@@ -31,26 +31,14 @@ def process_height_string(heights):
         elif "od" in height:
             res.append([height.split("od")[1].replace('m', '').strip(), None])
         elif "Brak":
-            res.append(["Brak", "Brak"])
+            res.append([None, None])
         else:
             res.append([None, None])
     return res
-
-def height_query_string(min_height, max_height):
-    if min_height == "Brak" or max_height == "Brak":
-        return f"(:Wysokosc{{name: Brak}})"
-    if min_height is not None and max_height is not None:
-        return f"(:Wysokosc{{min: {min_height}, max: {max_height}}})"
-    elif min_height is not None:
-        return f"(:Wysokosc{{min: {min_height}}})"
-    elif max_height is not None:
-        return f"(:Wysokosc{{max: {max_height}}})"
-    else:
-        return f"(:Wysokosc{{name: Brak}})"
     
 def height_query_string2(min_height, max_height):
     if min_height == "Brak" or max_height == "Brak":
-        bep = f"(w:Wysokosc{{name: Brak}})"
+        bep = f"(w:Wysokosc{{name: \"Brak\"}})"
     if min_height is not None and max_height is not None:
         bep = f"(w:Wysokosc{{min: {min_height}, max: {max_height}}})"
     elif min_height is not None:
@@ -58,7 +46,7 @@ def height_query_string2(min_height, max_height):
     elif max_height is not None:
         bep = f"(w:Wysokosc{{max: {max_height}}})"
     else:
-        bep = f"(w:Wysokosc{{name: Brak}})"
+        bep = f"(w:Wysokosc{{name: \"Brak\"}})"
     
     
     query_no_neo4j = (

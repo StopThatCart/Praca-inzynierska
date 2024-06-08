@@ -194,6 +194,11 @@ def main():
         print(f"Zapisano dane do plikuuu {output_name}.")
     else:
         print("ej co jest.")
+    
+    # Jeszcze raz bo grupa_roslin z jakiegos powodu miala pusta wartosc    
+    df = pd.read_csv(output_name)
+    df = df.fillna("Brak")
+    df.to_csv(output_name, index=False)
 
     end_time = time.time()
     elapsed_time = end_time - start_time
