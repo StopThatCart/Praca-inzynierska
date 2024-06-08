@@ -69,8 +69,6 @@ def import_plants(csv_filename, uri, username, password):
                 'forms': row['forma'].split(', '),
                 'growth_strength': row['sila_wzrostu'],
                 'shapes': row['pokroj'].split(', '),
-                
-                #'heights': row['docelowa_wysokosc'].split(', '),
                 'heights': process_height(row['docelowa_wysokosc']),
                 'leaves_colors': row['barwa_lisci_(igiel)'].split(', '),
                 'wintergreen_leaves': row['zimozielonosc_lisci_(igiel)'].split(', '),
@@ -91,27 +89,21 @@ def import_plants(csv_filename, uri, username, password):
 
     with driver.session() as session:
         print("Dodawanie roślin...")
-        session.run(plant_query_plant, plants=plants_data)
+        for batch_start in range(0, len(plants_data), 100):
+            batch_end = batch_start + 100
+            batch = plants_data[batch_start:batch_end]
+            session.run(plant_query_plant, plants=batch)
         
         # Generowanie zapytań
         for node, label, relationship in queries:
             q = query_string(node, label, relationship)
             print(f"Dodawanie węzłów {node.capitalize()}...")
-            session.run(q, plants=plants_data)
-         
-        
-        height_query = (
-            "UNWIND $plants AS plant "
-            f"MATCH (p:Roslina {{name: plant.name, latin_name: plant.latin_name}}) "
-            "WITH p, plant "
-            f"UNWIND plant.heights AS item "
-            f"MERGE item "
-            f"MERGE (p)-[:ma_wysokosc]->(w) "
-            f"MERGE (w)-[:zawiera_rosline]->(p)"
-        )
+            for batch_start in range(0, len(plants_data), 100):
+                batch_end = batch_start + 100
+                batch = plants_data[batch_start:batch_end]
+                session.run(q, plants=batch)
          
         print(f"Dodawanie wysokości...")
-        session.run(height_query, plants=plants_data)   
         
         # Dodawanie wysokości
         for plant in plants_data:
@@ -124,10 +116,17 @@ def import_plants(csv_filename, uri, username, password):
                     f"MERGE (p)-[:ma_wysokosc]->(w) "
                     f"MERGE (w)-[:zawiera_rosline]->(p)",
                     plants=[plant]
-                ) 
-
+                )
 
     print("Zakończono dodawanie roślin")
     driver.close()
 
+
+start_time = time.time()
+
 import_plants(csv_filename, neo4j_uri, neo4j_username, neo4j_password)
+
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f"Czas trwania importowania: {elapsed_time} sekund")
