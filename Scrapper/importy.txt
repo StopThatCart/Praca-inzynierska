@@ -1,0 +1,9 @@
+pip install aiohttp
+pip install asyncio
+pip install neo4j
+pip install requests
+pip install bs4
+pip install csv
+pip install pandas
+pip install selenium
+pip install time # Nie jest wymagane
