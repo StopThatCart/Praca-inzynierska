@@ -30,7 +30,7 @@ queries = [
     ("Sila_wzrostu", "growth_strength", "ma_sile_wzrostu"),
     ("Pokroj", "shapes", "ma_pokroj"),
     # TODO: WYSOKOŚĆ DO ZMIANY
-    ("Wysokosc", "heights", "ma_wysokosc"),
+    #("Wysokosc", "heights", "ma_wysokosc"),
     ("Kolor", "leaves_colors", "ma_liscie_koloru"),
     ("Zimozielonosc_lisci", "wintergreen_leaves", "ma_zimozielonosc_lisci"),
     ("Owoc", "fruits", "ma_owoc"),
@@ -57,14 +57,6 @@ def import_plants(csv_filename, uri, username, password):
         "UNWIND $plants AS plant "
         "MERGE (p:Roslina {name: plant.name, latin_name: plant.latin_name, description: plant.description}) "
         )
-        
-        plant_query_soils = ()
-        
-        plant_query_froots = ()
-        
-        plant_query_flowers = ()
-        
-        plant_query_other = ()
         
         plants_data = []
         for row in reader:
@@ -102,21 +94,45 @@ def import_plants(csv_filename, uri, username, password):
         session.run(plant_query_plant, plants=plants_data)
         
         # Generowanie zapytań
-        query_strings = [query_string(node, label, relationship) for node, label, relationship in queries]
         for node, label, relationship in queries:
             q = query_string(node, label, relationship)
             print(f"Dodawanie węzłów {node.capitalize()}...")
             session.run(q, plants=plants_data)
-            
-        # TODO zapytanie z wysokoscią
-        #
-        #
+         
+        
+        height_query = (
+            "UNWIND $plants AS plant "
+            f"MATCH (p:Roslina {{name: plant.name, latin_name: plant.latin_name}}) "
+            "WITH p, plant "
+            f"UNWIND plant.heights AS item "
+            f"MERGE item "
+            f"MERGE (p)-[:ma_wysokosc]->(w) "
+            f"MERGE (w)-[:zawiera_rosline]->(p)"
+        )
+         
+        print(f"Dodawanie wysokości...")
+        #session.run(height_query, plants=plants_data)   
+        
+        # Dodawanie wysokości
+        for plant in plants_data:
+            heights = plant['heights']
+            for height in heights:
+                session.run(
+                    f"UNWIND $plants AS plant "
+                    f"MATCH (p:Roslina {{name: plant.name, latin_name: plant.latin_name}}) "
+                    f"MERGE {height} "
+                    f"MERGE (p)-[:ma_wysokosc]->(w) "
+                    f"MERGE (w)-[:zawiera_rosline]->(p)",
+                    plants=[plant]
+                ) 
+
 
     print("Zakończono dodawanie roślin")
     driver.close()
 
 #import_plants(csv_filename, neo4j_uri, neo4j_username, neo4j_password)
-
-print(process_height("od 5 m do 10 m, do 7 m, powyżej 12 m"))
+#heights = process_height("od 5 m do 10 m, do 7 m, powyżej 12 m")
+#for h in heights:
+#    print(h)
 
 # Wyświetlanie zapytań

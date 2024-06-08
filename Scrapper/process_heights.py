@@ -48,10 +48,46 @@ def height_query_string(min_height, max_height):
     else:
         return f"(:Wysokosc{{name: Brak}})"
     
+def height_query_string2(min_height, max_height):
+    if min_height == "Brak" or max_height == "Brak":
+        bep = f"(w:Wysokosc{{name: Brak}})"
+    if min_height is not None and max_height is not None:
+        bep = f"(w:Wysokosc{{min: {min_height}, max: {max_height}}})"
+    elif min_height is not None:
+        bep = f"(w:Wysokosc{{min: {min_height}}})"
+    elif max_height is not None:
+        bep = f"(w:Wysokosc{{max: {max_height}}})"
+    else:
+        bep = f"(w:Wysokosc{{name: Brak}})"
+    
+    
+    query_no_neo4j = (
+        "UNWIND $plants AS plant "
+        f"MATCH (p:Roslina {{name: plant.name, latin_name: plant.latin_name}}) "
+        "WITH p, plant "
+        #f"UNWIND plant.heights AS item "
+        #f"MERGE (n:Wysokosc {{name: item}}) "
+        f"MERGE {bep} "
+        f"MERGE (p)-[:ma_wysokosc]->(w) "
+        f"MERGE (w)-[:zawiera_rosline]->(p)"
+    )
+    
+    query = (
+        "UNWIND $plants AS plant "
+        f"MATCH (p:Roslina {{name: plant.name, latin_name: plant.latin_name}}) "
+        "WITH p, plant "
+        f"UNWIND plant.heights AS item "
+        #f"MERGE (n:Wysokosc {{name: item}}) "
+        f"MERGE item "
+        f"MERGE (p)-[:ma_wysokosc]->(w) "
+        f"MERGE (w)-[:zawiera_rosline]->(p)"
+    )
+    return bep
+            
 def main(heights):
     ret = []
     heights = heights.split(',')
     res = process_height_string(heights)
     for r in res:
-      ret.append(height_query_string(r[0], r[1]))
+      ret.append(height_query_string2(r[0], r[1]))
     return ret

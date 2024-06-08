@@ -189,6 +189,7 @@ def main():
     plant_info_list = asyncio.run(get_all_plant_info(input_page))
     if plant_info_list:
         df = pd.DataFrame(plant_info_list)
+        df = df.fillna('Brak')
         df.to_csv(output_name, index=False)
         print(f"Zapisano dane do plikuuu {output_name}.")
     else:
