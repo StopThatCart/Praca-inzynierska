@@ -35,47 +35,50 @@ def process_height_string(heights):
         else:
             res.append([None, None])
     return res
-    
-def height_query_string2(min_height, max_height):
+     
+def height_query_string_to_class(min_height, max_height):
+    d_name = None
+    d_min = None
+    d_max = None
+
     if min_height == "Brak" or max_height == "Brak":
-        bep = f"(w:Wysokosc{{name: \"Brak\"}})"
+        d_name = "Brak"
     if min_height is not None and max_height is not None:
-        bep = f"(w:Wysokosc{{min: {min_height}, max: {max_height}}})"
+        d_min = min_height
+        d_max = max_height
     elif min_height is not None:
-        bep = f"(w:Wysokosc{{min: {min_height}}})"
+        d_min = min_height
     elif max_height is not None:
-        bep = f"(w:Wysokosc{{max: {max_height}}})"
+        d_max = max_height
     else:
-        bep = f"(w:Wysokosc{{name: \"Brak\"}})"
+        d_name = "Brak"
     
+    height_dict = {
+        "name": d_name,
+        "min": d_min,
+        "max": d_max
+    }
     
-    query_no_neo4j = (
-        "UNWIND $plants AS plant "
-        f"MATCH (p:Roslina {{name: plant.name, latin_name: plant.latin_name}}) "
-        "WITH p, plant "
-        #f"UNWIND plant.heights AS item "
-        #f"MERGE (n:Wysokosc {{name: item}}) "
-        f"MERGE {bep} "
-        f"MERGE (p)-[:ma_wysokosc]->(w) "
-        f"MERGE (w)-[:zawiera_rosline]->(p)"
-    )
+    height_params = None
     
-    query = (
-        "UNWIND $plants AS plant "
-        f"MATCH (p:Roslina {{name: plant.name, latin_name: plant.latin_name}}) "
-        "WITH p, plant "
-        f"UNWIND plant.heights AS item "
-        #f"MERGE (n:Wysokosc {{name: item}}) "
-        f"MERGE item "
-        f"MERGE (p)-[:ma_wysokosc]->(w) "
-        f"MERGE (w)-[:zawiera_rosline]->(p)"
-    )
-    return bep
-            
+    if height_dict['name'] is None:
+        height_dict['name'] = "cokolwiek innego"
+    if height_dict['min'] is None:
+        height_dict['min'] = 0
+    if height_dict['max'] is None:
+        height_dict['max'] = height_dict['min']
+     
+    height_params = {k: v for k, v in height_dict.items() if v is not None}
+    
+   # if height_params:
+       # height_props = ", ".join([f"{key}: '{value}'" for key, value in height_params.items()])
+       # return height_props
+    return height_params
+       
 def main(heights):
     ret = []
     heights = heights.split(',')
     res = process_height_string(heights)
     for r in res:
-      ret.append(height_query_string2(r[0], r[1]))
+      ret.append(height_query_string_to_class(r[0], r[1]))
     return ret

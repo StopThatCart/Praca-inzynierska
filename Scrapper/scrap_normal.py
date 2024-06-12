@@ -86,7 +86,6 @@ async def parse_page(html):
         name_pp = element.find('div', class_='description').find('p', class_='desc_pl_title').find("span")
         latin_name_pp = element.find('div', class_='description').find('p', class_='desc_title')
 
-        
         def trace_spanowanie(pp):
             if pp:
                 name = ""
@@ -111,6 +110,9 @@ async def parse_page(html):
         
         name = trace_spanowanie(name_pp)
         latin_name = trace_spanowanie(latin_name_pp)
+        
+        if name == "" or latin_name == "":
+            continue
 
         link = f"https://e-katalogroslin.pl{element.find('a')['href']}"
         

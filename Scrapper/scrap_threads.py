@@ -2,19 +2,23 @@ import requests
 import pandas as pd
 import aiohttp
 import asyncio
-import re
 from bs4 import BeautifulSoup
 import time
-from concurrent.futures import ThreadPoolExecutor
+import csv
+import re
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import ElementClickInterceptedException, StaleElementReferenceException
+from selenium.common.exceptions import ElementClickInterceptedException, StaleElementReferenceException, TimeoutException
 
-input_page = "https://e-katalogroslin.pl/przegladaj-katalog"
-output_name = "katalog_roslin.csv"
+# konfig przeglądarki
+firefox_options = webdriver.FirefoxOptions()
+firefox_options.add_argument("--headless")
+driver = webdriver.Firefox(options=firefox_options)
+driver.implicitly_wait(10)  # Ustawienie domyślnego czasu oczekiwania
+
 no_description = "Ta roślina nie posiada opisu"
 
 url_list = [
@@ -31,18 +35,18 @@ last_url = "https://e-katalogroslin.pl/przegladaj-katalog?se=60e5c0024c14f99ceaa
 def remove_polish(str):
     return str.lower().replace('ł', 'l').replace('ą', 'a').replace('ć', 'c').replace('ę', 'e').replace('ś', 's').replace('ń', 'n').replace('ó', 'o').replace('ż', 'z').replace('ź', 'z')
 
-async def fetch(session, url):
-    async with session.get(url) as response:
-        return await response.text()
-
 def clean_description(description):
-    description = description.strip().replace('"', "'").replace('\t', '\n').replace('\n', ' ')
+    description = description.strip().replace('"', "'").replace('\t', '\n')
 
     # usuwanie znaków specjalnych
     cleaned_description = re.sub(r'[^\w\s]', '', description)
     # usuwanie nadmiarowych spacji pomiedzy wierszami
     cleaned_description = re.sub(r'\s+', ' ', cleaned_description)
     return cleaned_description
+
+async def fetch(session, url):
+    async with session.get(url) as response:
+        return await response.text()
 
 async def get_plant_properties(session, plant_url):
     html = await fetch(session, plant_url)
@@ -52,7 +56,7 @@ async def get_plant_properties(session, plant_url):
     desc = soup.find('p', {"class": "description"}).get_text()
     desc = clean_description(desc)
     plant_properties["opis"] = desc
-
+    
     for row in table_rows:
         columns = row.find_all('td')
         if len(columns) == 2:
@@ -60,11 +64,15 @@ async def get_plant_properties(session, plant_url):
             if(property_name in banned_properties):
                 continue
             property_value = columns[1].get_text(separator=', ', strip=True)
+            
+            if(property_name in "docelowa_wysokosc"):
+                property_value = re.sub(r'(\d+,\d+)', lambda match: match.group(0).replace(',', '.'), property_value)
+            
             plant_properties[property_name] = property_value
 
     return plant_properties
 
-def parse_page(html):
+async def parse_page(html):
     soup = BeautifulSoup(html, 'html.parser')
     listing_section = soup.find('section', id='listning')
     elements = listing_section.find_all('div', class_='element')
@@ -74,11 +82,38 @@ def parse_page(html):
         desc = element.find('div', class_='description').find('p', class_='desc_desc').get_text(strip=True)
         if desc == no_description:
             continue
+        
+        name_pp = element.find('div', class_='description').find('p', class_='desc_pl_title').find("span")
+        latin_name_pp = element.find('div', class_='description').find('p', class_='desc_title')
 
-        name = element.find('div', class_='description').find('p', class_='desc_title').get_text(strip=True)
-        latin_name = element.find('div', class_='description').find('p', class_='desc_pl_title').get_text(strip=True)
+        
+        def trace_spanowanie(pp):
+            if pp:
+                name = ""
+                for content in pp.contents:
+                    if isinstance(content, str):
+                        name += content.strip() + " "
+                    elif content.name == 'span':
+                        if content.get('class') == ['i']:
+                            name += content.get_text(strip=True) + " "
+                        elif content.get('class') == ['n']:
+                            name += content.get_text(strip=True)
+                        elif content.get('class') == ['bn']:
+                            name += " " + content.get_text(strip=True)
+                name = name.strip()
+                name = re.sub(r'\s+', ' ', name)
+                return name
+            elif isinstance(pp, str):
+                name += content.strip() + " "
+                return name
+            else:
+                return ""
+        
+        name = trace_spanowanie(name_pp)
+        latin_name = trace_spanowanie(latin_name_pp)
+
         link = f"https://e-katalogroslin.pl{element.find('a')['href']}"
-
+        
         plant_info = {
             'name': name.lower(),
             'latin_name': latin_name.lower(),
@@ -88,102 +123,88 @@ def parse_page(html):
 
     return plant_info_list
 
-async def get_plant_info_for_url(session, start_url, end_url, stop_urls):
-    
-    print(f"Ej, pa tera: {start_url}")
-    print(f"A tu końcowy: {end_url}\n")
-    firefox_options = webdriver.FirefoxOptions()
-    firefox_options.add_argument("--headless")
-    driver = webdriver.Firefox(options=firefox_options)
-    driver.implicitly_wait(10)
-    
+async def get_all_plant_info(start_url, amount=999):
     max_tries = 3
-    hehe = 1
+    page_number = 1
     all_plant_info = []
-    hundreds_pages = []
     current_url = start_url
     driver.get(start_url)
-
+    
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "listning")))
     except:
-        print(f"Timeout! Nie udało się załadować sekcji listingu dla URL: {start_url}")
-        driver.quit()
-        return all_plant_info, hundreds_pages
+        print("Timeout! Nie udało się załadować sekcji listingu.")
+        return None
 
-    while current_url != end_url:
-        current_url = driver.current_url
-        
-        if current_url in stop_urls:
-            break
-        
-        if hehe % 10 == 0:
-            hundreds_pages.append(current_url)
-
-        plant_info_list = parse_page(driver.page_source)
-        tasks = [asyncio.create_task(get_plant_properties(session, plant['link'])) for plant in plant_info_list]
-        properties_list = await asyncio.gather(*tasks)
-
-        for plant, properties in zip(plant_info_list, properties_list):
-            plant.update(properties)
-            del plant['link']
-
-        all_plant_info.extend(plant_info_list)
-        print(f"Strona [{hehe}]. Pobrano dane z: {driver.current_url}")
-
-        for _ in range(max_tries):
-            try:
-                next_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-next]")))
-                next_button.click()
-                WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "listning")))
-                break
-            except ElementClickInterceptedException:
-                WebDriverWait(driver, 10).until_not(EC.presence_of_element_located((By.ID, "loader")))
-            except StaleElementReferenceException:
-                continue
-        hehe += 1
-
-    driver.quit()
-    return all_plant_info
-
-async def get_all_plant_info():
     async with aiohttp.ClientSession() as session:
-        with ThreadPoolExecutor(max_workers=len(url_list)) as executor:
-            loop = asyncio.get_event_loop()
-            tasks = [
-                loop.run_in_executor(
-                    executor,
-                    lambda url=url, stop_urls=[stop_url for stop_url in url_list if stop_url != url]: asyncio.run(
-                        get_plant_info_for_url(
-                            session, 
-                            url,
-                            last_url,
-                            stop_urls
-                        )
-                    )
-                )
-                for url in url_list
-            ]
-            results = await asyncio.gather(*tasks)
+        while current_url != last_url and amount != 0:
+            plant_info_list = await parse_page(driver.page_source)
+            tasks = [asyncio.create_task(get_plant_properties(session, plant['link'])) for plant in plant_info_list]
+            properties_list = await asyncio.gather(*tasks)
 
-    all_plant_info = []
-    for result in results:
-        all_plant_info.extend(result[0])
+            for plant, properties in zip(plant_info_list, properties_list):
+                plant.update(properties)
+                del plant['link']
+
+            all_plant_info.extend(plant_info_list)
+            
+            if(page_number % 10 == 0):
+                print(f"Strona [{page_number}]. Pobrano dane z: {current_url}")     
+            
+            for _ in range(max_tries):
+                try:
+                    next_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-next]")))
+                    next_button.click()
+                    WebDriverWait(driver, 10).until(EC.url_changes(current_url))
+                    break
+                except (ElementClickInterceptedException, StaleElementReferenceException, TimeoutException):
+                    continue
+            try:
+                WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "listning")))
+            except:
+                print("eeeeeooooo")
+                
+            new_url = driver.current_url
+            if new_url == current_url:
+                print("URL nie zmienił się. Spróbuj ponownie.")
+                continue
+
+            current_url = new_url
+            page_number += 1
+            amount -= 1
 
     return all_plant_info
+    
+    
+input_page = "https://e-katalogroslin.pl/przegladaj-katalog"
+output_name = "katalog_roslin.csv"
 
+le_test = "https://e-katalogroslin.pl/plants/3950,malus-domestica"
+before_last = "https://e-katalogroslin.pl/przegladaj-katalog?se=d306e4bd899cb4c4f423d4545941b3fd"
+test = "https://e-katalogroslin.pl/przegladaj-katalog?se=38ec3b62fa9d7cb98b7e2a47becf8f04"
+test_file = "testowy.csv"
 
 def main():
     start_time = time.time()
-    plant_info_list = asyncio.run(get_all_plant_info())
+    plant_info_list = asyncio.run(get_all_plant_info(input_page))
     if plant_info_list:
         df = pd.DataFrame(plant_info_list)
+        df = df.fillna('Brak')
         df.to_csv(output_name, index=False)
-        print(f"Zapisano dane do pliku {output_name}.")
+        print(f"Zapisano dane do plikuuu {output_name}.")
+    else:
+        print("ej co jest.")
+    
+    # Jeszcze raz bo grupa_roslin z jakiegos powodu miala pusta wartosc    
+    df = pd.read_csv(output_name)
+    df = df.fillna("Brak")
+    df.to_csv(output_name, index=False)
 
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"Czas trwania scrapowania: {elapsed_time} sekund")
+    driver.quit()
+
 
 if __name__ == "__main__":
     main()
