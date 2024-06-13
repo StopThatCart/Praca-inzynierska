@@ -5,9 +5,11 @@ import time
 from process_heights import main as process_height
 
 # Parametry do połączenia z bazą danych Neo4j
+database_name = "test" 
 neo4j_uri = "bolt://localhost:7687"
 neo4j_username = "neo4j"
 neo4j_password = "11111111"
+
 
 csv_filename = "katalog_roslin.csv"
 
@@ -16,43 +18,52 @@ brak = "Brak"
 def query_string(node_name, label, relationship):
     query = (
         "UNWIND $plants AS plant "
-        f"MATCH (p:Roslina {{name: plant.name, latin_name: plant.latin_name}}) "
+        f"MATCH (p:Plant {{name: plant.name, latin_name: plant.latin_name}}) "
         "WITH p, plant "
         f"UNWIND plant.{label} AS item "
         f"WITH p, item WHERE item <> '{brak}' "
         f"MERGE (n:{node_name.capitalize()} {{name: item}}) "
         f"MERGE (p)-[:{relationship}]->(n) "
-        f"MERGE (n)-[:zawiera_rosline]->(p)"
+        f"MERGE (n)-[:has_plant]->(p)"
     )
     return query
+
+plant_query = (
+        "UNWIND $plants AS plant "
+        "MERGE (p:Plant {name: plant.name, latin_name: plant.latin_name, description: plant.description}) "
+        "WITH p, plant "
+        "UNWIND plant.heights AS height "
+        "WITH p, height "
+        "WHERE height.name <> 'Brak' "
+        "SET p.height_min = height.min, p.height_max = height.max"
+        )
         
 queries = [
-    ("Grupa", "groups", "nalezy_do_grupy"),
-    ("Podgrupa", "subgroups", "nalezy_do_podgrupy"),
-    ("Forma", "forms", "ma_forme"),
-    ("Sila_wzrostu", "growth_strength", "ma_sile_wzrostu"),
-    ("Pokroj", "shapes", "ma_pokroj"),
-    ("Kolor", "leaves_colors", "ma_liscie_koloru"),
-    ("Zimozielonosc_lisci", "wintergreen_leaves", "ma_zimozielonosc_lisci"),
-    ("Owoc", "fruits", "ma_owoc"),
-    ("Stanowisko", "positions", "ma_stanowisko"),
-    ("Wilgotnosc", "humidities", "ma_wilgotnosc"),
-    ("Odczyn", "phs", "ma_odczyn_gleby"),
-    ("Gleba", "soils", "ma_glebe"),
-    ("Walor", "appeals", "ma_walor"),
-    ("Zastosowanie", "uses", "ma_zastosowanie"),
-    ("Nagroda", "awards", "ma_nagrode"),
-    ("Kwiat", "flowers", "ma_kwiat"),
-    ("Kolor", "flower_colors", "ma_kwiat_koloru"),
-    ("Okres", "flowering_periods", "ma_okres_kwitnienia"),
-    ("Okres", "fruiting_times", "ma_okres_owocowania")
+    ("Group", "groups", "has_group"),
+    ("Subgroup", "subgroups", "has_subgroup"),
+    ("Form", "forms", "has_forme"),
+    ("Growth_strength", "growth_strength", "has_growth_strength"),
+    ("Shape", "shapes", "has_shape"),
+    ("Color", "leaves_colors", "has_leaves_color"),
+    ("Wintergreen_leaves", "wintergreen_leaves", "has_wintergreen_leaves"),
+    ("Fruit", "fruits", "has_fruit"),
+    ("Position", "positions", "has_position"),
+    ("Humidity", "humidities", "has_humidity"),
+    ("Ph", "phs", "has_ph"),
+    ("Soil", "soils", "has_soil"),
+    ("Appeal", "appeals", "has_appeal"),
+    ("Use", "uses", "has_use"),
+    ("Award", "awards", "has_award"),
+    ("Flower", "flowers", "has_flower"),
+    ("Color", "flower_colors", "has_flower_color"),
+    ("Period", "flowering_periods", "has_flowering_period"),
+    ("Period", "fruiting_times", "has_fruiting_period")
 ]
 
 queries_test = [
-    ("Grupa", "groups", "nalezy_do_grupy"),
-    ("Podgrupa", "subgroups", "nalezy_do_podgrupy")
+    ("Group", "groups", "has_group"),
+    ("Subgroup", "subgroups", "has_subgroup")
 ]
-
 
 def import_plants(csv_filename, batch_size, uri, username, password):
     print("Rozpoczynanie seedowania bazy danych...")
@@ -60,11 +71,6 @@ def import_plants(csv_filename, batch_size, uri, username, password):
     
     with open(csv_filename, newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
-        
-        plant_query_plant = (
-        "UNWIND $plants AS plant "
-        "MERGE (p:Roslina {name: plant.name, latin_name: plant.latin_name, description: plant.description}) "
-        )
         
         plants_data = []
         for row in reader:
@@ -96,12 +102,12 @@ def import_plants(csv_filename, batch_size, uri, username, password):
             }
             plants_data.append(plant_data)
 
-    with driver.session() as session:
+    with driver.session(database=database_name) as session:
         print("Dodawanie roślin...")
         for batch_start in range(0, len(plants_data), batch_size):
             batch_end = min(batch_start + batch_size, len(plants_data))
             batch = plants_data[batch_start:batch_end]
-            session.run(plant_query_plant, plants=batch)
+            session.run(plant_query, plants=batch)
         
         for node, label, relationship in queries:
             q = query_string(node, label, relationship)
@@ -110,28 +116,6 @@ def import_plants(csv_filename, batch_size, uri, username, password):
                 batch_end = min(batch_start + batch_size, len(plants_data))
                 batch = plants_data[batch_start:batch_end]
                 session.run(q, plants=batch)
-        
-        query_height = ("""
-            UNWIND $plants AS plant 
-            MATCH (p:Roslina {name: plant.name, latin_name: plant.latin_name}) 
-            WITH p, plant 
-            UNWIND plant.heights AS height 
-            WITH p, height WHERE height.name <> 'Brak' 
-            
-            MERGE (n:Wysokosc {min: height.min, max: height.max}) 
-            MERGE (p)-[:ma_wysokosc]->(n)
-            MERGE (n)-[:zawiera_rosline]->(p)
-        """
-        )
-        
-        print(f"Dodawanie wysokości..")
-        for batch_start in range(0, len(plants_data), batch_size):
-            batch_end = min(batch_start + batch_size, len(plants_data))
-            batch = plants_data[batch_start:batch_end]
-            session.run(query_height, plants=batch)
-
-        
-
 
     print("Zakończono dodawanie roślin")
     driver.close()
@@ -145,24 +129,20 @@ def seciczek(plants_data):
     for s in secik:
           print(s)
 
-
-# Bardzo wolno działa
 def drop_database(uri, username, password):
     print("Czyszczenie bazy danych...")
     driver = GraphDatabase.driver(uri, auth=(username, password))
-    with driver.session() as session:
-        drop_query = (
-        "MATCH (s) "
-        "CALL apoc.nodes.delete(s, 1000) YIELD value "
-        "RETURN value"
-        )
+    with driver.session(database="system") as session:
+        drop_query = (f"DROP DATABASE {database_name} IF EXISTS;")
+        create_query = (f"CREATE DATABASE {database_name} IF NOT EXISTS;")
         
         session.run(drop_query)
+        session.run(create_query)
     print("Zakończono czyszczenie bazy danych.")
 
 start_time = time.time()
 
-#drop_database(neo4j_uri, neo4j_username, neo4j_password)
+drop_database(neo4j_uri, neo4j_username, neo4j_password)
 import_plants(csv_filename, 1000, neo4j_uri, neo4j_username, neo4j_password)
 
 

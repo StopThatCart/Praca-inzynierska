@@ -20,6 +20,8 @@ driver = webdriver.Firefox(options=firefox_options)
 driver.implicitly_wait(10)  # Ustawienie domyślnego czasu oczekiwania
 
 no_description = "Ta roślina nie posiada opisu"
+no_image = "https://e-katalogroslin.pl/wp-content/themes/e-katalogroslin/img/e-kat_noimg.jpg"
+default_img = "default_plant.jpg"
 
 url_list = [
 "https://e-katalogroslin.pl/przegladaj-katalog?se=b873c55f322d2ae7c077b52480a75f81",
@@ -116,10 +118,15 @@ async def parse_page(html):
 
         link = f"https://e-katalogroslin.pl{element.find('a')['href']}"
         
+        img_link = element.find('img', class_='offer_pic')['src']  
+        if img_link != no_image:
+            img_link = default_img
+            
         plant_info = {
             'name': name.lower(),
             'latin_name': latin_name.lower(),
-            'link': link
+            'link': link,
+            'image': img_link
         }
         plant_info_list.append(plant_info)
 
@@ -186,27 +193,30 @@ before_last = "https://e-katalogroslin.pl/przegladaj-katalog?se=d306e4bd899cb4c4
 test = "https://e-katalogroslin.pl/przegladaj-katalog?se=38ec3b62fa9d7cb98b7e2a47becf8f04"
 test_file = "testowy.csv"
 
-def main():
-    start_time = time.time()
-    plant_info_list = asyncio.run(get_all_plant_info(input_page))
+def commit_scrap(page, output, amount=999):
+    plant_info_list = asyncio.run(get_all_plant_info(page, amount))
     if plant_info_list:
         df = pd.DataFrame(plant_info_list)
         df = df.fillna('Brak')
-        df.to_csv(output_name, index=False)
-        print(f"Zapisano dane do plikuuu {output_name}.")
+        df.to_csv(output, index=False)
+        print(f"Zapisano dane do plikuuu {output}.")
     else:
         print("ej co jest.")
     
     # Jeszcze raz bo grupa_roslin z jakiegos powodu miala pusta wartosc    
-    df = pd.read_csv(output_name)
+    df = pd.read_csv(output)
     df = df.fillna("Brak")
-    df.to_csv(output_name, index=False)
-
+    df.to_csv(output, index=False)
+    
+def main():
+    start_time = time.time()
+    
+    commit_scrap(input_page, output_name)
+    
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"Czas trwania scrapowania: {elapsed_time} sekund")
     driver.quit()
-
 
 if __name__ == "__main__":
     main()
