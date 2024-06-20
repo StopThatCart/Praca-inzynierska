@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.yukka.model.Plant;
+import com.example.yukka.model.plants.Plant;
 import com.example.yukka.repository.PlantRepository;
 
 @Service

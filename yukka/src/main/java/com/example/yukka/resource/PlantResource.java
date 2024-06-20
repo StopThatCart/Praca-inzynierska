@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.yukka.model.Plant;
+import com.example.yukka.model.plants.Plant;
 import com.example.yukka.service.PlantService;
 
 

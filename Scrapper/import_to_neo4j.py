@@ -41,7 +41,7 @@ plant_query = (
 queries = [
     ("Group", "groups", "has_group"),
     ("Subgroup", "subgroups", "has_subgroup"),
-    ("Form", "forms", "has_forme"),
+    ("Form", "forms", "has_form"),
     ("Growth_strength", "growth_strength", "has_growth_strength"),
     ("Shape", "shapes", "has_shape"),
     ("Color", "leaves_colors", "has_leaves_color"),

@@ -1,4 +1,4 @@
-package com.example.yukka.model;
+package com.example.yukka.model.plants.relationshipnodes;
 
 import java.util.List;
 
@@ -8,8 +8,9 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import com.example.yukka.model.plants.Plant;
 @Node
-public class Soil {
+public class Ph {
     @Id @GeneratedValue
     private Long id;
     @Property("name")
@@ -18,13 +19,12 @@ public class Soil {
     @Relationship(type="has_plant", direction=Relationship.Direction.OUTGOING)
     private List<Plant> plants;
 
-    public Soil() {
+    public Ph() {
     }
 
     public List<Plant> getPlants() {
         return plants;
     }
-
 
     public Long getId() {
         return id;
@@ -38,6 +38,4 @@ public class Soil {
         this.name = name;
     }
 
-    
-    
 }
