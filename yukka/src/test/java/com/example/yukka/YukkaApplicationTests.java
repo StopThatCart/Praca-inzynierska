@@ -1,10 +1,10 @@
-package com.example.demo;
+package com.example.yukka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemoApplicationTests {
+class YukkaApplicationTests {
 
 	@Test
 	void contextLoads() {
