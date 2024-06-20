@@ -14,7 +14,6 @@ def get_estimated_heights(file_path):
     return estimated_heights
 
 def convert_commas_to_dots(value):
-    # Zastosowanie wyrażenia regularnego do zamiany przecinków na kropki
     return re.sub(r'(\d+,\d+)', lambda match: match.group(0).replace(',', '.'), value)
 
 def process_height_string(heights):
@@ -70,9 +69,6 @@ def height_query_string_to_class(min_height, max_height):
      
     height_params = {k: v for k, v in height_dict.items() if v is not None}
     
-   # if height_params:
-       # height_props = ", ".join([f"{key}: '{value}'" for key, value in height_params.items()])
-       # return height_props
     return height_params
        
 def main(heights):

@@ -30,7 +30,7 @@ def query_string(node_name, label, relationship):
 
 plant_query = (
         "UNWIND $plants AS plant "
-        "MERGE (p:Plant {name: plant.name, latin_name: plant.latin_name, description: plant.description}) "
+        "MERGE (p:Plant {name: plant.name, latin_name: plant.latin_name, description: plant.description, image: plant.image_name}) "
         "WITH p, plant "
         "UNWIND plant.heights AS height "
         "WITH p, height "
@@ -79,6 +79,7 @@ def import_plants(csv_filename, batch_size, uri, username, password):
                 'name': row['name'],
                 'latin_name': row['latin_name'],
                 'description': row['opis'],
+                'image_name': row['image_filename'],
                 'groups': row['grupa_roslin'].split(', '),
                 'subgroups': row['grupa_uzytkowa'].split(', '),
                 'forms': row['forma'].split(', '),

@@ -6,7 +6,8 @@ from bs4 import BeautifulSoup
 import time
 import csv
 import re
-
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -16,21 +17,22 @@ from selenium.common.exceptions import ElementClickInterceptedException, StaleEl
 # konfig przeglądarki
 firefox_options = webdriver.FirefoxOptions()
 firefox_options.add_argument("--headless")
-driver = webdriver.Firefox(options=firefox_options)
-driver.implicitly_wait(10)  # Ustawienie domyślnego czasu oczekiwania
-
-no_description = "Ta roślina nie posiada opisu"
-
-url_list = [
-"https://e-katalogroslin.pl/przegladaj-katalog?se=b873c55f322d2ae7c077b52480a75f81",
-"https://e-katalogroslin.pl/przegladaj-katalog?se=39921be9413de6ac538a4df45da7d104",
-"https://e-katalogroslin.pl/przegladaj-katalog?se=0f53540eb1787eab5cf47d55874e4372",
-"https://e-katalogroslin.pl/przegladaj-katalog?se=04c2fcb871ee0704e7af0cd6183a01e1",
-"https://e-katalogroslin.pl/przegladaj-katalog?se=85f76f2e4609984bd0caa1a567285df3"]
 
 banned_properties = ['pochodzenie', 'zasieg_geograficzny', 'strefa']
 
+url_list = [
+    "https://e-katalogroslin.pl/przegladaj-katalog?se=b873c55f322d2ae7c077b52480a75f81",
+    "https://e-katalogroslin.pl/przegladaj-katalog?se=39921be9413de6ac538a4df45da7d104",
+    "https://e-katalogroslin.pl/przegladaj-katalog?se=0f53540eb1787eab5cf47d55874e4372",
+    "https://e-katalogroslin.pl/przegladaj-katalog?se=04c2fcb871ee0704e7af0cd6183a01e1",
+    "https://e-katalogroslin.pl/przegladaj-katalog?se=85f76f2e4609984bd0caa1a567285df3"
+]
+
 last_url = "https://e-katalogroslin.pl/przegladaj-katalog?se=60e5c0024c14f99ceaa4840aa4d02bd1"
+
+no_description = "Ta roślina nie posiada opisu"
+no_image = "https://e-katalogroslin.pl/wp-content/themes/e-katalogroslin/img/e-kat_noimg.jpg"
+default_img = "default_plant.jpg"
 
 def remove_polish(str):
     return str.lower().replace('ł', 'l').replace('ą', 'a').replace('ć', 'c').replace('ę', 'e').replace('ś', 's').replace('ń', 'n').replace('ó', 'o').replace('ż', 'z').replace('ź', 'z')
@@ -86,7 +88,6 @@ async def parse_page(html):
         name_pp = element.find('div', class_='description').find('p', class_='desc_pl_title').find("span")
         latin_name_pp = element.find('div', class_='description').find('p', class_='desc_title')
 
-        
         def trace_spanowanie(pp):
             if pp:
                 name = ""
@@ -111,33 +112,49 @@ async def parse_page(html):
         
         name = trace_spanowanie(name_pp)
         latin_name = trace_spanowanie(latin_name_pp)
+        
+        if name == "" or latin_name == "":
+            continue
 
         link = f"https://e-katalogroslin.pl{element.find('a')['href']}"
         
+        img_link = element.find('img', class_='offer_pic')['src']  
+        if img_link == no_image:
+            img_link = default_img
+            
         plant_info = {
             'name': name.lower(),
             'latin_name': latin_name.lower(),
-            'link': link
+            'link': link,
+            'image': img_link
         }
         plant_info_list.append(plant_info)
 
     return plant_info_list
 
-async def get_all_plant_info(start_url, amount=999):
+async def get_all_plant_info(start_url, url_list, amount=999):
     max_tries = 3
     page_number = 1
     all_plant_info = []
     current_url = start_url
+    driver = webdriver.Firefox(options=firefox_options)
+    driver.implicitly_wait(10)
     driver.get(start_url)
+    thread_id = threading.get_ident()
     
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "listning")))
     except:
-        print("Timeout! Nie udało się załadować sekcji listingu.")
+        print(f"Timeout! Nie udało się załadować sekcji listingu dla {start_url}.")
+        driver.quit()
         return None
 
     async with aiohttp.ClientSession() as session:
         while current_url != last_url and amount != 0:
+            if current_url in url_list and current_url != start_url:
+                print(f"Zatrzymanie wątku, napotkano adres startowy innego wątku: {current_url}")
+                break
+            
             plant_info_list = await parse_page(driver.page_source)
             tasks = [asyncio.create_task(get_plant_properties(session, plant['link'])) for plant in plant_info_list]
             properties_list = await asyncio.gather(*tasks)
@@ -146,10 +163,12 @@ async def get_all_plant_info(start_url, amount=999):
                 plant.update(properties)
                 del plant['link']
 
+            plant_info_list = [plant for plant in plant_info_list if plant.get('docelowa_wysokosc')]
+            
             all_plant_info.extend(plant_info_list)
             
             if(page_number % 10 == 0):
-                print(f"Strona [{page_number}]. Pobrano dane z: {current_url}")     
+                print(f"Wątek [{thread_id}]: Przetworzone strony: [{page_number}]. Pobrano dane z: {current_url}")     
             
             for _ in range(max_tries):
                 try:
@@ -162,7 +181,7 @@ async def get_all_plant_info(start_url, amount=999):
             try:
                 WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "listning")))
             except:
-                print("eeeeeooooo")
+                print("Nie udało się załadować nowej strony.")
                 
             new_url = driver.current_url
             if new_url == current_url:
@@ -173,38 +192,46 @@ async def get_all_plant_info(start_url, amount=999):
             page_number += 1
             amount -= 1
 
+    driver.quit()
     return all_plant_info
-    
-    
-input_page = "https://e-katalogroslin.pl/przegladaj-katalog"
-output_name = "katalog_roslin.csv"
 
-le_test = "https://e-katalogroslin.pl/plants/3950,malus-domestica"
-before_last = "https://e-katalogroslin.pl/przegladaj-katalog?se=d306e4bd899cb4c4f423d4545941b3fd"
-test = "https://e-katalogroslin.pl/przegladaj-katalog?se=38ec3b62fa9d7cb98b7e2a47becf8f04"
+def worker(url, url_list):
+    return asyncio.run(get_all_plant_info(url, url_list))
+
+def commit_scrap(urls, output, amount=999):
+    plant_info_list = []
+    with ThreadPoolExecutor(max_workers=len(urls)) as executor:
+        futures = {executor.submit(worker, url, urls): url for url in urls}
+        for future in as_completed(futures):
+            result = future.result()
+            if result:
+                plant_info_list.extend(result)
+    
+    if plant_info_list:
+        df = pd.DataFrame(plant_info_list)
+        df = df.fillna('Brak')
+        df.to_csv(output, index=False)
+        print(f"Zapisano dane do pliku {output}.")
+    else:
+        print("Brak danych do zapisania.")
+    
+    # Jeszcze raz bo grupa_roslin z jakiegos powodu miala pusta wartosc    
+    df = pd.read_csv(output)
+    df = df.fillna("Brak")
+    df.to_csv(output, index=False)
+
+
+output_name = "katalog_roslin.csv"
 test_file = "testowy.csv"
 
 def main():
     start_time = time.time()
-    plant_info_list = asyncio.run(get_all_plant_info(input_page))
-    if plant_info_list:
-        df = pd.DataFrame(plant_info_list)
-        df = df.fillna('Brak')
-        df.to_csv(output_name, index=False)
-        print(f"Zapisano dane do plikuuu {output_name}.")
-    else:
-        print("ej co jest.")
     
-    # Jeszcze raz bo grupa_roslin z jakiegos powodu miala pusta wartosc    
-    df = pd.read_csv(output_name)
-    df = df.fillna("Brak")
-    df.to_csv(output_name, index=False)
-
+    commit_scrap(url_list, output_name, 3)
+    
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"Czas trwania scrapowania: {elapsed_time} sekund")
-    driver.quit()
-
 
 if __name__ == "__main__":
     main()

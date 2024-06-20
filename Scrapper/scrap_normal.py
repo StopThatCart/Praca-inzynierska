@@ -119,7 +119,7 @@ async def parse_page(html):
         link = f"https://e-katalogroslin.pl{element.find('a')['href']}"
         
         img_link = element.find('img', class_='offer_pic')['src']  
-        if img_link != no_image:
+        if img_link == no_image:
             img_link = default_img
             
         plant_info = {
@@ -155,6 +155,8 @@ async def get_all_plant_info(start_url, amount=999):
                 plant.update(properties)
                 del plant['link']
 
+            plant_info_list = [plant for plant in plant_info_list if plant.get('docelowa_wysokosc')]
+            
             all_plant_info.extend(plant_info_list)
             
             if(page_number % 10 == 0):
@@ -211,7 +213,7 @@ def commit_scrap(page, output, amount=999):
 def main():
     start_time = time.time()
     
-    commit_scrap(input_page, output_name)
+    commit_scrap(input_page, test_file, 3)
     
     end_time = time.time()
     elapsed_time = end_time - start_time
