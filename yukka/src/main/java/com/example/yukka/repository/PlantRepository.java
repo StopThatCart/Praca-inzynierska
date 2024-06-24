@@ -13,4 +13,6 @@ public interface PlantRepository extends Neo4jRepository<Plant, Long> {
     @Query("MATCH (p:Plant) RETURN p LIMIT $amount")
     Collection<Plant> getSomePlants(@Param("amount") int amount);
 
+    
+
 }
