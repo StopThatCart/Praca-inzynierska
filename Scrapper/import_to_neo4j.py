@@ -18,6 +18,33 @@ brak = "Brak"
 def query_string(node_name, label, relationship):
     query = (
         "UNWIND $plants AS plant "
+        f"MATCH (p:Roslina {{nazwa: plant.name, nazwa_lacinska: plant.latin_name}}) "
+        "WITH p, plant "
+        f"UNWIND plant.{label} AS item "
+        f"WITH p, item WHERE item <> '{brak}' "
+        f"MERGE (n:{node_name.capitalize()} {{nazwa: item}}) "
+        f"MERGE (p)-[:ma_wlasciwosc]->(n) "
+        f"MERGE (n)-[:ma_rosline]->(p)"
+    )
+    return query
+
+
+def query_string_good(node_name, label, relationship):
+    query = (
+        "UNWIND $plants AS plant "
+        f"MATCH (p:Roslina {{nazwa: plant.name, nazwa_lacinska: plant.latin_name}}) "
+        "WITH p, plant "
+        f"UNWIND plant.{label} AS item "
+        f"WITH p, item WHERE item <> '{brak}' "
+        f"MERGE (n:{node_name.capitalize()} {{nazwa: item}}) "
+        f"MERGE (p)-[:{relationship}]->(n) "
+        f"MERGE (n)-[:ma_rosline]->(p)"
+    )
+    return query
+
+def query_string_en(node_name, label, relationship):
+    query = (
+        "UNWIND $plants AS plant "
         f"MATCH (p:Plant {{name: plant.name, latin_name: plant.latin_name}}) "
         "WITH p, plant "
         f"UNWIND plant.{label} AS item "
@@ -30,6 +57,16 @@ def query_string(node_name, label, relationship):
 
 plant_query = (
         "UNWIND $plants AS plant "
+        "MERGE (p:Roslina {nazwa: plant.name, nazwa_lacinska: plant.latin_name, opis: plant.description, obraz: plant.image_name}) "
+        "WITH p, plant "
+        "UNWIND plant.heights AS height "
+        "WITH p, height "
+        "WHERE height.name <> 'Brak' "
+        "SET p.wysokosc_min = toFloat(height.min), p.wysokosc_max = toFloat(height.max)"
+        )
+
+plant_query_en = (
+        "UNWIND $plants AS plant "
         "MERGE (p:Plant {name: plant.name, latin_name: plant.latin_name, description: plant.description, image: plant.image_name}) "
         "WITH p, plant "
         "UNWIND plant.heights AS height "
@@ -37,8 +74,30 @@ plant_query = (
         "WHERE height.name <> 'Brak' "
         "SET p.height_min = height.min, p.height_max = height.max"
         )
-        
+   
 queries = [
+    ("Grupa", "groups", "ma_grupe"),
+    ("Podgrupa", "subgroups", "ma_podgrupe"),
+    ("Forma", "forms", "ma_forme"),
+    ("SilaWzrostu", "growth_strength", "ma_sile_wzrostu"),
+    ("Pokroj", "shapes", "ma_pokroj"),
+    ("Kolor", "leaves_colors", "ma_kolor_lisci"),
+    ("Kolor", "flower_colors", "ma_kolor_wiatow"),
+    ("Zimozielonosc", "wintergreen_leaves", "ma_zimozielonosc_lisci"),
+    ("Owoc", "fruits", "ma_owoc"),
+    ("Stanowisko", "positions", "ma_stanowisko"),
+    ("Wilgotnosc", "humidities", "ma_wilgotnosc"),
+    ("Odczyn", "phs", "ma_odczyn"),
+    ("Gleba", "soils", "ma_glebe"),
+    ("Walor", "appeals", "ma_walor"),
+    ("Zastosowanie", "uses", "ma_zastosowanie"),
+    ("Nagroda", "awards", "ma_nagrode"),
+    ("Kwiat", "flowers", "ma_kwiat"),
+    ("Okres", "flowering_periods", "ma_okres_kwitnienia"),
+    ("Okres", "fruiting_times", "ma_okres_owocowania")
+]   
+        
+queries_en = [
     ("Group", "groups", "has_group"),
     ("Subgroup", "subgroups", "has_subgroup"),
     ("Form", "forms", "has_form"),
