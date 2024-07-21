@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "excalibur": "^0.29.3",
+    "typescript": "^5.5.3"
+  },
+  "type":"module" 
+}

@@ -1,0 +1,1 @@
+{"mappings":"AAEA,MAAM,OAAO,IAAI,OAAO;IACpB,OAAO;IACP,QAAQ;AACV;AAEF,KAAK,KAAK","sources":["ogrodEx/moj-ogrod.ts"],"sourcesContent":["\r\n\r\nconst game = new Engine({\r\n    width: 600,\r\n    height: 400\r\n  });\r\n\r\ngame.start();"],"names":[],"version":3,"file":"ogrod.9e568791.js.map","sourceRoot":"/__parcel_source_root/"}

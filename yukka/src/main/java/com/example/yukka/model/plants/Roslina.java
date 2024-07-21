@@ -32,67 +32,71 @@ public class Roslina {
     @Id @GeneratedValue
     private Long id;
     @Property("nazwa")
-    private String name;
+    private String nazwa;
     @Property("nazwa_lacinska")
-    private String latinName;
+    private String nazwaLacinska;
     @Property("opis")
-    private String description;
+    private String opis;
     @Property("wysokosc_min")
-    private double minHeight;
+    private double wysokoscMax;
     @Property("wysokosc_max")
-    private double maxHeight;
+    private double wysokoscMin;
     @Property("obraz")
-    private String image;
+    private String obraz;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_forme", direction = Relationship.Direction.OUTGOING)
     private List<Forma> formy;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_glebe", direction = Relationship.Direction.OUTGOING)
     private List<Gleba> gleby;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
-    private List<Grupa> grupa;
+    @Relationship(type = "ma_grupe", direction = Relationship.Direction.OUTGOING)
+    private List<Grupa> grupy;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
-    private List<Kolor> kolory;
+    @Relationship(type = "ma_kolor_lisci", direction = Relationship.Direction.OUTGOING)
+    private List<Kolor> koloryLisci;
+    @Relationship(type = "ma_kolor_wiatow", direction = Relationship.Direction.OUTGOING)
+    private List<Kolor> koloryKwiatow;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_kwiat", direction = Relationship.Direction.OUTGOING)
     private List<Kwiat> kwiaty;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_nagrode", direction = Relationship.Direction.OUTGOING)
     private List<Nagroda> nagrody;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_odczyn", direction = Relationship.Direction.OUTGOING)
     private List<Odczyn> odczyny;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
-    private List<Okres> okresy;
+    @Relationship(type = "ma_okres_kwitnienia", direction = Relationship.Direction.OUTGOING)
+    private List<Okres> okresyKwitnienia;
+    @Relationship(type = "ma_okres_owocowania", direction = Relationship.Direction.OUTGOING)
+    private List<Okres> okresyOwocowania;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_owoc", direction = Relationship.Direction.OUTGOING)
     private List<Owoc> owoce;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_podgrupe", direction = Relationship.Direction.OUTGOING)
     private List<Podgrupa> podgrupa;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_pokroj", direction = Relationship.Direction.OUTGOING)
     private List<Pokroj> pokroje;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_sile_wzrostu", direction = Relationship.Direction.OUTGOING)
     private List<SilaWzrostu> silyWzrostu;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_stanowisko", direction = Relationship.Direction.OUTGOING)
     private List<Stanowisko> stanowiska;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_walor", direction = Relationship.Direction.OUTGOING)
     private List<Walor> walory;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_wilgotnosc", direction = Relationship.Direction.OUTGOING)
     private List<Wilgotnosc> wilgotnosci;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_zastosowanie", direction = Relationship.Direction.OUTGOING)
     private List<Zastowowanie> zastosowania;
 
-    @Relationship(type = "ma_wlasciwosc", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "ma_zimozielonosc_lisci", direction = Relationship.Direction.OUTGOING)
     private List<Zimozielonosc> zimozielonosci;
 
     public Roslina() {
@@ -102,64 +106,72 @@ public class Roslina {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getNazwa() {
+        return nazwa;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNazwa(String name) {
+        this.nazwa = name;
     }
 
-    public String getLatinName() {
-        return latinName;
+    public String getNazwaLacinska() {
+        return nazwaLacinska;
     }
 
-    public void setLatinName(String latinName) {
-        this.latinName = latinName;
+    public void setNazwaLacinska(String latinName) {
+        this.nazwaLacinska = latinName;
     }
 
-    public String getDescription() {
-        return description;
+    public String getOpis() {
+        return opis;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setOpis(String description) {
+        this.opis = description;
     }
 
-    public double getMinHeight() {
-        return minHeight;
+    public double getWysokoscMax() {
+        return wysokoscMax;
     }
 
-    public void setMinHeight(double minHeight) {
-        this.minHeight = minHeight;
+    public void setWysokoscMax(double minHeight) {
+        this.wysokoscMax = minHeight;
     }
 
-    public double getMaxHeight() {
-        return maxHeight;
+    public double getWysokoscMin() {
+        return wysokoscMin;
     }
 
-    public void setMaxHeight(double maxHeight) {
-        this.maxHeight = maxHeight;
+    public void setWysokoscMin(double maxHeight) {
+        this.wysokoscMin = maxHeight;
     }
 
-    public String getImage() {
-        return image;
+    public String getObraz() {
+        return obraz;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setObraz(String image) {
+        this.obraz = image;
     }
-  
+
     public List<Forma> getFormy() {
         return formy;
     }
 
-    public List<Grupa> getGrupa() {
-        return grupa;
+    public List<Gleba> getGleby() {
+        return gleby;
     }
 
-    public List<Kolor> getKolory() {
-        return kolory;
+    public List<Grupa> getGrupy() {
+        return grupy;
+    }
+
+    public List<Kolor> getKoloryLisci() {
+        return koloryLisci;
+    }
+
+    public List<Kolor> getKoloryKwiatow() {
+        return koloryKwiatow;
     }
 
     public List<Kwiat> getKwiaty() {
@@ -174,8 +186,12 @@ public class Roslina {
         return odczyny;
     }
 
-    public List<Okres> getOkresy() {
-        return okresy;
+    public List<Okres> getOkresyKwitnienia() {
+        return okresyKwitnienia;
+    }
+
+    public List<Okres> getOkresyOwocowania() {
+        return okresyOwocowania;
     }
 
     public List<Owoc> getOwoce() {
@@ -202,6 +218,10 @@ public class Roslina {
         return walory;
     }
 
+    public List<Wilgotnosc> getWilgotnosci() {
+        return wilgotnosci;
+    }
+
     public List<Zastowowanie> getZastosowania() {
         return zastosowania;
     }
@@ -209,12 +229,7 @@ public class Roslina {
     public List<Zimozielonosc> getZimozielonosci() {
         return zimozielonosci;
     }
-    
-    public List<Gleba> getGleby() {
-        return gleby;
-    }
 
-    public List<Wilgotnosc> getWilgotnosci() {
-        return wilgotnosci;
-    }
+    
+  
 }

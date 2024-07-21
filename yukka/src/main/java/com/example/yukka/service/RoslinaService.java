@@ -21,7 +21,7 @@ public class RoslinaService {
         Collection<Roslina> beep = plantRepository.getSomePlants(amount);
         Iterable<Roslina> properties = beep;
         for (Roslina property : properties) {
-            System.out.println(property.getName());
+            System.out.println(property.getNazwa());
             System.out.println(property.getGleby());
             
             // TODO

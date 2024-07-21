@@ -23,7 +23,7 @@ def query_string(node_name, label, relationship):
         f"UNWIND plant.{label} AS item "
         f"WITH p, item WHERE item <> '{brak}' "
         f"MERGE (n:{node_name.capitalize()} {{nazwa: item}}) "
-        f"MERGE (p)-[:ma_wlasciwosc]->(n) "
+        f"MERGE (p)-[:{relationship}]->(n) "
         f"MERGE (n)-[:ma_rosline]->(p)"
     )
     return query
