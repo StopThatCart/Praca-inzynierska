@@ -3,5 +3,5 @@ Czas trwania scrapowania: 3763.1579196453094 sekund
 // 62 min 43 sec
 
 // Z async i wątkami
-Czas trwania scrapowania: 2613.680743932724 sekund
-// 43 min 34 sec
+Czas trwania scrapowania: 2248.844812631607 sekund
+// 37 min 29 sec

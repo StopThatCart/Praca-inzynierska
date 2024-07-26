@@ -22,10 +22,15 @@ banned_properties = ['pochodzenie', 'zasieg_geograficzny', 'strefa']
 
 url_list = [
     "https://e-katalogroslin.pl/przegladaj-katalog?se=b873c55f322d2ae7c077b52480a75f81",
+#    "https://e-katalogroslin.pl/przegladaj-katalog?se=6fa1929f87113a75900ba8d4b4b46a98",
     "https://e-katalogroslin.pl/przegladaj-katalog?se=39921be9413de6ac538a4df45da7d104",
+#    "https://e-katalogroslin.pl/przegladaj-katalog?se=38ec3b62fa9d7cb98b7e2a47becf8f04",
     "https://e-katalogroslin.pl/przegladaj-katalog?se=0f53540eb1787eab5cf47d55874e4372",
+#    "https://e-katalogroslin.pl/przegladaj-katalog?se=5dc50211f4e63ccd8eefa37c99d6186b",
     "https://e-katalogroslin.pl/przegladaj-katalog?se=04c2fcb871ee0704e7af0cd6183a01e1",
-    "https://e-katalogroslin.pl/przegladaj-katalog?se=85f76f2e4609984bd0caa1a567285df3"
+#    "https://e-katalogroslin.pl/przegladaj-katalog?se=5869b59c0dfb79d0604ad654ddf4b404",
+    "https://e-katalogroslin.pl/przegladaj-katalog?se=85f76f2e4609984bd0caa1a567285df3",
+    "https://e-katalogroslin.pl/przegladaj-katalog?se=b0282224a707a5010c36fa11e8fd8c18"
 ]
 
 last_url = "https://e-katalogroslin.pl/przegladaj-katalog?se=60e5c0024c14f99ceaa4840aa4d02bd1"
@@ -33,6 +38,8 @@ last_url = "https://e-katalogroslin.pl/przegladaj-katalog?se=60e5c0024c14f99ceaa
 no_description = "Ta roślina nie posiada opisu"
 no_image = "https://e-katalogroslin.pl/wp-content/themes/e-katalogroslin/img/e-kat_noimg.jpg"
 default_img = "default_plant.jpg"
+
+null_placeholder = "Brak"
 
 def remove_polish(str):
     return str.lower().replace('ł', 'l').replace('ą', 'a').replace('ć', 'c').replace('ę', 'e').replace('ś', 's').replace('ń', 'n').replace('ó', 'o').replace('ż', 'z').replace('ź', 'z')
@@ -55,9 +62,10 @@ async def get_plant_properties(session, plant_url):
     soup = BeautifulSoup(html, 'html.parser')
     table_rows = soup.select('table.product_details_table tr')
     plant_properties = {}
-    desc = soup.find('p', {"class": "description"}).get_text()
-    desc = clean_description(desc)
-    plant_properties["opis"] = desc
+    desc = soup.find('p', {"class": "description"})
+    if desc is not None:
+        desc = clean_description(desc.get_text())
+        plant_properties["opis"] = desc
     
     for row in table_rows:
         columns = row.find_all('td')
@@ -159,11 +167,15 @@ async def get_all_plant_info(start_url, url_list, amount=999):
             tasks = [asyncio.create_task(get_plant_properties(session, plant['link'])) for plant in plant_info_list]
             properties_list = await asyncio.gather(*tasks)
 
+            updated_plant_info_list = []
             for plant, properties in zip(plant_info_list, properties_list):
+                if  properties.get('opis') is None:
+                    continue
                 plant.update(properties)
                 del plant['link']
+                updated_plant_info_list.append(plant)
 
-            plant_info_list = [plant for plant in plant_info_list if plant.get('docelowa_wysokosc')]
+            plant_info_list = [plant for plant in updated_plant_info_list if plant.get('docelowa_wysokosc')]
             
             all_plant_info.extend(plant_info_list)
             
@@ -209,7 +221,7 @@ def commit_scrap(urls, output, amount=999):
     
     if plant_info_list:
         df = pd.DataFrame(plant_info_list)
-        df = df.fillna('Brak')
+        df = df.fillna(null_placeholder)
         df.to_csv(output, index=False)
         print(f"Zapisano dane do pliku {output}.")
     else:
@@ -217,7 +229,7 @@ def commit_scrap(urls, output, amount=999):
     
     # Jeszcze raz bo grupa_roslin z jakiegos powodu miala pusta wartosc    
     df = pd.read_csv(output)
-    df = df.fillna("Brak")
+    df = df.fillna(null_placeholder)
     df.to_csv(output, index=False)
 
 
@@ -227,7 +239,7 @@ test_file = "testowy.csv"
 def main():
     start_time = time.time()
     
-    commit_scrap(url_list, output_name, 3)
+    commit_scrap(url_list, output_name)
     
     end_time = time.time()
     elapsed_time = end_time - start_time

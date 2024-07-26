@@ -138,7 +138,7 @@ def import_plants(csv_filename, batch_size, uri, username, password):
                 'name': row['name'],
                 'latin_name': row['latin_name'],
                 'description': row['opis'],
-                'image_name': row['image_filename'],
+                'image_name': row['image'],
                 'groups': row['grupa_roslin'].split(', '),
                 'subgroups': row['grupa_uzytkowa'].split(', '),
                 'forms': row['forma'].split(', '),
