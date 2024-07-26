@@ -24,7 +24,7 @@ public class RoslinaResource {
     @GetMapping
     public Collection<Roslina> getSome() {
         System.out.println("COOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n\n");
-        int amount = 2;
+        int amount = 1;
         return plantService.getSome(amount);
     }
 

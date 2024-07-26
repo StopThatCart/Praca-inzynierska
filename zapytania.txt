@@ -13,5 +13,3 @@ WITH p, okresy_kwitnienia, COLLECT(DISTINCT ok2.name) AS okresy_owocowania
 RETURN DISTINCT p.name, okresy_kwitnienia, okresy_owocowania
 
 
-// Odpalanie excalibura
-npx parcel ogrodEx/ogrod.html

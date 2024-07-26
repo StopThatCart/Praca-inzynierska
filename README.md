@@ -9,3 +9,8 @@ pandas==2.2.2
 Requests==2.32.3
 selenium==4.21.0
 ```
+
+// Odpalanie excalibura
+```
+npx parcel ogrodEx/ogrod.html
+```

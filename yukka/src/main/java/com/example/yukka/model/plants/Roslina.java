@@ -8,24 +8,6 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import com.example.yukka.model.plants.relationshipnodes.Forma;
-import com.example.yukka.model.plants.relationshipnodes.Gleba;
-import com.example.yukka.model.plants.relationshipnodes.Grupa;
-import com.example.yukka.model.plants.relationshipnodes.Kolor;
-import com.example.yukka.model.plants.relationshipnodes.Kwiat;
-import com.example.yukka.model.plants.relationshipnodes.Nagroda;
-import com.example.yukka.model.plants.relationshipnodes.Odczyn;
-import com.example.yukka.model.plants.relationshipnodes.Okres;
-import com.example.yukka.model.plants.relationshipnodes.Owoc;
-import com.example.yukka.model.plants.relationshipnodes.Podgrupa;
-import com.example.yukka.model.plants.relationshipnodes.Pokroj;
-import com.example.yukka.model.plants.relationshipnodes.SilaWzrostu;
-import com.example.yukka.model.plants.relationshipnodes.Stanowisko;
-import com.example.yukka.model.plants.relationshipnodes.Walor;
-import com.example.yukka.model.plants.relationshipnodes.Wilgotnosc;
-import com.example.yukka.model.plants.relationshipnodes.Zastowowanie;
-import com.example.yukka.model.plants.relationshipnodes.Zimozielonosc;
-
 
 @Node
 public class Roslina {
@@ -45,59 +27,59 @@ public class Roslina {
     private String obraz;
 
     @Relationship(type = "ma_forme", direction = Relationship.Direction.OUTGOING)
-    private List<Forma> formy;
+    private List<Wlasciwosc> formy;
 
     @Relationship(type = "ma_glebe", direction = Relationship.Direction.OUTGOING)
-    private List<Gleba> gleby;
+    private List<Wlasciwosc> gleby;
 
     @Relationship(type = "ma_grupe", direction = Relationship.Direction.OUTGOING)
-    private List<Grupa> grupy;
+    private List<Wlasciwosc> grupy;
 
     @Relationship(type = "ma_kolor_lisci", direction = Relationship.Direction.OUTGOING)
-    private List<Kolor> koloryLisci;
+    private List<Wlasciwosc> koloryLisci;
     @Relationship(type = "ma_kolor_wiatow", direction = Relationship.Direction.OUTGOING)
-    private List<Kolor> koloryKwiatow;
+    private List<Wlasciwosc> koloryKwiatow;
 
     @Relationship(type = "ma_kwiat", direction = Relationship.Direction.OUTGOING)
-    private List<Kwiat> kwiaty;
+    private List<Wlasciwosc> kwiaty;
 
     @Relationship(type = "ma_nagrode", direction = Relationship.Direction.OUTGOING)
-    private List<Nagroda> nagrody;
+    private List<Wlasciwosc> nagrody;
 
     @Relationship(type = "ma_odczyn", direction = Relationship.Direction.OUTGOING)
-    private List<Odczyn> odczyny;
+    private List<Wlasciwosc> odczyny;
 
     @Relationship(type = "ma_okres_kwitnienia", direction = Relationship.Direction.OUTGOING)
-    private List<Okres> okresyKwitnienia;
+    private List<Wlasciwosc> okresyKwitnienia;
     @Relationship(type = "ma_okres_owocowania", direction = Relationship.Direction.OUTGOING)
-    private List<Okres> okresyOwocowania;
+    private List<Wlasciwosc> okresyOwocowania;
 
     @Relationship(type = "ma_owoc", direction = Relationship.Direction.OUTGOING)
-    private List<Owoc> owoce;
+    private List<Wlasciwosc> owoce;
 
     @Relationship(type = "ma_podgrupe", direction = Relationship.Direction.OUTGOING)
-    private List<Podgrupa> podgrupa;
+    private List<Wlasciwosc> podgrupa;
 
     @Relationship(type = "ma_pokroj", direction = Relationship.Direction.OUTGOING)
-    private List<Pokroj> pokroje;
+    private List<Wlasciwosc> pokroje;
 
     @Relationship(type = "ma_sile_wzrostu", direction = Relationship.Direction.OUTGOING)
-    private List<SilaWzrostu> silyWzrostu;
+    private List<Wlasciwosc> silyWzrostu;
 
     @Relationship(type = "ma_stanowisko", direction = Relationship.Direction.OUTGOING)
-    private List<Stanowisko> stanowiska;
+    private List<Wlasciwosc> stanowiska;
 
     @Relationship(type = "ma_walor", direction = Relationship.Direction.OUTGOING)
-    private List<Walor> walory;
+    private List<Wlasciwosc> walory;
 
     @Relationship(type = "ma_wilgotnosc", direction = Relationship.Direction.OUTGOING)
-    private List<Wilgotnosc> wilgotnosci;
+    private List<Wlasciwosc> wilgotnosci;
 
     @Relationship(type = "ma_zastosowanie", direction = Relationship.Direction.OUTGOING)
-    private List<Zastowowanie> zastosowania;
+    private List<Wlasciwosc> zastosowania;
 
     @Relationship(type = "ma_zimozielonosc_lisci", direction = Relationship.Direction.OUTGOING)
-    private List<Zimozielonosc> zimozielonosci;
+    private List<Wlasciwosc> zimozielonosci;
 
     public Roslina() {
     }
@@ -154,82 +136,80 @@ public class Roslina {
         this.obraz = image;
     }
 
-    public List<Forma> getFormy() {
+    public List<Wlasciwosc> getFormy() {
         return formy;
     }
 
-    public List<Gleba> getGleby() {
+    public List<Wlasciwosc> getGleby() {
         return gleby;
     }
 
-    public List<Grupa> getGrupy() {
+    public List<Wlasciwosc> getGrupy() {
         return grupy;
     }
 
-    public List<Kolor> getKoloryLisci() {
+    public List<Wlasciwosc> getKoloryLisci() {
         return koloryLisci;
     }
 
-    public List<Kolor> getKoloryKwiatow() {
+    public List<Wlasciwosc> getKoloryKwiatow() {
         return koloryKwiatow;
     }
 
-    public List<Kwiat> getKwiaty() {
+    public List<Wlasciwosc> getKwiaty() {
         return kwiaty;
     }
 
-    public List<Nagroda> getNagrody() {
+    public List<Wlasciwosc> getNagrody() {
         return nagrody;
     }
 
-    public List<Odczyn> getOdczyny() {
+    public List<Wlasciwosc> getOdczyny() {
         return odczyny;
     }
 
-    public List<Okres> getOkresyKwitnienia() {
+    public List<Wlasciwosc> getOkresyKwitnienia() {
         return okresyKwitnienia;
     }
 
-    public List<Okres> getOkresyOwocowania() {
+    public List<Wlasciwosc> getOkresyOwocowania() {
         return okresyOwocowania;
     }
 
-    public List<Owoc> getOwoce() {
+    public List<Wlasciwosc> getOwoce() {
         return owoce;
     }
 
-    public List<Podgrupa> getPodgrupa() {
+    public List<Wlasciwosc> getPodgrupa() {
         return podgrupa;
     }
 
-    public List<Pokroj> getPokroje() {
+    public List<Wlasciwosc> getPokroje() {
         return pokroje;
     }
 
-    public List<SilaWzrostu> getSilyWzrostu() {
+    public List<Wlasciwosc> getSilyWzrostu() {
         return silyWzrostu;
     }
 
-    public List<Stanowisko> getStanowiska() {
+    public List<Wlasciwosc> getStanowiska() {
         return stanowiska;
     }
 
-    public List<Walor> getWalory() {
+    public List<Wlasciwosc> getWalory() {
         return walory;
     }
 
-    public List<Wilgotnosc> getWilgotnosci() {
+    public List<Wlasciwosc> getWilgotnosci() {
         return wilgotnosci;
     }
 
-    public List<Zastowowanie> getZastosowania() {
+    public List<Wlasciwosc> getZastosowania() {
         return zastosowania;
     }
 
-    public List<Zimozielonosc> getZimozielonosci() {
+    public List<Wlasciwosc> getZimozielonosci() {
         return zimozielonosci;
     }
-
     
-  
 }

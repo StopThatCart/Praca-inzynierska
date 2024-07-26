@@ -15,7 +15,8 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     //Collection<Roslina> getSomePlants();
     //@Query("MATCH (p:Roslina)-[r:ma_wlasciwosc]->(g:Gleba) RETURN p, collect(r), collect(g) LIMIT $amount")
     
-    @Query("MATCH path=(p:Roslina)-[:ma_wlasciwosc]->(g) RETURN p, collect(nodes(path)), collect(relationships(path)) LIMIT $amount")
+    @Query("MATCH path=(p:Roslina)-[r]->(g:Wlasciwosc) RETURN p, collect(nodes(path)), collect(relationships(path)) LIMIT $amount")
+   // @Query("MATCH path=(p:Roslina)-[:ma_wlasciwosc]->(g) RETURN p, collect(nodes(path)), collect(relationships(path)) LIMIT $amount")
     //@Query("MATCH (p:Roslina)-[r1:ma_wlasciwosc]->(g:Gleba), (p)-[r2:ma_wlasciwosc]->(w:Wilgotnosc) RETURN p, collect(g), collect(r1), collect(r2), collect(w) LIMIT $amount")
    // @Query("MATCH (p:Roslina)-[r:ma_wlasciwosc]->(wlasciwosc) RETURN p, collect(r), collect(wlasciwosc) LIMIT $amount")
     Collection<Roslina> getSomePlants(@Param("amount") int amount);

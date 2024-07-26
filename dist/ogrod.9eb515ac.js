@@ -598,19 +598,27 @@ const game = new (0, _excalibur.Engine)({
 game.screen.events.on("resize", ()=>(0, _uiJs.calculateExPixelConversion)(game.screen));
 const isoMap = new (0, _excalibur.IsometricMap)({
     pos: (0, _excalibur.vec)(250, 10),
-    tileWidth: 16,
-    tileHeight: 8,
-    columns: 2,
-    rows: 2,
+    tileWidth: 64,
+    tileHeight: 64,
+    columns: 6,
+    rows: 6,
     renderFromTopOfGraphic: true
 });
-/*
-//game.currentScene.add(isoMap);
-
-*/ game.start((0, _resourcesJs.loader)).then(()=>{
+game.start((0, _resourcesJs.loader)).then(()=>{
     const sprite = (0, _resourcesJs.Resources).Kot.toSprite();
-    for (let tile of isoMap.tiles)tile.addGraphic(sprite);
-    game.currentScene.add(isoMap); // Dodajemy isoMap do sceny po załadowaniu zasobów
+    sprite.width = isoMap.tileWidth;
+    sprite.height = isoMap.tileHeight;
+    for (let tile of isoMap.tiles){
+        tile.solid = true;
+        tile.addCollider((0, _excalibur.Shape).Polygon([
+            (0, _excalibur.vec)(0, 95),
+            (0, _excalibur.vec)(55, 63),
+            (0, _excalibur.vec)(111, 95),
+            (0, _excalibur.vec)(55, 127)
+        ]));
+    // tile.addGraphic(sprite.clone());
+    }
+    game.currentScene.add(isoMap);
     (0, _uiJs.calculateExPixelConversion)(game.screen);
 });
 
@@ -30059,7 +30067,7 @@ const Resources = {
 };
 const loader = new (0, _excalibur.Loader)(Object.values(Resources));
 
-},{"excalibur":"bDskv","@parcel/transformer-js/src/esmodule-helpers.js":"euIoy","./resources/kot.png":"7PXKK"}],"7PXKK":[function(require,module,exports) {
+},{"excalibur":"bDskv","./resources/kot.png":"7PXKK","@parcel/transformer-js/src/esmodule-helpers.js":"euIoy"}],"7PXKK":[function(require,module,exports) {
 module.exports = require("dcac574a14e99667").getBundleURL("6Cvgs") + "kot.3fe2305c.png" + "?" + Date.now();
 
 },{"dcac574a14e99667":"b02aB"}],"b02aB":[function(require,module,exports) {
