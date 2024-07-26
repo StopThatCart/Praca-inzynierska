@@ -34,4 +34,4 @@ build/
 
 
 ### brehh ###
-/node_modules/
+node_modules/
