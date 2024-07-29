@@ -3,26 +3,44 @@ package com.example.yukka.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(securedEnabled=true)
+@EnableMethodSecurity(securedEnabled=false)
 public class SecurityConfig {
 
     private JwtFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
+// Configuring HttpSecurity
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf((CsrfConfigurer<HttpSecurity> csrf) -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth.requestMatchers(
+                                                            "/rest/neo4j/**",
+                                                            "/auth/welcome", 
+                                                            "/auth/register", 
+                                                            "/auth/users", 
+                                                            "/auth/generateToken")
+                                                            .permitAll())
+               // .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/user/**").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/admin/**").authenticated())
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+              //  .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    /*
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -44,19 +62,12 @@ public class SecurityConfig {
                      )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-            /* 
-        http
-            .authorizeRequests(authorizeRequests ->
-                authorizeRequests
-                    .anyRequest().authenticated()
-            )
-            .httpBasic(); // or formLogin() depending on your authentication method
-
-           */
+            //.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            ;
         return http.build();
     }
+    */
+
 
     /* 
     @Autowired

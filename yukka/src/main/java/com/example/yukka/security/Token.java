@@ -2,11 +2,10 @@ package com.example.yukka.security;
 
 import java.time.LocalDateTime;
 
-import com.example.yukka.model.User.User;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.example.yukka.model.Uzytkownik.Uzytkownik;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,9 +17,9 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class Token {
-    @Id @GeneratedValue
+   // @Id
+    @GeneratedValue
     private Integer id;
     private String token;
     private LocalDateTime createdAt;
@@ -28,5 +27,5 @@ public class Token {
     private LocalDateTime validatedAt;
 
 
-    private User user;
+    private Uzytkownik user;
 }

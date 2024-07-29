@@ -1,4 +1,4 @@
-package com.example.yukka.model.User;
+package com.example.yukka.model.Uzytkownik;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.neo4j.core.schema.DynamicLabels;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -17,8 +16,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,10 +27,10 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+//@Entity
 @Node
-@EntityListeners(AuditingEntityListener.class)
-public class User implements UserDetails, Principal{
+//@EntityListeners(AuditingEntityListener.class)
+public class Uzytkownik implements UserDetails, Principal{
     @Id @GeneratedValue
     private Long id;
 
@@ -82,6 +79,13 @@ public class User implements UserDetails, Principal{
                      .collect(Collectors.toList());    // Collect into a list
     }
 
+    public boolean isAdmin() {
+        return labels.contains("Admin");
+    }
+
+    public boolean isPracownik() {
+        return labels.contains("Pracownik");
+    }
 
 
 }
