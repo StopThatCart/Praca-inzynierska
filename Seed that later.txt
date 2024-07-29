@@ -1,0 +1,11 @@
+CREATE CONSTRAINT unikalnyEmail FOR (u:Uzytkownik) REQUIRE u.email IS UNIQUE;
+
+// Jak chcesz dzisiejszą datę to użyj date()
+
+
+CREATE(u1:Uzytkownik:Admin{nazwa: "Jan Kowalski", email: "jan@email.pl", haslo: "jan123",  data_utworzenia: 1995}) 
+CREATE (u2:Uzytkownik:Pracownik {nazwa: "Anna Nowak", email: "anna@email.pl", haslo: "anna123", data_utworzenia: 1988})
+CREATE (u3:Uzytkownik {nazwa: "Piotr Wiśniewski", email: "piotr@email.pl", haslo: "piotr123", data_utworzenia: 1990})
+CREATE (u4:Uzytkownik {nazwa: "Katarzyna Mazur", email: "katarzyna@email.pl", haslo: "katarzyna123", data_utworzenia: 1992})
+CREATE (u5:Uzytkownik {nazwa: "Michał Zieliński", email: "michal@email.pl", haslo: "michal123", data_utworzenia: 1985, rola: 'uzytkownik'})
+CREATE (u6:Uzytkownik {nazwa: "Aleksandra Kwiatkowska", email: "aleksandra@email.pl", haslo: "aleksandra123", data_utworzenia: 1993})
