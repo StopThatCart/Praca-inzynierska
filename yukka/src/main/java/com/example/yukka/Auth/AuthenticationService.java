@@ -18,6 +18,7 @@ import com.example.yukka.model.Uzytkownik.Uzytkownik;
 import com.example.yukka.model.Uzytkownik.UzytkownikRepository;
 import com.example.yukka.security.JwtService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,16 +32,17 @@ class AuthenticationService {
 //    @Value("${application.mailing.frontend.activation-url}")
 //    private String activationUrl;
 
-    public void register(RegistrationRequest request) {
+    public void register(@RequestBody RegistrationRequest request) {
+        
         if (uzytkownikRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Użytkownik o podanym adresie e-mail już istnieje.");
         }
         var userRole = ROLE.Uzytkownik.toString();
-
+        System.out.println("\n\n\n Request: " + request.toString() + "\n\n\n");
         var user = Uzytkownik.builder()
-                .name(request.getName())
+                .name(request.getNazwa())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .password(passwordEncoder.encode(request.getHaslo()))
                  .banned(false)
                  .labels(List.of(userRole))
                 .build();

@@ -1,11 +1,11 @@
 CREATE CONSTRAINT unikalnyEmail FOR (u:Uzytkownik) REQUIRE u.email IS UNIQUE;
-
+CREATE CONSTRAINT unikalnaNazwa FOR (u:Uzytkownik) REQUIRE u.nazwa IS UNIQUE;
 // Jak chcesz dzisiejszą datę to użyj date()
 
 
 CREATE(u1:Uzytkownik:Admin{nazwa: "Jan Kowalski", email: "jan@email.pl", haslo: "jan123",  data_utworzenia: localdatetime("2024-07-21T19:51:56.908000000")}) 
-CREATE (u2:Uzytkownik:Pracownik {nazwa: "Anna Nowak", email: "anna@email.pl", haslo: "anna123", data_utworzenia: localdatetime("2024-07-22T19:51:56.908000000")})
-CREATE (u3:Uzytkownik {nazwa: "Piotr Wiśniewski", email: "piotr@email.pl", haslo: "piotr123", data_utworzenia: localdatetime("2024-07-23T19:51:56.908000000")})
-CREATE (u4:Uzytkownik {nazwa: "Katarzyna Mazur", email: "katarzyna@email.pl", haslo: "katarzyna123", data_utworzenia: localdatetime("2024-07-24T19:51:56.908000000")})
-CREATE (u5:Uzytkownik {nazwa: "Michał Zieliński", email: "michal@email.pl", haslo: "michal123", data_utworzenia: localdatetime("2024-07-25T19:51:56.908000000")})
-CREATE (u6:Uzytkownik {nazwa: "Aleksandra Kwiatkowska", email: "aleksandra@email.pl", haslo: "aleksandra123", data_utworzenia: localdatetime("2024-07-26T19:51:56.908000000")})
+CREATE (u2:Uzytkownik:Pracownik {nazwa: "Anna Nowak", email: "anna@email.pl", haslo: "anna123", data_utworzenia: localdatetime("2024-07-22T19:51:56.908000000"), ban: false})
+CREATE (u3:Uzytkownik {nazwa: "Piotr Wiśniewski", email: "piotr@email.pl", haslo: "piotr123", data_utworzenia: localdatetime("2024-07-23T19:51:56.908000000"), ban: false})
+CREATE (u4:Uzytkownik {nazwa: "Katarzyna Mazur", email: "katarzyna@email.pl", haslo: "katarzyna123", data_utworzenia: localdatetime("2024-07-24T19:51:56.908000000"), ban: false})
+CREATE (u5:Uzytkownik {nazwa: "Michał Zieliński", email: "michal@email.pl", haslo: "michal123", data_utworzenia: localdatetime("2024-07-25T19:51:56.908000000"), ban: false})
+CREATE (u6:Uzytkownik {nazwa: "Aleksandra Kwiatkowska", email: "aleksandra@email.pl", haslo: "aleksandra123", data_utworzenia: localdatetime("2024-07-26T19:51:56.908000000"), ban: false})

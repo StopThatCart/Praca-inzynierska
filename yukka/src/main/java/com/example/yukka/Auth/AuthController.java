@@ -1,5 +1,6 @@
 package com.example.yukka.Auth;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,22 +10,30 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("auth")
-@RequiredArgsConstructor
+@RequestMapping("/api/auth")
+//@RequiredArgsConstructor
+@Tag(name = "Authentication")
 public class AuthController {
     private final AuthenticationService service;
+    @Autowired
+    public AuthController(AuthenticationService authenticationService) {
+        this.service = authenticationService;
+    }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> register(
-            @RequestBody @Valid RegistrationRequest request
+            @RequestBody 
+            // @Valid
+            RegistrationRequest request
     ) {
-        service.register(request);
-        return ResponseEntity.accepted().build();
+        System.out.println("\n\n\n Request: " + request.toString() + "\n\n\n");
+        return ResponseEntity.ok().build();
+       // service.register(request);
+        //return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/authenticate")

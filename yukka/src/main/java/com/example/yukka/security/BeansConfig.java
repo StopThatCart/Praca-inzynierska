@@ -1,5 +1,6 @@
 package com.example.yukka.security;
 
+/* 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,3 +40,4 @@ public class BeansConfig {
     
     
 }
+*/
