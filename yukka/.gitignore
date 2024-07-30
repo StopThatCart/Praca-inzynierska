@@ -38,3 +38,9 @@ node_modules/
 **/node_modules
 **/Scrapper/images
 Scrapper/images/*
+
+Scrapper/images/
+
+Scrapper/images/
+
+*.png
