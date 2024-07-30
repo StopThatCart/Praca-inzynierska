@@ -1,6 +1,6 @@
 node_modules
 .parcel-cache
-
+dist/
 HELP.md
 yukka/target/
 yukka/!.mvn/wrapper/maven-wrapper.jar
