@@ -16,6 +16,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.yukka.Authorities.ROLE;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,7 +52,7 @@ public class Uzytkownik implements UserDetails, Principal{
     @Property("data_utworzenia")
     private LocalDateTime createdDate;
 
-    @Property("zbanowany")
+    @Property("ban")
     private boolean banned;
 
     @Override
@@ -80,11 +82,11 @@ public class Uzytkownik implements UserDetails, Principal{
     }
 
     public boolean isAdmin() {
-        return labels.contains("Admin");
+        return labels.contains(ROLE.Admin.toString());
     }
 
     public boolean isPracownik() {
-        return labels.contains("Pracownik");
+        return labels.contains(ROLE.Pracownik.toString());
     }
 
 

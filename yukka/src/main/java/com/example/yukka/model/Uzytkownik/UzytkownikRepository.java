@@ -17,4 +17,13 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
     @Query("MATCH (u:Uzytkownik) RETURN u")
     Collection<Uzytkownik> getAllUsers();
+
+    @Query("MATCH (u:Uzytkownik) RETURN u")
+    void addUzytkownik(Uzytkownik user);
+
+    @Query("CREATE (u:Uzytkownik {nazwa: $user.name, email: $user.email, haslo: $user.password, data_utworzenia: localdatetime(), ban: false})")
+    void addNewUzytkownik(Uzytkownik user);
+
+    @Query("CREATE (u:Uzytkownik:Pracownik {nazwa: $user.name, email: $user.email, haslo: $user.password, data_utworzenia: localdatetime(), ban: false})")
+    void addNewPracownik(Uzytkownik user);
 }
