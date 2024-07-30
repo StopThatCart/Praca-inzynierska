@@ -1,5 +1,5 @@
 node_modules
-
+.parcel-cache
 
 HELP.md
 yukka/target/
@@ -38,7 +38,5 @@ build/
 
 ### brehh ###
 node_modules/
-**/node_modules
-#**/Scrapper/images
 Scrapper/images/*
 #*.png
