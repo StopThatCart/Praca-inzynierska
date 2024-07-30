@@ -1,4 +1,4 @@
-package com.example.yukka.Authorities;
+package com.example.yukka.authorities;
 
 public enum ROLE {
     Admin,

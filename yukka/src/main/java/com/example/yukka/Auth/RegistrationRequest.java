@@ -1,4 +1,4 @@
-package com.example.yukka.Auth;
+package com.example.yukka.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -25,7 +25,9 @@ public class RegistrationRequest {
     @NotEmpty(message = "Password is mandatory")
     @Size(min = 8, message = "Password should be 8 characters long minimum")
     private String haslo;
-    public RegistrationRequest() {}
+    public RegistrationRequest() {
+        super();
+    }
     public RegistrationRequest(String nazwa, String email, String haslo) {
         this.nazwa = nazwa;
         this.email = email;
@@ -33,7 +35,7 @@ public class RegistrationRequest {
     }
     @Override
     public String toString() {
-        return "RegistrationRequest [nazwa=" + nazwa + ", email=" + email + ", haslo=" + haslo + "]";
+        return "RegistrationRequest [nazwa=" + this.nazwa + ", email=" + this.email + ", haslo=" + this.haslo + "]";
     }
 
 }

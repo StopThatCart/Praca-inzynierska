@@ -1,4 +1,4 @@
-package com.example.yukka.Auth;
+package com.example.yukka.auth;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,16 +1,17 @@
-package com.example.yukka.Auth;
+package com.example.yukka.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,19 +28,16 @@ public class AuthController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> register(
             @RequestBody 
-            // @Valid
-            RegistrationRequest request
-    ) {
+             @Valid
+            RegistrationRequest request) {
         System.out.println("\n\n\n Request: " + request.toString() + "\n\n\n");
-        return ResponseEntity.ok().build();
-       // service.register(request);
-        //return ResponseEntity.accepted().build();
+        //return ResponseEntity.ok().build();
+        service.register(request);
+        return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthRequest request
-    ) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 

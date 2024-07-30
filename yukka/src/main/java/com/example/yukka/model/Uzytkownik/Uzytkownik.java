@@ -16,7 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.yukka.Authorities.ROLE;
+import com.example.yukka.authorities.ROLE;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,13 +40,13 @@ public class Uzytkownik implements UserDetails, Principal{
     private List<String> labels;
 
     @Property("nazwa")
-    private String name;
+    private String nazwa;
 
     @Property("email")
     private String email;
 
     @Property("haslo")
-    private String password;
+    private String haslo;
 
     @CreatedDate
     @Property("data_utworzenia")
@@ -55,19 +55,28 @@ public class Uzytkownik implements UserDetails, Principal{
     @Property("ban")
     private boolean banned;
 
+    
+
+
+    public Uzytkownik(String name, String email, String password) {
+        this.nazwa = name;
+        this.email = email;
+        this.haslo = password;
+    }
+
     @Override
     public String getName() {
-        return name;
+        return nazwa;
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return haslo;
     }
 
     @Override
     public String getUsername() {
-        return name;
+        return nazwa;
     }
 
     public boolean isBanned() {
@@ -87,6 +96,12 @@ public class Uzytkownik implements UserDetails, Principal{
 
     public boolean isPracownik() {
         return labels.contains(ROLE.Pracownik.toString());
+    }
+
+    @Override
+    public String toString() {
+        return "Uzytkownik [id=" + id + ", labels=" + labels + ", nazwa=" + nazwa + ", email=" + email + ", haslo="
+                + haslo + ", createdDate=" + createdDate + ", banned=" + banned + "]";
     }
 
 
