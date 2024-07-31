@@ -15,7 +15,13 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     Optional<Uzytkownik> findByEmail(String email);
 
     @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa OR u.email = $email RETURN u")
-    Optional<Uzytkownik> findByNameOrEmail(@Param("nazwa") String nazwa, @Param("email") String email);
+    Optional<Uzytkownik> checkIfUzytkownikExists(@Param("nazwa") String nazwa, @Param("email") String email);
+
+    @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa OR u.email = $nazwa RETURN u")
+    Uzytkownik findByNameOrEmail(@Param("nazwa") String nameOrEmail);
+
+    @Query("MATCH (u:Uzytkownik) WHERE (u.nazwa = $nazwa OR u.email = $nazwa) AND u.haslo = $haslo RETURN u")
+    Uzytkownik findByLogin(@Param("nazwa") String nazwa, @Param("haslo") String haslo);
 
     List<Uzytkownik> findByLabels(Set<String> labels);
 

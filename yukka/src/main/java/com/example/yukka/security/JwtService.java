@@ -49,10 +49,7 @@ public class JwtService {
             UserDetails userDetails,
             long expiration
     ) {
-        var authorities = userDetails.getAuthorities()
-                .stream().
-                map(GrantedAuthority::getAuthority)
-                .toList();
+        var authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

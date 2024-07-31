@@ -5,22 +5,19 @@
 
 package com.example.yukka.auth;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.yukka.authorities.ROLE;
 import com.example.yukka.model.Uzytkownik.Uzytkownik;
 import com.example.yukka.model.Uzytkownik.UzytkownikRepository;
 import com.example.yukka.security.JwtService;
-
-import org.springframework.web.bind.annotation.RequestBody;
+import com.example.yukka.security.Neo4JAuthenticationProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,12 +28,13 @@ class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final Neo4JAuthenticationProvider neo4jAuthenticationProvider;
 
 //    @Value("${application.mailing.frontend.activation-url}")
 //    private String activationUrl;
 
     public void register(RegistrationRequest request) {
-        if (uzytkownikRepository.findByNameOrEmail(request.getNazwa(), request.getEmail()).isPresent()) {
+        if (uzytkownikRepository.checkIfUzytkownikExists(request.getNazwa(), request.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Użytkownik o podanej nazwie lub adresie e-mail już istnieje.");
         }
         //var userRole = ROLE.Uzytkownik.toString();
@@ -50,27 +48,32 @@ class AuthenticationService {
                 // .banned(false)
                  //.labels(List.of(userRole))
                 .build();
-        System.out.println("\n\n\n Request: " + user.toString() + "\n\n\n");
+        
+        //uzytkownikRepository.addNewPracownik(user.getNazwa(), user.getEmail(), user.getHaslo());
         uzytkownikRepository.addNewUzytkownik(user.getNazwa(), user.getEmail(), user.getHaslo());
         //uzytkownikRepository.addNewUzytkownik(user);
         //sendValidationEmail(user);
     }
 
     public AuthenticationResponse authenticate(AuthRequest request) {
+        
+        System.out.println("\n\n\n SAAAAAAAA: " + request.toString() + "\n\n\n");
+        /* 
         var auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+                new UsernamePasswordAuthenticationToken(request.getEmail(),request.getHaslo())
+        );*/
+        //Authentication auth = neo4jAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
+
+        System.out.println("Auth: " + auth.toString());
 
         var claims = new HashMap<String, Object>();
-        var user = ((Uzytkownik) auth.getPrincipal());
-        claims.put("Name", user.getNazwa());
+        var user = ((User) auth.getPrincipal());
+        claims.put("Nazwa", user.getUsername());
        // claims.put("authorities", user.getAuthorities()); // To już jest robione w JwtService
 
         /* */
-        var jwtToken = jwtService.generateToken(claims, (Uzytkownik) auth.getPrincipal());
+        var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
