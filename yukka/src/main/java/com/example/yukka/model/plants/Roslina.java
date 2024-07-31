@@ -8,8 +8,14 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+
 
 @Node
+@NoArgsConstructor
+@Getter
 public class Roslina {
     @Id @GeneratedValue
     private Long id;
@@ -81,135 +87,5 @@ public class Roslina {
     @Relationship(type = "ma_zimozielonosc_lisci", direction = Relationship.Direction.OUTGOING)
     private List<Wlasciwosc> zimozielonosci;
 
-    public Roslina() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getNazwa() {
-        return nazwa;
-    }
-
-    public void setNazwa(String name) {
-        this.nazwa = name;
-    }
-
-    public String getNazwaLacinska() {
-        return nazwaLacinska;
-    }
-
-    public void setNazwaLacinska(String latinName) {
-        this.nazwaLacinska = latinName;
-    }
-
-    public String getOpis() {
-        return opis;
-    }
-
-    public void setOpis(String description) {
-        this.opis = description;
-    }
-
-    public double getWysokoscMax() {
-        return wysokoscMax;
-    }
-
-    public void setWysokoscMax(double minHeight) {
-        this.wysokoscMax = minHeight;
-    }
-
-    public double getWysokoscMin() {
-        return wysokoscMin;
-    }
-
-    public void setWysokoscMin(double maxHeight) {
-        this.wysokoscMin = maxHeight;
-    }
-
-    public String getObraz() {
-        return obraz;
-    }
-
-    public void setObraz(String image) {
-        this.obraz = image;
-    }
-
-    public List<Wlasciwosc> getFormy() {
-        return formy;
-    }
-
-    public List<Wlasciwosc> getGleby() {
-        return gleby;
-    }
-
-    public List<Wlasciwosc> getGrupy() {
-        return grupy;
-    }
-
-    public List<Wlasciwosc> getKoloryLisci() {
-        return koloryLisci;
-    }
-
-    public List<Wlasciwosc> getKoloryKwiatow() {
-        return koloryKwiatow;
-    }
-
-    public List<Wlasciwosc> getKwiaty() {
-        return kwiaty;
-    }
-
-    public List<Wlasciwosc> getNagrody() {
-        return nagrody;
-    }
-
-    public List<Wlasciwosc> getOdczyny() {
-        return odczyny;
-    }
-
-    public List<Wlasciwosc> getOkresyKwitnienia() {
-        return okresyKwitnienia;
-    }
-
-    public List<Wlasciwosc> getOkresyOwocowania() {
-        return okresyOwocowania;
-    }
-
-    public List<Wlasciwosc> getOwoce() {
-        return owoce;
-    }
-
-    public List<Wlasciwosc> getPodgrupa() {
-        return podgrupa;
-    }
-
-    public List<Wlasciwosc> getPokroje() {
-        return pokroje;
-    }
-
-    public List<Wlasciwosc> getSilyWzrostu() {
-        return silyWzrostu;
-    }
-
-    public List<Wlasciwosc> getStanowiska() {
-        return stanowiska;
-    }
-
-    public List<Wlasciwosc> getWalory() {
-        return walory;
-    }
-
-    public List<Wlasciwosc> getWilgotnosci() {
-        return wilgotnosci;
-    }
-
-    public List<Wlasciwosc> getZastosowania() {
-        return zastosowania;
-    }
-
-    public List<Wlasciwosc> getZimozielonosci() {
-        return zimozielonosci;
-    }
-    
+   
 }
