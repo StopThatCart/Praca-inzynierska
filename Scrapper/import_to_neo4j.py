@@ -57,7 +57,7 @@ def query_string_en(node_name, label, relationship):
 
 plant_query = (
         "UNWIND $plants AS plant "
-        "MERGE (p:Roslina {nazwa: plant.name, nazwa_lacinska: plant.latin_name, opis: plant.description, obraz: plant.image_name}) "
+        "MERGE (p:Roslina {nazwa: plant.name, nazwa_lacinska: plant.latin_name, opis: plant.description, obraz: plant.image_filename}) "
         "WITH p, plant "
         "UNWIND plant.heights AS height "
         "WITH p, height "
@@ -67,7 +67,7 @@ plant_query = (
 
 plant_query_en = (
         "UNWIND $plants AS plant "
-        "MERGE (p:Plant {name: plant.name, latin_name: plant.latin_name, description: plant.description, image: plant.image_name}) "
+        "MERGE (p:Plant {name: plant.name, latin_name: plant.latin_name, description: plant.description, image: plant.image_filename}) "
         "WITH p, plant "
         "UNWIND plant.heights AS height "
         "WITH p, height "
