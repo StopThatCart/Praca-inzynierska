@@ -3,7 +3,9 @@ package com.example.yukka.model.roslina;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
-import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 
 @SpringBootTest
 @AutoConfigureDataNeo4j
@@ -26,21 +27,27 @@ public class RoslinaControllerTest {
 
     Roslina roslina;
 
+    private List<String> extractNazwy(List<Wlasciwosc> wlasciwosci) {
+        return wlasciwosci.stream()
+                           .map(Wlasciwosc::getNazwa)
+                           .sorted()
+                           .collect(Collectors.toList());
+    }
+
+    private boolean areWlasciwosciEqual(List<Wlasciwosc> list1, List<Wlasciwosc> list2) {
+        return extractNazwy(list1).equals(extractNazwy(list2));
+    }
+
     @BeforeEach
     void setUp() {
-        String name = "Róża";
-        String latinName = "Rosa";
-        String description = "Piękna roślina ozdobna";
-        String imageFilename = "roza.jpg";
+        String name = "Na pewno takiej nazwy nie ma";
+        String latinName = "Nomen Latinum certe nullum est";
+        String description = "To jest dramat.";
+        String imageFilename = "tilia_henryana.jpg";
         Double minHeight = 0.5;
         Double maxHeight = 4.0;
-        List<WlasciwoscWithRelations> properties = List.of(
-            new WlasciwoscWithRelations("Grupa", "próchniczna", "MA_GRUPE"),
-            new WlasciwoscWithRelations("Podgrupa", "Krzewy", "MA_PODGRUPE")
-        );
 
         // Tworzenie kilku obiektów Wlasciwosc
-        
         Wlasciwosc formaDrzewo = new Wlasciwosc(Collections.singletonList("Forma"), "TAKA TESTOWA");
 
         Wlasciwosc glebaPrzecietna = new Wlasciwosc(Collections.singletonList("Gleba"),"TEŻ TESTOWA");
@@ -71,16 +78,17 @@ public class RoslinaControllerTest {
 
         Wlasciwosc walorPachnaceKwiaty = new Wlasciwosc(Collections.singletonList("Walor"),"pachnące kwiaty");
         Wlasciwosc walorRoslinaMiododajna = new Wlasciwosc(Collections.singletonList("Walor"),"roślina miododajna");
+        // Resztę właściwości zostawia się pustą.
 
         // Tworzymy obiekt klasy Roslina
         Roslina lipaHenryego = Roslina.builder()
             //.id(294L)
-            .nazwa("Na pewno takiej nazwy nie ma")
-            .nazwaLacinska("Nomen Latinum certe nullum est")
-            .opis("To jest dramat.")
+            .nazwa(name)
+            .nazwaLacinska(latinName)
+            .opis(description)
             .wysokoscMin(minHeight)
             .wysokoscMax(maxHeight)
-            .obraz("tilia_henryana.jpg")
+            .obraz(imageFilename)
             .formy(Arrays.asList(formaDrzewo))
             .gleby(Arrays.asList(glebaPrzecietna, glebaProchniczna, glebaGliniasta))
             .grupy(Arrays.asList(grupaLisciaste))
@@ -104,25 +112,39 @@ public class RoslinaControllerTest {
 
     @Test
     void testSaveRoslina() {
-       
-
-        /* 
-        RoslinaRequest roslinaRequest = RoslinaRequest.builder()
-        .nazwa(roslina.getNazwa())
-        .nazwaLacinska(roslina.getNazwaLacinska())
-        .opis(roslina.getOpis())
-        .obraz(roslina.getObraz())
-        .wysokoscMin(roslina.getWysokoscMin())
-        .wysokoscMax(roslina.getWysokoscMax())
-        .wlasciwosci(properties)
-        .build();
-        */
-
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
+        Roslina roslina2 = roslinaService.save(roslinaRequest);
+
+        // Assert
+        Assertions.assertThat(roslina2).isNotNull();
+        Assertions.assertThat(roslina2.getId()).isNotNull();
+        Assertions.assertThat(roslina2.getNazwa()).isEqualTo(roslina.getNazwa());
+        Assertions.assertThat(roslina2.getNazwaLacinska()).isEqualTo(roslina.getNazwaLacinska());
+        Assertions.assertThat(roslina2.getOpis()).isEqualTo(roslina.getOpis());
+        Assertions.assertThat(roslina2.getWysokoscMin()).isEqualTo(roslina.getWysokoscMin());
+        Assertions.assertThat(roslina2.getWysokoscMax()).isEqualTo(roslina.getWysokoscMax());
+        Assertions.assertThat(roslina2.getFormy()).isEqualTo(roslina.getFormy());
+
+       // System.out.println("\n\n\nroslina2 gleby: "+ roslina2.getGleby().toString() + " ||| " + roslina.getGleby().toString() + "    :roslina]\n\n\n");
         
-        roslinaService.save(roslinaRequest);
-
-        // roslinaService.save2(roslina);
-
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getFormy(), roslina.getFormy())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getGleby(), roslina.getGleby())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getGrupy(), roslina.getGrupy())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getKoloryLisci(), roslina.getKoloryLisci())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getKoloryKwiatow(), roslina.getKoloryKwiatow())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getKwiaty(), roslina.getKwiaty())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getNagrody(), roslina.getNagrody())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getOdczyny(), roslina.getOdczyny())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getOkresyKwitnienia(), roslina.getOkresyKwitnienia())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getOkresyOwocowania(), roslina.getOkresyOwocowania())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getOwoce(), roslina.getOwoce())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getPodgrupa(), roslina.getPodgrupa())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getPokroje(), roslina.getPokroje())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getSilyWzrostu(), roslina.getSilyWzrostu())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getStanowiska(), roslina.getStanowiska())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getWalory(), roslina.getWalory())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getWilgotnosci(), roslina.getWilgotnosci())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getZastosowania(), roslina.getZastosowania())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getZimozielonosci(), roslina.getZimozielonosci())).isTrue();
     }
 }

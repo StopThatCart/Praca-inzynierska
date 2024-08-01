@@ -29,7 +29,7 @@ import lombok.ToString;
 @ToString
 public class Roslina {
     @Id @GeneratedValue
-    private Long id;
+    private long id;
     @Property("nazwa")
     private String nazwa;
     @Property("nazwaLacinska")
@@ -37,9 +37,10 @@ public class Roslina {
     @Property("opis")
     private String opis;
     @Property("wysokoscMin")
-    private Double wysokoscMax;
-    @Property("wysokoscMax")
     private Double wysokoscMin;
+    @Property("wysokoscMax")
+    private Double wysokoscMax;
+    
     @Property("obraz")
     private String obraz;
 

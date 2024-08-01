@@ -44,7 +44,8 @@ public class RoslinaService {
     public Roslina save(RoslinaRequest request) {
         Roslina pl = roslinaMapper.toRoslina(request);
 
-        System.out.println("\n\n\nROSŁIBASDASD: "+ pl.toString() + "\n\n\n");
+      //  System.out.println("\n\n\nWYSOKOŚCI request: "+ request.getWysokoscMin() + " ||| " + request.getWysokoscMax() + "\n");
+       // System.out.println("\n\n\nWYSOKOŚCI PL: "+ pl.getWysokoscMin() + " ||| " + pl.getWysokoscMax() + "\n\n\n");
 
         if(roslinaRepository.findRoslinaByLatinName(request.getNazwaLacinska()) != null){
             // TODO: napraw podwójne uruchamianie się testów
@@ -59,6 +60,7 @@ public class RoslinaService {
         request.getObraz(), 
         request.getWysokoscMin(), 
         request.getWysokoscMax(), 
+       // pl,
         request.getWlasciwosci());
         /* 
         return Roslina roslinaRepository.save(request.getNazwa(), 

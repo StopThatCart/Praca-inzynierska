@@ -1,6 +1,7 @@
 package com.example.yukka.model.roslina.wlasciwosc;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.neo4j.core.schema.DynamicLabels;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -25,7 +26,7 @@ public class Wlasciwosc {
     private List<String> labels;
 
     @Id @GeneratedValue
-    private Long id;
+    private long id;
     @Property("nazwa")
     private String nazwa;
 
@@ -50,6 +51,29 @@ public class Wlasciwosc {
         if(labels.isEmpty()) return null;
         return  labels.get(0);
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wlasciwosc that = (Wlasciwosc) o;
+        return Objects.equals(labels, that.labels) &&
+              // Objects.equals(id, that.id) &&
+               Objects.equals(nazwa, that.nazwa);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(labels, nazwa);
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Wlasciwosc [labels=" + labels + ", id=" + id + ", nazwa=" + nazwa + ", plants=" + plants + "]";
+    }
+
     
 
 
