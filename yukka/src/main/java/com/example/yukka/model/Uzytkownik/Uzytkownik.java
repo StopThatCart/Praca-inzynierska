@@ -1,4 +1,4 @@
-package com.example.yukka.model.Uzytkownik;
+package com.example.yukka.model.uzytkownik;
 
 import java.security.Principal;
 import java.time.LocalDateTime;

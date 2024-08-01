@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.yukka.model.plants.relationshipnodes.Gleba;
+import com.example.yukka.model.roslina.relationshipnodes.Gleba;
 import com.example.yukka.repository.GlebaRepository;
 
 @Service

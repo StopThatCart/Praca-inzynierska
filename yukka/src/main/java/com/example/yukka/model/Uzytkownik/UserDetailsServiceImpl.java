@@ -1,4 +1,4 @@
-package com.example.yukka.model.Uzytkownik;
+package com.example.yukka.model.uzytkownik;
 
 import java.util.Collection;
 import java.util.Optional;

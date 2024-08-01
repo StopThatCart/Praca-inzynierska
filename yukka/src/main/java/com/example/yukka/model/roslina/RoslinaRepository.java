@@ -1,12 +1,10 @@
-package com.example.yukka.repository;
+package com.example.yukka.model.roslina;
 
 import java.util.Collection;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
-
-import com.example.yukka.model.plants.Roslina;
 
 public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
@@ -21,7 +19,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
    // @Query("MATCH (p:Roslina)-[r:ma_wlasciwosc]->(wlasciwosc) RETURN p, collect(r), collect(wlasciwosc) LIMIT $amount")
     Collection<Roslina> getSomePlants(@Param("amount") int amount);
     
-    @Query("MATCH (r:Roslina)-[:ma_wlasciwosc]->(g:Gleba) WHERE r.name = $name RETURN r, collect(g) as glebus")
+    @Query("MATCH (r:Roslina)-[:MA_GLEBE]->(g:Gleba) WHERE r.name = $name RETURN r, collect(g) as glebus")
     Roslina findRoslinaWithGleba(@Param("name") String name);
 
     

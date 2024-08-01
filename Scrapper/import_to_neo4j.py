@@ -18,13 +18,13 @@ brak = "Brak"
 def query_string(node_name, label, relationship):
     query = (
         "UNWIND $plants AS plant "
-        f"MATCH (p:Roslina {{nazwa: plant.name, nazwa_lacinska: plant.latin_name}}) "
+        f"MATCH (p:Roslina {{nazwa: plant.name, nazwaLacinska: plant.latin_name}}) "
         "WITH p, plant "
         f"UNWIND plant.{label} AS item "
         f"WITH p, item WHERE item <> '{brak}' "
         f"MERGE (n:Wlasciwosc:{node_name.capitalize()} {{nazwa: item}}) "
         f"MERGE (p)-[:{relationship}]->(n) "
-        f"MERGE (n)-[:ma_rosline]->(p)"
+        f"MERGE (n)-[:MA_ROSLINE]->(p)"
     )
     return query
 
@@ -32,96 +32,96 @@ def query_string(node_name, label, relationship):
 def query_string_good(node_name, label, relationship):
     query = (
         "UNWIND $plants AS plant "
-        f"MATCH (p:Roslina {{nazwa: plant.name, nazwa_lacinska: plant.latin_name}}) "
+        f"MATCH (p:Roslina {{nazwa: plant.name, nazwaLacinska: plant.latin_name}}) "
         "WITH p, plant "
         f"UNWIND plant.{label} AS item "
         f"WITH p, item WHERE item <> '{brak}' "
         f"MERGE (n:Wlasciwosc:{node_name.capitalize()} {{nazwa: item}}) "
         f"MERGE (p)-[:{relationship}]->(n) "
-        f"MERGE (n)-[:ma_rosline]->(p)"
+        f"MERGE (n)-[:MA_ROSLINE]->(p)"
     )
     return query
 
 def query_string_en(node_name, label, relationship):
     query = (
         "UNWIND $plants AS plant "
-        f"MATCH (p:Plant {{name: plant.name, latin_name: plant.latin_name}}) "
+        f"MATCH (p:Plant {{name: plant.name, latinName: plant.latin_name}}) "
         "WITH p, plant "
         f"UNWIND plant.{label} AS item "
         f"WITH p, item WHERE item <> '{brak}' "
         f"MERGE (n:Wlasciwosc:{node_name.capitalize()} {{name: item}}) "
         f"MERGE (p)-[:{relationship}]->(n) "
-        f"MERGE (n)-[:has_plant]->(p)"
+        f"MERGE (n)-[:HAS_PLANT]->(p)"
     )
     return query
 
 plant_query = (
         "UNWIND $plants AS plant "
-        "MERGE (p:Roslina {nazwa: plant.name, nazwa_lacinska: plant.latin_name, opis: plant.description, obraz: plant.image_filename}) "
+        "MERGE (p:Roslina {nazwa: plant.name, nazwaLacinska: plant.latin_name, opis: plant.description, obraz: plant.image_filename}) "
         "WITH p, plant "
         "UNWIND plant.heights AS height "
         "WITH p, height "
         "WHERE height.name <> 'Brak' "
-        "SET p.wysokosc_min = toFloat(height.min), p.wysokosc_max = toFloat(height.max)"
+        "SET p.wysokoscMin = toFloat(height.min), p.wysokoscMax = toFloat(height.max)"
         )
 
 plant_query_en = (
         "UNWIND $plants AS plant "
-        "MERGE (p:Plant {name: plant.name, latin_name: plant.latin_name, description: plant.description, image: plant.image_filename}) "
+        "MERGE (p:Plant {name: plant.name, latinName: plant.latin_name, description: plant.description, image: plant.image_filename}) "
         "WITH p, plant "
         "UNWIND plant.heights AS height "
         "WITH p, height "
         "WHERE height.name <> 'Brak' "
-        "SET p.height_min = height.min, p.height_max = height.max"
+        "SET p.heightMin = height.min, p.heightMax = height.max"
         )
    
 queries = [
-    ("Grupa", "groups", "ma_grupe"),
-    ("Podgrupa", "subgroups", "ma_podgrupe"),
-    ("Forma", "forms", "ma_forme"),
-    ("SilaWzrostu", "growth_strength", "ma_sile_wzrostu"),
-    ("Pokroj", "shapes", "ma_pokroj"),
-    ("Kolor", "leaves_colors", "ma_kolor_lisci"),
-    ("Kolor", "flower_colors", "ma_kolor_wiatow"),
-    ("Zimozielonosc", "wintergreen_leaves", "ma_zimozielonosc_lisci"),
-    ("Owoc", "fruits", "ma_owoc"),
-    ("Stanowisko", "positions", "ma_stanowisko"),
-    ("Wilgotnosc", "humidities", "ma_wilgotnosc"),
-    ("Odczyn", "phs", "ma_odczyn"),
-    ("Gleba", "soils", "ma_glebe"),
-    ("Walor", "appeals", "ma_walor"),
-    ("Zastosowanie", "uses", "ma_zastosowanie"),
-    ("Nagroda", "awards", "ma_nagrode"),
-    ("Kwiat", "flowers", "ma_kwiat"),
-    ("Okres", "flowering_periods", "ma_okres_kwitnienia"),
-    ("Okres", "fruiting_times", "ma_okres_owocowania")
+    ("Grupa", "groups", "MA_GRUPE"),
+    ("Podgrupa", "subgroups", "MA_PODGRUPE"),
+    ("Forma", "forms", "MA_FORME"),
+    ("SilaWzrostu", "growth_strength", "MA_SILE_WZROSTU"),
+    ("Pokroj", "shapes", "MA_POKROJ"),
+    ("Kolor", "leaves_colors", "MA_KOLOR_LISCI"),
+    ("Kolor", "flower_colors", "MA_KOLOR_KWIATOW"),
+    ("Zimozielonosc", "wintergreen_leaves", "MA_ZIMOZIELONOSC_LISCI"),
+    ("Owoc", "fruits", "MA_OWOC"),
+    ("Stanowisko", "positions", "MA_STANOWISKO"),
+    ("Wilgotnosc", "humidities", "MA_WILGOTNOSC"),
+    ("Odczyn", "phs", "MA_ODCZYN"),
+    ("Gleba", "soils", "MA_GLEBE"),
+    ("Walor", "appeals", "MA_WALOR"),
+    ("Zastosowanie", "uses", "MA_ZASTOSOWANIE"),
+    ("Nagroda", "awards", "MA_NAGRODE"),
+    ("Kwiat", "flowers", "MA_KWIAT"),
+    ("Okres", "flowering_periods", "MA_OKRES_KWITNIENIA"),
+    ("Okres", "fruiting_times", "MA_OKRES_OWOCOWANIA")
 ]   
         
 queries_en = [
-    ("Group", "groups", "has_group"),
-    ("Subgroup", "subgroups", "has_subgroup"),
-    ("Form", "forms", "has_form"),
-    ("Growth_strength", "growth_strength", "has_growth_strength"),
-    ("Shape", "shapes", "has_shape"),
-    ("Color", "leaves_colors", "has_leaves_color"),
-    ("Wintergreen_leaves", "wintergreen_leaves", "has_wintergreen_leaves"),
-    ("Fruit", "fruits", "has_fruit"),
-    ("Position", "positions", "has_position"),
-    ("Humidity", "humidities", "has_humidity"),
-    ("Ph", "phs", "has_ph"),
-    ("Soil", "soils", "has_soil"),
-    ("Appeal", "appeals", "has_appeal"),
-    ("Use", "uses", "has_use"),
-    ("Award", "awards", "has_award"),
-    ("Flower", "flowers", "has_flower"),
-    ("Color", "flower_colors", "has_flower_color"),
-    ("Period", "flowering_periods", "has_flowering_period"),
-    ("Period", "fruiting_times", "has_fruiting_period")
+    ("Group", "groups", "HAS_GROUP"),
+    ("Subgroup", "subgroups", "HAS_SUBGROUP"),
+    ("Form", "forms", "HAS_FORM"),
+    ("Growth_strength", "growth_strength", "HAS_GROWTH_STRENGTH"),
+    ("Shape", "shapes", "HAS_SHAPE"),
+    ("Color", "leaves_colors", "HAS_LEAVES_COLOR"),
+    ("Wintergreen_leaves", "wintergreen_leaves", "HAS_WINTERGREEN_LEAVES"),
+    ("Fruit", "fruits", "HAS_FRUIT"),
+    ("Position", "positions", "HAS_POSITION"),
+    ("Humidity", "humidities", "HAS_HUMIDITY"),
+    ("Ph", "phs", "HAS_PH"),
+    ("Soil", "soils", "HAS_SOIL"),
+    ("Appeal", "appeals", "HAS_APPEAL"),
+    ("Use", "uses", "HAS_USE"),
+    ("Award", "awards", "HAS_AWARD"),
+    ("Flower", "flowers", "HAS_FLOWER"),
+    ("Color", "flower_colors", "HAS_FLOWER_COLOR"),
+    ("Period", "flowering_periods", "HAS_FLOWERING_PERIOD"),
+    ("Period", "fruiting_times", "HAS_FRUITING_PERIOD")
 ]
 
 queries_test = [
-    ("Group", "groups", "has_group"),
-    ("Subgroup", "subgroups", "has_subgroup")
+    ("Group", "groups", "HAS_GROUP"),
+    ("Subgroup", "subgroups", "HAS_SUBGROUP")
 ]
 
 def import_plants(csv_filename, batch_size, uri, username, password):
@@ -138,7 +138,7 @@ def import_plants(csv_filename, batch_size, uri, username, password):
                 'name': row['name'],
                 'latin_name': row['latin_name'],
                 'description': row['opis'],
-                'image_name': row['image'],
+                'image_filename': row['image_filename'],
                 'groups': row['grupa_roslin'].split(', '),
                 'subgroups': row['grupa_uzytkowa'].split(', '),
                 'forms': row['forma'].split(', '),
