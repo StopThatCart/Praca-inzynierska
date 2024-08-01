@@ -1,4 +1,4 @@
-package com.example.yukka.model.plants;
+package com.example.yukka.model.roslina.enums;
 
 public enum PlantPropertyType {
     Grupa,

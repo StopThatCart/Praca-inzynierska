@@ -1,4 +1,4 @@
-package com.example.yukka.model.plants.relationshipnodes;
+package com.example.yukka.model.roslina.relationshipnodes;
 
 import java.util.List;
 
@@ -8,21 +8,21 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import com.example.yukka.model.plants.Roslina;
+import com.example.yukka.model.roslina.Roslina;
 @Node
-public class Zastowowanie {
+public class Gleba {
     @Id @GeneratedValue
     private Long id;
     @Property("nazwa")
-    private String name;
+    private String nazwa;
 
     @Relationship(type="ma_rosline", direction=Relationship.Direction.OUTGOING)
     private List<Roslina> plants;
 
-    public Zastowowanie() {
+    public Gleba() {
     }
 
-    public List<Roslina> getPlants() {
+    public List<Roslina> getRosliny() {
         return plants;
     }
 
@@ -30,12 +30,12 @@ public class Zastowowanie {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getNazwa() {
+        return nazwa;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNazwa(String name) {
+        this.nazwa = name;
     }
 
 }

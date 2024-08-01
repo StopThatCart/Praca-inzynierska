@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.example.yukka.model.Uzytkownik.Uzytkownik;
-import com.example.yukka.model.Uzytkownik.UzytkownikRepository;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.uzytkownik.UzytkownikRepository;
 
 import lombok.RequiredArgsConstructor;
 

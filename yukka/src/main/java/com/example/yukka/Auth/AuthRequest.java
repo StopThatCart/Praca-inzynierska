@@ -7,10 +7,12 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Builder
+@ToString
 public class AuthRequest {
     @Email(message = "Email is not well formatted")
     @NotEmpty(message = "Email is mandatory")
@@ -21,12 +23,4 @@ public class AuthRequest {
     @NotNull(message = "Password is mandatory")
     @Size(min = 8, message = "Password should be 8 characters long minimum")
     private String haslo;
-
-    @Override
-    public String toString() {
-        return "AuthRequest [email=" + email + ", password=" + haslo + "]";
-    }
-
-    
-
 }

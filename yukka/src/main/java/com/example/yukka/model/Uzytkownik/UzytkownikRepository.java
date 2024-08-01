@@ -1,4 +1,4 @@
-package com.example.yukka.model.Uzytkownik;
+package com.example.yukka.model.uzytkownik;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,5 +33,8 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
     @Query("CREATE (u:Uzytkownik:Pracownik {nazwa: $nazwa, email: $email, haslo: $haslo, data_utworzenia: localdatetime(), ban: false})")
     void addNewPracownik(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo);
+
+    @Query("CREATE (u:Uzytkownik:Admin {nazwa: $nazwa, email: $email, haslo: $haslo, data_utworzenia: localdatetime(), ban: false})")
+    void addNewAdmin(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo);
 
 }

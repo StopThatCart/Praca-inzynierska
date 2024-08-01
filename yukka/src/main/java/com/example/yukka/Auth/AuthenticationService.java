@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.yukka.model.Uzytkownik.Uzytkownik;
-import com.example.yukka.model.Uzytkownik.UzytkownikRepository;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.uzytkownik.UzytkownikRepository;
 import com.example.yukka.security.JwtService;
 import com.example.yukka.security.Neo4JAuthenticationProvider;
 
