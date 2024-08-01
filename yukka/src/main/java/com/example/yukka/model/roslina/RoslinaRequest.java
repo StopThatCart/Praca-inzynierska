@@ -1,6 +1,11 @@
 package com.example.yukka.model.roslina;
+import java.util.List;
+import java.util.Map;
+
+import com.example.yukka.validations.ValidWysokosc;
+
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +15,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
+@ValidWysokosc
 public class RoslinaRequest {
 
     @NotEmpty(message = "Nazwa jest wymagana")
@@ -23,10 +29,15 @@ public class RoslinaRequest {
     @NotEmpty(message = "Opis jest wymagany.")
     private String opis;
 
-    @NotEmpty(message = "wysokość musi być zdefiniowana")
-    private float wysokoscMin;
+    @NotNull(message = "Halo. RoślinaRequest dzwoni.")
+    private String obraz;
 
-    @NotEmpty(message = "Password is mandatory")
-    @Size(min = 8, message = "Password should be 8 characters long minimum")
-    private String haslo;
+    @NotEmpty(message = "wysokość musi być zdefiniowana")
+    private Double wysokoscMin;
+
+    @NotEmpty(message = "wysokość musi być zdefiniowana")
+    private Double wysokoscMax;
+
+    @NotNull(message = "Właściwości nie mogą być nullem. Daj puste jak musisz.")
+    private List<Map<String, String>> wlasciwosci;
 }

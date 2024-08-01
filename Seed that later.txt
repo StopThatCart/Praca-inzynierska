@@ -1,5 +1,8 @@
+CREATE CONSTRAINT unikalnaLacinskaNazwa FOR (ros:Roslina) REQUIRE ros.nazwaLacinska IS UNIQUE;
+
+
 CREATE CONSTRAINT unikalnyEmail FOR (u:Uzytkownik) REQUIRE u.email IS UNIQUE;
-CREATE CONSTRAINT unikalnaNazwa FOR (u:Uzytkownik) REQUIRE u.nazwa IS UNIQUE;
+CREATE CONSTRAINT unikalnaNazwaUzytkownika FOR (u:Uzytkownik) REQUIRE u.nazwa IS UNIQUE;
 // Jak chcesz dzisiejszą datę to użyj date()
 
 

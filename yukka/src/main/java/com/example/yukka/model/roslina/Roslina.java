@@ -1,5 +1,6 @@
 package com.example.yukka.model.roslina;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -8,14 +9,24 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
 
 @Node
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Setter
+@Builder
+@ToString
 public class Roslina {
     @Id @GeneratedValue
     private Long id;
@@ -26,68 +37,87 @@ public class Roslina {
     @Property("opis")
     private String opis;
     @Property("wysokoscMin")
-    private double wysokoscMax;
+    private Double wysokoscMax;
     @Property("wysokoscMax")
-    private double wysokoscMin;
+    private Double wysokoscMin;
     @Property("obraz")
     private String obraz;
 
     @Relationship(type = "MA_FORME", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> formy;
+    @Builder.Default
+    private List<Wlasciwosc> formy = new ArrayList<>();
 
     @Relationship(type = "MA_GLEBE", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> gleby;
+    @Builder.Default
+    private List<Wlasciwosc> gleby = new ArrayList<>();
 
     @Relationship(type = "MA_GRUPE", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> grupy;
+    @Builder.Default
+    private List<Wlasciwosc> grupy = new ArrayList<>();
 
     @Relationship(type = "MA_KOLOR_LISCI", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> koloryLisci;
+    @Builder.Default
+    private List<Wlasciwosc> koloryLisci = new ArrayList<>();
 
     @Relationship(type = "MA_KOLOR_KWIATOW", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> koloryKwiatow;
+    @Builder.Default
+    private List<Wlasciwosc> koloryKwiatow = new ArrayList<>();
 
     @Relationship(type = "MA_KWIAT", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> kwiaty;
+    @Builder.Default
+    private List<Wlasciwosc> kwiaty = new ArrayList<>();
 
     @Relationship(type = "MA_NAGRODE", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> nagrody;
+    @Builder.Default
+    private List<Wlasciwosc> nagrody = new ArrayList<>();
 
     @Relationship(type = "MA_ODCZYNY", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> odczyny;
+    @Builder.Default
+    private List<Wlasciwosc> odczyny = new ArrayList<>();
 
     @Relationship(type = "MA_OKRES_KWITNIENIA", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> okresyKwitnienia;
+    @Builder.Default
+    private List<Wlasciwosc> okresyKwitnienia = new ArrayList<>();
 
     @Relationship(type = "MA_OKRES_OWOCOWANIA", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> okresyOwocowania;
+    @Builder.Default
+    private List<Wlasciwosc> okresyOwocowania = new ArrayList<>();
 
     @Relationship(type = "MA_OWOC", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> owoce;
+    @Builder.Default
+    private List<Wlasciwosc> owoce = new ArrayList<>();
 
     @Relationship(type = "MA_PODGRUPE", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> podgrupa;
+    @Builder.Default
+    private List<Wlasciwosc> podgrupa = new ArrayList<>();
 
     @Relationship(type = "MA_POKROJ", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> pokroje;
+    @Builder.Default
+    private List<Wlasciwosc> pokroje = new ArrayList<>();
 
     @Relationship(type = "MA_SILE_WZROSTU", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> silyWzrostu;
+    @Builder.Default
+    private List<Wlasciwosc> silyWzrostu = new ArrayList<>();
 
     @Relationship(type = "MA_STANOWISKO", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> stanowiska;
+    @Builder.Default
+    private List<Wlasciwosc> stanowiska = new ArrayList<>();
 
     @Relationship(type = "MA_WALOR", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> walory;
+    @Builder.Default
+    private List<Wlasciwosc> walory = new ArrayList<>();
 
     @Relationship(type = "MA_WILGOTNOSC", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> wilgotnosci;
+    @Builder.Default
+    private List<Wlasciwosc> wilgotnosci = new ArrayList<>();
 
     @Relationship(type = "MA_ZASTOSOWANIE", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> zastosowania;
+    @Builder.Default
+    private List<Wlasciwosc> zastosowania = new ArrayList<>();
 
     @Relationship(type = "MA_ZIMOZIELONOSC_LISCI", direction = Relationship.Direction.OUTGOING)
-    private List<Wlasciwosc> zimozielonosci;
+    @Builder.Default
+    private List<Wlasciwosc> zimozielonosci = new ArrayList<>();
 
    
 }
