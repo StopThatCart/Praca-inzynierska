@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikRepository;
 import com.example.yukka.security.JwtService;
-import com.example.yukka.security.Neo4JAuthenticationProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +27,7 @@ class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final Neo4JAuthenticationProvider neo4jAuthenticationProvider;
+    //private final Neo4JAuthenticationProvider neo4jAuthenticationProvider;
 
 //    @Value("${application.mailing.frontend.activation-url}")
 //    private String activationUrl;

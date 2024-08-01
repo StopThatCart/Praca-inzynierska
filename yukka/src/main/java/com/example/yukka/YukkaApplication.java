@@ -44,7 +44,7 @@ public class YukkaApplication {
 
 	void seed() {
 
-		// Kingdom come
+		// Użytkownicy na razie bez relacji
 
 		uzytkownikRepository.addNewAdmin("Jan Kowalski", "jan@email.pl", "jan12345678");
 		uzytkownikRepository.addNewPracownik("Anna Nowak", "anna@email.pl", "anna12345678");

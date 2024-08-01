@@ -1,4 +1,4 @@
-package com.example.yukka.security;
+package com.example.yukka.security.config;
 
 
 import java.util.Arrays;

@@ -44,6 +44,7 @@ public class JwtService {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
+    @SuppressWarnings("deprecation")
     private String buildToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails,
@@ -74,6 +75,7 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    @SuppressWarnings("deprecation")
     private Claims extractAllClaims(String token) {
         JwtParser parser = Jwts.parser()
         .setSigningKey(getSignInKey())

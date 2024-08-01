@@ -32,8 +32,6 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
         String nameOrEmail = authentication.getName();
         String haslo = authentication.getCredentials().toString();
 
-        //  TODO: Encryption password
-
         Uzytkownik uzyt = uzytkownikRepository.findByNameOrEmail(nameOrEmail);
         if(uzyt == null){
             throw new BadCredentialsException("Niepoprawny login lub hasło.");
@@ -52,9 +50,7 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
        // List<GrantedAuthority> authorities = new ArrayList<>();
         //.add();
        
-
         //return new UsernamePasswordAuthenticationToken(principal, haslo, uzyt.getAuthorities());
-
 /* 
         try (Session session = driver.session(sessionConfig)) {
             if (nameOrEmail.contains("@")){
