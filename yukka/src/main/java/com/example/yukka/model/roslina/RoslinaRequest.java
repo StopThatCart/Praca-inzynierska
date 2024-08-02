@@ -41,4 +41,18 @@ public class RoslinaRequest {
 
     @NotNull(message = "Właściwości nie mogą być nullem. Daj puste jak musisz.")
     private List<Map<String, String>> wlasciwosci;
+
+    public boolean areWlasciwosciEmpty() {
+        if (wlasciwosci == null || wlasciwosci.isEmpty()) {
+            return true;
+        }
+        for (Map<String, String> map : wlasciwosci) {
+            for (String value : map.values()) {
+                if (value != null && !value.trim().isEmpty()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

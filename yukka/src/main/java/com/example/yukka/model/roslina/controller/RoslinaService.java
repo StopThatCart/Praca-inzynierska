@@ -40,13 +40,18 @@ public class RoslinaService {
     }
 
     public Roslina save(RoslinaRequest request) {
-        return roslinaRepository.addPlantWithProperties(
-            request.getNazwa(), 
-            request.getNazwaLacinska(), 
-            request.getOpis(), 
-            request.getObraz(), 
-            request.getWysokoscMin(), 
-            request.getWysokoscMax(), 
+        if(request.areWlasciwosciEmpty()) {
+            System.out.println("\n\n\n\n\nWŁAŚCIWOŚCI SĄ PUSTEn\n\n\n\n\n");
+            return roslinaRepository.addRoslina(
+            request.getNazwa(), request.getNazwaLacinska(), 
+            request.getOpis(), request.getObraz(), 
+            request.getWysokoscMin(), request.getWysokoscMax());
+        }
+
+        return roslinaRepository.addRoslina(
+            request.getNazwa(), request.getNazwaLacinska(), 
+            request.getOpis(), request.getObraz(), 
+            request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosci());
         /* 
         Roslina pl = roslinaMapper.toRoslina(request);
@@ -57,13 +62,18 @@ public class RoslinaService {
     }
 
     public Roslina update(RoslinaRequest request) {
-        return roslinaRepository.updatePlantProperties(
-            request.getNazwa(), 
-            request.getNazwaLacinska(), 
-            request.getOpis(), 
-            request.getObraz(), 
-            request.getWysokoscMin(), 
-            request.getWysokoscMax(), 
+        if(request.areWlasciwosciEmpty()) {
+            System.out.println("\n\n\n\n\nWŁAŚCIWOŚCI SĄ PUSTEn\n\n\n\n\n");
+            return roslinaRepository.updateRoslina(
+            request.getNazwa(), request.getNazwaLacinska(), 
+            request.getOpis(), request.getObraz(), 
+            request.getWysokoscMin(), request.getWysokoscMax());
+        }
+        
+        return roslinaRepository.updateRoslina(
+            request.getNazwa(), request.getNazwaLacinska(), 
+            request.getOpis(), request.getObraz(), 
+            request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosci());
     }
 

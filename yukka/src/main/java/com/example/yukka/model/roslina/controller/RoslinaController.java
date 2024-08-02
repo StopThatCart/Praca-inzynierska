@@ -49,6 +49,7 @@ public class RoslinaController {
     public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request) {
         Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
+            System.out.println("\n\n\nBITCH IS NOT PRESENT\n\n\n");
             return ResponseEntity.ok("Roślina o takiej nazwie łacińskiej już istnieje.");
         }
 
@@ -65,6 +66,7 @@ public class RoslinaController {
         roslinaService.update(request);
         return ResponseEntity.status(HttpStatus.OK).body("Roślina została pomyślnie zaktualizowana.");
     }
+    
     
     @DeleteMapping("/{nazwaLacinska}")
     public String deleteRoslina(@PathVariable String nazwaLacinska) {

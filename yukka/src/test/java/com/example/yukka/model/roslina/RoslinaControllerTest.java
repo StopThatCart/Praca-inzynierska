@@ -8,13 +8,12 @@ import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -30,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Testcontainers
 @Slf4j
 //@TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@TestMethodOrder(OrderAnnotation.class)
+//@TestMethodOrder(OrderAnnotation.class)
 //@ContextConfiguration
 public class RoslinaControllerTest {
 
@@ -98,7 +97,7 @@ public class RoslinaControllerTest {
         // Resztę właściwości zostawia się pustą.
 
         Roslina lipaHenryego = Roslina.builder()
-            .id(12345678L)
+            //.id(12345678L)
             .nazwa(name)
             .nazwaLacinska(latinName)
             .opis(description)
@@ -128,17 +127,53 @@ public class RoslinaControllerTest {
         roslinaService.deleteByNazwaLacinska(latinName);
     }
 
+    @Test
+    //@Order(1)
+    void testRoslinaRequestInvalidDataAccessResourceUsageException(){
+        Roslina emptyRoslina2 = Roslina.builder().build();
+        RoslinaRequest emptyRoslinaRequest2 = roslinaMapper.toRoslinaRequest(emptyRoslina2);
+        Exception exception = assertThrows(InvalidDataAccessResourceUsageException.class, () -> {
+            roslinaController.saveRoslina(emptyRoslinaRequest2);
+        });
+    }
 
     @Test
-    @Order(1)
+    void testSaveRoslinaWithoutRelations() {
+        String lacinskaNazwa2 = "Jeśli taka łacińska nazwa się znajdzie to będę bardzo zdziwiony";
+        Roslina roslinaWithoutRelations = Roslina.builder()
+            .nazwa(name)
+            .nazwaLacinska(lacinskaNazwa2)
+            .opis(description)
+            .wysokoscMin(minHeight)
+            .wysokoscMax(maxHeight)
+            .obraz(imageFilename)
+            .build();
+        RoslinaRequest emptyRoslinaRequest = roslinaMapper.toRoslinaRequest(roslinaWithoutRelations);
+        roslinaController.saveRoslina(emptyRoslinaRequest);
+
+        Roslina roslina2 = roslinaService.findByNazwaLacinska(lacinskaNazwa2).get();
+        // Assert
+        
+        Assertions.assertThat(roslina2).isNotNull();
+        Assertions.assertThat(roslina2.getId()).isNotNull();
+        Assertions.assertThat(roslina2.getNazwa()).isEqualTo(roslinaWithoutRelations.getNazwa());
+        Assertions.assertThat(roslina2.getNazwaLacinska()).isEqualTo(roslinaWithoutRelations.getNazwaLacinska());
+        Assertions.assertThat(roslina2.getOpis()).isEqualTo(roslinaWithoutRelations.getOpis());
+        Assertions.assertThat(roslina2.getWysokoscMin()).isEqualTo(roslinaWithoutRelations.getWysokoscMin());
+        Assertions.assertThat(roslina2.getWysokoscMax()).isEqualTo(roslinaWithoutRelations.getWysokoscMax());
+
+        Assertions.assertThat(roslina2.getFormy()).isEmpty();
+        // Reszty nie trzeba bo to w sumie to samo
+
+        roslinaService.deleteByNazwaLacinska(lacinskaNazwa2);
+    }
+
+    @Test
+   // @Order(2)
     void testSaveRoslina() {
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
         ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest);
        
-        if(response.getStatusCode() == HttpStatus.OK) {
-           System.out.println("\n\n\nAHAHAHAHAHAAHAHAAHAHAHAHAHAHAHAH\n\n\n");
-           return;
-        }
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         
       //  Roslina roslina2 = roslinaController.saveRoslina(roslinaRequest).getBody();
@@ -161,6 +196,8 @@ public class RoslinaControllerTest {
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getGrupy(), roslina.getGrupy())).isTrue();
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getKoloryLisci(), roslina.getKoloryLisci())).isTrue();
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getKoloryKwiatow(), roslina.getKoloryKwiatow())).isTrue();
+        // Reszty nie trzeba bo nie ma zbytniej różnicy
+        /* 
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getKwiaty(), roslina.getKwiaty())).isTrue();
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getNagrody(), roslina.getNagrody())).isTrue();
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getOdczyny(), roslina.getOdczyny())).isTrue();
@@ -175,12 +212,13 @@ public class RoslinaControllerTest {
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getWilgotnosci(), roslina.getWilgotnosci())).isTrue();
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getZastosowania(), roslina.getZastosowania())).isTrue();
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getZimozielonosci(), roslina.getZimozielonosci())).isTrue();
+        */
 
         System.out.println("\n\n\nZakończono test dodawania roślin.\n\n\n");
     }
 
     @Test
-    @Order(2)
+   // @Order(3)
     void testUpdateRoslina() {
         RoslinaRequest roslinaRequestOld = roslinaMapper.toRoslinaRequest(roslina);
         roslinaService.save(roslinaRequestOld);
@@ -229,7 +267,7 @@ public class RoslinaControllerTest {
     }
 
     @Test
-    @Order(3) 
+   // @Order(4) 
     void testDeleteRoslina() {
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
         ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest);

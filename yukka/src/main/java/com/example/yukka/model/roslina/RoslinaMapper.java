@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import com.example.yukka.model.roslina.enums.RoslinaRelacje;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 
+import jakarta.validation.Valid;
+
 @Service
 public class RoslinaMapper {
     public RoslinaRequest toRoslinaRequest(Roslina roslina) {
@@ -27,7 +29,7 @@ public class RoslinaMapper {
             .build();
     }
 
-    public Roslina toRoslina(RoslinaRequest request) {
+    public Roslina toRoslina(@Valid RoslinaRequest request) {
         Roslina roslina = Roslina.builder()
             .nazwa(request.getNazwa())
             .nazwaLacinska(request.getNazwaLacinska())
