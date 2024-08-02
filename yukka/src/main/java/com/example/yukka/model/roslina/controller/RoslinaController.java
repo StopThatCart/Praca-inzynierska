@@ -1,4 +1,4 @@
-package com.example.yukka.model.roslina;
+package com.example.yukka.model.roslina.controller;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.yukka.model.roslina.Roslina;
+import com.example.yukka.model.roslina.RoslinaRequest;
 
 import jakarta.validation.Valid;
 
@@ -42,8 +46,7 @@ public class RoslinaController {
     }
 
     @PostMapping
-    public ResponseEntity<String> saveRoslina(
-            @Valid @RequestBody RoslinaRequest request) {
+    public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request) {
         Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
             return ResponseEntity.ok("Roślina o takiej nazwie łacińskiej już istnieje.");
@@ -51,6 +54,16 @@ public class RoslinaController {
 
         roslinaService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
+    }
+
+    @PutMapping
+    public ResponseEntity<String> updateRoslina(@Valid @RequestBody RoslinaRequest request) {
+        Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(request.getNazwaLacinska());
+        if (roslina.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Roślina o takiej nazwie łacińskiej już istnieje.");
+        }
+        roslinaService.update(request);
+        return ResponseEntity.status(HttpStatus.OK).body("Roślina została pomyślnie zaktualizowana.");
     }
     
     @DeleteMapping("/{nazwaLacinska}")

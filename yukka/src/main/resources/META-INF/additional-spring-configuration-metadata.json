@@ -10,8 +10,13 @@
     "description": "A description for 'jwt.expiration'"
   },
   {
-    "name": "roslina.max.height",
+    "name": "roslina.wysokosc.max",
     "type": "java.lang.String",
-    "description": "A description for 'roslina.max.height'"
+    "description": "A description for 'roslina.wysokosc.max'"
+  },
+  {
+    "name": "roslina.obraz.default",
+    "type": "java.lang.String",
+    "description": "A description for 'roslina.obraz.default'"
   }
 ]}

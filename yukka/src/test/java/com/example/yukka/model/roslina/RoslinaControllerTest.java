@@ -1,5 +1,6 @@
 package com.example.yukka.model.roslina;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.example.yukka.model.roslina.controller.RoslinaController;
+import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +57,7 @@ public class RoslinaControllerTest {
                            .sorted()
                            .collect(Collectors.toList());
     }
+    
 
     private boolean areWlasciwosciEqual(List<Wlasciwosc> list1, List<Wlasciwosc> list2) {
         return extractNazwy(list1).equals(extractNazwy(list2));
@@ -176,7 +180,56 @@ public class RoslinaControllerTest {
     }
 
     @Test
-    @Order(2) 
+    @Order(2)
+    void testUpdateRoslina() {
+        RoslinaRequest roslinaRequestOld = roslinaMapper.toRoslinaRequest(roslina);
+        roslinaService.save(roslinaRequestOld);
+
+        String nazwa2 = "Zmieniona nazwa";
+        Wlasciwosc grupa2 = new Wlasciwosc(Collections.singletonList("Grupa"), "owocowe");
+        Wlasciwosc owoc22 = new Wlasciwosc(Collections.singletonList("Owoc"),"rzułte");
+
+        // TODO: Obsłuż wstawianie nulli do Kontrollera
+
+        // Zmiana nazwy
+        roslina.setNazwa(nazwa2);
+
+        // Usunięcie właściwości
+        roslina.setFormy(Arrays.asList());
+
+        // Zamiana właściwości
+        roslina.setGrupy(Arrays.asList(grupa2));
+
+        // Dodanie właściwości
+        List<Wlasciwosc> owoceOld = roslina.getOwoce();
+        List<Wlasciwosc> owoceNew = new ArrayList<>(owoceOld);  // Zamiana na modyfikowalną listę
+        owoceNew.addAll(Arrays.asList(owoc22));
+        roslina.setOwoce(owoceNew);  // Ustawienie zaktualizowanej listy
+
+        RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
+        ResponseEntity<String> response = roslinaController.updateRoslina(roslinaRequest);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Roslina roslina2 = roslinaService.findByNazwaLacinska(latinName).get();
+        
+        Assertions.assertThat(roslina2).isNotNull();
+        Assertions.assertThat(roslina2.getId()).isNotNull();
+
+        // Ta część jest ważna
+        Assertions.assertThat(roslina2.getNazwa()).isEqualTo(nazwa2);
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getFormy(), Arrays.asList())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getGrupy(), Arrays.asList(grupa2))).isTrue();
+
+        //System.out.println("\n\n\n + OwoceOld: " + owoceOld + " Roslina: " + roslina2.getOwoce() + " ||| " + owoceNew + " :OwoceNew\n\n\n");
+
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getOwoce(), owoceNew)).isTrue();
+
+        System.out.println("\n\n\nZakończono test auktualizacji rośliny.\n\n\n");
+    }
+
+    @Test
+    @Order(3) 
     void testDeleteRoslina() {
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
         ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest);
