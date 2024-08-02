@@ -37,8 +37,12 @@ public class RoslinaService {
         return roslinaRepository.getSomePlants(2);
     }
 
-    public Optional<Roslina> getById(Long id) {
+    public Optional<Roslina> findById(Long id) {
         return roslinaRepository.findById(id);
+    }
+
+    public Optional<Roslina> findByNazwaLacinska(String nazwaLacinska) {
+        return roslinaRepository.findRoslinaByLatinName(nazwaLacinska);
     }
 
     public Roslina save(RoslinaRequest request) {
@@ -53,7 +57,7 @@ public class RoslinaService {
         };
        // float mi = (float) request.getWysokoscMin();
         //return roslinaRepository.addPlantWithProperties(pl, request.getWlasciwosci());
-        return roslinaRepository.addPlantWithProperties2(
+        return roslinaRepository.addPlantWithProperties(
             request.getNazwa(), 
         request.getNazwaLacinska(), 
         request.getOpis(), 
@@ -76,38 +80,17 @@ public class RoslinaService {
         return roslinaRepository.save(request);
      }
 
-     // Nie działa lol
-     public Roslina save3(RoslinaRequest request) {
-        Roslina pl = roslinaMapper.toRoslina(request);
-        StringBuilder cypherQuery = new StringBuilder();
+    // Trzeba ID
+    public void delete(Roslina roslina) {
+        roslinaRepository.delete(roslina);
+    }
+    // Usuwanie po ID zajmuje ogromną ilość czasu i wywołuje HeapOverflow, więc lepiej jest użyć UNIQUE atrybutu jak nazwaLacinska
+    public void deleteById(Long roslinaId) {
+        roslinaRepository.deleteById(roslinaId);
+       // roslinaRepository.deleteById(roslinaId);
+    }
 
-        cypherQuery.append("UNWIND $roslina AS ros\n")
-                   .append("MERGE (p:Roslina {nazwa: ros.nazwa, nazwaLacinska: ros.nazwaLacinska, opis: ros.opis, obraz: COALESCE(ros.obraz, 'default_plant.jpg'), wysokoscMin: ros.wysokoscMin, wysokoscMax: ros.wysokoscMax})\n")
-                   .append("WITH p, $properties AS properties\n")
-                   .append("UNWIND properties AS property\n");
-
-        for (int i = 0; i < request.getWlasciwosci().size(); i++) {
-            cypherQuery.append("MATCH (w:").append(request.getWlasciwosci().get(i).get("etykieta"))
-                       .append(" {nazwa: property.nazwa})\n")
-                       .append("MERGE (p)-[:").append(request.getWlasciwosci().get(i).get("relacja"))
-                       .append("]->(w)\n");
-        }
-
-        cypherQuery.append("WITH p\n")
-                   .append("MATCH path=(p)-[r]->(w:Wlasciwosc)\n")
-                   .append("RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus");
-
-        // Wykonanie zapytania Cypher
-        return neo4jClient.query(cypherQuery.toString())
-                          .bind(pl).to("roslina")
-                          .bind(request.getWlasciwosci()).to("properties")
-                          .fetchAs(Roslina.class)
-                          .mappedBy((typeSystem, record) -> {
-                              // Mapowanie danych
-                              return new Roslina(); // Załaduj i mapuj dane zgodnie z potrzebami
-                          })
-                          .one()
-                          .orElse(null);
-
+    public void deleteByNazwaLacinska(String nazwaLacinska) {
+        roslinaRepository.deleteByNazwaLacinska(nazwaLacinska);
     }
 }
