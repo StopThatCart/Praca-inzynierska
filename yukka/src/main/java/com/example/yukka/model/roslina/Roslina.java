@@ -37,12 +37,15 @@ public class Roslina {
     @Property("opis")
     private String opis;
     @Property("wysokoscMin")
-    private Double wysokoscMin;
+    @Builder.Default
+    private Double wysokoscMin = 0.0;
     @Property("wysokoscMax")
-    private Double wysokoscMax;
+    @Builder.Default
+    private Double wysokoscMax = 0.0;
     
     @Property("obraz")
-    private String obraz;
+    @Builder.Default
+    private String obraz ="default_plant.jpg";
 
     @Relationship(type = "MA_FORME", direction = Relationship.Direction.OUTGOING)
     @Builder.Default

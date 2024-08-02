@@ -43,7 +43,7 @@ public class RoslinaMapper {
     }
 
     private List<Map<String, String>> mapWlasciwosciToMap(Roslina roslina) {
-        System.out.println("ROŚLINA:  "+ roslina.toString());
+        //System.out.println("ROŚLINA:  "+ roslina.toString());
         return Arrays.stream(RoslinaRelacje.values())
             .map(relacja -> mapRelationToMap(getWlasciwosciByRelacja(roslina, relacja), relacja))
             .flatMap(List::stream)

@@ -29,8 +29,9 @@ public class RoslinaRequest {
     @NotEmpty(message = "Opis jest wymagany.")
     private String opis;
 
-    @NotNull(message = "Halo. RoślinaRequest dzwoni.")
-    private String obraz;
+    @NotNull(message = "Nazwa obrazu jest wymagana.")
+    @Builder.Default
+    private String obraz = "default.jpg";
 
     @NotEmpty(message = "wysokość musi być zdefiniowana")
     private Double wysokoscMin;

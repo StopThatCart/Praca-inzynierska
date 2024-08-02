@@ -9,7 +9,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class WysokoscValidator implements ConstraintValidator<ValidWysokosc, RoslinaRequest> {
 
-    @Value("#{T(Float).parseFloat('${roslina.max.height}')}")
+    @Value("#{T(Float).parseFloat('${roslina.wysokosc.max}')}")
     private float wysokoscLimit;
 
     @Override

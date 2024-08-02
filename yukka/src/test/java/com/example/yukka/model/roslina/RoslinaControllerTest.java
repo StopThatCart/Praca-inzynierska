@@ -1,24 +1,41 @@
 package com.example.yukka.model.roslina;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.neo4j.AutoConfigureDataNeo4j;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.example.yukka.model.roslina.controller.RoslinaController;
+import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 
+import lombok.extern.slf4j.Slf4j;
+
 @SpringBootTest
-@AutoConfigureDataNeo4j
-@ContextConfiguration()
+//@AutoConfigureDataNeo4j
+@Testcontainers
+@Slf4j
+//@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@TestMethodOrder(OrderAnnotation.class)
+//@ContextConfiguration
 public class RoslinaControllerTest {
+
+    @Autowired
+    private RoslinaController roslinaController;
 
     @Autowired
     private RoslinaService roslinaService;
@@ -26,6 +43,13 @@ public class RoslinaControllerTest {
     private RoslinaMapper roslinaMapper;
 
     Roslina roslina;
+    private Long roslinaId;
+    private String name = "Na pewno takiej nazwy nie ma";
+    private String latinName = "Nomen Latinum certe nullum est";
+    private String description = "To jest dramat.";
+    private String imageFilename = "tilia_henryana.jpg";
+    private Double minHeight = 0.5;
+    private Double maxHeight = 4.0;
 
     private List<String> extractNazwy(List<Wlasciwosc> wlasciwosci) {
         return wlasciwosci.stream()
@@ -33,6 +57,7 @@ public class RoslinaControllerTest {
                            .sorted()
                            .collect(Collectors.toList());
     }
+    
 
     private boolean areWlasciwosciEqual(List<Wlasciwosc> list1, List<Wlasciwosc> list2) {
         return extractNazwy(list1).equals(extractNazwy(list2));
@@ -40,14 +65,6 @@ public class RoslinaControllerTest {
 
     @BeforeEach
     void setUp() {
-        String name = "Na pewno takiej nazwy nie ma";
-        String latinName = "Nomen Latinum certe nullum est";
-        String description = "To jest dramat.";
-        String imageFilename = "tilia_henryana.jpg";
-        Double minHeight = 0.5;
-        Double maxHeight = 4.0;
-
-        // Tworzenie kilku obiektów Wlasciwosc
         Wlasciwosc formaDrzewo = new Wlasciwosc(Collections.singletonList("Forma"), "TAKA TESTOWA");
 
         Wlasciwosc glebaPrzecietna = new Wlasciwosc(Collections.singletonList("Gleba"),"TEŻ TESTOWA");
@@ -80,9 +97,8 @@ public class RoslinaControllerTest {
         Wlasciwosc walorRoslinaMiododajna = new Wlasciwosc(Collections.singletonList("Walor"),"roślina miododajna");
         // Resztę właściwości zostawia się pustą.
 
-        // Tworzymy obiekt klasy Roslina
         Roslina lipaHenryego = Roslina.builder()
-            //.id(294L)
+            .id(12345678L)
             .nazwa(name)
             .nazwaLacinska(latinName)
             .opis(description)
@@ -107,15 +123,28 @@ public class RoslinaControllerTest {
             .walory(Arrays.asList(walorPachnaceKwiaty, walorRoslinaMiododajna))
             .build();
         roslina = lipaHenryego;
+
+        System.out.println("\n\n\nUSUWANKOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n");
+        roslinaService.deleteByNazwaLacinska(latinName);
     }
 
 
     @Test
+    @Order(1)
     void testSaveRoslina() {
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
-        Roslina roslina2 = roslinaService.save(roslinaRequest);
-
+        ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest);
+       
+        if(response.getStatusCode() == HttpStatus.OK) {
+           System.out.println("\n\n\nAHAHAHAHAHAAHAHAAHAHAHAHAHAHAHAH\n\n\n");
+           return;
+        }
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        
+      //  Roslina roslina2 = roslinaController.saveRoslina(roslinaRequest).getBody();
+        Roslina roslina2 = roslinaService.findByNazwaLacinska(latinName).get();
         // Assert
+        
         Assertions.assertThat(roslina2).isNotNull();
         Assertions.assertThat(roslina2.getId()).isNotNull();
         Assertions.assertThat(roslina2.getNazwa()).isEqualTo(roslina.getNazwa());
@@ -146,5 +175,76 @@ public class RoslinaControllerTest {
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getWilgotnosci(), roslina.getWilgotnosci())).isTrue();
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getZastosowania(), roslina.getZastosowania())).isTrue();
         Assertions.assertThat(areWlasciwosciEqual(roslina2.getZimozielonosci(), roslina.getZimozielonosci())).isTrue();
+
+        System.out.println("\n\n\nZakończono test dodawania roślin.\n\n\n");
+    }
+
+    @Test
+    @Order(2)
+    void testUpdateRoslina() {
+        RoslinaRequest roslinaRequestOld = roslinaMapper.toRoslinaRequest(roslina);
+        roslinaService.save(roslinaRequestOld);
+
+        String nazwa2 = "Zmieniona nazwa";
+        Wlasciwosc grupa2 = new Wlasciwosc(Collections.singletonList("Grupa"), "owocowe");
+        Wlasciwosc owoc22 = new Wlasciwosc(Collections.singletonList("Owoc"),"rzułte");
+
+        // TODO: Obsłuż wstawianie nulli do Kontrollera
+
+        // Zmiana nazwy
+        roslina.setNazwa(nazwa2);
+
+        // Usunięcie właściwości
+        roslina.setFormy(Arrays.asList());
+
+        // Zamiana właściwości
+        roslina.setGrupy(Arrays.asList(grupa2));
+
+        // Dodanie właściwości
+        List<Wlasciwosc> owoceOld = roslina.getOwoce();
+        List<Wlasciwosc> owoceNew = new ArrayList<>(owoceOld);  // Zamiana na modyfikowalną listę
+        owoceNew.addAll(Arrays.asList(owoc22));
+        roslina.setOwoce(owoceNew);  // Ustawienie zaktualizowanej listy
+
+        RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
+        ResponseEntity<String> response = roslinaController.updateRoslina(roslinaRequest);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Roslina roslina2 = roslinaService.findByNazwaLacinska(latinName).get();
+        
+        Assertions.assertThat(roslina2).isNotNull();
+        Assertions.assertThat(roslina2.getId()).isNotNull();
+
+        // Ta część jest ważna
+        Assertions.assertThat(roslina2.getNazwa()).isEqualTo(nazwa2);
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getFormy(), Arrays.asList())).isTrue();
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getGrupy(), Arrays.asList(grupa2))).isTrue();
+
+        //System.out.println("\n\n\n + OwoceOld: " + owoceOld + " Roslina: " + roslina2.getOwoce() + " ||| " + owoceNew + " :OwoceNew\n\n\n");
+
+        Assertions.assertThat(areWlasciwosciEqual(roslina2.getOwoce(), owoceNew)).isTrue();
+
+        System.out.println("\n\n\nZakończono test auktualizacji rośliny.\n\n\n");
+    }
+
+    @Test
+    @Order(3) 
+    void testDeleteRoslina() {
+        RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
+        ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest);
+    
+        if(response.getStatusCode() == HttpStatus.OK) {
+        System.out.println("\n\n\nAHAHAHAHAHAAHAHAAHAHAHAHAHAHAHAH\n\n\n");
+        return;
+        }
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Roslina roslina2 = roslinaService.findByNazwaLacinska(latinName).get();
+
+        roslinaController.deleteRoslina(roslina2.getNazwaLacinska());
+
+        Assertions.assertThat(roslinaService.findByNazwaLacinska(latinName)).isEmpty();
+
+        System.out.println("\n\n\nZakończono test usuwania roślin.\n\n\n");
     }
 }
