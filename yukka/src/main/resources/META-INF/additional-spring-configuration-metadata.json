@@ -18,5 +18,10 @@
     "name": "roslina.obraz.default",
     "type": "java.lang.String",
     "description": "A description for 'roslina.obraz.default'"
+  },
+  {
+    "name": "application.file.uploads.photos-output-path",
+    "type": "java.lang.String",
+    "description": "A description for 'application.file.uploads.photos-output-path'"
   }
 ]}

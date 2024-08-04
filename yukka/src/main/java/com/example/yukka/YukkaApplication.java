@@ -1,8 +1,5 @@
 package com.example.yukka;
 
-import java.util.Locale;
-import java.util.logging.Logger;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,21 +7,22 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import com.example.yukka.model.uzytkownik.UzytkownikRepository;
-import com.github.javafaker.Faker;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication
 @RequiredArgsConstructor
+@Slf4j
 public class YukkaApplication {
 
 	
 	private final UzytkownikRepository uzytkownikRepository;
 
 
-	Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
+	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
 	
-	private static final Logger LOGGER = Logger.getLogger(YukkaApplication.class.getName());
+
 
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(YukkaApplication.class, args);

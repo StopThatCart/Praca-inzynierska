@@ -10,7 +10,6 @@ import java.util.HashMap;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,14 +64,18 @@ class AuthenticationService {
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
 
         System.out.println("Auth: " + auth.toString());
+        
 
         var claims = new HashMap<String, Object>();
-        var user = ((User) auth.getPrincipal());
+
+        var user = ((Uzytkownik) auth.getPrincipal());
         claims.put("Nazwa", user.getUsername());
+        claims.put("Email", user.getEmail());
+        //claims.put("Haslo", user.getUsername());
        // claims.put("authorities", user.getAuthorities()); // To już jest robione w JwtService
 
         /* */
-        var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
+        var jwtToken = jwtService.generateToken(claims, (Uzytkownik) auth.getPrincipal());
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();

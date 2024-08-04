@@ -24,6 +24,7 @@ public class UzytkownikResource {
         return userDetailsServiceImpl.getAllUsers();
     }
 
+    // TODO: szukanie po emailu
     @GetMapping("/email")
     public Optional<Uzytkownik> getByEmail() {
         String eo = "jan@email.pl";

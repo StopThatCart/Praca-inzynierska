@@ -4,8 +4,12 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.yukka.file.FileStoreService;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaRequest;
 
@@ -13,6 +17,9 @@ import com.example.yukka.model.roslina.RoslinaRequest;
 public class RoslinaService {
     @Autowired
     RoslinaRepository roslinaRepository;
+
+    @Autowired
+    FileStoreService fileStoreService;
 
    // @Autowired
    // RoslinaMapper roslinaMapper;
@@ -78,5 +85,16 @@ public class RoslinaService {
     // Usuwanie po ID zajmuje ogromną ilość czasu i wywołuje HeapOverflow, więc lepiej jest użyć UNIQUE atrybutu jak nazwaLacinska
     public void deleteByNazwaLacinska(String nazwaLacinska) {
         roslinaRepository.deleteByNazwaLacinska(nazwaLacinska);
+    }
+
+    public void uploadRoslinaObraz(MultipartFile file, Authentication connectedUser, String latinName) {
+        // TODO: Lepsza obsługa w przypadku nieznalezienia niczego
+        Roslina roslina = roslinaRepository.findByNazwaLacinska(latinName).get();
+        User user = ((User) connectedUser.getPrincipal());
+
+        var pfp = fileStoreService.saveFile(file, latinName, user.getUsername());
+        
+        roslina.setObraz(pfp);
+        roslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getObraz(), roslina.getWysokoscMin(), roslina.getWysokoscMax());
     }
 }

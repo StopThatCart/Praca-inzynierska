@@ -5,7 +5,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,8 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
         System.out.println("\n\n\n USEEEEERR: " + uzyt.toString() + "\n\n\n");
 
         if(passwordEncoder.matches(haslo, uzyt.getHaslo())) {
-            final UserDetails principal = new User(nameOrEmail, haslo, uzyt.getAuthorities());
+            //  final UserDetails principal = new User(uzyt.getName(), haslo, uzyt.getAuthorities());
+            final UserDetails principal = uzyt;
             return new UsernamePasswordAuthenticationToken(principal, haslo, uzyt.getAuthorities());
         } else {
             throw new BadCredentialsException("Niepoprawny login lub hasło.");
