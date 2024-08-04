@@ -1,12 +1,12 @@
     package com.example.yukka.model.roslina.wlasciwosc;
 
     import java.util.List;
-    import java.util.Objects;
+import java.util.Objects;
 
     import org.springframework.data.neo4j.core.schema.DynamicLabels;
     import org.springframework.data.neo4j.core.schema.GeneratedValue;
-    import org.springframework.data.neo4j.core.schema.Id;
-    import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
     import org.springframework.data.neo4j.core.schema.Property;
     import org.springframework.data.neo4j.core.schema.Relationship;
 
@@ -74,7 +74,7 @@
             return "Wlasciwosc [labels=" + labels + ", id=" + id + ", nazwa=" + nazwa + ", plants=" + plants + "]";
         }
 
-        
+
 
 
     }

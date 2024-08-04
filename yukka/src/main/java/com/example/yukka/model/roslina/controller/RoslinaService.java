@@ -41,7 +41,6 @@ public class RoslinaService {
 
     public Roslina save(RoslinaRequest request) {
         if(request.areWlasciwosciEmpty()) {
-            System.out.println("\n\n\n\n\nWŁAŚCIWOŚCI SĄ PUSTEn\n\n\n\n\n");
             return roslinaRepository.addRoslina(
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
@@ -63,7 +62,6 @@ public class RoslinaService {
 
     public Roslina update(RoslinaRequest request) {
         if(request.areWlasciwosciEmpty()) {
-            System.out.println("\n\n\n\n\nWŁAŚCIWOŚCI SĄ PUSTEn\n\n\n\n\n");
             return roslinaRepository.updateRoslina(
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 

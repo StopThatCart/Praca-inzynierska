@@ -31,12 +31,12 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         MERGE (p:Roslina {nazwa: $name, nazwaLacinska: $latinName, opis: $description, 
         obraz: COALESCE($imageFilename, 'default_plant.jpg'), wysokoscMin: $heightMin, wysokoscMax: $heightMax}) 
 
-        WITH p, $properties AS properties UNWIND properties AS property
+        WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
-        WITH p, property, [ property.labels, 'Wlasciwosc' ] AS labels
-        CALL apoc.merge.node(labels, {nazwa: property.nazwa}) YIELD node AS w
-        WITH p, w, property
-        CALL apoc.merge.relationship(p, property.relacja, {}, {}, w) YIELD rel
+        WITH p, relat, [ relat.labels, 'Wlasciwosc' ] AS labels
+        CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
+        WITH p, w, relat
+        CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
         MERGE (w)-[:MA_ROSLINE]->(p)
 
         WITH p OPTIONAL MATCH path=(p)-[r]->(w)
@@ -46,7 +46,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         @Param("name") String name,@Param("latinName") String latinName, 
         @Param("description") String description, @Param("imageFilename") String imageFilename, 
         @Param("heightMin") Double heightMin, @Param("heightMax") Double heightMax, 
-        @Param("properties") List<Map<String, String>> properties
+        @Param("relatLump") List<Map<String, String>> relatLump
     );
 
     @Query("""
@@ -69,20 +69,20 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
            SET  p.nazwa = $name, p.opis = $description,
                 p.obraz = COALESCE($imageFilename, 'default_plant.jpg'),
                 p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
-           WITH p, $properties AS properties UNWIND properties AS property
+           WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
            MATCH (p)-[r]->(w:Wlasciwosc)
-           WITH p, r, w, collect(property) AS newProperties
+           WITH p, r, w, collect(relat) AS newRelatLump
 
-           WHERE NOT any(np IN newProperties WHERE w.nazwa = np.nazwa AND type(r) = np.relacja)
+           WHERE NOT any(np IN newRelatLump WHERE w.nazwa = np.nazwa AND type(r) = np.relacja)
            DELETE r
 
-           WITH p, newProperties AS properties
-           UNWIND properties AS property
-           WITH p, property, [ property.labels, 'Wlasciwosc' ] AS labels
-           CALL apoc.merge.node(labels, {nazwa: property.nazwa}) YIELD node AS w
-           WITH p, w, property
-           CALL apoc.merge.relationship(p, property.relacja, {}, {}, w) YIELD rel
+           WITH p, newRelatLump AS relatLump
+           UNWIND relatLump AS relat
+           WITH p, relat, [ relat.labels, 'Wlasciwosc' ] AS labels
+           CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
+           WITH p, w, relat
+           CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
            MERGE (w)-[:MA_ROSLINE]->(p)
 
            WITH p OPTIONAL MATCH path=(p)-[r]->(w)
@@ -95,7 +95,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         @Param("imageFilename") String imageFilename,
         @Param("heightMin") Double heightMin,
         @Param("heightMax") Double heightMax,
-        @Param("properties") List<Map<String, String>> properties
+        @Param("relatLump") List<Map<String, String>> relatLump
     );
 
 
@@ -126,25 +126,25 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
             OPTIONAL MATCH (p)-[r]->(w:Wlasciwosc), (p)<-[r2:MA_ROSLINE]-(w)
             DELETE r, r2
 
-            WITH p, $properties AS properties
-            UNWIND properties AS property
-            WITH p, property, [ property.labels, 'Wlasciwosc' ] AS labels 
-            CALL apoc.merge.node(labels, {nazwa: property.nazwa}) YIELD node AS w
-            WITH p, w, property
-            CALL apoc.merge.relationship(p, property.relacja, {}, {}, w) YIELD rel
+            WITH p, $relatLump AS relatLump
+            UNWIND relatLump AS relat
+            WITH p, relat, [ relat.labels, 'Wlasciwosc' ] AS labels 
+            CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
+            WITH p, w, relat
+            CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
             MERGE (w)-[:MA_ROSLINE]->(p)
 
             WITH p OPTIONAL MATCH path=(p)-[r]->(w)
             RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
           """)
-    Roslina updateRoslinaPropertiesButEasierAndSlower(
+    Roslina updateRoslinaRelationshipsButEasierAndSlower(
         @Param("name") String name,
         @Param("latinName") String latinName,
         @Param("description") String description,
         @Param("imageFilename") String imageFilename,
         @Param("heightMin") Double heightMin,
         @Param("heightMax") Double heightMax,
-        @Param("properties") List<Map<String, String>> properties
+        @Param("relatLump") List<Map<String, String>> relatLump
     );
     
     @Query("MATCH (p:Roslina{nazwaLacinska: $latinName}) DETACH DELETE p")
