@@ -31,15 +31,12 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
         String nameOrEmail = authentication.getName();
         String haslo = authentication.getCredentials().toString();
 
-        Uzytkownik uzyt = uzytkownikRepository.findByNameOrEmail(nameOrEmail);
+        Uzytkownik uzyt = uzytkownikRepository.findByNameOrEmail(nameOrEmail).get();
         if(uzyt == null){
             throw new BadCredentialsException("Niepoprawny login lub hasło.");
         }
 
-        System.out.println("\n\n\n USEEEEERR: " + uzyt.toString() + "\n\n\n");
-
         if(passwordEncoder.matches(haslo, uzyt.getHaslo())) {
-            //  final UserDetails principal = new User(uzyt.getName(), haslo, uzyt.getAuthorities());
             final UserDetails principal = uzyt;
             return new UsernamePasswordAuthenticationToken(principal, haslo, uzyt.getAuthorities());
         } else {

@@ -26,7 +26,6 @@ public class AuthController {
             @RequestBody 
              @Valid
             RegistrationRequest request) {
-        System.out.println("\n\n\n Request: " + request.toString() + "\n\n\n");
         //return ResponseEntity.ok().build();
         service.register(request);
         return ResponseEntity.accepted().build();

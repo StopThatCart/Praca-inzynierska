@@ -50,17 +50,20 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     );
 
     @Query("""
-        MERGE (p:Roslina {nazwa: $name, nazwaLacinska: $latinName, opis: $description, 
-        obraz: COALESCE($imageFilename, 'default_plant.jpg'), wysokoscMin: $heightMin, wysokoscMax: $heightMax}) 
+        WITH $roslina.__properties__ AS rp 
+        MERGE (p:Roslina {
+        nazwa: rp.nazwa, 
+        nazwaLacinska: rp.nazwaLacinska, 
+        opis: rp.opis, 
+        obraz: COALESCE(rp.obraz, 'default_plant.jpg'), 
+        wysokoscMin: rp.wysokoscMin, 
+        wysokoscMax: rp.wysokoscMax
+        }) 
 
         WITH p OPTIONAL MATCH path=(p)-[r]->(w)
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
-    Roslina addRoslina(
-        @Param("name") String name, @Param("latinName") String latinName,
-        @Param("description") String description, @Param("imageFilename") String imageFilename,
-        @Param("heightMin") Double heightMin, @Param("heightMax") Double heightMax
-    );
+    Roslina addRoslina(@Param("roslina") Roslina roslina);
 
 // To niestety trzeba zapamiętać bo mi trochę zajęło
 // Czas wykonania testu: 162ms, 179ms

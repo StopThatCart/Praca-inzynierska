@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.yukka.model.uzytkownik.UserDetailsServiceImpl;
+import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikRepository;
 import com.example.yukka.security.JwtService;
@@ -23,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class AuthenticationService {
     private final UzytkownikRepository uzytkownikRepository;
+    private final UserDetailsServiceImpl uzytkownikService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -38,7 +41,7 @@ class AuthenticationService {
         //var userRole = ROLE.Uzytkownik.toString();
         System.out.println("\n\n\n Request: " + request.toString() + "\n\n\n");
         //System.out.println("\n\n\n Request: " + request.getNazwa() + "\n\n\n");
-        var user = Uzytkownik.builder()
+        Uzytkownik user = Uzytkownik.builder()
                 .nazwa(request.getNazwa())
                 .email(request.getEmail())
                 .haslo(passwordEncoder.encode(request.getHaslo()))
@@ -47,8 +50,11 @@ class AuthenticationService {
                  //.labels(List.of(userRole))
                 .build();
         
-        //uzytkownikRepository.addNewPracownik(user.getNazwa(), user.getEmail(), user.getHaslo());
-        uzytkownikRepository.addNewUzytkownik(user.getNazwa(), user.getEmail(), user.getHaslo());
+        Ustawienia ust = Ustawienia.builder().build();
+
+        uzytkownikService.addUzytkownik(user);
+
+    
         //uzytkownikRepository.addNewUzytkownik(user);
         //sendValidationEmail(user);
     }

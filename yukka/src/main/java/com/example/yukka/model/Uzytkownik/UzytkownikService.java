@@ -32,4 +32,19 @@ public class UserDetailsServiceImpl implements  UserDetailsService {
     public Optional<Uzytkownik> dawajEmailDeklu(String userEmail){
         return repository.findByEmail(userEmail);
     }
+
+    public void banUzytkownik(String userEmail){
+        repository.banUzytkownik(userEmail);
+    }
+
+    public void addUzytkownik(Uzytkownik uzytkownik){
+        Ustawienia ust = Ustawienia.builder().build();
+        repository.addUzytkownik(uzytkownik, ust);
+    }
+
+    public void addPracownik(Uzytkownik uzytkownik){
+        Ustawienia ust = Ustawienia.builder().build();
+        repository.addUzytkownik(uzytkownik, uzytkownik.getLabels(), ust);
+    }
+
 }

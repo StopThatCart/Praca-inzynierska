@@ -2,6 +2,7 @@ package com.example.yukka.model.uzytkownik;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,7 +39,8 @@ public class Uzytkownik implements UserDetails, Principal{
     private Long id;
 
     @DynamicLabels
-    private List<String> labels;
+    @Builder.Default
+    private List<String> labels = new ArrayList<>();
 
     @Property("nazwa")
     private String nazwa;
@@ -50,18 +53,29 @@ public class Uzytkownik implements UserDetails, Principal{
 
     @CreatedDate
     @Property("data_utworzenia")
-    private LocalDateTime createdDate;
+    @Builder.Default
+    private LocalDateTime createdDate = LocalDateTime.now();
 
     @Property("ban")
-    private boolean banned;
+    @Builder.Default
+    private boolean ban = false;
 
-    
+    @Relationship(type = "MA_USTAWIENIA", direction = Relationship.Direction.OUTGOING)
+    // Daj List jak nie działa
+    private MaUstawienia ustawienia;
 
 
     public Uzytkownik(String name, String email, String password) {
         this.nazwa = name;
         this.email = email;
         this.haslo = password;
+    }
+
+    public Uzytkownik(String name, String email, String password, String label) {
+        this.nazwa = name;
+        this.email = email;
+        this.haslo = password;
+        this.labels = List.of(label);
     }
 
     @Override
@@ -79,8 +93,8 @@ public class Uzytkownik implements UserDetails, Principal{
         return nazwa;
     }
 
-    public boolean isBanned() {
-        return banned;
+    public boolean isBan() {
+        return ban;
     }
 
     @Override
@@ -101,7 +115,7 @@ public class Uzytkownik implements UserDetails, Principal{
     @Override
     public String toString() {
         return "Uzytkownik [id=" + id + ", labels=" + labels + ", nazwa=" + nazwa + ", email=" + email + ", haslo="
-                + haslo + ", createdDate=" + createdDate + ", banned=" + banned + "]";
+                + haslo + ", createdDate=" + createdDate + ", banned=" + ban + "]";
     }
 
 

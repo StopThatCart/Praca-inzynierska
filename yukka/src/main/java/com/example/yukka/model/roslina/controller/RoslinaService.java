@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.model.roslina.Roslina;
+import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 
 @Service
@@ -21,8 +22,8 @@ public class RoslinaService {
     @Autowired
     FileStoreService fileStoreService;
 
-   // @Autowired
-   // RoslinaMapper roslinaMapper;
+    @Autowired
+    RoslinaMapper roslinaMapper;
 
     public Collection<Roslina> getSome(int amount) {
         System.out.println("BOOOOOOOOOI " + amount);
@@ -47,11 +48,15 @@ public class RoslinaService {
     }
 
     public Roslina save(RoslinaRequest request) {
+
+        Roslina pl = roslinaMapper.toRoslina(request);
+        //return Roslina roslinaRepository.save(request.getNazwa(), request.getNazwaLacinska(), 
+       // request.getOpis(), request.getWysokoscMin(), 
+       // request.getWysokoscMax(), request.getWlasciwosci());
+        
+
         if(request.areWlasciwosciEmpty()) {
-            return roslinaRepository.addRoslina(
-            request.getNazwa(), request.getNazwaLacinska(), 
-            request.getOpis(), request.getObraz(), 
-            request.getWysokoscMin(), request.getWysokoscMax());
+            return roslinaRepository.addRoslina(pl);
         }
 
         return roslinaRepository.addRoslina(
@@ -59,12 +64,7 @@ public class RoslinaService {
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosci());
-        /* 
-        Roslina pl = roslinaMapper.toRoslina(request);
-        return Roslina roslinaRepository.save(request.getNazwa(), request.getNazwaLacinska(), 
-        request.getOpis(), request.getWysokoscMin(), 
-        request.getWysokoscMax(), request.getWlasciwosci());
-        */
+
     }
 
     public Roslina update(RoslinaRequest request) {

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,11 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaRequest;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 
 
@@ -69,18 +73,29 @@ public class RoslinaController {
     
     
     @DeleteMapping("/{nazwaLacinska}")
-    public String deleteRoslina(@PathVariable String nazwaLacinska) {
+    public ResponseEntity<String> deleteRoslina(@PathVariable String nazwaLacinska) {
         Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(nazwaLacinska);
 
         if (roslina.isEmpty()) {
-            return "Nie znaleziono rośliny o nazwie łacińskiej - " + nazwaLacinska;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nie znaleziono rośliny o nazwie łacińskiej - " + nazwaLacinska);
         }
 
-        roslinaService.deleteByNazwaLacinska(nazwaLacinska);;
+        roslinaService.deleteByNazwaLacinska(nazwaLacinska);
 
-        return "Usunięto rośline o nazwie łacińskiej - " + nazwaLacinska;
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usunięto rośline o nazwie łacińskiej - " + nazwaLacinska);
     }
     
+
+    // TODO: Przetestować to jak już będzie podstawowy panel. Dodatkowo obsługa usuwania starego obrazu po zmianie obrazu
+    @PostMapping(value = "/obraz/{nazwaLacinska}", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadBookCoverPicture(
+            @PathVariable("nazwaLacinska") String nazwaLacinska, 
+            @Parameter() @RequestPart("file") 
+            MultipartFile file, 
+            Authentication connectedUser) {
+        roslinaService.uploadRoslinaObraz(file, connectedUser, nazwaLacinska);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
     
 
 }
