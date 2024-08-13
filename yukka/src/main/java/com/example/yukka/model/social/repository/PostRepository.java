@@ -1,16 +1,40 @@
-package com.example.yukka.model.post.controller;
+package com.example.yukka.model.social.repository;
+
+import java.util.Optional;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.yukka.model.post.Post;
+import com.example.yukka.model.social.post.Post;
 
 
 
 public interface PostRepository extends Neo4jRepository<Post, Long> {
 
- 
+
+    @Query("""
+        MATCH (post:Post {post_id: $post_id})
+        OPTIONAL MATCH path = (post)-[:MA_KOMENTARZ]->
+                              (kom:Komentarz)
+                              <-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
+                              <-[:SKOMENTOWAL]-(uzytkownik:Uzytkownik)
+        RETURN post, collect(nodes(path)), collect(relationships(path))
+        """)
+    Optional<Post> findPostByPostIdButWithPath(@Param("post_id") String postId);
+     
+    @Query("""
+        MATCH (post:Post{post_id: $post_id})
+        OPTIONAL MATCH (post)-[:MA_KOMENTARZ]->(kom:Komentarz)
+        OPTIONAL MATCH (kom)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
+        OPTIONAL MATCH (uzytkownik)-[:SKOMENTOWAL]->(odpowiedz)
+
+        WITH post, collect(DISTINCT odpowiedz) AS komentarze, collect(DISTINCT uzytkownik) AS uzytkownicy
+        RETURN post, komentarze, uzytkownicy
+        """)
+    Optional<Post> findPostByPostId(@Param("post_id") String postId);
+
+    // TODO: Posty z paginacją
 
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})
@@ -45,8 +69,9 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
                                         tytul: pt.tytul, opis: pt.opis, 
                                         oceny_lubi: 0, oceny_nie_lubi: 0, 
                                         obraz: COALESCE(pt.obraz, null), data_utworzenia: localdatetime()})
+        RETURN post
         """)
-    void addPost(@Param("email") String email, @Param("post") Post post);
+    Optional<Post> addPost(@Param("email") String email, @Param("post") Post post);
 
     @Query("""
         MATCH (post:Post {post_id: $post_id})
@@ -68,8 +93,6 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
     @Query("""
         MATCH (u:Post) 
         DETACH DELETE u 
-        WITH u
-        MATCH(ust:Ustawienia) DETACH DELETE ust
         """)
     void clearPosts();
 

@@ -1,4 +1,4 @@
-package com.example.yukka.model.post;
+package com.example.yukka.model.social;
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -19,7 +19,6 @@ public class Ocenil {
     @Property("lubi")
     private boolean lubi;
 
-    // Uwaga: Może nie zadziałać
     @TargetNode
     private Oceniany oceniany;
 

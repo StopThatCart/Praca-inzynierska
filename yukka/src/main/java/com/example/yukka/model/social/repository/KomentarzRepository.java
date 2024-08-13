@@ -1,14 +1,23 @@
-package com.example.yukka.model.post.controller;
+package com.example.yukka.model.social.repository;
+
+import java.util.Optional;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.yukka.model.post.Komentarz;
+import com.example.yukka.model.social.komentarz.Komentarz;
 
 
 
 public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
+
+    
+    @Query("""
+            MATCH (kom:Komentarz{komentarz_id: $komentarz_id})
+            RETURN kom
+            """)
+    Optional<Komentarz> findKomentarzByKomentarzId(@Param("komentarz_id") String komentarz_id);
 
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})
@@ -47,8 +56,6 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         """)
     void addKomentarzToKomentarz(@Param("email") String email, @Param("kom") Komentarz kom, @Param("target_komentarz_id") String targetKomentarzId);
 
-
-    // UWAGA: Nie wiem, czy działa
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
         MATCH (post:Post{post_id: $target_post_id})
@@ -60,6 +67,18 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         """)
     void addKomentarzToPost(@Param("email") String email, @Param("target_post_id") String targetPostId, @Param("kom") Komentarz kom);
 
+    @Query("""
+        MATCH (uzyt:Uzytkownik{email: $email})
+        MATCH (uzyt)-[JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)
+        WITH uzyt, priv, kom.__properies__ as pt
+        CREATE (uzyt)-[:SKOMENTOWAL]->
+                (kom:Komentarz{komentarz_id: pt.komentarz_id, opis: pt.opis, 
+                oceny_lubi: null, oceny_nie_lubi: null, obraz: pt.obraz, data_utworzenia: localdatetime()})
+                <-[:MA_KOMENTARZ]-(priv)
+        """)
+    void addKomentarzToRozmowaPrywatna(@Param("email") String email, @Param("kom") Komentarz kom);
+
+    // Jakimś cudem działa z i bez odpowiedzi. Czary.
     @Query("""
         MATCH (post:Post{post_id: $target_post_id})-[:MA_KOMENTARZ]->(komentarz:Komentarz)
         OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)

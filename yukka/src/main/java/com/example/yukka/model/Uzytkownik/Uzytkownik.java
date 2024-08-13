@@ -19,9 +19,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.yukka.authorities.ROLE;
-import com.example.yukka.model.post.Komentarz;
-import com.example.yukka.model.post.Ocenil;
-import com.example.yukka.model.post.Post;
+import com.example.yukka.model.social.Ocenil;
+import com.example.yukka.model.social.RozmowaPrywatna;
+import com.example.yukka.model.social.komentarz.Komentarz;
+import com.example.yukka.model.social.post.Post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -77,6 +78,9 @@ public class Uzytkownik implements UserDetails, Principal{
     @Relationship(type = "MA_USTAWIENIA", direction = Relationship.Direction.OUTGOING)
     // Daj List jak nie działa
     private MaUstawienia ustawienia;
+
+    @Relationship(type = "JEST_W_ROZMOWIE", direction = Relationship.Direction.OUTGOING)
+    private List<RozmowaPrywatna> rozmowyPrywatne;
 
 
     public Uzytkownik(String name, String email, String password) {

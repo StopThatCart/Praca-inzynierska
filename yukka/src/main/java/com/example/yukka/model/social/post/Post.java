@@ -1,4 +1,4 @@
-package com.example.yukka.model.post;
+package com.example.yukka.model.social.post;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,7 +10,9 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.social.Oceniany;
+import com.example.yukka.model.social.Ocenil;
+import com.example.yukka.model.social.komentarz.Komentarz;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,11 +26,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Komentarz implements Oceniany {
+public class Post implements Oceniany {
     @Id @GeneratedValue
     private Long id;
-    @Property(name = "komentarz_id")
-    private String komentarzId;
+    @Property(name = "post_id")
+    private String postId;
+
+    @Property(name = "tytul")
+    private String tytul;
 
     @Property(name = "opis")
     private String opis;
@@ -41,6 +46,9 @@ public class Komentarz implements Oceniany {
     
     @Property(name = "obraz")
     private String obraz;
+
+    @Property(name = "liczba_komentarzy")
+    private Integer liczbaKomentarzy;
     
     @CreatedDate
     @Property(name = "data_utworzenia")
@@ -49,16 +57,7 @@ public class Komentarz implements Oceniany {
     @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
     private List<Ocenil> ocenil;
 
-    @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.INCOMING)
-    private List<Post> posty;
-
-    @Relationship(type = "ODPOWIEDZIAL", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.OUTGOING)
     private List<Komentarz> komentarze;
-
-    @Relationship(type = "ODPOWIEDZIAL", direction = Relationship.Direction.INCOMING)
-    private List<Komentarz> odpowiedzi;
-
-    @Relationship(type = "SKOMENTOWAL", direction = Relationship.Direction.INCOMING)
-    private Uzytkownik uzytkownik;
 
 }

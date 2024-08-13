@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import com.example.yukka.model.post.Komentarz;
-import com.example.yukka.model.post.Post;
-import com.example.yukka.model.post.controller.KomentarzRepository;
-import com.example.yukka.model.post.controller.PostRepository;
+import com.example.yukka.model.social.komentarz.Komentarz;
+import com.example.yukka.model.social.post.Post;
+import com.example.yukka.model.social.repository.KomentarzRepository;
+import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.uzytkownik.MaUstawienia;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
