@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.yukka.model.uzytkownik.UzytkownikService;
+import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;

@@ -42,6 +42,9 @@ public class Post implements Oceniany {
     
     @Property(name = "obraz")
     private String obraz;
+
+    @Property(name = "liczba_komentarzy")
+    private Integer liczbaKomentarzy;
     
     @CreatedDate
     @Property(name = "data_utworzenia")
@@ -49,5 +52,8 @@ public class Post implements Oceniany {
 
     @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
     private List<Ocenil> ocenil;
+
+    @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.OUTGOING)
+    private List<Komentarz> komentarze;
 
 }

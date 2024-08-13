@@ -49,7 +49,27 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
     void addPost(@Param("email") String email, @Param("post") Post post);
 
     @Query("""
-        MATCH (u:Post) DETACH DELETE u 
+        MATCH (post:Post {post_id: $post_id})
+    
+        OPTIONAL MATCH (post)-[:MA_KOMENTARZ]->(komentarz:Komentarz)
+        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
+            
+        WITH post,komentarz, collect(odpowiedz) AS odpowiedzi
+        UNWIND odpowiedzi AS odp
+        DETACH DELETE odp
+
+        WITH post, komentarz
+        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
+        DETACH DELETE komentarz
+        DETACH DELETE post
+        """)
+    void deletePost(@Param("post_id") String post_id);
+
+    @Query("""
+        MATCH (u:Post) 
+        DETACH DELETE u 
+        WITH u
+        MATCH(ust:Ustawienia) DETACH DELETE ust
         """)
     void clearPosts();
 

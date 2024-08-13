@@ -1,4 +1,4 @@
-package com.example.yukka.model.uzytkownik;
+package com.example.yukka.model.uzytkownik.controller;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.RequiredArgsConstructor;
 

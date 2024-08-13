@@ -66,6 +66,8 @@ public class Uzytkownik implements UserDetails, Principal{
     @Relationship(type = "MA_POST", direction = Relationship.Direction.OUTGOING)
     private List<Post> posty;
 
+    // TODO: Profil
+
     @Relationship(type = "SKOMENTOWAL", direction = Relationship.Direction.OUTGOING)
     private List<Komentarz> komentarze;
     

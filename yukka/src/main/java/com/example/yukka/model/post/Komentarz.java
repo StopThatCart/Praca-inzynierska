@@ -10,6 +10,8 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import com.example.yukka.model.uzytkownik.Uzytkownik;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,5 +48,17 @@ public class Komentarz implements Oceniany {
 
     @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
     private List<Ocenil> ocenil;
+
+    @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.INCOMING)
+    private List<Post> posty;
+
+    @Relationship(type = "ODPOWIEDZIAL", direction = Relationship.Direction.OUTGOING)
+    private List<Komentarz> komentarze;
+
+    @Relationship(type = "ODPOWIEDZIAL", direction = Relationship.Direction.INCOMING)
+    private List<Komentarz> odpowiedzi;
+
+    @Relationship(type = "SKOMENTOWAL", direction = Relationship.Direction.INCOMING)
+    private Uzytkownik uzytkownik;
 
 }

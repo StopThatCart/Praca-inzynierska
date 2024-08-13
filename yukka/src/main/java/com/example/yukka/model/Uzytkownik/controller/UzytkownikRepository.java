@@ -1,4 +1,4 @@
-package com.example.yukka.model.uzytkownik;
+package com.example.yukka.model.uzytkownik.controller;
 
 import java.util.Collection;
 import java.util.List;
@@ -7,6 +7,9 @@ import java.util.Optional;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
+
+import com.example.yukka.model.uzytkownik.Ustawienia;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 
 public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> {
@@ -85,10 +88,9 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
     // TODO: Zmień jak będą kolejne komponenty dodawane
     @Query("""
-            MATCH (u:Uzytkownik{email: $email}) 
+            MATCH (u:Uzytkownik{email: $email})-[:MA_USTAWIENIA]->(ust:Ustawienia)
+            DETACH DELETE ust
             DETACH DELETE u 
-            WITH u
-            MATCH(ust:Ustawienia) DETACH DELETE ust
             """)
     void removeUzytkownik(@Param("email") String email);
 }

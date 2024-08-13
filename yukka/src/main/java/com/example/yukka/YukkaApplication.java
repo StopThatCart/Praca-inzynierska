@@ -11,12 +11,13 @@ import org.springframework.context.annotation.Bean;
 
 import com.example.yukka.model.post.Komentarz;
 import com.example.yukka.model.post.Post;
+import com.example.yukka.model.post.controller.KomentarzRepository;
 import com.example.yukka.model.post.controller.PostRepository;
 import com.example.yukka.model.uzytkownik.MaUstawienia;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
-import com.example.yukka.model.uzytkownik.UzytkownikRepository;
-import com.example.yukka.model.uzytkownik.UzytkownikService;
+import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
+import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class YukkaApplication {
 	private final UzytkownikService uzytkownikService;
 
 	private final PostRepository postRepository;
+	private final KomentarzRepository komentarzRepository;
 
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
@@ -57,6 +59,7 @@ public class YukkaApplication {
 	void unseed() {
 		uzytkownikRepository.clearUzytkowicy();
 		postRepository.clearPosts();
+		komentarzRepository.clearKomentarze();
 	}
 
 	void seed() {
@@ -102,7 +105,7 @@ public class YukkaApplication {
 		uzytkownikService.addUzytkownik(usKatarzyna);
 		uzytkownikService.addUzytkownik(usMichal);
 		
-		Komentarz k1 = Komentarz.builder().komentarzId(UUID.randomUUID().toString()).opis("Jakiś opis").build();
+		
 
 		// TODO: Sprawdź w serwice, czy id nie istnieje w bazie
 		String postId1 = UUID.randomUUID().toString();
@@ -126,6 +129,29 @@ public class YukkaApplication {
 
 		postRepository.addOcenaToPost(katarzynaEmail, postId3, true);
 		postRepository.addOcenaToPost(piotrEmail, postId3, false);
+
+		String komId1 = UUID.randomUUID().toString();
+		String komId2 = UUID.randomUUID().toString();
+		String komId3 = UUID.randomUUID().toString();
+		String komId4 = UUID.randomUUID().toString();
+		String komId5 = UUID.randomUUID().toString();
+
+		Komentarz k1 = Komentarz.builder().komentarzId(komId1).opis("Jakiś opis").build();
+		Komentarz k2 = Komentarz.builder().komentarzId(komId2).opis("Jakiś opis").build();
+		Komentarz k3 = Komentarz.builder().komentarzId(komId3).opis("Jakiś opis").build();
+		Komentarz k4 = Komentarz.builder().komentarzId(komId4).opis("Jakiś opis").build();
+		Komentarz k5 = Komentarz.builder().komentarzId(komId5).opis("Jakiś opis").build();
+
+		komentarzRepository.addKomentarzToPost(piotrEmail, postId3, k1);
+		komentarzRepository.addKomentarzToPost(katarzynaEmail, postId3, k2);
+
+		komentarzRepository.addKomentarzToKomentarz(piotrEmail, k3, komId2);
+		komentarzRepository.addKomentarzToKomentarz(katarzynaEmail, k4, komId2);
+		komentarzRepository.addKomentarzToKomentarz(katarzynaEmail, k5, komId3);
+
+		// To się da do service potem
+		komentarzRepository.updateKomentarzeCountInPost(postId3);
+
 
 	}
 
