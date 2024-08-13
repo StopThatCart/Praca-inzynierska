@@ -79,6 +79,16 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
   //  @Query("CREATE (u:Uzytkownik:`:#{literal(#rola)}` {nazwa: $nazwa, email: $email, haslo: $haslo, data_utworzenia: localdatetime(), ban: false})")
    // void addNewPracownik(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo, @Param("rola") String rola);
 
-    @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.ban = true ")
-    void banUzytkownik(@Param("email") String email);
+    @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.ban = $ban ")
+    void banUzytkownik(@Param("email") String email, @Param("ban") boolean ban);
+
+
+    // TODO: Zmień jak będą kolejne komponenty dodawane
+    @Query("""
+            MATCH (u:Uzytkownik{email: $email}) 
+            DETACH DELETE u 
+            WITH u
+            MATCH(ust:Ustawienia) DETACH DELETE ust
+            """)
+    void removeUzytkownik(@Param("email") String email);
 }

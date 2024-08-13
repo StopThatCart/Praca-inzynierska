@@ -1,6 +1,7 @@
 package com.example.yukka;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -8,11 +9,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import com.example.yukka.model.post.Komentarz;
+import com.example.yukka.model.post.Post;
+import com.example.yukka.model.post.controller.PostRepository;
 import com.example.yukka.model.uzytkownik.MaUstawienia;
-import com.example.yukka.model.uzytkownik.UserDetailsServiceImpl;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikRepository;
+import com.example.yukka.model.uzytkownik.UzytkownikService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +28,9 @@ public class YukkaApplication {
 
 	
 	private final UzytkownikRepository uzytkownikRepository;
-	private final UserDetailsServiceImpl uzytkownikService;
+	private final UzytkownikService uzytkownikService;
+
+	private final PostRepository postRepository;
 
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
@@ -50,6 +56,7 @@ public class YukkaApplication {
 
 	void unseed() {
 		uzytkownikRepository.clearUzytkowicy();
+		postRepository.clearPosts();
 	}
 
 	void seed() {
@@ -70,18 +77,21 @@ public class YukkaApplication {
 		.email("anna@email.pl").haslo("anna12345678")
 		.build();
 
+		String piotrEmail = "piotr@email.pl";
 		Uzytkownik usPiotr = Uzytkownik.builder()
-        .nazwa("Piotr Wiśniewski").email("piotr@email.pl")
+        .nazwa("Piotr Wiśniewski").email(piotrEmail)
         .haslo("piotr12345678")
         .build();
 
+		String katarzynaEmail = "katarzyna@email.pl";
 		Uzytkownik usKatarzyna = Uzytkownik.builder()
-		.nazwa("Katarzyna Mazur").email("katarzyna@email.pl")
+		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
         .haslo("katarzyna12345678")
         .build();
 
+		String michalEmail = "michal@email.pl";
 		Uzytkownik usMichal = Uzytkownik.builder()
-        .nazwa("Michał Zieliński").email("michal@email.pl")
+        .nazwa("Michał Zieliński").email(michalEmail)
         .haslo("michal12345678")
         .build();
 
@@ -92,6 +102,31 @@ public class YukkaApplication {
 		uzytkownikService.addUzytkownik(usKatarzyna);
 		uzytkownikService.addUzytkownik(usMichal);
 		
+		Komentarz k1 = Komentarz.builder().komentarzId(UUID.randomUUID().toString()).opis("Jakiś opis").build();
+
+		// TODO: Sprawdź w serwice, czy id nie istnieje w bazie
+		String postId1 = UUID.randomUUID().toString();
+		Post p1 = Post.builder().postId(postId1).tytul("Jakiś tytuł").opis("Jakiś opis").build();
+
+		String postId2 = UUID.randomUUID().toString();
+		Post p2 = Post.builder().postId(postId2).tytul("Jakiś tytuł").opis("Jakiś opis").build();
+
+		String postId3= UUID.randomUUID().toString();
+		Post p3 = Post.builder().postId(postId3).tytul("Jakiś tytuł").opis("Jakiś opis").build();
+
+		postRepository.addPost(michalEmail, p1);
+		postRepository.addPost(michalEmail, p2);
+		postRepository.addPost(michalEmail, p3);
+		
+		postRepository.addOcenaToPost(katarzynaEmail, postId1, false);
+		postRepository.addOcenaToPost(piotrEmail, postId1, false);
+
+		postRepository.addOcenaToPost(katarzynaEmail, postId2, true);
+		postRepository.addOcenaToPost(piotrEmail, postId2, true);
+
+		postRepository.addOcenaToPost(katarzynaEmail, postId3, true);
+		postRepository.addOcenaToPost(piotrEmail, postId3, false);
+
 	}
 
 }

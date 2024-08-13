@@ -13,7 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.yukka.model.uzytkownik.UserDetailsServiceImpl;
+import com.example.yukka.model.uzytkownik.UzytkownikService;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikRepository;
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class AuthenticationService {
     private final UzytkownikRepository uzytkownikRepository;
-    private final UserDetailsServiceImpl uzytkownikService;
+    private final UzytkownikService uzytkownikService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;

@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UzytkownikController {
     @Autowired
-    UserDetailsServiceImpl userDetailsServiceImpl;
+    UzytkownikService userDetailsServiceImpl;
 
     @GetMapping
     public Collection<Uzytkownik> getAllUsers() {
@@ -28,15 +28,15 @@ public class UzytkownikController {
     }
 
     // TODO: szukanie po emailu
-    @GetMapping("/email/{nazwaLacinska}")
-    public Optional<Uzytkownik> getByEmail(@PathVariable("nazwaLacinska") String nazwaLacinska) {
-        return userDetailsServiceImpl.dawajEmailDeklu(nazwaLacinska);
+    @GetMapping("/email/{email}")
+    public Optional<Uzytkownik> getByEmail(@PathVariable("email") String email) {
+        return userDetailsServiceImpl.dawajEmailDeklu(email);
     }
 
     // TODO: ban
-    @PutMapping("/ban/{nazwaLacinska}")
-    public ResponseEntity<String> banUzytkownik(@PathVariable("nazwaLacinska") String nazwaLacinska, Authentication connectedUser) {
-        Uzytkownik uzyt = userDetailsServiceImpl.dawajEmailDeklu(nazwaLacinska).get();
+    @PutMapping("/ban/{email}")
+    public ResponseEntity<String> banUzytkownik(@PathVariable("email") String email, Authentication connectedUser) {
+        Uzytkownik uzyt = userDetailsServiceImpl.dawajEmailDeklu(email).get();
         var us = (Uzytkownik) connectedUser.getPrincipal();
         if(uzyt.getEmail().equals(us.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie można banować samego siebie.");
@@ -50,7 +50,7 @@ public class UzytkownikController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Admini i pracownicy nie mogą być banowani.");
         }
 
-        userDetailsServiceImpl.banUzytkownik(nazwaLacinska);
+        userDetailsServiceImpl.banUzytkownik(email);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Użytkownik został pomyślnie zbanowany.");
     }
 }

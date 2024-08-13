@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements  UserDetailsService {
+public class UzytkownikService implements  UserDetailsService {
 
     @Autowired
     private final UzytkownikRepository repository;
@@ -34,7 +34,11 @@ public class UserDetailsServiceImpl implements  UserDetailsService {
     }
 
     public void banUzytkownik(String userEmail){
-        repository.banUzytkownik(userEmail);
+        repository.banUzytkownik(userEmail, true);
+    }
+
+    public void unbanUzytkownik(String userEmail){
+        repository.banUzytkownik(userEmail, false);
     }
 
     public void addUzytkownik(Uzytkownik uzytkownik){

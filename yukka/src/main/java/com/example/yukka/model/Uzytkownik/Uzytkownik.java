@@ -19,6 +19,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.yukka.authorities.ROLE;
+import com.example.yukka.model.post.Komentarz;
+import com.example.yukka.model.post.Ocenil;
+import com.example.yukka.model.post.Post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,6 +62,15 @@ public class Uzytkownik implements UserDetails, Principal{
     @Property("ban")
     @Builder.Default
     private boolean ban = false;
+
+    @Relationship(type = "MA_POST", direction = Relationship.Direction.OUTGOING)
+    private List<Post> posty;
+
+    @Relationship(type = "SKOMENTOWAL", direction = Relationship.Direction.OUTGOING)
+    private List<Komentarz> komentarze;
+    
+    @Relationship(type = "OCENIL", direction = Relationship.Direction.OUTGOING)
+    private List<Ocenil> oceny;
 
     @Relationship(type = "MA_USTAWIENIA", direction = Relationship.Direction.OUTGOING)
     // Daj List jak nie działa
