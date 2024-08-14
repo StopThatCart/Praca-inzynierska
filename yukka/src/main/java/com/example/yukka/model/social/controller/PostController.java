@@ -1,4 +1,4 @@
-package com.example.yukka.model.social.post;
+package com.example.yukka.model.social.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
+import com.example.yukka.model.social.post.PostResponse;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
+import com.example.yukka.model.social.service.PostService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,7 +43,7 @@ public class PostController {
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser) {
-        return ResponseEntity.ok(postService.findAllPosts(page, size, connectedUser));
+        return ResponseEntity.ok(postService.findAllPosts(page, size));
     }
 
     @GetMapping("/uzytkownik")

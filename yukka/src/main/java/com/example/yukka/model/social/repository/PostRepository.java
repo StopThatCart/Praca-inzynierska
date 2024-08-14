@@ -14,10 +14,10 @@ import com.example.yukka.model.social.post.Post;
 
 public interface PostRepository extends Neo4jRepository<Post, Long> {
 
-
+    // To działa
     @Query("""
         MATCH (post:Post {post_id: $post_id})
-        OPTIONAL MATCH path = (post)-[:MA_KOMENTARZ]->
+        OPTIONAL MATCH path = (:Uzytkownik)-[:MA_POST]->(post)-[:MA_KOMENTARZ]->
                               (kom:Komentarz)
                               <-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
                               <-[:SKOMENTOWAL]-(uzytkownik:Uzytkownik)
@@ -26,7 +26,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
     Optional<Post> findPostByPostIdButWithPath(@Param("post_id") String postId);
      
     @Query("""
-        MATCH (post:Post{post_id: $post_id})
+        MATCH (post:Post{post_id: $post_id})<-[:MA_POST]-(:Uzytkownik)
         OPTIONAL MATCH (post)-[:MA_KOMENTARZ]->(kom:Komentarz)
         OPTIONAL MATCH (kom)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
         OPTIONAL MATCH (uzytkownik)-[:SKOMENTOWAL]->(odpowiedz)
@@ -36,16 +36,26 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         """)
     Optional<Post> findPostByPostId(@Param("post_id") String postId);
 
-    @Query("""
-            MATCH (post:Post)
-            RETURN post
-            """)
+    @Query(value = """
+        MATCH path = (post:Post)<-[:MA_POST]-(:Uzytkownik)
+        RETURN post, collect(nodes(path)), collect(relationships(path)) 
+        :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
+        """,
+       countQuery = """
+        MATCH (post:Post)
+        RETURN count(post)
+        """)
     Page<Post> findAllPosts(Pageable pageable);
 
-    @Query("""
-            MATCH (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{email: $email})
-            RETURN post
-            """)
+    @Query(value = """
+            MATCH path = (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{email: $email})
+            RETURN post, collect(nodes(path)), collect(relationships(path)) 
+            :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
+            """,
+            countQuery = """
+        MATCH (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{email: $email})
+        RETURN count(post)
+        """)
     Page<Post> findAllPostyByUzytkownik(Pageable pageable, @Param("email") String email);
 
     @Query("""

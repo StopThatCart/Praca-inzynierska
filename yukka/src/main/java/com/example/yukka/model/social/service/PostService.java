@@ -1,4 +1,4 @@
-package com.example.yukka.model.social.post;
+package com.example.yukka.model.social.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +17,9 @@ import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzMapper;
+import com.example.yukka.model.social.post.Post;
+import com.example.yukka.model.social.post.PostMapper;
+import com.example.yukka.model.social.post.PostResponse;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
@@ -40,15 +43,15 @@ public class PostService {
     KomentarzMapper komentarzMapper;
 
     public PostResponse findByPostId(String postId) {
-        return postRepository.findPostByPostId(postId)
+        return postRepository.findPostByPostIdButWithPath(postId)
                 .map(postMapper::toPostResponse)
                 .orElseThrow();
     }
 
-    public PageResponse<PostResponse> findAllPosts(int page, int size, Authentication connectedUser) {
-        Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
-        Pageable pageable = PageRequest.of(page, size, Sort.by("dataUtworzenia").descending());
+    public PageResponse<PostResponse> findAllPosts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("post.data_utworzenia").descending());
         Page<Post> posts = postRepository.findAllPosts(pageable);
+        System.out.println("\n\n\n post: " + posts.get().findFirst().get().toString() + "\n\n\n");
         List<PostResponse> postsResponse = posts.stream()
                 .map(postMapper::toPostResponse)
                 .toList();
@@ -65,7 +68,7 @@ public class PostService {
 
     public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
-        Pageable pageable = PageRequest.of(page, size, Sort.by("dataUtworzenia").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("post.data_utworzenia").descending());
         Page<Post> posts = postRepository.findAllPostyByUzytkownik(pageable, user.getEmail());
         List<PostResponse> postsResponse = posts.stream()
                 .map(postMapper::toPostResponse)

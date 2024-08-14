@@ -2,6 +2,7 @@ package com.example.yukka.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 
 
 @Configuration
+//@EnableWebMvc
+@EnableSpringDataWebSupport()
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = false)
 @RequiredArgsConstructor

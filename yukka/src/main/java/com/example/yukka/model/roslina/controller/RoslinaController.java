@@ -22,11 +22,13 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaRequest;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 
 @RestController
 @RequestMapping("/rest/neo4j/rosliny")
+@Tag(name = "Post")
 public class RoslinaController {
 
     @Autowired

@@ -1,8 +1,8 @@
-package com.example.yukka.model.social.post;
+package com.example.yukka.model.social.komentarz;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.example.yukka.model.social.komentarz.KomentarzDTO;
+import com.example.yukka.model.social.post.PostDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,15 +15,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostResponse {
+public class KomentarzResponse {
     private Long id;
-    private String postId;
-    private String tytul;
+    private String komentarzId;
     private String opis;
     private Integer ocenyLubi;
     private Integer ocenyNieLubi;
-    private Integer liczbaKomentarzy;
-    private List<KomentarzDTO> komentarze;
+    private PostDTO post;
+    private KomentarzDTO komentarzOd;
+    private List<KomentarzDTO> odpowiedzi;
     private String uzytkownik;
     private byte[] obraz;
     private LocalDateTime dataUtworzenia;

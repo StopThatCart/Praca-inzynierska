@@ -2,16 +2,21 @@ package com.example.yukka.model.social.post;
 
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.example.yukka.file.FileUtils;
+import com.example.yukka.model.social.komentarz.KomentarzMapper;
 import com.example.yukka.model.social.request.PostRequest;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class PostMapper {
+    private final KomentarzMapper komentarzMapper;
     public PostRequest toPostRequest(Post post) {
         return PostRequest.builder()
             .tytul(post.getTytul())
@@ -37,6 +42,9 @@ public class PostMapper {
                 .ocenyLubi(post.getOcenyLubi())
                 .ocenyNieLubi(post.getOcenyNieLubi())
                 .liczbaKomentarzy(post.getLiczbaKomentarzy())
+                .komentarze(post.getKomentarze().stream()
+                    .map(komentarzMapper::toKomentarzDTO)
+                    .collect(Collectors.toList()))
                 .uzytkownik(post.getAutor().getNazwa())
                 .obraz(FileUtils.readFileFromLocation(post.getObraz()))
                 .build();

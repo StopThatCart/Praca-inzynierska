@@ -2,6 +2,7 @@ package com.example.yukka.model.social.komentarz;
 
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,35 @@ public class KomentarzMapper {
             .komentarzId(UUID.randomUUID().toString())
             .opis(request.getOpis())
             .obraz(request.getObraz())
+            .build();
+    }
+
+    public KomentarzDTO toKomentarzDTO(Komentarz komentarz) {
+        return KomentarzDTO.builder()
+            .id(komentarz.getId())
+            .komentarzId(komentarz.getKomentarzId())
+            .opis(komentarz.getOpis())
+            .ocenyLubi(komentarz.getOcenyLubi())
+            .ocenyNieLubi(komentarz.getOcenyNieLubi())
+            .dataUtworzenia(komentarz.getDataUtworzenia())
+            .odpowiedzi(komentarz.getOdpowiedzi().stream()
+                .map(this::toKomentarzDTO)
+                .collect(Collectors.toList()))
+            .uzytkownikNazwa(komentarz.getUzytkownik().getNazwa())
+            .build();
+    }
+
+    public KomentarzResponse toKomentarzResponse(Komentarz komentarz) {
+        return KomentarzResponse.builder()
+            .id(komentarz.getId())
+            .komentarzId(komentarz.getKomentarzId())
+            .opis(komentarz.getOpis())
+            .ocenyLubi(komentarz.getOcenyLubi())
+            .ocenyNieLubi(komentarz.getOcenyNieLubi())
+            .dataUtworzenia(komentarz.getDataUtworzenia())
+          //  .odpowiedzi(komentarz.getOdpowiedzi().stream()
+          //      .map(this::toKomentarzDTO)
+          //      .collect(Collectors.toList()))
             .build();
     }
 

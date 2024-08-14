@@ -10,9 +10,9 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.Oceniany;
 import com.example.yukka.model.social.Ocenil;
+import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.AllArgsConstructor;
@@ -52,11 +52,12 @@ public class Komentarz implements Oceniany {
     @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
     private List<Ocenil> ocenil;
 
+    // TODO: dodaj podobny obiekt w wiadomościach prywatnych
     @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.INCOMING)
-    private List<Post> posty;
+    private Post posty;
 
     @Relationship(type = "ODPOWIEDZIAL", direction = Relationship.Direction.OUTGOING)
-    private List<Komentarz> komentarze;
+    private Komentarz komentarzOd;
 
     @Relationship(type = "ODPOWIEDZIAL", direction = Relationship.Direction.INCOMING)
     private List<Komentarz> odpowiedzi;
