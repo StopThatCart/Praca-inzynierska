@@ -92,7 +92,7 @@ public class RoslinaService {
         Roslina roslina = roslinaRepository.findByNazwaLacinska(latinName).get();
         User user = ((User) connectedUser.getPrincipal());
 
-        var pfp = fileStoreService.saveFile(file, latinName, user.getUsername());
+        var pfp = fileStoreService.saveRoslina(file, latinName, user.getUsername());
         
         roslina.setObraz(pfp);
         roslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getObraz(), roslina.getWysokoscMin(), roslina.getWysokoscMax());

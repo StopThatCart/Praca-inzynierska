@@ -13,6 +13,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import com.example.yukka.model.social.Oceniany;
 import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.komentarz.Komentarz;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,6 +54,9 @@ public class Post implements Oceniany {
     @CreatedDate
     @Property(name = "data_utworzenia")
     private LocalDateTime dataUtworzenia;
+
+    @Relationship(type = "MA_POST", direction = Relationship.Direction.INCOMING)
+    private Uzytkownik autor;
 
     @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
     private List<Ocenil> ocenil;

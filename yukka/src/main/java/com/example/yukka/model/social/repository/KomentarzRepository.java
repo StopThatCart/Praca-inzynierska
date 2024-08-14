@@ -64,8 +64,9 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
                 (kom:Komentarz{komentarz_id: pt.komentarz_id, opis: pt.opis, 
                 oceny_lubi: 0, oceny_nie_lubi: 0, obraz: pt.obraz, data_utworzenia: localdatetime()})
                 <-[:MA_KOMENTARZ]-(post)
+        RETURN kom.komentarz_id
         """)
-    void addKomentarzToPost(@Param("email") String email, @Param("target_post_id") String targetPostId, @Param("kom") Komentarz kom);
+    String addKomentarzToPost(@Param("email") String email, @Param("target_post_id") String targetPostId, @Param("kom") Komentarz kom);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
@@ -112,5 +113,13 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         MATCH (u:Komentarz) DETACH DELETE u 
         """)
     void clearKomentarze();
+
+    // UWAGA: Nie będzie działać dla wiadomości prywatnych. Chyba.
+    @Query("""
+        MATCH (kom:Komentarz{komentarz_id: "a72b2e46-a26e-458a-b1a8-f20bc4e89658"})
+        OPTIONAL MATCH (kom)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
+        DETACH DELETE odpowiedz
+        """)
+    void removeKomentarz(@Param("komentarz_id") String komentarzId);
 
 }

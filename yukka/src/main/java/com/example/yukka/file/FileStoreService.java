@@ -24,12 +24,24 @@ public class FileStoreService {
     @Value("${application.file.uploads.photos-output-path}")
     private String fileUploadPath;
 
-    public String saveFile(@Nonnull MultipartFile sourceFile,
+    public String saveRoslina(@Nonnull MultipartFile sourceFile,
     @Nonnull String roslinaNazwaLacinska, @Nonnull String uzytkownikNazwa) {
-        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa;
+        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa + separator + "rosliny";
         return uploadFile(sourceFile, fileUploadSubPath);
     }
 
+    public String savePost(@Nonnull MultipartFile sourceFile,
+    @Nonnull String postId, @Nonnull String uzytkownikNazwa) {
+        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa  + separator + "posty";
+        return uploadFile(sourceFile, fileUploadSubPath);
+    }
+
+    public String saveKomentarz(@Nonnull MultipartFile sourceFile,
+    @Nonnull String komentarzId, @Nonnull String uzytkownikNazwa) {
+        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa  + separator + "komentarze";
+        return uploadFile(sourceFile, fileUploadSubPath);
+    }
+    // TODO: inne nazewnictwo plików dla komentarzy i postów (Użycie postId zamiast reszty)
     private String uploadFile(@Nonnull MultipartFile sourceFile, @Nonnull String fileUploadSubPath) {
         final String finalUploadPath = fileUploadPath + separator + fileUploadSubPath;
         File targetFolder = new File(finalUploadPath);
@@ -42,6 +54,7 @@ public class FileStoreService {
             }
         }
         final String fileExtension = getFileExtension(sourceFile.getOriginalFilename());
+        // TODO: lepsza nazwa pliku
         String targetFilePath = finalUploadPath + separator + currentTimeMillis() + "." + fileExtension;
         Path targetPath = Paths.get(targetFilePath);
         try {

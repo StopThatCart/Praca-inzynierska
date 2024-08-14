@@ -2,6 +2,8 @@ package com.example.yukka.model.social.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,20 +36,31 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         """)
     Optional<Post> findPostByPostId(@Param("post_id") String postId);
 
-    // TODO: Posty z paginacją
+    @Query("""
+            MATCH (post:Post)
+            RETURN post
+            """)
+    Page<Post> findAllPosts(Pageable pageable);
+
+    @Query("""
+            MATCH (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{email: $email})
+            RETURN post
+            """)
+    Page<Post> findAllPostyByUzytkownik(Pageable pageable, @Param("email") String email);
 
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})
             MATCH (post:Post{post_id: $post_id})
             MERGE (uzyt)-[relu:OCENIL{lubi: $ocena}]->(post)
 
-            WITH post
+            WITH post, relu
             MATCH (post)<-[r:OCENIL]-(uzyt)
-            WITH post, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS oceny_lubi,
+            WITH post, relu, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS oceny_lubi,
             COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS oceny_nie_lubi
             SET post.oceny_lubi = oceny_lubi, post.oceny_nie_lubi = oceny_nie_lubi
+            RETURN relu.__id__
             """)
-    void addOcenaToPost(@Param("email") String email, @Param("post_id") String post_id, @Param("ocena") boolean ocena);
+    Long addOcenaToPost(@Param("email") String email, @Param("post_id") String post_id, @Param("ocena") boolean ocena);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})-[relu:OCENIL]->(post:Post{post_id: $post_id})
@@ -72,6 +85,12 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         RETURN post
         """)
     Optional<Post> addPost(@Param("email") String email, @Param("post") Post post);
+
+    @Query("""
+        MATCH (post:Post{post_id: $post_id})
+        SET post.obraz = $obraz
+        """)
+    void updatePostObraz(@Param("post_id") String post_id, @Param("obraz") String obraz);
 
     @Query("""
         MATCH (post:Post {post_id: $post_id})

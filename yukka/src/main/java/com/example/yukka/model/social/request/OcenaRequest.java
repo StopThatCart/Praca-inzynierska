@@ -11,10 +11,6 @@ import lombok.ToString;
 @Builder
 @ToString
 public class OcenaRequest {
-
-    @NotEmpty(message = "Tytuł jest wymagany")
-    private String email;
-
     @NotEmpty(message = "Aby coś ocenić, należy to najpierw wskazać")
     private String ocenialny_id;
 

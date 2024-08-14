@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping("/rest/neo4j/roslina")
+@RequestMapping("/rest/neo4j/rosliny")
 public class RoslinaController {
 
     @Autowired
