@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.roslina.enums.RoslinaRelacje;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 
@@ -43,6 +44,18 @@ public class RoslinaMapper {
         mapMapToRoslina(roslina, request.getWlasciwosci());
         
         return roslina;
+    }
+
+    public RoslinaResponse toRoslinaResponse(Roslina roslina) {
+        return RoslinaResponse.builder()
+                .id(roslina.getId())
+                .nazwa(roslina.getNazwa())
+                .nazwaLacinska(roslina.getNazwaLacinska())
+                .opis(roslina.getOpis())
+                .wysokoscMin(roslina.getWysokoscMin())
+                .wysokoscMax(roslina.getWysokoscMax())
+                .obraz(FileUtils.readFileFromLocation(roslina.getObraz()))
+                .build();
     }
 
     private List<Map<String, String>> mapWlasciwosciToMap(Roslina roslina) {

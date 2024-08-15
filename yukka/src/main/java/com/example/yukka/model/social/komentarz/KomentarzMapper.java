@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.social.request.KomentarzRequest;
 
 import jakarta.validation.Valid;
@@ -39,6 +40,7 @@ public class KomentarzMapper {
                 .map(this::toKomentarzDTO)
                 .collect(Collectors.toList()))
             .uzytkownikNazwa(komentarz.getUzytkownik().getNazwa())
+            .obraz(FileUtils.readFileFromLocation(komentarz.getUzytkownik().getAvatar()))
             .build();
     }
 
@@ -50,6 +52,8 @@ public class KomentarzMapper {
             .ocenyLubi(komentarz.getOcenyLubi())
             .ocenyNieLubi(komentarz.getOcenyNieLubi())
             .dataUtworzenia(komentarz.getDataUtworzenia())
+            .uzytkownikNazwa(komentarz.getUzytkownik().getNazwa())
+            .obraz(FileUtils.readFileFromLocation(komentarz.getUzytkownik().getAvatar()))
           //  .odpowiedzi(komentarz.getOdpowiedzi().stream()
           //      .map(this::toKomentarzDTO)
           //      .collect(Collectors.toList()))

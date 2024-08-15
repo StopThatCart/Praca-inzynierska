@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +21,56 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         RETURN ros, collect(nodes(path)), collect(relationships(path))
     """)
     Optional<Roslina> findByNazwaLacinska(@Param("latinName") String latinName);
+
+
+    @Query(value = """
+        MATCH (roslina:Roslina)
+        RETURN roslina
+        :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
+        """,
+       countQuery = """
+        MATCH (roslina:Roslina)
+        RETURN count(roslina)
+        """)
+    Page<Roslina> findAllRosliny(Pageable pageable);
+
+    // TODO: Sprawdź jak działa na frontendzie
+    @Query(value = """
+        WITH $roslina.__properties__ AS rp 
+        MATCH (roslina:Roslina)
+        OPTIONAL MATCH (roslina)-[rel]->(relatedNode)
+        WHERE (rp.nazwa IS NULL OR roslina.nazwa CONTAINS rp.nazwa) 
+            AND (rp.nazwaLacinska IS NULL OR roslina.nazwaLacinska CONTAINS rp.nazwaLacinska)
+            AND (rp.wysokoscMin IS NULL OR roslina.wysokoscMin >= rp.wysokoscMin)
+            AND (rp.wysokoscMax IS NULL OR roslina.wysokoscMax <= rp.wysokoscMax)
+            AND (size($relatLump) = 0 OR 
+                    ANY(relat IN $relatLump WHERE 
+                        (relatedNode.nazwa = relat.nazwa) AND
+                        (type(rel) = relat.relacja) AND
+                        (labels(relatedNode) = [relat.labels, 'Wlasciwosc'])
+                    )
+        )
+        RETURN DISTINCT roslina
+        :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
+        """,
+       countQuery = """
+        WITH $roslina.__properties__ AS rp 
+        MATCH (roslina:Roslina)
+        OPTIONAL MATCH (roslina)-[rel]->(relatedNode)
+        WHERE (rp.nazwa IS NULL OR roslina.nazwa CONTAINS rp.nazwa) 
+            AND (rp.nazwaLacinska IS NULL OR roslina.nazwaLacinska CONTAINS rp.nazwaLacinska)
+            AND (rp.wysokoscMin IS NULL OR roslina.wysokoscMin >= rp.wysokoscMin)
+            AND (rp.wysokoscMax IS NULL OR roslina.wysokoscMax <= rp.wysokoscMax)
+            AND (size($relatLump) = 0 OR 
+                    ANY(relat IN $relatLump WHERE 
+                        (relatedNode.nazwa = relat.nazwa) AND
+                        (type(rel) = relat.relacja) AND
+                        (labels(relatedNode) = [relat.labels, 'Wlasciwosc'])
+                    )
+        )
+        RETURN count(DISTINCT roslina)
+        """)
+    Page<Roslina> findAllRoslinyWithParameters(Pageable pageable, @Param("roslina") Roslina roslina);
 
     // Do wyrzucenia
     @Query("MATCH path=(p:Roslina)-[r]->(g:Wlasciwosc) RETURN p, collect(nodes(path)), collect(relationships(path)) LIMIT $amount")

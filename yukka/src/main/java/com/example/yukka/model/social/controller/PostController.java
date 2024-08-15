@@ -18,7 +18,6 @@ import com.example.yukka.model.social.post.PostResponse;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.service.PostService;
-import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,7 +55,6 @@ public class PostController {
 
     @PatchMapping("/ocena")
     public ResponseEntity<Long> addOcena(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
-        Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
         return ResponseEntity.ok(postService.addOcena(request, connectedUser));
     }
 

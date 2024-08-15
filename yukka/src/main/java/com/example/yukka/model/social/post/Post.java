@@ -11,7 +11,6 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.example.yukka.model.social.Oceniany;
-import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
@@ -29,10 +28,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Post implements Oceniany {
+public class Post extends Oceniany {
     @Id @GeneratedValue
     private Long id;
-    @Property(name = "post_id")
+    @Property(name = "postId")
     private String postId;
 
     @Property(name = "tytul")
@@ -41,27 +40,18 @@ public class Post implements Oceniany {
     @Property(name = "opis")
     private String opis;
 
-    @Property(name = "oceny_lubi")
-    private Integer ocenyLubi;
-
-    @Property(name = "oceny_nie_lubi")
-    private Integer ocenyNieLubi;
-    
     @Property(name = "obraz")
     private String obraz;
 
-    @Property(name = "liczba_komentarzy")
+    @Property(name = "liczbaKomentarzy")
     private Integer liczbaKomentarzy;
     
     @CreatedDate
-    @Property(name = "data_utworzenia")
+    @Property(name = "dataUtworzenia")
     private LocalDateTime dataUtworzenia;
 
     @Relationship(type = "MA_POST", direction = Relationship.Direction.INCOMING)
     private Uzytkownik autor;
-
-    @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
-    private List<Ocenil> ocenil;
 
     @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.OUTGOING)
     private List<Komentarz> komentarze;

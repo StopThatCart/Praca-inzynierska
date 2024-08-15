@@ -25,47 +25,53 @@ public class FileStoreService {
     private String fileUploadPath;
 
     public String saveRoslina(@Nonnull MultipartFile sourceFile,
-    @Nonnull String roslinaNazwaLacinska, @Nonnull String uzytkownikNazwa) {
+                              @Nonnull String roslinaNazwaLacinska, @Nonnull String uzytkownikNazwa) {
         final String fileUploadSubPath = "users" + separator + uzytkownikNazwa + separator + "rosliny";
-        return uploadFile(sourceFile, fileUploadSubPath);
+        String fileName = generateFileName(roslinaNazwaLacinska);
+        return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
     public String savePost(@Nonnull MultipartFile sourceFile,
-    @Nonnull String postId, @Nonnull String uzytkownikNazwa) {
-        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa  + separator + "posty";
-        return uploadFile(sourceFile, fileUploadSubPath);
+                           @Nonnull String postId, @Nonnull String uzytkownikNazwa) {
+        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa + separator + "posty";
+        String fileName = generateFileName(postId);
+        return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
     public String saveKomentarz(@Nonnull MultipartFile sourceFile,
-    @Nonnull String komentarzId, @Nonnull String uzytkownikNazwa) {
-        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa  + separator + "komentarze";
-        return uploadFile(sourceFile, fileUploadSubPath);
+                                @Nonnull String komentarzId, @Nonnull String uzytkownikNazwa) {
+        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa + separator + "komentarze";
+        String fileName = generateFileName(komentarzId);
+        return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
-    // TODO: inne nazewnictwo plików dla komentarzy i postów (Użycie postId zamiast reszty)
-    private String uploadFile(@Nonnull MultipartFile sourceFile, @Nonnull String fileUploadSubPath) {
+    
+    private String uploadFile(@Nonnull MultipartFile sourceFile, @Nonnull String fileUploadSubPath, @Nonnull String fileName) {
         final String finalUploadPath = fileUploadPath + separator + fileUploadSubPath;
         File targetFolder = new File(finalUploadPath);
 
-        if (!targetFolder.exists()) {
-            boolean folderCreated = targetFolder.mkdirs();
-            if (!folderCreated) {
-                log.warn("Nie udało się stworzyć folderu: " + targetFolder);
-                return null;
-            }
+        if (!targetFolder.exists() && !targetFolder.mkdirs()) {
+            log.warn("Nie udało się stworzyć folderu: " + targetFolder);
+            return null;
         }
-        final String fileExtension = getFileExtension(sourceFile.getOriginalFilename());
-        // TODO: lepsza nazwa pliku
-        String targetFilePath = finalUploadPath + separator + currentTimeMillis() + "." + fileExtension;
+
+        String fileExtension = getFileExtension(sourceFile.getOriginalFilename());
+        String targetFilePath = finalUploadPath + separator + fileName + "." + fileExtension;
         Path targetPath = Paths.get(targetFilePath);
+
         try {
             Files.write(targetPath, sourceFile.getBytes());
             log.info("Zapisano plik do: " + targetFilePath);
             return targetFilePath;
         } catch (IOException e) {
-            log.error("Nie zapisano pliku", e);
+            log.error("Błąd podczas zapisu pliku do ścieżki: " + targetFilePath, e);
+            return null;
         }
-        return null;
     }
+
+    private String generateFileName(String baseName) {
+        return baseName.replaceAll("\\s+", "_") + "_" + currentTimeMillis();
+    }
+
 
     private String getFileExtension(String fileName) {
         if (fileName == null || fileName.isEmpty()) {

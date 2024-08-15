@@ -33,7 +33,7 @@ public class RozmowaPrywatna {
     private List<String> emaile;
 
     @CreatedDate
-    @Property(name = "data_utworzenia")
+    @Property(name = "dataUtworzenia")
     private LocalDateTime dataUtworzenia;
 
     @Relationship(type = "JEST_W_ROZMOWIE", direction = Relationship.Direction.INCOMING)

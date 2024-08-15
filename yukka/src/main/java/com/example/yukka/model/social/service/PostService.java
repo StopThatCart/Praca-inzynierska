@@ -1,6 +1,7 @@
 package com.example.yukka.model.social.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,7 +50,7 @@ public class PostService {
     }
 
     public PageResponse<PostResponse> findAllPosts(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("post.data_utworzenia").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPosts(pageable);
         System.out.println("\n\n\n post: " + posts.get().findFirst().get().toString() + "\n\n\n");
         List<PostResponse> postsResponse = posts.stream()
@@ -68,7 +69,7 @@ public class PostService {
 
     public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
-        Pageable pageable = PageRequest.of(page, size, Sort.by("post.data_utworzenia").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPostyByUzytkownik(pageable, user.getEmail());
         List<PostResponse> postsResponse = posts.stream()
                 .map(postMapper::toPostResponse)
@@ -101,7 +102,7 @@ public class PostService {
 
     public Long addOcena(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(request.getOcenialny_id()).orElseThrow();
+        Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
 
         return postRepository.addOcenaToPost(user.getEmail(), post.getPostId(), request.isLubi());
     }
@@ -151,16 +152,23 @@ public class PostService {
         postRepository.deletePost(postId);
     }
 
-    // TODO: Faktyczna implementacja + Jak zmieni się nazwę użytkownika, to też jego folder z obrazami
     public void uploadPostObraz(MultipartFile file, Authentication connectedUser, String latinName) {
-        // TODO: Lepsza obsługa w przypadku nieznalezienia niczego
-        Post post = postRepository.findPostByPostId(latinName).get();
+        Optional<Post> postOptional = postRepository.findPostByPostId(latinName);
+    
+        if (postOptional.isEmpty()) {
+            throw new NoSuchElementException("Nie znaleziono posta o podanym ID: " + latinName);
+        }
+        Post post = postOptional.get();
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
 
-        var pfp = fileStoreService.savePost(file, post.getPostId(), user.getNazwa());
+        String pfp = fileStoreService.savePost(file, post.getPostId(), user.getNazwa());
+
+        if (pfp == null) {
+            throw new IllegalStateException("Nie udało się zapisać obrazu.");
+        }
+    
         
         post.setObraz(pfp);
         postRepository.updatePostObraz(post.getPostId(), post.getObraz());
-        //roslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getObraz(), roslina.getWysokoscMin(), roslina.getWysokoscMax());
     }
 }

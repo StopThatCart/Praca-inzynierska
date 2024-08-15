@@ -1,6 +1,5 @@
 package com.example.yukka.model.roslina.controller;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +13,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaRequest;
+import com.example.yukka.model.roslina.RoslinaResponse;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,13 +36,22 @@ public class RoslinaController {
     @Autowired
     RoslinaService roslinaService;
 
+
+    @GetMapping
+    public ResponseEntity<PageResponse<RoslinaResponse>> findAllPosty(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            Authentication connectedUser) {
+        return ResponseEntity.ok(roslinaService.findAllRosliny(page, size));
+    }
+/* 
     @GetMapping
     public Collection<Roslina> getSome() {
         System.out.println("COOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n\n");
         int amount = 1;
         return roslinaService.getSome(amount);
     }
-
+*/
     @GetMapping("/{id}")
     public ResponseEntity<Roslina> getById(@PathVariable Integer id) {
         Optional<Roslina> roslina = roslinaService.findById((long) id);

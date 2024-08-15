@@ -11,7 +11,6 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.example.yukka.model.social.Oceniany;
-import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
@@ -27,30 +26,21 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Komentarz implements Oceniany {
+public class Komentarz extends Oceniany {
     @Id @GeneratedValue
     private Long id;
-    @Property(name = "komentarz_id")
+    @Property(name = "komentarzId")
     private String komentarzId;
 
     @Property(name = "opis")
     private String opis;
-
-    @Property(name = "oceny_lubi")
-    private Integer ocenyLubi;
-
-    @Property(name = "oceny_nie_lubi")
-    private Integer ocenyNieLubi;
     
     @Property(name = "obraz")
     private String obraz;
     
     @CreatedDate
-    @Property(name = "data_utworzenia")
+    @Property(name = "dataUtworzenia")
     private LocalDateTime dataUtworzenia;
-
-    @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
-    private List<Ocenil> ocenil;
 
     // TODO: dodaj podobny obiekt w wiadomościach prywatnych
     @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.INCOMING)

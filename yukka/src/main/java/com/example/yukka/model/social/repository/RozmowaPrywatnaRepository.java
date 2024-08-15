@@ -27,7 +27,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         MATCH (uzyt2:Uzytkownik{email: $email2})
         WITH uzyt1, uzyt2
         CREATE (uzyt1)-[:JEST_W_ROZMOWIE]->
-               (priv:RozmowaPrywatna{emaile: [uzyt1.email, uzyt2.email], data_utworzenia: localdatetime()})
+               (priv:RozmowaPrywatna{emaile: [uzyt1.email, uzyt2.email], dataUtworzenia: localdatetime()})
                <-[JEST_W_ROZMOWIE]-(uzyt2)
         """)
     void addRozmowaPrywatna(@Param("email1") String email1, @Param("email2") String email2);

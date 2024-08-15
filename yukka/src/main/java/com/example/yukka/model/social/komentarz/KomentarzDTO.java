@@ -22,4 +22,5 @@ public class KomentarzDTO {
     private LocalDateTime dataUtworzenia;
     private List<KomentarzDTO> odpowiedzi;
     private String uzytkownikNazwa;
+    public byte[] obraz;
 }

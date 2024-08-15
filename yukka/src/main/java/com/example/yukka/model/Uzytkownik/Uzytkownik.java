@@ -55,6 +55,9 @@ public class Uzytkownik implements UserDetails, Principal{
     @Property("haslo")
     private String haslo;
 
+    @Property("avatar")
+    private String avatar;
+
     @CreatedDate
     @Property("data_utworzenia")
     @Builder.Default

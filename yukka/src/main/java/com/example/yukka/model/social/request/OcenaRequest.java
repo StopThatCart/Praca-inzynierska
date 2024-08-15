@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class OcenaRequest {
     @NotEmpty(message = "Aby coś ocenić, należy to najpierw wskazać")
-    private String ocenialny_id;
+    private String ocenialnyId;
 
     @NotNull(message = "Ocena musi być")
     private boolean lubi;
