@@ -16,11 +16,6 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     List<Uzytkownik> findByUsername(String name);
     Optional<Uzytkownik> findByEmail(String email);
 
-    String gg = """
-            MATCH (u:Uzytkownik) WHERE u.email = $email
-            SET u.ban = true
-            """;
-
     @Query("""
             MATCH (u:Uzytkownik) DETACH DELETE u 
             WITH u
@@ -65,9 +60,11 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         CREATE (ustawienia:Ustawienia) SET ustawienia += $ustawienia.__properties__
         WITH u, ustawienia
         CREATE(u)-[:MA_USTAWIENIA]->(ustawienia)
+
+        RETURN u
             """
             )
-    void addUzytkownik(@Param("uzyt") Uzytkownik uzyt, @Param("ustawienia") Ustawienia ustawienia);
+    Uzytkownik addUzytkownik(@Param("uzyt") Uzytkownik uzyt, @Param("ustawienia") Ustawienia ustawienia);
 
     @Query("""
         CREATE (u:Uzytkownik:`:#{allOf(#roles)}`) SET u += $uzyt.__properties__
@@ -75,15 +72,18 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         CREATE (ustawienia:Ustawienia) SET ustawienia += $ustawienia.__properties__
         WITH u, ustawienia
         CREATE(u)-[:MA_USTAWIENIA]->(ustawienia)
+
+
+        RETURN u
             """
             )
-    void addUzytkownik(@Param("uzyt") Uzytkownik uzyt, List<String> roles, @Param("ustawienia") Ustawienia ustawienia);
+    Uzytkownik addUzytkownik(@Param("uzyt") Uzytkownik uzyt, List<String> roles, @Param("ustawienia") Ustawienia ustawienia);
 
   //  @Query("CREATE (u:Uzytkownik:`:#{literal(#rola)}` {nazwa: $nazwa, email: $email, haslo: $haslo, data_utworzenia: localdatetime(), ban: false})")
    // void addNewPracownik(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo, @Param("rola") String rola);
 
-    @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.ban = $ban ")
-    void banUzytkownik(@Param("email") String email, @Param("ban") boolean ban);
+    @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.ban = $ban RETURN u")
+    Uzytkownik banUzytkownik(@Param("email") String email, @Param("ban") boolean ban);
 
 
     // TODO: Zmień jak będą kolejne komponenty dodawane

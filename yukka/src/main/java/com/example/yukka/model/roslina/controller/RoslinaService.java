@@ -111,12 +111,12 @@ public class RoslinaService {
         roslinaRepository.deleteByNazwaLacinska(nazwaLacinska);
     }
 
+    // TODO: popraw dodawanie obrazu jak już się zrobi
     public void uploadRoslinaObraz(MultipartFile file, Authentication connectedUser, String latinName) {
-        // TODO: Lepsza obsługa w przypadku nieznalezienia niczego
         Roslina roslina = roslinaRepository.findByNazwaLacinska(latinName).get();
-        User user = ((User) connectedUser.getPrincipal());
+        User uzyt = ((User) connectedUser.getPrincipal());
 
-        var pfp = fileStoreService.saveRoslina(file, latinName, user.getUsername());
+        var pfp = fileStoreService.saveRoslina(file, latinName, uzyt.getUsername());
         
         roslina.setObraz(pfp);
         roslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getObraz(), roslina.getWysokoscMin(), roslina.getWysokoscMax());

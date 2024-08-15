@@ -13,8 +13,6 @@ import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
-import com.example.yukka.model.uzytkownik.MaUstawienia;
-import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
@@ -40,6 +38,7 @@ public class YukkaApplication {
 
 
 	public static void main(String[] args) {
+		
 		ApplicationContext context = SpringApplication.run(YukkaApplication.class, args);
        
 		// PythonPlantSeeder scriptRunner = context.getBean(PythonPlantSeeder.class);
@@ -66,9 +65,9 @@ public class YukkaApplication {
 
 		// Użytkownicy na razie bez relacji
 
-		Ustawienia ust = Ustawienia.builder().build();
+		//Ustawienia ust = Ustawienia.builder().build();
 
-		MaUstawienia maUst = MaUstawienia.builder().ustawienia(ust).build();
+		//MaUstawienia maUst = MaUstawienia.builder().ustawienia(ust).build();
 
 		Uzytkownik usJan = Uzytkownik.builder()
         .nazwa("Jan Kowalski").email("jan@email.pl")
@@ -106,8 +105,6 @@ public class YukkaApplication {
 		uzytkownikService.addUzytkownik(usMichal);
 		
 		
-
-		// TODO: Sprawdź w serwice, czy id nie istnieje w bazie
 		String postId1 = UUID.randomUUID().toString();
 		Post p1 = Post.builder().postId(postId1).tytul("Jakiś tytuł").opis("Jakiś opis").build();
 

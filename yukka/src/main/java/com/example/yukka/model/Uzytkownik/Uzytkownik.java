@@ -14,6 +14,7 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -133,10 +134,25 @@ public class Uzytkownik implements UserDetails, Principal{
         return labels.contains(ROLE.Pracownik.toString());
     }
 
-    @Override
-    public String toString() {
-        return "Uzytkownik [id=" + id + ", labels=" + labels + ", nazwa=" + nazwa + ", email=" + email + ", haslo="
-                + haslo + ", createdDate=" + createdDate + ", banned=" + ban + "]";
+    public boolean isNormalUzytkownik() {
+        return !isAdmin() && !isPracownik();
+    }
+
+    /** Sprawdza, czy zalogowany użytkownik ma dostęp do prywatnych treści danego użytkownika. 
+     *  Admin ma prawo do wszystkiego, a pracownicy do użytkowników i samych siebie.
+     * @param targetUzyt Użytkownik, do którego danych się dostaje
+     * @param connectedUser Połączony zalogowany użytkownik
+     * @return boolean
+    */
+    public boolean hasAuthenticationRights(Uzytkownik targetUzyt, Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        if(uzyt.isAdmin()){
+            return true;
+        }else if (uzyt.isPracownik()) {
+            return targetUzyt.isNormalUzytkownik() || uzyt.getEmail().equals(targetUzyt.getEmail());
+        } else  {
+            return uzyt.getEmail().equals(targetUzyt.getEmail());
+        }
     }
 
 

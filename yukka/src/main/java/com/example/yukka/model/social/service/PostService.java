@@ -1,11 +1,13 @@
 package com.example.yukka.model.social.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,32 +18,28 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
-import com.example.yukka.model.social.komentarz.Komentarz;
-import com.example.yukka.model.social.komentarz.KomentarzMapper;
+import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostMapper;
 import com.example.yukka.model.social.post.PostResponse;
-import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
-import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
-    @Autowired
+    @Value("${post.add.cooldown}")
+    private Integer postAddCD;
+
     PostRepository postRepository;
-    @Autowired
-    KomentarzRepository komentarzRepository;
-    @Autowired
+    UzytkownikRepository uzytkownikRepository;
     FileStoreService fileStoreService;
-
-    @Autowired
     PostMapper postMapper;
-
-    @Autowired
-    KomentarzMapper komentarzMapper;
 
     public PostResponse findByPostId(String postId) {
         return postRepository.findPostByPostIdButWithPath(postId)
@@ -67,7 +65,7 @@ public class PostService {
         );
     }
 
-    public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, Authentication connectedUser) {
+    public PageResponse<PostResponse> findAllPostyByConnectedUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPostyByUzytkownik(pageable, user.getEmail());
@@ -85,83 +83,69 @@ public class PostService {
         );
     }
 
+    public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, Authentication connectedUser, String email) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByEmail(email);
+        if(targetUzyt.isEmpty()) {
+            return new PageResponse<>();
+        }
+        if(!uzyt.hasAuthenticationRights(targetUzyt.get(), connectedUser)){
+            return new PageResponse<>();
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
+        Page<Post> posts = postRepository.findAllPostyByUzytkownik(pageable, email);
+        List<PostResponse> postsResponse = posts.stream()
+                .map(postMapper::toPostResponse)
+                .toList();
+        return new PageResponse<>(
+                postsResponse,
+                posts.getNumber(),
+                posts.getSize(),
+                posts.getTotalElements(),
+                posts.getTotalPages(),
+                posts.isFirst(),
+                posts.isLast()
+        );
+    }
 
-    public Post save(PostRequest request, String email) {
+
+    public Post save(PostRequest request, Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+
+        Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
+        checkTimeSinceLastPost(newestPost);
 
         Post post = postMapper.toPost(request);
-        do { 
-            Optional<Post> post2 = postRepository.findPostByPostId(post.getPostId());
-            if(post2.isEmpty()){
-                break;
-            }
-            post.setPostId(UUID.randomUUID().toString());
-        } while (true);
+        post.setPostId(createPostId());
         
-        return postRepository.addPost(email, post).get();
+        return postRepository.addPost(uzyt.getEmail(), post).get();
     }
 
-    public Long addOcena(OcenaRequest request, Authentication connectedUser) {
-        Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
+    public Ocenil addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
 
-        return postRepository.addOcenaToPost(user.getEmail(), post.getPostId(), request.isLubi());
-    }
-
-    public String addKomentarz(String postId, KomentarzRequest request, Authentication connectedUser) {
-        Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(postId).orElseThrow();
-
-        Komentarz kom = komentarzMapper.toKomentarz(request);
-        do { 
-            Optional<Komentarz> kom2 = komentarzRepository.findKomentarzByKomentarzId(kom.getKomentarzId());
-            if(kom2.isEmpty()){
-                break;
-            }
-            kom.setKomentarzId(UUID.randomUUID().toString());
-        } while (true);
-        
-        return komentarzRepository.addKomentarzToPost(user.getEmail(), post.getPostId(), kom);
-    }
-
-    public void deleteKomentarz(String postId, String komentarzId, Authentication connectedUser) {
-        Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
-        Optional<Post> post = postRepository.findPostByPostId(postId);
-        Optional<Komentarz> kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId);
-
-        if (kom.isEmpty() || post.isEmpty()) {
-            return;
-        }
-
-        if(!user.isAdmin() && !user.isPracownik()) {
-            if(!user.getEmail().equals(kom.get().getUzytkownik().getEmail())){
-                return;
-            }
-        }
-        
-        komentarzRepository.removeKomentarz(komentarzId);
+        return postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
     }
 
     public void deletePost(String postId, Authentication connectedUser) {
-        Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
-        Optional<Post> post = postRepository.findPostByPostId(postId);
-        if(!user.isAdmin() && !user.isPracownik()) {
-            if(!user.getEmail().equals(post.get().getAutor().getEmail())){
-                return;
-            }
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        Post post = postRepository.findPostByPostId(postId).orElseThrow();
+        if(uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
+            postRepository.deletePost(postId);
         }
-        postRepository.deletePost(postId);
     }
 
-    public void uploadPostObraz(MultipartFile file, Authentication connectedUser, String latinName) {
-        Optional<Post> postOptional = postRepository.findPostByPostId(latinName);
+    public void uploadPostObraz(MultipartFile file, Authentication connectedUser, String postId) {
+        Optional<Post> postOptional = postRepository.findPostByPostId(postId);
     
         if (postOptional.isEmpty()) {
-            throw new NoSuchElementException("Nie znaleziono posta o podanym ID: " + latinName);
+            throw new NoSuchElementException("Nie znaleziono posta o podanym ID: " + postId);
         }
         Post post = postOptional.get();
-        Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
-        String pfp = fileStoreService.savePost(file, post.getPostId(), user.getNazwa());
+        String pfp = fileStoreService.savePost(file, post.getPostId(), uzyt.getNazwa());
 
         if (pfp == null) {
             throw new IllegalStateException("Nie udało się zapisać obrazu.");
@@ -170,5 +154,30 @@ public class PostService {
         
         post.setObraz(pfp);
         postRepository.updatePostObraz(post.getPostId(), post.getObraz());
+    }
+
+
+    public String createPostId() {
+        String resultId = UUID.randomUUID().toString();
+        do { 
+            Optional<Post> kom = postRepository.findPostByPostId(resultId);
+            if(kom.isEmpty()){
+                break;
+            }
+            resultId = UUID.randomUUID().toString();
+        } while (true);
+        return resultId;
+    }
+
+    private void checkTimeSinceLastPost(Optional<Post> newestPost) {
+        if (newestPost.isPresent()) {
+            LocalDateTime lastPostTime = newestPost.get().getDataUtworzenia();
+            LocalDateTime now = LocalDateTime.now();
+    
+            Duration timeElapsed = Duration.between(lastPostTime, now);
+            if (timeElapsed.getSeconds() < postAddCD) {
+                throw new IllegalStateException("Musisz poczekać " + postAddCD + " sekund przed dodaniem kolejnego posta.");
+            }
+        }
     }
 }

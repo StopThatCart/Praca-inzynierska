@@ -23,5 +23,15 @@
     "name": "application.file.uploads.photos-output-path",
     "type": "java.lang.String",
     "description": "A description for 'application.file.uploads.photos-output-path'"
+  },
+  {
+    "name": "komentarz.add.cooldown",
+    "type": "java.lang.Integer",
+    "description": "A description for 'komentarz.add.cooldown'"
+  },
+  {
+    "name": "post.add.cooldown",
+    "type": "java.lang.Integer",
+    "description": "A description for 'post.add.cooldown'"
   }
 ]}

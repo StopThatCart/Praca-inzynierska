@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
@@ -50,7 +49,7 @@ class AuthenticationService {
                  //.labels(List.of(userRole))
                 .build();
         
-        Ustawienia ust = Ustawienia.builder().build();
+       // Ustawienia ust = Ustawienia.builder().build();
 
         uzytkownikService.addUzytkownik(user);
 

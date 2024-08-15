@@ -8,13 +8,12 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.post.Post;
 
 
 
 public interface PostRepository extends Neo4jRepository<Post, Long> {
-
-    // To działa
     @Query("""
         MATCH (post:Post {postId: $postId})
         OPTIONAL MATCH path = (:Uzytkownik)-[:MA_POST]->(post)-[:MA_KOMENTARZ]->
@@ -35,6 +34,15 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         RETURN post, komentarze, uzytkownicy
         """)
     Optional<Post> findPostByPostId(@Param("postId") String postId);
+
+        @Query("""
+            MATCH (post:Post)<-[r1:MA_POST]-(uzyt:Uzytkownik{email: $email})
+            RETURN post
+            ORDER BY post.dataUtworzenia DESC
+            LIMIT 1
+            """)
+    Optional<Post> findNewestPostOfUzytkownik(@Param("email") String email);
+
 
     @Query(value = """
         MATCH path = (post:Post)<-[:MA_POST]-(:Uzytkownik)
@@ -68,9 +76,9 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
             WITH post, relu, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
             COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
             SET post.ocenyLubi = ocenyLubi, post.ocenyNieLubi = ocenyNieLubi
-            RETURN relu.__id__
+            RETURN relu
             """)
-    Long addOcenaToPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
+    Ocenil addOcenaToPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})-[relu:OCENIL]->(post:Post{postId: $postId})

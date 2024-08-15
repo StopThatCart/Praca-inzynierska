@@ -47,7 +47,7 @@ public class Komentarz extends Oceniany {
     private Post posty;
 
     @Relationship(type = "ODPOWIEDZIAL", direction = Relationship.Direction.OUTGOING)
-    private Komentarz komentarzOd;
+    private Komentarz odpowiadaKomentarzowi;
 
     @Relationship(type = "ODPOWIEDZIAL", direction = Relationship.Direction.INCOMING)
     private List<Komentarz> odpowiedzi;
