@@ -11,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
-
 public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> {
     List<Uzytkownik> findByUsername(String name);
     Optional<Uzytkownik> findByEmail(String email);
@@ -93,4 +92,5 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             DETACH DELETE u 
             """)
     void removeUzytkownik(@Param("email") String email);
+
 }

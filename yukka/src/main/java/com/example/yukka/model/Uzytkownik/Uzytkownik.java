@@ -43,6 +43,9 @@ public class Uzytkownik implements UserDetails, Principal{
     @Id @GeneratedValue
     private Long id;
 
+    @Property(name = "uzytId")
+    private String uzytId;
+
     @DynamicLabels
     @Builder.Default
     private List<String> labels = new ArrayList<>();

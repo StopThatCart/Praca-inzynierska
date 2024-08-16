@@ -76,7 +76,7 @@ public class PostController {
 
 
     // UWAGA: nietestowane
-    @PostMapping(value = "/obraz/{post-id}", consumes = "multipart/form-data")
+    @PostMapping(value = "/{post-id}/obraz", consumes = "multipart/form-data")
     public ResponseEntity<?> uploadPostImage(
             @PathVariable("post-id") String postId,
             @Parameter()

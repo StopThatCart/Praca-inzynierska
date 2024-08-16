@@ -16,6 +16,7 @@ import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
+import com.example.yukka.seeder.RoslinaImporterService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,8 @@ public class YukkaApplication {
 	private final PostRepository postRepository;
 	private final KomentarzRepository komentarzRepository;
 
+	private final RoslinaImporterService roslinaImporterService;
+
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
 	
@@ -44,14 +47,17 @@ public class YukkaApplication {
 		// PythonPlantSeeder scriptRunner = context.getBean(PythonPlantSeeder.class);
        // String scriptOutput = scriptRunner.runPythonScript();
        // System.out.println(scriptOutput);
-	   
+		
+
+
 	}
 
 	@Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
-			unseed();
-            seed();
+			//unseed();
+           // seed();
+		   roslinaImporterService.seedRosliny();
         };
     }
 
@@ -70,29 +76,34 @@ public class YukkaApplication {
 		//MaUstawienia maUst = MaUstawienia.builder().ustawienia(ust).build();
 
 		Uzytkownik usJan = Uzytkownik.builder()
+
         .nazwa("Jan Kowalski").email("jan@email.pl")
         .haslo("jan12345678").labels(List.of("Admin"))
         .build();
 
 		Uzytkownik usPrac = Uzytkownik.builder()
+
 		.labels(List.of("Pracownik")).nazwa("Anna Nowak")
 		.email("anna@email.pl").haslo("anna12345678")
 		.build();
 
 		String piotrEmail = "piotr@email.pl";
 		Uzytkownik usPiotr = Uzytkownik.builder()
+		.uzytId(UUID.randomUUID().toString())
         .nazwa("Piotr Wiśniewski").email(piotrEmail)
         .haslo("piotr12345678")
         .build();
 
 		String katarzynaEmail = "katarzyna@email.pl";
 		Uzytkownik usKatarzyna = Uzytkownik.builder()
+
 		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
         .haslo("katarzyna12345678")
         .build();
 
 		String michalEmail = "michal@email.pl";
 		Uzytkownik usMichal = Uzytkownik.builder()
+		.uzytId(UUID.randomUUID().toString())
         .nazwa("Michał Zieliński").email(michalEmail)
         .haslo("michal12345678")
         .build();

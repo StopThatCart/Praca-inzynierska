@@ -64,13 +64,15 @@ public class RoslinaController {
 
     @PostMapping
     public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request) {
-        Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(request.getNazwaLacinska());
-        if (roslina.isPresent()) {
-            System.out.println("\n\n\nBITCH IS NOT PRESENT\n\n\n");
-            return ResponseEntity.ok("Roślina o takiej nazwie łacińskiej już istnieje.");
-        }
-
         roslinaService.save(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
+    }
+
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request, 
+    @Parameter() @RequestPart("file") MultipartFile file,
+    Authentication currentUser) {
+        roslinaService.save(request, file, currentUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
     }
 
@@ -100,7 +102,7 @@ public class RoslinaController {
     
 
     // TODO: Przetestować to jak już będzie podstawowy panel. Dodatkowo obsługa usuwania starego obrazu po zmianie obrazu
-    @PostMapping(value = "/obraz/{nazwaLacinska}", consumes = "multipart/form-data")
+    @PostMapping(value = "/{nazwaLacinska}/obraz/", consumes = "multipart/form-data")
     public ResponseEntity<?> uploadBookCoverPicture(
             @PathVariable("nazwaLacinska") String nazwaLacinska, 
             @Parameter() @RequestPart("file") 

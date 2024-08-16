@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +19,7 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 @Service
 public class RoslinaService {
@@ -72,14 +72,14 @@ public class RoslinaService {
     }
 
     public Roslina save(RoslinaRequest request) {
-
-        Roslina pl = roslinaMapper.toRoslina(request);
-        //return Roslina roslinaRepository.save(request.getNazwa(), request.getNazwaLacinska(), 
-       // request.getOpis(), request.getWysokoscMin(), 
-       // request.getWysokoscMax(), request.getWlasciwosci());
+        Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
+        if (roslina.isPresent()) {
+            System.out.println("\n\n\nBITCH IS PRESENT\n\n\n");
+            return null;
+        }
         
-
         if(request.areWlasciwosciEmpty()) {
+            Roslina pl = roslinaMapper.toRoslina(request);
             return roslinaRepository.addRoslina(pl);
         }
 
@@ -89,6 +89,48 @@ public class RoslinaService {
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosci());
 
+    }
+
+    public Roslina save(RoslinaRequest request, MultipartFile file, Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
+        if (roslina.isPresent()) {
+            System.out.println("\n\n\nBITCH IS PRESENT\n\n\n");
+            return null;
+        }
+        
+        String leObraz = fileStoreService.saveRoslina(file, request.getNazwaLacinska(), uzyt.getUzytId());
+        request.setObraz(leObraz);
+        if(request.areWlasciwosciEmpty()) {
+            Roslina pl = roslinaMapper.toRoslina(request);
+            Roslina ros = roslinaRepository.addRoslina(pl);
+            return ros;
+        }
+        Roslina ros = roslinaRepository.addRoslina(
+            request.getNazwa(), request.getNazwaLacinska(), 
+            request.getOpis(), request.getObraz(), 
+            request.getWysokoscMin(), request.getWysokoscMax(), 
+            request.getWlasciwosci());
+
+        return ros;
+    }
+
+    public Roslina saveSeededRoslina(RoslinaRequest request, MultipartFile file) {
+        Roslina pl = roslinaMapper.toRoslina(request);
+        
+        String leObraz = fileStoreService.saveSeededRoslina(file, request.getObraz());
+        request.setObraz(leObraz);
+        if(request.areWlasciwosciEmpty()) {
+            Roslina ros = roslinaRepository.addRoslina(pl);
+            return ros;
+        }
+        Roslina ros = roslinaRepository.addRoslina(
+            request.getNazwa(), request.getNazwaLacinska(), 
+            request.getOpis(), request.getObraz(), 
+            request.getWysokoscMin(), request.getWysokoscMax(), 
+            request.getWlasciwosci());
+
+        return ros;
     }
 
     public Roslina update(RoslinaRequest request) {
@@ -106,19 +148,24 @@ public class RoslinaService {
             request.getWlasciwosci());
     }
 
+    // Uwaga: to jest do głównej rośliny, nie customowej
+    public void uploadRoslinaObraz(MultipartFile file, Authentication connectedUser, String latinName) {
+        Roslina roslina = roslinaRepository.findByNazwaLacinska(latinName).get();
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+
+        String pfp = fileStoreService.saveRoslina(file, latinName, uzyt.getUsername());
+        if(pfp == null){
+            return;
+        }
+        
+        roslina.setObraz(pfp);
+        roslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getObraz(), roslina.getWysokoscMin(), roslina.getWysokoscMax());
+    }
+
     // Usuwanie po ID zajmuje ogromną ilość czasu i wywołuje HeapOverflow, więc lepiej jest użyć UNIQUE atrybutu jak nazwaLacinska
     public void deleteByNazwaLacinska(String nazwaLacinska) {
         roslinaRepository.deleteByNazwaLacinska(nazwaLacinska);
     }
 
-    // TODO: popraw dodawanie obrazu jak już się zrobi
-    public void uploadRoslinaObraz(MultipartFile file, Authentication connectedUser, String latinName) {
-        Roslina roslina = roslinaRepository.findByNazwaLacinska(latinName).get();
-        User uzyt = ((User) connectedUser.getPrincipal());
 
-        var pfp = fileStoreService.saveRoslina(file, latinName, uzyt.getUsername());
-        
-        roslina.setObraz(pfp);
-        roslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getObraz(), roslina.getWysokoscMin(), roslina.getWysokoscMax());
-    }
 }

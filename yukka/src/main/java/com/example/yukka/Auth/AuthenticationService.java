@@ -6,6 +6,7 @@
 package com.example.yukka.auth;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,6 +42,7 @@ class AuthenticationService {
         System.out.println("\n\n\n Request: " + request.toString() + "\n\n\n");
         //System.out.println("\n\n\n Request: " + request.getNazwa() + "\n\n\n");
         Uzytkownik user = Uzytkownik.builder()
+                .uzytId(UUID.randomUUID().toString())
                 .nazwa(request.getNazwa())
                 .email(request.getEmail())
                 .haslo(passwordEncoder.encode(request.getHaslo()))
@@ -70,13 +72,12 @@ class AuthenticationService {
 
         System.out.println("Auth: " + auth.toString());
         
-
         var claims = new HashMap<String, Object>();
 
-        var user = ((Uzytkownik) auth.getPrincipal());
-        claims.put("Nazwa", user.getUsername());
-        claims.put("Email", user.getEmail());
-        //claims.put("Haslo", user.getUsername());
+        Uzytkownik uzyt = ((Uzytkownik) auth.getPrincipal());
+        claims.put("UzytId", uzyt.getUzytId());
+        claims.put("Nazwa", uzyt.getUsername());
+        claims.put("Email", uzyt.getEmail());
        // claims.put("authorities", user.getAuthorities()); // To już jest robione w JwtService
 
         /* */

@@ -10,6 +10,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import com.example.yukka.model.roslina.enums.RoslinaRelacje;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -136,5 +137,32 @@ public class Roslina {
                           .map(Wlasciwosc::getNazwa)
                           .collect(Collectors.toSet());
     }
-   
+
+    // Może się przydać
+    /* 
+    public void setWlasciwosci(Set<Wlasciwosc> wlasciwosci, RoslinaRelacje relacja) {
+        switch (relacja) {
+            case MA_FORME -> setFormy(wlasciwosci);
+            case MA_GLEBE -> setGleby(wlasciwosci);
+            case MA_GRUPE -> setGrupy(wlasciwosci);
+            case MA_KOLOR_LISCI -> setKoloryLisci(wlasciwosci);
+            case MA_KOLOR_KWIATOW -> setKoloryKwiatow(wlasciwosci);
+            case MA_KWIAT -> setKwiaty(wlasciwosci);
+            case MA_NAGRODE -> setNagrody(wlasciwosci);
+            case MA_ODCZYNY -> setOdczyny(wlasciwosci);
+            case MA_OKRES_KWITNIENIA -> setOkresyKwitnienia(wlasciwosci);
+            case MA_OKRES_OWOCOWANIA -> setOkresyOwocowania(wlasciwosci);
+            case MA_OWOC -> setOwoce(wlasciwosci);
+            case MA_PODGRUPE -> setPodgrupa(wlasciwosci);
+            case MA_POKROJ -> setPokroje(wlasciwosci);
+            case MA_SILE_WZROSTU -> setSilyWzrostu(wlasciwosci);
+            case MA_STANOWISKO -> setStanowiska(wlasciwosci);
+            case MA_WALOR -> setWalory(wlasciwosci);
+            case MA_WILGOTNOSC -> setWilgotnosci(wlasciwosci);
+            case MA_ZASTOSOWANIE -> setZastosowania(wlasciwosci);
+            case MA_ZIMOZIELONOSC_LISCI -> setZimozielonosci(wlasciwosci);
+            default -> throw new IllegalArgumentException("Relacja nie występuje w " + RoslinaRelacje.class);
+        }
+    }
+   */
 }

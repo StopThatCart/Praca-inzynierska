@@ -4,7 +4,7 @@
             "type": "java",
             "name": "Spring Boot-YukkaApplication<yukka>",
             "request": "launch",
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/yukka",
             "mainClass": "com.example.yukka.YukkaApplication",
             "projectName": "yukka",
             "args": "",

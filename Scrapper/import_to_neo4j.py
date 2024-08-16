@@ -42,19 +42,6 @@ def query_string_good(node_name, label, relationship):
     )
     return query
 
-def query_string_en(node_name, label, relationship):
-    query = (
-        "UNWIND $plants AS plant "
-        f"MATCH (p:Plant {{name: plant.name, latinName: plant.latin_name}}) "
-        "WITH p, plant "
-        f"UNWIND plant.{label} AS item "
-        f"WITH p, item WHERE item <> '{brak}' "
-        f"MERGE (n:Wlasciwosc:{node_name.capitalize()} {{name: item}}) "
-        f"MERGE (p)-[:{relationship}]->(n) "
-        f"MERGE (n)-[:HAS_PLANT]->(p)"
-    )
-    return query
-
 plant_query = (
         "UNWIND $plants AS plant "
         "MERGE (p:Roslina {nazwa: plant.name, nazwaLacinska: plant.latin_name, opis: plant.description, obraz: plant.image_filename}) "
@@ -63,16 +50,6 @@ plant_query = (
         "WITH p, height "
         "WHERE height.name <> 'Brak' "
         "SET p.wysokoscMin = toFloat(height.min), p.wysokoscMax = toFloat(height.max)"
-        )
-
-plant_query_en = (
-        "UNWIND $plants AS plant "
-        "MERGE (p:Plant {name: plant.name, latinName: plant.latin_name, description: plant.description, image: plant.image_filename}) "
-        "WITH p, plant "
-        "UNWIND plant.heights AS height "
-        "WITH p, height "
-        "WHERE height.name <> 'Brak' "
-        "SET p.heightMin = height.min, p.heightMax = height.max"
         )
    
 queries = [
@@ -96,33 +73,6 @@ queries = [
     ("Okres", "flowering_periods", "MA_OKRES_KWITNIENIA"),
     ("Okres", "fruiting_times", "MA_OKRES_OWOCOWANIA")
 ]   
-        
-queries_en = [
-    ("Group", "groups", "HAS_GROUP"),
-    ("Subgroup", "subgroups", "HAS_SUBGROUP"),
-    ("Form", "forms", "HAS_FORM"),
-    ("Growth_strength", "growth_strength", "HAS_GROWTH_STRENGTH"),
-    ("Shape", "shapes", "HAS_SHAPE"),
-    ("Color", "leaves_colors", "HAS_LEAVES_COLOR"),
-    ("Wintergreen_leaves", "wintergreen_leaves", "HAS_WINTERGREEN_LEAVES"),
-    ("Fruit", "fruits", "HAS_FRUIT"),
-    ("Position", "positions", "HAS_POSITION"),
-    ("Humidity", "humidities", "HAS_HUMIDITY"),
-    ("Ph", "phs", "HAS_PH"),
-    ("Soil", "soils", "HAS_SOIL"),
-    ("Appeal", "appeals", "HAS_APPEAL"),
-    ("Use", "uses", "HAS_USE"),
-    ("Award", "awards", "HAS_AWARD"),
-    ("Flower", "flowers", "HAS_FLOWER"),
-    ("Color", "flower_colors", "HAS_FLOWER_COLOR"),
-    ("Period", "flowering_periods", "HAS_FLOWERING_PERIOD"),
-    ("Period", "fruiting_times", "HAS_FRUITING_PERIOD")
-]
-
-queries_test = [
-    ("Group", "groups", "HAS_GROUP"),
-    ("Subgroup", "subgroups", "HAS_SUBGROUP")
-]
 
 def import_plants(csv_filename, batch_size, uri, username, password):
     print("Rozpoczynanie seedowania bazy danych...")

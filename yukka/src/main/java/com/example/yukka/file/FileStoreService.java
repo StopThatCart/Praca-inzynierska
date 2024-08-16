@@ -3,7 +3,6 @@ package com.example.yukka.file;
 import java.io.File;
 import static java.io.File.separator;
 import java.io.IOException;
-import static java.lang.System.currentTimeMillis;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,23 +23,50 @@ public class FileStoreService {
     @Value("${application.file.uploads.photos-output-path}")
     private String fileUploadPath;
 
+    @Value("${roslina.obraz.default.jpg-file-path}")
+    private String defaultRoslinaObrazPath;
+
+    @Value("${roslina.obraz.default.name}")
+    private String defaultRoslinaObrazName;
+
+    
+
+    // Jako iż seedowane rośliny już mają swoje ścieżki, to zwraca się tylko wygenerowane nazwy zamiast ścieżki do pliku
+    public String saveSeededRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String obraz) {
+        String fileUploadSubPath = "defaults";
+        if(!obraz.equals(defaultRoslinaObrazName)) {
+            fileUploadSubPath = fileUploadSubPath + separator + "rosliny";
+             //String fileName = generateFileName(obraz);
+            uploadFile(sourceFile, fileUploadSubPath, obraz);
+        }
+        return obraz;
+    }
+
+    // Potem sie dorobi
+    public String saveCustomRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String nazwaLacinska, @Nonnull String uzytId) {
+        throw new UnsupportedOperationException("Feature incomplete. Contact assistance.");
+    }
+
     public String saveRoslina(@Nonnull MultipartFile sourceFile,
-                              @Nonnull String roslinaNazwaLacinska, @Nonnull String uzytkownikNazwa) {
-        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa + separator + "rosliny";
-        String fileName = generateFileName(roslinaNazwaLacinska);
-        return uploadFile(sourceFile, fileUploadSubPath, fileName);
+                              @Nonnull String obraz, @Nonnull String uzytId) {
+        if(!obraz.equals(defaultRoslinaObrazName)) {
+            String fileUploadSubPath = "users" + separator + uzytId + separator + "rosliny";
+            String fileName = generateFileName(obraz);
+            return uploadFile(sourceFile, fileUploadSubPath, fileName);
+        }
+        return obraz;
     }
 
     public String savePost(@Nonnull MultipartFile sourceFile,
-                           @Nonnull String postId, @Nonnull String uzytkownikNazwa) {
-        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa + separator + "posty";
+                           @Nonnull String postId, @Nonnull String uzytId) {
+        final String fileUploadSubPath = "users" + separator + uzytId + separator + "posty";
         String fileName = generateFileName(postId);
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
     public String saveKomentarz(@Nonnull MultipartFile sourceFile,
-                                @Nonnull String komentarzId, @Nonnull String uzytkownikNazwa) {
-        final String fileUploadSubPath = "users" + separator + uzytkownikNazwa + separator + "komentarze";
+                                @Nonnull String komentarzId, @Nonnull String uzytId) {
+        final String fileUploadSubPath = "users" + separator + uzytId + separator + "komentarze";
         String fileName = generateFileName(komentarzId);
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
@@ -60,7 +86,7 @@ public class FileStoreService {
 
         try {
             Files.write(targetPath, sourceFile.getBytes());
-            log.info("Zapisano plik do: " + targetFilePath);
+            log.info("Zapisano plik do: " + targetPath);
             return targetFilePath;
         } catch (IOException e) {
             log.error("Błąd podczas zapisu pliku do ścieżki: " + targetFilePath, e);
@@ -69,7 +95,10 @@ public class FileStoreService {
     }
 
     private String generateFileName(String baseName) {
-        return baseName.replaceAll("\\s+", "_") + "_" + currentTimeMillis();
+        String normalized = baseName.replaceAll("[\\s\"'!,!@#$%^&*()-=+{}<>?~`]", "_") + "_";
+        normalized = normalized.replaceAll("_+", "_");
+        
+        return normalized + System.currentTimeMillis();
     }
 
 

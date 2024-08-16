@@ -15,11 +15,6 @@
     "description": "A description for 'roslina.wysokosc.max'"
   },
   {
-    "name": "roslina.obraz.default",
-    "type": "java.lang.String",
-    "description": "A description for 'roslina.obraz.default'"
-  },
-  {
     "name": "application.file.uploads.photos-output-path",
     "type": "java.lang.String",
     "description": "A description for 'application.file.uploads.photos-output-path'"
@@ -33,5 +28,45 @@
     "name": "post.add.cooldown",
     "type": "java.lang.Integer",
     "description": "A description for 'post.add.cooldown'"
+  },
+  {
+    "name": "application.seeder.csv-file-path",
+    "type": "java.lang.String",
+    "description": "A description for 'application.seeder.csv-file-path'"
+  },
+  {
+    "name": "roslina.obraz.default.jpg-file-path",
+    "type": "java.lang.String",
+    "description": "A description for 'roslina.obraz.default.jpg-file-path'"
+  },
+  {
+    "name": "roslina.obraz.default.name",
+    "type": "java.lang.String",
+    "description": "A description for 'roslina.obraz.default.name'"
+  },
+  {
+    "name": "spring.data.neo4j.max-retries",
+    "type": "java.lang.Integer",
+    "description": "A description for 'spring.data.neo4j.max-retries'"
+  },
+  {
+    "name": "spring.data.neo4j.time-after-drop-create",
+    "type": "java.lang.Integer",
+    "description": "A description for 'spring.data.neo4j.time-after-drop-create'"
+  },
+  {
+    "name": "roslina.seed.amount",
+    "type": "java.lang.Integer",
+    "description": "A description for 'roslina.seed.amount'"
+  },
+  {
+    "name": "spring.data.neo4j.seed-mode",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.data.neo4j.seed-mode'"
+  },
+  {
+    "name": "roslina.seed.obrazy-path",
+    "type": "java.lang.String",
+    "description": "A description for 'roslina.seed.obrazy-path'"
   }
 ]}
