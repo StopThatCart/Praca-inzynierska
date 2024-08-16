@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
 import com.example.yukka.model.social.request.KomentarzRequest;
@@ -73,7 +72,7 @@ public class KomentarzController {
     }
 
     @PutMapping("/ocena")
-    public ResponseEntity<Ocenil> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
+    public ResponseEntity<Komentarz> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addOcenaToKomentarz(request, connectedUser));
     }
 

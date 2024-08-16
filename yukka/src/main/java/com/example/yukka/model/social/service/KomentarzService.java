@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
-import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzDTO;
 import com.example.yukka.model.social.komentarz.KomentarzMapper;
@@ -38,10 +37,10 @@ public class KomentarzService {
     @Value("${komentarz.add.cooldown}")
     private Integer komAddCD;
 
-    PostRepository postRepository;
-    UzytkownikRepository uzytkownikRepository;
-    KomentarzRepository komentarzRepository;
-    FileStoreService fileStoreService;
+    private final PostRepository postRepository;
+    private final UzytkownikRepository uzytkownikRepository;
+    private final KomentarzRepository komentarzRepository;
+    private final FileStoreService fileStoreService;
 
     PostMapper postMapper;
     KomentarzMapper komentarzMapper;
@@ -85,7 +84,7 @@ public class KomentarzService {
         );
     }
 
-    public Ocenil addOcenaToKomentarz(OcenaRequest request, Authentication connectedUser) {
+    public Komentarz addOcenaToKomentarz(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Komentarz> komentarz = komentarzRepository.findKomentarzByKomentarzId(request.getOcenialnyId());
         if(komentarz.isEmpty()) {

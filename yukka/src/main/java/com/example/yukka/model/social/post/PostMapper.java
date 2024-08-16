@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostMapper {
     private final KomentarzMapper komentarzMapper;
+    private final FileUtils fileUtils;
     public PostRequest toPostRequest(Post post) {
         return PostRequest.builder()
             .tytul(post.getTytul())
@@ -46,7 +47,7 @@ public class PostMapper {
                     .map(komentarzMapper::toKomentarzDTO)
                     .collect(Collectors.toList()))
                 .uzytkownik(post.getAutor().getNazwa())
-                .obraz(FileUtils.readFileFromLocation(post.getObraz()))
+                .obraz(fileUtils.readPostObrazFile(post.getObraz()))
                 .build();
     }
 

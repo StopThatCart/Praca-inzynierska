@@ -8,7 +8,6 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.post.Post;
 
 
@@ -71,14 +70,14 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
             MATCH (post:Post{postId: $postId})
             MERGE (uzyt)-[relu:OCENIL{lubi: $ocena}]->(post)
 
-            WITH post, relu
+            WITH post
             MATCH (post)<-[r:OCENIL]-(uzyt)
-            WITH post, relu, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
+            WITH post, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
             COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
             SET post.ocenyLubi = ocenyLubi, post.ocenyNieLubi = ocenyNieLubi
-            RETURN relu
+            RETURN post
             """)
-    Ocenil addOcenaToPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
+    Post addOcenaToPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})-[relu:OCENIL]->(post:Post{postId: $postId})

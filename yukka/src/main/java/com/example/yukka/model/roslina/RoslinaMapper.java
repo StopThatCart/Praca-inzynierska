@@ -16,9 +16,12 @@ import com.example.yukka.model.roslina.enums.RoslinaRelacje;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class RoslinaMapper {
+    private final FileUtils fileUtils;
     public RoslinaRequest toRoslinaRequest(Roslina roslina) {
         return RoslinaRequest.builder()
             .nazwa(roslina.getNazwa())
@@ -54,7 +57,7 @@ public class RoslinaMapper {
                 .opis(roslina.getOpis())
                 .wysokoscMin(roslina.getWysokoscMin())
                 .wysokoscMax(roslina.getWysokoscMax())
-                .obraz(FileUtils.readFileFromLocation(roslina.getObraz()))
+                .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
                 .build();
     }
 

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostResponse;
 import com.example.yukka.model.social.request.OcenaRequest;
@@ -41,8 +40,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<PageResponse<PostResponse>> findAllPosty(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            Authentication connectedUser) {
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
         return ResponseEntity.ok(postService.findAllPosts(page, size));
     }
 
@@ -70,7 +68,7 @@ public class PostController {
 
 
     @PutMapping("/ocena")
-    public ResponseEntity<Ocenil> addOcenaToPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
+    public ResponseEntity<Post> addOcenaToPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(postService.addOcenaToPost(request, connectedUser));
     }
 

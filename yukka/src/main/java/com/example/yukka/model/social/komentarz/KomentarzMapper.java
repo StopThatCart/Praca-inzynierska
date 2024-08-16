@@ -10,9 +10,12 @@ import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.social.request.KomentarzRequest;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class KomentarzMapper {
+    private final FileUtils fileUtils;
     public KomentarzRequest toKomentarzRequest(Komentarz post) {
         return KomentarzRequest.builder()
             .opis(post.getOpis())
@@ -40,7 +43,8 @@ public class KomentarzMapper {
                 .map(this::toKomentarzDTO)
                 .collect(Collectors.toList()))
             .uzytkownikNazwa(komentarz.getUzytkownik().getNazwa())
-            .obraz(FileUtils.readFileFromLocation(komentarz.getUzytkownik().getAvatar()))
+            .obraz(fileUtils.readKomentarzObrazFile(komentarz.getObraz()))
+            .avatar(fileUtils.readAvatarFile(komentarz.getUzytkownik().getAvatar()))
             .build();
     }
 
@@ -53,7 +57,8 @@ public class KomentarzMapper {
             .ocenyNieLubi(komentarz.getOcenyNieLubi())
             .dataUtworzenia(komentarz.getDataUtworzenia())
             .uzytkownikNazwa(komentarz.getUzytkownik().getNazwa())
-            .obraz(FileUtils.readFileFromLocation(komentarz.getUzytkownik().getAvatar()))
+            .obraz(fileUtils.readKomentarzObrazFile(komentarz.getObraz()))
+            .avatar(fileUtils.readAvatarFile(komentarz.getUzytkownik().getAvatar()))
           //  .odpowiedzi(komentarz.getOdpowiedzi().stream()
           //      .map(this::toKomentarzDTO)
           //      .collect(Collectors.toList()))

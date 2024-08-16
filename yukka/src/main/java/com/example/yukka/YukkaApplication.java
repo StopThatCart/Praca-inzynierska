@@ -55,9 +55,9 @@ public class YukkaApplication {
 	@Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
-			//unseed();
-           // seed();
-		   roslinaImporterService.seedRosliny();
+			roslinaImporterService.seedRosliny();
+			unseed();
+            seed();
         };
     }
 
@@ -128,16 +128,15 @@ public class YukkaApplication {
 		postRepository.addPost(michalEmail, p1);
 		postRepository.addPost(michalEmail, p2);
 		postRepository.addPost(michalEmail, p3);
+
 		
 		postRepository.addOcenaToPost(katarzynaEmail, postId1, false);
 		postRepository.addOcenaToPost(piotrEmail, postId1, false);
-
 		postRepository.addOcenaToPost(katarzynaEmail, postId2, true);
 		postRepository.addOcenaToPost(piotrEmail, postId2, true);
 
 		postRepository.addOcenaToPost(katarzynaEmail, postId3, true);
 		postRepository.addOcenaToPost(piotrEmail, postId3, false);
-
 		String komId1 = UUID.randomUUID().toString();
 		String komId2 = UUID.randomUUID().toString();
 		String komId3 = UUID.randomUUID().toString();
@@ -152,11 +151,9 @@ public class YukkaApplication {
 
 		komentarzRepository.addKomentarzToPost(piotrEmail, postId3, k1);
 		komentarzRepository.addKomentarzToPost(katarzynaEmail, postId3, k2);
-
 		komentarzRepository.addKomentarzToKomentarz(piotrEmail, k3, komId2);
 		komentarzRepository.addKomentarzToKomentarz(katarzynaEmail, k4, komId2);
 		komentarzRepository.addKomentarzToKomentarz(katarzynaEmail, k5, komId3);
-
 		// To się da do service potem
 		komentarzRepository.updateKomentarzeCountInPost(postId3);
 

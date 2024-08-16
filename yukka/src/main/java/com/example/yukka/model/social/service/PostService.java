@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
-import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostMapper;
 import com.example.yukka.model.social.post.PostResponse;
@@ -36,10 +35,10 @@ public class PostService {
     @Value("${post.add.cooldown}")
     private Integer postAddCD;
 
-    PostRepository postRepository;
-    UzytkownikRepository uzytkownikRepository;
-    FileStoreService fileStoreService;
-    PostMapper postMapper;
+    private final PostRepository postRepository;
+    private final UzytkownikRepository uzytkownikRepository;
+    private final FileStoreService fileStoreService;
+    private final PostMapper postMapper;
 
     public PostResponse findByPostId(String postId) {
         return postRepository.findPostByPostIdButWithPath(postId)
@@ -121,7 +120,7 @@ public class PostService {
         return postRepository.addPost(uzyt.getEmail(), post).get();
     }
 
-    public Ocenil addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
+    public Post addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
 

@@ -23,4 +23,5 @@ public class KomentarzDTO {
     private List<KomentarzDTO> odpowiedzi;
     private String uzytkownikNazwa;
     public byte[] obraz;
+    public byte[] avatar;
 }

@@ -8,7 +8,6 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.komentarz.Komentarz;
 
 
@@ -58,14 +57,14 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
             MATCH (kom:Komentarz{komentarzId: $komentarzId})
             MERGE (uzyt)-[relu:OCENIL{lubi: $ocena}]->(kom)
 
-            WITH kom, relu
+            WITH kom
             MATCH (kom)<-[r:OCENIL]-(uzyt)
-            WITH kom, relu, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
+            WITH kom COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
             COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNielubi
             SET kom.ocenyLubi = ocenyLubi, kom.ocenyNielubi = ocenyNielubi
-            RETURN relu
+            RETURN kom
             """)
-    Ocenil addOcenaToKomentarz(@Param("email") String email, @Param("komentarzId") String komentarzId, @Param("ocena") boolean ocena);
+    Komentarz addOcenaToKomentarz(@Param("email") String email, @Param("komentarzId") String komentarzId, @Param("ocena") boolean ocena);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})-[relu:OCENIL]->(kom:Komentarz{komentarzId: $komentarzId})

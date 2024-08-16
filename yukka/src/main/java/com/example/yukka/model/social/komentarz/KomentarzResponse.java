@@ -26,6 +26,7 @@ public class KomentarzResponse {
     private List<KomentarzDTO> odpowiedzi;
     private String uzytkownikNazwa;
     private byte[] obraz;
+    public byte[] avatar;
     private LocalDateTime dataUtworzenia;
     
 }
