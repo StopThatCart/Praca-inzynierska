@@ -8,6 +8,7 @@ package com.example.yukka.auth;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,6 +35,9 @@ class AuthenticationService {
 //    @Value("${application.mailing.frontend.activation-url}")
 //    private String activationUrl;
 
+    @Value("${uzytkownik.obraz.default.name}")
+    private  String defaultAvatarObrazName;
+
     public void register(RegistrationRequest request) {
         if (uzytkownikRepository.checkIfUzytkownikExists(request.getNazwa(), request.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Użytkownik o podanej nazwie lub adresie e-mail już istnieje.");
@@ -46,6 +50,7 @@ class AuthenticationService {
                 .nazwa(request.getNazwa())
                 .email(request.getEmail())
                 .haslo(passwordEncoder.encode(request.getHaslo()))
+                .avatar(defaultAvatarObrazName)
               //  .createdDate(LocalDateTime.now())
                 // .banned(false)
                  //.labels(List.of(userRole))

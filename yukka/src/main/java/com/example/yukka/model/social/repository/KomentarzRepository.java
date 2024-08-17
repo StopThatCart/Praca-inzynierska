@@ -27,7 +27,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         OPTIONAL MATCH path = (post:Post)-[:MA_KOMENTARZ]->(kom:Komentarz)
                           <-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
                           <-[:SKOMENTOWAL]-(uzytkownik:Uzytkownik)
-        RETURN kom, collect(nodes(path)) collect(relationships(path))
+        RETURN kom, collect(nodes(path)), collect(relationships(path))
         """)
     Optional<Komentarz> findKomentarzWithOdpowiedziByKomentarzId(@Param("komentarzId") String komentarzId);
 
@@ -42,15 +42,18 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
 
     @Query(value = """
-        MATCH (komentarz:Komentarz)<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik{email: $email})
-        RETURN komentarz, r1, uzyt
+        MATCH path=(komentarz:Komentarz)<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik{email: $email})
+        OPTIONAL MATCH (post:Post)-[r2:MA_KOMENTARZ]->(komentarz)
+        OPTIONAL MATCH (odpowiedz:Komentarz)-[r3:ODPOWIEDZIAL]->(komentarz)
+
+        RETURN komentarz, r1, post, r2, odpowiedz, r3, collect(nodes(path)), collect(relationships(path))
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
         """,
         countQuery = """
         MATCH (komentarz:Komentarz)<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik{email: $email})
         RETURN count(komentarz)
     """)
-    Page<Komentarz> findKomentarzeOfUzytkownik(Pageable pageable, @Param("email") String email);
+    Page<Komentarz> findKomentarzeOfUzytkownik(@Param("email") String email, Pageable pageable);
 
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})
@@ -83,7 +86,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         MATCH (kom2:Komentarz{komentarzId: $komentarzId})
         WITH uzyt, kom2, $kom.__properties__ AS pt 
         CREATE (uzyt)-[:SKOMENTOWAL]->
-                (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, 
+                (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
                 ocenyLubi: 0, ocenyNielubi: 0, 
                 obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 -[:ODPOWIEDZIAL]->(kom2)
@@ -96,7 +99,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         MATCH (post:Post{postId: $postId})
         WITH uzyt, post, $kom.__properties__ AS pt 
         CREATE (uzyt)-[:SKOMENTOWAL]->
-                (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, 
+                (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false, 
                 ocenyLubi: 0, ocenyNielubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 <-[:MA_KOMENTARZ]-(post)
         RETURN kom
@@ -104,16 +107,15 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
     Komentarz addKomentarzToPost(@Param("email") String email, @Param("postId") String postId, @Param("kom") Komentarz kom);
 
     @Query("""
-        MATCH (uzyt:Uzytkownik{email: $email})
-        MATCH (uzyt)-[JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)
-        WITH uzyt, priv, $kom.__properies__ as pt
-        CREATE (uzyt)-[:SKOMENTOWAL]->
-                (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, 
+        MATCH (uzyt1:Uzytkownik{nazwa: $nazwa1})-[JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $nazwa2})
+        WITH uzyt1, priv, $kom.__properies__ as pt
+        CREATE (uzyt1)-[:SKOMENTOWAL]->
+                (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
                 ocenyLubi: null, ocenyNielubi: null, obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 <-[:MA_KOMENTARZ]-(priv)
         RETURN kom
         """)
-    Komentarz addKomentarzToRozmowaPrywatna(@Param("email") String email, @Param("kom") Komentarz kom);
+    Komentarz addKomentarzToRozmowaPrywatna(@Param("nazwa1") String nazwa1, @Param("nazwa2") String nazwa2, @Param("kom") Komentarz kom);
 
     // Jakimś cudem działa z i bez odpowiedzi. Czary.
     @Query("""
@@ -121,14 +123,14 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
         WITH post, komentarz, collect(odpowiedz) AS odpowiedzi
         WITH post, sum(size(odpowiedzi)) AS liczbaOdpowiedzi
-        SET post.liczba_komentarzy = liczbaOdpowiedzi
+        SET post.liczbaKomentarzy = liczbaOdpowiedzi
         """)
     void updateKomentarzeCountInPost(@Param("postId") String postId);
 
 
     @Query("""
         MATCH (:Uzytkownik{email:email})-[:SKOMENTOWAL]->(komentarz:Komentarz{$kom.__properies__.komentarzId})
-        SET komentarz.opis = $kom.__properies__.opis 
+        SET komentarz.opis = $kom.__properies__.opis, komentarz.edytowany = true
         RETURN komentarz
         """)
     Komentarz updateKomentarz(@Param("email") String email, @Param("postId") String postId, @Param("kom") Komentarz kom);

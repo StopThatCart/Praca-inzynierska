@@ -3,10 +3,10 @@ package com.example.yukka.model.social.service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,7 +49,10 @@ public class PostService {
     public PageResponse<PostResponse> findAllPosts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPosts(pageable);
-        System.out.println("\n\n\n post: " + posts.get().findFirst().get().toString() + "\n\n\n");
+//        System.out.println("\n\n\n post: " + posts.get().findFirst().get().toString() + "\n\n\n");
+     //   for(Post p : posts) {
+   //         System.out.println(p.toString());
+   //     }
         List<PostResponse> postsResponse = posts.stream()
                 .map(postMapper::toPostResponse)
                 .toList();
@@ -67,7 +70,7 @@ public class PostService {
     public PageResponse<PostResponse> findAllPostyByConnectedUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
-        Page<Post> posts = postRepository.findAllPostyByUzytkownik(pageable, user.getEmail());
+        Page<Post> posts = postRepository.findAllPostyByUzytkownik(user.getEmail(), pageable);
         List<PostResponse> postsResponse = posts.stream()
                 .map(postMapper::toPostResponse)
                 .toList();
@@ -82,7 +85,7 @@ public class PostService {
         );
     }
 
-    public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, Authentication connectedUser, String email) {
+    public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, String email, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByEmail(email);
         if(targetUzyt.isEmpty()) {
@@ -92,7 +95,7 @@ public class PostService {
             return new PageResponse<>();
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
-        Page<Post> posts = postRepository.findAllPostyByUzytkownik(pageable, email);
+        Page<Post> posts = postRepository.findAllPostyByUzytkownik(email, pageable);
         List<PostResponse> postsResponse = posts.stream()
                 .map(postMapper::toPostResponse)
                 .toList();
@@ -120,6 +123,25 @@ public class PostService {
         return postRepository.addPost(uzyt.getEmail(), post).get();
     }
 
+    public Post save(PostRequest request, MultipartFile file, Authentication connectedUser) throws FileUploadException {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        
+        Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
+        checkTimeSinceLastPost(newestPost);
+
+        Post post = postMapper.toPost(request);
+        post.setPostId(createPostId());
+
+        String leObraz = fileStoreService.savePost(file, post.getPostId(), uzyt.getUzytId());
+        if(leObraz == null) {
+            throw new FileUploadException("Wystąpił błąd podczas wysyłania pliku");
+        }
+        request.setObraz(leObraz);
+        
+        return postRepository.addPost(uzyt.getEmail(), post).get();
+    }
+
+
     public Post addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
@@ -135,6 +157,7 @@ public class PostService {
         }
     }
 
+    /* 
     public void uploadPostObraz(MultipartFile file, Authentication connectedUser, String postId) {
         Optional<Post> postOptional = postRepository.findPostByPostId(postId);
     
@@ -149,12 +172,12 @@ public class PostService {
         if (pfp == null) {
             throw new IllegalStateException("Nie udało się zapisać obrazu.");
         }
-    
+   
         
         post.setObraz(pfp);
         postRepository.updatePostObraz(post.getPostId(), post.getObraz());
     }
-
+ */
 
     public String createPostId() {
         String resultId = UUID.randomUUID().toString();

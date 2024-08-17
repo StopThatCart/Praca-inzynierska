@@ -29,7 +29,10 @@ public class FileStoreService {
     @Value("${roslina.obraz.default.name}")
     private String defaultRoslinaObrazName;
 
-    
+    @Value("${uzytkownik.obraz.default.png-file-path}")
+    private  String avatarDefaultObrazPath;
+    @Value("${uzytkownik.obraz.default.name}")
+    private  String defaultAvatarObrazName;
 
     // Jako iż seedowane rośliny już mają swoje ścieżki, to zwraca się tylko wygenerowane nazwy zamiast ścieżki do pliku
     public String saveSeededRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String obraz) {
@@ -60,15 +63,24 @@ public class FileStoreService {
     public String savePost(@Nonnull MultipartFile sourceFile,
                            @Nonnull String postId, @Nonnull String uzytId) {
         final String fileUploadSubPath = "users" + separator + uzytId + separator + "posty";
-        String fileName = generateFileName(postId);
+        String fileName = generateFileName(postId) + "_" + System.currentTimeMillis();
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
     public String saveKomentarz(@Nonnull MultipartFile sourceFile,
                                 @Nonnull String komentarzId, @Nonnull String uzytId) {
         final String fileUploadSubPath = "users" + separator + uzytId + separator + "komentarze";
-        String fileName = generateFileName(komentarzId);
+        String fileName = generateFileName(komentarzId) + "_" + System.currentTimeMillis();
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
+    }
+
+    public String saveAvatar(@Nonnull MultipartFile sourceFile, @Nonnull String obraz, @Nonnull String uzytId) {
+        if(!obraz.equals(defaultAvatarObrazName)) {
+            String fileUploadSubPath = "users" + separator + uzytId;
+            String fileName = generateFileName(obraz);
+            uploadFile(sourceFile, fileUploadSubPath, fileName);
+        }
+        return obraz;
     }
     
     private String uploadFile(@Nonnull MultipartFile sourceFile, @Nonnull String fileUploadSubPath, @Nonnull String fileName) {
@@ -81,7 +93,12 @@ public class FileStoreService {
         }
 
         String fileExtension = getFileExtension(sourceFile.getOriginalFilename());
-        String targetFilePath = finalUploadPath + separator + fileName + "." + fileExtension;
+        String targetFileName = fileName;
+        if (!fileName.toLowerCase().endsWith("." + fileExtension)) {
+            targetFileName += "." + fileExtension;
+        }
+        
+        String targetFilePath = finalUploadPath + separator + targetFileName;
         Path targetPath = Paths.get(targetFilePath);
 
         try {
@@ -98,7 +115,7 @@ public class FileStoreService {
         String normalized = baseName.replaceAll("[\\s\"'!,!@#$%^&*()-=+{}<>?~`]", "_") + "_";
         normalized = normalized.replaceAll("_+", "_");
         
-        return normalized + System.currentTimeMillis();
+        return normalized;
     }
 
 

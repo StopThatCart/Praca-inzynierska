@@ -53,7 +53,9 @@ public class Post extends Oceniany {
     @Relationship(type = "MA_POST", direction = Relationship.Direction.INCOMING)
     private Uzytkownik autor;
 
+    
     @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.OUTGOING)
+  //  @JsonBackReference
     private List<Komentarz> komentarze;
 
 }

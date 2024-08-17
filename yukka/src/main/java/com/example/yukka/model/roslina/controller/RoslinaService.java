@@ -40,7 +40,6 @@ public class RoslinaService {
             System.out.println(property.getNazwa());
             System.out.println(property.getGleby());
             
-            // TODO Edit: Lol?
         }
 
         return roslinaRepository.getSomePlants(2);

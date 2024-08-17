@@ -2,7 +2,7 @@ package com.example.yukka.model.social.post;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.example.yukka.model.social.komentarz.KomentarzDTO;
+import com.example.yukka.model.social.komentarz.KomentarzResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,9 +23,10 @@ public class PostResponse {
     private Integer ocenyLubi;
     private Integer ocenyNieLubi;
     private Integer liczbaKomentarzy;
-    private List<KomentarzDTO> komentarze;
+    private List<KomentarzResponse> komentarze;
     private String uzytkownik;
     private byte[] obraz;
+    private byte[] avatar;
     private LocalDateTime dataUtworzenia;
     
 }

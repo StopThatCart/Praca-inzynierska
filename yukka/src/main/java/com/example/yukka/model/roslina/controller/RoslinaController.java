@@ -63,7 +63,8 @@ public class RoslinaController {
     }
 
     @PostMapping
-    public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request) {
+    public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request,
+    Authentication currentUser) {
         roslinaService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
     }
@@ -102,7 +103,7 @@ public class RoslinaController {
     
 
     // TODO: Przetestować to jak już będzie podstawowy panel. Dodatkowo obsługa usuwania starego obrazu po zmianie obrazu
-    @PostMapping(value = "/{nazwaLacinska}/obraz/", consumes = "multipart/form-data")
+    @PostMapping(value = "/{nazwaLacinska}", consumes = "multipart/form-data")
     public ResponseEntity<?> uploadBookCoverPicture(
             @PathVariable("nazwaLacinska") String nazwaLacinska, 
             @Parameter() @RequestPart("file") 

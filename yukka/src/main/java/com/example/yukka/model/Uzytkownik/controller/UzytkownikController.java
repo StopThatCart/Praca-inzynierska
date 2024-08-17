@@ -1,7 +1,6 @@
 package com.example.yukka.model.uzytkownik.controller;
 
 import java.util.Collection;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.yukka.model.social.RozmowaPrywatna;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,18 @@ public class UzytkownikController {
 
     // dodawanie użytkowników jest w authorization. Za to dodawanie pracowników będzie u admina
     @GetMapping
-    public Collection<Uzytkownik> getAllUsers() {
-        return uzytkownikService.getAllUsers();
+    public Collection<Uzytkownik> findAllUzytkownicy() {
+        return uzytkownikService.findAllUzytkownicy();
     }
     
     @GetMapping("/{email}")
-    public Optional<Uzytkownik> getByEmail(@PathVariable("email") String email) {
-        return uzytkownikService.dawajEmailDeklu(email);
+    public ResponseEntity<Uzytkownik> getByEmail(@PathVariable("email") String email) {
+        return ResponseEntity.ok(uzytkownikService.findByEmail(email));
+    }
+
+    @GetMapping("/rozmowaPrywatna/{otherUzytNazwa}")
+    public ResponseEntity<RozmowaPrywatna> findRozmowaPrywatna(@PathVariable("otherUzytNazwa") String otherUzytNazwa, Authentication connectedUser) {
+        return ResponseEntity.ok(uzytkownikService.findRozmowaPrywatna(otherUzytNazwa, connectedUser));
     }
 
     // TODO: Blokowanie jak użytownik jest zbanowany

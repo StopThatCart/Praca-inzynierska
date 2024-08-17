@@ -12,7 +12,11 @@ import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> {
-    List<Uzytkownik> findByUsername(String name);
+    @Query("""
+            MATCH (u:Uzytkownik{nazwa: $nazwa})
+            RETURN u
+            """)
+    Optional<Uzytkownik> findByNazwa(@Param("nazwa") String nazwa);
     Optional<Uzytkownik> findByEmail(String email);
 
     @Query("""
@@ -33,8 +37,24 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
    // List<Uzytkownik> findByLabels(Set<String> labels);
 
+   @Query("""
+    MATCH (uzyt1:Uzytkownik{nazwa: $nazwa1})-[JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $nazwa2})
+    RETURN uzyt1, priv, uzyt2
+       """
+       )
+    Optional<Uzytkownik> findRozmowaPrywatna(@Param("nazwa1") String nazwa1, @Param("nazwa2") String nazwa2);
+
+    
+   @Query("""
+    MATCH (uzyt1:Uzytkownik{nazwa: $nazwa1})-[JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $nazwa2})
+    MATCH (priv)<-[:MA_KOMENTARZ]-(kom:Komentarz)
+    RETURN uzyt1, priv, uzyt2, collect(kom) AS komentarze
+       """
+       )
+    Optional<Uzytkownik> findRozmowaPrywatnaWithKomentarze(@Param("nazwa1") String nazwa1, @Param("nazwa2") String nazwa2);
+
     @Query("MATCH (u:Uzytkownik) RETURN u")
-    Collection<Uzytkownik> getAllUsers();
+    Collection<Uzytkownik> findAllUzytkownicy();
 
     @Query("""
         CREATE (u:Uzytkownik {nazwa: $nazwa, 
@@ -92,5 +112,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             DETACH DELETE u 
             """)
     void removeUzytkownik(@Param("email") String email);
+
+
 
 }

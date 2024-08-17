@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import static com.example.yukka.handler.YukkaErrorCodes.ACCOUNT_BANNED;
 import static com.example.yukka.handler.YukkaErrorCodes.ACCOUNT_DISABLED;
-import static com.example.yukka.handler.YukkaErrorCodes.ACCOUNT_LOCKED;
 import static com.example.yukka.handler.YukkaErrorCodes.BAD_CREDENTIALS;
 
 @RestControllerAdvice
@@ -34,12 +34,26 @@ public class GlobalExceptionHandler {
                 .status(UNAUTHORIZED)
                 .body(
                         ExceptionResponse.builder()
-                                .businessErrorCode(ACCOUNT_LOCKED.getCode())
-                                .businessErrorDescription(ACCOUNT_LOCKED.getDescription())
+                                .businessErrorCode(ACCOUNT_BANNED.getCode())
+                                .businessErrorDescription(ACCOUNT_BANNED.getDescription())
                                 .error(exp.getMessage())
                                 .build()
                 );
     }
+
+    @ExceptionHandler(BannedUzytkownikException.class)
+    public ResponseEntity<ExceptionResponse> handleException(BannedUzytkownikException exp) {
+        return ResponseEntity
+                .status(UNAUTHORIZED)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(ACCOUNT_BANNED.getCode())
+                                .businessErrorDescription(ACCOUNT_BANNED.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
 
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<ExceptionResponse> handleException(DisabledException exp) {
@@ -63,7 +77,7 @@ public class GlobalExceptionHandler {
                         ExceptionResponse.builder()
                                 .businessErrorCode(BAD_CREDENTIALS.getCode())
                                 .businessErrorDescription(BAD_CREDENTIALS.getDescription())
-                                .error("Login and / or Password is incorrect")
+                                .error("Niepoprawny login lub hasło")
                                 .build()
                 );
     }

@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
@@ -26,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class YukkaApplication {
 
-	
+	private final PasswordEncoder passwordEncoder;
 	private final UzytkownikRepository uzytkownikRepository;
 	private final UzytkownikService uzytkownikService;
 
@@ -78,34 +79,36 @@ public class YukkaApplication {
 		Uzytkownik usJan = Uzytkownik.builder()
 
         .nazwa("Jan Kowalski").email("jan@email.pl")
-        .haslo("jan12345678").labels(List.of("Admin"))
+        .haslo(passwordEncoder.encode("jan12345678"))
+		.labels(List.of("Admin"))
         .build();
 
 		Uzytkownik usPrac = Uzytkownik.builder()
 
 		.labels(List.of("Pracownik")).nazwa("Anna Nowak")
-		.email("anna@email.pl").haslo("anna12345678")
+		.email("anna@email.pl")
+		.haslo(passwordEncoder.encode("anna12345678"))
 		.build();
 
 		String piotrEmail = "piotr@email.pl";
 		Uzytkownik usPiotr = Uzytkownik.builder()
 		.uzytId(UUID.randomUUID().toString())
         .nazwa("Piotr Wiśniewski").email(piotrEmail)
-        .haslo("piotr12345678")
+        .haslo(passwordEncoder.encode("piotr12345678"))
         .build();
 
 		String katarzynaEmail = "katarzyna@email.pl";
 		Uzytkownik usKatarzyna = Uzytkownik.builder()
 
 		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
-        .haslo("katarzyna12345678")
+        .haslo(passwordEncoder.encode("katarzyna12345678"))
         .build();
 
 		String michalEmail = "michal@email.pl";
 		Uzytkownik usMichal = Uzytkownik.builder()
 		.uzytId(UUID.randomUUID().toString())
         .nazwa("Michał Zieliński").email(michalEmail)
-        .haslo("michal12345678")
+        .haslo(passwordEncoder.encode("michal12345678"))
         .build();
 
 		uzytkownikService.addPracownik(usJan);

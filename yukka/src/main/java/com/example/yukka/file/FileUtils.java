@@ -24,6 +24,11 @@ public class FileUtils {
     @Value("${roslina.seed.obrazy-path}")
     private  String seedRoslinaObrazyPath;
 
+    @Value("${uzytkownik.obraz.default.png-file-path}")
+    private  String avatarDefaultObrazPath;
+    @Value("${uzytkownik.obraz.default.name}")
+    private  String defaultAvatarObrazName;
+    
 
     public  byte[] readRoslinaObrazFile(String fileUrl) {
         if (StringUtils.isBlank(fileUrl)) {
@@ -34,9 +39,9 @@ public class FileUtils {
             Path imagePath = new File(defaultRoslinaObrazPath).toPath();
             return readFileFromLocation(imagePath);
         }
-     //   System.out.println("Seed: " + seedRoslinaObrazyPath);
+     //   System.out.println("Seed: " + avatarDefaultObrazPath);
       //  System.out.println("Url: " + fileUrl);
-        //System.out.println(": " + seedRoslinaObrazyPath);
+        //System.out.println(": " + avatarDefaultObrazPath);
         Path imagePath = Paths.get(seedRoslinaObrazyPath, fileUrl);
         return readFileFromLocation(imagePath);
     }
@@ -61,7 +66,19 @@ public class FileUtils {
     }
 
     public  byte[] readAvatarFile(String fileUrl) {
-        return readPostObrazFile(fileUrl);
+        if (StringUtils.isBlank(fileUrl)) {
+            return null;
+        }
+
+        if (fileUrl.equals(defaultAvatarObrazName)) {
+            Path imagePath = new File(avatarDefaultObrazPath).toPath();
+            return readFileFromLocation(imagePath);
+        }
+     //   System.out.println("Seed: " + avatarDefaultObrazPath);
+      //  System.out.println("Url: " + fileUrl);
+        //System.out.println(": " + avatarDefaultObrazPath);
+        Path imagePath = Paths.get(seedRoslinaObrazyPath, fileUrl);
+        return readFileFromLocation(imagePath);
     }
 
     public byte[] readFileFromLocation(Path path) {

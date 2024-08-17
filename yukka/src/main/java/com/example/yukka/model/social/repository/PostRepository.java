@@ -63,7 +63,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         MATCH (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{email: $email})
         RETURN count(post)
         """)
-    Page<Post> findAllPostyByUzytkownik(Pageable pageable, @Param("email") String email);
+    Page<Post> findAllPostyByUzytkownik(@Param("email") String email, Pageable pageable);
 
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})

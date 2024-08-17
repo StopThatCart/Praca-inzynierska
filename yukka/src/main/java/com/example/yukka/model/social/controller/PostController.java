@@ -1,4 +1,5 @@
 package com.example.yukka.model.social.controller;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,14 +57,20 @@ public class PostController {
     public ResponseEntity<PageResponse<PostResponse>> findAllPostyByUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            Authentication connectedUser,
-            @PathVariable("email") String email) {
-        return ResponseEntity.ok(postService.findAllPostyByUzytkownik(page, size, connectedUser, email));
+            @PathVariable("email") String email,
+            Authentication connectedUser) {
+        return ResponseEntity.ok(postService.findAllPostyByUzytkownik(page, size, email,connectedUser));
     }
 
     @PostMapping
     public ResponseEntity<Post> addPost(@Valid @RequestBody PostRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(postService.save(request, connectedUser));
+    }
+
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<Post> addPost(@Valid @RequestBody PostRequest request, 
+    @Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) throws FileUploadException {
+        return ResponseEntity.ok(postService.save(request, file, connectedUser));
     }
 
 
@@ -73,6 +80,7 @@ public class PostController {
     }
 
 
+    /*
     // UWAGA: nietestowane
     @PostMapping(value = "/{post-id}/obraz", consumes = "multipart/form-data")
     public ResponseEntity<?> uploadPostImage(
@@ -83,7 +91,7 @@ public class PostController {
         postService.uploadPostObraz(file, connectedUser, postId);
         return ResponseEntity.accepted().build();
     }
-
+ */
     @DeleteMapping("/{post-id}")
     public ResponseEntity<String> removePost(
                     @PathVariable("post-id") String postId,

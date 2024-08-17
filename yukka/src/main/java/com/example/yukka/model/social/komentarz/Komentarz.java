@@ -19,6 +19,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Node
 @Getter
@@ -37,6 +38,9 @@ public class Komentarz extends Oceniany {
     
     @Property(name = "obraz")
     private String obraz;
+
+    @Property(name = "edytowany")
+    private boolean edytowany;
     
     @CreatedDate
     @Property(name = "dataUtworzenia")
@@ -44,15 +48,34 @@ public class Komentarz extends Oceniany {
 
     // TODO: dodaj podobny obiekt w wiadomościach prywatnych
     @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.INCOMING)
-    private Post posty;
+   // @JsonBackReference
+    @ToString.Exclude
+    private Post post;
 
     @Relationship(type = "ODPOWIEDZIAL", direction = Relationship.Direction.OUTGOING)
+  //  @JsonManagedReference
+    @ToString.Exclude
     private Komentarz odpowiadaKomentarzowi;
 
     @Relationship(type = "ODPOWIEDZIAL", direction = Relationship.Direction.INCOMING)
+ //   @JsonManagedReference
+    @ToString.Exclude
     private List<Komentarz> odpowiedzi;
 
     @Relationship(type = "SKOMENTOWAL", direction = Relationship.Direction.INCOMING)
     private Uzytkownik uzytkownik;
+
+    @Override
+    public String toString() {
+        return "Komentarz{" +
+                "id=" + id +
+                ", komentarzId='" + komentarzId + '\'' +
+                ", opis='" + opis + '\'' +
+                ", edytowany=" + edytowany +
+                ", dataUtworzenia=" + dataUtworzenia +
+                ", postId=" + (post != null ? post.getId() : "null") +
+                ", odpowiedziCount=" + (odpowiedzi != null ? odpowiedzi.size() : 0) +
+                '}';
+    }
 
 }

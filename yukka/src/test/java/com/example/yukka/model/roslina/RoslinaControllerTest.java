@@ -8,18 +8,23 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.example.yukka.authorities.ROLE;
 import com.example.yukka.model.roslina.controller.RoslinaController;
 import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,20 +39,36 @@ public class RoslinaControllerTest {
 
     @Autowired
     private RoslinaController roslinaController;
-
     @Autowired
     private RoslinaService roslinaService;
     @Autowired
     private RoslinaMapper roslinaMapper;
 
+    Authentication mockAuth;
+    Uzytkownik uzyt;
+
     Roslina roslina;
     //private Long roslinaId;
-    private final String name = "Na pewno takiej nazwy nie ma";
-    private final String latinName = "Nomen Latinum certe nullum est";
-    private final String description = "To jest dramat.";
-    private final String imageFilename = "tilia_henryana.jpg";
-    private final Double minHeight = 0.5;
-    private final Double maxHeight = 4.0;
+    private final String roslinaNazwa = "Na pewno takiej nazwy nie ma";
+    private final String nazwaLacinska = "Nomen Latinum certe nullum est";
+    private final String roslinaOpis = "To jest dramat.";
+    private final String roslinaObraz = "tilia_henryana.jpg";
+    private final Double wysokoscMin = 0.5;
+    private final Double wysokoscMax = 4.0;
+
+    @BeforeAll
+    void setUpUzytkownik() {
+        mockAuth = Mockito.mock(Authentication.class);
+
+        // Utworzenie użytkownika z rolą ADMIN
+        uzyt = Uzytkownik.builder()
+        .nazwa("Jan Kowalski")
+        .email("jan@email.pl")
+        .labels(Collections.singletonList(ROLE.Admin.toString()))
+        .build();  
+        //new User("admin", "password", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        Mockito.when(mockAuth.getPrincipal()).thenReturn(uzyt);
+    }
 
     @BeforeEach
     void setUp() {
@@ -85,12 +106,12 @@ public class RoslinaControllerTest {
 
         Roslina lipaHenryego = Roslina.builder()
             //.id(12345678L)
-            .nazwa(name)
-            .nazwaLacinska(latinName)
-            .opis(description)
-            .wysokoscMin(minHeight)
-            .wysokoscMax(maxHeight)
-            .obraz(imageFilename)
+            .nazwa(roslinaNazwa)
+            .nazwaLacinska(nazwaLacinska)
+            .opis(roslinaOpis)
+            .wysokoscMin(wysokoscMin)
+            .wysokoscMax(wysokoscMax)
+            .obraz(roslinaObraz)
             .formy(new HashSet<>(Arrays.asList(formaDrzewo)))
             .gleby(new HashSet<>(Arrays.asList(glebaPrzecietna, glebaProchniczna, glebaGliniasta)))
             .grupy(new HashSet<>(Arrays.asList(grupaLisciaste)))
@@ -111,16 +132,19 @@ public class RoslinaControllerTest {
         roslina = lipaHenryego;
 
         System.out.println("\n\n\nUSUWANKOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n");
-        roslinaService.deleteByNazwaLacinska(latinName);
+        roslinaService.deleteByNazwaLacinska(nazwaLacinska);
     }
 
     @Test
+  //  @WithMockUser(username = "admin", roles = {"ADMIN"})
     //@Order(1)
     void testRoslinaRequestInvalidDataAccessResourceUsageException(){
+        
+
         Roslina emptyRoslina2 = Roslina.builder().build();
         RoslinaRequest emptyRoslinaRequest2 = roslinaMapper.toRoslinaRequest(emptyRoslina2);
         assertThrows(InvalidDataAccessResourceUsageException.class, () -> {
-            roslinaController.saveRoslina(emptyRoslinaRequest2);
+            roslinaController.saveRoslina(emptyRoslinaRequest2, mockAuth);
         });
     }
 
@@ -128,16 +152,16 @@ public class RoslinaControllerTest {
     void testSaveRoslinaWithoutRelations() {
         String lacinskaNazwa2 = "Jeśli taka łacińska nazwa się znajdzie to będę bardzo zdziwiony";
         Roslina roslinaWithoutRelations = Roslina.builder()
-            .nazwa(name)
+            .nazwa(roslinaNazwa)
             .nazwaLacinska(lacinskaNazwa2)
-            .opis(description)
-            .wysokoscMin(minHeight)
-            .wysokoscMax(maxHeight)
-            .obraz(imageFilename)
+            .opis(roslinaOpis)
+            .wysokoscMin(wysokoscMin)
+            .wysokoscMax(wysokoscMax)
+            .obraz(roslinaObraz)
             .build();
 
         RoslinaRequest emptyRoslinaRequest = roslinaMapper.toRoslinaRequest(roslinaWithoutRelations);
-        ResponseEntity<String> response = roslinaController.saveRoslina(emptyRoslinaRequest);
+        ResponseEntity<String> response = roslinaController.saveRoslina(emptyRoslinaRequest, mockAuth);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
         Roslina roslina2 = roslinaService.findByNazwaLacinska(lacinskaNazwa2).get();
@@ -161,12 +185,12 @@ public class RoslinaControllerTest {
    // @Order(2)
     void testSaveRoslina() {
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
-        ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest);
+        ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest, mockAuth);
        
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         
       //  Roslina roslina2 = roslinaController.saveRoslina(roslinaRequest).getBody();
-        Roslina roslina2 = roslinaService.findByNazwaLacinska(latinName).get();
+        Roslina roslina2 = roslinaService.findByNazwaLacinska(nazwaLacinska).get();
         // Assert
         
         Assertions.assertThat(roslina2).isNotNull();
@@ -219,7 +243,7 @@ public class RoslinaControllerTest {
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Roslina roslina2 = roslinaService.findByNazwaLacinska(latinName).get();
+        Roslina roslina2 = roslinaService.findByNazwaLacinska(nazwaLacinska).get();
         
         Assertions.assertThat(roslina2).isNotNull();
         Assertions.assertThat(roslina2.getId()).isNotNull();
@@ -241,14 +265,14 @@ public class RoslinaControllerTest {
    // @Order(4) 
     void testDeleteRoslina() {
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
-        ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest);
+        ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest, mockAuth);
     
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        Roslina roslina2 = roslinaService.findByNazwaLacinska(latinName).get();
+        Roslina roslina2 = roslinaService.findByNazwaLacinska(nazwaLacinska).get();
 
         roslinaController.deleteRoslina(roslina2.getNazwaLacinska());
 
-        Assertions.assertThat(roslinaService.findByNazwaLacinska(latinName)).isEmpty();
+        Assertions.assertThat(roslinaService.findByNazwaLacinska(nazwaLacinska)).isEmpty();
 
         System.out.println("\n\n\nZakończono test usuwania roślin.\n\n\n");
     }
