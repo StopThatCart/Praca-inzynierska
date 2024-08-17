@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,6 +20,7 @@ import org.springframework.web.context.request.WebRequest;
 import static com.example.yukka.handler.YukkaErrorCodes.ACCOUNT_BANNED;
 import static com.example.yukka.handler.YukkaErrorCodes.ACCOUNT_DISABLED;
 import static com.example.yukka.handler.YukkaErrorCodes.BAD_CREDENTIALS;
+import static com.example.yukka.handler.YukkaErrorCodes.ENTITY_NOT_FOUND;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -67,6 +69,32 @@ public class GlobalExceptionHandler {
                                 .build()
                 );
     }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(EntityNotFoundException exp) {
+        return ResponseEntity
+                .status(NOT_FOUND)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(ENTITY_NOT_FOUND.getCode())
+                                .businessErrorDescription(ENTITY_NOT_FOUND.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+        public ResponseEntity<ExceptionResponse> handleException(EntityAlreadyExistsException exp) {
+                return ResponseEntity
+                        .status(BAD_REQUEST)
+                        .body(
+                                ExceptionResponse.builder()
+                                        .businessErrorCode(ENTITY_NOT_FOUND.getCode())
+                                        .businessErrorDescription(ENTITY_NOT_FOUND.getDescription())
+                                        .error(exp.getMessage())
+                                        .build()
+                        );
+        }
 
 
     @ExceptionHandler(BadCredentialsException.class)

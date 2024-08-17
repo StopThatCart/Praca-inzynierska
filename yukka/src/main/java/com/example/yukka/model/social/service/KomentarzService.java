@@ -2,7 +2,6 @@ package com.example.yukka.model.social.service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.handler.BannedUzytkownikException;
-import com.example.yukka.model.social.RozmowaPrywatna;
+import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzMapper;
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
@@ -27,8 +26,10 @@ import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostMapper;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
+import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
+import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
@@ -43,6 +44,7 @@ public class KomentarzService {
 
     private final PostRepository postRepository;
     private final UzytkownikRepository uzytkownikRepository;
+    private final RozmowaPrywatnaRepository rozmowaPrywatnaRepository;
     private final KomentarzRepository komentarzRepository;
     private final FileStoreService fileStoreService;
 
@@ -111,15 +113,15 @@ public class KomentarzService {
         Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         if(uzyt.getNazwa().equals(otherUzytNazwa)) {
-            return null;
+            throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
         }
-        Uzytkownik uzyt2 = uzytkownikRepository.findByNazwa(otherUzytNazwa).orElseThrow();
+        Uzytkownik uzyt2 = uzytkownikRepository.findByNazwa(otherUzytNazwa).orElseThrow(
+            () -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa)
+        );
 
-        RozmowaPrywatna uwrp = uzytkownikRepository.findRozmowaPrywatna(uzyt2.getNazwa(), uzyt.getNazwa()).orElseThrow()
-            .getRozmowyPrywatne()
-            .stream()
-            .findFirst()
-            .orElseThrow(() -> new NoSuchElementException("Nie znaleziono rozmowy prywatnej"));
+        RozmowaPrywatna uwrp = rozmowaPrywatnaRepository.findRozmowaPrywatna(uzyt2.getNazwa(), uzyt.getNazwa()).orElseThrow(
+            () -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej")
+        );
 
         Komentarz kom = komentarzMapper.toKomentarz(request);
         kom.setKomentarzId(createKomentarzId());
@@ -130,12 +132,17 @@ public class KomentarzService {
     public Komentarz addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, @Valid KomentarzRequest request,
         MultipartFile file, Authentication connectedUser) throws FileUploadException {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        
         if(uzyt.getNazwa().equals(otherUzytNazwa)) {
-            return null;
+           throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
         }
-        Uzytkownik uzyt2 = uzytkownikRepository.findByNazwa(otherUzytNazwa).orElseThrow();
+        Uzytkownik uzyt2 = uzytkownikRepository.findByNazwa(otherUzytNazwa).orElseThrow(
+            () -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa)
+        );
 
-        RozmowaPrywatna uwrp = getRozmowaPrywatna(uzyt2, uzyt);
+        RozmowaPrywatna uwrp = rozmowaPrywatnaRepository.findRozmowaPrywatna(uzyt2.getNazwa(), uzyt.getNazwa()).orElseThrow(
+            () -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej")
+        );
 
         Komentarz kom = createKomentarz(request);
         saveKomentarzFile(file, kom, uzyt);
@@ -220,12 +227,6 @@ public class KomentarzService {
     }
 
     // Pomocnicze
-
-    private RozmowaPrywatna getRozmowaPrywatna(Uzytkownik uzyt2, Uzytkownik uzyt) {
-        return uzytkownikRepository.findRozmowaPrywatna(uzyt2.getNazwa(), uzyt.getNazwa()).orElseThrow()
-                .getRozmowyPrywatne().stream().findFirst()
-                .orElseThrow(() -> new NoSuchElementException("Nie znaleziono rozmowy prywatnej"));
-    }
 
     private Komentarz createKomentarz(KomentarzRequest request) {
         Komentarz kom = komentarzMapper.toKomentarz(request);

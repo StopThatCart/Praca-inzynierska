@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.yukka.model.social.post.PostResponse;
+import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class KomentarzResponse {
     private Integer ocenyNieLubi;
     private LocalDateTime dataUtworzenia;
     private PostResponse post;
+    private RozmowaPrywatnaResponse rozmowaPrywatna; 
     private KomentarzResponse odpowiadaKomentarzowi;
     private List<KomentarzResponse> odpowiedzi;
     private String uzytkownikNazwa;

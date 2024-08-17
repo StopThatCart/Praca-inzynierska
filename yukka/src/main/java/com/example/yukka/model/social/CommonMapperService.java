@@ -7,8 +7,12 @@ import org.springframework.stereotype.Service;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
+import com.example.yukka.model.social.komentarz.KomentarzSimpleResponse;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostResponse;
+import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
+import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,21 +43,57 @@ public class CommonMapperService {
         return KomentarzResponse.builder()
             .id(komentarz.getId())
             .komentarzId(komentarz.getKomentarzId())
-            .post(komentarz.getPost() != null ?  mapPostForKomentarzResponse(komentarz.getPost()) : null)
+            .post(komentarz.getPost() != null ? mapPostForKomentarzResponse(komentarz.getPost()) : null)
             .opis(komentarz.getOpis())
             .edytowany(komentarz.isEdytowany())
             .ocenyLubi(komentarz.getOcenyLubi())
             .ocenyNieLubi(komentarz.getOcenyNieLubi())
             .dataUtworzenia(komentarz.getDataUtworzenia())
-            .odpowiadaKomentarzowi(mapKomentarzForKomentarzResponse(komentarz.getOdpowiadaKomentarzowi()))
+            .odpowiadaKomentarzowi(mapOdpowiadaKomentarzowiForKomentarzResponse(komentarz.getOdpowiadaKomentarzowi()))
             .odpowiedzi(komentarz.getOdpowiedzi().stream()
                 .map(this::toKomentarzResponse)
                 .collect(Collectors.toList()))
             .uzytkownikNazwa(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getNazwa() : null)
             .obraz(fileUtils.readKomentarzObrazFile(komentarz.getObraz()))
             .avatar(fileUtils.readAvatarFile(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getAvatar() : null))
+            .rozmowaPrywatna(komentarz.getRozmowaPrywatna() != null ? mapRozmowaPrywatnaForKomentarzResponse(komentarz.getRozmowaPrywatna()) : null) // New mapping
             .build();
     }
+
+    
+
+    
+
+    // pomocnicze
+
+    private RozmowaPrywatnaResponse mapRozmowaPrywatnaForKomentarzResponse(RozmowaPrywatna rozmowaPrywatna) {
+        if (rozmowaPrywatna == null) {
+            return null;
+        }
+        return RozmowaPrywatnaResponse.builder()
+            .id(rozmowaPrywatna.getId())
+            .uzytkownicy(rozmowaPrywatna.getUzytkownicy().stream()
+                .map(Uzytkownik::getNazwa)
+                .collect(Collectors.toList()))
+            .komentarze(rozmowaPrywatna.getWiadomosci().stream()
+                .map(this::toKomentarzSimpleResponse)
+                .collect(Collectors.toList()))
+            .liczbaKomentarzy(rozmowaPrywatna.getLiczbaWiadomosci())
+            .build();
+    }
+
+    private KomentarzSimpleResponse toKomentarzSimpleResponse(Komentarz komentarz) {
+        if (komentarz == null) {
+            return null;
+        }
+        return KomentarzSimpleResponse.builder()
+            .id(komentarz.getId())
+            .komentarzId(komentarz.getKomentarzId())
+            .opis(komentarz.getOpis())
+            .uzytkownikNazwa(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getNazwa() : null)
+            .build();
+    }
+
 
     private PostResponse mapPostForKomentarzResponse(Post post) {
         if (post == null) {
@@ -66,7 +106,7 @@ public class CommonMapperService {
             .build();
     }
 
-    private KomentarzResponse mapKomentarzForKomentarzResponse(Komentarz kom) {
+    private KomentarzResponse mapOdpowiadaKomentarzowiForKomentarzResponse(Komentarz kom) {
         if (kom == null) {
             return null;
         }

@@ -17,12 +17,23 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             RETURN u
             """)
     Optional<Uzytkownik> findByNazwa(@Param("nazwa") String nazwa);
-    Optional<Uzytkownik> findByEmail(String email);
+    @Query("""
+        MATCH (u:Uzytkownik{email: $email})
+        RETURN u
+        """)
+    Optional<Uzytkownik> findByEmail(@Param("email") String email);
 
     @Query("""
             MATCH (u:Uzytkownik) DETACH DELETE u 
             WITH u
             MATCH(ust:Ustawienia) DETACH DELETE ust
+            WITH ust
+            MATCH(roz:RozmowaPrywatna)
+            OPTIONAL MATCH (roz)-[:MA_WIADOMOSC]->(kom:Komentarz)
+            DETACH DELETE roz, kom
+            WITH roz
+            MATCH (u:Uzytkownik)
+            DETACH DELETE u 
             """)
     void clearUzytkowicy();
 
@@ -37,25 +48,11 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
    // List<Uzytkownik> findByLabels(Set<String> labels);
 
-   @Query("""
-    MATCH (uzyt1:Uzytkownik{nazwa: $nazwa1})-[JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $nazwa2})
-    RETURN uzyt1, priv, uzyt2
-       """
-       )
-    Optional<Uzytkownik> findRozmowaPrywatna(@Param("nazwa1") String nazwa1, @Param("nazwa2") String nazwa2);
-
-    
-   @Query("""
-    MATCH (uzyt1:Uzytkownik{nazwa: $nazwa1})-[JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $nazwa2})
-    MATCH (priv)<-[:MA_KOMENTARZ]-(kom:Komentarz)
-    RETURN uzyt1, priv, uzyt2, collect(kom) AS komentarze
-       """
-       )
-    Optional<Uzytkownik> findRozmowaPrywatnaWithKomentarze(@Param("nazwa1") String nazwa1, @Param("nazwa2") String nazwa2);
 
     @Query("MATCH (u:Uzytkownik) RETURN u")
     Collection<Uzytkownik> findAllUzytkownicy();
 
+    /* 
     @Query("""
         CREATE (u:Uzytkownik {nazwa: $nazwa, 
                               email: $email, haslo: $haslo, 
@@ -72,7 +69,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             """
             )
     void addNewUzytkownikButBadLikeVeryBad(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo);
-
+*/
     @Query("""
         CREATE (u:Uzytkownik) SET u += $uzyt.__properties__
         WITH u
@@ -91,8 +88,6 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         CREATE (ustawienia:Ustawienia) SET ustawienia += $ustawienia.__properties__
         WITH u, ustawienia
         CREATE(u)-[:MA_USTAWIENIA]->(ustawienia)
-
-
         RETURN u
             """
             )
@@ -101,14 +96,25 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
   //  @Query("CREATE (u:Uzytkownik:`:#{literal(#rola)}` {nazwa: $nazwa, email: $email, haslo: $haslo, data_utworzenia: localdatetime(), ban: false})")
    // void addNewPracownik(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo, @Param("rola") String rola);
 
+
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.ban = $ban RETURN u")
     Uzytkownik banUzytkownik(@Param("email") String email, @Param("ban") boolean ban);
 
 
     // TODO: Zmień jak będą kolejne komponenty dodawane
     @Query("""
-            MATCH (u:Uzytkownik{email: $email})-[:MA_USTAWIENIA]->(ust:Ustawienia)
+            MATCH (u:Uzytkownik{email: $email})
+            WITH u
+
+            MATCH (u)-[:MA_USTAWIENIA]->(ust:Ustawienia)
             DETACH DELETE ust
+
+            WITH u
+            OPTIONAL MATCH (u)-[:JEST_W_ROZMOWIE]->(rozmowa:RozmowaPrywatna)
+            OPTIONAL MATCH (rozmowa)-[:MA_WIADOMOSC]->(kom:Komentarz)
+            DETACH DELETE kom, rozmowa
+            
+            WITH u
             DETACH DELETE u 
             """)
     void removeUzytkownik(@Param("email") String email);

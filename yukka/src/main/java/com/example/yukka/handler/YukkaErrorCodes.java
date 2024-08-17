@@ -3,6 +3,7 @@ package com.example.yukka.handler;
 import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
 
 import lombok.Getter;
@@ -14,6 +15,8 @@ public enum YukkaErrorCodes {
     ACCOUNT_BANNED(302, FORBIDDEN, "Konto użytkownika jest zbanowane"),
     ACCOUNT_DISABLED(303, FORBIDDEN, "Konto użytkownika jest wyłączone"),
     BAD_CREDENTIALS(304, FORBIDDEN, "Niepoprawny login lub hasło"),
+    ENTITY_NOT_FOUND(305, NOT_FOUND, "Nie znaleziono obiektu w bazie danych"),
+    ENTITY_ALREADY_EXISTS(306, BAD_REQUEST, "Obiekt już istnieje w bazie danych"),
     ;
 
     @Getter

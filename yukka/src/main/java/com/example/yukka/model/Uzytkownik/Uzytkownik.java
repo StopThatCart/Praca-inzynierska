@@ -21,9 +21,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.yukka.authorities.ROLE;
 import com.example.yukka.model.social.Ocenil;
-import com.example.yukka.model.social.RozmowaPrywatna;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
+import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

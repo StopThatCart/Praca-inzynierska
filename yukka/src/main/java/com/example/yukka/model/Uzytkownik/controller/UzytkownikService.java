@@ -1,7 +1,6 @@
 package com.example.yukka.model.uzytkownik.controller;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.yukka.model.social.RozmowaPrywatna;
+import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
@@ -31,27 +30,12 @@ public class UzytkownikService implements  UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Użytkownika nie znaleziono"));
     }
 
-    public RozmowaPrywatna findRozmowaPrywatna(String otherUzytNazwa, Authentication connectedUser) {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        if(uzyt.getNazwa().equals(otherUzytNazwa)) {
-            return null;
-        }
-        Uzytkownik uzyt2 = uzytkownikRepository.findByNazwa(otherUzytNazwa).orElseThrow();
-
-        RozmowaPrywatna uwrp = uzytkownikRepository.findRozmowaPrywatnaWithKomentarze(uzyt2.getNazwa(), uzyt.getNazwa()).orElseThrow()
-            .getRozmowyPrywatne()
-            .stream()
-            .findFirst()
-            .orElseThrow(() -> new NoSuchElementException("Nie znaleziono rozmowy prywatnej")); 
-        return uwrp;
-    }
-
     public Collection<Uzytkownik> findAllUzytkownicy(){
         return uzytkownikRepository.findAllUzytkownicy();
     }
 
     public Uzytkownik findByEmail(String userEmail){
-        return uzytkownikRepository.findByEmail(userEmail).orElseThrow();
+        return uzytkownikRepository.findByEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("Rozmowa prywatna nie istnieje"));
     }
 
     public Uzytkownik setBanUzytkownik(String email, Authentication currentUser, boolean ban){
@@ -80,12 +64,13 @@ public class UzytkownikService implements  UserDetailsService {
         return uzytkownikRepository.banUzytkownik(email, ban);
     }
 
+    // Bez zabezpieczeń bo to tylko do seedowania
     public void addUzytkownik(Uzytkownik uzytkownik){
         Ustawienia ust = Ustawienia.builder().build();
         uzytkownikRepository.addUzytkownik(uzytkownik, ust);
     }
 
-    // Bez zabezpieczeń na razie bo tak
+    // Bez zabezpieczeń bo to tylko do seedowania
     public void addPracownik(Uzytkownik uzytkownik){
         Ustawienia ust = Ustawienia.builder().build();
         uzytkownikRepository.addUzytkownik(uzytkownik, uzytkownik.getLabels(), ust);
@@ -93,17 +78,14 @@ public class UzytkownikService implements  UserDetailsService {
 
     public void remove(String email, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
-        Optional<Uzytkownik> uzytOpt = uzytkownikRepository.findByEmail(email);
-        if(uzytOpt.isEmpty()) {
-            return;
-        }
-        Uzytkownik targetUzyt = uzytOpt.get();
+        Uzytkownik uzytOpt = uzytkownikRepository.findByEmail(email)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + email));
         
-        if(targetUzyt.getEmail().equals(uzyt.getEmail())) {
+        if(uzytOpt.getEmail().equals(uzyt.getEmail())) {
             throw new IllegalArgumentException("Nie można usuwać samego siebie, przynajmniej na razie.");
         }
 
-        if(targetUzyt.isAdmin() || targetUzyt.isPracownik()) {
+        if(uzytOpt.isAdmin() || uzytOpt.isPracownik()) {
             throw new IllegalArgumentException("Nie można usuwać samego admina lub pracownika, przynajmniej na razie.");
         }
     }

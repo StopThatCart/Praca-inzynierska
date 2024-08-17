@@ -2,6 +2,7 @@ package com.example.yukka.model.social.komentarz;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -12,6 +13,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.example.yukka.model.social.Oceniany;
 import com.example.yukka.model.social.post.Post;
+import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.AllArgsConstructor;
@@ -46,7 +48,11 @@ public class Komentarz extends Oceniany {
     @Property(name = "dataUtworzenia")
     private LocalDateTime dataUtworzenia;
 
-    // TODO: dodaj podobny obiekt w wiadomościach prywatnych
+    @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.INCOMING)
+    // @JsonBackReference
+     @ToString.Exclude
+     private RozmowaPrywatna rozmowaPrywatna;
+
     @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.INCOMING)
    // @JsonBackReference
     @ToString.Exclude
@@ -73,7 +79,8 @@ public class Komentarz extends Oceniany {
                 ", opis='" + opis + '\'' +
                 ", edytowany=" + edytowany +
                 ", dataUtworzenia=" + dataUtworzenia +
-                ", postId=" + (post != null ? post.getId() : "null") +
+                ", postId=" + (post != null ? post.getPostId() : "null") +
+                ", rozmowaPrywatna=" + (rozmowaPrywatna != null ? rozmowaPrywatna.getUzytkownicy().stream().map(Uzytkownik::getNazwa).collect(Collectors.joining(", ")) : "null") +
                 ", odpowiedziCount=" + (odpowiedzi != null ? odpowiedzi.size() : 0) +
                 '}';
     }

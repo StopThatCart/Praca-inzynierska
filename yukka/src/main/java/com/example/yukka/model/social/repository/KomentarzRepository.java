@@ -107,15 +107,15 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
     Komentarz addKomentarzToPost(@Param("email") String email, @Param("postId") String postId, @Param("kom") Komentarz kom);
 
     @Query("""
-        MATCH (uzyt1:Uzytkownik{nazwa: $nazwa1})-[JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $nazwa2})
-        WITH uzyt1, priv, $kom.__properies__ as pt
+        MATCH (uzyt1:Uzytkownik{nazwa: $nadawca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $nazwa2})
+        WITH uzyt1, priv, $kom.__properties__ as pt
         CREATE (uzyt1)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
                 ocenyLubi: null, ocenyNielubi: null, obraz: pt.obraz, dataUtworzenia: localdatetime()})
-                <-[:MA_KOMENTARZ]-(priv)
+                <-[:MA_WIADOMOSC]-(priv)
         RETURN kom
         """)
-    Komentarz addKomentarzToRozmowaPrywatna(@Param("nazwa1") String nazwa1, @Param("nazwa2") String nazwa2, @Param("kom") Komentarz kom);
+    Komentarz addKomentarzToRozmowaPrywatna(@Param("nadawca") String nadawca, @Param("nazwa2") String nazwa2, @Param("kom") Komentarz kom);
 
     // Jakimś cudem działa z i bez odpowiedzi. Czary.
     @Query("""

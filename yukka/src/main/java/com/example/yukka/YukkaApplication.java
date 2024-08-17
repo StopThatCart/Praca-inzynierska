@@ -14,6 +14,10 @@ import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
+import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
+import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
+import com.example.yukka.model.social.service.KomentarzService;
+import com.example.yukka.model.social.service.RozmowaPrywatnaService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
@@ -33,6 +37,11 @@ public class YukkaApplication {
 
 	private final PostRepository postRepository;
 	private final KomentarzRepository komentarzRepository;
+	private final RozmowaPrywatnaService rozmowaPrywatnaService;
+	private final RozmowaPrywatnaRepository rozmowaPrywatnaRepository;
+	private final KomentarzService komentarzService;
+
+
 
 	private final RoslinaImporterService roslinaImporterService;
 
@@ -160,6 +169,35 @@ public class YukkaApplication {
 		// To się da do service potem
 		komentarzRepository.updateKomentarzeCountInPost(postId3);
 
+
+		// Rozmowy prywatne
+
+		// Initialize UUIDs for Komentarz IDs
+		String komId6 = UUID.randomUUID().toString();
+		String komId7 = UUID.randomUUID().toString();
+		String komId8 = UUID.randomUUID().toString();
+		String komId9 = UUID.randomUUID().toString();
+
+		// Retrieve Uzytkownik objects
+		Uzytkownik piotr = uzytkownikService.findByEmail(piotrEmail);
+		Uzytkownik katarzyna = uzytkownikService.findByEmail(katarzynaEmail);
+
+		// Add Private Conversation
+		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaService.addRozmowaPrywatnaNoPunjabi(katarzyna.getNazwa(), piotr);
+		//rozmowaPrywatnaRepository.saveRozmowaPrywatna(katarzyna.getNazwa(), piotr.getNazwa());
+		//RozmowaPrywatna rozmowa2 = rozmowaPrywatnaService.addRozmowaPrywatnaNoPunjabi(piotr.getNazwa(), katarzyna);
+
+		// Accept Private Conversation
+		rozmowaPrywatnaService.acceptRozmowaPrywatnaNoPunjabi(piotr.getNazwa(), katarzyna);
+		//rozmowaPrywatnaService.acceptRozmowaPrywatnaNoPunjabi(katarzyna.getNazwa(), piotr);
+
+		// Add Komentarz to Private Conversation
+		
+		Komentarz k6 = Komentarz.builder().komentarzId(komId6).komentarzId(komId6).opis("Wiadomość od Piotra").build();
+		Komentarz k7 = Komentarz.builder().komentarzId(komId7).komentarzId(komId7).opis("Wiadomość od Katarzyny").build();
+
+		komentarzRepository.addKomentarzToRozmowaPrywatna(katarzyna.getNazwa(), piotr.getNazwa(), k6);
+		komentarzRepository.addKomentarzToRozmowaPrywatna(piotr.getNazwa(), katarzyna.getNazwa(), k7);
 
 	}
 
