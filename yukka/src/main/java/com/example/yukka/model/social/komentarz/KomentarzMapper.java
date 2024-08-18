@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.social.request.KomentarzRequest;
 
@@ -18,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class KomentarzMapper {
-    private final FileUtils fileUtils;
     private final CommonMapperService commonMapperService;
     public KomentarzRequest toKomentarzRequest(Komentarz post) {
         return KomentarzRequest.builder()
@@ -72,7 +70,10 @@ public class KomentarzMapper {
         );
     }
  */
-    public PageResponse<KomentarzResponse> komentarzResponsetoPageResponse(List<KomentarzResponse> komentarzeResponse, Page<Komentarz> komentarze) {
+    public PageResponse<KomentarzResponse> komentarzResponsetoPageResponse(Page<Komentarz> komentarze) {
+        List<KomentarzResponse> komentarzeResponse = komentarze.stream()
+                .map(this::toKomentarzResponse)
+                .toList();
         return new PageResponse<>(
             komentarzeResponse,
             komentarze.getNumber(),

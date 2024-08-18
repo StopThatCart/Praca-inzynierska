@@ -17,7 +17,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
     @Query("""
         MATCH (ros:Roslina{nazwaLacinska: $latinName})
-        OPTIONAL MATCH path=(ros)-[r]-()
+        OPTIONAL MATCH path=(ros)-[r]-(:Wlasciwosc)
         RETURN ros, collect(nodes(path)), collect(relationships(path))
     """)
     Optional<Roslina> findByNazwaLacinska(@Param("latinName") String latinName);

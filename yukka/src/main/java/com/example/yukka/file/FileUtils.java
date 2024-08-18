@@ -51,13 +51,7 @@ public class FileUtils {
         if (StringUtils.isBlank(fileUrl)) {
             return null;
         }
-
-        if (fileUrl.equals(defaultRoslinaObrazName)) {
-            Path imagePath = Paths.get(defaultRoslinaObrazPath);
-            return readFileFromLocation(imagePath);
-        }
-
-        Path imagePath = Paths.get(seedRoslinaObrazyPath, fileUrl);
+        Path imagePath = Paths.get(fileUrl);
         return readFileFromLocation(imagePath);
     }
 
@@ -74,9 +68,7 @@ public class FileUtils {
             Path imagePath = new File(avatarDefaultObrazPath).toPath();
             return readFileFromLocation(imagePath);
         }
-     //   System.out.println("Seed: " + avatarDefaultObrazPath);
-      //  System.out.println("Url: " + fileUrl);
-        //System.out.println(": " + avatarDefaultObrazPath);
+
         Path imagePath = Paths.get(seedRoslinaObrazyPath, fileUrl);
         return readFileFromLocation(imagePath);
     }

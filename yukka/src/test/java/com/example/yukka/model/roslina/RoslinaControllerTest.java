@@ -35,6 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 //@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 //@TestMethodOrder(OrderAnnotation.class)
 //@ContextConfiguration
+
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RoslinaControllerTest {
 
     @Autowired

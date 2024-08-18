@@ -60,12 +60,13 @@ public class Uzytkownik implements UserDetails, Principal{
     private String haslo;
 
     @Property("avatar")
-    private String avatar;
+    @Builder.Default
+    private String avatar = "default_avatar.png";
 
     @CreatedDate
-    @Property("data_utworzenia")
+    @Property("dataUtworzenia")
     @Builder.Default
-    private LocalDateTime createdDate = LocalDateTime.now();
+    private LocalDateTime dataUtworzenia = LocalDateTime.now();
 
     @Property("ban")
     @Builder.Default

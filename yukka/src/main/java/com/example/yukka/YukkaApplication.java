@@ -129,13 +129,13 @@ public class YukkaApplication {
 		
 		
 		String postId1 = UUID.randomUUID().toString();
-		Post p1 = Post.builder().postId(postId1).tytul("Jakiś tytuł").opis("Jakiś opis").build();
+		Post p1 = Post.builder().postId(postId1).tytul("Jakiś post1").opis("Jakiś postowy opis1").build();
 
 		String postId2 = UUID.randomUUID().toString();
-		Post p2 = Post.builder().postId(postId2).tytul("Jakiś tytuł").opis("Jakiś opis").build();
+		Post p2 = Post.builder().postId(postId2).tytul("Jakiś post2").opis("Jakiś postowy opis2").build();
 
 		String postId3= UUID.randomUUID().toString();
-		Post p3 = Post.builder().postId(postId3).tytul("Jakiś tytuł").opis("Jakiś opis").build();
+		Post p3 = Post.builder().postId(postId3).tytul("Jakiś post3").opis("Jakiś postowy opis3").build();
 
 		postRepository.addPost(michalEmail, p1);
 		postRepository.addPost(michalEmail, p2);
@@ -155,11 +155,11 @@ public class YukkaApplication {
 		String komId4 = UUID.randomUUID().toString();
 		String komId5 = UUID.randomUUID().toString();
 
-		Komentarz k1 = Komentarz.builder().komentarzId(komId1).opis("Jakiś opis").build();
-		Komentarz k2 = Komentarz.builder().komentarzId(komId2).opis("Jakiś opis").build();
-		Komentarz k3 = Komentarz.builder().komentarzId(komId3).opis("Jakiś opis").build();
-		Komentarz k4 = Komentarz.builder().komentarzId(komId4).opis("Jakiś opis").build();
-		Komentarz k5 = Komentarz.builder().komentarzId(komId5).opis("Jakiś opis").build();
+		Komentarz k1 = Komentarz.builder().komentarzId(komId1).opis("Piotr opis").build();
+		Komentarz k2 = Komentarz.builder().komentarzId(komId2).opis("Kata opis").build();
+		Komentarz k3 = Komentarz.builder().komentarzId(komId3).opis("Piotr2 opis").build();
+		Komentarz k4 = Komentarz.builder().komentarzId(komId4).opis("Kata2 opis").build();
+		Komentarz k5 = Komentarz.builder().komentarzId(komId5).opis("Kata3 opis").build();
 
 		komentarzRepository.addKomentarzToPost(piotrEmail, postId3, k1);
 		komentarzRepository.addKomentarzToPost(katarzynaEmail, postId3, k2);

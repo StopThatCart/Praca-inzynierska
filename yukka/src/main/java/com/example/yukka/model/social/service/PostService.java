@@ -2,7 +2,6 @@ package com.example.yukka.model.social.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,40 +48,15 @@ public class PostService {
     public PageResponse<PostResponse> findAllPosts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPosts(pageable);
-//        System.out.println("\n\n\n post: " + posts.get().findFirst().get().toString() + "\n\n\n");
-     //   for(Post p : posts) {
-   //         System.out.println(p.toString());
-   //     }
-        List<PostResponse> postsResponse = posts.stream()
-                .map(postMapper::toPostResponse)
-                .toList();
-        return new PageResponse<>(
-                postsResponse,
-                posts.getNumber(),
-                posts.getSize(),
-                posts.getTotalElements(),
-                posts.getTotalPages(),
-                posts.isFirst(),
-                posts.isLast()
-        );
+
+        return postMapper.postResponsetoPageResponse(posts);
     }
 
     public PageResponse<PostResponse> findAllPostyByConnectedUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPostyByUzytkownik(user.getEmail(), pageable);
-        List<PostResponse> postsResponse = posts.stream()
-                .map(postMapper::toPostResponse)
-                .toList();
-        return new PageResponse<>(
-                postsResponse,
-                posts.getNumber(),
-                posts.getSize(),
-                posts.getTotalElements(),
-                posts.getTotalPages(),
-                posts.isFirst(),
-                posts.isLast()
-        );
+        return postMapper.postResponsetoPageResponse(posts);
     }
 
     public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, String email, Authentication connectedUser) {
@@ -96,18 +70,7 @@ public class PostService {
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPostyByUzytkownik(email, pageable);
-        List<PostResponse> postsResponse = posts.stream()
-                .map(postMapper::toPostResponse)
-                .toList();
-        return new PageResponse<>(
-                postsResponse,
-                posts.getNumber(),
-                posts.getSize(),
-                posts.getTotalElements(),
-                posts.getTotalPages(),
-                posts.isFirst(),
-                posts.isLast()
-        );
+        return postMapper.postResponsetoPageResponse(posts);
     }
 
 

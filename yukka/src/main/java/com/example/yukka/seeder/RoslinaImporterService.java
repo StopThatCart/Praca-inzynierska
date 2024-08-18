@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.opencsv.CSVReader;
@@ -49,12 +48,12 @@ public class RoslinaImporterService {
     @Value("${roslina.obraz.default.jpg-file-path}")
     private String defaultObrazPath;
 
-    private final RoslinaMapper roslinaMapper;
+    //private final RoslinaMapper roslinaMapper;
     private final RoslinaService roslinaService;
     
     private final Neo4jHealthCheck healthCheck;
 
-    private static final String brak = "Brak";
+    private final String emptyCsvValue = "Brak";
 
     @Value("${roslina.seed.amount}")
     private int limit;
@@ -203,8 +202,8 @@ public class RoslinaImporterService {
     }
 
     private void addWlasciwosc(List<Map<String, String>> wlasciwosci, String label, String value) {
-        if (value != null && !value.isEmpty() && !value.toLowerCase().equals(brak.toLowerCase()) 
-        && label != null && !label.isEmpty() &&  !label.toLowerCase().equals(brak.toLowerCase())) {
+        if (value != null && !value.isEmpty() && !value.toLowerCase().equals(emptyCsvValue.toLowerCase()) 
+        && label != null && !label.isEmpty() &&  !label.toLowerCase().equals(emptyCsvValue.toLowerCase())) {
            
             String meh = label;
             if(meh.contains("Okres")) {

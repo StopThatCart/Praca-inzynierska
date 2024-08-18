@@ -11,8 +11,9 @@ import org.springframework.data.neo4j.core.schema.Node;
     import org.springframework.data.neo4j.core.schema.Relationship;
 
     import com.example.yukka.model.roslina.Roslina;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-    import lombok.Getter;
+import lombok.Getter;
     import lombok.NoArgsConstructor;
     import lombok.Setter;
 
@@ -21,15 +22,16 @@ import org.springframework.data.neo4j.core.schema.Node;
     @Setter
     @NoArgsConstructor
     public class Wlasciwosc {
-
+        @JsonIgnore
         @DynamicLabels
         private List<String> labels;
-
+        @JsonIgnore
         @Id @GeneratedValue
         private long id;
         @Property("nazwa")
         private String nazwa;
 
+        @JsonIgnore
         @Relationship(type="MA_ROSLINE", direction=Relationship.Direction.OUTGOING)
         private List<Roslina> plants;
 

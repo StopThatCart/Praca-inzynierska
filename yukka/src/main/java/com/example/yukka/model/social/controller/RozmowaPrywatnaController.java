@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
+import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
 import com.example.yukka.model.social.service.RozmowaPrywatnaService;
 
 @RestController
@@ -20,10 +23,20 @@ public class RozmowaPrywatnaController {
 
     @Autowired
     private RozmowaPrywatnaService rozmowaPrywatnaService;
+    
+
+    @GetMapping
+    public ResponseEntity<PageResponse<RozmowaPrywatnaResponse>> findRozmowyPrywatneOfUzytkownik(
+        @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+        @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+        Authentication authentication) {
+        PageResponse<RozmowaPrywatnaResponse> rozmowy = rozmowaPrywatnaService.findRozmowyPrywatneOfUzytkownik(page, size, authentication);
+        return ResponseEntity.ok(rozmowy);
+    }
 
     @GetMapping("/{nazwa-odbiorcy}")
-    public ResponseEntity<RozmowaPrywatna> getRozmowaPrywatna(@PathVariable String odbiorca, Authentication authentication) {
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaService.findRozmowaPrywatna(odbiorca, authentication);
+    public ResponseEntity<RozmowaPrywatnaResponse> getRozmowaPrywatna(@PathVariable String odbiorca, Authentication authentication) {
+        RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.findRozmowaPrywatna(odbiorca, authentication);
         return ResponseEntity.ok(rozmowa);
     }
 

@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.rozmowaPrywatna;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.yukka.model.social.komentarz.KomentarzSimpleResponse;
@@ -17,7 +18,10 @@ import lombok.Setter;
 @Builder
 public class RozmowaPrywatnaResponse {
     private Long id;
+    private boolean aktywna;
+    private boolean zablokowana;
     private List<String> uzytkownicy;
     private List<KomentarzSimpleResponse> komentarze;
-    private int liczbaKomentarzy;
+    private int liczbaWiadomosci;
+    private LocalDateTime ostatnioAktualizowana;
 }

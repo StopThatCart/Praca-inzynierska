@@ -3,6 +3,8 @@ package com.example.yukka.model.social.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,6 +31,18 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
        """
        )
     Optional<RozmowaPrywatna> findRozmowaPrywatnaWithKomentarze(@Param("nazwa1") String nazwa1, @Param("nazwa2") String nazwa2);
+
+
+    @Query(value ="""
+        MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)
+        RETURN priv, collect(nodes(path)), collect(relationships(path))
+        :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
+           """,
+           countQuery = """
+        MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)
+        RETURN count(priv)
+            """)
+    Page<RozmowaPrywatna> findRozmowyPrywatneOfUzytkownik(@Param("email") String email, Pageable pageable);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})

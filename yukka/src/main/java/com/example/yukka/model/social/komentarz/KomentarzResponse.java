@@ -3,7 +3,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.yukka.model.social.post.PostResponse;
-import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,8 +24,10 @@ public class KomentarzResponse {
     private Integer ocenyLubi;
     private Integer ocenyNieLubi;
     private LocalDateTime dataUtworzenia;
+     @JsonInclude(JsonInclude.Include.NON_NULL)
     private PostResponse post;
-    private RozmowaPrywatnaResponse rozmowaPrywatna; 
+    //private RozmowaPrywatnaResponse rozmowaPrywatna;
+    @JsonInclude(JsonInclude.Include.NON_NULL) 
     private KomentarzResponse odpowiadaKomentarzowi;
     private List<KomentarzResponse> odpowiedzi;
     private String uzytkownikNazwa;

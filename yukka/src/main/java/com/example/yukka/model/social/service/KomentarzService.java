@@ -1,7 +1,6 @@
 package com.example.yukka.model.social.service;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,13 +22,11 @@ import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzMapper;
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
 import com.example.yukka.model.social.post.Post;
-import com.example.yukka.model.social.post.PostMapper;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
-import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
@@ -48,20 +45,22 @@ public class KomentarzService {
     private final KomentarzRepository komentarzRepository;
     private final FileStoreService fileStoreService;
 
-    PostMapper postMapper;
+   // PostMapper postMapper;
     private final KomentarzMapper komentarzMapper;
 
-    
+
+    /* 
     public KomentarzResponse findByKomentarzId(String komentarzId) {
         return  komentarzRepository.findKomentarzByKomentarzId(komentarzId)
                 .map(komentarzMapper::toKomentarzResponse)
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
     }
+                */
 
     public KomentarzResponse findByKomentarzIdWithOdpowiedzi(String komentarzId) {
         return  komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
                 .map(komentarzMapper::toKomentarzResponse)
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
     }
 
     public PageResponse<KomentarzResponse> findKomentarzeOfUzytkownik(int page, int size, String email, Authentication connectedUser) {
@@ -80,23 +79,7 @@ public class KomentarzService {
       //      System.out.println(k.toString());
       //  }
         //return new PageResponse<>();
-        
-        List<KomentarzResponse> komentarzeResponse = komentarze.stream()
-                .map(komentarzMapper::toKomentarzResponse)
-                .toList();
-         
-        return komentarzMapper.komentarzResponsetoPageResponse(komentarzeResponse, komentarze);
-      /*
-                return new PageResponse<>(
-                komentarzeResponse,
-                komentarze.getNumber(),
-                komentarze.getSize(),
-                komentarze.getTotalElements(),
-                komentarze.getTotalPages(),
-                komentarze.isFirst(),
-                komentarze.isLast()
-        );
-        */
+        return komentarzMapper.komentarzResponsetoPageResponse(komentarze);
     }
 
     public Komentarz addOcenaToKomentarz(OcenaRequest request, Authentication connectedUser) {
@@ -115,13 +98,11 @@ public class KomentarzService {
         if(uzyt.getNazwa().equals(otherUzytNazwa)) {
             throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
         }
-        Uzytkownik uzyt2 = uzytkownikRepository.findByNazwa(otherUzytNazwa).orElseThrow(
-            () -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa)
-        );
+        Uzytkownik uzyt2 = uzytkownikRepository.findByNazwa(otherUzytNazwa)
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa));
 
-        RozmowaPrywatna uwrp = rozmowaPrywatnaRepository.findRozmowaPrywatna(uzyt2.getNazwa(), uzyt.getNazwa()).orElseThrow(
-            () -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej")
-        );
+        rozmowaPrywatnaRepository.findRozmowaPrywatna(uzyt2.getNazwa(), uzyt.getNazwa())
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
 
         Komentarz kom = komentarzMapper.toKomentarz(request);
         kom.setKomentarzId(createKomentarzId());
@@ -136,13 +117,11 @@ public class KomentarzService {
         if(uzyt.getNazwa().equals(otherUzytNazwa)) {
            throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
         }
-        Uzytkownik uzyt2 = uzytkownikRepository.findByNazwa(otherUzytNazwa).orElseThrow(
-            () -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa)
-        );
+        Uzytkownik uzyt2 = uzytkownikRepository.findByNazwa(otherUzytNazwa)
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa));
 
-        RozmowaPrywatna uwrp = rozmowaPrywatnaRepository.findRozmowaPrywatna(uzyt2.getNazwa(), uzyt.getNazwa()).orElseThrow(
-            () -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej")
-        );
+        rozmowaPrywatnaRepository.findRozmowaPrywatna(uzyt2.getNazwa(), uzyt.getNazwa())
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
 
         Komentarz kom = createKomentarz(request);
         saveKomentarzFile(file, kom, uzyt);
@@ -170,7 +149,8 @@ public class KomentarzService {
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastKomentarz(newestKomentarz);
 
-        Post post = postRepository.findPostByPostId(postId).orElseThrow();
+        Post post = postRepository.findPostByPostId(postId)
+        .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
 
         Komentarz kom = createKomentarz(request);
         saveKomentarzFile(file, kom, uzyt);
@@ -204,7 +184,7 @@ public class KomentarzService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Komentarz kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
                 .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik(), connectedUser))
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
         return komentarzRepository.updateKomentarz(uzyt.getEmail(), komentarzId, kom);
     }
 
@@ -214,16 +194,18 @@ public class KomentarzService {
         Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
                 .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik(), connectedUser))
                 .orElseThrow();
-        komentarzRepository.removeKomentarz(komentarzId);
+        komentarzRepository.removeKomentarz(komentarz.getKomentarzId());
     }
 
     public void deleteKomentarzFromPost(String postId, String komentarzId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(postId).orElseThrow();
+        postRepository.findPostByPostId(postId).orElseThrow(
+            () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId)
+        );
         Komentarz kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
                 .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik(), connectedUser))
                 .orElseThrow();
-        komentarzRepository.removeKomentarz(komentarzId);
+        komentarzRepository.removeKomentarz(kom.getKomentarzId());
     }
 
     // Pomocnicze
@@ -257,6 +239,7 @@ public class KomentarzService {
     }
 
     private void checkTimeSinceLastKomentarz(Optional<Komentarz> newestKomentarz) {
+        
         if (newestKomentarz.isPresent()) {
             LocalDateTime lastKomentarzTime = newestKomentarz.get().getDataUtworzenia();
             LocalDateTime now = LocalDateTime.now();

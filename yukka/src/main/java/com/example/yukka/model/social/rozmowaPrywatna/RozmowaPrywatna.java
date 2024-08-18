@@ -44,6 +44,10 @@ public class RozmowaPrywatna {
     @Property(name = "dataUtworzenia")
     private LocalDateTime dataUtworzenia;
 
+    @CreatedDate
+    @Property(name = "ostatnioAktualizowana")
+    private LocalDateTime ostatnioAktualizowana;
+
     @Relationship(type = "JEST_W_ROZMOWIE", direction = Relationship.Direction.INCOMING)
     private List<Uzytkownik> uzytkownicy;
 
@@ -62,6 +66,7 @@ public class RozmowaPrywatna {
                 ", zablokowana=" + zablokowana +
                 ", liczbaWiadomosci=" + liczbaWiadomosci +
                 ", dataUtworzenia=" + dataUtworzenia +
+                ", ostatnioAktualizowana=" + ostatnioAktualizowana +
                 ", uzytkownicy=" + nazwyUzytkownikow +
                 ", wiadomosci=" + wiadomosci.size() +
                 '}';

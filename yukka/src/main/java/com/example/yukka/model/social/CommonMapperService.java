@@ -1,9 +1,12 @@
 package com.example.yukka.model.social;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
@@ -56,31 +59,48 @@ public class CommonMapperService {
             .uzytkownikNazwa(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getNazwa() : null)
             .obraz(fileUtils.readKomentarzObrazFile(komentarz.getObraz()))
             .avatar(fileUtils.readAvatarFile(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getAvatar() : null))
-            .rozmowaPrywatna(komentarz.getRozmowaPrywatna() != null ? mapRozmowaPrywatnaForKomentarzResponse(komentarz.getRozmowaPrywatna()) : null) // New mapping
+        //    .rozmowaPrywatna(komentarz.getRozmowaPrywatna() != null ? toRozmowaPrywatnaResponse(komentarz.getRozmowaPrywatna()) : null) // New mapping
             .build();
     }
 
+        public PageResponse<RozmowaPrywatnaResponse> rozmowaPrywatnaResponsetoPageRozmowaPrywatnaResponse(Page<RozmowaPrywatna> rozmowyPrywatne) {
+            List<RozmowaPrywatnaResponse> rozmowyPrywatneResponse = rozmowyPrywatne.getContent().stream()
+            .map(this::toRozmowaPrywatnaResponse)
+            .collect(Collectors.toList());
     
-
-    
+            return new PageResponse<>(
+                rozmowyPrywatneResponse,
+                rozmowyPrywatne.getNumber(),
+                rozmowyPrywatne.getSize(),
+                rozmowyPrywatne.getTotalElements(),
+                rozmowyPrywatne.getTotalPages(),
+                rozmowyPrywatne.isFirst(),
+                rozmowyPrywatne.isLast()
+        );
+    }
 
     // pomocnicze
 
-    private RozmowaPrywatnaResponse mapRozmowaPrywatnaForKomentarzResponse(RozmowaPrywatna rozmowaPrywatna) {
+
+    public RozmowaPrywatnaResponse toRozmowaPrywatnaResponse(RozmowaPrywatna rozmowaPrywatna) {
         if (rozmowaPrywatna == null) {
             return null;
         }
         return RozmowaPrywatnaResponse.builder()
             .id(rozmowaPrywatna.getId())
+            .aktywna(rozmowaPrywatna.isAktywna())
+            .zablokowana(rozmowaPrywatna.isZablokowana())
             .uzytkownicy(rozmowaPrywatna.getUzytkownicy().stream()
                 .map(Uzytkownik::getNazwa)
                 .collect(Collectors.toList()))
             .komentarze(rozmowaPrywatna.getWiadomosci().stream()
                 .map(this::toKomentarzSimpleResponse)
                 .collect(Collectors.toList()))
-            .liczbaKomentarzy(rozmowaPrywatna.getLiczbaWiadomosci())
+            .liczbaWiadomosci(rozmowaPrywatna.getLiczbaWiadomosci())
+            .ostatnioAktualizowana(rozmowaPrywatna.getOstatnioAktualizowana())
             .build();
     }
+
 
     private KomentarzSimpleResponse toKomentarzSimpleResponse(Komentarz komentarz) {
         if (komentarz == null) {
@@ -91,6 +111,8 @@ public class CommonMapperService {
             .komentarzId(komentarz.getKomentarzId())
             .opis(komentarz.getOpis())
             .uzytkownikNazwa(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getNazwa() : null)
+            .avatar(fileUtils.readAvatarFile(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getAvatar() : null))
+            .obraz(fileUtils.readKomentarzObrazFile(komentarz.getObraz()))
             .build();
     }
 

@@ -52,9 +52,10 @@ public class RoslinaController {
         return roslinaService.getSome(amount);
     }
 */
-    @GetMapping("/{id}")
-    public ResponseEntity<Roslina> getById(@PathVariable Integer id) {
-        Optional<Roslina> roslina = roslinaService.findById((long) id);
+    @GetMapping("/{nazwa-lacinska}")
+    public ResponseEntity<Roslina> getByNazwaLacinska(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
+     //   String nazwaLacinska = URLDecoder.decode(encodedNazwaLacinska, StandardCharsets.UTF_8);
+        Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(nazwaLacinska);
 
         if (roslina.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

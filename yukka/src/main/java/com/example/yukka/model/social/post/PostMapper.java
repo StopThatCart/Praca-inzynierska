@@ -1,11 +1,14 @@
 package com.example.yukka.model.social.post;
 
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.social.request.PostRequest;
@@ -56,5 +59,18 @@ public class PostMapper {
                 .build();
     }
 
-
+    public PageResponse<PostResponse> postResponsetoPageResponse(Page<Post> posty) {
+        List<PostResponse> postyResponse = posty.stream()
+                .map(this::toPostResponse)
+                .toList();
+        return new PageResponse<>(
+            postyResponse,
+            posty.getNumber(),
+            posty.getSize(),
+            posty.getTotalElements(),
+            posty.getTotalPages(),
+            posty.isFirst(),
+            posty.isLast()
+        );
+    }
 }

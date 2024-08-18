@@ -50,17 +50,6 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.findKomentarzeOfUzytkownik(page, size, email, connectedUser));
     }
 
-    // TODO: dodawanie komentarza do wiadomości prywatnej
-        /*
-    @PostMapping("/wiadomoscPrywatna/{email1}/{email2}/komentarze")
-    public ResponseEntity<Komentaz> addKomentarzToWiadomoscPrywatna(
-                    @PathVariable("email1") String email1, 
-                    @PathVariable("email2") String email2,
-                    @Valid @RequestBody KomentarzRequest request, 
-                    Authentication connectedUser) {
-        return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(email1, email2, request, connectedUser));
-    }
- */
     @PostMapping("/{komentarz-id}")
     public ResponseEntity<Komentarz> addOdpowiedzToKomentarz(
                     @PathVariable("komentarz-id") String komentarzId, 

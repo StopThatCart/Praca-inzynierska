@@ -23,14 +23,15 @@ public class FileStoreService {
     @Value("${application.file.uploads.photos-output-path}")
     private String fileUploadPath;
 
-    @Value("${roslina.obraz.default.jpg-file-path}")
-    private String defaultRoslinaObrazPath;
+    
+    //@Value("${roslina.obraz.default.jpg-file-path}")
+    //private String defaultRoslinaObrazPath;
 
     @Value("${roslina.obraz.default.name}")
     private String defaultRoslinaObrazName;
 
-    @Value("${uzytkownik.obraz.default.png-file-path}")
-    private  String avatarDefaultObrazPath;
+  //  @Value("${uzytkownik.obraz.default.png-file-path}")
+ //   private  String avatarDefaultObrazPath;
     @Value("${uzytkownik.obraz.default.name}")
     private  String defaultAvatarObrazName;
 

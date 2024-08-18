@@ -23,11 +23,11 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
     Optional<Komentarz> findKomentarzByKomentarzId(@Param("komentarzId") String komentarzId);
 
     @Query("""
-        MATCH (kom:Komentarz{komentarzId: $komentarzId})<-[:SKOMENTOWAL]-(:Uzytkownik)
+        MATCH (kom:Komentarz{komentarzId: $komentarzId})<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik)
         OPTIONAL MATCH path = (post:Post)-[:MA_KOMENTARZ]->(kom:Komentarz)
                           <-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
                           <-[:SKOMENTOWAL]-(uzytkownik:Uzytkownik)
-        RETURN kom, collect(nodes(path)), collect(relationships(path))
+        RETURN kom, r1, uzyt, collect(nodes(path)), collect(relationships(path))
         """)
     Optional<Komentarz> findKomentarzWithOdpowiedziByKomentarzId(@Param("komentarzId") String komentarzId);
 
@@ -43,14 +43,15 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
     @Query(value = """
         MATCH path=(komentarz:Komentarz)<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik{email: $email})
+        WHERE NOT (komentarz)<-[:MA_WIADOMOSC]-(:RozmowaPrywatna)
         OPTIONAL MATCH (post:Post)-[r2:MA_KOMENTARZ]->(komentarz)
-        OPTIONAL MATCH (odpowiedz:Komentarz)-[r3:ODPOWIEDZIAL]->(komentarz)
 
-        RETURN komentarz, r1, post, r2, odpowiedz, r3, collect(nodes(path)), collect(relationships(path))
+        RETURN  komentarz, r1, post, r2, collect(nodes(path)), collect(relationships(path))
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
         """,
         countQuery = """
         MATCH (komentarz:Komentarz)<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik{email: $email})
+        WHERE NOT (komentarz)<-[:MA_WIADOMOSC]-(:RozmowaPrywatna)
         RETURN count(komentarz)
     """)
     Page<Komentarz> findKomentarzeOfUzytkownik(@Param("email") String email, Pageable pageable);
@@ -111,7 +112,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         WITH uzyt1, priv, $kom.__properties__ as pt
         CREATE (uzyt1)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
-                ocenyLubi: null, ocenyNielubi: null, obraz: pt.obraz, dataUtworzenia: localdatetime()})
+                ocenyLubi: 0, ocenyNielubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 <-[:MA_WIADOMOSC]-(priv)
         RETURN kom
         """)
