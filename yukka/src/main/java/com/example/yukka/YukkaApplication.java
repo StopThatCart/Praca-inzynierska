@@ -86,14 +86,14 @@ public class YukkaApplication {
 		//MaUstawienia maUst = MaUstawienia.builder().ustawienia(ust).build();
 
 		Uzytkownik usJan = Uzytkownik.builder()
-
+		.uzytId("jasiuId")
         .nazwa("Jan Kowalski").email("jan@email.pl")
         .haslo(passwordEncoder.encode("jan12345678"))
 		.labels(List.of("Admin"))
         .build();
 
 		Uzytkownik usPrac = Uzytkownik.builder()
-
+		.uzytId("annaJakasId")
 		.labels(List.of("Pracownik")).nazwa("Anna Nowak")
 		.email("anna@email.pl")
 		.haslo(passwordEncoder.encode("anna12345678"))
@@ -101,21 +101,21 @@ public class YukkaApplication {
 
 		String piotrEmail = "piotr@email.pl";
 		Uzytkownik usPiotr = Uzytkownik.builder()
-		.uzytId(UUID.randomUUID().toString())
+		.uzytId("piotrekId")
         .nazwa("Piotr Wiśniewski").email(piotrEmail)
         .haslo(passwordEncoder.encode("piotr12345678"))
         .build();
 
 		String katarzynaEmail = "katarzyna@email.pl";
 		Uzytkownik usKatarzyna = Uzytkownik.builder()
-
+		.uzytId("jakasKatarzynaId")
 		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
         .haslo(passwordEncoder.encode("katarzyna12345678"))
         .build();
 
 		String michalEmail = "michal@email.pl";
 		Uzytkownik usMichal = Uzytkownik.builder()
-		.uzytId(UUID.randomUUID().toString())
+		.uzytId("michalekId")
         .nazwa("Michał Zieliński").email(michalEmail)
         .haslo(passwordEncoder.encode("michal12345678"))
         .build();
@@ -157,6 +157,7 @@ public class YukkaApplication {
 
 		Komentarz k1 = Komentarz.builder().komentarzId(komId1).opis("Piotr opis").build();
 		Komentarz k2 = Komentarz.builder().komentarzId(komId2).opis("Kata opis").build();
+		Komentarz k22 = Komentarz.builder().komentarzId(komId2).opis("Kata opis innego posta").build();
 		Komentarz k3 = Komentarz.builder().komentarzId(komId3).opis("Piotr2 opis").build();
 		Komentarz k4 = Komentarz.builder().komentarzId(komId4).opis("Kata2 opis").build();
 		Komentarz k5 = Komentarz.builder().komentarzId(komId5).opis("Kata3 opis").build();
@@ -166,6 +167,8 @@ public class YukkaApplication {
 		komentarzRepository.addKomentarzToKomentarz(piotrEmail, k3, komId2);
 		komentarzRepository.addKomentarzToKomentarz(katarzynaEmail, k4, komId2);
 		komentarzRepository.addKomentarzToKomentarz(katarzynaEmail, k5, komId3);
+
+		komentarzRepository.addKomentarzToPost(katarzynaEmail, postId2, k22);
 		// To się da do service potem
 		komentarzRepository.updateKomentarzeCountInPost(postId3);
 
@@ -183,12 +186,13 @@ public class YukkaApplication {
 		Uzytkownik katarzyna = uzytkownikService.findByEmail(katarzynaEmail);
 
 		// Add Private Conversation
-		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaService.addRozmowaPrywatnaNoPunjabi(katarzyna.getNazwa(), piotr);
+		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaService.inviteToRozmowaPrywatnaNoPunjabi(katarzyna.getUzytId(), piotr);
 		//rozmowaPrywatnaRepository.saveRozmowaPrywatna(katarzyna.getNazwa(), piotr.getNazwa());
-		//RozmowaPrywatna rozmowa2 = rozmowaPrywatnaService.addRozmowaPrywatnaNoPunjabi(piotr.getNazwa(), katarzyna);
+		//RozmowaPrywatna rozmowa2 = rozmowaPrywatnaService.inviteToRozmowaPrywatnaNoPunjabi(piotr.getNazwa(), katarzyna);
 
 		// Accept Private Conversation
-		rozmowaPrywatnaService.acceptRozmowaPrywatnaNoPunjabi(piotr.getNazwa(), katarzyna);
+		RozmowaPrywatna meh = rozmowaPrywatnaService.acceptRozmowaPrywatnaNoPunjabi(piotr.getUzytId(), katarzyna);
+		System.out.println("Meh: " + meh.toString());
 		//rozmowaPrywatnaService.acceptRozmowaPrywatnaNoPunjabi(katarzyna.getNazwa(), piotr);
 
 		// Add Komentarz to Private Conversation

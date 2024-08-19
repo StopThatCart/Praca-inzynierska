@@ -89,7 +89,7 @@ public class CommonMapperService {
         return RozmowaPrywatnaResponse.builder()
             .id(rozmowaPrywatna.getId())
             .aktywna(rozmowaPrywatna.isAktywna())
-            .zablokowana(rozmowaPrywatna.isZablokowana())
+            .nadawca(rozmowaPrywatna.getNadawca())
             .uzytkownicy(rozmowaPrywatna.getUzytkownicy().stream()
                 .map(Uzytkownik::getNazwa)
                 .collect(Collectors.toList()))

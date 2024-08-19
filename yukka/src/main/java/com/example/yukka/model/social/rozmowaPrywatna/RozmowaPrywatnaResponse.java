@@ -19,7 +19,7 @@ import lombok.Setter;
 public class RozmowaPrywatnaResponse {
     private Long id;
     private boolean aktywna;
-    private boolean zablokowana;
+    private String nadawca;
     private List<String> uzytkownicy;
     private List<KomentarzSimpleResponse> komentarze;
     private int liczbaWiadomosci;

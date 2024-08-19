@@ -6,6 +6,7 @@
 package com.example.yukka.auth;
 
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
@@ -46,7 +48,7 @@ class AuthenticationService {
         System.out.println("\n\n\n Request: " + request.toString() + "\n\n\n");
         //System.out.println("\n\n\n Request: " + request.getNazwa() + "\n\n\n");
         Uzytkownik user = Uzytkownik.builder()
-                .uzytId(UUID.randomUUID().toString())
+                .uzytId(createUzytkownikId())
                 .nazwa(request.getNazwa())
                 .email(request.getEmail())
                 .haslo(passwordEncoder.encode(request.getHaslo()))
@@ -83,6 +85,7 @@ class AuthenticationService {
         claims.put("UzytId", uzyt.getUzytId());
         claims.put("Nazwa", uzyt.getUsername());
         claims.put("Email", uzyt.getEmail());
+        
        // claims.put("authorities", user.getAuthorities()); // To już jest robione w JwtService
 
         /* */
@@ -90,6 +93,18 @@ class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    String createUzytkownikId() {
+        String resultId = UUID.randomUUID().toString();
+        do { 
+            Optional<Uzytkownik> uzyt = uzytkownikRepository.findByUzytId(resultId);
+            if(uzyt.isEmpty()){
+                break;
+            }
+            resultId = UUID.randomUUID().toString();
+        } while (true);
+        return resultId;
     }
 
 }

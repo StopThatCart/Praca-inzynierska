@@ -114,6 +114,14 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
                 ocenyLubi: 0, ocenyNielubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 <-[:MA_WIADOMOSC]-(priv)
+        WITH priv, kom
+        SET priv.ostatnioAktualizowana = localdatetime()
+
+        WITH priv, kom
+        MATCH (priv)-[:MA_WIADOMOSC]->(komentarze:Komentarz)
+        WITH priv, kom, count(komentarze) AS liczbaKom
+        SET priv.liczbaWiadomosci = liczbaKom
+
         RETURN kom
         """)
     Komentarz addKomentarzToRozmowaPrywatna(@Param("nadawca") String nadawca, @Param("nazwa2") String nazwa2, @Param("kom") Komentarz kom);
@@ -170,3 +178,20 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
     void removeKomentarz(@Param("komentarzId") String komentarzId);
 
 }
+
+
+/*
+ * 
+ * 
+ * @Test
+    public void testRejectRozmowaPrywatna() throws Exception {
+        String nadawcaId = "testId";
+        doNothing().when(rozmowaPrywatnaService).rejectRozmowaPrywatna(nadawcaId, receiverAuth);
+
+        mockMvc.perform(put("/nadawca-uzyt-id/reject")
+                .principal(authentication))
+                .andExpect(status().ok());
+
+        verify(rozmowaPrywatnaService, times(1)).rejectRozmowaPrywatna(nadawcaId, receiverAuth);
+    }
+ */

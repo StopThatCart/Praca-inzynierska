@@ -18,7 +18,7 @@ import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
 import com.example.yukka.model.social.service.RozmowaPrywatnaService;
 
 @RestController
-@RequestMapping("/rozmowy")
+@RequestMapping("/rest/neo4j/rozmowy")
 public class RozmowaPrywatnaController {
 
     @Autowired
@@ -29,26 +29,32 @@ public class RozmowaPrywatnaController {
     public ResponseEntity<PageResponse<RozmowaPrywatnaResponse>> findRozmowyPrywatneOfUzytkownik(
         @RequestParam(name = "page", defaultValue = "0", required = false) int page,
         @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-        Authentication authentication) {
-        PageResponse<RozmowaPrywatnaResponse> rozmowy = rozmowaPrywatnaService.findRozmowyPrywatneOfUzytkownik(page, size, authentication);
+        Authentication connectedUser) {
+        PageResponse<RozmowaPrywatnaResponse> rozmowy = rozmowaPrywatnaService.findRozmowyPrywatneOfUzytkownik(page, size, connectedUser);
         return ResponseEntity.ok(rozmowy);
     }
 
-    @GetMapping("/{nazwa-odbiorcy}")
-    public ResponseEntity<RozmowaPrywatnaResponse> getRozmowaPrywatna(@PathVariable String odbiorca, Authentication authentication) {
-        RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.findRozmowaPrywatna(odbiorca, authentication);
+    @GetMapping("/{odbiorca-uzyt-id}")
+    public ResponseEntity<RozmowaPrywatnaResponse> getRozmowaPrywatna(@PathVariable String odbiorcaId, Authentication connectedUser) {
+        RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.findRozmowaPrywatna(odbiorcaId, connectedUser);
         return ResponseEntity.ok(rozmowa);
     }
 
-    @PostMapping("/{nazwa-odbiorcy}")
-    public ResponseEntity<RozmowaPrywatna> addRozmowaPrywatna(@PathVariable String odbiorca, Authentication authentication) {
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaService.addRozmowaPrywatna(odbiorca, authentication);
+    @PostMapping("/{odbiorca-uzyt-id}")
+    public ResponseEntity<RozmowaPrywatna> inviteToRozmowaPrywatna(@PathVariable String odbiorcaId, Authentication connectedUser) {
+        RozmowaPrywatna rozmowa = rozmowaPrywatnaService.inviteToRozmowaPrywatna(odbiorcaId, connectedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(rozmowa);
     }
 
-    @PutMapping("/{nazwa-odbiorcy}/accept")
-    public ResponseEntity<RozmowaPrywatna> acceptRozmowaPrywatna(@PathVariable String odbiorca, Authentication authentication) {
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaService.acceptRozmowaPrywatna(odbiorca, authentication);
+    @PutMapping("/{nadawca-uzyt-id}/accept")
+    public ResponseEntity<RozmowaPrywatna> acceptRozmowaPrywatna(@PathVariable String nadawcaId, Authentication connectedUser) {
+        RozmowaPrywatna rozmowa = rozmowaPrywatnaService.acceptRozmowaPrywatna(nadawcaId, connectedUser);
         return ResponseEntity.ok(rozmowa);
+    }
+
+    @PutMapping("/{nadawca-uzyt-id}/reject")
+    public ResponseEntity<RozmowaPrywatna> rejectRozmowaPrywatna(@PathVariable String nadawcaId, Authentication connectedUser) {
+        rozmowaPrywatnaService.rejectRozmowaPrywatna(nadawcaId, connectedUser);
+        return ResponseEntity.ok().build();
     }
 }

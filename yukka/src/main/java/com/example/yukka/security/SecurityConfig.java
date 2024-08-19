@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 //@EnableWebMvc
 @EnableSpringDataWebSupport()
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = false)
+@EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtFilter authFilter;
