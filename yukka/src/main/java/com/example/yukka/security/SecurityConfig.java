@@ -50,6 +50,8 @@ public class SecurityConfig {
                       .requestMatchers("/auth/**").permitAll()
                       .requestMatchers( "/favicon.ico").permitAll()
 
+                      .requestMatchers("/rest/neo4j/rozmowy").hasRole(ROLE.Admin.toString())
+
 
                       .anyRequest().permitAll())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

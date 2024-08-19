@@ -57,7 +57,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         MATCH (uzyt2:Uzytkownik{uzytId: $odbiorcaId})
         WITH uzyt1, uzyt2
         MERGE (uzyt1)-[:JEST_W_ROZMOWIE]->
-               (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uzytId, dataUtworzenia: localdatetime(), ostatnioAktualizowana: localdatetime()})
+               (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uzytId, dataUtworzenia: localdatetime(), ostatnioAktualizowane: localdatetime()})
                <-[:JEST_W_ROZMOWIE]-(uzyt2)
         """)
     RozmowaPrywatna saveRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca);

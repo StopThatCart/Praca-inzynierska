@@ -115,7 +115,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
                 ocenyLubi: 0, ocenyNielubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 <-[:MA_WIADOMOSC]-(priv)
         WITH priv, kom
-        SET priv.ostatnioAktualizowana = localdatetime()
+        SET priv.ostatnioAktualizowane = localdatetime()
 
         WITH priv, kom
         MATCH (priv)-[:MA_WIADOMOSC]->(komentarze:Komentarz)

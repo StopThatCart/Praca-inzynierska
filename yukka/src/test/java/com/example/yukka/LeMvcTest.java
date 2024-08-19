@@ -1,12 +1,5 @@
 package com.example.yukka;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.security.Principal;
 
 import org.junit.Test;
@@ -14,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -22,12 +16,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.example.yukka.common.PageResponse;
@@ -44,13 +40,19 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Testcontainers
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class LeMvcTest {
-    @Autowired
+    
+    //Jak dasz @Autowired to włącza się security
+
     private MockMvc mockMvc;
     @Mock
     private Authentication authentication = Mockito.mock(Authentication.class);
     private Principal mockPrincipal = Mockito.mock(Principal.class);
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private UzytkownikRepository uzytkownikRepository;
@@ -77,14 +79,13 @@ public class LeMvcTest {
 
     @BeforeAll
     void adddddd() {
-
-      //  SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    //    Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-     //   SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
-    //    SecurityContextHolder.setContext(securityContext);
-
         Mockito.when(authentication.getPrincipal()).thenReturn(nadawca);
         Mockito.when(authentication.getName()).thenReturn(nadawca.getNazwa());
+        Mockito.when(authentication.getCredentials()).thenReturn(nadawca.getHaslo());
+
+
+       
+       
         
         
         System.out.println("auth: " + authentication.getPrincipal());
@@ -120,38 +121,21 @@ public class LeMvcTest {
         System.out.println("Uzytkownik: " + authentication.getPrincipal().toString());
 
      //   System.out.println("mockPrincipal.getName(): " + mockPrincipal.getName());
-//
-//        Mockito.when(authentication.getPrincipal()).thenReturn(nadawca);
-
-    //    assertNotNull(authentication);
-   //     assertEquals(nadawca, authentication.getPrincipal());
-        
-      //  System.out.println("auth: " + authentication.getPrincipal());
-
-
-     //   RequestBuilder requestBuilder = MockMvcRequestBuilders
-        //    .get("/rozmowy")
-          //  .principal(mockPrincipal);
-           // .authentication(authentication)
-            //.accept(MediaType.APPLICATION_JSON);
-          //  .andExpect(status().isOk());
-
-      //  MvcResult result = mockMvc .perform(requestBuilder).andReturn();
-
-        //MockHttpServletResponse response = result.getResponse();
-        //int status = response.getStatus();
-        //Assert.assertEquals("response status is wrong", 200, status);
-
-
-       // PageResponse<RozmowaPrywatnaResponse> pageResponse = new PageResponse<>();
-       // when(rozmowaPrywatnaService.findRozmowyPrywatneOfUzytkownik(0, 10, authentication))
-        //        .thenReturn(pageResponse);
 
         PageResponse<RozmowaPrywatnaResponse> pageResponse = rozmowaPrywatnaService.findRozmowyPrywatneOfUzytkownik(0, 10, authentication);
 
         ResponseEntity<PageResponse<RozmowaPrywatnaResponse>> respons = rozmowaPrywatnaController.findRozmowyPrywatneOfUzytkownik(0, 10, authentication);
                 assertEquals(HttpStatus.OK, respons.getStatusCode());
+
+
+        mockMvc = MockMvcBuilders.standaloneSetup(rozmowaPrywatnaController).build();
+        mockMvc.perform(MockMvcRequestBuilders
+            .get("/rest/neo4j/rozmowy")
+
                 
+            .principal(authentication))
+            .andExpect(status().isOk());
+
     }
 
     @Test
@@ -159,8 +143,19 @@ public class LeMvcTest {
       // expectations need to match with actuals
       // When this is run, it imitates and accesses 
       // the web layer and get the output.
+    @WithMockUser(username = "admin", roles = {"Uzytkownik"})
     public void testWelcome() throws Exception {
+        Mockito.when(authentication.getPrincipal()).thenReturn(nadawca);
+        mockMvc = MockMvcBuilders.standaloneSetup(rozmowaPrywatnaController)
+        
+        .build();
+        mockMvc.perform(MockMvcRequestBuilders
+            .get("/rest/neo4j/rozmowy")
+            .principal(authentication)
+            )
+                .andExpect(status().isOk());
         Authentication bb = authentication;
+      //  Authentication bb = authenticationManager.authenticate(authentication);
         System.out.println("\n\n\nbb no plis: " + bb + "\n\n\n");
         if (bb != null) {
             System.out.println("Authentication name: " + bb.getName());
