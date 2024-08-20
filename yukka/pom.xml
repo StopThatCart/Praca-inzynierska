@@ -139,6 +139,14 @@
 			<artifactId>opencsv</artifactId>
 			<version>5.6</version>
 		</dependency>
+
+
+		<dependency>
+			<groupId>org.ocpsoft.prettytime</groupId>
+			<artifactId>prettytime</artifactId>
+			<version>5.0.1.Final</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

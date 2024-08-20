@@ -1,8 +1,13 @@
 package com.example.yukka;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
+import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -255,7 +260,30 @@ public class YukkaApplication {
 		//OcenaRequest ocenaDoWiadomosciPrywatnej = OcenaRequest.builder().ocenialnyId(k3.getKomentarzId()).lubi(false).build();
 		//komentarzService.addOcenaToKomentarzTest(ocenaDoWiadomosciPrywatnej, katarzyna);
 
+		LocalDateTime what = LocalDateTime.now();
 
+		//System.out.println("Czas: " + timeAgo(what));
+		//testPrettyTime();
 	}
 
+	public static String timeAgo(LocalDateTime dateTime) {
+        PrettyTime p = new PrettyTime(Locale.forLanguageTag("pl"));
+        return p.format(Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));
+    }
+
+	public void testPrettyTime() {
+		PrettyTime prettyTime = new PrettyTime(Locale.forLanguageTag("pl"));
+
+        LocalDateTime now = LocalDateTime.now();
+
+        // Przykłady różnych dat
+        System.out.println(prettyTime.format(Date.from(now.minusSeconds(30).atZone(ZoneId.systemDefault()).toInstant())));
+        System.out.println(prettyTime.format(Date.from(now.minusMinutes(5).atZone(ZoneId.systemDefault()).toInstant()))); 
+        System.out.println(prettyTime.format(Date.from(now.minusHours(1).atZone(ZoneId.systemDefault()).toInstant())));  
+        System.out.println(prettyTime.format(Date.from(now.minusDays(1).atZone(ZoneId.systemDefault()).toInstant())));  
+        System.out.println(prettyTime.format(Date.from(now.minusDays(3).atZone(ZoneId.systemDefault()).toInstant()))); 
+        System.out.println(prettyTime.format(Date.from(now.minusWeeks(1).atZone(ZoneId.systemDefault()).toInstant()))); 
+        System.out.println(prettyTime.format(Date.from(now.minusMonths(1).atZone(ZoneId.systemDefault()).toInstant()))); 
+        System.out.println(prettyTime.format(Date.from(now.minusYears(1).atZone(ZoneId.systemDefault()).toInstant()))); 
+	}
 }
