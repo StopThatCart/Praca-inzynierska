@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 //@TestMethodOrder(OrderAnnotation.class)
 //@ContextConfiguration
 
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RoslinaControllerTest {
 
     @Autowired
@@ -46,6 +47,7 @@ public class RoslinaControllerTest {
     @Autowired
     private RoslinaMapper roslinaMapper;
 
+  //  @Mock
     Authentication mockAuth;
     Uzytkownik uzyt;
 
@@ -58,6 +60,7 @@ public class RoslinaControllerTest {
     private final Double wysokoscMin = 0.5;
     private final Double wysokoscMax = 4.0;
 
+    
     @BeforeAll
     void setUpUzytkownik() {
         mockAuth = Mockito.mock(Authentication.class);
@@ -74,6 +77,11 @@ public class RoslinaControllerTest {
 
     @BeforeEach
     void setUp() {
+ 
+        //new User("admin", "password", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        Mockito.when(mockAuth.getPrincipal()).thenReturn(uzyt);
+
+
         Wlasciwosc formaDrzewo = new Wlasciwosc(Collections.singletonList("Forma"), "TAKA TESTOWA");
 
         Wlasciwosc glebaPrzecietna = new Wlasciwosc(Collections.singletonList("Gleba"),"TEŻ TESTOWA");
@@ -266,6 +274,11 @@ public class RoslinaControllerTest {
     @Test
    // @Order(4) 
     void testDeleteRoslina() {
+        System.out.println("\n\n\nRozpoczęto test usuwania roślin.\n\n\n");
+        System.out.println("\n\n\nRoslina: " + roslina + "\n\n\n");
+        System.out.println("\n\n\nNazwa: " + nazwaLacinska + "\n\n\n");
+        System.out.println("\n\n\n<a[[er]]>: " + roslinaMapper.toRoslinaRequest(roslina) + "\n\n\n");
+        
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
         ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest, mockAuth);
     

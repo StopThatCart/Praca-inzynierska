@@ -11,7 +11,7 @@ import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 
 
 public enum RoslinaRelacje {
-    MA_WLASCIWOSC("wlasciwosci"),
+  //  MA_WLASCIWOSC("wlasciwosci"),
     MA_FORME("formy"),
     MA_GLEBE("gleby"),
     MA_GRUPE("grupy"),

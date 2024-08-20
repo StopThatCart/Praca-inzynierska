@@ -34,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class KomentarzController {
 
     private final KomentarzService komentarzService;
+    
 
     @GetMapping("/{komentarz-id}")
     public ResponseEntity<KomentarzResponse> findKomentarzById(@PathVariable("komentarz-id") String komentarzId) {
@@ -42,7 +43,7 @@ public class KomentarzController {
        // return ResponseEntity.ok(komentarzService.findByKomentarzId(komentarzId));
     }
 
-    @GetMapping("/uzytkownicy/{email}")
+    @GetMapping("/uzytkownicy")
     public ResponseEntity<PageResponse<KomentarzResponse>> findKomentarzeOfUzytkownik(
         @RequestParam(name = "page", defaultValue = "0", required = false) int page,
         @RequestParam(name = "size", defaultValue = "10", required = false) int size,
@@ -50,41 +51,41 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.findKomentarzeOfUzytkownik(page, size, email, connectedUser));
     }
 
-    @PostMapping("/{komentarz-id}")
+    @PostMapping("/odpowiedzi")
     public ResponseEntity<Komentarz> addOdpowiedzToKomentarz(
-                    @PathVariable("komentarz-id") String komentarzId, 
+                  //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     Authentication connectedUser) {
-        return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(komentarzId, request, connectedUser));
+        return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, connectedUser));
     }
 
-    @PostMapping(value = "/{komentarz-id}", consumes = "multipart/form-data")
+    @PostMapping(value = "/odpowiedzi", consumes = "multipart/form-data")
     public ResponseEntity<Komentarz> addOdpowiedzToKomentarz(
-                    @PathVariable("komentarz-id") String komentarzId, 
+                  //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     @Parameter() @RequestPart("file") MultipartFile file, 
                     Authentication connectedUser) throws FileUploadException {
-        return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(komentarzId, request, file, connectedUser));
+        return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, file, connectedUser));
     }
 
-    @PostMapping("posty/{post-id}/")
+    @PostMapping("/posty")
     public ResponseEntity<Komentarz> addKomentarzToPost(
-                    @PathVariable("post-id") String postId, 
+                    //@PathVariable("post-id") String postId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     Authentication connectedUser) {
-        return ResponseEntity.ok(komentarzService.addKomentarzToPost(postId, request, connectedUser));
+        return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, connectedUser));
     }
 
-    @PostMapping(value =  "posty/{post-id}/", consumes = "multipart/form-data")
+    @PostMapping(value =  "/posty", consumes = "multipart/form-data")
     public ResponseEntity<Komentarz> addKomentarzToPost(
-                    @PathVariable("post-id") String postId, 
+                  //  @PathVariable("post-id") String postId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     @Parameter() @RequestPart("file") MultipartFile file,
                     Authentication connectedUser) throws FileUploadException {
-        return ResponseEntity.ok(komentarzService.addKomentarzToPost(postId, request, file, connectedUser));
+        return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, file, connectedUser));
     }
 
-    @PostMapping(value =  "wiadomosciPrywatne/{other-uzyt-nazwa}/", consumes = "multipart/form-data")
+    @PostMapping(value =  "/wiadomosciPrywatne/{other-uzyt-nazwa}", consumes = "multipart/form-data")
     public ResponseEntity<Komentarz> addKomentarzToWiadomoscPrywatna(
                     @PathVariable("other-uzyt-nazwa") String otherUzytNazwa, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -93,7 +94,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(otherUzytNazwa, request, file, connectedUser));
     }
 
-    @PostMapping("wiadomosciPrywatne/{other-uzyt-nazwa}/")
+    @PostMapping("/wiadomosciPrywatne/{other-uzyt-nazwa}")
     public ResponseEntity<Komentarz> addKomentarzToWiadomoscPrywatna(
                     @PathVariable("other-uzyt-nazwa") String otherUzytNazwa, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -101,7 +102,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(otherUzytNazwa, request, connectedUser));
     }
 
-    @PutMapping("/ocena")
+    @PutMapping("/oceny")
     public ResponseEntity<Komentarz> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addOcenaToKomentarz(request, connectedUser));
     }
@@ -113,18 +114,7 @@ public class KomentarzController {
                     Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.updateKomentarz(komentarzId, request, connectedUser));
     }
-/*
-    // UWAGA: nietestowane
-    @PostMapping(value = "/obraz/{post-id}", consumes = "multipart/form-data")
-    public ResponseEntity<?> uploadPostImage(
-            @PathVariable("post-id") String postId,
-            @Parameter()
-            @RequestPart("file") MultipartFile file,
-            Authentication connectedUser) {
-        komentarzService.uploadPostObraz(file, connectedUser, postId);
-        return ResponseEntity.accepted().build();
-    }
-*/
+
     @DeleteMapping("/{komentarz-id}")
     public ResponseEntity<String> removeKomentarz(
                     @PathVariable("komentarz-id") String komentarzId,

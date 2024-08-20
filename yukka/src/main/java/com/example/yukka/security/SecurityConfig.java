@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 //@EnableWebMvc
 @EnableSpringDataWebSupport()
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = false)
+@EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtFilter authFilter;
@@ -49,6 +49,8 @@ public class SecurityConfig {
                       .requestMatchers("/pracownik/**").hasAnyRole(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                       .requestMatchers("/auth/**").permitAll()
                       .requestMatchers( "/favicon.ico").permitAll()
+
+                     // .requestMatchers("/rest/neo4j/rozmowy").hasRole(ROLE.Admin.toString())
 
 
                       .anyRequest().permitAll())

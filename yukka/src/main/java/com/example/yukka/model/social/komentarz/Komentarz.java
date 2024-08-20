@@ -48,7 +48,7 @@ public class Komentarz extends Oceniany {
     @Property(name = "dataUtworzenia")
     @Builder.Default
     private LocalDateTime dataUtworzenia = LocalDateTime.now();
-    @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "MA_WIADOMOSC", direction = Relationship.Direction.INCOMING)
     // @JsonBackReference
      @ToString.Exclude
      private RozmowaPrywatna rozmowaPrywatna;

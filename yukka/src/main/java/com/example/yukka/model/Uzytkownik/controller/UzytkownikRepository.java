@@ -12,11 +12,19 @@ import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> {
+
+    @Query("""
+        MATCH (u:Uzytkownik{uzytId: $uzytId})
+        RETURN u
+        """)
+    Optional<Uzytkownik> findByUzytId(@Param("uzytId") String uzytId);
+
     @Query("""
             MATCH (u:Uzytkownik{nazwa: $nazwa})
             RETURN u
             """)
     Optional<Uzytkownik> findByNazwa(@Param("nazwa") String nazwa);
+    
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
         RETURN u
@@ -32,6 +40,9 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             OPTIONAL MATCH (roz)-[:MA_WIADOMOSC]->(kom:Komentarz)
             DETACH DELETE roz, kom
             WITH roz
+            MATCH (powiadomienie:Powiadomienie)
+            DETACH DELETE powiadomienie
+            WITH powiadomienie
             MATCH (u:Uzytkownik)
             DETACH DELETE u 
             """)
@@ -114,6 +125,10 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             OPTIONAL MATCH (rozmowa)-[:MA_WIADOMOSC]->(kom:Komentarz)
             DETACH DELETE kom, rozmowa
             
+            WITH u
+            MATCH (u)<-[:POWIADAMIA]-(powiadomienie:Powiadomienie)
+            DETACH DELETE powiadomienie
+
             WITH u
             DETACH DELETE u 
             """)

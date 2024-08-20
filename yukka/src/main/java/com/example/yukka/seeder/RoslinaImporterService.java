@@ -62,9 +62,13 @@ public class RoslinaImporterService {
     public void seedRosliny() {
         try {
             if(seedMode.equals("create")){
+                System.out.println("Creating database");
                 healthCheck.dropAndCreateDatabase(dbName);
                 List<RoslinaRequest> bep = parseCsvToRoslinaRequests(CSV_FILE, limit);
                 if (healthCheck.isItActuallyAvailable()) {
+                 //   System.out.println("Installing trigger");
+                  // healthCheck.installTriggers();
+                    System.out.println("Importing rosliny");
                     importRoslinyIntoDatabase(bep);
                 }
             }else{

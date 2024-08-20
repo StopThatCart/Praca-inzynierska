@@ -27,6 +27,28 @@ public class Neo4jHealthCheck {
     @Value("${spring.data.neo4j.time-after-drop-create}")
     private int timeBetweenDBDrops;
 
+
+    /* 
+    @SuppressWarnings("deprecation")
+    public void installTriggers() {
+        Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
+        try (Session session = driver.session(SessionConfig.forDatabase("system"))) {
+            session.writeTransaction(tx -> {
+                tx.run("CALL apoc.trigger.install(" +
+                        "'" + dbName + "', " +
+                        "'setDataUtworzenia', " +
+                        "'UNWIND {createdNodes} AS n " +
+                        "SET n.dataUtworzenia = localdatetime()', " +
+                        "{phase:'after'})");
+                return null;
+            });
+        } catch (Exception e) {
+            log.error("Błąd podczas instalacji wyzwalacza", e);
+        } finally {
+            driver.close();
+        }
+    }
+*/
     public void dropAndCreateDatabase(String databaseName) {
         log.info("Czyszczenie bazy danych...");
         Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));

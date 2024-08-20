@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -34,8 +35,8 @@ public class RozmowaPrywatna {
     @Property(name = "aktywna")
     private boolean aktywna;
 
-    @Property(name = "zablokowana")
-    private boolean zablokowana;
+    @Property(name = "nadawca")
+    private String nadawca;
 
     @Property(name = "liczbaWiadomosci")
     private int liczbaWiadomosci;
@@ -44,7 +45,7 @@ public class RozmowaPrywatna {
     @Property(name = "dataUtworzenia")
     private LocalDateTime dataUtworzenia;
 
-    @CreatedDate
+    @LastModifiedDate
     @Property(name = "ostatnioAktualizowana")
     private LocalDateTime ostatnioAktualizowana;
 
@@ -63,7 +64,7 @@ public class RozmowaPrywatna {
         return "RozmowaPrywatna{" +
                 "id=" + id +
                 ", jestAktywna=" + aktywna +
-                ", zablokowana=" + zablokowana +
+                ", nadawca=" + nadawca +
                 ", liczbaWiadomosci=" + liczbaWiadomosci +
                 ", dataUtworzenia=" + dataUtworzenia +
                 ", ostatnioAktualizowana=" + ostatnioAktualizowana +

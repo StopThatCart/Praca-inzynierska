@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -30,15 +31,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@Entity
 @Node
-//@EntityListeners(AuditingEntityListener.class)
 public class Uzytkownik implements UserDetails, Principal{
     @Id @GeneratedValue
     private Long id;
@@ -88,7 +88,15 @@ public class Uzytkownik implements UserDetails, Principal{
     private MaUstawienia ustawienia;
 
     @Relationship(type = "JEST_W_ROZMOWIE", direction = Relationship.Direction.OUTGOING)
-    private List<RozmowaPrywatna> rozmowyPrywatne;
+    private Set<RozmowaPrywatna> rozmowyPrywatne;
+
+    @ToString.Exclude
+    @Relationship(type = "BLOKUJE", direction = Relationship.Direction.OUTGOING)
+    private Set<Uzytkownik> blokowaniUzytkownicy;
+
+    @ToString.Exclude
+    @Relationship(type = "JEST_BLOKOWANY_PRZEZ", direction = Relationship.Direction.INCOMING)
+    private Set<Uzytkownik> blokujacyUzytkownicy;
 
 
     public Uzytkownik(String name, String email, String password) {
@@ -157,6 +165,28 @@ public class Uzytkownik implements UserDetails, Principal{
         } else  {
             return uzyt.getEmail().equals(targetUzyt.getEmail());
         }
+    }
+    
+    @Override
+    public String toString() {
+        return "Uzytkownik{" +
+                "id=" + id +
+                ", uzytId='" + uzytId + '\'' +
+                ", labels=" + labels +
+                ", nazwa='" + nazwa + '\'' +
+                ", email='" + email + '\'' +
+                ", haslo='" + haslo + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", dataUtworzenia=" + dataUtworzenia +
+                ", ban=" + ban +
+        //        ", posty=" + posty +
+          //      ", komentarze=" + komentarze +
+                ", oceny=" + oceny +
+                ", ustawienia=" + ustawienia +
+         //       ", rozmowyPrywatne=" + rozmowyPrywatne +
+          //      ", blokowaniUzytkownicy=" + blokowaniUzytkownicy +
+         //       ", blokujacyUzytkownicy=" + blokujacyUzytkownicy +
+                '}';
     }
 
 

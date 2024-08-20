@@ -63,7 +63,7 @@ public class CommonMapperService {
             .build();
     }
 
-        public PageResponse<RozmowaPrywatnaResponse> rozmowaPrywatnaResponsetoPageRozmowaPrywatnaResponse(Page<RozmowaPrywatna> rozmowyPrywatne) {
+    public PageResponse<RozmowaPrywatnaResponse> rozmowaPrywatnaPagetoPageRozmowaPrywatnaResponse(Page<RozmowaPrywatna> rozmowyPrywatne) {
             List<RozmowaPrywatnaResponse> rozmowyPrywatneResponse = rozmowyPrywatne.getContent().stream()
             .map(this::toRozmowaPrywatnaResponse)
             .collect(Collectors.toList());
@@ -89,7 +89,7 @@ public class CommonMapperService {
         return RozmowaPrywatnaResponse.builder()
             .id(rozmowaPrywatna.getId())
             .aktywna(rozmowaPrywatna.isAktywna())
-            .zablokowana(rozmowaPrywatna.isZablokowana())
+            .nadawca(rozmowaPrywatna.getNadawca())
             .uzytkownicy(rozmowaPrywatna.getUzytkownicy().stream()
                 .map(Uzytkownik::getNazwa)
                 .collect(Collectors.toList()))
