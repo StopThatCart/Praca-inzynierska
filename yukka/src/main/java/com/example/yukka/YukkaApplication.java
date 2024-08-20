@@ -187,6 +187,7 @@ public class YukkaApplication {
 		// komentarzRepository.addKomentarzToPost(postId2, k11);
 		// komentarzRepository.addKomentarzToPost(postId3, k12);
 
+		// To samo, tylko daje powiadomienia użytkownikom
 		
 		Komentarz kom1 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 1").targetId(postId1).build(), usPiotr);
 		Komentarz kom2 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3").targetId(postId3).build(), usKatarzyna);

@@ -43,7 +43,7 @@ public class KomentarzController {
        // return ResponseEntity.ok(komentarzService.findByKomentarzId(komentarzId));
     }
 
-    @GetMapping("/uzytkownicy/{email}")
+    @GetMapping("/uzytkownicy")
     public ResponseEntity<PageResponse<KomentarzResponse>> findKomentarzeOfUzytkownik(
         @RequestParam(name = "page", defaultValue = "0", required = false) int page,
         @RequestParam(name = "size", defaultValue = "10", required = false) int size,
@@ -51,7 +51,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.findKomentarzeOfUzytkownik(page, size, email, connectedUser));
     }
 
-    @PostMapping("/odpowiedz")
+    @PostMapping("/odpowiedzi")
     public ResponseEntity<Komentarz> addOdpowiedzToKomentarz(
                   //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -59,7 +59,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, connectedUser));
     }
 
-    @PostMapping(value = "/odpowiedz", consumes = "multipart/form-data")
+    @PostMapping(value = "/odpowiedzi", consumes = "multipart/form-data")
     public ResponseEntity<Komentarz> addOdpowiedzToKomentarz(
                   //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -102,7 +102,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(otherUzytNazwa, request, connectedUser));
     }
 
-    @PutMapping("/ocena")
+    @PutMapping("/oceny")
     public ResponseEntity<Komentarz> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addOcenaToKomentarz(request, connectedUser));
     }
@@ -114,18 +114,7 @@ public class KomentarzController {
                     Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.updateKomentarz(komentarzId, request, connectedUser));
     }
-/*
-    // UWAGA: nietestowane
-    @PostMapping(value = "/obraz/{post-id}", consumes = "multipart/form-data")
-    public ResponseEntity<?> uploadPostImage(
-            @PathVariable("post-id") String postId,
-            @Parameter()
-            @RequestPart("file") MultipartFile file,
-            Authentication connectedUser) {
-        komentarzService.uploadPostObraz(file, connectedUser, postId);
-        return ResponseEntity.accepted().build();
-    }
-*/
+
     @DeleteMapping("/{komentarz-id}")
     public ResponseEntity<String> removeKomentarz(
                     @PathVariable("komentarz-id") String komentarzId,

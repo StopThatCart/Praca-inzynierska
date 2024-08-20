@@ -53,16 +53,6 @@ public class KomentarzService {
 
    // PostMapper postMapper;
     private final KomentarzMapper komentarzMapper;
-    
-
-
-    /* 
-    public KomentarzResponse findByKomentarzId(String komentarzId) {
-        return  komentarzRepository.findKomentarzByKomentarzId(komentarzId)
-                .map(komentarzMapper::toKomentarzResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
-    }
-                */
 
     // Przysięgam, potem poprawię te funkcje, ale teraz nie mam czasu
                 
@@ -75,31 +65,20 @@ public class KomentarzService {
 
     @Transactional(readOnly = true)
     public PageResponse<KomentarzResponse> findKomentarzeOfUzytkownik(int page, int size, String email, Authentication connectedUser) {
-        /* 
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByEmail(email);
         if (targetUzyt.isEmpty() || !uzyt.hasAuthenticationRights(targetUzyt.get(), connectedUser)) {
             return new PageResponse<>();
-        }*/
-      //  System.out.println("\n\n\n EMAIL: " + email + "\n\n\n");
+        }
         Pageable pageable = PageRequest.of(page, size, Sort.by("komentarz.dataUtworzenia").descending());
-      //  System.out.println("KOMENTARZE:  AAA ");
 
-        Page<Komentarz> komentarze = komentarzRepository.findKomentarzeOfUzytkownik(email, pageable);
-       // for(Komentarz k : komentarze) {
-      //      System.out.println(k.toString());
-      //  }
-        //return new PageResponse<>();
+        Page<Komentarz> komentarze = komentarzRepository.findKomentarzeOfUzytkownik(uzyt.getEmail(), pageable);
         return komentarzMapper.komentarzResponsetoPageResponse(komentarze);
     }
 
     public Komentarz addOcenaToKomentarz(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        if(uzyt.isBan()) {
-            throw new BannedUzytkownikException("Użytkownik jest zbanowany");
-        }
-        Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(request.getOcenialnyId())
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
+        Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(request.getOcenialnyId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
 
         if(komentarz.getRozmowaPrywatna() != null) {
             throw new IllegalArgumentException("Nie można oceniać wiadomości w rozmowach prywatnych"); 
@@ -117,8 +96,7 @@ public class KomentarzService {
         if(uzyt.isBan()) {
             throw new BannedUzytkownikException("Użytkownik jest zbanowany");
         }
-        Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(request.getOcenialnyId())
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
+        Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(request.getOcenialnyId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
 
         if(komentarz.getRozmowaPrywatna() != null) {
             throw new IllegalArgumentException("Nie można oceniać wiadomości w rozmowach prywatnych");    
@@ -138,11 +116,8 @@ public class KomentarzService {
         if(nadawca.getNazwa().equals(otherUzytNazwa)) {
             throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
         }
-        Uzytkownik odbiorca = uzytkownikRepository.findByNazwa(otherUzytNazwa)
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa));
-
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaByUzytId(odbiorca.getNazwa(), nadawca.getNazwa())
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
+        Uzytkownik odbiorca = uzytkownikRepository.findByNazwa(otherUzytNazwa).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa));
+        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaByUzytId(odbiorca.getNazwa(), nadawca.getNazwa()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
 
         Komentarz kom = komentarzMapper.toKomentarz(request);
         kom.setKomentarzId(createKomentarzId());
@@ -152,8 +127,7 @@ public class KomentarzService {
         PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
         .typ(TypPowiadomienia.WIADOMOSC_PRYWATNA.name())
         .odnosnik(rozmowa.getNadawca())
-        .uzytkownikNazwa(nadawca.getNazwa())
-        .avatar(nadawca.getAvatar())
+        .uzytkownikNazwa(nadawca.getNazwa()).avatar(nadawca.getAvatar())
         .build();
         powiadomienieService.addPowiadomienie(powiadomienie, odbiorca);
 
@@ -163,33 +137,23 @@ public class KomentarzService {
     public Komentarz addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, @Valid KomentarzRequest request,
         Uzytkownik connectedUser) {
         Uzytkownik nadawca = connectedUser;
+        
         if(nadawca.getNazwa().equals(otherUzytNazwa)) {
             throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
         }
-        Uzytkownik odbiorca = uzytkownikRepository.findByNazwa(otherUzytNazwa)
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa));
-
-       // System.out.println("\n\n\n");
-       // System.out.println("NADAWCA: " + nadawca.getNazwa());
-       // System.out.println("ODB: " + odbiorca.getNazwa());
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaByNazwa(odbiorca.getNazwa(), nadawca.getNazwa())
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
+        Uzytkownik odbiorca = uzytkownikRepository.findByNazwa(otherUzytNazwa).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa));
+        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaByNazwa(odbiorca.getNazwa(), nadawca.getNazwa()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
 
         Komentarz kom = komentarzMapper.toKomentarz(request);
         kom.setKomentarzId(createKomentarzId());
         
-       // System.out.println("Yyyyyy.");
         Komentarz response = komentarzRepository.addKomentarzToRozmowaPrywatna(nadawca.getNazwa(), odbiorca.getNazwa(), kom);
 
         PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
         .typ(TypPowiadomienia.WIADOMOSC_PRYWATNA.name())
         .odnosnik(rozmowa.getNadawca())
-        .uzytkownikNazwa(nadawca.getNazwa())
-        .avatar(nadawca.getAvatar())
+        .uzytkownikNazwa(nadawca.getNazwa()).avatar(nadawca.getAvatar())
         .build();
-
-      //  System.out.println("Powiadomienie: " + powiadomienie.toString());
-      //  System.out.println("\n\n\n");
 
         powiadomienieService.addPowiadomienie(powiadomienie, odbiorca);
 
@@ -203,11 +167,8 @@ public class KomentarzService {
         if(nadawca.getNazwa().equals(otherUzytNazwa)) {
            throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
         }
-        Uzytkownik odbiorca = uzytkownikRepository.findByNazwa(otherUzytNazwa)
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa));
-
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaByNazwa(odbiorca.getNazwa(), nadawca.getNazwa())
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
+        Uzytkownik odbiorca = uzytkownikRepository.findByNazwa(otherUzytNazwa).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + otherUzytNazwa));
+        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaByNazwa(odbiorca.getNazwa(), nadawca.getNazwa()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
 
         Komentarz kom = createKomentarz(request);
         saveKomentarzFile(file, kom, nadawca);
@@ -217,8 +178,7 @@ public class KomentarzService {
         PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
         .typ(TypPowiadomienia.WIADOMOSC_PRYWATNA.name())
         .odnosnik(rozmowa.getNadawca())
-        .uzytkownikNazwa(nadawca.getNazwa())
-        .avatar(nadawca.getAvatar())
+        .uzytkownikNazwa(nadawca.getNazwa()).avatar(nadawca.getAvatar())
         .build();
         powiadomienieService.addPowiadomienie(powiadomienie, odbiorca);
 
@@ -292,13 +252,12 @@ public class KomentarzService {
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastKomentarz(newestKomentarz);
 
-        Post post = postRepository.findPostByPostId(request.getTargetId())
-        .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getTargetId()));
+        Post post = postRepository.findPostByPostId(request.getTargetId()).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getTargetId()));
 
         Komentarz kom = createKomentarz(request);
         saveKomentarzFile(file, kom, uzyt);
         
-        Komentarz response =  komentarzRepository.addKomentarzToPost(uzyt.getEmail(), post.getPostId(), kom);
+        Komentarz response = komentarzRepository.addKomentarzToPost(uzyt.getEmail(), post.getPostId(), kom);
 
                 // W sumie do autorów postów nie powinny lecieć powiadomienia o nowych komentarzach w postach
         /*
@@ -320,11 +279,8 @@ public class KomentarzService {
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastKomentarz(newestKomentarz);
 
-        Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByKomentarzId(request.getTargetId())
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
-
-        Post post = postRepository.findPostByKomentarzOdpowiedzId(request.getTargetId()).orElseThrow(
-            () -> new EntityNotFoundException("Nie znaleziono posta dla odpowiedzi o podanym ID: " + request.getTargetId()));
+        Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByKomentarzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
+        Post post = postRepository.findPostByKomentarzOdpowiedzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta dla odpowiedzi o podanym ID: " + request.getTargetId()));
 
         Komentarz kom = komentarzMapper.toKomentarz(request);
         kom.setKomentarzId(createKomentarzId());
@@ -334,10 +290,8 @@ public class KomentarzService {
         if(!komentarzDoOdpowiedzi.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
             PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
             .typ(TypPowiadomienia.KOMENTARZ_POST.name())
-            .tytul(post.getTytul())
-            .odnosnik(post.getPostId())
-            .uzytkownikNazwa(uzyt.getNazwa())
-            .avatar(uzyt.getAvatar())
+            .tytul(post.getTytul()).odnosnik(post.getPostId())
+            .uzytkownikNazwa(uzyt.getNazwa()).avatar(uzyt.getAvatar())
             .build();
             powiadomienieService.addPowiadomienie(powiadomienie, komentarzDoOdpowiedzi.getUzytkownik());
         }
@@ -350,11 +304,8 @@ public class KomentarzService {
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastKomentarz(newestKomentarz);
 
-        Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByKomentarzId(request.getTargetId())
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
-
-        Post post = postRepository.findPostByKomentarzOdpowiedzId(request.getTargetId()).orElseThrow(
-            () -> new EntityNotFoundException("Nie znaleziono posta dla odpowiedzi o podanym ID: " + request.getTargetId()));
+        Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByKomentarzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
+        Post post = postRepository.findPostByKomentarzOdpowiedzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta dla odpowiedzi o podanym ID: " + request.getTargetId()));
 
         Komentarz kom = komentarzMapper.toKomentarz(request);
         kom.setKomentarzId(createKomentarzId());
@@ -364,10 +315,8 @@ public class KomentarzService {
         if(!komentarzDoOdpowiedzi.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
             PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
             .typ(TypPowiadomienia.KOMENTARZ_POST.name())
-            .tytul(post.getTytul())
-            .odnosnik(post.getPostId())
-            .uzytkownikNazwa(uzyt.getNazwa())
-            .avatar(uzyt.getAvatar())
+            .tytul(post.getTytul()).odnosnik(post.getPostId())
+            .uzytkownikNazwa(uzyt.getNazwa()).avatar(uzyt.getAvatar())
             .build();
             powiadomienieService.addPowiadomienie(powiadomienie, komentarzDoOdpowiedzi.getUzytkownik());
         }
@@ -377,15 +326,13 @@ public class KomentarzService {
     }
 
     public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Authentication connectedUser) throws FileUploadException {
+        
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastKomentarz(newestKomentarz);
 
-        Post post = postRepository.findPostByKomentarzOdpowiedzId(request.getTargetId()).orElseThrow(
-            () -> new EntityNotFoundException("Nie znaleziono posta dla odpowiedzi o podanym ID: " + request.getTargetId()));
-
-        Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByKomentarzId(request.getTargetId())
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
+        Post post = postRepository.findPostByKomentarzOdpowiedzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta dla odpowiedzi o podanym ID: " + request.getTargetId()));
+        Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByKomentarzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
 
         Komentarz kom = createKomentarz(request);
         saveKomentarzFile(file, kom, uzyt);
@@ -394,10 +341,8 @@ public class KomentarzService {
 
         if(!komentarzDoOdpowiedzi.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
             PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
-            .typ(TypPowiadomienia.KOMENTARZ_POST.name())
-            .tytul(post.getTytul())
-            .odnosnik(post.getPostId())
-            .uzytkownikNazwa(uzyt.getNazwa())
+            .typ(TypPowiadomienia.KOMENTARZ_POST.name()).tytul(post.getTytul())
+            .odnosnik(post.getPostId()).uzytkownikNazwa(uzyt.getNazwa())
             .avatar(uzyt.getAvatar())
             .build();
             powiadomienieService.addPowiadomienie(powiadomienie, komentarzDoOdpowiedzi.getUzytkownik());
@@ -476,27 +421,5 @@ public class KomentarzService {
             }
         }
     }
-
-    /* 
-    public void uploadKomentarzObraz(MultipartFile file, Authentication connectedUser, String komentarzId) {
-        Optional<Komentarz> komentarzOptional = komentarzRepository.findKomentarzByKomentarzId(komentarzId);
-    
-        if (komentarzOptional.isEmpty()) {
-            throw new NoSuchElementException("Nie znaleziono posta o podanym ID: " + komentarzId);
-        }
-        Komentarz komentarz = komentarzOptional.get();
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-
-        String pfp = fileStoreService.saveKomentarz(file, komentarz.getKomentarzId(), uzyt.getNazwa());
-
-        if (pfp == null) {
-            throw new IllegalStateException("Nie udało się zapisać obrazu.");
-        }
-    
-        
-        komentarz.setObraz(pfp);
-        //komentarzRepository.updateKomentarzObraz(komentarz.getKomentarzId(), komentarz.getObraz());
-    }
-        */
 
 }
