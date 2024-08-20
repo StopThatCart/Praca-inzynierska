@@ -1,6 +1,6 @@
 package com.example.yukka.model.social.powiadomienie;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Builder;
@@ -24,6 +24,8 @@ public class PowiadomienieResponse {
     private String avatar = "default_avatar.png";
     private String uzytkownikNazwa;
     private int iloscPolubien;
-    private LocalDate data;
+    private LocalDateTime data;
+    @Builder.Default
+    private LocalDateTime dataUtworzenia = LocalDateTime.now();
 
 }

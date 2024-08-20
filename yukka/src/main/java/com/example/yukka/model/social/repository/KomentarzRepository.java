@@ -17,8 +17,9 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
     
     @Query("""
             MATCH (kom:Komentarz{komentarzId: $komentarzId})<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik)
+            OPTIONAL MATCH (rozmowa:RozmowaPrywatna)-[r3:MA_WIADOMOSC]->(kom)
             OPTIONAL MATCH path = (:Post)-[:MA_KOMENTARZ]->(kom)
-            RETURN kom, r1, uzyt, collect(nodes(path)) as pathNodes, collect(relationships(path)) as pathRels
+            RETURN kom, r1, uzyt, rozmowa, r3, collect(nodes(path)) as pathNodes, collect(relationships(path)) as pathRels
             """)
     Optional<Komentarz> findKomentarzByKomentarzId(@Param("komentarzId") String komentarzId);
 
@@ -34,7 +35,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
     
     @Query("""
             MATCH (komentarz:Komentarz)<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik{email: $email})
-            RETURN kom
+            RETURN komentarz
             ORDER BY komentarz.dataUtworzenia DESC
             LIMIT 1
             """)
@@ -63,8 +64,8 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
             WITH kom
             MATCH (kom)<-[r:OCENIL]-(uzyt)
-            WITH kom COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
-            COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNielubi
+            WITH kom, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
+                      COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNielubi
             SET kom.ocenyLubi = ocenyLubi, kom.ocenyNielubi = ocenyNielubi
             RETURN kom
             """)
@@ -77,7 +78,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         WITH kom
         MATCH (kom)<-[r:OCENIL]-(uzyt)
         WITH kom, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
-        COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNielubi
+                  COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNielubi
         SET kom.ocenyLubi = ocenyLubi, kom.ocenyNielubi = ocenyNielubi
         """)
     void removeOcenaFromKomentarz(@Param("email") String email, @Param("komentarzId") String komentarzId, @Param("ocena") boolean ocena);
@@ -91,9 +92,35 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
                 ocenyLubi: 0, ocenyNielubi: 0, 
                 obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 -[:ODPOWIEDZIAL]->(kom2)
+
+        WITH kom, kom2
+        OPTIONAL MATCH (kom2)-[:ODPOWIEDZIAL*0..]->(kom1:Komentarz)<-[:MA_KOMENTARZ]-(post:Post)
+
+        WITH kom, post
+        MATCH (post)-[:MA_KOMENTARZ]->(komentarz:Komentarz)
+        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
+        WITH kom, post, komentarz, collect(odpowiedz) AS odpowiedzi
+        WITH kom, post, sum(size(odpowiedzi)) AS liczbaOdpowiedzi
+        SET post.liczbaKomentarzy = liczbaOdpowiedzi
+
+
         RETURN kom
         """)
-    Komentarz addKomentarzToKomentarz(@Param("email") String email, @Param("kom") Komentarz kom, @Param("komentarzId") String targetKomentarzId);
+    Komentarz addOdpowiedzToKomentarzInPost(@Param("email") String email, @Param("kom") Komentarz kom, @Param("komentarzId") String targetKomentarzId);
+
+
+    @Query("""
+        MATCH (uzyt:Uzytkownik{email: $email})
+        MATCH (kom2:Komentarz{komentarzId: $komentarzId})
+        WITH uzyt, kom2, $kom.__properties__ AS pt 
+        CREATE (uzyt)-[:SKOMENTOWAL]->
+                (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
+                ocenyLubi: 0, ocenyNielubi: 0, 
+                obraz: pt.obraz, dataUtworzenia: localdatetime()})
+                -[:ODPOWIEDZIAL]->(kom2)
+        RETURN kom
+        """)
+    Komentarz addOdpowiedzToKomentarzButOld(@Param("email") String email, @Param("kom") Komentarz kom, @Param("komentarzId") String targetKomentarzId);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
@@ -103,12 +130,21 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false, 
                 ocenyLubi: 0, ocenyNielubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 <-[:MA_KOMENTARZ]-(post)
+        
+        WITH kom 
+
+        MATCH (post:Post{postId: $postId})-[:MA_KOMENTARZ]->(komentarz:Komentarz)
+        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
+        WITH kom, post, komentarz, collect(odpowiedz) AS odpowiedzi
+        WITH kom, post, sum(size(odpowiedzi)) AS liczbaOdpowiedzi
+        SET post.liczbaKomentarzy = liczbaOdpowiedzi
+    
         RETURN kom
         """)
     Komentarz addKomentarzToPost(@Param("email") String email, @Param("postId") String postId, @Param("kom") Komentarz kom);
 
     @Query("""
-        MATCH (uzyt1:Uzytkownik{nazwa: $nadawca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $nazwa2})
+        MATCH (uzyt1:Uzytkownik{nazwa: $nadawca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $odbiorca})
         WITH uzyt1, priv, $kom.__properties__ as pt
         CREATE (uzyt1)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
@@ -124,7 +160,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
         RETURN kom
         """)
-    Komentarz addKomentarzToRozmowaPrywatna(@Param("nadawca") String nadawca, @Param("nazwa2") String nazwa2, @Param("kom") Komentarz kom);
+    Komentarz addKomentarzToRozmowaPrywatna(@Param("nadawca") String nadawca, @Param("odbiorca") String odbiorca, @Param("kom") Komentarz kom);
 
     // Jakimś cudem działa z i bez odpowiedzi. Czary.
     @Query("""

@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
-        public ResponseEntity<ExceptionResponse> handleException(EntityAlreadyExistsException exp) {
+    public ResponseEntity<ExceptionResponse> handleException(EntityAlreadyExistsException exp) {
                 return ResponseEntity
                         .status(BAD_REQUEST)
                         .body(
@@ -95,7 +95,6 @@ public class GlobalExceptionHandler {
                                         .build()
                         );
         }
-
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ExceptionResponse> handleException() {

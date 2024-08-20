@@ -38,9 +38,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@Entity
 @Node
-//@EntityListeners(AuditingEntityListener.class)
 public class Uzytkownik implements UserDetails, Principal{
     @Id @GeneratedValue
     private Long id;

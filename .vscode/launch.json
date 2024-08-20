@@ -2,20 +2,14 @@
     "configurations": [
         {
             "type": "java",
-            "name": "PowiadomienieService",
-            "request": "launch",
-            "mainClass": "com.example.yukka.model.social.service.PowiadomienieService",
-            "projectName": "yukka"
-        },
-        {
-            "type": "java",
             "name": "Spring Boot-YukkaApplication<yukka>",
             "request": "launch",
             "cwd": "${workspaceFolder}/yukka",
             "mainClass": "com.example.yukka.YukkaApplication",
             "projectName": "yukka",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=52815 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=yukka"
         }
     ]
 }

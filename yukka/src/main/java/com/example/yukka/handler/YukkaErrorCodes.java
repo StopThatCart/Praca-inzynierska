@@ -17,6 +17,7 @@ public enum YukkaErrorCodes {
     BAD_CREDENTIALS(304, FORBIDDEN, "Niepoprawny login lub hasło"),
     ENTITY_NOT_FOUND(305, NOT_FOUND, "Nie znaleziono obiektu w bazie danych"),
     ENTITY_ALREADY_EXISTS(306, BAD_REQUEST, "Obiekt już istnieje w bazie danych"),
+    OCENA(307, BAD_REQUEST, "Wystąpił błąd podczas oceniania"),
     ;
 
     @Getter

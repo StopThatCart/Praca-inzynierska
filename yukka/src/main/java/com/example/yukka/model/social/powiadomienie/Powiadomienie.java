@@ -1,6 +1,5 @@
 package com.example.yukka.model.social.powiadomienie;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Powiadomienie {
- @Id @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
     @Property(name = "typ")
@@ -50,12 +49,16 @@ public class Powiadomienie {
     @Property(name = "nazwyRoslin")
     private List<String> nazwyRoslin;
 
+    @Property(name = "iloscPolubien")
+    private int iloscPolubien;
+
     @Property(name = "data")
-    private LocalDate data;
+    private LocalDateTime data;
 
     @CreatedDate
+    @Builder.Default
     @Property(name = "dataUtworzenia")
-    private LocalDateTime dataUtworzenia;
+    private LocalDateTime dataUtworzenia = LocalDateTime.now();
 
     @Relationship(type = "POWIADAMIA", direction = Relationship.Direction.OUTGOING)
     private Uzytkownik uzytkownik;
@@ -69,7 +72,8 @@ public class Powiadomienie {
                 ", tytul='" + tytul + '\'' +
                 ", opis='" + opis + '\'' +
                 ", avatar='" + avatar + '\'' +
-                ", nazwyRoslin=" + nazwyRoslin.toString() +
+                ", nazwyRoslin=" + nazwyRoslin +
+                ", iloscPolubien=" + iloscPolubien +
                 ", dataUtworzenia=" + dataUtworzenia +
                 ", uzytkownik=" + uzytkownik +
                 '}';

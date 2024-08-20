@@ -15,11 +15,18 @@ import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 
 public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywatna, Long> {
    @Query("""
-    MATCH path = (uzyt1:Uzytkownik{uzytId: $uzyt1Id})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $uzyt2Id})
+    MATCH path = (uzyt1:Uzytkownik{uzytId: $odbiorca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawca})
     RETURN priv, collect(nodes(path)), collect(relationships(path))
        """
        )
-    Optional<RozmowaPrywatna> findRozmowaPrywatna(@Param("uzyt1Id") String nazwa1, @Param("uzyt2Id") String nazwa2);
+    Optional<RozmowaPrywatna> findRozmowaPrywatnaByUzytId(@Param("odbiorca") String odbiorca, @Param("nadawca") String nadawca);
+
+    @Query("""
+    MATCH path = (uzyt1:Uzytkownik{nazwa: $odbiorca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $nadawca})
+    RETURN priv, collect(nodes(path)), collect(relationships(path))
+       """
+       )
+    Optional<RozmowaPrywatna> findRozmowaPrywatnaByNazwa(@Param("odbiorca") String odbiorca, @Param("nadawca") String nadawca);
 
     
    @Query("""
@@ -60,7 +67,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
                (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uzytId, dataUtworzenia: localdatetime(), ostatnioAktualizowane: localdatetime()})
                <-[:JEST_W_ROZMOWIE]-(uzyt2)
         """)
-    RozmowaPrywatna saveRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca);
+    RozmowaPrywatna inviteToRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca);
 
     // To pójdzie do admina potem
     @Query("""
@@ -96,8 +103,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         """
         )
     RozmowaPrywatna acceptRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
-                                        @Param("odbiorcaId") String odbiorcaId,
-                                        @Param("rozmowa") RozmowaPrywatna rozmowa);
+                                        @Param("odbiorcaId") String odbiorcaId);
 
 
     @Query("""

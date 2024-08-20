@@ -34,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class KomentarzController {
 
     private final KomentarzService komentarzService;
+    
 
     @GetMapping("/{komentarz-id}")
     public ResponseEntity<KomentarzResponse> findKomentarzById(@PathVariable("komentarz-id") String komentarzId) {
@@ -50,41 +51,41 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.findKomentarzeOfUzytkownik(page, size, email, connectedUser));
     }
 
-    @PostMapping("/{komentarz-id}")
+    @PostMapping("/odpowiedz")
     public ResponseEntity<Komentarz> addOdpowiedzToKomentarz(
-                    @PathVariable("komentarz-id") String komentarzId, 
+                  //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     Authentication connectedUser) {
-        return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(komentarzId, request, connectedUser));
+        return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, connectedUser));
     }
 
-    @PostMapping(value = "/{komentarz-id}", consumes = "multipart/form-data")
+    @PostMapping(value = "/odpowiedz", consumes = "multipart/form-data")
     public ResponseEntity<Komentarz> addOdpowiedzToKomentarz(
-                    @PathVariable("komentarz-id") String komentarzId, 
+                  //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     @Parameter() @RequestPart("file") MultipartFile file, 
                     Authentication connectedUser) throws FileUploadException {
-        return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(komentarzId, request, file, connectedUser));
+        return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, file, connectedUser));
     }
 
-    @PostMapping("posty/{post-id}/")
+    @PostMapping("/posty")
     public ResponseEntity<Komentarz> addKomentarzToPost(
-                    @PathVariable("post-id") String postId, 
+                    //@PathVariable("post-id") String postId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     Authentication connectedUser) {
-        return ResponseEntity.ok(komentarzService.addKomentarzToPost(postId, request, connectedUser));
+        return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, connectedUser));
     }
 
-    @PostMapping(value =  "posty/{post-id}/", consumes = "multipart/form-data")
+    @PostMapping(value =  "/posty", consumes = "multipart/form-data")
     public ResponseEntity<Komentarz> addKomentarzToPost(
-                    @PathVariable("post-id") String postId, 
+                  //  @PathVariable("post-id") String postId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     @Parameter() @RequestPart("file") MultipartFile file,
                     Authentication connectedUser) throws FileUploadException {
-        return ResponseEntity.ok(komentarzService.addKomentarzToPost(postId, request, file, connectedUser));
+        return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, file, connectedUser));
     }
 
-    @PostMapping(value =  "wiadomosciPrywatne/{other-uzyt-nazwa}/", consumes = "multipart/form-data")
+    @PostMapping(value =  "/wiadomosciPrywatne/{other-uzyt-nazwa}", consumes = "multipart/form-data")
     public ResponseEntity<Komentarz> addKomentarzToWiadomoscPrywatna(
                     @PathVariable("other-uzyt-nazwa") String otherUzytNazwa, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -93,7 +94,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(otherUzytNazwa, request, file, connectedUser));
     }
 
-    @PostMapping("wiadomosciPrywatne/{other-uzyt-nazwa}/")
+    @PostMapping("/wiadomosciPrywatne/{other-uzyt-nazwa}")
     public ResponseEntity<Komentarz> addKomentarzToWiadomoscPrywatna(
                     @PathVariable("other-uzyt-nazwa") String otherUzytNazwa, 
                     @Valid @RequestBody KomentarzRequest request, 

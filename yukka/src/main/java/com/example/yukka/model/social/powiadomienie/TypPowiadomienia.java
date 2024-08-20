@@ -2,7 +2,7 @@ package com.example.yukka.model.social.powiadomienie;
 
 public enum TypPowiadomienia {
     KOMENTARZ_POST("{uzytkownikNazwa} odpowiedzial na twój komentarz pod postem {tytul}"),
-    WIADOMOSC_PRYWATNA("{uzytkownikNazwa} odpowiedzial w wiadomosci prywatnej {tytul}"),
+    WIADOMOSC_PRYWATNA("{uzytkownikNazwa} odpowiedzial tobie w wiadomosci prywatnej"),
     POLUBIENIA_POST("Twój post {tytul} zebrał ponad {iloscPolubien} polubień!"),
     OWOCOWANIE_ROSLIN("Za {data} twoje rośliny {nazwyRoslin} zaczną owocować!"),
     PODLEWANIE_ROSLIN("Za {data} powinieneś podlać następujące rośliny: {nazwyRoslin}"),
@@ -11,7 +11,8 @@ public enum TypPowiadomienia {
     ODBANOWANIE("Zostałeś odbanowany"),
     OCENA_ROSLINY("Ktoś ocenił twoją roślinę {tytul} {odnosnik}"),
     USUNIECIE_ROSLINY("Twoja roślina została usunięta bo tak"),
-    GRATULACJE("Gratulacje użytkowniku! Zyskałeś ponad {iloscPolubien} polubień!");
+    GRATULACJE("Gratulacje użytkowniku! Zyskałeś ponad {iloscPolubien} polubień!"),
+    SPECJALNE("Specjalne powiadomienie: {tytul}");
 
     private final String template;
 

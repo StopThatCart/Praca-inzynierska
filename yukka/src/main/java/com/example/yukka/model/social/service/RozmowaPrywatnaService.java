@@ -59,14 +59,14 @@ public class RozmowaPrywatnaService {
             throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
         }
 
-        if (rozmowaPrywatnaRepository.findRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId()).isPresent()) {
+        if (rozmowaPrywatnaRepository.findRozmowaPrywatnaByUzytId(nadawca.getUzytId(), odbiorca.getUzytId()).isPresent()) {
             throw new EntityAlreadyExistsException("Rozmowa prywatna już istnieje");
         }
 
-        return rozmowaPrywatnaRepository.saveRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
+        return rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
     }
 
-    public RozmowaPrywatna inviteToRozmowaPrywatnaNoPunjabi(String odbiorcaId, Uzytkownik currentUser) {
+    public RozmowaPrywatna inviteToRozmowaPrywatnaNoPunjabi(Uzytkownik currentUser, String odbiorcaId) {
         Uzytkownik nadawca = currentUser;
         Uzytkownik odbiorca = uzytkownikRepository.findByUzytId(odbiorcaId)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o uzytId: " + odbiorcaId));
@@ -79,7 +79,7 @@ public class RozmowaPrywatnaService {
       //      throw new EntityAlreadyExistsException("Rozmowa prywatna już istnieje");
       //  }
 
-        return rozmowaPrywatnaRepository.saveRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
+        return rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
     }
 
     // TODO: Dodać implementację, że tylko nadawcaId może zaakceptować rozmowę
@@ -92,7 +92,7 @@ public class RozmowaPrywatnaService {
             throw new IllegalArgumentException("Nie można akceptować rozmowy z samym sobą");
         }
 
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatna(odbiorca.getUzytId(), nadawca.getUzytId())
+        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaByUzytId(odbiorca.getUzytId(), nadawca.getUzytId())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
 
         if (rozmowa.isAktywna()) {
@@ -100,7 +100,7 @@ public class RozmowaPrywatnaService {
         }
 
         rozmowa.setAktywna(true);
-        return rozmowaPrywatnaRepository.acceptRozmowaPrywatna(odbiorca.getUzytId(), nadawca.getUzytId(), rozmowa);
+        return rozmowaPrywatnaRepository.acceptRozmowaPrywatna(odbiorca.getUzytId(), nadawca.getUzytId());
     }
 
     public RozmowaPrywatna acceptRozmowaPrywatnaNoPunjabi(String nadawcaId, Uzytkownik currentUser) {
@@ -112,7 +112,7 @@ public class RozmowaPrywatnaService {
             throw new IllegalArgumentException("Nie można akceptować rozmowy z samym sobą");
         }
 
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatna(odbiorca.getUzytId(), nadawca.getUzytId())
+        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaByUzytId(odbiorca.getUzytId(), nadawca.getUzytId())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
 
         if (rozmowa.isAktywna()) {
@@ -123,7 +123,7 @@ public class RozmowaPrywatnaService {
         System.out.println("Odbiorca: " + odbiorca.getUzytId());
         System.out.println("Rozmowa: " + rozmowa.toString());
         rozmowa.setAktywna(true);
-        return rozmowaPrywatnaRepository.acceptRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId(), rozmowa);
+        return rozmowaPrywatnaRepository.acceptRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
     }
 
     public void rejectRozmowaPrywatna(String nadawcaId, Authentication currentUser) {
@@ -135,7 +135,7 @@ public class RozmowaPrywatnaService {
             throw new IllegalArgumentException("Nie można odrzucać rozmowy z samym sobą");
         }
 
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatna(odbiorca.getUzytId(), nadawca.getUzytId())
+        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaByUzytId(odbiorca.getUzytId(), nadawca.getUzytId())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
 
         if (rozmowa.isAktywna()) {
@@ -154,6 +154,6 @@ public class RozmowaPrywatnaService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("priv.ostatnioAktualizowane").descending());
         Page<RozmowaPrywatna> rozmowy = rozmowaPrywatnaRepository.findRozmowyPrywatneOfUzytkownik(uzyt.getEmail(), pageable);
 
-        return commonMapperService.rozmowaPrywatnaResponsetoPageRozmowaPrywatnaResponse(rozmowy);
+        return commonMapperService.rozmowaPrywatnaPagetoPageRozmowaPrywatnaResponse(rozmowy);
     }
 }

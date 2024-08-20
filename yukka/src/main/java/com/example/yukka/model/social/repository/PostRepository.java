@@ -24,15 +24,25 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
     Optional<Post> findPostByPostIdButWithPath(@Param("postId") String postId);
      
     @Query("""
-        MATCH (post:Post{postId: $postId})<-[:MA_POST]-(:Uzytkownik)
+        MATCH (post:Post{postId: $postId})<-[r1:MA_POST]-(autor:Uzytkownik)
         OPTIONAL MATCH (post)-[:MA_KOMENTARZ]->(kom:Komentarz)
         OPTIONAL MATCH (kom)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
         OPTIONAL MATCH (uzytkownik)-[:SKOMENTOWAL]->(odpowiedz)
 
-        WITH post, collect(DISTINCT odpowiedz) AS komentarze, collect(DISTINCT uzytkownik) AS uzytkownicy
-        RETURN post, komentarze, uzytkownicy
+        WITH post, r1, autor, collect(DISTINCT odpowiedz) AS komentarze, collect(DISTINCT uzytkownik) AS uzytkownicy
+        RETURN post, r1, autor, komentarze, uzytkownicy
         """)
     Optional<Post> findPostByPostId(@Param("postId") String postId);
+
+
+    @Query("""
+        MATCH (kom2:Komentarz {komentarzId: $komentarzId})
+        WITH kom2
+        OPTIONAL MATCH (kom2)-[:ODPOWIEDZIAL*0..]->(kom1:Komentarz)<-[:MA_KOMENTARZ]-(post:Post)
+        RETURN post
+        """)
+    Optional<Post> findPostByKomentarzOdpowiedzId(@Param("komentarzId") String komentarzId);
+
 
         @Query("""
             MATCH (post:Post)<-[r1:MA_POST]-(uzyt:Uzytkownik{email: $email})

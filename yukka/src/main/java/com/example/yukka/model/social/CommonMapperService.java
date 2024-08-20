@@ -63,7 +63,7 @@ public class CommonMapperService {
             .build();
     }
 
-        public PageResponse<RozmowaPrywatnaResponse> rozmowaPrywatnaResponsetoPageRozmowaPrywatnaResponse(Page<RozmowaPrywatna> rozmowyPrywatne) {
+    public PageResponse<RozmowaPrywatnaResponse> rozmowaPrywatnaPagetoPageRozmowaPrywatnaResponse(Page<RozmowaPrywatna> rozmowyPrywatne) {
             List<RozmowaPrywatnaResponse> rozmowyPrywatneResponse = rozmowyPrywatne.getContent().stream()
             .map(this::toRozmowaPrywatnaResponse)
             .collect(Collectors.toList());
