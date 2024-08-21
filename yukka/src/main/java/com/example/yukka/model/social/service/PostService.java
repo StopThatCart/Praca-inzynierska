@@ -2,6 +2,7 @@ package com.example.yukka.model.social.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,9 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
+import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostMapper;
 import com.example.yukka.model.social.post.PostResponse;
+import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
@@ -35,6 +38,7 @@ public class PostService {
     private Integer postAddCD;
 
     private final PostRepository postRepository;
+    private final KomentarzRepository komentarzRepository;
     private final UzytkownikRepository uzytkownikRepository;
     private final FileStoreService fileStoreService;
     private final PostMapper postMapper;
@@ -118,6 +122,26 @@ public class PostService {
         if(uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
             postRepository.deletePost(postId);
         }
+    }
+
+    public void deletePost(String postId, Uzytkownik connectedUser) {
+        Uzytkownik uzyt = connectedUser;
+        Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+      //  if(uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
+       //     postRepository.deletePost(postId);
+      //  }
+        List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(postId);
+        postRepository.deletePost(postId);
+
+        for (Uzytkownik u : uzytkownicyInPost) {
+
+            System.out.println("Aktualizacja użytownika LE POST: " + u.getNazwa());
+            komentarzRepository.updateUzytkownikKomentarzeOcenyCount(u.getUzytId());
+        }
+
+
+        System.out.println("Flex");
+       // komentarzRepository.updateUzytkownikKomentarzeOcenyCount(uzytkownicyInPost);
     }
 
     /* 

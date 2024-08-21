@@ -78,16 +78,41 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})
             MATCH (post:Post{postId: $postId})
-            MERGE (uzyt)-[relu:OCENIL{lubi: $ocena}]->(post)
+            MERGE (uzyt)-[relu:OCENIL]->(post)
+            ON CREATE SET relu.lubi = $ocena
+            ON MATCH SET relu.lubi = $ocena
 
             WITH post
             MATCH (post)<-[r:OCENIL]-(uzyt)
             WITH post, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
             COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
             SET post.ocenyLubi = ocenyLubi, post.ocenyNieLubi = ocenyNieLubi
+
+            WITH post
+            OPTIONAL MATCH (oceniany:Uzytkownik)-[:MA_POST]->(post)<-[r2:OCENIL]-(uzyt:Uzytkownik)
+                WHERE oceniany <> uzyt
+            WITH post, oceniany,  
+                COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
+                COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
+            SET oceniany.postyOcenyPozytywne = ocenyPozytywne, 
+                oceniany.postyOcenyNegatywne = ocenyNegatywne
+
             RETURN post
             """)
     Post addOcenaToPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
+
+
+    @Query("""
+        MATCH (post:Post{postId: $postId})
+        OPTIONAL MATCH (oceniany:Uzytkownik)-[:MA_POST]->(post)<-[r2:OCENIL]-(uzyt:Uzytkownik)
+            WHERE oceniany <> uzyt
+        WITH post, oceniany,  
+            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
+            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
+        SET oceniany.postyOcenyPozytywne = ocenyPozytywne, 
+            oceniany.postyOcenyNegatywne = ocenyNegatywne
+        """)
+    void updateOcenyCountOfPost(@Param("postId") String postId);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})-[relu:OCENIL]->(post:Post{postId: $postId})
@@ -99,8 +124,17 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
         SET post.ocenyLubi = ocenyLubi, post.ocenyNieLubi = ocenyNieLubi
 
+        WITH post
+        OPTIONAL MATCH (oceniany:Uzytkownik)-[:MA_POST]->(post)<-[r2:OCENIL]-(uzyt:Uzytkownik)
+            WHERE oceniany <> uzyt
+        WITH post, oceniany,  
+            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
+            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
+        SET oceniany.postyOcenyPozytywne = ocenyPozytywne, 
+            oceniany.postyOcenyNegatywne = ocenyNegatywne
+
         """)
-    void removeOcenaFromPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
+    void removeOcenaFromPost(@Param("email") String email, @Param("postId") String postId);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
@@ -119,13 +153,15 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         """)
     void updatePostObraz(@Param("postId") String postId, @Param("obraz") String obraz);
 
+    // Po wykonaiu tej funkcji trzeba robić update ocen posta oraz komentarzy
+    // Ewentualnie porzucić te atrybuty i tylko zwracać liczbę ocen/komentarzy w countach
     @Query("""
         MATCH (post:Post {postId: $postId})
     
         OPTIONAL MATCH (post)-[:MA_KOMENTARZ]->(komentarz:Komentarz)
         OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
             
-        WITH post,komentarz, collect(odpowiedz) AS odpowiedzi
+        WITH post, komentarz, collect(odpowiedz) AS odpowiedzi
         UNWIND odpowiedzi AS odp
         DETACH DELETE odp
 
@@ -136,6 +172,29 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         """)
     void deletePost(@Param("postId") String postId);
 
+    @Query("""
+        MATCH (post:Post {postId: $postId})
+        OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(komentarz:Komentarz)
+        DETACH DELETE komentarz
+
+        WITH post
+        DETACH DELETE post
+        """)
+    void deletePostButBetter(@Param("postId") String postId);
+
+    // Nie używaj
+    /* 
+    @Query("""
+        MATCH (post:Post{postId: $postId})
+        OPTIONAL MATCH (post)<-[:MA_POST]-(uzyt:Uzytkownik)
+        OPTIONAL MATCH (post)-[:MA_KOMENTARZ]->()<-[:SKOMENTOWAL]-(uzyt2:Uzytkownik)
+        OPTIONAL MATCH (post)<-[:OCENIL]-(uzyt3:Uzytkownik)
+        WITH post, COLLECT(DISTINCT uzyt) + COLLECT(DISTINCT uzyt2) + COLLECT(DISTINCT uzyt3) AS uzytkownicy
+        RETURN uzytkownicy
+        """)
+    List<Uzytkownik> getConnectedUzytkownicyFromPost(@Param("postId") String postId);
+
+*/
     @Query("""
         MATCH (u:Post) 
         DETACH DELETE u 

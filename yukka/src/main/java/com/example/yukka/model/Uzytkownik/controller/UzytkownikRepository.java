@@ -14,6 +14,17 @@ import com.example.yukka.model.uzytkownik.Uzytkownik;
 public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> {
 
     @Query("""
+        MATCH (post:Post{postId: $postId})
+        OPTIONAL MATCH (post)<-[:MA_POST]-(uzyt:Uzytkownik)
+        OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(:Komentarz)<-[:SKOMENTOWAL]-(uzyt2:Uzytkownik)
+        OPTIONAL MATCH (post)<-[:OCENIL]-(uzyt3:Uzytkownik)
+        WITH post, COLLECT(DISTINCT uzyt) + COLLECT(DISTINCT uzyt2) + COLLECT(DISTINCT uzyt3) AS uzytkownicy
+        UNWIND uzytkownicy AS uzytkownik
+        RETURN DISTINCT uzytkownik
+        """)
+    List<Uzytkownik> getConnectedUzytkownicyFromPostButBetter(@Param("postId") String postId);
+
+    @Query("""
         MATCH (u:Uzytkownik{uzytId: $uzytId})
         RETURN u
         """)

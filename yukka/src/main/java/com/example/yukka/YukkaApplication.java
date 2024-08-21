@@ -23,6 +23,7 @@ import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.social.service.KomentarzService;
+import com.example.yukka.model.social.service.PostService;
 import com.example.yukka.model.social.service.RozmowaPrywatnaService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
@@ -42,6 +43,7 @@ public class YukkaApplication {
 	private final UzytkownikService uzytkownikService;
 
 	private final PostRepository postRepository;
+	private final PostService postService;
 	private final KomentarzRepository komentarzRepository;
 	private final RozmowaPrywatnaService rozmowaPrywatnaService;
 	private final RozmowaPrywatnaRepository rozmowaPrywatnaRepository;
@@ -194,14 +196,16 @@ public class YukkaApplication {
 
 		// To samo, tylko daje powiadomienia użytkownikom
 		
-		Komentarz kom1 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 1").targetId(postId1).build(), usPiotr);
-		Komentarz kom2 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3").targetId(postId3).build(), usKatarzyna);
-		System.out.println("Komentarz 2: " + kom2.toString());
-		Komentarz kom3 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3").targetId(postId3).build(), usPiotr);
+		Komentarz kom1 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 1 od Piotra").targetId(postId1).build(), usPiotr);
+		Komentarz kom2 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3 od Katarzyny").targetId(postId3).build(), usKatarzyna);
+		//System.out.println("Komentarz 2: " + kom2.toString());
+		Komentarz kom3 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3 od Piotra").targetId(postId3).build(), usPiotr);
 
 		Komentarz kom4 = komentarzService.addOdpowiedzToKomentarz(KomentarzRequest.builder().opis("Piotr2 opis").targetId(kom2.getKomentarzId()).build(), usPiotr);
 		Komentarz kom5 = komentarzService.addOdpowiedzToKomentarz(KomentarzRequest.builder().opis("Kata2 opis").targetId(kom2.getKomentarzId()).build(), usKatarzyna);
-	//	Komentarz kom6 = komentarzService.addOdpowiedzToKomentarz(KomentarzRequest.builder().opis("Kata3 opis").targetId(kom5.getKomentarzId()).build(), usKatarzyna);
+		Komentarz kom6 = komentarzService.addOdpowiedzToKomentarz(KomentarzRequest.builder().opis("Kata3 opis").targetId(kom5.getKomentarzId()).build(), usKatarzyna);
+
+		Komentarz kom7 = komentarzService.addOdpowiedzToKomentarz(KomentarzRequest.builder().opis("Michał opis").targetId(kom4.getKomentarzId()).build(), usMichal);
 
 				
 
@@ -210,12 +214,27 @@ public class YukkaApplication {
 	//	System.out.println("\n\n\nocenia1\n\n\n\n\n\n");
 		//komentarzRepository.addOcenaToKomentarz(piotrEmail, komId2, false);
 	//	System.out.println("ocenia2");
-	//	komentarzRepository.addOcenaToKomentarz(katarzynaEmail, komId1, true);
+		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom1.getKomentarzId(), true);
+		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom3.getKomentarzId(), false);
+		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom4.getKomentarzId(), false);
+		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom7.getKomentarzId(), false);
+
 	//	System.out.println("ocenia3");
-	//	komentarzRepository.addOcenaToKomentarz(piotrEmail, komId4, true); 
-	//	komentarzRepository.addOcenaToKomentarz(katarzynaEmail, komId3, false);
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom1.getKomentarzId(), true);
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom2.getKomentarzId(), false);
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom3.getKomentarzId(), true); 
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom4.getKomentarzId(), false); 
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom5.getKomentarzId(), true);
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom6.getKomentarzId(), true);
+
+		komentarzRepository.addOcenaToKomentarz(piotrEmail, kom2.getKomentarzId(), false);
+		komentarzRepository.addOcenaToKomentarz(piotrEmail, kom5.getKomentarzId(), false);
+		 
 		//komentarzRepository.addOcenaToKomentarz(piotrEmail, komId5, true); 
-		
+
+		// Usunięcie oceny
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom3.getKomentarzId(), false);
+		//komentarzRepository.removeOcenaFromKomentarz(michalEmail, kom3.getKomentarzId());
 
 		// Rozmowy prywatne
 
@@ -234,7 +253,7 @@ public class YukkaApplication {
 
 		// Akceptacja rozmowy prywatnej
 		RozmowaPrywatna meh = rozmowaPrywatnaRepository.acceptRozmowaPrywatna(piotr.getUzytId(), katarzyna.getUzytId());
-		System.out.println("Meh: " + meh.toString());
+		//System.out.println("Meh: " + meh.toString());
 		//rozmowaPrywatnaService.acceptRozmowaPrywatnaNoPunjabi(katarzyna.getNazwa(), piotr);
 
 		// Dodanie komentarzy do rozmowy prywatnej
@@ -264,6 +283,13 @@ public class YukkaApplication {
 
 		//System.out.println("Czas: " + timeAgo(what));
 		//testPrettyTime();
+
+		// Testowanie usuwanka
+		System.out.println("Usuwanie komentarzy");
+		komentarzService.deleteKomentarzFromPost(postId3, kom4.getKomentarzId(), usJan);
+
+		System.out.println("Usuwanie posta");
+		postService.deletePost(postId3, usJan);
 	}
 
 	public static String timeAgo(LocalDateTime dateTime) {

@@ -1,6 +1,7 @@
 package com.example.yukka.model.social.service;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -370,13 +371,40 @@ public class KomentarzService {
 
     public void deleteKomentarzFromPost(String postId, String komentarzId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        postRepository.findPostByPostId(postId).orElseThrow(
-            () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId)
-        );
+        Post post = postRepository.findPostByPostId(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
         Komentarz kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
                 .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik(), connectedUser))
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
+
+        List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(post.getPostId());
         komentarzRepository.removeKomentarz(kom.getKomentarzId());
+        
+        komentarzRepository.updateUzytkownikKomentarzeOcenyCount(uzytkownicyInPost);
+        komentarzRepository.updateKomentarzeCountInPostButWithFunniNewRelation(post.getPostId());
+    }
+
+    public void deleteKomentarzFromPost(String postId, String komentarzId, Uzytkownik connectedUser) {
+        Uzytkownik uzyt = connectedUser;
+        Post post = postRepository.findPostByPostId(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+        Komentarz kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
+
+        System.out.println("Pobieranie użytowników z posta");
+      //  List<Uzytkownik> uzytkownicyInPost = postRepository.getConnectedUzytkownicyFromPostButBetter(post.getPostId());
+        List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(post.getPostId());
+        komentarzRepository.removeKomentarz(kom.getKomentarzId());
+
+        System.out.println("Aktualizacja użytowników");
+        for (Uzytkownik u : uzytkownicyInPost) {
+
+            System.out.println("Aktualizacja użytownika: " + u.getNazwa());
+            komentarzRepository.updateUzytkownikKomentarzeOcenyCount(u.getUzytId());
+        }
+
+        System.out.println("Flex");
+      //  komentarzRepository.updateUzytkownikKomentarzeOcenyCount(uzytkownicyInPost);
+
+        System.out.println("Aktualizacja posta");
+        komentarzRepository.updateKomentarzeCountInPostButWithFunniNewRelation(post.getPostId());
     }
 
     // Pomocnicze
