@@ -8,7 +8,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.ogrod.Ogrod;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,18 +24,21 @@ import lombok.Setter;
 @Node
 public class Dzialka {
 
-    
     @Id @GeneratedValue
     private Long id;
 
     @Property("numer")
     private int numer;
 
-    @Property("pola")
-    private int[][] pola;
+  //  @Property("pola")
+  //  private int[][] pola;
 
-    @Property("uzytkownik")
-    private Uzytkownik uzytkowni;
+  //  @Property("uzytkownik")
+ //   private Uzytkownik uzytkownik;
+
+
+    @Relationship(type = "MA_DZIALKE", direction = Relationship.Direction.INCOMING)
+    private Ogrod ogrod;
 
     // Zwykla roslina
     @Relationship(type = "ZASADZONA_NA", direction = Relationship.Direction.INCOMING)

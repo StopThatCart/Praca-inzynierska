@@ -112,7 +112,7 @@ public class KomentarzService {
 
 
     public void removeOcenaFromKomentarz(OcenaRequest request, Authentication connectedUser) {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(request.getOcenialnyId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
 
         if(komentarz.getRozmowaPrywatna() != null) {

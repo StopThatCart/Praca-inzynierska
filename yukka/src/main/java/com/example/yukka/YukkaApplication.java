@@ -15,6 +15,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.yukka.model.dzialka.Dzialka;
+import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
+import com.example.yukka.model.dzialka.repository.DzialkaRepository;
+import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.repository.KomentarzRepository;
@@ -49,7 +53,8 @@ public class YukkaApplication {
 	private final RozmowaPrywatnaRepository rozmowaPrywatnaRepository;
 	private final KomentarzService komentarzService;
 
-
+	private final DzialkaService dzialkaService;
+	private final DzialkaRepository dzialkaRepository;
 
 	private final RoslinaImporterService roslinaImporterService;
 
@@ -285,11 +290,41 @@ public class YukkaApplication {
 		//testPrettyTime();
 
 		// Testowanie usuwanka
-		System.out.println("Usuwanie komentarzy");
-		komentarzService.deleteKomentarzFromPost(postId3, kom4.getKomentarzId(), usJan);
+		//System.out.println("Usuwanie komentarzy");
+		//komentarzService.deleteKomentarzFromPost(postId3, kom4.getKomentarzId(), usJan);
 
-		System.out.println("Usuwanie posta");
-		postService.deletePost(postId3, usJan);
+		//System.out.println("Usuwanie posta");
+		//postService.deletePost(postId3, usJan);
+
+		DzialkaRoslinaRequest req = DzialkaRoslinaRequest.builder()
+		.numerDzialki(1).x(1).y(1)
+		.nazwaLacinskaRosliny("symphytum grandiflorum'goldsmith'")
+		.build();
+
+		DzialkaRoslinaRequest req2 = DzialkaRoslinaRequest.builder()
+		.numerDzialki(2).x(1).y(1)
+		.nazwaLacinskaRosliny("taxus baccata'adpressa'")
+		.build();
+
+		DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
+		.numerDzialki(2).x(1).y(1)
+		.nazwaLacinskaRosliny("Takiej rośliny nie ma")
+		.build();
+
+		dzialkaService.saveRoslinaToDzialka(req, usPiotr);
+
+
+		dzialkaService.saveRoslinaToDzialka(req2, usPiotr);
+
+		// Wywala exception i słusznie
+		//dzialkaService.saveRoslinaToDzialka(req3, usPiotr);
+
+		Dzialka piotrDzialka2 = dzialkaRepository.getDzialkaByNumer(usPiotr.getEmail(), 2).get();
+
+		System.out.println("Dzialka 2: " + piotrDzialka2.toString());
+
+
+
 	}
 
 	public static String timeAgo(LocalDateTime dateTime) {

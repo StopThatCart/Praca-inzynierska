@@ -86,7 +86,7 @@ public class Uzytkownik implements UserDetails, Principal{
 
     @Relationship(type = "MA_USTAWIENIA", direction = Relationship.Direction.OUTGOING)
     // Daj List jak nie działa
-    private MaUstawienia ustawienia;
+    private Ustawienia ustawienia;
     
     @Relationship(type = "MA_OGROD", direction = Relationship.Direction.OUTGOING)
     private Ogrod ogrod;

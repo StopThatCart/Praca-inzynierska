@@ -28,6 +28,9 @@ public class ZasadzonaNa {
 
     @Property("y")
     private int y;
+
+    @Property("obraz")
+    private String obraz;
     
     @TargetNode
     private Dzialka dzialka;

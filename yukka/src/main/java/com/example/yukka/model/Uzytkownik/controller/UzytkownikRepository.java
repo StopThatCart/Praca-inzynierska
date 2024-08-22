@@ -42,22 +42,6 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         """)
     Optional<Uzytkownik> findByEmail(@Param("email") String email);
 
-    @Query("""
-            MATCH (u:Uzytkownik) DETACH DELETE u 
-            WITH u
-            MATCH(ust:Ustawienia) DETACH DELETE ust
-            WITH ust
-            MATCH(roz:RozmowaPrywatna)
-            OPTIONAL MATCH (roz)-[:MA_WIADOMOSC]->(kom:Komentarz)
-            DETACH DELETE roz, kom
-            WITH roz
-            MATCH (powiadomienie:Powiadomienie)
-            DETACH DELETE powiadomienie
-            WITH powiadomienie
-            MATCH (u:Uzytkownik)
-            DETACH DELETE u 
-            """)
-    void clearUzytkowicy();
 
     @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa OR u.email = $email RETURN u")
     Optional<Uzytkownik> checkIfUzytkownikExists(@Param("nazwa") String nazwa, @Param("email") String email);
@@ -119,9 +103,9 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         WITH u, ustawienia
         CREATE(u)-[:MA_USTAWIENIA]->(ustawienia)
         WITH u
-        CREATE(u)-[:MA_OGROD]->(o:Ogrod)
+        CREATE(u)-[:MA_OGROD]->(o:Ogrod{nazwa: "Ogród użytkownika " + u.nazwa})
         WITH u, o
-        FOREACH (i IN RANGE(1, 20) |
+        FOREACH (i IN RANGE(1, 10) |
             CREATE (o)-[:MA_DZIALKE]->(d:Dzialka {numer: i})
         )
         RETURN u
@@ -136,9 +120,9 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         WITH u, ustawienia
         CREATE(u)-[:MA_USTAWIENIA]->(ustawienia)
         WITH u
-        CREATE(u)-[:MA_OGROD]->(o:Ogrod)
+        CREATE(u)-[:MA_OGROD]->(o:Ogrod{nazwa: "Ogród użytkownika " + u.nazwa})
         WITH u, o
-        FOREACH (i IN RANGE(1, 20) |
+        FOREACH (i IN RANGE(1, 10) |
             CREATE (o)-[:MA_DZIALKE]->(d:Dzialka {numer: i})
         )
         RETURN u
@@ -175,6 +159,28 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             DETACH DELETE u 
             """)
     void removeUzytkownik(@Param("email") String email);
+
+    @Query("""
+        MATCH (u:Uzytkownik) DETACH DELETE u 
+        WITH u
+        MATCH(ust:Ustawienia) DETACH DELETE ust
+        WITH ust
+        MATCH(roz:RozmowaPrywatna)
+        OPTIONAL MATCH (roz)-[:MA_WIADOMOSC]->(kom:Komentarz)
+        DETACH DELETE roz, kom
+        WITH roz
+        MATCH (powiadomienie:Powiadomienie)
+        DETACH DELETE powiadomienie
+        WITH powiadomienie
+        MATCH (o:Ogrod)
+        OPTIONAL MATCH (o)-[:MA_DZIALKE]->(d:Dzialka)
+        DETACH DELETE d, o
+        WITH d
+        MATCH (u:Uzytkownik)
+        DETACH DELETE u 
+
+        """)
+void clearUzytkowicy();
 
 
 
