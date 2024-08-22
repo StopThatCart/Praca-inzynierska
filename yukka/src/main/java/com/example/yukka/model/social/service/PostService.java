@@ -113,7 +113,17 @@ public class PostService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
 
-        return postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
+        post =  postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
+        postRepository.updateOcenyCountOfPost(post.getPostId());
+        return post;
+    }
+
+    public void removeOcenaFromPost(OcenaRequest request, Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
+
+        postRepository.removeOcenaFromPost(uzyt.getEmail(), post.getPostId());
+        postRepository.updateOcenyCountOfPost(post.getPostId());
     }
 
     public void deletePost(String postId, Authentication connectedUser) {
@@ -134,14 +144,12 @@ public class PostService {
         postRepository.deletePost(postId);
 
         for (Uzytkownik u : uzytkownicyInPost) {
-
             System.out.println("Aktualizacja użytownika LE POST: " + u.getNazwa());
             komentarzRepository.updateUzytkownikKomentarzeOcenyCount(u.getUzytId());
         }
 
-
         System.out.println("Flex");
-       // komentarzRepository.updateUzytkownikKomentarzeOcenyCount(uzytkownicyInPost);
+        postRepository.updateOcenyCountOfPost(post.getPostId());
     }
 
     /* 

@@ -74,9 +74,15 @@ public class PostController {
     }
 
 
-    @PutMapping("/ocena")
+    @PutMapping("/oceny")
     public ResponseEntity<Post> addOcenaToPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(postService.addOcenaToPost(request, connectedUser));
+    }
+
+    @DeleteMapping("/oceny")
+    public ResponseEntity<String> removeOcenaFromPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
+        postService.removeOcenaFromPost(request, connectedUser);
+        return ResponseEntity.noContent().build();
     }
 
 

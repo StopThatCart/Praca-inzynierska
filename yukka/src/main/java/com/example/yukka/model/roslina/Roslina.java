@@ -1,6 +1,7 @@
 package com.example.yukka.model.roslina;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import com.example.yukka.model.dzialka.ZasadzonaNa;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -19,8 +21,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-
 
 @Node
 @NoArgsConstructor
@@ -48,6 +48,14 @@ public class Roslina {
     @Property("obraz")
     @Builder.Default
     private String obraz ="default_plant.jpg";
+
+
+    // Ogrod
+
+    @Relationship(type = "ZASADZONA_NA", direction = Relationship.Direction.OUTGOING)
+    private List<ZasadzonaNa> roslina;
+
+    // Wlasciwosci
 
     @Relationship(type = "MA_FORME", direction = Relationship.Direction.OUTGOING)
     @Builder.Default

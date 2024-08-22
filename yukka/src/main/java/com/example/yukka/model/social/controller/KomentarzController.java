@@ -102,9 +102,16 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(otherUzytNazwa, request, connectedUser));
     }
 
+    // Działa też jako update
     @PutMapping("/oceny")
     public ResponseEntity<Komentarz> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addOcenaToKomentarz(request, connectedUser));
+    }
+
+    @DeleteMapping("/oceny")
+    public ResponseEntity<String> removeOcenaFromKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
+        komentarzService.removeOcenaFromKomentarz(request, connectedUser);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{komentarz-id}")

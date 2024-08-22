@@ -21,6 +21,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.yukka.authorities.ROLE;
+import com.example.yukka.model.ogrod.Ogrod;
 import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
@@ -86,6 +87,9 @@ public class Uzytkownik implements UserDetails, Principal{
     @Relationship(type = "MA_USTAWIENIA", direction = Relationship.Direction.OUTGOING)
     // Daj List jak nie działa
     private MaUstawienia ustawienia;
+    
+    @Relationship(type = "MA_OGROD", direction = Relationship.Direction.OUTGOING)
+    private Ogrod ogrod;
 
     @Relationship(type = "JEST_W_ROZMOWIE", direction = Relationship.Direction.OUTGOING)
     private Set<RozmowaPrywatna> rozmowyPrywatne;

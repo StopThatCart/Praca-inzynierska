@@ -30,12 +30,11 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/rest/neo4j/rosliny")
-@Tag(name = "Post")
+@Tag(name = "Roslina")
 public class RoslinaController {
 
     @Autowired
     RoslinaService roslinaService;
-
 
     @GetMapping
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllPosty(

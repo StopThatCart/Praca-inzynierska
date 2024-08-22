@@ -92,13 +92,38 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             )
     void addNewUzytkownikButBadLikeVeryBad(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo);
 */
+
+    /*
+     * ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠤⢤⣄⡤⠤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢀⣠⠤⠀⡴⠋⠀⠀⠀⠀⠀⠉⠒⢌⠉⠛⣽⡲⣄⡀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣠⠾⠉⠀⠀⠀⠀⣄⠀⠀⠀⠀⠀⢀⣀⠀⣥⡤⠜⠊⣈⢻⣆⠀⠀⠀⠀⠀
+⠀⠀⠀⣠⠾⠁⠔⠨⠂⠀⢀⠘⡜⡦⣀⡴⡆⠛⠒⠙⡴⡀⠘⡆⠀⠀⠛⡙⢷⡀⠀⠀⠀
+⠀⠀⡴⠃⠀⠀⠀⠀⢀⣠⡼⠟⡏⡏⠙⣇⢸⡄⠀⠀⢹⠏⠁⢹⡳⣤⠀⠘⡌⣷⠀⠀⠀
+⠀⣸⠃⠀⡠⠖⢲⠀⠀⣸⠃⢰⡇⡇⠀⢸⣌⣇⢀⠀⣸⣷⣀⡼⢣⡇⠀⠀⢹⣹⠀⠀⠀
+⠀⡏⠀⡜⠁⠀⠁⠀⡰⢃⣴⣷⢟⣿⡟⡲⠟⠻⠊⠙⠃⣼⣿⣻⣾⡇⠀⠀⢸⡿⠀⠀⠀
+⠀⡇⠰⡇⠀⢀⡠⠞⡗⢩⡟⢸⡏⠀⢹⡇⠀⠀⠀⠀⠀⢸⣿⠉⢱⣿⠠⢤⣟⠁⠀⠀⠀
+⠀⣧⠀⠉⠉⠉⠀⢸⠦⡸⡅⢸⣏⠒⣱⠇⠀⠀⠀⠀⠀⠀⢿⣅⡽⠙⢦⠀⢈⣳⡄⠀⠀
+⠀⡟⠀⠀⠀⠀⠀⠘⠀⣘⡌⣀⡉⠉⠁⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠁⠀⡸⠛⠜⡷⣠⠀
+⢸⠃⠀⠀⠀⠀⣀⡫⣿⣮⡀⠀⠀⠀⠀⠀⢠⠤⠶⡦⡤⠀⠀⠀⠀⠀⢠⠇⡀⠸⣧⣤⡆
+⡟⠀⠀⠀⠀⠀⠀⡄⢠⠉⢇⠀⡄⠀⠀⠀⠘⢦⣀⡸⠃⠀⠀⠀⢀⡠⠋⠈⠛⢷⡖⠋⠀
+⡇⢀⠀⠀⠀⠀⠀⢇⠀⢕⣺⣿⣅⡀⠀⠀⠀⠀⠀⠀⢀⣠⠤⠒⠉⠀⢠⣄⡶⠋⠀⠀⠀
+⠻⢾⣼⣦⣀⠀⡄⠈⠓⢦⣼⣿⣍⠉⠻⣄⠀⢈⠏⠉⣿⣦⡀⠀⢀⣠⠾⠀⠀⠀⠀⠀⠀
+⠀⠀⠈⠀⠉⠙⠓⠛⣦⡼⠘⣿⣿⣷⣤⣀⣹⠞⢤⣼⣿⣿⠈⢶⡋⠁⠀⠀⠀⠀⠀⠀⠀
+     */
+
+
     @Query("""
         CREATE (u:Uzytkownik) SET u += $uzyt.__properties__
         WITH u
         CREATE (ustawienia:Ustawienia) SET ustawienia += $ustawienia.__properties__
         WITH u, ustawienia
         CREATE(u)-[:MA_USTAWIENIA]->(ustawienia)
-
+        WITH u
+        CREATE(u)-[:MA_OGROD]->(o:Ogrod)
+        WITH u, o
+        FOREACH (i IN RANGE(1, 20) |
+            CREATE (o)-[:MA_DZIALKE]->(d:Dzialka {numer: i})
+        )
         RETURN u
             """
             )
@@ -110,6 +135,12 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         CREATE (ustawienia:Ustawienia) SET ustawienia += $ustawienia.__properties__
         WITH u, ustawienia
         CREATE(u)-[:MA_USTAWIENIA]->(ustawienia)
+        WITH u
+        CREATE(u)-[:MA_OGROD]->(o:Ogrod)
+        WITH u, o
+        FOREACH (i IN RANGE(1, 20) |
+            CREATE (o)-[:MA_DZIALKE]->(d:Dzialka {numer: i})
+        )
         RETURN u
             """
             )

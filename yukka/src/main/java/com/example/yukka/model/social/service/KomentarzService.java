@@ -111,6 +111,23 @@ public class KomentarzService {
     }
 
 
+    public void removeOcenaFromKomentarz(OcenaRequest request, Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(request.getOcenialnyId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
+
+        if(komentarz.getRozmowaPrywatna() != null) {
+            throw new IllegalArgumentException("Nie można oceniać wiadomości w rozmowach prywatnych"); 
+        }
+
+        if(komentarz.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
+            throw new IllegalArgumentException("Nie można oceniać własnych komentarzy");
+        }
+
+        komentarzRepository.removeOcenaFromKomentarz(uzyt.getEmail(), komentarz.getKomentarzId());
+     //   komentarzRepository.updateOcenyCountOfKomentarz(komentarz.getKomentarzId());
+    }
+
+
     public Komentarz addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, @Valid KomentarzRequest request,
         Authentication connectedUser) {
         Uzytkownik nadawca = ((Uzytkownik) connectedUser.getPrincipal());
