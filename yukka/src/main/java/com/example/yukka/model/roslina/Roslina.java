@@ -53,7 +53,7 @@ public class Roslina {
     // Ogrod
 
     @Relationship(type = "ZASADZONA_NA", direction = Relationship.Direction.OUTGOING)
-    private List<ZasadzonaNa> roslina;
+    private List<ZasadzonaNa> dzialki;
 
     // Wlasciwosci
 

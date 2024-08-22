@@ -42,7 +42,18 @@ public class Dzialka {
 
     // Zwykla roslina
     @Relationship(type = "ZASADZONA_NA", direction = Relationship.Direction.INCOMING)
-    private List<ZasadzonaNa> roslina;
+    private List<ZasadzonaNaReverse> zasadzoneRosliny;
 
     // Customowa roslina
+
+
+    @Override
+    public String toString() {
+        return "Dzialka{" +
+                "id=" + id +
+                ", numer=" + numer +
+                ", ogrod=" + ogrod.getNazwa() +
+                ", zasadzoneRosliny=" + zasadzoneRosliny.size() +
+                '}';
+    }
 }

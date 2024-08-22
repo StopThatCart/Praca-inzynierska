@@ -25,7 +25,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
     @Query("""
             MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki}) 
             OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(rosliny)
-            RETURN d, r1, rosliny, collect(nodes(path)), collect(relationships(path))
+            RETURN d, collect(r1), collect(rosliny), collect(nodes(path)), collect(relationships(path))
             """)
     Optional<Dzialka> getDzialkaByNumer(@Param("email") String email, @Param("numerDzialki") int numerDzialki);
 
