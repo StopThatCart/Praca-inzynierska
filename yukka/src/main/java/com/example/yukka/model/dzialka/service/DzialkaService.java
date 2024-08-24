@@ -7,8 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.yukka.file.FileStoreService;
+import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
+import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
@@ -24,6 +27,8 @@ public class DzialkaService {
     private final RoslinaRepository roslinaRepository;
     private final ZasadzonaNaService zasadzonaNaService;
     private final UzytkownikRepository uzytkownikRepository;
+    private final FileStoreService fileStoreService;
+    private final FileUtils fileUtils;
 
 
     // Pobiera działki jakiegoś użytkownika
@@ -58,8 +63,8 @@ public class DzialkaService {
     public Dzialka saveRoslinaToDzialka(DzialkaRoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         // Zawsze zwróci działkę zalogowanego użytkownika
-        Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), request.getNumerDzialki()).orElseThrow(
-            () -> new IllegalArgumentException("Nie znaleziono działki " + request.getNumerDzialki() + " dla użytkownika " + uzyt.getEmail()));
+        Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), request.getNumerDzialki())
+        .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono działki " + request.getNumerDzialki() + " dla użytkownika " + uzyt.getEmail()));
 
         if(dzialkaRepository.checkIfCoordinatesAreOccupied(uzyt.getEmail(), request.getNumerDzialki(), request.getX(), request.getY())) {
             System.out.println("Koordynaty zajęte. Anyway!");
@@ -74,29 +79,45 @@ public class DzialkaService {
     public Dzialka saveRoslinaToDzialka(DzialkaRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         // Zawsze zwróci działkę zalogowanego użytkownika
-        Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), request.getNumerDzialki()).orElseThrow(
-            () -> new IllegalArgumentException("Nie znaleziono działki " + request.getNumerDzialki() + " dla użytkownika " + uzyt.getEmail()));
+        Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), request.getNumerDzialki())
+        .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono działki " + request.getNumerDzialki() + " dla użytkownika " + uzyt.getEmail()));
 
         if(dzialkaRepository.checkIfCoordinatesAreOccupied(uzyt.getEmail(), request.getNumerDzialki(), request.getX(), request.getY())) {
             System.out.println("Koordynaty zajęte. Anyway!");
         };
 
-        Roslina roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinskaRosliny()).orElseThrow(
-            () -> new IllegalArgumentException("Nie znaleziono rośliny " + request.getNazwaLacinskaRosliny()));
+        Roslina roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinskaRosliny())
+        .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rośliny " + request.getNazwaLacinskaRosliny()));
 
         Dzialka dzialkaZRoslina = dzialkaRepository.saveRoslinaToDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
         request.getX(), request.getY(), 
-        request.getObraz(), request.getNazwaLacinskaRosliny());
+        request.getObraz(), roslina.getNazwaLacinska());
         return dzialkaZRoslina;
     }
 
+    public Dzialka updateRoslinaObrazInDzialka(DzialkaRoslinaRequest request, MultipartFile file, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        // Zawsze zwróci działkę zalogowanego użytkownika
+        Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), request.getNumerDzialki())
+        .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono działki " + request.getNumerDzialki() + " dla użytkownika " + uzyt.getEmail()));
 
-    public Dzialka saveUzytkownikRoslinaToDzialka(String nazwaLacinska, int numer, Authentication connectedUser) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if(dzialkaRepository.checkIfCoordinatesAreOccupied(uzyt.getEmail(), request.getNumerDzialki(), request.getX(), request.getY())) {
+            String pfp = fileStoreService.saveRoslinaObrazInDzialka(file, uzyt.getUsername());
+            if(pfp == null){
+                return null;
+            }
+        
+            Dzialka dzialkaZRoslina = dzialkaRepository.updateRoslinaObrazInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
+            request.getX(), request.getY(), pfp);
+
+            return dzialkaZRoslina;
+        } else {
+            return null;
+        }
+
     }
 
-
-    public Dzialka updateRoslinaObrazInDzialka(DzialkaRoslinaRequest request, MultipartFile file, Authentication connectedUser) {
+    public Dzialka saveUzytkownikRoslinaToDzialka(String nazwaLacinska, int numer, Authentication connectedUser) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
@@ -110,6 +131,13 @@ public class DzialkaService {
         if(!uzyt.hasAuthenticationRights(wlasciciel, connectedUser)) {
             throw new AccessDeniedException("Nie masz uprawnień do usunięcia rośliny z działki użytkownika " + dzialka.getOgrod().getUzytkownik().getEmail());
         }
+        ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
+
+        if(pozycja == null) {
+            throw new IllegalArgumentException("Nie znaleziono rośliny na pozycji (" + request.getX() + ", " + request.getY() + ")");
+        }
+
+        fileUtils.deleteObraz(pozycja.getObraz());
 
         dzialkaRepository.removeRoslinaFromDzialka(uzyt.getEmail(), request.getNumerDzialki(), request.getX(), request.getY());
     }

@@ -63,9 +63,30 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Param("obraz") String obraz,
         @Param("nazwaLacinska") String nazwaLacinska);
 
-        
+
 
         @Query("""
+        MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
+              (:Ogrod)-[:MA_DZIALKE]->
+              (d:Dzialka{numer: $numerDzialki})
+        MATCH (roslina:Roslina{nazwaLacinska: $nazwaLacinska})
+
+        MATCH (d)<-[existing:ZASADZONA_NA {x: $x, y: $y}]-(existingRoslina)
+        SET existingRoslina.obraz = coalesce($obraz, existingRoslina.obraz)
+
+        WITH d
+        MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
+              
+        RETURN d, collect(nodes(path)), collect(relationships(path))
+            """)
+    Dzialka updateRoslinaObrazInDzialka(@Param("email") String email,
+        @Param("numerDzialki") int numerDzialki, 
+        @Param("x") int x, @Param("y") int y, 
+        @Param("obraz") String obraz);
+
+        
+
+    @Query("""
             MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
                   (:Ogrod)-[:MA_DZIALKE]->
                   (d:Dzialka{numer: $numerDzialki})
@@ -77,8 +98,8 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
             MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
             
             RETURN d, collect(nodes(path)), collect(relationships(path))
-                """)
-        Dzialka removeRoslinaFromDzialka(@Param("email") String email,
-            @Param("numerDzialki") int numerDzialki, 
-            @Param("x") int x, @Param("y") int y);
+            """)
+    Dzialka removeRoslinaFromDzialka(@Param("email") String email,
+        @Param("numerDzialki") int numerDzialki, 
+        @Param("x") int x, @Param("y") int y);
 }

@@ -43,12 +43,23 @@ public class Dzialka {
     // Zwykla roslina
     @Relationship(type = "ZASADZONA_NA", direction = Relationship.Direction.INCOMING)
     private List<ZasadzonaNaReverse> zasadzoneRosliny;
+    
 
     // Customowa roslina
 
 
+    public ZasadzonaNaReverse getZasadzonaNaByCoordinates(int x, int y) {
+        for (ZasadzonaNaReverse zasadzonaNa : zasadzoneRosliny) {
+            if (zasadzonaNa.getX() == x && zasadzonaNa.getY() == y) {
+                return zasadzonaNa;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
+        
         return "Dzialka{" +
                 "id=" + id +
                 ", numer=" + numer +

@@ -61,6 +61,12 @@ public class FileStoreService {
         return obraz;
     }
 
+    public String saveRoslinaObrazInDzialka(@Nonnull MultipartFile sourceFile, @Nonnull String uzytId) {
+        String fileUploadSubPath = "users" + separator + uzytId + separator + "dzialki" + separator + "rosliny";
+        String fileName = generateFileName(uzytId) + "_" + System.currentTimeMillis();
+        return uploadFile(sourceFile, fileUploadSubPath, fileName);
+    }
+
     public String savePost(@Nonnull MultipartFile sourceFile,
                            @Nonnull String postId, @Nonnull String uzytId) {
         final String fileUploadSubPath = "users" + separator + uzytId + separator + "posty";

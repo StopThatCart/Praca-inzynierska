@@ -1,6 +1,7 @@
 package com.example.yukka.file;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,7 +9,9 @@ import java.nio.file.Paths;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,6 +59,7 @@ public class FileUtils {
     }
 
     public byte[] readKomentarzObrazFile(String fileUrl) {
+        System.out.println("Komentarz: " + fileUrl);
         return readPostObrazFile(fileUrl);
     }
 
@@ -82,9 +86,7 @@ public class FileUtils {
             File imageFile = new File(path.toString());
             if(imageFile.exists()) {
                 return Files.readAllBytes(path);
-            }
-           
-            else {
+            } else {
                 System.out.println("No jest null2");
                 return Files.readAllBytes(Paths.get(defaultRoslinaObrazPath));
             }
@@ -92,5 +94,71 @@ public class FileUtils {
             log.warn("Nie znaleziono pliku w ścieżce {}", path.toString());
         }
         return null;
+    }
+
+    public MultipartFile loadImageFile(Path path) {
+        // Zbudowanie ścieżki do pliku obrazu na podstawie nazwy łacińskiej rośliny
+        
+        File imageFile = new File(path.toString());
+
+        if (imageFile.exists()) {
+            try {
+                String fileName = imageFile.getName();
+                String baseName = fileName;
+
+                if (fileName.endsWith(".jpg")) {
+                    baseName = fileName.substring(0, fileName.length() - 4);
+                } else if (fileName.endsWith(".png")) {
+                    baseName = fileName.substring(0, fileName.length() - 4);
+                }
+              //  log.info("Nazwa pliku: " + baseName + (fileName.endsWith(".jpg") ? ".jpg" : (fileName.endsWith(".png") ? ".png" : "")));
+
+                FileInputStream input = new FileInputStream(imageFile);
+                return new MockMultipartFile(baseName, baseName, "image/jpeg", input);
+            } catch (IOException e) {
+                log.error("Nie udało się załadować pliku obrazu: " + path, e);
+            }
+        } else {
+            log.warn("Plik obrazu nie znaleziony: " + path);
+        }
+    return null;
+    }
+
+    public boolean deleteObraz(String fileUrl) {
+        if (StringUtils.isBlank(fileUrl)) {
+            return false;
+        }
+        if (fileUrl.equals(defaultAvatarObrazName) || fileUrl.equals(defaultRoslinaObrazName)) {
+            System.out.println("Nie można usunąć domyślnego obrazu");
+            return false;
+        }
+
+        Path imagePath = Paths.get(fileUrl);
+        return deleteFile(imagePath);
+    }
+
+    private boolean deleteFile(Path path) {
+        if (path == null) {
+            System.out.println("Ścieżka usuwania jest null");
+            return false;
+        }
+        try {
+            File file = new File(path.toString());
+            if (file.exists()) {
+                if (file.delete()) {
+                    System.out.println("Plik został usunięty");
+                    return true;
+                } else {
+                    System.out.println("Nie udało się usunąć pliku");
+                    return false;
+                }
+            } else {
+                System.out.println("Plik nie istnieje");
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Wystąpił błąd podczas usuwania pliku: " + e.getMessage());
+            return false;
+        }
     }
 }
