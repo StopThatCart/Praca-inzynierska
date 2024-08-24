@@ -64,6 +64,19 @@ public class Uzytkownik implements UserDetails, Principal{
     @Builder.Default
     private String avatar = "default_avatar.png";
 
+    @Property("komentarzeOcenyPozytywne")
+    private int komentarzeOcenyPozytywne;
+
+    @Property("komentarzeOcenyNegatywne")
+    private int komentarzeOcenyNegatywne;
+
+    @Property("postyOcenyPozytywne")
+    private int postyOcenyPozytywne;
+
+    @Property("postyOcenyNegatywne")
+    private int postyOcenyNegatywne;
+
+
     @CreatedDate
     @Property("dataUtworzenia")
     @Builder.Default
@@ -129,10 +142,6 @@ public class Uzytkownik implements UserDetails, Principal{
     @Override
     public String getUsername() {
         return nazwa;
-    }
-
-    public boolean isBan() {
-        return ban;
     }
 
     @Override

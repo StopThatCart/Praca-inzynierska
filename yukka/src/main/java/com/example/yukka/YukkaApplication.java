@@ -99,10 +99,12 @@ public class YukkaApplication {
     }
 
 	void unseed() {
+		uzytkownikService.seedRemoveUzytkownicyObrazy();
 		uzytkownikRepository.clearUzytkowicy();
-		komentarzService.seedRemoveKomentarzeObrazy();
+
+		//komentarzService.seedRemoveKomentarzeObrazy();
 		komentarzRepository.clearKomentarze();
-		postService.seedRemovePostyObrazy();
+		//postService.seedRemovePostyObrazy();
 		postRepository.clearPosts();
 	}
 
@@ -150,6 +152,13 @@ public class YukkaApplication {
 		uzytkownikService.addUzytkownik(usPiotr);
 		uzytkownikService.addUzytkownik(usKatarzyna);
 		uzytkownikService.addUzytkownik(usMichal);
+
+
+		Path adachiPath = Paths.get(obrazSeedPath, "adachi.jpg");
+		MockMultipartFile obrazAvatar1 = new MockMultipartFile("tempFileName", "adachi.jpg", 
+		"image/png", fileUtils.readFileFromLocation(adachiPath));
+
+		uzytkownikService.updateUzytkownikAvatar(obrazAvatar1, usPiotr);
 		
 		
 		String postId1 = UUID.randomUUID().toString();
@@ -312,8 +321,8 @@ public class YukkaApplication {
 		String komId10 = UUID.randomUUID().toString();
 
 		// Do testów
-		Uzytkownik piotr = uzytkownikService.findByEmail(piotrEmail);
-		Uzytkownik katarzyna = uzytkownikService.findByEmail(katarzynaEmail);
+		Uzytkownik piotr = uzytkownikRepository.findByEmail(piotrEmail).get();
+		Uzytkownik katarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
 
 		// Zaproszenie do rozmowy prywatnej
 		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(usKatarzyna.getUzytId(), usPiotr.getUzytId());

@@ -1,6 +1,5 @@
 package com.example.yukka.model.uzytkownik.controller;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
+
+import jakarta.annotation.Nonnull;
 
 public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> {
 
@@ -55,8 +56,9 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
    // List<Uzytkownik> findByLabels(Set<String> labels);
 
 
+    @Override
     @Query("MATCH (u:Uzytkownik) RETURN u")
-    Collection<Uzytkownik> findAllUzytkownicy();
+    @Nonnull List<Uzytkownik> findAll();
 
     /* 
     @Query("""
@@ -133,6 +135,9 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
   //  @Query("CREATE (u:Uzytkownik:`:#{literal(#rola)}` {nazwa: $nazwa, email: $email, haslo: $haslo, data_utworzenia: localdatetime(), ban: false})")
    // void addNewPracownik(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo, @Param("rola") String rola);
 
+    @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.avatar = $avatar RETURN u")
+    Uzytkownik updateAvatar(@Param("email") String email, @Param("avatar") String avatar);
+
 
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.ban = $ban RETURN u")
     Uzytkownik banUzytkownik(@Param("email") String email, @Param("ban") boolean ban);
@@ -140,24 +145,24 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
     // TODO: Zmień jak będą kolejne komponenty dodawane
     @Query("""
-            MATCH (u:Uzytkownik{email: $email})
-            WITH u
+        MATCH (u:Uzytkownik{email: $email})
+        WITH u
 
-            MATCH (u)-[:MA_USTAWIENIA]->(ust:Ustawienia)
-            DETACH DELETE ust
+        MATCH (u)-[:MA_USTAWIENIA]->(ust:Ustawienia)
+        DETACH DELETE ust
 
-            WITH u
-            OPTIONAL MATCH (u)-[:JEST_W_ROZMOWIE]->(rozmowa:RozmowaPrywatna)
-            OPTIONAL MATCH (rozmowa)-[:MA_WIADOMOSC]->(kom:Komentarz)
-            DETACH DELETE kom, rozmowa
-            
-            WITH u
-            MATCH (u)<-[:POWIADAMIA]-(powiadomienie:Powiadomienie)
-            DETACH DELETE powiadomienie
+        WITH u
+        OPTIONAL MATCH (u)-[:JEST_W_ROZMOWIE]->(rozmowa:RozmowaPrywatna)
+        OPTIONAL MATCH (rozmowa)-[:MA_WIADOMOSC]->(kom:Komentarz)
+        DETACH DELETE kom, rozmowa
+        
+        WITH u
+        MATCH (u)<-[:POWIADAMIA]-(powiadomienie:Powiadomienie)
+        DETACH DELETE powiadomienie
 
-            WITH u
-            DETACH DELETE u 
-            """)
+        WITH u
+        DETACH DELETE u 
+        """)
     void removeUzytkownik(@Param("email") String email);
 
     @Query("""
@@ -180,7 +185,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         DETACH DELETE u 
 
         """)
-void clearUzytkowicy();
+    void clearUzytkowicy();
 
 
 

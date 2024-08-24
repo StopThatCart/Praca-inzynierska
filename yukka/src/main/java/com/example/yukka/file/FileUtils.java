@@ -73,7 +73,7 @@ public class FileUtils {
             return readFileFromLocation(imagePath);
         }
 
-        Path imagePath = Paths.get(seedRoslinaObrazyPath, fileUrl);
+        Path imagePath = Paths.get(fileUrl);
         return readFileFromLocation(imagePath);
     }
 
@@ -122,6 +122,35 @@ public class FileUtils {
             log.warn("Plik obrazu nie znaleziony: " + path);
         }
     return null;
+    }
+
+    public boolean deleteDirectory(Path path) {
+        if (path == null) {
+            System.out.println("Ścieżka usuwania jest null");
+            return false;
+        }
+        try {
+            File directory = new File(path.toString());
+            if (directory.exists() && directory.isDirectory()) {
+                File[] files = directory.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (file.isDirectory()) {
+                            deleteDirectory(file.toPath());
+                        } else {
+                            file.delete();
+                        }
+                    }
+                }
+                return directory.delete();
+            } else {
+                System.out.println("Folder nie istnieje lub nie jest folderem");
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Wystąpił błąd podczas usuwania folderu: " + e.getMessage());
+            return false;
+        }
     }
 
     public boolean deleteObraz(String fileUrl) {

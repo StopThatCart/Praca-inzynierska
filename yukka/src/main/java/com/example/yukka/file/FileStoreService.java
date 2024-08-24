@@ -81,13 +81,13 @@ public class FileStoreService {
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
-    public String saveAvatar(@Nonnull MultipartFile sourceFile, @Nonnull String obraz, @Nonnull String uzytId) {
-        if(!obraz.equals(defaultAvatarObrazName)) {
-            String fileUploadSubPath = "users" + separator + uzytId;
-            String fileName = generateFileName(obraz);
-            uploadFile(sourceFile, fileUploadSubPath, fileName);
-        }
-        return obraz;
+    public String saveAvatar(@Nonnull MultipartFile sourceFile, @Nonnull String uzytId) {
+        String fileUploadSubPath = "users" + separator + uzytId;
+        String fileName = uzytId;
+        String avatar = uploadFile(sourceFile, fileUploadSubPath, fileName);
+        if(avatar == null) {
+            return defaultAvatarObrazName;
+        }else return avatar;
     }
     
     private String uploadFile(@Nonnull MultipartFile sourceFile, @Nonnull String fileUploadSubPath, @Nonnull String fileName) {
