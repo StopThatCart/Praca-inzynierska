@@ -42,10 +42,7 @@ public class FileUtils {
             Path imagePath = new File(defaultRoslinaObrazPath).toPath();
             return readFileFromLocation(imagePath);
         }
-     //   System.out.println("Seed: " + avatarDefaultObrazPath);
-      //  System.out.println("Url: " + fileUrl);
-        //System.out.println(": " + avatarDefaultObrazPath);
-        Path imagePath = Paths.get(seedRoslinaObrazyPath, fileUrl);
+        Path imagePath = Paths.get(fileUrl);
         return readFileFromLocation(imagePath);
     }
 

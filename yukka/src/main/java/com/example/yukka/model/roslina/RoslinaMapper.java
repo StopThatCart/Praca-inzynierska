@@ -22,6 +22,47 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RoslinaMapper {
     private final FileUtils fileUtils;
+
+    public UzytkownikRoslinaRequest toUzytkownikRoslinaRequest(UzytkownikRoslina roslina) {
+        return UzytkownikRoslinaRequest.builder()
+            .roslinaId(roslina.getRoslinaId())
+            .nazwa(roslina.getNazwa())
+            .opis(roslina.getOpis())
+            .obraz(roslina.getObraz())
+            .wysokoscMin(roslina.getWysokoscMin())
+            .wysokoscMax(roslina.getWysokoscMax())
+            .wlasciwosci(mapWlasciwosciToMap(roslina))
+            .build();
+    }
+
+    public UzytkownikRoslina toUzytkownikRoslina(@Valid UzytkownikRoslinaRequest request) {
+        UzytkownikRoslina roslina = UzytkownikRoslina.builder()
+            .roslinaId(request.getRoslinaId())
+            .nazwa(request.getNazwa())
+            .opis(request.getOpis())
+            .obraz(request.getObraz())
+            .wysokoscMin(request.getWysokoscMin())
+            .wysokoscMax(request.getWysokoscMax())
+            .build();
+        
+        mapMapToRoslina(roslina, request.getWlasciwosci());
+        
+        return roslina;
+    }
+
+    public UzytkownikRoslinaResponse toUzytkownikRoslinaResponse(UzytkownikRoslina roslina) {
+        return UzytkownikRoslinaResponse.builder()
+                .id(roslina.getId())
+                .roslinaId(roslina.getRoslinaId())
+                .nazwa(roslina.getNazwa())
+                .opis(roslina.getOpis())
+                .wysokoscMin(roslina.getWysokoscMin())
+                .wysokoscMax(roslina.getWysokoscMax())
+                .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
+                .build();
+    }
+
+
     public RoslinaRequest toRoslinaRequest(Roslina roslina) {
         return RoslinaRequest.builder()
             .nazwa(roslina.getNazwa())

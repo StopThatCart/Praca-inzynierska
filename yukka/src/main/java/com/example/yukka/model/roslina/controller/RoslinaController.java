@@ -37,7 +37,7 @@ public class RoslinaController {
     RoslinaService roslinaService;
 
     @GetMapping
-    public ResponseEntity<PageResponse<RoslinaResponse>> findAllPosty(
+    public ResponseEntity<PageResponse<RoslinaResponse>> findAllRosliny(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser) {

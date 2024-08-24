@@ -161,6 +161,16 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         DETACH DELETE powiadomienie
 
         WITH u
+        OPTIONAL MATCH (u)<-[:STWORZONA_PRZEZ]-(roslina:UzytkownikRoslina)
+        OPTIONAL MATCH (roslina)<-[:MA_ROSLINE]-(wl:UzytkownikWlasciwosc)
+        DETACH DELETE roslina
+
+        WITH u
+        MATCH (wlasciwosc:UzytkownikWlasciwosc) 
+        WHERE NOT (wlasciwosc)--()
+        DELETE wlasciwosc
+
+        WITH u
         DETACH DELETE u 
         """)
     void removeUzytkownik(@Param("email") String email);
@@ -181,6 +191,12 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         OPTIONAL MATCH (o)-[:MA_DZIALKE]->(d:Dzialka)
         DETACH DELETE d, o
         WITH d
+
+        MATCH (roslina:UzytkownikRoslina)
+        OPTIONAL MATCH (roslina)<-[:MA_ROSLINE]-(wl:UzytkownikWlasciwosc)
+        DETACH DELETE roslina, wl
+        
+        WITH roslina
         MATCH (u:Uzytkownik)
         DETACH DELETE u 
 

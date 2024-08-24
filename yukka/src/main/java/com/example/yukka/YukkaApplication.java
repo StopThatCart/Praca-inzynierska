@@ -4,7 +4,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -26,6 +29,10 @@ import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.service.DzialkaService;
+import com.example.yukka.model.roslina.Roslina;
+import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
+import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
+import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.repository.KomentarzRepository;
@@ -57,6 +64,9 @@ public class YukkaApplication {
 	private final UzytkownikRepository uzytkownikRepository;
 	private final UzytkownikService uzytkownikService;
 
+	private final UzytkownikRoslinaService uzytkownikRoslinaService;
+	private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
+
 	private final PostRepository postRepository;
 	private final PostService postService;
 	private final KomentarzRepository komentarzRepository;
@@ -71,6 +81,8 @@ public class YukkaApplication {
 
 	private final FileUtils fileUtils;
 	private final FileStoreService fileStoreService;
+
+	private final UzytkownikRoslinaSeeder uzytkownikRoslinaSeeder;
 
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
@@ -394,7 +406,9 @@ public class YukkaApplication {
 
 		System.out.println("Dzialka 2: " + piotrDzialka2.toString());
 
+		// Rosliny uzytkownika 
 
+		uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usMichal);
 
 	}
 

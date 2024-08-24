@@ -121,7 +121,7 @@ public class RoslinaControllerTest {
             .opis(roslinaOpis)
             .wysokoscMin(wysokoscMin)
             .wysokoscMax(wysokoscMax)
-            .obraz(roslinaObraz)
+         //   .obraz(roslinaObraz)
             .formy(new HashSet<>(Arrays.asList(formaDrzewo)))
             .gleby(new HashSet<>(Arrays.asList(glebaPrzecietna, glebaProchniczna, glebaGliniasta)))
             .grupy(new HashSet<>(Arrays.asList(grupaLisciaste)))
@@ -167,7 +167,7 @@ public class RoslinaControllerTest {
             .opis(roslinaOpis)
             .wysokoscMin(wysokoscMin)
             .wysokoscMax(wysokoscMax)
-            .obraz(roslinaObraz)
+           // .obraz(roslinaObraz)
             .build();
 
         RoslinaRequest emptyRoslinaRequest = roslinaMapper.toRoslinaRequest(roslinaWithoutRelations);
