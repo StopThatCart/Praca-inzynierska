@@ -1,42 +1,104 @@
 package com.example.yukka.model.social.service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.example.yukka.YukkaApplication;
 import com.example.yukka.common.PageResponse;
+import com.example.yukka.model.roslina.controller.RoslinaRepository;
+import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.social.powiadomienie.Powiadomienie;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
 import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.PowiadomienieRepository;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@EnableScheduling
 public class PowiadomienieService {
     private final PowiadomienieRepository powiadomienieRepository;
     private final PowiadomienieMapper powiadomienieMapper;
 
+    private final UzytkownikRepository uzytkownikRepository;
+
+    private final RoslinaRepository roslinaRepository;
+    
+
+    @Value("${powiadomienia.obraz.default.name}")
+    private String powiadomienieAvatar;
+
     public PageResponse<PowiadomienieResponse> findPowiadomieniaOfUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-       // Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByEmail(email);
-       // if (targetUzyt.isEmpty() || !uzyt.hasAuthenticationRights(targetUzyt.get(), connectedUser)) {
-      //      return new PageResponse<>();
-      //  }
-       // System.out.println("\n\n\n EMAIL: " + email + "\n\n\n");
-        Pageable pageable = PageRequest.of(page, size, Sort.by("powiadomienie.dataUtworzenia").descending());
-      //  System.out.println("KOMENTARZE:  AAA ");
 
+        Pageable pageable = PageRequest.of(page, size, Sort.by("powiadomienie.dataUtworzenia").descending());
         Page<Powiadomienie> powiadomienia = powiadomienieRepository.findPowiadomieniaOfUzytkownik(uzyt.getEmail(), pageable);
 
         return powiadomienieMapper.PowiadomieniePageToPagePowiadomienieResponse(powiadomienia);
+    }
+
+    
+    @Scheduled(cron = "0 0 0 1 * ?")  // Na początku każdego miesiąca
+    //@Scheduled(fixedDelay=2000L)  // Test co 2 sekundy
+    public void checkOkresyPowiadomienia() {
+        if (!YukkaApplication.isApplicationReady()) {
+            System.out.println("Aplikacja nie jest gotowa do sprawdzania okresów powiadomień");
+            return; 
+        }
+        System.out.println("Sprawdzanie okresów powiadomień");
+        List<Uzytkownik> uzytkownicy = uzytkownikRepository.getUzytkownicyWithRoslinyInDzialki();
+        if(uzytkownicy.isEmpty()) return;
+        
+
+        //Miesiac aktualnyMiesiac = Miesiac.values()[LocalDate.now().getMonthValue() - 1];
+       // System.out.println("Aktualny miesiąc: " + aktualnyMiesiac.name());
+        Miesiac aktualnyMiesiac = Miesiac.MAJ;  // Test
+
+        for (Uzytkownik uzytkownik : uzytkownicy) {
+            Set<String> nazwyRoslinOwocowanie = new HashSet<>();
+            Set<String> nazwyRoslinKwitnienie = new HashSet<>();
+
+            uzytkownik.getOgrod().getDzialki().forEach(dzialka -> {
+                dzialka.getZasadzoneRosliny().forEach(zasadzona -> {
+                    przetworzOkresy(zasadzona.getRoslina().getOkresyOwocowania(), aktualnyMiesiac, nazwyRoslinOwocowanie, zasadzona.getRoslina().getNazwa());
+                    przetworzOkresy(zasadzona.getRoslina().getOkresyKwitnienia(), aktualnyMiesiac, nazwyRoslinKwitnienie, zasadzona.getRoslina().getNazwa());     
+                });
+            });
+            utworzOkresPowiadomienie(nazwyRoslinOwocowanie, TypPowiadomienia.OWOCOWANIE_ROSLIN_TERAZ, uzytkownik);
+            utworzOkresPowiadomienie(nazwyRoslinKwitnienie, TypPowiadomienia.KWITNIENIE_ROSLIN_TERAZ, uzytkownik);
+        }
+    }
+
+    private void przetworzOkresy(Set<Wlasciwosc> okresy, Miesiac aktualnyMiesiac, Set<String> nazwyRoslin, String nazwaRosliny) {
+        okresy.stream()
+              .filter(okres -> okres.getNazwa().equalsIgnoreCase(aktualnyMiesiac.name()))
+              .forEach(okres -> nazwyRoslin.add(nazwaRosliny));
+    }
+
+    private void utworzOkresPowiadomienie(Set<String> nazwyRoslin, TypPowiadomienia typ, Uzytkownik uzytkownik) {
+        if (!nazwyRoslin.isEmpty()) {
+            PowiadomienieResponse powiadomienieRequest = PowiadomienieResponse.builder()
+                    .typ(typ.toString())
+                    .odnosnik(uzytkownik.getUzytId())
+                    .nazwyRoslin(nazwyRoslin)
+                    .build();
+            addPowiadomienie(powiadomienieRequest, uzytkownik);
+        }
     }
 
     public Powiadomienie addPowiadomienie(PowiadomienieResponse request, Uzytkownik uzytkownik) {

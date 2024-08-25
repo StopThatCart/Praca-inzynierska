@@ -4,10 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -29,10 +26,8 @@ import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.service.DzialkaService;
-import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
-import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.repository.KomentarzRepository;
@@ -43,6 +38,7 @@ import com.example.yukka.model.social.request.PostRequest;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.social.service.KomentarzService;
 import com.example.yukka.model.social.service.PostService;
+import com.example.yukka.model.social.service.PowiadomienieService;
 import com.example.yukka.model.social.service.RozmowaPrywatnaService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
@@ -56,6 +52,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class YukkaApplication {
+	// Potrzebne żeby funkcje Scheduled nie działały przed załadowaniem aplikacji
+	private static boolean isApplicationReady = false;
 
 	@Value("${obraz.seed.path}")
     private String obrazSeedPath;
@@ -84,6 +82,8 @@ public class YukkaApplication {
 
 	private final UzytkownikRoslinaSeeder uzytkownikRoslinaSeeder;
 
+	private final PowiadomienieService powiadomienieService;
+
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
 	
@@ -96,10 +96,14 @@ public class YukkaApplication {
 		// PythonPlantSeeder scriptRunner = context.getBean(PythonPlantSeeder.class);
        // String scriptOutput = scriptRunner.runPythonScript();
        // System.out.println(scriptOutput);
-		
+	   isApplicationReady = true;
 
 
 	}
+
+	public static boolean isApplicationReady() {
+        return isApplicationReady;
+    }
 
 	@Bean
     public CommandLineRunner seedDatabase() {
@@ -109,6 +113,7 @@ public class YukkaApplication {
             seed();
         };
     }
+	
 
 	void unseed() {
 		uzytkownikService.seedRemoveUzytkownicyObrazy();
@@ -404,7 +409,7 @@ public class YukkaApplication {
 
 		Dzialka piotrDzialka2 = dzialkaRepository.getDzialkaByNumer(usPiotr.getEmail(), 2).get();
 
-		System.out.println("Dzialka 2: " + piotrDzialka2.toString());
+		//System.out.println("Dzialka 2: " + piotrDzialka2.toString());
 
 		// Rosliny uzytkownika 
 

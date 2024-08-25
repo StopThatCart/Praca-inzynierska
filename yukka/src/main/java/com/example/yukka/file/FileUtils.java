@@ -31,6 +31,12 @@ public class FileUtils {
     private  String avatarDefaultObrazPath;
     @Value("${uzytkownik.obraz.default.name}")
     private  String defaultAvatarObrazName;
+
+    @Value("${powiadomienia.obraz.default.png-file-path}")
+    private String powiadomieniaAvatarObrazPath;
+
+    @Value("${powiadomienia.obraz.default.name}")
+    private String powiadomieniaAvatarObrazName;
     
 
     public  byte[] readRoslinaObrazFile(String fileUrl) {
@@ -67,6 +73,11 @@ public class FileUtils {
 
         if (fileUrl.equals(defaultAvatarObrazName)) {
             Path imagePath = new File(avatarDefaultObrazPath).toPath();
+            return readFileFromLocation(imagePath);
+        }
+
+        if (fileUrl.equals(powiadomieniaAvatarObrazName)) {
+            Path imagePath = new File(powiadomieniaAvatarObrazPath).toPath();
             return readFileFromLocation(imagePath);
         }
 

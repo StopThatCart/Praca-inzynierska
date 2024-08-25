@@ -4,12 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
-import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.UzytkownikRoslina;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
@@ -90,7 +87,7 @@ public class UzytkownikRoslinaSeeder {
 
         UzytkownikRoslina res = uzytkownikRoslinaService.save(roslinaRequest, uzyt);
 
-        System.out.println("ROSLINA1: " + roslina1);
+      //  System.out.println("ROSLINA1: " + roslina1);
 	}
 
 }

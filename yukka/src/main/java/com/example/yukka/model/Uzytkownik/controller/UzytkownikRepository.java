@@ -14,16 +14,6 @@ import jakarta.annotation.Nonnull;
 
 public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> {
 
-    @Query("""
-        MATCH (post:Post{postId: $postId})
-        OPTIONAL MATCH (post)<-[:MA_POST]-(uzyt:Uzytkownik)
-        OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(:Komentarz)<-[:SKOMENTOWAL]-(uzyt2:Uzytkownik)
-        OPTIONAL MATCH (post)<-[:OCENIL]-(uzyt3:Uzytkownik)
-        WITH post, COLLECT(DISTINCT uzyt) + COLLECT(DISTINCT uzyt2) + COLLECT(DISTINCT uzyt3) AS uzytkownicy
-        UNWIND uzytkownicy AS uzytkownik
-        RETURN DISTINCT uzytkownik
-        """)
-    List<Uzytkownik> getConnectedUzytkownicyFromPostButBetter(@Param("postId") String postId);
 
     @Query("""
         MATCH (u:Uzytkownik{uzytId: $uzytId})
@@ -43,10 +33,6 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         """)
     Optional<Uzytkownik> findByEmail(@Param("email") String email);
 
-
-    @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa OR u.email = $email RETURN u")
-    Optional<Uzytkownik> checkIfUzytkownikExists(@Param("nazwa") String nazwa, @Param("email") String email);
-
     @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa OR u.email = $nazwa RETURN u")
     Optional<Uzytkownik> findByNameOrEmail(@Param("nazwa") String nameOrEmail);
 
@@ -59,6 +45,31 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     @Override
     @Query("MATCH (u:Uzytkownik) RETURN u")
     @Nonnull List<Uzytkownik> findAll();
+
+    @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa OR u.email = $email RETURN u")
+    Optional<Uzytkownik> checkIfUzytkownikExists(@Param("nazwa") String nazwa, @Param("email") String email);
+
+    @Query("""
+        MATCH path = (uzyt:Uzytkownik)-[:MA_OGROD]->(:Ogrod)
+            -[:MA_DZIALKE]->(:Dzialka)
+            <-[:ZASADZONA_NA]-(rosliny)-[r]-(wlasciwosc)
+        WHERE (wlasciwosc:Wlasciwosc OR wlasciwosc:UzytkownikWlasciwosc)
+                AND (rosliny:Roslina OR rosliny:UzytkownikRoslina)
+        RETURN uzyt, collect(NODES(path)), collect(RELATIONSHIPS(path))
+        """)
+    List<Uzytkownik> getUzytkownicyWithRoslinyInDzialki();
+
+
+    @Query("""
+        MATCH (post:Post{postId: $postId})
+        OPTIONAL MATCH (post)<-[:MA_POST]-(uzyt:Uzytkownik)
+        OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(:Komentarz)<-[:SKOMENTOWAL]-(uzyt2:Uzytkownik)
+        OPTIONAL MATCH (post)<-[:OCENIL]-(uzyt3:Uzytkownik)
+        WITH post, COLLECT(DISTINCT uzyt) + COLLECT(DISTINCT uzyt2) + COLLECT(DISTINCT uzyt3) AS uzytkownicy
+        UNWIND uzytkownicy AS uzytkownik
+        RETURN DISTINCT uzytkownik
+        """)
+    List<Uzytkownik> getConnectedUzytkownicyFromPostButBetter(@Param("postId") String postId);
 
     /* 
     @Query("""
