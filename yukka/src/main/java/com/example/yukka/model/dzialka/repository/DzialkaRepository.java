@@ -1,5 +1,6 @@
 package com.example.yukka.model.dzialka.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -30,10 +31,10 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
     Optional<Dzialka> getDzialkaByNumer(@Param("email") String email, @Param("numerDzialki") int numerDzialki);
 
     @Query("""
-            MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka) 
+            MATCH path = (u:Uzytkownik{nazwa: $nazwa})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka) 
             RETURN d, collect(nodes(path)), collect(relationships(path))
             """)
-    Optional<Dzialka> getDzialkiOfUzytkownik(@Param("email") String email);
+    List<Dzialka> getDzialkiOfUzytkownikByNazwa(@Param("nazwa") String nazwa);
 
     @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
@@ -83,6 +84,23 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Param("numerDzialki") int numerDzialki, 
         @Param("x") int x, @Param("y") int y, 
         @Param("obraz") String obraz);
+
+        @Query("""
+        MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
+                (:Ogrod)-[:MA_DZIALKE]->
+                (d:Dzialka{numer: $numerDzialki})
+                
+        MATCH (d)<-[existing:ZASADZONA_NA {x: $x, y: $y}]-(existingRoslina)
+        SET existing.obraz = null
+
+        WITH d
+        MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
+                
+        RETURN d, collect(nodes(path)), collect(relationships(path))
+                """)
+        Dzialka deleteRoslinaObrazInDzialka(@Param("email") String email,
+        @Param("numerDzialki") int numerDzialki, 
+        @Param("x") int x, @Param("y") int y);
 
         
 

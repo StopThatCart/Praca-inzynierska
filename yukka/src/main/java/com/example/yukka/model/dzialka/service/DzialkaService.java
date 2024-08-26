@@ -1,5 +1,6 @@
 package com.example.yukka.model.dzialka.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.access.AccessDeniedException;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
+import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
@@ -33,6 +35,30 @@ public class DzialkaService {
     private final UzytkownikRepository uzytkownikRepository;
     private final FileStoreService fileStoreService;
     private final FileUtils fileUtils;
+
+
+
+    public List<Dzialka> getDzialki(Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        return dzialkaRepository.getDzialkiOfUzytkownikByNazwa(uzyt.getNazwa());
+    }
+
+    public List<Dzialka> getDzialkiOfUzytkownik(String nazwa, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+
+        Uzytkownik wlasciciel = uzytkownikRepository.findByNazwa(nazwa)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika " + nazwa));
+
+        if(wlasciciel.getUzytId().equals(uzyt.getUzytId())) {
+            return dzialkaRepository.getDzialkiOfUzytkownikByNazwa(nazwa);
+        }
+
+        if(!wlasciciel.getUstawienia().isOgrodPokaz()) {
+            throw new AccessDeniedException("Ogród użytkownika " + nazwa + " jest ukryty");
+        }
+        
+        return dzialkaRepository.getDzialkiOfUzytkownikByNazwa(nazwa);
+    }
 
 
     // Pobiera działki jakiegoś użytkownika, o ile on na to pozwala
@@ -168,8 +194,36 @@ public class DzialkaService {
         }
     }
 
-    public Dzialka saveUzytkownikRoslinaToDzialka(String nazwaLacinska, int numer, Authentication connectedUser) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public void deleteRoslinaObrazInDzialka(DzialkaRoslinaRequest request, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        // Zawsze zwróci działkę zalogowanego użytkownika
+        Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), request.getNumerDzialki())
+        .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono działki " + request.getNumerDzialki() + " dla użytkownika " + uzyt.getEmail()));
+
+        System.out.println("Le aktualizacja obrazu rośliny na działce");
+        if(dzialkaRepository.checkIfCoordinatesAreOccupied(uzyt.getEmail(), request.getNumerDzialki(), request.getX(), request.getY())) {
+            if (dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()).getObraz() != null) {
+                fileUtils.deleteObraz(dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()).getObraz());
+                Dzialka dzialkaZRoslina = dzialkaRepository.deleteRoslinaObrazInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
+                request.getX(), request.getY()); 
+            }
+        }
+    }
+
+    public void deleteRoslinaObrazInDzialka(DzialkaRoslinaRequest request, Uzytkownik connectedUser) {
+        Uzytkownik uzyt = connectedUser;
+        // Zawsze zwróci działkę zalogowanego użytkownika
+        Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), request.getNumerDzialki())
+        .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono działki " + request.getNumerDzialki() + " dla użytkownika " + uzyt.getEmail()));
+
+        System.out.println("Le aktualizacja obrazu rośliny na działce");
+        if(dzialkaRepository.checkIfCoordinatesAreOccupied(uzyt.getEmail(), request.getNumerDzialki(), request.getX(), request.getY())) {
+            if (dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()).getObraz() != null) {
+                fileUtils.deleteObraz(dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()).getObraz());
+                Dzialka dzialkaZRoslina = dzialkaRepository.deleteRoslinaObrazInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
+                request.getX(), request.getY()); 
+            }
+        }
     }
 
     public void deleteRoslinaFromDzialka(DzialkaRoslinaRequest request, Authentication connectedUser) {

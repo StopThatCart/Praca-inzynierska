@@ -18,7 +18,6 @@ public class DzialkaRoslinaRequest {
 
     private String uzytkownikRoslinaId;
 
-    @NotEmpty(message = "Nazwa jest wymagana")
     private String nazwaLacinskaRosliny;
 
     @NotEmpty(message = "")
