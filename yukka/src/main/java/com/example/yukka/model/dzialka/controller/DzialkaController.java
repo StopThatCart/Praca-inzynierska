@@ -33,14 +33,15 @@ public class DzialkaController {
 
     @GetMapping("/{numer}/uzytkownicy/{nazwa}")
     public Optional<Dzialka> getDzialkaOfUzytkownikByNumer(@PathVariable int numer, 
-    @PathVariable String nazwa, Authentication connectedUser) {
-        return dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa, connectedUser);
+    @PathVariable String nazwa) {
+        return dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa);
     }
 
     @GetMapping("/{numer}")
     public Optional<Dzialka> getDzialkaByNumer(@PathVariable int numer, Authentication connectedUser) {
         return dzialkaService.getDzialkaByNumer(numer, connectedUser);
     }
+    
 
     /* 
     @DeleteMapping("/{id}")

@@ -37,6 +37,7 @@ public class PowiadomienieService {
 
     private final UzytkownikRepository uzytkownikRepository;
 
+    @SuppressWarnings("unused")
     private final RoslinaRepository roslinaRepository;
     
 

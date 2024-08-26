@@ -126,7 +126,6 @@ public class YukkaApplication {
 	}
 
 	void seed() {
-
 		// Użytkownicy na razie bez relacji
 
 		Uzytkownik usJan = Uzytkownik.builder()
@@ -213,7 +212,6 @@ public class YukkaApplication {
 		try {
 			p3 = postService.save(postReq1, obrazPost1, usMichal);
 		} catch (FileUploadException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		//postRepository.addPost(michalEmail, p3);
@@ -287,7 +285,6 @@ public class YukkaApplication {
 			kom4 = komentarzService.addOdpowiedzToKomentarz(komReq1, obraz1, usPiotr);
 			kom5 = komentarzService.addOdpowiedzToKomentarz(komReq2, obraz2, usKatarzyna);
 		} catch (FileUploadException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -394,10 +391,6 @@ public class YukkaApplication {
 		.nazwaLacinskaRosliny("taxus baccata'adpressa'")
 		.build();
 
-		DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
-		.numerDzialki(2).x(1).y(1)
-		.nazwaLacinskaRosliny("Takiej rośliny nie ma")
-		.build();
 
 		dzialkaService.saveRoslinaToDzialka(req, usPiotr);
 
@@ -414,6 +407,17 @@ public class YukkaApplication {
 		// Rosliny uzytkownika 
 
 		uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usMichal);
+
+		DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
+		.numerDzialki(2).x(1).y(1)
+		.uzytkownikRoslinaId("12345678")
+		.build();
+
+
+		//dzialkaService.saveRoslinaToDzialka(req3, usPiotr);
+
+
+		dzialkaService.updateRoslinaObrazInDzialka(req2, obraz2, usPiotr);
 
 	}
 

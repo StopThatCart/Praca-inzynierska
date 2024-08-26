@@ -100,18 +100,5 @@ public class RoslinaController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usunięto rośline o nazwie łacińskiej - " + nazwaLacinska);
     }
-    
-
-    // TODO: Przetestować to jak już będzie podstawowy panel. Dodatkowo obsługa usuwania starego obrazu po zmianie obrazu
-    @PostMapping(value = "/{nazwaLacinska}", consumes = "multipart/form-data")
-    public ResponseEntity<?> uploadBookCoverPicture(
-            @PathVariable("nazwaLacinska") String nazwaLacinska, 
-            @Parameter() @RequestPart("file") 
-            MultipartFile file, 
-            Authentication connectedUser) {
-        roslinaService.uploadRoslinaObraz(file, connectedUser, nazwaLacinska);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-    }
-    
 
 }

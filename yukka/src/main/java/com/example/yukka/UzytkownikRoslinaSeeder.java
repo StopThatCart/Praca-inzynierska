@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.UzytkownikRoslina;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
-import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
@@ -20,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UzytkownikRoslinaSeeder {
     private final UzytkownikRoslinaService uzytkownikRoslinaService;
-    private final UzytkownikRoslinaRepository uzytkownikRoslineRepository;
+    //private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
     private final RoslinaMapper roslinaMapper;
     
 

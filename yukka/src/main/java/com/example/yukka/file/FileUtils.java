@@ -52,7 +52,6 @@ public class FileUtils {
         return readFileFromLocation(imagePath);
     }
 
-    // TODO: implementacja posta czy kiego czegos
     public byte[] readPostObrazFile(String fileUrl) {
         if (StringUtils.isBlank(fileUrl)) {
             return null;
@@ -165,7 +164,7 @@ public class FileUtils {
         if (StringUtils.isBlank(fileUrl)) {
             return false;
         }
-        if (fileUrl.equals(defaultAvatarObrazName) || fileUrl.equals(defaultRoslinaObrazName)) {
+        if (fileUrl.equals(defaultAvatarObrazName) || fileUrl.equals(defaultRoslinaObrazName) || fileUrl.equals(powiadomieniaAvatarObrazName)) {
             System.out.println("Nie można usunąć domyślnego obrazu");
             return false;
         }

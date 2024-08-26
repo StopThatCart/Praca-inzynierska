@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.example.yukka.file.FileUtils;
+import com.example.yukka.model.dzialka.Dzialka;
+import com.example.yukka.model.dzialka.DzialkaResponse;
+import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
+import com.example.yukka.model.dzialka.ZasadzonaRoslinaResponse;
 import com.example.yukka.model.roslina.enums.RoslinaRelacje;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 
@@ -22,6 +26,38 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RoslinaMapper {
     private final FileUtils fileUtils;
+
+    public DzialkaResponse toDzialkaResponse(Dzialka dzialka) {
+        return DzialkaResponse.builder()
+            .id(dzialka.getId())
+            .numer(dzialka.getNumer())
+            .wlasciciel(dzialka.getOgrod().getUzytkownik())
+            .zasadzoneRosliny(dzialka.getZasadzoneRosliny().stream()
+                .map(this::toZasadzonaRoslinaResponse)
+                .collect(Collectors.toList()))
+            .liczbaRoslin(dzialka.getZasadzoneRosliny().size())
+            .build();
+    }
+
+    private ZasadzonaRoslinaResponse toZasadzonaRoslinaResponse(ZasadzonaNaReverse zasadzonaNaReverse) {
+        if (zasadzonaNaReverse == null || zasadzonaNaReverse.getRoslina() == null) {
+            return null;
+        }
+    
+        byte[] obraz = null;
+        if (zasadzonaNaReverse.getObraz() != null) {
+            obraz = fileUtils.readRoslinaObrazFile(zasadzonaNaReverse.getObraz());
+        } else if (zasadzonaNaReverse.getRoslina().getObraz() != null) {
+            obraz = fileUtils.readRoslinaObrazFile(zasadzonaNaReverse.getRoslina().getObraz());
+        }
+    
+        return ZasadzonaRoslinaResponse.builder()
+            .roslina(zasadzonaNaReverse.getRoslina())
+            .x(zasadzonaNaReverse.getX())
+            .y(zasadzonaNaReverse.getY())
+            .obraz(obraz)
+            .build();
+    }
 
     public UzytkownikRoslinaRequest toUzytkownikRoslinaRequest(UzytkownikRoslina roslina) {
         return UzytkownikRoslinaRequest.builder()

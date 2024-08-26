@@ -42,15 +42,19 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
               (:Ogrod)-[:MA_DZIALKE]->
               (d:Dzialka{numer: $numerDzialki})
-        MATCH (roslina:Roslina{nazwaLacinska: $nazwaLacinska})
 
-        OPTIONAL MATCH (d)<-[existing:ZASADZONA_NA]-(existingRoslina:Roslina)
+        OPTIONAL MATCH (roslina1:Roslina {nazwaLacinska: $nazwaLacinska})
+        OPTIONAL MATCH (roslina2:UzytkownikRoslina {roslinaId: $nazwaLacinska})
+        
+        WITH d, coalesce(roslina1, roslina2) AS roslina
+
+        OPTIONAL MATCH (d)<-[existing:ZASADZONA_NA]-(existingRoslina)
         WHERE   existing.x = $x AND existing.y = $y 
-                AND existingRoslina.nazwaLacinska <> $nazwaLacinska
+                AND existingRoslina <> roslina
         DELETE existing
 
         WITH d, roslina
-        CREATE (d)<-[r:ZASADZONA_NA {x: $x, y: $y, obraz: coalesce($obraz, roslina.obraz)}]-(roslina)
+        CREATE (d)<-[r:ZASADZONA_NA {x: $x, y: $y, obraz: $obraz}]-(roslina)
 
         WITH d
         MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
@@ -69,10 +73,9 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
               (:Ogrod)-[:MA_DZIALKE]->
               (d:Dzialka{numer: $numerDzialki})
-        MATCH (roslina:Roslina{nazwaLacinska: $nazwaLacinska})
-
+              
         MATCH (d)<-[existing:ZASADZONA_NA {x: $x, y: $y}]-(existingRoslina)
-        SET existingRoslina.obraz = coalesce($obraz, existingRoslina.obraz)
+        SET existing.obraz = $obraz
 
         WITH d
         MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)

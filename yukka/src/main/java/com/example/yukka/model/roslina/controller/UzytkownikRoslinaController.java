@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,10 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.roslina.Roslina;
-import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
-import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.UzytkownikRoslina;
+import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
 import com.example.yukka.model.roslina.UzytkownikRoslinaResponse;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,7 +37,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UzytkownikRoslinaController {
     private final UzytkownikRoslinaService uzytkownikRoslinaService;
-    private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
+  //  private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
 
 
     @GetMapping("/{roslinaId}")
