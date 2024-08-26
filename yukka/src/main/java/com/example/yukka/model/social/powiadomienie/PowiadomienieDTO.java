@@ -16,7 +16,7 @@ import lombok.ToString;
 @Builder
 @ToString
 // Tak naprawdę to jest DTO, ale nie chce mi się zmieniać nazwy
-public class PowiadomienieResponse {
+public class PowiadomienieDTO {
     private String typ;
     private String tytul;
     private String odnosnik;

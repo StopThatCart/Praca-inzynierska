@@ -192,6 +192,7 @@ public class DzialkaService {
 
         dzialkaRepository.removeRoslinaFromDzialka(uzyt.getEmail(), request.getNumerDzialki(), request.getX(), request.getY());
     }
+    
 
     // Lol nie
     /*

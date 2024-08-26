@@ -35,9 +35,6 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
             """)
     Optional<Dzialka> getDzialkiOfUzytkownik(@Param("email") String email);
 
-
-    // Na razie zwykła roślina. Rośliny użytkownika na potem
-    // TODO: zapisywanie obrazów dla rośliny z katalogu dodanej do ogrodu przez użytkownika
     @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
               (:Ogrod)-[:MA_DZIALKE]->

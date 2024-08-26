@@ -54,8 +54,8 @@ public class DzialkaController {
         return dzialkaService.saveRoslinaToDzialka(request, connectedUser);
     }
 
-    @DeleteMapping("/rosliny/{id}")
-    public void deleteRoslinaFromDzialka(@PathVariable Long id) {
-        zasadzonaNaService.deleteZasadzonaNa(id);
+    @DeleteMapping("/rosliny")
+    public void deleteRoslinaFromDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, Authentication connectedUser) {
+        dzialkaService.deleteRoslinaFromDzialka(request, connectedUser);
     }
 }

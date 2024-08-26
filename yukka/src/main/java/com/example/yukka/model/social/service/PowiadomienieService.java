@@ -20,7 +20,7 @@ import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.social.powiadomienie.Powiadomienie;
-import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
+import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.PowiadomienieRepository;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
@@ -44,7 +44,7 @@ public class PowiadomienieService {
     @Value("${powiadomienia.obraz.default.name}")
     private String powiadomienieAvatar;
 
-    public PageResponse<PowiadomienieResponse> findPowiadomieniaOfUzytkownik(int page, int size, Authentication connectedUser) {
+    public PageResponse<PowiadomienieDTO> findPowiadomieniaOfUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("powiadomienie.dataUtworzenia").descending());
@@ -93,7 +93,7 @@ public class PowiadomienieService {
 
     private void utworzOkresPowiadomienie(Set<String> nazwyRoslin, TypPowiadomienia typ, Uzytkownik uzytkownik) {
         if (!nazwyRoslin.isEmpty()) {
-            PowiadomienieResponse powiadomienieRequest = PowiadomienieResponse.builder()
+            PowiadomienieDTO powiadomienieRequest = PowiadomienieDTO.builder()
                     .typ(typ.toString())
                     .odnosnik(uzytkownik.getUzytId())
                     .nazwyRoslin(nazwyRoslin)
@@ -102,13 +102,23 @@ public class PowiadomienieService {
         }
     }
 
-    public Powiadomienie addPowiadomienie(PowiadomienieResponse request, Uzytkownik uzytkownik) {
+    public Powiadomienie addSpecjalnePowiadomienie(PowiadomienieDTO powiadomienieRequest) {
+        Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest);
+        return powiadomienieRepository.addGlobalCustomPowiadomienie(powiadomienie);
+    }
+
+    public Powiadomienie addSpecjalnePowiadomienieToPracownicy(PowiadomienieDTO powiadomienieRequest) {
+        Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest);
+        return powiadomienieRepository.addCustomPowiadomienieToPracownicy(powiadomienie);
+    }
+
+    public Powiadomienie addPowiadomienie(PowiadomienieDTO request, Uzytkownik uzytkownik) {
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.valueOf(request.getTyp()), request, uzytkownik);
       //  System.out.println("Powiadomienie: " + powiadomienie);
         return powiadomienieRepository.addPowiadomienieToUzytkownik(uzytkownik.getEmail(), powiadomienie);
     }
 
-    public String generatePowiadomienieOpis(TypPowiadomienia typ, PowiadomienieResponse request) {
+    public String generatePowiadomienieOpis(TypPowiadomienia typ, PowiadomienieDTO request) {
         String template = typ.getTemplate();
         template = template.replace("{tytul}", request.getTytul() != null ? request.getTytul() : "");
         template = template.replace("{odnosnik}", request.getOdnosnik() != null ? request.getOdnosnik() : "");
@@ -128,7 +138,7 @@ public class PowiadomienieService {
         return template;
     }
 
-    public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieResponse request, Uzytkownik uzytkownik) {
+    public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieDTO request, Uzytkownik uzytkownik) {
         String opis = generatePowiadomienieOpis(typ, request);
         return Powiadomienie.builder()
                 .typ(typ.name())
@@ -138,6 +148,20 @@ public class PowiadomienieService {
                 .avatar(request.getAvatar())
                 .nazwyRoslin(request.getNazwyRoslin())
                 .uzytkownik(uzytkownik)
+                .uzytkownikNazwa(request.getUzytkownikNazwa())
+                .data(request.getData())
+                .build();
+    }
+
+    public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieDTO request) {
+        String opis = generatePowiadomienieOpis(typ, request);
+        return Powiadomienie.builder()
+                .typ(typ.name())
+                .odnosnik(request.getOdnosnik())
+                .tytul(request.getTytul())
+                .opis(opis)
+                .avatar(request.getAvatar())
+                .nazwyRoslin(request.getNazwyRoslin())
                 .uzytkownikNazwa(request.getUzytkownikNazwa())
                 .data(request.getData())
                 .build();

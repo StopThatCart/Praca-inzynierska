@@ -132,7 +132,7 @@ public class KomentarzController {
     }
 
     // Być może to wywalić i używać tylko removeKomentarz
-    @DeleteMapping("{post-id}/komentarze/{komentarz-id}")
+    @DeleteMapping("{komentarz-id}/posty/{post-id}")
     public ResponseEntity<String> removeKomentarzFromPost(
                     @PathVariable("post-id") String postId,
                     @PathVariable("komentarz-id") String komentarzId,

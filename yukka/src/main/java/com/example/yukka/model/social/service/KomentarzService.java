@@ -26,7 +26,7 @@ import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzMapper;
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
 import com.example.yukka.model.social.post.Post;
-import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
+import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
@@ -145,7 +145,7 @@ public class KomentarzService {
         
         Komentarz response = komentarzRepository.addKomentarzToRozmowaPrywatna(nadawca.getNazwa(), odbiorca.getNazwa(), kom);
 
-        PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
+        PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
         .typ(TypPowiadomienia.WIADOMOSC_PRYWATNA.name())
         .odnosnik(rozmowa.getNadawca())
         .uzytkownikNazwa(nadawca.getNazwa()).avatar(nadawca.getAvatar())
@@ -170,7 +170,7 @@ public class KomentarzService {
         
         Komentarz response = komentarzRepository.addKomentarzToRozmowaPrywatna(nadawca.getNazwa(), odbiorca.getNazwa(), kom);
 
-        PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
+        PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
         .typ(TypPowiadomienia.WIADOMOSC_PRYWATNA.name())
         .odnosnik(rozmowa.getNadawca())
         .uzytkownikNazwa(nadawca.getNazwa()).avatar(nadawca.getAvatar())
@@ -196,7 +196,7 @@ public class KomentarzService {
 
         Komentarz response = komentarzRepository.addKomentarzToRozmowaPrywatna(nadawca.getNazwa(), odbiorca.getNazwa(), kom);
 
-        PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
+        PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
         .typ(TypPowiadomienia.WIADOMOSC_PRYWATNA.name())
         .odnosnik(rozmowa.getNadawca())
         .uzytkownikNazwa(nadawca.getNazwa()).avatar(nadawca.getAvatar())
@@ -309,7 +309,7 @@ public class KomentarzService {
         Komentarz response = komentarzRepository.addOdpowiedzToKomentarzInPost(uzyt.getEmail(), kom, request.getTargetId());
 
         if(!komentarzDoOdpowiedzi.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
-            PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
+            PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.KOMENTARZ_POST.name())
             .tytul(post.getTytul()).odnosnik(post.getPostId())
             .uzytkownikNazwa(uzyt.getNazwa()).avatar(uzyt.getAvatar())
@@ -334,7 +334,7 @@ public class KomentarzService {
         Komentarz response = komentarzRepository.addOdpowiedzToKomentarzInPost(uzyt.getEmail(), kom, request.getTargetId());
 
         if(!komentarzDoOdpowiedzi.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
-            PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
+            PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.KOMENTARZ_POST.name())
             .tytul(post.getTytul()).odnosnik(post.getPostId())
             .uzytkownikNazwa(uzyt.getNazwa()).avatar(uzyt.getAvatar())
@@ -361,7 +361,7 @@ public class KomentarzService {
         Komentarz response = komentarzRepository.addOdpowiedzToKomentarzInPost(uzyt.getEmail(), kom, request.getTargetId());
 
         if(!komentarzDoOdpowiedzi.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
-            PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
+            PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.KOMENTARZ_POST.name()).tytul(post.getTytul())
             .odnosnik(post.getPostId()).uzytkownikNazwa(uzyt.getNazwa())
             .avatar(uzyt.getAvatar())
@@ -387,7 +387,7 @@ public class KomentarzService {
         Komentarz response = komentarzRepository.addOdpowiedzToKomentarzInPost(uzyt.getEmail(), kom, request.getTargetId());
 
         if(!komentarzDoOdpowiedzi.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
-            PowiadomienieResponse powiadomienie = PowiadomienieResponse.builder()
+            PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.KOMENTARZ_POST.name()).tytul(post.getTytul())
             .odnosnik(post.getPostId()).uzytkownikNazwa(uzyt.getNazwa())
             .avatar(uzyt.getAvatar())

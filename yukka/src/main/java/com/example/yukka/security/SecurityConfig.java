@@ -42,9 +42,23 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> 
                     auth.requestMatchers( 
                                     //"/**",
-                                  "/auth/test"
+                                  "/auth/test",
+                                  "/komentarze/oceny",
+                                  "/posty/oceny",
+                                  "/rozmowy/**"
                       )
                       .authenticated()
+                      // Do swaggera
+                      .requestMatchers("/v2/api-docs",
+                                        "/v3/api-docs",
+                                        "/v3/api-docs/**",
+                                        "/swagger-resources",
+                                        "/swagger-resources/**",
+                                        "/configuration/ui",
+                                        "/configuration/security",
+                                        "/swagger-ui/**",
+                                        "/webjars/**",
+                                        "/swagger-ui.html").permitAll()
                       .requestMatchers("/admin/**").hasRole(ROLE.Admin.toString())
                       .requestMatchers("/pracownik/**").hasAnyRole(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                       .requestMatchers("/auth/**").permitAll()
@@ -57,6 +71,8 @@ public class SecurityConfig {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                // Filter do sprawdzania czy użytkownik jest zbanowany. Nietestowany
+                .addFilterBefore(authFilter, BanCheckFilter.class)
                 .build();
     }
 
