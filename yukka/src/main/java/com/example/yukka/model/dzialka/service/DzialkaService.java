@@ -1,7 +1,6 @@
 package com.example.yukka.model.dzialka.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -12,13 +11,16 @@ import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.dzialka.Dzialka;
+import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.roslina.Roslina;
+import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.UzytkownikRoslina;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
+import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
@@ -36,46 +38,61 @@ public class DzialkaService {
     private final FileStoreService fileStoreService;
     private final FileUtils fileUtils;
 
+    private final RoslinaMapper roslinaMapper;
+    private final CommonMapperService commonMapperService;
 
 
-    public List<Dzialka> getDzialki(Authentication connectedUser) {
+
+    public List<DzialkaResponse> getDzialki(Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
-        return dzialkaRepository.getDzialkiOfUzytkownikByNazwa(uzyt.getNazwa());
+
+        List<Dzialka> dzialki = dzialkaRepository.getDzialkiOfUzytkownikByNazwa(uzyt.getNazwa());
+        List<DzialkaResponse> dzialkiResponse = dzialki.stream()
+                .map(roslinaMapper::toDzialkaResponse)
+                .toList();
+        return dzialkiResponse;
     }
 
-    public List<Dzialka> getDzialkiOfUzytkownik(String nazwa, Authentication connectedUser) {
+    public List<DzialkaResponse> getDzialkiOfUzytkownik(String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
 
         Uzytkownik wlasciciel = uzytkownikRepository.findByNazwa(nazwa)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika " + nazwa));
 
-        if(wlasciciel.getUzytId().equals(uzyt.getUzytId())) {
-            return dzialkaRepository.getDzialkiOfUzytkownikByNazwa(nazwa);
-        }
-
-        if(!wlasciciel.getUstawienia().isOgrodPokaz()) {
+        if(!wlasciciel.getUstawienia().isOgrodPokaz() && !uzyt.getEmail().equals(wlasciciel.getEmail())) {
             throw new AccessDeniedException("Ogród użytkownika " + nazwa + " jest ukryty");
         }
+
+        List<Dzialka> dzialki = dzialkaRepository.getDzialkiOfUzytkownikByNazwa(nazwa);
+        List<DzialkaResponse> dzialkiResponse = dzialki.stream()
+                .map(roslinaMapper::toDzialkaResponse)
+                .toList();
         
-        return dzialkaRepository.getDzialkiOfUzytkownikByNazwa(nazwa);
+        return dzialkiResponse;
     }
 
 
     // Pobiera działki jakiegoś użytkownika, o ile on na to pozwala
-    public Optional<Dzialka> getDzialkaOfUzytkownikByNumer(int numer, String nazwa) {
+    public DzialkaResponse getDzialkaOfUzytkownikByNumer(int numer, String nazwa) {
         Uzytkownik wlasciciel = uzytkownikRepository.findByNazwa(nazwa).orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika " + nazwa));
 
         if(!wlasciciel.getUstawienia().isOgrodPokaz()) {
             throw new AccessDeniedException("Ogród użytkownika " + nazwa + " jest ukryty");
         }
+        Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(wlasciciel.getEmail(), numer)
+        .orElseThrow( () -> new IllegalArgumentException("Działka o numerze " + numer + " nie istnieje"));
+        DzialkaResponse dzialkaResponse = roslinaMapper.toDzialkaResponse(dzialka);
 
-        return dzialkaRepository.getDzialkaByNumer(wlasciciel.getEmail(), numer);
+        return dzialkaResponse;
     }
 
     // Pobiera WŁASNĄ działkę
-    public Optional<Dzialka> getDzialkaByNumer(int numer, Authentication connectedUser) {
+    public DzialkaResponse getDzialkaByNumer(int numer, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
-        return dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), numer);
+        
+        return dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), numer)
+        .map(roslinaMapper::toDzialkaResponse)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono działki " + numer + " dla użytkownika " + uzyt.getEmail()));
     }
 /* 
     public Optional<Dzialka> getDzialkaById(Long id) {

@@ -9,6 +9,7 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.example.yukka.model.ogrod.Ogrod;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +37,7 @@ public class Dzialka {
   //  @Property("uzytkownik")
  //   private Uzytkownik uzytkownik;
 
-
+    @JsonIgnore
     @Relationship(type = "MA_DZIALKE", direction = Relationship.Direction.INCOMING)
     private Ogrod ogrod;
 

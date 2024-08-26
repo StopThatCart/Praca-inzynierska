@@ -6,6 +6,8 @@ import org.springframework.data.neo4j.core.schema.RelationshipId;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +34,7 @@ public class ZasadzonaNa {
     @Property("obraz")
     private String obraz;
     
+    @JsonIgnore
     @TargetNode
     private Dzialka dzialka;
 

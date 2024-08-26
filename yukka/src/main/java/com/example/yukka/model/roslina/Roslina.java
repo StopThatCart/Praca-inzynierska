@@ -15,8 +15,8 @@ import com.example.yukka.model.dzialka.ZasadzonaNa;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +30,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @ToString
+@SuppressWarnings("all")
 public class Roslina {
     @Id @GeneratedValue
     private long id;
@@ -52,7 +53,7 @@ public class Roslina {
 
 
     // Ogrod
-
+    @JsonIgnore
     @Relationship(type = "ZASADZONA_NA", direction = Relationship.Direction.OUTGOING)
     private List<ZasadzonaNa> dzialki;
 

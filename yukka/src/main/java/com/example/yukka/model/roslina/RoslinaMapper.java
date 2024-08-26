@@ -31,7 +31,7 @@ public class RoslinaMapper {
         return DzialkaResponse.builder()
             .id(dzialka.getId())
             .numer(dzialka.getNumer())
-            .wlasciciel(dzialka.getOgrod().getUzytkownik())
+            .wlascicielNazwa(dzialka.getOgrod().getUzytkownik().getNazwa())
             .zasadzoneRosliny(dzialka.getZasadzoneRosliny().stream()
                 .map(this::toZasadzonaRoslinaResponse)
                 .collect(Collectors.toList()))
@@ -52,7 +52,7 @@ public class RoslinaMapper {
         }
     
         return ZasadzonaRoslinaResponse.builder()
-            .roslina(zasadzonaNaReverse.getRoslina())
+            .roslina(roslinaToRoslinaResponseWithWlasciwosci(zasadzonaNaReverse.getRoslina()))
             .x(zasadzonaNaReverse.getX())
             .y(zasadzonaNaReverse.getY())
             .obraz(obraz)
@@ -136,6 +136,43 @@ public class RoslinaMapper {
                 .wysokoscMax(roslina.getWysokoscMax())
                 .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
                 .build();
+    }
+
+    public RoslinaResponse roslinaToRoslinaResponseWithWlasciwosci(Roslina roslina) {
+        return RoslinaResponse.builder()
+                .id(roslina.getId())
+                .nazwa(roslina.getNazwa())
+                .nazwaLacinska(roslina.getNazwaLacinska())
+                .opis(roslina.getOpis())
+                .wysokoscMin(roslina.getWysokoscMin())
+                .wysokoscMax(roslina.getWysokoscMax())
+                .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
+                .grupy(extractNazwy(roslina.getGrupy()))
+                .formy(extractNazwy(roslina.getFormy()))
+                .gleby(extractNazwy(roslina.getGleby()))
+                .koloryLisci(extractNazwy(roslina.getKoloryLisci()))
+                .koloryKwiatow(extractNazwy(roslina.getKoloryKwiatow()))
+                .kwiaty(extractNazwy(roslina.getKwiaty()))
+                .nagrody(extractNazwy(roslina.getNagrody()))
+                .odczyny(extractNazwy(roslina.getOdczyny()))
+                .okresyKwitnienia(extractNazwy(roslina.getOkresyKwitnienia()))
+                .okresyOwocowania(extractNazwy(roslina.getOkresyOwocowania()))
+                .owoce(extractNazwy(roslina.getOwoce()))
+                .podgrupa(extractNazwy(roslina.getPodgrupa()))
+                .pokroje(extractNazwy(roslina.getPokroje()))
+                .silyWzrostu(extractNazwy(roslina.getSilyWzrostu()))
+                .stanowiska(extractNazwy(roslina.getStanowiska()))
+                .walory(extractNazwy(roslina.getWalory()))
+                .wilgotnosci(extractNazwy(roslina.getWilgotnosci()))
+                .zastosowania(extractNazwy(roslina.getZastosowania()))
+                .zimozielonosci(extractNazwy(roslina.getZimozielonosci()))
+                .build();
+    }
+
+    private Set<String> extractNazwy(Set<Wlasciwosc> wlasciwosci) {
+        return wlasciwosci.stream()
+                          .map(Wlasciwosc::getNazwa)
+                          .collect(Collectors.toSet());
     }
 
     private List<Map<String, String>> mapWlasciwosciToMap(Roslina roslina) {

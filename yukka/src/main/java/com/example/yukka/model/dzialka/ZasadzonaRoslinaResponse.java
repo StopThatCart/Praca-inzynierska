@@ -1,6 +1,6 @@
 package com.example.yukka.model.dzialka;
 
-import com.example.yukka.model.roslina.Roslina;
+import com.example.yukka.model.roslina.RoslinaResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Builder
 public class ZasadzonaRoslinaResponse {
 
-    private Roslina roslina;
+    private RoslinaResponse roslina;
     private int x;
     private int y;
     private byte[] obraz;

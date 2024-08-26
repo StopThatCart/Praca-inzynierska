@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.model.dzialka.Dzialka;
+import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.dzialka.service.ZasadzonaNaService;
@@ -27,7 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/dzialki")
+@RequestMapping("rest/neo4j/dzialki")
 @Tag(name = "Dzialka")
 public class DzialkaController {
 @Autowired
@@ -38,24 +39,24 @@ public class DzialkaController {
 
 
     @GetMapping
-    public ResponseEntity<List<Dzialka>> getDzialki(Authentication connectedUser) {
+    public ResponseEntity<List<DzialkaResponse>> getDzialki(Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getDzialki(connectedUser));
     }
 
     @GetMapping("/uzytkownicy/{nazwa}")
-    public ResponseEntity<List<Dzialka>> getDzialkiOfUzytkownik(@PathVariable String nazwa, Authentication connectedUser) {
+    public ResponseEntity<List<DzialkaResponse>> getDzialkiOfUzytkownik(@PathVariable String nazwa, Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getDzialkiOfUzytkownik(nazwa, connectedUser));
     }
 
     @GetMapping("/{numer}")
-    public ResponseEntity<Dzialka> getDzialkaByNumer(@PathVariable int numer, Authentication connectedUser) {
-        return ResponseEntity.ok(dzialkaService.getDzialkaByNumer(numer, connectedUser).orElse(null));
+    public ResponseEntity<DzialkaResponse> getDzialkaByNumer(@PathVariable int numer, Authentication connectedUser) {
+        return ResponseEntity.ok(dzialkaService.getDzialkaByNumer(numer, connectedUser));
     }
 
     @GetMapping("/{numer}/uzytkownicy/{nazwa}")
-    public ResponseEntity<Dzialka> getDzialkaOfUzytkownikByNumer(@PathVariable int numer, 
+    public ResponseEntity<DzialkaResponse> getDzialkaOfUzytkownikByNumer(@PathVariable int numer, 
     @PathVariable String nazwa) {
-        return ResponseEntity.ok(dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa).orElse(null));
+        return ResponseEntity.ok(dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa));
     }
 
     /* 

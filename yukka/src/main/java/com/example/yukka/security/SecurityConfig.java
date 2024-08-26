@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtFilter authFilter;
+    private final BanCheckFilter banCheckFilter;
     private final Neo4JAuthenticationProvider authenticationProvider;
 
     @Bean
@@ -71,8 +72,7 @@ public class SecurityConfig {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
-                // Filter do sprawdzania czy użytkownik jest zbanowany. Nietestowany
-                .addFilterBefore(authFilter, BanCheckFilter.class)
+                .addFilterBefore(banCheckFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

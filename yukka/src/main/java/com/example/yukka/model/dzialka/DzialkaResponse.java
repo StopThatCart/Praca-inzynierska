@@ -2,8 +2,6 @@ package com.example.yukka.model.dzialka;
 
 import java.util.List;
 
-import com.example.yukka.model.uzytkownik.Uzytkownik;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +16,7 @@ import lombok.Setter;
 public class DzialkaResponse {
     private Long id;
     private int numer;
-    private Uzytkownik wlasciciel;
+    private String wlascicielNazwa;
     private List<ZasadzonaRoslinaResponse> zasadzoneRosliny;
     private int liczbaRoslin;
 

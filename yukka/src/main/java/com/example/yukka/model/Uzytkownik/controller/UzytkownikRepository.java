@@ -16,24 +16,28 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
 
     @Query("""
-        MATCH (u:Uzytkownik{uzytId: $uzytId})
-        RETURN u
+        MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(u:Uzytkownik{uzytId: $uzytId})
+        RETURN u, collect(NODES(path)), collect(RELATIONSHIPS(path))
         """)
     Optional<Uzytkownik> findByUzytId(@Param("uzytId") String uzytId);
 
     @Query("""
-            MATCH (u:Uzytkownik{nazwa: $nazwa})
-            RETURN u
+            MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(u:Uzytkownik{nazwa: $nazwa})
+            RETURN u, collect(NODES(path)), collect(RELATIONSHIPS(path))
             """)
     Optional<Uzytkownik> findByNazwa(@Param("nazwa") String nazwa);
     
     @Query("""
-        MATCH (u:Uzytkownik{email: $email})
-        RETURN u
+        MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(u:Uzytkownik{email: $email})
+        RETURN u, collect(NODES(path)), collect(RELATIONSHIPS(path))
         """)
     Optional<Uzytkownik> findByEmail(@Param("email") String email);
 
-    @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa OR u.email = $nazwa RETURN u")
+    @Query("""
+        MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(u:Uzytkownik)
+        WHERE u.nazwa = $nazwa OR u.email = $nazwa
+        RETURN u, collect(NODES(path)), collect(RELATIONSHIPS(path))
+        """)
     Optional<Uzytkownik> findByNameOrEmail(@Param("nazwa") String nameOrEmail);
 
     @Query("MATCH (u:Uzytkownik) WHERE (u.nazwa = $nazwa OR u.email = $nazwa) AND u.haslo = $haslo RETURN u")

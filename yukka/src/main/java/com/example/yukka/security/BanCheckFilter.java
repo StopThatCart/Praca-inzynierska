@@ -51,7 +51,7 @@ public class BanCheckFilter extends OncePerRequestFilter {
 
           //  if (isProtectedUrl && uzyt.isBan()) {
          //       response.sendError(HttpServletResponse.SC_FORBIDDEN, "Operacja niedozwolona - Jesteś zbanowany.");
-                return;
+         //       return;
          //   }
         }
 
