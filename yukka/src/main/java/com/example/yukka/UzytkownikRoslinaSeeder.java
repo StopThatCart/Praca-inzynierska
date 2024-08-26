@@ -6,6 +6,9 @@ import java.util.HashSet;
 
 import org.springframework.stereotype.Service;
 
+import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
+import com.example.yukka.model.dzialka.service.DzialkaService;
+import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.UzytkownikRoslina;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
@@ -21,6 +24,7 @@ public class UzytkownikRoslinaSeeder {
     private final UzytkownikRoslinaService uzytkownikRoslinaService;
     //private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
     private final RoslinaMapper roslinaMapper;
+    private final DzialkaService dzialkaService;
     
 
     UzytkownikRoslina roslina1;
@@ -84,7 +88,14 @@ public class UzytkownikRoslinaSeeder {
 
         UzytkownikRoslinaRequest roslinaRequest = roslinaMapper.toUzytkownikRoslinaRequest(roslina1);
 
-        UzytkownikRoslina res = uzytkownikRoslinaService.save(roslinaRequest, uzyt);
+        Roslina res = uzytkownikRoslinaService.save(roslinaRequest, uzyt);
+
+        DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
+		.numerDzialki(2).x(9).y(9)
+		.uzytkownikRoslinaId("12345678")
+		.build();
+
+		dzialkaService.saveRoslinaToDzialka(req3, uzyt);
 
       //  System.out.println("ROSLINA1: " + roslina1);
 	}

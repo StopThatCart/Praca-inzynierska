@@ -391,10 +391,11 @@ public class YukkaApplication {
 		.nazwaLacinskaRosliny("taxus baccata'adpressa'")
 		.build();
 
-
+		
+		System.out.println("Dodawanie rośliny 1 do działek");
 		dzialkaService.saveRoslinaToDzialka(req, usPiotr);
 
-
+		System.out.println("Dodawanie rośliny 2 do działek");
 		dzialkaService.saveRoslinaToDzialka(req2, usPiotr);
 
 		// Wywala exception i słusznie
@@ -405,18 +406,10 @@ public class YukkaApplication {
 		//System.out.println("Dzialka 2: " + piotrDzialka2.toString());
 
 		// Rosliny uzytkownika 
+		System.out.println("Seedowanie roślin użytkownika");
+		uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usPiotr);
 
-		uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usMichal);
-
-		DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
-		.numerDzialki(2).x(1).y(1)
-		.uzytkownikRoslinaId("12345678")
-		.build();
-
-
-		//dzialkaService.saveRoslinaToDzialka(req3, usPiotr);
-
-
+		System.out.println("Aktualizacja obrazu rośliny w działce");
 		dzialkaService.updateRoslinaObrazInDzialka(req2, obraz2, usPiotr);
 
 	}

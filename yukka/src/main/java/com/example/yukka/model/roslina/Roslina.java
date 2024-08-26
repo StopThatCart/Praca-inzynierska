@@ -13,15 +13,16 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.example.yukka.model.dzialka.ZasadzonaNa;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import lombok.Builder;
 
 @Node
 @NoArgsConstructor
@@ -34,6 +35,9 @@ import lombok.experimental.SuperBuilder;
 public class Roslina {
     @Id @GeneratedValue
     private long id;
+
+    @Property("roslinaId")
+    private String roslinaId;
     @Property("nazwa")
     private String nazwa;
     @Property("nazwaLacinska")
@@ -56,6 +60,10 @@ public class Roslina {
     @JsonIgnore
     @Relationship(type = "ZASADZONA_NA", direction = Relationship.Direction.OUTGOING)
     private List<ZasadzonaNa> dzialki;
+	
+	@JsonIgnore
+	@Relationship(type = "STWORZONA_PRZEZ", direction = Relationship.Direction.OUTGOING)
+    private Uzytkownik uzytkownik;
 
     // Wlasciwosci
 

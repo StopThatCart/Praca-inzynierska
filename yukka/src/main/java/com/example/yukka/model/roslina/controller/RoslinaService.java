@@ -70,7 +70,7 @@ public class RoslinaService {
     }
 
     public Optional<Roslina> findByNazwaLacinska(String nazwaLacinska) {
-        return roslinaRepository.findByNazwaLacinska(nazwaLacinska);
+        return roslinaRepository.findByNazwaLacinskaWithRelations(nazwaLacinska);
     }
 
     public Roslina save(RoslinaRequest request) {

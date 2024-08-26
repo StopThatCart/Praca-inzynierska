@@ -18,7 +18,9 @@ import lombok.ToString;
 @ValidWysokosc
 public class RoslinaRequest {
 
-    @NotEmpty(message = "Nazwa jest wymagana")
+    // TODO: Zrobić sprawdzanie OR dla roslinaId i nazwa
+    private String roslinaId;
+
     private String nazwa;
 
     @NotEmpty(message = "Nazwa jest wymagana")

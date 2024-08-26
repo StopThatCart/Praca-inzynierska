@@ -46,7 +46,7 @@ public class UzytkownikRoslinaService {
     private final CommonMapperService commonMapperService;
 
     public Optional<UzytkownikRoslina> findByRoslinaId(String roslinaId) {
-        return uzytkownikRoslinaRepository.findByRoslinaId(roslinaId);
+        return uzytkownikRoslinaRepository.findByRoslinaIdWithRelations(roslinaId);
     }
 
 
@@ -70,7 +70,7 @@ public class UzytkownikRoslinaService {
 
 
 
-    public UzytkownikRoslina save(UzytkownikRoslinaRequest request, Authentication connectedUser) {
+    public Roslina save(UzytkownikRoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
         Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
@@ -93,7 +93,7 @@ public class UzytkownikRoslinaService {
     }
 
 
-    public UzytkownikRoslina save(UzytkownikRoslinaRequest request, Uzytkownik connectedUser) {
+    public Roslina save(UzytkownikRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
 
         Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
@@ -115,7 +115,7 @@ public class UzytkownikRoslinaService {
 
     }
 
-    public UzytkownikRoslina save(UzytkownikRoslinaRequest request, MultipartFile file, Authentication connectedUser) {
+    public Roslina save(UzytkownikRoslinaRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
@@ -130,7 +130,7 @@ public class UzytkownikRoslinaService {
             UzytkownikRoslina ros = uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(), pl);
             return ros;
         }
-        UzytkownikRoslina ros = uzytkownikRoslinaRepository.addRoslina(
+        Roslina ros = uzytkownikRoslinaRepository.addRoslina(
             uzyt.getUzytId(),
             request.getNazwa(), createRoslinaId(),
             request.getOpis(), request.getObraz(), 

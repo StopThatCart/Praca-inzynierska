@@ -20,6 +20,13 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
         WHERE wlasciwosc:Wlasciwosc OR wlasciwosc:UzytkownikWlasciwosc
         RETURN ros, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relationships
     """)
+    Optional<UzytkownikRoslina> findByRoslinaIdWithRelations(@Param("roslinaId") String roslinaId);
+
+
+    @Query("""
+        MATCH (ros:UzytkownikRoslina{roslinaId: $roslinaId})
+        RETURN ros
+    """)
     Optional<UzytkownikRoslina> findByRoslinaId(@Param("roslinaId") String roslinaId);
 
     @Query(value = """
@@ -37,7 +44,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
     @Query("""
         MATCH (uzytkownik:Uzytkownik{uzytId: $uzytId})
         WITH uzytkownik, $roslina.__properties__ AS rp 
-        MERGE (p:Roslina {
+        MERGE (p:UzytkownikRoslina:Roslina {
         nazwa: rp.nazwa, 
         nazwaLacinska: rp.nazwaLacinska, 
         opis: rp.opis, 
@@ -54,13 +61,13 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
     @Query("""
         MATCH (uzytkownik:Uzytkownik{uzytId: $uzytId})
         WITH uzytkownik
-        MERGE (p:UzytkownikRoslina {nazwa: $name, roslinaId: $roslinaId, opis: $description, 
+        MERGE (p:UzytkownikRoslina:Roslina {nazwa: $name, roslinaId: $roslinaId, opis: $description, 
         obraz: COALESCE($imageFilename, 'default_plant.jpg'), wysokoscMin: $heightMin, wysokoscMax: $heightMax})
             -[:STWORZONA_PRZEZ]->(uzytkownik)
 
         WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
-        WITH p, relat, [ relat.labels, 'UzytkownikWlasciwosc' ] AS labels
+        WITH p, relat, [ relat.labels, 'UzytkownikWlasciwosc', 'Wlasciwosc' ] AS labels
         CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
         WITH p, w, relat
         CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
@@ -92,7 +99,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
 
            WITH p, newRelatLump AS relatLump
            UNWIND relatLump AS relat
-           WITH p, relat, [ relat.labels, 'UzytkownikWlasciwosc' ] AS labels
+           WITH p, relat, [ relat.labels, 'UzytkownikWlasciwosc', 'Wlasciwosc' ] AS labels
            CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
            WITH p, w, relat
            CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel

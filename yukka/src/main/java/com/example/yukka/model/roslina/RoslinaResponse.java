@@ -15,12 +15,15 @@ import lombok.Setter;
 @Builder
 public class RoslinaResponse {
     private Long id;
+    private String roslinaId;
     private String nazwa;
     private String nazwaLacinska;
     private String opis;
     private double wysokoscMin;
     private double wysokoscMax;
     private byte[] obraz;
+
+    private String autor;
 
     private Set<String> grupy;
     private Set<String> formy;
