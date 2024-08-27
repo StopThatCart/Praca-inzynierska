@@ -24,6 +24,7 @@ import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
+import com.example.yukka.model.dzialka.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
@@ -383,12 +384,12 @@ public class YukkaApplication {
 
 		DzialkaRoslinaRequest req = DzialkaRoslinaRequest.builder()
 		.numerDzialki(1).x(1).y(1)
-		.nazwaLacinskaRosliny("symphytum grandiflorum'goldsmith'")
+		.nazwaLacinska("symphytum grandiflorum'goldsmith'")
 		.build();
 
 		DzialkaRoslinaRequest req2 = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2).x(1).y(1)
-		.nazwaLacinskaRosliny("taxus baccata'adpressa'")
+		.nazwaLacinska("taxus baccata'adpressa'")
 		.build();
 
 		
@@ -411,6 +412,25 @@ public class YukkaApplication {
 
 		System.out.println("Aktualizacja obrazu rośliny w działce");
 		dzialkaService.updateRoslinaObrazInDzialka(req2, obraz2, usPiotr);
+
+		MoveRoslinaRequest moveRequest1 = MoveRoslinaRequest.builder()
+		.numerDzialkiStary(2)
+		.xStary(1).yStary(1)
+		.xNowy(3).yNowy(4)
+		.build();
+
+		MoveRoslinaRequest moveRequest2 = MoveRoslinaRequest.builder()
+		.numerDzialkiStary(2)
+		.numerDzialkiNowy(1)
+		.xStary(3).yStary(4)
+		.xNowy(7).yNowy(7)
+		.build();
+
+		System.out.println("Zmienianie pozycji rośliny w działce");
+		dzialkaService.updateRoslinaPositionInDzialka(moveRequest1, usPiotr);
+
+		System.out.println("Zmienianie pozycji rośliny w działce do nowej działki");
+		dzialkaService.updateRoslinaPositionInDzialka(moveRequest2, usPiotr);
 
 	}
 

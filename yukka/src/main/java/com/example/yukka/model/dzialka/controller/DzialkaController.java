@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
+import com.example.yukka.model.dzialka.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.dzialka.service.ZasadzonaNaService;
 
@@ -66,12 +66,18 @@ public class DzialkaController {
     }
 */
     @PostMapping("/rosliny")
-    public ResponseEntity<Dzialka> saveRoslinaToDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, Authentication connectedUser) {
+    public ResponseEntity<DzialkaResponse> saveRoslinaToDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, Authentication connectedUser) {
         return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, connectedUser));
     }
 
+    @PatchMapping(value = "/rosliny/pozycja", consumes = "multipart/form-data")
+    public ResponseEntity<DzialkaResponse> updateRoslinaPositionInDzialka(@Valid @RequestBody MoveRoslinaRequest request, 
+    Authentication connectedUser) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(dzialkaService.updateRoslinaPositionInDzialka(request, connectedUser));
+    }
+
     @PatchMapping(value = "/rosliny/obraz", consumes = "multipart/form-data")
-    public ResponseEntity<Dzialka> updateRoslinaObrazInDzialka(@Valid @RequestBody DzialkaRoslinaRequest request,
+    public ResponseEntity<DzialkaResponse> updateRoslinaObrazInDzialka(@Valid @RequestBody DzialkaRoslinaRequest request,
         @Parameter() @RequestPart("file") MultipartFile file,
         Authentication connectedUser) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(dzialkaService.updateRoslinaObrazInDzialka(request, file, connectedUser));

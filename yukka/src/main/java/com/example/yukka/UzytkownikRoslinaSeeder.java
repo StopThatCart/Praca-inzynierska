@@ -92,7 +92,7 @@ public class UzytkownikRoslinaSeeder {
 
         DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2).x(9).y(9)
-		.uzytkownikRoslinaId("12345678")
+		.roslinaId("12345678")
 		.build();
 
 		dzialkaService.saveRoslinaToDzialka(req3, uzyt);

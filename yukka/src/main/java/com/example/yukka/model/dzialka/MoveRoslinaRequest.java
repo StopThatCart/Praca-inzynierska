@@ -1,4 +1,5 @@
 package com.example.yukka.model.dzialka;
+
 import com.example.yukka.validations.ValidRoslinaIdAlboNazwaLacinska;
 
 import jakarta.validation.constraints.Max;
@@ -14,26 +15,38 @@ import lombok.ToString;
 @Builder
 @ToString
 @ValidRoslinaIdAlboNazwaLacinska
-public class DzialkaRoslinaRequest {
+public class MoveRoslinaRequest {
     private String roslinaId;
     private String nazwaLacinska;
 
     @NotEmpty(message = "Co...?")
     @Min(value = 1, message = "Numer działki musi być > 0")
     @Max(value = 10, message = "Numer działki musi być <= 10")
-    private int numerDzialki;
+    private int numerDzialkiStary;
+
+    // Może być null jak nie zmienia się działki
+    @Min(value = 1, message = "Numer działki musi być > 0")
+    @Max(value = 10, message = "Numer działki musi być <= 10")
+    private int numerDzialkiNowy;
 
     @NotEmpty(message = "Pozycja x jest wymagana")
-    @Min(value = 1, message = "Pozycja x musi być > 0")
-    @Max(value = 20, message = "Pozycja x musi być <= 20")
-    private int x;
+    @Min(value = 0, message = "Pozycja starego x musi być > 0")
+    @Max(value = 20, message = "Pozycja starego x musi być <= 20")
+    private int xStary;
 
     @NotEmpty(message = "Pozycja y jest wymagana")
+    @Min(value = 1, message = "Pozycja starego y musi być > 0")
+    @Max(value = 20, message = "Pozycja starego y musi być <= 20")
+    private int yStary;
+
+    @NotEmpty(message = "Nowa pozycja x jest wymagana")
+    @Min(value = 1, message = "Pozycja x musi być > 0")
+    @Max(value = 20, message = "Pozycja x musi być <= 20")
+    private int xNowy;
+
+    @NotEmpty(message = "Nowa pozycja y jest wymagana")
     @Min(value = 1, message = "Pozycja y musi być > 0")
     @Max(value = 20, message = "Pozycja y musi być <= 20")
-    private int y;
-
-    // Null jak nie dopina się żadnego obrazu
-    private String obraz;
+    private int yNowy;
 
 }

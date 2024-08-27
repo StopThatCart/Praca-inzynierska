@@ -75,8 +75,48 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Param("nazwaLacinska") String nazwaLacinska);
 
 
+    @Query("""
+        MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
+              (:Ogrod)-[:MA_DZIALKE]->
+              (d:Dzialka{numer: $numerDzialki})
+              
+        MATCH (d)<-[existing:ZASADZONA_NA {x: $xStary, y: $yStary}]-(existingRoslina)
+        SET existing.x = $xNowy, existing.y = $yNowy
+
+        WITH d
+        MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
+              
+        RETURN d, collect(nodes(path)), collect(relationships(path))
+            """)
+    Dzialka updateRoslinaPositionInDzialka(@Param("email") String email,
+        @Param("numerDzialki") int numerDzialki, 
+        @Param("xStary") int xStary, @Param("yStary") int yStary, 
+        @Param("xNowy") int xNowy, @Param("yNowy") int getYNowy);
 
         @Query("""
+        MATCH (u:Uzytkownik{email: $email})-[maOgrod:MA_OGROD]->(ogrod:Ogrod)-[:MA_DZIALKE]->(d1:Dzialka{numer: $numerDzialkiStary})
+        MATCH (u)-[maOgrod]->(ogrod)-[:MA_DZIALKE]->(d2:Dzialka{numer: $numerDzialkiNowy})
+                
+        MATCH (d1)<-[existing:ZASADZONA_NA {x: $xStary, y: $yStary}]-(existingRoslina)
+
+        WITH existing, d1, d2, existingRoslina, existing.obraz AS obrazek
+        DELETE existing
+
+        MERGE (d2)<-[existing2:ZASADZONA_NA {x: $xNowy, y: $yNowy, obraz: obrazek}]-(existingRoslina)
+
+        WITH d2
+        MATCH path = (d2)<-[zasadzone:ZASADZONA_NA]-(rosliny)
+                
+        RETURN d2, collect(nodes(path)), collect(relationships(path))
+                """)
+        Dzialka updateRoslinaPositionInDzialka(@Param("email") String email,
+        @Param("numerDzialkiStary") int numerDzialkiStary,
+        @Param("numerDzialkiNowy") int numerDzialkiNowy, 
+        @Param("xStary") int xStary, @Param("yStary") int yStary, 
+        @Param("xNowy") int xNowy, @Param("yNowy") int getYNowy);
+
+
+    @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
               (:Ogrod)-[:MA_DZIALKE]->
               (d:Dzialka{numer: $numerDzialki})

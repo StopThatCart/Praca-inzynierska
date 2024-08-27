@@ -29,10 +29,17 @@ public class RoslinaMapper {
     private final FileUtils fileUtils;
 
     public DzialkaResponse toDzialkaResponse(Dzialka dzialka) {
+        Uzytkownik uzyt = null;
+        String nazwa = null;
+        if(dzialka.getOgrod() != null && dzialka.getOgrod().getUzytkownik() != null) {
+            uzyt = dzialka.getOgrod().getUzytkownik();
+            nazwa = uzyt.getNazwa();
+        }
+
         return DzialkaResponse.builder()
             .id(dzialka.getId())
             .numer(dzialka.getNumer())
-            .wlascicielNazwa(dzialka.getOgrod().getUzytkownik().getNazwa())
+            .wlascicielNazwa(dzialka.getOgrod() != null ? nazwa : null)
             .zasadzoneRosliny(dzialka.getZasadzoneRosliny().stream()
                 .map(this::toZasadzonaRoslinaResponse)
                 .collect(Collectors.toList()))

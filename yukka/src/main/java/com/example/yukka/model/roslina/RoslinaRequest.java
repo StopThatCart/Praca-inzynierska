@@ -21,6 +21,7 @@ public class RoslinaRequest {
     // TODO: Zrobić sprawdzanie OR dla roslinaId i nazwa
     private String roslinaId;
 
+    @NotEmpty(message = "Nazwa jest wymagana")
     private String nazwa;
 
     @NotEmpty(message = "Nazwa jest wymagana")
