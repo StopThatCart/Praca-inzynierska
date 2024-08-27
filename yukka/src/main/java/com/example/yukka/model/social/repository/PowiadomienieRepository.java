@@ -52,7 +52,7 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
 
     @Query("""
         MATCH (uzyt:Uzytkownik)
-        WHERE uzyt:Pracownik OR uzyt:Admin
+        WHERE uzyt:Pracownik
         CREATE (pow:Powiadomienie{typ:  pp.typ, odnosnik: pp.odnosnik, 
                                         tytul: pp.tytul, uzytkownikNazwa: pp.uzytkownikNazwa, 
                                         opis: pp.opis, avatar: pp.avatar, 

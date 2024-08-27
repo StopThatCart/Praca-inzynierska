@@ -1,7 +1,9 @@
 package com.example.yukka.model.social.powiadomienie;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Value;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -14,14 +16,15 @@ import lombok.ToString;
 @Builder
 @ToString
 // Tak naprawdę to jest DTO, ale nie chce mi się zmieniać nazwy
-public class PowiadomienieResponse {
+public class PowiadomienieDTO {
     private String typ;
     private String tytul;
     private String odnosnik;
     private String opis;
-    private List<String> nazwyRoslin;
+    private Set<String> nazwyRoslin;
     @Builder.Default
-    private String avatar = "default_avatar.png";
+    @Value("${powiadomienia.obraz.default.name}")
+    private String avatar = "default_powiadomienie_avatar.png";
     private String uzytkownikNazwa;
     private int iloscPolubien;
     private LocalDateTime data;

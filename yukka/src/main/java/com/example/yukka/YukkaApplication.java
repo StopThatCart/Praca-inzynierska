@@ -1,5 +1,7 @@
 package com.example.yukka;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -7,22 +9,37 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.yukka.file.FileStoreService;
+import com.example.yukka.file.FileUtils;
+import com.example.yukka.model.dzialka.Dzialka;
+import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
+import com.example.yukka.model.dzialka.MoveRoslinaRequest;
+import com.example.yukka.model.dzialka.repository.DzialkaRepository;
+import com.example.yukka.model.dzialka.service.DzialkaService;
+import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
+import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
+import com.example.yukka.model.social.request.PostRequest;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.social.service.KomentarzService;
+import com.example.yukka.model.social.service.PostService;
+import com.example.yukka.model.social.service.PowiadomienieService;
 import com.example.yukka.model.social.service.RozmowaPrywatnaService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
@@ -36,20 +53,37 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class YukkaApplication {
+	// Potrzebne żeby funkcje Scheduled nie działały przed załadowaniem aplikacji
+	private static boolean isApplicationReady = false;
+
+	@Value("${obraz.seed.path}")
+    private String obrazSeedPath;
 
 	private final PasswordEncoder passwordEncoder;
 	private final UzytkownikRepository uzytkownikRepository;
 	private final UzytkownikService uzytkownikService;
 
+	private final UzytkownikRoslinaService uzytkownikRoslinaService;
+	private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
+
 	private final PostRepository postRepository;
+	private final PostService postService;
 	private final KomentarzRepository komentarzRepository;
 	private final RozmowaPrywatnaService rozmowaPrywatnaService;
 	private final RozmowaPrywatnaRepository rozmowaPrywatnaRepository;
 	private final KomentarzService komentarzService;
 
-
+	private final DzialkaService dzialkaService;
+	private final DzialkaRepository dzialkaRepository;
 
 	private final RoslinaImporterService roslinaImporterService;
+
+	private final FileUtils fileUtils;
+	private final FileStoreService fileStoreService;
+
+	private final UzytkownikRoslinaSeeder uzytkownikRoslinaSeeder;
+
+	private final PowiadomienieService powiadomienieService;
 
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
@@ -63,10 +97,14 @@ public class YukkaApplication {
 		// PythonPlantSeeder scriptRunner = context.getBean(PythonPlantSeeder.class);
        // String scriptOutput = scriptRunner.runPythonScript();
        // System.out.println(scriptOutput);
-		
+	   isApplicationReady = true;
 
 
 	}
+
+	public static boolean isApplicationReady() {
+        return isApplicationReady;
+    }
 
 	@Bean
     public CommandLineRunner seedDatabase() {
@@ -76,15 +114,19 @@ public class YukkaApplication {
             seed();
         };
     }
+	
 
 	void unseed() {
+		uzytkownikService.seedRemoveUzytkownicyObrazy();
 		uzytkownikRepository.clearUzytkowicy();
-		postRepository.clearPosts();
+
+		//komentarzService.seedRemoveKomentarzeObrazy();
 		komentarzRepository.clearKomentarze();
+		//postService.seedRemovePostyObrazy();
+		postRepository.clearPosts();
 	}
 
 	void seed() {
-
 		// Użytkownicy na razie bez relacji
 
 		Uzytkownik usJan = Uzytkownik.builder()
@@ -127,6 +169,13 @@ public class YukkaApplication {
 		uzytkownikService.addUzytkownik(usPiotr);
 		uzytkownikService.addUzytkownik(usKatarzyna);
 		uzytkownikService.addUzytkownik(usMichal);
+
+
+		Path adachiPath = Paths.get(obrazSeedPath, "adachi.jpg");
+		MockMultipartFile obrazAvatar1 = new MockMultipartFile("tempFileName", "adachi.jpg", 
+		"image/png", fileUtils.readFileFromLocation(adachiPath));
+
+		uzytkownikService.updateUzytkownikAvatar(obrazAvatar1, usPiotr);
 		
 		
 		String postId1 = UUID.randomUUID().toString();
@@ -150,10 +199,23 @@ public class YukkaApplication {
         .opis("Jakiś postowy opis3")
         .build();
 
+		PostRequest postReq1 = PostRequest.builder().tytul("Jakiś post3").opis("Jakiś postowy opis3").build();
+
+		Path cheezyPath = Paths.get(obrazSeedPath, "cheezy.jpg");
+		MockMultipartFile obrazPost1 = new MockMultipartFile("tempFileName", "cheezy.jpg", 
+		"image/png", fileUtils.readFileFromLocation(cheezyPath));
+
 		// Dodawanie postów
 		postRepository.addPost(michalEmail, p1);
 		postRepository.addPost(michalEmail, p2);
-		postRepository.addPost(michalEmail, p3);
+
+		//
+		try {
+			p3 = postService.save(postReq1, obrazPost1, usMichal);
+		} catch (FileUploadException e) {
+			e.printStackTrace();
+		}
+		//postRepository.addPost(michalEmail, p3);
 	
 		// Dodawanie ocen do postów
 		postRepository.addOcenaToPost(katarzynaEmail, postId1, false);
@@ -193,15 +255,48 @@ public class YukkaApplication {
 		// komentarzRepository.addKomentarzToPost(postId3, k12);
 
 		// To samo, tylko daje powiadomienia użytkownikom
-		
-		Komentarz kom1 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 1").targetId(postId1).build(), usPiotr);
-		Komentarz kom2 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3").targetId(postId3).build(), usKatarzyna);
-		System.out.println("Komentarz 2: " + kom2.toString());
-		Komentarz kom3 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3").targetId(postId3).build(), usPiotr);
 
-		Komentarz kom4 = komentarzService.addOdpowiedzToKomentarz(KomentarzRequest.builder().opis("Piotr2 opis").targetId(kom2.getKomentarzId()).build(), usPiotr);
-		Komentarz kom5 = komentarzService.addOdpowiedzToKomentarz(KomentarzRequest.builder().opis("Kata2 opis").targetId(kom2.getKomentarzId()).build(), usKatarzyna);
-	//	Komentarz kom6 = komentarzService.addOdpowiedzToKomentarz(KomentarzRequest.builder().opis("Kata3 opis").targetId(kom5.getKomentarzId()).build(), usKatarzyna);
+
+		
+		System.out.println("Dodawanie komentarzy do postów");
+
+		Komentarz kom1 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 1 od Piotra").targetId(p1.getPostId()).build(), usPiotr);
+		Komentarz kom2 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3 od Katarzyny").targetId(p3.getPostId()).build(), usKatarzyna);
+		//System.out.println("Komentarz 2: " + kom2.toString());
+		Komentarz kom3 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3 od Piotra").targetId(p3.getPostId()).build(), usPiotr);
+
+		System.out.println("Dodawanie odpowiedzi do komentarzy");
+
+		Path kotPath = Paths.get(obrazSeedPath, "kot.png");
+		MockMultipartFile obraz1 = new MockMultipartFile("tempFileName", "kot.png", 
+		"image/png", fileUtils.readFileFromLocation(kotPath));
+
+		Path peppinoPath = Paths.get(obrazSeedPath, "peppino.png");
+		MockMultipartFile obraz2 = new MockMultipartFile("tempFileName", "peppino.png", 
+		"image/png", fileUtils.readFileFromLocation(peppinoPath));
+
+	//	System.out.println("Obraz: " + obraz.length);
+	//	System.out.println("Multipart: " + obraz1.getContentType());
+
+		KomentarzRequest komReq1 = KomentarzRequest.builder().opis("Piotr2 opis").targetId(kom2.getKomentarzId()).build();
+		Komentarz kom4 = null;
+		KomentarzRequest komReq2 = KomentarzRequest.builder().opis("Kata2 opis").targetId(kom2.getKomentarzId()).build();
+		Komentarz kom5 = null;
+		try {
+			kom4 = komentarzService.addOdpowiedzToKomentarz(komReq1, obraz1, usPiotr);
+			kom5 = komentarzService.addOdpowiedzToKomentarz(komReq2, obraz2, usKatarzyna);
+		} catch (FileUploadException e) {
+			e.printStackTrace();
+		}
+
+		
+		
+
+		KomentarzRequest komReq3 = KomentarzRequest.builder().opis("Kata3 opis").targetId(kom5.getKomentarzId()).build();
+		Komentarz kom6 = komentarzService.addOdpowiedzToKomentarz(komReq3, usKatarzyna);
+
+		KomentarzRequest komReq4 = KomentarzRequest.builder().opis("Michał opis").targetId(kom4.getKomentarzId()).build();
+		Komentarz kom7 = komentarzService.addOdpowiedzToKomentarz(komReq4, usMichal);
 
 				
 
@@ -210,12 +305,27 @@ public class YukkaApplication {
 	//	System.out.println("\n\n\nocenia1\n\n\n\n\n\n");
 		//komentarzRepository.addOcenaToKomentarz(piotrEmail, komId2, false);
 	//	System.out.println("ocenia2");
-	//	komentarzRepository.addOcenaToKomentarz(katarzynaEmail, komId1, true);
+		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom1.getKomentarzId(), true);
+		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom3.getKomentarzId(), false);
+		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom4.getKomentarzId(), false);
+		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom7.getKomentarzId(), false);
+
 	//	System.out.println("ocenia3");
-	//	komentarzRepository.addOcenaToKomentarz(piotrEmail, komId4, true); 
-	//	komentarzRepository.addOcenaToKomentarz(katarzynaEmail, komId3, false);
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom1.getKomentarzId(), true);
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom2.getKomentarzId(), false);
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom3.getKomentarzId(), true); 
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom4.getKomentarzId(), false); 
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom5.getKomentarzId(), true);
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom6.getKomentarzId(), true);
+
+		komentarzRepository.addOcenaToKomentarz(piotrEmail, kom2.getKomentarzId(), false);
+		komentarzRepository.addOcenaToKomentarz(piotrEmail, kom5.getKomentarzId(), false);
+		 
 		//komentarzRepository.addOcenaToKomentarz(piotrEmail, komId5, true); 
-		
+
+		// Usunięcie oceny
+		komentarzRepository.addOcenaToKomentarz(michalEmail, kom3.getKomentarzId(), false);
+		//komentarzRepository.removeOcenaFromKomentarz(michalEmail, kom3.getKomentarzId());
 
 		// Rozmowy prywatne
 
@@ -226,15 +336,15 @@ public class YukkaApplication {
 		String komId10 = UUID.randomUUID().toString();
 
 		// Do testów
-		Uzytkownik piotr = uzytkownikService.findByEmail(piotrEmail);
-		Uzytkownik katarzyna = uzytkownikService.findByEmail(katarzynaEmail);
+		Uzytkownik piotr = uzytkownikRepository.findByEmail(piotrEmail).get();
+		Uzytkownik katarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
 
 		// Zaproszenie do rozmowy prywatnej
 		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(usKatarzyna.getUzytId(), usPiotr.getUzytId());
 
 		// Akceptacja rozmowy prywatnej
 		RozmowaPrywatna meh = rozmowaPrywatnaRepository.acceptRozmowaPrywatna(piotr.getUzytId(), katarzyna.getUzytId());
-		System.out.println("Meh: " + meh.toString());
+		//System.out.println("Meh: " + meh.toString());
 		//rozmowaPrywatnaService.acceptRozmowaPrywatnaNoPunjabi(katarzyna.getNazwa(), piotr);
 
 		// Dodanie komentarzy do rozmowy prywatnej
@@ -264,6 +374,64 @@ public class YukkaApplication {
 
 		//System.out.println("Czas: " + timeAgo(what));
 		//testPrettyTime();
+
+		// Testowanie usuwanka
+		//System.out.println("Usuwanie komentarzy");
+		//komentarzService.deleteKomentarzFromPost(postId3, kom4.getKomentarzId(), usJan);
+
+		//System.out.println("Usuwanie posta");
+		//postService.deletePost(postId3, usJan);
+
+		DzialkaRoslinaRequest req = DzialkaRoslinaRequest.builder()
+		.numerDzialki(1).x(1).y(1)
+		.nazwaLacinska("symphytum grandiflorum'goldsmith'")
+		.build();
+
+		DzialkaRoslinaRequest req2 = DzialkaRoslinaRequest.builder()
+		.numerDzialki(2).x(1).y(1)
+		.nazwaLacinska("taxus baccata'adpressa'")
+		.build();
+
+		
+		System.out.println("Dodawanie rośliny 1 do działek");
+		dzialkaService.saveRoslinaToDzialka(req, usPiotr);
+
+		System.out.println("Dodawanie rośliny 2 do działek");
+		dzialkaService.saveRoslinaToDzialka(req2, usPiotr);
+
+		// Wywala exception i słusznie
+		//dzialkaService.saveRoslinaToDzialka(req3, usPiotr);
+
+		Dzialka piotrDzialka2 = dzialkaRepository.getDzialkaByNumer(usPiotr.getEmail(), 2).get();
+
+		//System.out.println("Dzialka 2: " + piotrDzialka2.toString());
+
+		// Rosliny uzytkownika 
+		System.out.println("Seedowanie roślin użytkownika");
+		uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usPiotr);
+
+		System.out.println("Aktualizacja obrazu rośliny w działce");
+		dzialkaService.updateRoslinaObrazInDzialka(req2, obraz2, usPiotr);
+
+		MoveRoslinaRequest moveRequest1 = MoveRoslinaRequest.builder()
+		.numerDzialkiStary(2)
+		.xStary(1).yStary(1)
+		.xNowy(3).yNowy(4)
+		.build();
+
+		MoveRoslinaRequest moveRequest2 = MoveRoslinaRequest.builder()
+		.numerDzialkiStary(2)
+		.numerDzialkiNowy(1)
+		.xStary(3).yStary(4)
+		.xNowy(7).yNowy(7)
+		.build();
+
+		System.out.println("Zmienianie pozycji rośliny w działce");
+		dzialkaService.updateRoslinaPositionInDzialka(moveRequest1, usPiotr);
+
+		System.out.println("Zmienianie pozycji rośliny w działce do nowej działki");
+		dzialkaService.updateRoslinaPositionInDzialka(moveRequest2, usPiotr);
+
 	}
 
 	public static String timeAgo(LocalDateTime dateTime) {

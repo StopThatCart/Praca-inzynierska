@@ -78,5 +78,20 @@
     "name": "uzytkownik.obraz.default.name",
     "type": "java.lang.String",
     "description": "A description for 'uzytkownik.obraz.default.name'"
+  },
+  {
+    "name": "obraz.seed.path",
+    "type": "java.lang.String",
+    "description": "A description for 'obraz.seed.path'"
+  },
+  {
+    "name": "powiadomienia.obraz.default.png-file-path",
+    "type": "java.lang.String",
+    "description": "A description for 'powiadomienia.obraz.default.png-file-path'"
+  },
+  {
+    "name": "powiadomienia.obraz.default.name",
+    "type": "java.lang.String",
+    "description": "A description for 'powiadomienia.obraz.default.name'"
   }
 ]}

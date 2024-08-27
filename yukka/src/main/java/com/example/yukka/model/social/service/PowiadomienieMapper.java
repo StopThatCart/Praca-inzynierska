@@ -8,17 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.social.powiadomienie.Powiadomienie;
-import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
+import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 
 @Service
 public class PowiadomienieMapper {
 
 
-    public PowiadomienieResponse toPowiadomienieResponse(Powiadomienie powiadomienie) {
+    public PowiadomienieDTO toPowiadomienieResponse(Powiadomienie powiadomienie) {
         if (powiadomienie == null) {
             return null;
         }
-        return PowiadomienieResponse.builder()
+        return PowiadomienieDTO.builder()
             .typ(powiadomienie.getTyp())
             .tytul(powiadomienie.getTytul())
             .odnosnik(powiadomienie.getOdnosnik())
@@ -32,8 +32,8 @@ public class PowiadomienieMapper {
             .build();
     }
 
-    public PageResponse<PowiadomienieResponse> PowiadomieniePageToPagePowiadomienieResponse(Page<Powiadomienie> powiadomienia) {
-            List<PowiadomienieResponse> powiadomieniaResponse = powiadomienia.getContent().stream()
+    public PageResponse<PowiadomienieDTO> PowiadomieniePageToPagePowiadomienieResponse(Page<Powiadomienie> powiadomienia) {
+            List<PowiadomienieDTO> powiadomieniaResponse = powiadomienia.getContent().stream()
             .map(this::toPowiadomienieResponse)
             .collect(Collectors.toList());
     

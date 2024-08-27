@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
+import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
@@ -28,6 +29,8 @@ public class RoslinaService {
 
     @Autowired
     FileStoreService fileStoreService;
+    @Autowired
+    FileUtils fileUtils;
 
     @Autowired
     RoslinaMapper roslinaMapper;
@@ -67,7 +70,7 @@ public class RoslinaService {
     }
 
     public Optional<Roslina> findByNazwaLacinska(String nazwaLacinska) {
-        return roslinaRepository.findByNazwaLacinska(nazwaLacinska);
+        return roslinaRepository.findByNazwaLacinskaWithRelations(nazwaLacinska);
     }
 
     public Roslina save(RoslinaRequest request) {
@@ -151,15 +154,17 @@ public class RoslinaService {
     public void uploadRoslinaObraz(MultipartFile file, Authentication connectedUser, String latinName) {
         Roslina roslina = roslinaRepository.findByNazwaLacinska(latinName).get();
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-
+        
         String pfp = fileStoreService.saveRoslina(file, latinName, uzyt.getUsername());
         if(pfp == null){
             return;
         }
+        fileUtils.deleteObraz(roslina.getObraz());
         
         roslina.setObraz(pfp);
         roslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getObraz(), roslina.getWysokoscMin(), roslina.getWysokoscMax());
     }
+
 
     // Usuwanie po ID zajmuje ogromną ilość czasu i wywołuje HeapOverflow, więc lepiej jest użyć UNIQUE atrybutu jak nazwaLacinska
     public void deleteByNazwaLacinska(String nazwaLacinska) {

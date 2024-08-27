@@ -30,15 +30,14 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/rest/neo4j/rosliny")
-@Tag(name = "Post")
+@Tag(name = "Roslina")
 public class RoslinaController {
 
     @Autowired
     RoslinaService roslinaService;
 
-
     @GetMapping
-    public ResponseEntity<PageResponse<RoslinaResponse>> findAllPosty(
+    public ResponseEntity<PageResponse<RoslinaResponse>> findAllRosliny(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser) {
@@ -101,18 +100,5 @@ public class RoslinaController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usunięto rośline o nazwie łacińskiej - " + nazwaLacinska);
     }
-    
-
-    // TODO: Przetestować to jak już będzie podstawowy panel. Dodatkowo obsługa usuwania starego obrazu po zmianie obrazu
-    @PostMapping(value = "/{nazwaLacinska}", consumes = "multipart/form-data")
-    public ResponseEntity<?> uploadBookCoverPicture(
-            @PathVariable("nazwaLacinska") String nazwaLacinska, 
-            @Parameter() @RequestPart("file") 
-            MultipartFile file, 
-            Authentication connectedUser) {
-        roslinaService.uploadRoslinaObraz(file, connectedUser, nazwaLacinska);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-    }
-    
 
 }

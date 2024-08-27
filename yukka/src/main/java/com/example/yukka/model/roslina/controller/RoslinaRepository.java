@@ -16,15 +16,27 @@ import com.example.yukka.model.roslina.Roslina;
 public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
     @Query("""
-        MATCH (ros:Roslina{nazwaLacinska: $latinName})
+        MATCH (roslina:Roslina{nazwaLacinska: $latinName}) WHERE NOT roslina:UzytkownikRoslina
+        RETURN count(roslina) > 0
+    """)
+    boolean checkIfRoslinaWithNazwaLacinskaExists(@Param("latinName") String latinName);
+
+    @Query("""
+        MATCH (roslina:Roslina{nazwaLacinska: $latinName}) WHERE NOT roslina:UzytkownikRoslina
         OPTIONAL MATCH path=(ros)-[r]-(:Wlasciwosc)
-        RETURN ros, collect(nodes(path)), collect(relationships(path))
+        RETURN roslina, collect(nodes(path)), collect(relationships(path))
+    """)
+    Optional<Roslina> findByNazwaLacinskaWithRelations(@Param("latinName") String latinName);
+
+    @Query("""
+        MATCH (roslina:Roslina{nazwaLacinska: $latinName}) WHERE NOT roslina:UzytkownikRoslina
+        RETURN roslina
     """)
     Optional<Roslina> findByNazwaLacinska(@Param("latinName") String latinName);
 
 
     @Query(value = """
-        MATCH (roslina:Roslina)
+        MATCH (roslina:Roslina) WHERE NOT roslina:UzytkownikRoslina
         RETURN roslina
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
         """,
@@ -37,7 +49,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     // TODO: Sprawdź jak działa na frontendzie
     @Query(value = """
         WITH $roslina.__properties__ AS rp 
-        MATCH (roslina:Roslina)
+        MATCH (roslina:Roslina) WHERE NOT roslina:UzytkownikRoslina
         OPTIONAL MATCH (roslina)-[rel]->(relatedNode)
         WHERE (rp.nazwa IS NULL OR roslina.nazwa CONTAINS rp.nazwa) 
             AND (rp.nazwaLacinska IS NULL OR roslina.nazwaLacinska CONTAINS rp.nazwaLacinska)
@@ -55,7 +67,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         """,
        countQuery = """
         WITH $roslina.__properties__ AS rp 
-        MATCH (roslina:Roslina)
+        MATCH (roslina:Roslina) WHERE NOT roslina:UzytkownikRoslina
         OPTIONAL MATCH (roslina)-[rel]->(relatedNode)
         WHERE (rp.nazwa IS NULL OR roslina.nazwa CONTAINS rp.nazwa) 
             AND (rp.nazwaLacinska IS NULL OR roslina.nazwaLacinska CONTAINS rp.nazwaLacinska)
@@ -73,10 +85,10 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     Page<Roslina> findAllRoslinyWithParameters(Pageable pageable, @Param("roslina") Roslina roslina);
 
     // Do wyrzucenia
-    @Query("MATCH path=(p:Roslina)-[r]->(g:Wlasciwosc) RETURN p, collect(nodes(path)), collect(relationships(path)) LIMIT $amount")
+    @Query("MATCH path=(p:Roslina)-[r]->(g:Wlasciwosc) WHERE NOT p:UzytkownikRoslina RETURN p, collect(nodes(path)), collect(relationships(path)) LIMIT $amount")
     Collection<Roslina> getSomePlants(@Param("amount") int amount);
     // Do wyrzucenia
-    @Query("MATCH (r:Roslina)-[:MA_GLEBE]->(g:Gleba) WHERE r.name = $name RETURN r, collect(g) as glebus")
+    @Query("MATCH (r:Roslina)-[:MA_GLEBE]->(g:Gleba) WHERE NOT r:UzytkownikRoslina AND r.name = $name RETURN r, collect(g) as glebus")
     Roslina findRoslinaWithGleba(@Param("name") String name);
 
     @Query("""
@@ -120,7 +132,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 // To niestety trzeba zapamiętać bo mi trochę zajęło
 // Czas wykonania testu: 162ms, 179ms
     @Query("""
-           MATCH (p:Roslina{nazwaLacinska: $latinName})
+           MATCH (p:Roslina{nazwaLacinska: $latinName}) WHERE NOT p:UzytkownikRoslina
            SET  p.nazwa = $name, p.opis = $description,
                 p.obraz = COALESCE($imageFilename, 'default_plant.jpg'),
                 p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
@@ -155,7 +167,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
 
     @Query("""
-        MATCH (p:Roslina{nazwaLacinska: $latinName})
+        MATCH (p:Roslina{nazwaLacinska: $latinName}) WHERE NOT p:UzytkownikRoslina
         SET  p.nazwa = $name, p.opis = $description,
             p.obraz = COALESCE($imageFilename, 'default_plant.jpg'),
             p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
@@ -172,7 +184,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
     // Czas wykonania testu: 462ms, 330ms
     @Query("""
-            MATCH (p:Roslina{nazwaLacinska: $latinName})
+            MATCH (p:Roslina{nazwaLacinska: $latinName}) WHERE NOT p:UzytkownikRoslina
             SET p.nazwa = $name, p.opis = $description,
                 p.obraz = COALESCE($imageFilename, 'default_plant.jpg'),
                 p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
@@ -202,7 +214,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         @Param("relatLump") List<Map<String, String>> relatLump
     );
     
-    @Query("MATCH (p:Roslina{nazwaLacinska: $latinName}) DETACH DELETE p")
+    @Query("MATCH (p:Roslina{nazwaLacinska: $latinName}) WHERE NOT p:UzytkownikRoslina DETACH DELETE p")
     void deleteByNazwaLacinska(@Param("latinName") String latinName);
 
 }

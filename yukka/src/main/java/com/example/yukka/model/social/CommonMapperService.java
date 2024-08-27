@@ -16,6 +16,7 @@ import com.example.yukka.model.social.post.PostResponse;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +24,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommonMapperService {
     private final FileUtils fileUtils;
+
+
+    public UzytkownikResponse toUzytkownikResponse(Uzytkownik uzytkownik) {
+        if (uzytkownik == null) {
+            return null;
+        }
+        return UzytkownikResponse.builder()
+            .id(uzytkownik.getId())
+            .uzytId(uzytkownik.getUzytId())
+            .labels(uzytkownik.getLabels())
+            .nazwa(uzytkownik.getNazwa())
+            .email(uzytkownik.getEmail())
+            .avatar(fileUtils.readAvatarFile(uzytkownik.getAvatar()))
+            .komentarzeOcenyNegatywne(uzytkownik.getKomentarzeOcenyNegatywne())
+            .komentarzeOcenyPozytywne(uzytkownik.getKomentarzeOcenyPozytywne())
+            .postyOcenyNegatywne(uzytkownik.getPostyOcenyNegatywne())
+            .postyOcenyPozytywne(uzytkownik.getPostyOcenyPozytywne())
+            .dataUtworzenia(uzytkownik.getDataUtworzenia())
+            .ban(uzytkownik.isBan())
+            .build();
+    }
     
     public PostResponse mapToPostResponse(Post post) {
         return PostResponse.builder()
