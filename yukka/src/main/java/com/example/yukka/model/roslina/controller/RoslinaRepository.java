@@ -97,7 +97,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
         WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
-        WITH p, relat, [ relat.labels, 'Wlasciwosc' ] AS labels
+        WITH p, relat, [ relat.etykieta, 'Wlasciwosc' ] AS labels
         CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
         WITH p, w, relat
         CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
@@ -107,7 +107,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
     Roslina addRoslina(
-        @Param("name") String name,@Param("latinName") String latinName, 
+        @Param("name") String name, @Param("latinName") String latinName, 
         @Param("description") String description, @Param("imageFilename") String imageFilename, 
         @Param("heightMin") Double heightMin, @Param("heightMax") Double heightMax, 
         @Param("relatLump") List<Map<String, String>> relatLump
@@ -146,7 +146,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
            WITH p, newRelatLump AS relatLump
            UNWIND relatLump AS relat
-           WITH p, relat, [ relat.labels, 'Wlasciwosc' ] AS labels
+           WITH p, relat, [ relat.etykieta, 'Wlasciwosc' ] AS labels
            CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
            WITH p, w, relat
            CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel

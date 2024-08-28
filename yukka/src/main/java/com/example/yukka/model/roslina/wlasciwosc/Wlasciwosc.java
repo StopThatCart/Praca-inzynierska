@@ -60,7 +60,6 @@ import lombok.Getter;
             if (o == null || getClass() != o.getClass()) return false;
             Wlasciwosc that = (Wlasciwosc) o;
             return Objects.equals(labels, that.labels) &&
-                // Objects.equals(id, that.id) &&
                 Objects.equals(nazwa, that.nazwa);
         }
 
@@ -73,7 +72,7 @@ import lombok.Getter;
 
         @Override
         public String toString() {
-            return "Wlasciwosc [labels=" + labels + ", id=" + id + ", nazwa=" + nazwa + "]";
+            return "Wlasciwosc [labels=" + labels + ", nazwa=" + nazwa + "]";
         }
 
 

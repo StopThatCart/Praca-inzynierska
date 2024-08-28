@@ -210,7 +210,6 @@ public class RoslinaControllerTest {
         Assertions.assertThat(roslina2.getOpis()).isEqualTo(roslina.getOpis());
         Assertions.assertThat(roslina2.getWysokoscMin()).isEqualTo(roslina.getWysokoscMin());
         Assertions.assertThat(roslina2.getWysokoscMax()).isEqualTo(roslina.getWysokoscMax());
-        Assertions.assertThat(roslina2.getFormy()).isEqualTo(roslina.getFormy());
 
        // System.out.println("\n\n\nroslina2 gleby: "+ roslina2.getGleby().toString() + " ||| " + roslina.getGleby().toString() + "    :roslina]\n\n\n");
         

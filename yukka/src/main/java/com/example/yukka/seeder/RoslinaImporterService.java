@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
@@ -19,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.controller.RoslinaService;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
@@ -181,8 +180,8 @@ public class RoslinaImporterService {
     }
 
     
-    private List<Map<String, String>> parseWlasciwosci(String[] row) {
-        List<Map<String, String>> wlasciwosci = new ArrayList<>();
+    private List<WlasciwoscWithRelations> parseWlasciwosci(String[] row) {
+        List<WlasciwoscWithRelations> wlasciwosci = new ArrayList<>();
 
         addWlasciwosc(wlasciwosci, "Forma", row[6]);
         addWlasciwosc(wlasciwosci, "SilaWzrostu", row[7]);
@@ -205,7 +204,7 @@ public class RoslinaImporterService {
         return wlasciwosci;
     }
 
-    private void addWlasciwosc(List<Map<String, String>> wlasciwosci, String label, String value) {
+    private void addWlasciwosc(List<WlasciwoscWithRelations> wlasciwosci, String label, String value) {
         if (value != null && !value.isEmpty() && !value.toLowerCase().equals(emptyCsvValue.toLowerCase()) 
         && label != null && !label.isEmpty() &&  !label.toLowerCase().equals(emptyCsvValue.toLowerCase())) {
            
@@ -220,11 +219,11 @@ public class RoslinaImporterService {
             for (String part : parts) {
                 part = part.trim();
                 if (!part.isEmpty()) {
-                    Map<String, String> wlasciwosc = new HashMap<>();
+                    WlasciwoscWithRelations wlasciwosc = new WlasciwoscWithRelations(label, part, determineRelacja(meh));
 
-                    wlasciwosc.put("labels", label);
-                    wlasciwosc.put("nazwa",  part);
-                    wlasciwosc.put("relacja", determineRelacja(meh));
+               //     wlasciwosc.put("labels", label);
+               //     wlasciwosc.put("nazwa",  part);
+               //     wlasciwosc.put("relacja", determineRelacja(meh));
                     wlasciwosci.add(wlasciwosc);
                    }
             }

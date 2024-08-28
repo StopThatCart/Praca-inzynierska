@@ -85,11 +85,14 @@ public class RoslinaService {
             return roslinaRepository.addRoslina(pl);
         }
 
+        System.out.println("\n\n\n Nazwa: " + request.getNazwa() + "\n\n\n");
+        System.out.println("\n\n\n Relacje: " + request.getWlasciwosciAsMap() + "\n\n\n");
+
         return roslinaRepository.addRoslina(
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosci());
+            request.getWlasciwosciAsMap());
 
     }
 
@@ -112,7 +115,7 @@ public class RoslinaService {
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosci());
+            request.getWlasciwosciAsMap());
 
         return ros;
     }
@@ -130,7 +133,7 @@ public class RoslinaService {
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosci());
+            request.getWlasciwosciAsMap());
 
         return ros;
     }
@@ -147,7 +150,7 @@ public class RoslinaService {
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosci());
+            request.getWlasciwosciAsMap());
     }
 
     // Uwaga: to jest do głównej rośliny, nie customowej

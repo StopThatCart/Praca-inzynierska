@@ -18,6 +18,7 @@ import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
 import com.example.yukka.model.dzialka.ZasadzonaRoslinaResponse;
 import com.example.yukka.model.roslina.enums.RoslinaRelacje;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import jakarta.validation.Valid;
@@ -75,7 +76,7 @@ public class RoslinaMapper {
             .obraz(roslina.getObraz())
             .wysokoscMin(roslina.getWysokoscMin())
             .wysokoscMax(roslina.getWysokoscMax())
-            .wlasciwosci(mapWlasciwosciToMap(roslina))
+            .wlasciwosci(mapWlasciwosciWithRelationsToMap(roslina))
             .build();
     }
 
@@ -88,8 +89,7 @@ public class RoslinaMapper {
             .wysokoscMin(request.getWysokoscMin())
             .wysokoscMax(request.getWysokoscMax())
             .build();
-        
-        mapMapToRoslina(roslina, request.getWlasciwosci());
+        mapWlasciwosciToRoslina(roslina, request.getWlasciwosci());
         
         return roslina;
     }
@@ -130,7 +130,7 @@ public class RoslinaMapper {
             .obraz(roslina.getObraz())
             .wysokoscMin(roslina.getWysokoscMin())
             .wysokoscMax(roslina.getWysokoscMax())
-            .wlasciwosci(mapWlasciwosciToMap(roslina))
+            .wlasciwosci(mapWlasciwosciWithRelationsToMap(roslina))
             .build();
     }
 
@@ -145,7 +145,7 @@ public class RoslinaMapper {
             .wysokoscMax(request.getWysokoscMax())
             .build();
         
-        mapMapToRoslina(roslina, request.getWlasciwosci());
+        mapWlasciwosciToRoslina(roslina, request.getWlasciwosci());
         
         return roslina;
     }
@@ -206,6 +206,24 @@ public class RoslinaMapper {
                           .collect(Collectors.toSet());
     }
 
+    private List<WlasciwoscWithRelations> mapWlasciwosciWithRelationsToMap(Roslina roslina) {
+        return Arrays.stream(RoslinaRelacje.values())
+            .map(relacja -> mapWlasciwosciRelationToMap(relacja.getWlasciwosci(roslina), relacja))
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
+    }
+    
+    private List<WlasciwoscWithRelations> mapWlasciwosciRelationToMap(Set<Wlasciwosc> wlasciwosci, RoslinaRelacje relacja) {
+        return wlasciwosci.stream()
+            .map(w -> {
+                WlasciwoscWithRelations wlasciwosc = new WlasciwoscWithRelations(w.getLabels(), w.getNazwa(), relacja.name());
+                return wlasciwosc;
+            })
+            .collect(Collectors.toList());
+    }
+
+    
+
     private List<Map<String, String>> mapWlasciwosciToMap(Roslina roslina) {
         return Arrays.stream(RoslinaRelacje.values())
             .map(relacja -> mapRelationToMap(relacja.getWlasciwosci(roslina), relacja))
@@ -231,6 +249,22 @@ public class RoslinaMapper {
             wlasciwosc.setNazwa(w.get("nazwa"));
 
             RoslinaRelacje relacja = RoslinaRelacje.valueOf(w.get("relacja"));
+            Set<Wlasciwosc> existingSet = relacja.getWlasciwosci(roslina);
+            if (existingSet == null) {
+                existingSet = new HashSet<>();
+            }
+            existingSet.add(wlasciwosc);
+            relacja.setWlasciwosci(roslina, existingSet);
+        }
+    }
+
+
+    private void mapWlasciwosciToRoslina(Roslina roslina, List<WlasciwoscWithRelations> wlasciwosci) {
+        for (WlasciwoscWithRelations w : wlasciwosci) {
+            Wlasciwosc wlasciwosc = new Wlasciwosc();
+            wlasciwosc.setNazwa(w.getNazwa());
+
+            RoslinaRelacje relacja = RoslinaRelacje.valueOf(w.getRelacja());
             Set<Wlasciwosc> existingSet = relacja.getWlasciwosci(roslina);
             if (existingSet == null) {
                 existingSet = new HashSet<>();

@@ -2,8 +2,10 @@ package com.example.yukka.model.roslina;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import com.example.yukka.validations.ValidWysokosc;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -38,19 +40,28 @@ public class UzytkownikRoslinaRequest {
     private Double wysokoscMin;
     private Double wysokoscMax;
 
-    private List<Map<String, String>> wlasciwosci;
+    private List<WlasciwoscWithRelations> wlasciwosci;
 
     public boolean areWlasciwosciEmpty() {
         if (wlasciwosci == null || wlasciwosci.isEmpty()) {
             return true;
         }
-        for (Map<String, String> map : wlasciwosci) {
-            for (String value : map.values()) {
-                if (value != null && !value.trim().isEmpty()) {
-                    return false;
-                }
+        for (WlasciwoscWithRelations wlasciwosc : wlasciwosci) {
+            if (wlasciwosc.getNazwa() != null && !wlasciwosc.getNazwa().trim().isEmpty()) {
+                return false;
             }
         }
         return true;
+    }
+
+    @JsonIgnore
+    public List<Map<String, String>> getWlasciwosciAsMap() {
+        return wlasciwosci.stream()
+            .map(w -> Map.of(
+                "etykieta", w.getEtykieta(),
+                "nazwa", w.getNazwa(),
+                "relacja", w.getRelacja()
+            ))
+            .collect(Collectors.toList());
     }
 }

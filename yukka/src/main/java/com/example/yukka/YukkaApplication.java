@@ -111,7 +111,7 @@ public class YukkaApplication {
         return args -> {
 			roslinaImporterService.seedRosliny();
 			unseed();
-            seed();
+        	seed();
         };
     }
 	
