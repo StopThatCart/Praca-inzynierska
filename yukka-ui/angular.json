@@ -30,7 +30,6 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
               "../Projekt bootstrap/assets/bootstrap/js/bootstrap.min.js",
               "../Projekt bootstrap/assets/js/freelancer.js",
               "../Projekt bootstrap/assets/js/Lightbox-Gallery-baguetteBox.min.js",
