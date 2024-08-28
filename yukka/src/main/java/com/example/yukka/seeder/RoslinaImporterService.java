@@ -143,7 +143,7 @@ public class RoslinaImporterService {
             log.warn("Plik obrazu nie znaleziony: " + imagePath);
         }
     return null;
-}
+    }
 
     public List<RoslinaRequest> parseCsvToRoslinaRequests(String filePath, int limit) throws IOException, CsvException {
         List<RoslinaRequest> roslinaRequests = new ArrayList<>();

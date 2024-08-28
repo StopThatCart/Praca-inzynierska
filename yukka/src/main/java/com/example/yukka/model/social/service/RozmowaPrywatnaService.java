@@ -82,7 +82,6 @@ public class RozmowaPrywatnaService {
         return rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
     }
 
-    // TODO: Dodać implementację, że tylko nadawcaId może zaakceptować rozmowę
     public RozmowaPrywatna acceptRozmowaPrywatna(String nadawcaId, Authentication currentUser) {
         Uzytkownik odbiorca = (Uzytkownik) currentUser.getPrincipal();
         Uzytkownik nadawca = uzytkownikRepository.findByUzytId(nadawcaId)
@@ -97,6 +96,10 @@ public class RozmowaPrywatnaService {
 
         if (rozmowa.isAktywna()) {
             throw new IllegalArgumentException("Rozmowa jest już aktywna");
+        }
+
+        if(rozmowa.getNadawca().equals(odbiorca.getEmail())) {
+            throw new IllegalArgumentException("Nie możesz zaakceptować rozmowy, którą sam zaprosiłeś");
         }
 
         rozmowa.setAktywna(true);
@@ -118,10 +121,15 @@ public class RozmowaPrywatnaService {
         if (rozmowa.isAktywna()) {
             throw new IllegalArgumentException("Rozmowa jest już aktywna");
         }
-        System.out.println("\n\n\n\n\n");
-        System.out.println("Nadawca: " + nadawca.getUzytId());
-        System.out.println("Odbiorca: " + odbiorca.getUzytId());
-        System.out.println("Rozmowa: " + rozmowa.toString());
+
+        if(rozmowa.getNadawca().equals(odbiorca.getEmail())) {
+            throw new IllegalArgumentException("Nie możesz zaakceptować rozmowy, którą sam zaprosiłeś");
+        }
+
+        //System.out.println("\n\n\n\n\n");
+        //System.out.println("Nadawca: " + nadawca.getUzytId());
+       // System.out.println("Odbiorca: " + odbiorca.getUzytId());
+       // System.out.println("Rozmowa: " + rozmowa.toString());
         rozmowa.setAktywna(true);
         return rozmowaPrywatnaRepository.acceptRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
     }

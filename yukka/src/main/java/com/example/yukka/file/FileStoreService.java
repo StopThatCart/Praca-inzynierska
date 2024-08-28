@@ -41,47 +41,55 @@ public class FileStoreService {
         if(!obraz.equals(defaultRoslinaObrazName)) {
             fileUploadSubPath = fileUploadSubPath + separator + "rosliny";
              //String fileName = generateFileName(obraz);
-            uploadFile(sourceFile, fileUploadSubPath, obraz);
+            return uploadFile(sourceFile, fileUploadSubPath, obraz);
         }
         return obraz;
     }
 
     // Potem sie dorobi
-    public String saveCustomRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String nazwaLacinska, @Nonnull String uzytId) {
-        throw new UnsupportedOperationException("Feature incomplete. Contact assistance.");
+    public String saveUzytkownikRoslinaObraz(@Nonnull MultipartFile sourceFile, @Nonnull String roslinaId, @Nonnull String uzytId) {
+            String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "rosliny" + separator + roslinaId;
+            String fileName = roslinaId;
+            return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
     public String saveRoslina(@Nonnull MultipartFile sourceFile,
                               @Nonnull String obraz, @Nonnull String uzytId) {
         if(!obraz.equals(defaultRoslinaObrazName)) {
-            String fileUploadSubPath = "users" + separator + uzytId + separator + "rosliny";
-            String fileName = generateFileName(obraz);
+            String fileUploadSubPath = "uzytkownicy" + separator + "rosliny";
+            String fileName = generateFileName(obraz) + "_" + System.currentTimeMillis();
             return uploadFile(sourceFile, fileUploadSubPath, fileName);
         }
         return obraz;
     }
 
+    public String saveRoslinaObrazInDzialka(@Nonnull MultipartFile sourceFile, @Nonnull String uzytId) {
+        String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "dzialki" + separator + "rosliny";
+        String fileName = generateFileName(uzytId) + "_" + System.currentTimeMillis();
+        return uploadFile(sourceFile, fileUploadSubPath, fileName);
+    }
+
     public String savePost(@Nonnull MultipartFile sourceFile,
                            @Nonnull String postId, @Nonnull String uzytId) {
-        final String fileUploadSubPath = "users" + separator + uzytId + separator + "posty";
+        final String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "posty";
         String fileName = generateFileName(postId) + "_" + System.currentTimeMillis();
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
     public String saveKomentarz(@Nonnull MultipartFile sourceFile,
                                 @Nonnull String komentarzId, @Nonnull String uzytId) {
-        final String fileUploadSubPath = "users" + separator + uzytId + separator + "komentarze";
+        final String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "komentarze";
         String fileName = generateFileName(komentarzId) + "_" + System.currentTimeMillis();
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
-    public String saveAvatar(@Nonnull MultipartFile sourceFile, @Nonnull String obraz, @Nonnull String uzytId) {
-        if(!obraz.equals(defaultAvatarObrazName)) {
-            String fileUploadSubPath = "users" + separator + uzytId;
-            String fileName = generateFileName(obraz);
-            uploadFile(sourceFile, fileUploadSubPath, fileName);
-        }
-        return obraz;
+    public String saveAvatar(@Nonnull MultipartFile sourceFile, @Nonnull String uzytId) {
+        String fileUploadSubPath = "uzytkownicy" + separator + uzytId;
+        String fileName = uzytId;
+        String avatar = uploadFile(sourceFile, fileUploadSubPath, fileName);
+        if(avatar == null) {
+            return defaultAvatarObrazName;
+        }else return avatar;
     }
     
     private String uploadFile(@Nonnull MultipartFile sourceFile, @Nonnull String fileUploadSubPath, @Nonnull String fileName) {

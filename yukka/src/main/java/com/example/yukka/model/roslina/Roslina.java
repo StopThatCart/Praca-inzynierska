@@ -1,6 +1,7 @@
 package com.example.yukka.model.roslina;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -10,28 +11,33 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import com.example.yukka.model.dzialka.ZasadzonaNa;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-
+import lombok.experimental.SuperBuilder;
+import lombok.Builder;
 
 @Node
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @ToString
+@SuppressWarnings("all")
 public class Roslina {
     @Id @GeneratedValue
     private long id;
+
+    @Property("roslinaId")
+    private String roslinaId;
     @Property("nazwa")
     private String nazwa;
     @Property("nazwaLacinska")
@@ -48,6 +54,18 @@ public class Roslina {
     @Property("obraz")
     @Builder.Default
     private String obraz ="default_plant.jpg";
+
+
+    // Ogrod
+    @JsonIgnore
+    @Relationship(type = "ZASADZONA_NA", direction = Relationship.Direction.OUTGOING)
+    private List<ZasadzonaNa> dzialki;
+	
+	@JsonIgnore
+	@Relationship(type = "STWORZONA_PRZEZ", direction = Relationship.Direction.OUTGOING)
+    private Uzytkownik uzytkownik;
+
+    // Wlasciwosci
 
     @Relationship(type = "MA_FORME", direction = Relationship.Direction.OUTGOING)
     @Builder.Default

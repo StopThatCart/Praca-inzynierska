@@ -1,27 +1,43 @@
 package com.example.yukka.model.uzytkownik.controller;
 
-import java.util.Collection;
+import static java.io.File.separator;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.yukka.file.FileStoreService;
+import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UzytkownikService implements  UserDetailsService {
+    @Value("${application.file.uploads.photos-output-path}")
+    String fileUploadPath;
 
     @Autowired
     private final UzytkownikRepository uzytkownikRepository;
+
+    private final FileUtils fileUtils;
+    private final FileStoreService fileStoreService;
+    private final CommonMapperService commonMapperService;
 
     @Override
    // @Transactional
@@ -30,12 +46,32 @@ public class UzytkownikService implements  UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Użytkownika nie znaleziono"));
     }
 
-    public Collection<Uzytkownik> findAllUzytkownicy(){
-        return uzytkownikRepository.findAllUzytkownicy();
+    public List<Uzytkownik> findAll(){
+        return uzytkownikRepository.findAll();
     }
 
-    public Uzytkownik findByEmail(String userEmail){
-        return uzytkownikRepository.findByEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("Rozmowa prywatna nie istnieje"));
+    public UzytkownikResponse findByEmail(String userEmail){
+        Uzytkownik uzyt = uzytkownikRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("Użytkownik nie istnieje"));
+
+        return commonMapperService.toUzytkownikResponse(uzyt);
+    }
+
+    public Uzytkownik updateUzytkownikAvatar(MultipartFile file, Authentication currentUser) {
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+
+        String leObraz = fileStoreService.saveAvatar(file, uzyt.getUzytId());
+        Uzytkownik uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
+        return uzytkownik;
+    }
+
+    public Uzytkownik updateUzytkownikAvatar(MultipartFile file, Uzytkownik currentUser) {
+        Uzytkownik uzyt = currentUser;
+
+        String leObraz = fileStoreService.saveAvatar(file, uzyt.getUzytId());
+        System.out.println("Zapisano avatar: " + leObraz);
+        Uzytkownik uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
+        return uzytkownik;
     }
 
     public Uzytkownik setBanUzytkownik(String email, Authentication currentUser, boolean ban){
@@ -87,6 +123,39 @@ public class UzytkownikService implements  UserDetailsService {
 
         if(uzytOpt.isAdmin() || uzytOpt.isPracownik()) {
             throw new IllegalArgumentException("Nie można usuwać samego admina lub pracownika, przynajmniej na razie.");
+        }
+
+        Path path = Paths.get(fileUploadPath + separator + "users" + separator + uzytOpt.getUzytId());
+        System.out.println("Usuwanie folderu: " + path);
+        uzytkownikRepository.removeUzytkownik(uzytOpt.getEmail());
+        fileUtils.deleteDirectory(path);
+    }
+
+    public void removeSelf(Authentication currentUser) {
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        
+        if(uzyt.isAdmin() || uzyt.isPracownik()) {
+            throw new IllegalArgumentException("Nie można usuwać samego admina lub pracownika, przynajmniej na razie.");
+        }
+
+        // Wylogowanie
+        SecurityContextHolder.clearContext();
+
+        Path path = Paths.get(fileUploadPath + separator + "users" + separator + uzyt.getUzytId());
+        System.out.println("Usuwanie folderu: " + path);
+        uzytkownikRepository.removeUzytkownik(uzyt.getEmail());
+        fileUtils.deleteDirectory(path);
+    }
+
+    public void seedRemoveUzytkownicyObrazy() {
+        
+        List<Uzytkownik> uzytkownicy = uzytkownikRepository.findAll();
+        for(Uzytkownik uzyt : uzytkownicy) {
+
+           // uzytkownikRepository.delete(uzyt);
+            Path path = Paths.get(fileUploadPath + separator + "users" + separator + uzyt.getUzytId());
+            System.out.println("Usuwanie folderu: " + path);
+            fileUtils.deleteDirectory(path);
         }
     }
 

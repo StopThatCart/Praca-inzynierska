@@ -73,7 +73,7 @@ import lombok.Getter;
 
         @Override
         public String toString() {
-            return "Wlasciwosc [labels=" + labels + ", id=" + id + ", nazwa=" + nazwa + ", plants=" + plants + "]";
+            return "Wlasciwosc [labels=" + labels + ", id=" + id + ", nazwa=" + nazwa + "]";
         }
 
 

@@ -12,11 +12,19 @@ import org.springframework.data.repository.query.Param;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
+import io.micrometer.common.lang.NonNull;
+
 
 
 public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
-    
+    @Override
+    @Query("""
+            MATCH (kom:Komentarz)
+            RETURN kom
+            """)
+    @NonNull List<Komentarz> findAll();
+
     @Query("""
             MATCH (kom:Komentarz{komentarzId: $komentarzId})<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik)
             OPTIONAL MATCH (rozmowa:RozmowaPrywatna)-[r3:MA_WIADOMOSC]->(kom)

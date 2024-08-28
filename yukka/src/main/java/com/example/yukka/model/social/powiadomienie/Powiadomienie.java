@@ -1,7 +1,7 @@
 package com.example.yukka.model.social.powiadomienie;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -47,7 +47,7 @@ public class Powiadomienie {
     private String avatar;
 
     @Property(name = "nazwyRoslin")
-    private List<String> nazwyRoslin;
+    private Set<String> nazwyRoslin;
 
     @Property(name = "iloscPolubien")
     private int iloscPolubien;

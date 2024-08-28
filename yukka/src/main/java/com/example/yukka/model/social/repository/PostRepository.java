@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -10,9 +11,18 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.yukka.model.social.post.Post;
 
+import jakarta.annotation.Nonnull;
+
 
 
 public interface PostRepository extends Neo4jRepository<Post, Long> {
+
+    @Override
+    @Query("""
+        MATCH (post:Post)
+        RETURN post
+        """)
+    @Nonnull List<Post> findAll();
     @Query("""
         MATCH (post:Post {postId: $postId})
         OPTIONAL MATCH path = (:Uzytkownik)-[:MA_POST]->(post)-[:MA_KOMENTARZ]->
