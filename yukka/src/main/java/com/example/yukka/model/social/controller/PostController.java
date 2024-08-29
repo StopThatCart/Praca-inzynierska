@@ -33,19 +33,19 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
     private final PostService postService;
 
-    @GetMapping("/{post-id}")
+    @GetMapping(value = "/{post-id}", produces="application/json")
     public ResponseEntity<PostResponse> findPostById(@PathVariable("post-id") String postId) {
         return ResponseEntity.ok(postService.findByPostId(postId));
     }
 
-    @GetMapping
+    @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPosty(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
         return ResponseEntity.ok(postService.findAllPosts(page, size));
     }
 
-    @GetMapping("/uzytkownik")
+    @GetMapping(value = "/uzytkownik", produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPostyByConnectedUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
@@ -53,7 +53,7 @@ public class PostController {
         return ResponseEntity.ok(postService.findAllPostyByConnectedUzytkownik(page, size, connectedUser));
     }
 
-    @GetMapping("/uzytkownik/{email}")
+    @GetMapping(value = "/uzytkownik/{email}", produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPostyByUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
@@ -62,12 +62,12 @@ public class PostController {
         return ResponseEntity.ok(postService.findAllPostyByUzytkownik(page, size, email,connectedUser));
     }
 
-    @PostMapping
+    @PostMapping(produces="application/json")
     public ResponseEntity<Post> addPost(@Valid @RequestBody PostRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(postService.save(request, connectedUser));
     }
 
-    @PostMapping(consumes = "multipart/form-data")
+    @PostMapping(consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<Post> addPost(@Valid @RequestBody PostRequest request, 
     @Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) throws FileUploadException {
         return ResponseEntity.ok(postService.save(request, file, connectedUser));

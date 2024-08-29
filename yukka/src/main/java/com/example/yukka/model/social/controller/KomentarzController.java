@@ -36,14 +36,14 @@ public class KomentarzController {
     private final KomentarzService komentarzService;
     
 
-    @GetMapping("/{komentarz-id}")
+    @GetMapping(value = "/{komentarz-id}", produces="application/json")
     public ResponseEntity<KomentarzResponse> findKomentarzById(@PathVariable("komentarz-id") String komentarzId) {
         
         return ResponseEntity.ok(komentarzService.findByKomentarzIdWithOdpowiedzi(komentarzId));
        // return ResponseEntity.ok(komentarzService.findByKomentarzId(komentarzId));
     }
 
-    @GetMapping("/uzytkownicy")
+    @GetMapping(value = "/uzytkownicy", produces="application/json")
     public ResponseEntity<PageResponse<KomentarzResponse>> findKomentarzeOfUzytkownik(
         @RequestParam(name = "page", defaultValue = "0", required = false) int page,
         @RequestParam(name = "size", defaultValue = "10", required = false) int size,
@@ -51,7 +51,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.findKomentarzeOfUzytkownik(page, size, email, connectedUser));
     }
 
-    @PostMapping("/odpowiedzi")
+    @PostMapping(value = "/odpowiedzi", produces="application/json")
     public ResponseEntity<Komentarz> addOdpowiedzToKomentarz(
                   //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -68,7 +68,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, file, connectedUser));
     }
 
-    @PostMapping("/posty")
+    @PostMapping(value = "/posty", produces="application/json")
     public ResponseEntity<Komentarz> addKomentarzToPost(
                     //@PathVariable("post-id") String postId, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -76,7 +76,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, connectedUser));
     }
 
-    @PostMapping(value =  "/posty", consumes = "multipart/form-data")
+    @PostMapping(value =  "/posty", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<Komentarz> addKomentarzToPost(
                   //  @PathVariable("post-id") String postId, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -85,7 +85,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, file, connectedUser));
     }
 
-    @PostMapping(value =  "/wiadomosciPrywatne/{other-uzyt-nazwa}", consumes = "multipart/form-data")
+    @PostMapping(value =  "/wiadomosciPrywatne/{other-uzyt-nazwa}", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<Komentarz> addKomentarzToWiadomoscPrywatna(
                     @PathVariable("other-uzyt-nazwa") String otherUzytNazwa, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -94,7 +94,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(otherUzytNazwa, request, file, connectedUser));
     }
 
-    @PostMapping("/wiadomosciPrywatne/{other-uzyt-nazwa}")
+    @PostMapping(value = "/wiadomosciPrywatne/{other-uzyt-nazwa}", produces="application/json")
     public ResponseEntity<Komentarz> addKomentarzToWiadomoscPrywatna(
                     @PathVariable("other-uzyt-nazwa") String otherUzytNazwa, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -103,18 +103,18 @@ public class KomentarzController {
     }
 
     // Działa też jako update
-    @PutMapping("/oceny")
+    @PutMapping(value = "/oceny", produces="application/json")
     public ResponseEntity<Komentarz> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addOcenaToKomentarz(request, connectedUser));
     }
 
-    @DeleteMapping("/oceny")
+    @DeleteMapping(value = "/oceny")
     public ResponseEntity<String> removeOcenaFromKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         komentarzService.removeOcenaFromKomentarz(request, connectedUser);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{komentarz-id}")
+    @PatchMapping(value = "/{komentarz-id}", produces="application/json")
     public ResponseEntity<Komentarz> updateKomentarz(
                     @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 

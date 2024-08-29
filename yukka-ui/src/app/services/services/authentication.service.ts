@@ -26,7 +26,7 @@ export class AuthenticationService extends BaseService {
   }
 
   /** Path part for operation `register()` */
-  static readonly RegisterPath = '/api/auth/register';
+  static readonly RegisterPath = '/rest/neo4j/api/auth/register';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -55,7 +55,7 @@ export class AuthenticationService extends BaseService {
   }
 
   /** Path part for operation `login()` */
-  static readonly LoginPath = '/api/auth/login';
+  static readonly LoginPath = '/rest/neo4j/api/auth/login';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -80,7 +80,7 @@ export class AuthenticationService extends BaseService {
   }
 
   /** Path part for operation `confirm()` */
-  static readonly ConfirmPath = '/api/auth/test';
+  static readonly ConfirmPath = '/rest/neo4j/api/auth/test';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -105,7 +105,7 @@ export class AuthenticationService extends BaseService {
   }
 
   /** Path part for operation `confirm2()` */
-  static readonly Confirm2Path = '/api/auth/testUnprotected';
+  static readonly Confirm2Path = '/rest/neo4j/api/auth/testUnprotected';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

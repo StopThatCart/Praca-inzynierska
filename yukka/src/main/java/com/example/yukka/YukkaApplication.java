@@ -109,9 +109,9 @@ public class YukkaApplication {
 	@Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
-			roslinaImporterService.seedRosliny();
-			unseed();
-        	seed();
+//roslinaImporterService.seedRosliny();
+		//	unseed();
+        //	seed();
         };
     }
 	

@@ -1,5 +1,7 @@
 package com.example.yukka.security;
 
+import java.util.Optional;
+
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,12 +33,23 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
         String nameOrEmail = authentication.getName();
         String haslo = authentication.getCredentials().toString();
         System.out.println("nazwa: " + nameOrEmail);
-        Uzytkownik uzyt = uzytkownikRepository.findByNameOrEmail(nameOrEmail).orElseThrow(() -> new BadCredentialsException("Niepoprawny login lub hasło."));
+        Optional<Uzytkownik> uzytOpt = uzytkownikRepository.findByNameOrEmail(nameOrEmail);
+
+        if (uzytOpt.isEmpty()) {
+            System.out.println("Nie ma takiego uzytkownika");
+            throw new BadCredentialsException("Niepoprawny login lub hasło.");
+            //return null;
+        }
+
+        Uzytkownik uzyt = uzytOpt.get();
+       // .orElseThrow(() -> new BadCredentialsException("Niepoprawny login lub hasło."));
 
         if(passwordEncoder.matches(haslo, uzyt.getHaslo())) {
+            System.out.println("Udalo sie zalogowac");
             final UserDetails principal = uzyt;
             return new UsernamePasswordAuthenticationToken(principal, haslo, uzyt.getAuthorities());
         } else {
+            System.out.println("Nue Udalo sie zalogowac");
             throw new BadCredentialsException("Niepoprawny login lub hasło.");
         }
 

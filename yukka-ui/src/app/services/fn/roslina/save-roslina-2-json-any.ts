@@ -8,12 +8,12 @@ import { RequestBuilder } from '../../request-builder';
 
 import { RoslinaRequest } from '../../models/roslina-request';
 
-export interface SaveRoslina2$Json$Params {
+export interface SaveRoslina2$Json$Any$Params {
       body: RoslinaRequest
 }
 
-export function saveRoslina2$Json(http: HttpClient, rootUrl: string, params: SaveRoslina2$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, saveRoslina2$Json.PATH, 'post');
+export function saveRoslina2$Json$Any(http: HttpClient, rootUrl: string, params: SaveRoslina2$Json$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  const rb = new RequestBuilder(rootUrl, saveRoslina2$Json$Any.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -28,4 +28,4 @@ export function saveRoslina2$Json(http: HttpClient, rootUrl: string, params: Sav
   );
 }
 
-saveRoslina2$Json.PATH = '/rest/neo4j/rosliny';
+saveRoslina2$Json$Any.PATH = '/rest/neo4j/rosliny';

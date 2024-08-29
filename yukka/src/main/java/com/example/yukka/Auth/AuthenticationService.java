@@ -20,6 +20,7 @@ import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 import com.example.yukka.security.JwtService;
+import com.example.yukka.security.Neo4JAuthenticationProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +32,7 @@ class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    //private final Neo4JAuthenticationProvider neo4jAuthenticationProvider;
+    private final Neo4JAuthenticationProvider neo4jAuthenticationProvider;
 
 //    @Value("${application.mailing.frontend.activation-url}")
 //    private String activationUrl;
@@ -73,8 +74,9 @@ class AuthenticationService {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(),request.getHaslo())
         );*/
-        //Authentication auth = neo4jAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
+        Authentication auth = neo4jAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
+        // Z poniższym authenticate wywołuje się dwa razy
+       // Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
 
         System.out.println("Auth: " + auth.toString());
         

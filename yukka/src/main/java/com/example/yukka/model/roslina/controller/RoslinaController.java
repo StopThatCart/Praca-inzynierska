@@ -51,7 +51,7 @@ public class RoslinaController {
         return roslinaService.getSome(amount);
     }
 */
-    @GetMapping("/{nazwa-lacinska}")
+    @GetMapping(value = "/{nazwa-lacinska}", produces="application/json")
     public ResponseEntity<Roslina> getByNazwaLacinska(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
      //   String nazwaLacinska = URLDecoder.decode(encodedNazwaLacinska, StandardCharsets.UTF_8);
         Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(nazwaLacinska);
@@ -62,7 +62,7 @@ public class RoslinaController {
         return new ResponseEntity<>(roslina.get(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(produces="application/json")
     public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request,
     Authentication currentUser) {
         roslinaService.save(request);

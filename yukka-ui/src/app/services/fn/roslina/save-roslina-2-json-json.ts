@@ -8,21 +8,18 @@ import { RequestBuilder } from '../../request-builder';
 
 import { RoslinaRequest } from '../../models/roslina-request';
 
-export interface SaveRoslina2$FormData$Params {
-      body: {
-'request'?: RoslinaRequest;
-'file': Blob;
-}
+export interface SaveRoslina2$Json$Json$Params {
+      body: RoslinaRequest
 }
 
-export function saveRoslina2$FormData(http: HttpClient, rootUrl: string, params: SaveRoslina2$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, saveRoslina2$FormData.PATH, 'post');
+export function saveRoslina2$Json$Json(http: HttpClient, rootUrl: string, params: SaveRoslina2$Json$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  const rb = new RequestBuilder(rootUrl, saveRoslina2$Json$Json.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'multipart/form-data');
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
@@ -31,4 +28,4 @@ export function saveRoslina2$FormData(http: HttpClient, rootUrl: string, params:
   );
 }
 
-saveRoslina2$FormData.PATH = '/rest/neo4j/rosliny';
+saveRoslina2$Json$Json.PATH = '/rest/neo4j/rosliny';

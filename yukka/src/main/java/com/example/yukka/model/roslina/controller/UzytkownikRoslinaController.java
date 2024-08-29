@@ -40,14 +40,14 @@ public class UzytkownikRoslinaController {
   //  private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
 
 
-    @GetMapping("/{roslinaId}")
+    @GetMapping(value = "/{roslinaId}", produces="application/json")
     public ResponseEntity<UzytkownikRoslina> findUzytkownikRoslinaByRoslinaId(
         @PathVariable("roslinaId") String roslinaId, 
             Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikRoslinaService.findByRoslinaId(roslinaId).orElse(null));
     }
 
-    @GetMapping
+    @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<UzytkownikRoslinaResponse>> findAllRosliny(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,

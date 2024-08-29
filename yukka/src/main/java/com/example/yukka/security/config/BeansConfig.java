@@ -1,17 +1,10 @@
 package com.example.yukka.security.config;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,16 +36,31 @@ public class BeansConfig {
         return new BCryptPasswordEncoder();
     }
     
+
+   
+/* 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE, "x-auth-token"));
-        configuration.setExposedHeaders(List.of("x-auth-token"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    public CorsFilter corsFilter() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        final CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+        config.setAllowedHeaders(Arrays.asList(
+                HttpHeaders.ORIGIN,
+                HttpHeaders.CONTENT_TYPE,
+                HttpHeaders.ACCEPT,
+                HttpHeaders.AUTHORIZATION
+        ));
+        config.setAllowedMethods(Arrays.asList(
+                "GET",
+                "POST",
+                "DELETE",
+                "PUT",
+                "PATCH"
+        ));
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+
     }
+*/
 }

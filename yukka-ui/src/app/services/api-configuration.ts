@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfiguration {
-  rootUrl: string = 'http://localhost:8081/rest/neo4j';
+  rootUrl: string = 'http://localhost:8081';
 }
 
 /**

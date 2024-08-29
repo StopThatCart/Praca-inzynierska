@@ -37,36 +37,35 @@ public class UzytkownikController {
     PowiadomienieService powiadomienieService;
 
     // dodawanie użytkowników jest w authorization. Za to dodawanie pracowników będzie u admina
-    @GetMapping
+    @GetMapping(produces="application/json")
     public List<Uzytkownik> findAllUzytkownicy() {
         return uzytkownikService.findAll();
     }
     
-    @GetMapping("/{email}")
+    @GetMapping(value = "/{email}", produces="application/json")
     public ResponseEntity<UzytkownikResponse> getByEmail(@PathVariable("email") String email) {
         return ResponseEntity.ok(uzytkownikService.findByEmail(email));
     }
 
-    @PatchMapping(value = "/avatar", consumes = "multipart/form-data")
+    @PatchMapping(value = "/avatar", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<Uzytkownik> updateAvatar(@Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.updateUzytkownikAvatar(file, connectedUser));
     }
 
 
-    // TODO: Blokowanie jak użytownik jest zbanowany
-    @PatchMapping("pracownik/ban/{email}/{ban}")
+    @PatchMapping(value = "pracownik/ban/{email}/{ban}", produces="application/json")
     public ResponseEntity<Uzytkownik> setBanUzytkownik(@PathVariable("email") String email, 
     @PathVariable("ban") boolean ban, Authentication currentUser) {
         return ResponseEntity.ok(uzytkownikService.setBanUzytkownik(email, currentUser, ban));
     }
 
 
-    @PostMapping("admin/powiadomienie")
+    @PostMapping(value = "admin/powiadomienie", produces="application/json")
     public ResponseEntity<Powiadomienie> sendSpecjalnePowiadomienieToPracownicy(@RequestBody PowiadomienieDTO powiadomienieDTO) {
         return ResponseEntity.ok(powiadomienieService.addSpecjalnePowiadomienieToPracownicy(powiadomienieDTO));
     }
 
-    @PostMapping("pracownik/powiadomienie")
+    @PostMapping(value = "pracownik/powiadomienie", produces="application/json")
     public ResponseEntity<Powiadomienie> sendSpecjalnePowiadomienie(@RequestBody PowiadomienieDTO powiadomienieDTO) {
         return ResponseEntity.ok(powiadomienieService.addSpecjalnePowiadomienie(powiadomienieDTO));
     }

@@ -9,12 +9,12 @@ import { RequestBuilder } from '../../request-builder';
 import { Komentarz } from '../../models/komentarz';
 import { KomentarzRequest } from '../../models/komentarz-request';
 
-export interface AddOdpowiedzToKomentarz1$Json$Params {
+export interface AddOdpowiedzToKomentarz1$Json$Any$Params {
       body: KomentarzRequest
 }
 
-export function addOdpowiedzToKomentarz1$Json(http: HttpClient, rootUrl: string, params: AddOdpowiedzToKomentarz1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
-  const rb = new RequestBuilder(rootUrl, addOdpowiedzToKomentarz1$Json.PATH, 'post');
+export function addOdpowiedzToKomentarz1$Json$Any(http: HttpClient, rootUrl: string, params: AddOdpowiedzToKomentarz1$Json$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  const rb = new RequestBuilder(rootUrl, addOdpowiedzToKomentarz1$Json$Any.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -29,4 +29,4 @@ export function addOdpowiedzToKomentarz1$Json(http: HttpClient, rootUrl: string,
   );
 }
 
-addOdpowiedzToKomentarz1$Json.PATH = '/rest/neo4j/komentarze/odpowiedzi';
+addOdpowiedzToKomentarz1$Json$Any.PATH = '/rest/neo4j/komentarze/odpowiedzi';

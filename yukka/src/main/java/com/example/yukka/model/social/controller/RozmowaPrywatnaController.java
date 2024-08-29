@@ -28,7 +28,7 @@ public class RozmowaPrywatnaController {
     private RozmowaPrywatnaService rozmowaPrywatnaService;
     
 
-    @GetMapping
+    @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<RozmowaPrywatnaResponse>> findRozmowyPrywatneOfUzytkownik(
         @RequestParam(name = "page", defaultValue = "0", required = false) int page,
         @RequestParam(name = "size", defaultValue = "10", required = false) int size,
@@ -37,25 +37,25 @@ public class RozmowaPrywatnaController {
         return ResponseEntity.ok(rozmowy);
     }
 
-    @GetMapping("/{odbiorca-uzyt-id}")
+    @GetMapping(value = "/{odbiorca-uzyt-id}", produces="application/json")
     public ResponseEntity<RozmowaPrywatnaResponse> getRozmowaPrywatna(@PathVariable String odbiorcaId, Authentication connectedUser) {
         RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.findRozmowaPrywatna(odbiorcaId, connectedUser);
         return ResponseEntity.ok(rozmowa);
     }
 
-    @PostMapping("/{odbiorca-uzyt-id}")
+    @PostMapping(value = "/{odbiorca-uzyt-id}", produces="application/json")
     public ResponseEntity<RozmowaPrywatna> inviteToRozmowaPrywatna(@PathVariable String odbiorcaId, Authentication connectedUser) {
         RozmowaPrywatna rozmowa = rozmowaPrywatnaService.inviteToRozmowaPrywatna(odbiorcaId, connectedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(rozmowa);
     }
 
-    @PutMapping("/{nadawca-uzyt-id}/accept")
+    @PutMapping(value = "/{nadawca-uzyt-id}/accept", produces="application/json")
     public ResponseEntity<RozmowaPrywatna> acceptRozmowaPrywatna(@PathVariable String nadawcaId, Authentication connectedUser) {
         RozmowaPrywatna rozmowa = rozmowaPrywatnaService.acceptRozmowaPrywatna(nadawcaId, connectedUser);
         return ResponseEntity.ok(rozmowa);
     }
 
-    @PutMapping("/{nadawca-uzyt-id}/reject")
+    @PutMapping(value = "/{nadawca-uzyt-id}/reject")
     public ResponseEntity<RozmowaPrywatna> rejectRozmowaPrywatna(@PathVariable String nadawcaId, Authentication connectedUser) {
         rozmowaPrywatnaService.rejectRozmowaPrywatna(nadawcaId, connectedUser);
         return ResponseEntity.ok().build();

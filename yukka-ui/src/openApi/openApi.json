@@ -16,7 +16,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8081/rest/neo4j",
+      "url": "http://localhost:8081",
       "description": "Local ENV"
     },
     {
@@ -62,7 +62,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RozmowaPrywatna"
                 }
@@ -177,6 +177,11 @@
           "200": {
             "description": "OK",
             "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
               "*/*": {
                 "schema": {
                   "type": "string"
@@ -265,7 +270,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Komentarz"
                 }
@@ -335,7 +340,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponseUzytkownikRoslinaResponse"
                 }
@@ -438,7 +443,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UzytkownikRoslina"
                 }
@@ -542,7 +547,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Powiadomienie"
                 }
@@ -572,7 +577,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Powiadomienie"
                 }
@@ -593,7 +598,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RozmowaPrywatnaResponse"
                 }
@@ -612,7 +617,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RozmowaPrywatna"
                 }
@@ -654,7 +659,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponsePostResponse"
                 }
@@ -699,7 +704,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Post"
                 }
@@ -756,7 +761,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Komentarz"
                 }
@@ -803,7 +808,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Komentarz"
                 }
@@ -850,6 +855,11 @@
           "200": {
             "description": "OK",
             "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Komentarz"
+                }
+              },
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/Komentarz"
@@ -880,7 +890,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DzialkaResponse"
                 }
@@ -918,7 +928,7 @@
         }
       }
     },
-    "/api/auth/register": {
+    "/rest/neo4j/api/auth/register": {
       "post": {
         "tags": [
           "Authentication"
@@ -948,7 +958,7 @@
         }
       }
     },
-    "/api/auth/login": {
+    "/rest/neo4j/api/auth/login": {
       "post": {
         "tags": [
           "Authentication"
@@ -968,7 +978,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuthenticationResponse"
                 }
@@ -1006,7 +1016,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Uzytkownik"
                 }
@@ -1044,7 +1054,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Uzytkownik"
                 }
@@ -1074,7 +1084,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/KomentarzResponse"
                 }
@@ -1140,7 +1150,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Komentarz"
                 }
@@ -1170,7 +1180,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DzialkaResponse"
                 }
@@ -1240,7 +1250,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DzialkaResponse"
                 }
@@ -1260,7 +1270,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -1304,7 +1314,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UzytkownikResponse"
                 }
@@ -1367,7 +1377,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponseRozmowaPrywatnaResponse"
                 }
@@ -1397,7 +1407,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Roslina"
                 }
@@ -1427,7 +1437,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PostResponse"
                 }
@@ -1497,7 +1507,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponsePostResponse"
                 }
@@ -1547,7 +1557,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponsePostResponse"
                 }
@@ -1589,7 +1599,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponseKomentarzResponse"
                 }
@@ -1666,7 +1676,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DzialkaResponse"
                 }
@@ -1705,7 +1715,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DzialkaResponse"
                 }
@@ -1735,7 +1745,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -1748,7 +1758,7 @@
         }
       }
     },
-    "/api/auth/test": {
+    "/rest/neo4j/api/auth/test": {
       "get": {
         "tags": [
           "Authentication"
@@ -1768,7 +1778,7 @@
         }
       }
     },
-    "/api/auth/testUnprotected": {
+    "/rest/neo4j/api/auth/testUnprotected": {
       "get": {
         "tags": [
           "Authentication"
@@ -2196,16 +2206,19 @@
           "name": {
             "type": "string"
           },
-          "pracownik": {
-            "type": "boolean"
-          },
           "normalUzytkownik": {
             "type": "boolean"
           },
           "admin": {
             "type": "boolean"
           },
+          "pracownik": {
+            "type": "boolean"
+          },
           "username": {
+            "type": "string"
+          },
+          "password": {
             "type": "string"
           },
           "authorities": {
@@ -2214,16 +2227,13 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "password": {
-            "type": "string"
-          },
           "enabled": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
           "accountNonLocked": {
@@ -2795,6 +2805,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "ynowy": {
+            "type": "integer",
+            "format": "int32"
+          },
           "ystary": {
             "type": "integer",
             "format": "int32"
@@ -2804,10 +2818,6 @@
             "format": "int32"
           },
           "xnowy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ynowy": {
             "type": "integer",
             "format": "int32"
           }
