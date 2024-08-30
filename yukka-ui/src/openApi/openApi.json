@@ -948,7 +948,7 @@
           "202": {
             "description": "Accepted",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "object"
                 }
@@ -2209,10 +2209,10 @@
           "normalUzytkownik": {
             "type": "boolean"
           },
-          "admin": {
+          "pracownik": {
             "type": "boolean"
           },
-          "pracownik": {
+          "admin": {
             "type": "boolean"
           },
           "username": {
@@ -2739,11 +2739,15 @@
         "required": [
           "email",
           "haslo",
-          "nazwa"
+          "nazwa",
+          "powtorzHaslo"
         ],
         "type": "object",
         "properties": {
           "nazwa": {
+            "maxLength": 2147483647,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$",
             "type": "string"
           },
           "email": {
@@ -2752,6 +2756,9 @@
           "haslo": {
             "maxLength": 2147483647,
             "minLength": 8,
+            "type": "string"
+          },
+          "powtorzHaslo": {
             "type": "string"
           }
         }
@@ -2805,11 +2812,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ystary": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
@@ -2817,7 +2820,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ystary": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           }

@@ -6,8 +6,9 @@
                 <li class="nav-item"><a class="nav-link active" href="#" style="color: rgb(255,255,255);">Przeglądaj katalog</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" style="color: rgba(255,255,255,0.65);">Mój ogród</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" style="color: rgba(255,255,255,0.65);">Społeczność</a></li>
-            </ul><button class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</button>
-        </div>
+            </ul>
+            <button *ngIf="!isLogged()" (click)="toLogin()" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</button>
+            <button *ngIf="isLogged()" (click)="logout()" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Wyloguj się</button></div>
     </div>
 
 </nav>

@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
     private final AuthenticationService service;
 
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/register", produces="application/json")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> register(
             @RequestBody 

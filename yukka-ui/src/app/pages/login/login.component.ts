@@ -15,7 +15,7 @@ import { TokenService } from '../../services/token/token.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  authRequest: AuthRequest = {email: '', haslo: ''};
+  authRequest: AuthRequest = {email: 'jan@email.pl', haslo: 'jan12345678'};
   errorMsg: Array<string> = [];
 
   constructor(
@@ -33,13 +33,11 @@ export class LoginComponent {
         next: (res) => {
           console.log(res);
           this.tokenService.token = res.token as string;
-          //this.router.navigate(['']);
+          this.router.navigate(['']);
         },
         error: (err) => {
           console.log(err);
-
-          // TODO: Globalny handler tego czegoś
-          // TODO: Dobra jednak nie XD
+          /*
           if (err.error instanceof Blob) {
             console.log('Blob');
             const reader = new FileReader();
@@ -55,10 +53,15 @@ export class LoginComponent {
                 }
             };
             reader.readAsText(err.error);
-          } else if (err.error.validationErrors) {
+          } else */
+           if (err.error.validationErrors) {
             this.errorMsg = err.error.validationErrors;
-          } else {
+          } else if (typeof err.error === 'string') {
+            this.errorMsg.push(err.error);
+          } else if (err.error.error) {
             this.errorMsg.push(err.error.error);
+          } else {
+            this.errorMsg.push(err.message);
           }
         }
     });

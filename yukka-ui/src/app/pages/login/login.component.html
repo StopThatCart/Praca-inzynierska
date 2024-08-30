@@ -29,14 +29,15 @@
                                         style="color: #000000;--bs-light: #f8f9fa;--bs-light-rgb: 248,249,250;">
                                 </div>
                                 <div class="mb-3">
-                                    <input [(ngModel)]="authRequest.haslo" class="form-control" type="password" name="password" id="haslo" placeholder="haslo" value="jan12345678">
+                                    <input [(ngModel)]="authRequest.haslo" class="form-control" type="password" name="password" id="haslo" placeholder="haslo" value="jan12345678"
+                                    style="color: #000000;">
                                 </div>
                                 <div class="mb-3">
                                     <button (click)="login()" class="btn btn-primary d-block w-100" type="submit">Login</button>
                                 </div>
                                 <p style="color: black;">Nie masz jeszcze konta?</p>
                                 <div class="mb-3">
-                                  <a class="btn btn-primary d-block w-100" href="#"role="button">Zarejestruj się</a>
+                                  <a  (click)="register()" class="btn btn-primary d-block w-100" role="button">Zarejestruj się</a>
                                 </div>
                             </form>
                         </div>

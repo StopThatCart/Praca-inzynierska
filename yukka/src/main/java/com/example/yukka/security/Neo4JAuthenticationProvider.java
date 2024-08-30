@@ -49,7 +49,7 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
             final UserDetails principal = uzyt;
             return new UsernamePasswordAuthenticationToken(principal, haslo, uzyt.getAuthorities());
         } else {
-            System.out.println("Nue Udalo sie zalogowac");
+            System.out.println("Nie Udalo sie zalogowac");
             throw new BadCredentialsException("Niepoprawny login lub hasło.");
         }
 
