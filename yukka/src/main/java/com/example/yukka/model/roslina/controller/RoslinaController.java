@@ -36,7 +36,7 @@ public class RoslinaController {
     @Autowired
     RoslinaService roslinaService;
 
-    @GetMapping
+    @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllRosliny(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
@@ -57,9 +57,9 @@ public class RoslinaController {
         Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(nazwaLacinska);
 
         if (roslina.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<>(roslina.get(), HttpStatus.OK);
+        return ResponseEntity.ok(roslina.get());
     }
 
     @PostMapping(produces="application/json")

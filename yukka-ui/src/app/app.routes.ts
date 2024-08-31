@@ -12,5 +12,9 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+  {
+    path: 'rosliny',
+    loadChildren: () => import('./modules/roslina/roslina.module').then(m => m.RoslinaModule)
   }
 ];

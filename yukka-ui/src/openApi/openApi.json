@@ -104,7 +104,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponseRoslinaResponse"
                 }
@@ -2209,10 +2209,10 @@
           "normalUzytkownik": {
             "type": "boolean"
           },
-          "pracownik": {
+          "admin": {
             "type": "boolean"
           },
-          "admin": {
+          "pracownik": {
             "type": "boolean"
           },
           "username": {
@@ -2230,10 +2230,10 @@
           "enabled": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           },
           "accountNonLocked": {
@@ -2812,10 +2812,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
-            "type": "integer",
-            "format": "int32"
-          },
           "xstary": {
             "type": "integer",
             "format": "int32"
@@ -2825,6 +2821,10 @@
             "format": "int32"
           },
           "ynowy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           }

@@ -5,17 +5,27 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   providedIn: 'root'
 })
 export class TokenService {
-
-  set token(token: string) {
-    localStorage.setItem('token', token);
+  private isLocalStorageAvailable(): boolean {
+    return typeof localStorage !== 'undefined';
   }
 
-  get token() {
-    return localStorage.getItem('token') as string;
+  set token(token: string) {
+    if (this.isLocalStorageAvailable()) {
+      localStorage.setItem('token', token);
+    }
+  }
+
+  get token(): string | null {
+    if (this.isLocalStorageAvailable()) {
+      return localStorage.getItem('token');
+    }
+    return null;
   }
 
   clearToken() {
-    localStorage.removeItem('token');
+    if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem('token');
+    }
   }
 
   isTokenValid() {
@@ -28,7 +38,7 @@ export class TokenService {
     // check expiry date
     const isTokenExpired = jwtHelper.isTokenExpired(token);
     if (isTokenExpired) {
-      localStorage.clear();
+      this.clearToken();
       return false;
     }
     return true;
