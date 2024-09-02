@@ -36,6 +36,9 @@ public class RoslinaController {
     @Autowired
     RoslinaService roslinaService;
 
+    @Autowired
+    RoslinaRepository roslinaRepository;
+
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllRosliny(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -52,14 +55,9 @@ public class RoslinaController {
     }
 */
     @GetMapping(value = "/{nazwa-lacinska}", produces="application/json")
-    public ResponseEntity<Roslina> getByNazwaLacinska(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
+    public ResponseEntity<RoslinaResponse> findByNazwaLacinska(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
      //   String nazwaLacinska = URLDecoder.decode(encodedNazwaLacinska, StandardCharsets.UTF_8);
-        Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(nazwaLacinska);
-
-        if (roslina.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(roslina.get());
+        return ResponseEntity.ok(roslinaService.findByNazwaLacinska(nazwaLacinska.toLowerCase()));
     }
 
     @PostMapping(produces="application/json")
@@ -79,10 +77,6 @@ public class RoslinaController {
 
     @PutMapping
     public ResponseEntity<String> updateRoslina(@Valid @RequestBody RoslinaRequest request) {
-        Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(request.getNazwaLacinska());
-        if (roslina.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Roślina o takiej nazwie łacińskiej już istnieje.");
-        }
         roslinaService.update(request);
         return ResponseEntity.status(HttpStatus.OK).body("Roślina została pomyślnie zaktualizowana.");
     }
@@ -90,13 +84,13 @@ public class RoslinaController {
     
     @DeleteMapping("/{nazwaLacinska}")
     public ResponseEntity<String> deleteRoslina(@PathVariable String nazwaLacinska) {
-        Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(nazwaLacinska);
+        Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska.toLowerCase());
 
         if (roslina.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nie znaleziono rośliny o nazwie łacińskiej - " + nazwaLacinska);
         }
 
-        roslinaService.deleteByNazwaLacinska(nazwaLacinska);
+        roslinaService.deleteByNazwaLacinska(nazwaLacinska.toLowerCase());
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usunięto rośline o nazwie łacińskiej - " + nazwaLacinska);
     }

@@ -23,10 +23,10 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
     @Query("""
         MATCH (roslina:Roslina{nazwaLacinska: $latinName}) WHERE NOT roslina:UzytkownikRoslina
-        OPTIONAL MATCH path=(ros)-[r]-(:Wlasciwosc)
+        OPTIONAL MATCH path=(roslina)-[r]->(w:Wlasciwosc)
         RETURN roslina, collect(nodes(path)), collect(relationships(path))
     """)
-    Optional<Roslina> findByNazwaLacinskaWithRelations(@Param("latinName") String latinName);
+    Optional<Roslina> findByNazwaLacinskaWithWlasciwosci(@Param("latinName") String latinName);
 
     @Query("""
         MATCH (roslina:Roslina{nazwaLacinska: $latinName}) WHERE NOT roslina:UzytkownikRoslina

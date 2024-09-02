@@ -1,17 +1,20 @@
 import { Component, Input } from '@angular/core';
 import { RoslinaResponse } from '../../../../services/models';
 import { Roslina } from '../../../../services/models/roslina';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-roslina-card',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './roslina-card.component.html',
   styleUrl: './roslina-card.component.css'
 })
 export class RoslinaCardComponent {
   @Input()  roslina:RoslinaResponse = {};
   private _roslinaObraz: string | undefined;
+
+  constructor(private router: Router) {}
 
   getRoslina(): RoslinaResponse {
     return this.roslina;
@@ -29,9 +32,9 @@ export class RoslinaCardComponent {
   }
 
   goToRoslina(nazwaLacinska: string | undefined) {
-   console.log('nazwaLacinska', nazwaLacinska);
-   // this.router.navigate(['/roslina', this.nazwaLacinska]);
-
+    if (nazwaLacinska) {
+      this.router.navigate(['/rosliny', nazwaLacinska]);
+    }
   }
 
 

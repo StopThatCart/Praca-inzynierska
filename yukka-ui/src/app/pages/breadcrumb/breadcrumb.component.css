@@ -1,0 +1,22 @@
+
+
+
+.li span {
+  color: #18bc9c;
+}
+
+.a {
+    text-decoration: none;
+}
+
+
+.breadcrumb-item span {
+  margin: 0 5px;
+}
+
+
+.breadcrumb-separator {
+  margin: 0 5px;
+  color: #18bc9c;
+  list-style: none;
+}

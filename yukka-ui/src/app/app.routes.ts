@@ -7,11 +7,13 @@ export const routes: Routes = [
   { path: '', component: IndeksusComponent },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
+    data: { breadcrumb: 'Login' }
   },
   {
     path: 'register',
-    component: RegisterComponent
+    component: RegisterComponent,
+    data: { breadcrumb: 'Rejestracja' }
   },
   {
     path: 'rosliny',

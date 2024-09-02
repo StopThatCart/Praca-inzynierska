@@ -1392,7 +1392,7 @@
         "tags": [
           "Roslina"
         ],
-        "operationId": "getByNazwaLacinska",
+        "operationId": "findByNazwaLacinska",
         "parameters": [
           {
             "name": "nazwa-lacinska",
@@ -1409,7 +1409,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Roslina"
+                  "$ref": "#/components/schemas/RoslinaResponse"
                 }
               }
             }
@@ -2218,14 +2218,14 @@
           "username": {
             "type": "string"
           },
-          "password": {
-            "type": "string"
-          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
+          },
+          "password": {
+            "type": "string"
           },
           "enabled": {
             "type": "boolean"
@@ -2812,11 +2812,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "xstary": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ystary": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
@@ -2824,7 +2820,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "xstary": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ystary": {
             "type": "integer",
             "format": "int32"
           }
@@ -3380,171 +3380,6 @@
           }
         }
       },
-      "Roslina": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "roslinaId": {
-            "type": "string"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "nazwaLacinska": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "wysokoscMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "wysokoscMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "obraz": {
-            "type": "string"
-          },
-          "formy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "gleby": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "grupy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "koloryLisci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "koloryKwiatow": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "kwiaty": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "nagrody": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "odczyny": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "okresyKwitnienia": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "okresyOwocowania": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "owoce": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "podgrupa": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "pokroje": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "silyWzrostu": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "stanowiska": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "walory": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "wilgotnosci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "zastosowania": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "zimozielonosci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          }
-        }
-      },
       "KomentarzResponse": {
         "type": "object",
         "properties": {
@@ -3729,6 +3564,171 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Roslina"
+            }
+          }
+        }
+      },
+      "Roslina": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "roslinaId": {
+            "type": "string"
+          },
+          "nazwa": {
+            "type": "string"
+          },
+          "nazwaLacinska": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
+          "wysokoscMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "wysokoscMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "obraz": {
+            "type": "string"
+          },
+          "formy": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "gleby": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "grupy": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "koloryLisci": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "koloryKwiatow": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "kwiaty": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "nagrody": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "odczyny": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "okresyKwitnienia": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "okresyOwocowania": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "owoce": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "podgrupa": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "pokroje": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "silyWzrostu": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "stanowiska": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "walory": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "wilgotnosci": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "zastosowania": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
+            }
+          },
+          "zimozielonosci": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Wlasciwosc"
             }
           }
         }

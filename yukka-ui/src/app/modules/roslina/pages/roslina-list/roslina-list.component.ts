@@ -23,14 +23,11 @@ export class RoslinaListComponent implements OnInit{
   message = '';
   level: 'success' |'error' = 'success';
 
-  private roslinaPage = 'roslinyCurrentPage';
-
   constructor(
     private roslinaService: RoslinaService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
-
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -38,7 +35,6 @@ export class RoslinaListComponent implements OnInit{
       this.findAllRosliny();
     });
   }
-
 
   findAllRosliny() {
     console.log('findAllRosliny');
@@ -53,16 +49,16 @@ export class RoslinaListComponent implements OnInit{
 
   updatePages() {
     const totalPages = this.roslinaResponse.totalPages as number;
-    let startPage = Math.max(1, this.page - 2); // Zmieniono na 1
-    let endPage = Math.min(totalPages, this.page + 2); // Zmieniono na totalPages
+    let startPage = Math.max(1, this.page - 2);
+    let endPage = Math.min(totalPages, this.page + 2);
 
     if (totalPages <= 5) {
-      startPage = 1; // Zmieniono na 1
+      startPage = 1;
       endPage = totalPages;
-    } else if (this.page <= 3) { // Zmieniono na 3
-      endPage = Math.min(totalPages, 5); // Zmieniono na totalPages
-    } else if (this.page >= totalPages - 2) { // Zmieniono na 2
-      startPage = Math.max(1, totalPages - 4); // Zmieniono na 1
+    } else if (this.page <= 3) {
+      endPage = Math.min(totalPages, 5);
+    } else if (this.page >= totalPages - 2) {
+      startPage = Math.max(1, totalPages - 4);
     }
 
     this.pages = Array(endPage - startPage + 1).fill(0).map((_, i) => startPage + i);
@@ -73,11 +69,11 @@ export class RoslinaListComponent implements OnInit{
   }
 
   goToFirstPage() {
-    this.router.navigate(['/rosliny/page', 1]); // Zmieniono na 1
+    this.router.navigate(['/rosliny/page', 1]);
   }
 
   goToPreviousPage() {
-    if (this.page > 1) { // Zmieniono na 1
+    if (this.page > 1) {
       this.router.navigate(['/rosliny/page', this.page - 1]);
     }
   }

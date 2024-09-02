@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TokenService } from '../../services/token/token.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -21,7 +21,7 @@ export class NavbarComponent {
   }
 
   toKatalog() {
-    this.router.navigate(['katalog']);
+    this.router.navigate(['rosliny']);
   }
 
   toSpolecznosc() {

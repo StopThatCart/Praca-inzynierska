@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Roslina } from '../../models/roslina';
+import { RoslinaResponse } from '../../models/roslina-response';
 
-export interface GetByNazwaLacinska$Params {
+export interface FindByNazwaLacinska$Params {
   'nazwa-lacinska': string;
 }
 
-export function getByNazwaLacinska(http: HttpClient, rootUrl: string, params: GetByNazwaLacinska$Params, context?: HttpContext): Observable<StrictHttpResponse<Roslina>> {
-  const rb = new RequestBuilder(rootUrl, getByNazwaLacinska.PATH, 'get');
+export function findByNazwaLacinska(http: HttpClient, rootUrl: string, params: FindByNazwaLacinska$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+  const rb = new RequestBuilder(rootUrl, findByNazwaLacinska.PATH, 'get');
   if (params) {
     rb.path('nazwa-lacinska', params['nazwa-lacinska'], {});
   }
@@ -23,9 +23,9 @@ export function getByNazwaLacinska(http: HttpClient, rootUrl: string, params: Ge
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Roslina>;
+      return r as StrictHttpResponse<RoslinaResponse>;
     })
   );
 }
 
-getByNazwaLacinska.PATH = '/rest/neo4j/rosliny/{nazwa-lacinska}';
+findByNazwaLacinska.PATH = '/rest/neo4j/rosliny/{nazwa-lacinska}';

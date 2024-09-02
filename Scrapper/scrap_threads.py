@@ -48,7 +48,7 @@ def clean_description(description):
     description = description.strip().replace('"', "'").replace('\t', '\n')
 
     # usuwanie znaków specjalnych
-    cleaned_description = re.sub(r'[^\w\s]', '', description)
+   # cleaned_description = re.sub(r'[^\w\s]', '', description)
     # usuwanie nadmiarowych spacji pomiedzy wierszami
     cleaned_description = re.sub(r'\s+', ' ', cleaned_description)
     return cleaned_description

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
+import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
@@ -65,12 +66,21 @@ public class RoslinaService {
         );
     }
 
-    public Optional<Roslina> findById(Long id) {
-        return roslinaRepository.findById(id);
+    public RoslinaResponse findById(Long id) {
+        Roslina ros = roslinaRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id: " + id));
+        return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
-    public Optional<Roslina> findByNazwaLacinska(String nazwaLacinska) {
-        return roslinaRepository.findByNazwaLacinskaWithRelations(nazwaLacinska);
+    public RoslinaResponse findByNazwaLacinska(String nazwaLacinska) {
+        Roslina ros = roslinaRepository.findByNazwaLacinskaWithWlasciwosci(nazwaLacinska)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
+        RoslinaResponse res = roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
+
+        System.out.println("Roslina: " + ros.getNazwa());
+        System.out.println("Gleba: " + ros.getGleby() + " ||| " + "Response gleby " + res.getGleby());
+
+        return res;
     }
 
     public Roslina save(RoslinaRequest request) {
@@ -100,7 +110,7 @@ public class RoslinaService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
-            System.out.println("\n\n\nBITCH IS PRESENT\n\n\n");
+            System.out.println("\n\n\nENTITY IS PRESENT\n\n\n");
             return null;
         }
         
@@ -138,19 +148,24 @@ public class RoslinaService {
         return ros;
     }
 
-    public Roslina update(RoslinaRequest request) {
+    public RoslinaResponse update(RoslinaRequest request) {
+        Roslina roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska())
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + request.getNazwaLacinska()));
+
         if(request.areWlasciwosciEmpty()) {
-            return roslinaRepository.updateRoslina(
-            request.getNazwa(), request.getNazwaLacinska(), 
-            request.getOpis(), request.getObraz(), 
-            request.getWysokoscMin(), request.getWysokoscMax());
+            Roslina ros = roslinaRepository.updateRoslina(
+                request.getNazwa(), request.getNazwaLacinska(), 
+                request.getOpis(), request.getObraz(), 
+                request.getWysokoscMin(), request.getWysokoscMax());
+            return roslinaMapper.toRoslinaResponse(ros);
         }
         
-        return roslinaRepository.updateRoslina(
+        Roslina ros = roslinaRepository.updateRoslina(
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosciAsMap());
+        return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
     // Uwaga: to jest do głównej rośliny, nie customowej
