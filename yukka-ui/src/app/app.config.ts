@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { HttpTokenInterceptor } from './services/interceptors/http-token.interceptor';
+import { LoadingInterceptor } from './services/LoaderSpinner/interceptor/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,9 @@ export const appConfig: ApplicationConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpTokenInterceptor,
       multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true
     }
   ]
 };

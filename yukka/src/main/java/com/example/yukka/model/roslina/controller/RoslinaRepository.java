@@ -34,14 +34,18 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     """)
     Optional<Roslina> findByNazwaLacinska(@Param("latinName") String latinName);
 
+    // path na razie został dodany dla testów.
+    // TODO: Wyszukiwanie albo na backendzie albo na frontendzie
+    // Jednak backend.
 
     @Query(value = """
         MATCH (roslina:Roslina) WHERE NOT roslina:UzytkownikRoslina
-        RETURN roslina
+        OPTIONAL MATCH path=(roslina)-[r]->(w:Wlasciwosc)
+        RETURN roslina, collect(nodes(path)), collect(relationships(path))
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
         """,
        countQuery = """
-        MATCH (roslina:Roslina)
+        MATCH (roslina:Roslina) WHERE NOT roslina:UzytkownikRoslina
         RETURN count(roslina)
         """)
     Page<Roslina> findAllRosliny(Pageable pageable);

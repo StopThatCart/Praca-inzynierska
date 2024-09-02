@@ -37,7 +37,7 @@ export class RoslinaListComponent implements OnInit{
   }
 
   findAllRosliny() {
-    console.log('findAllRosliny');
+    //console.log('findAllRosliny');
     this.roslinaService.findAllRosliny1({ page: this.page - 1, size: this.size })
       .subscribe({
         next: (rosliny) => {
