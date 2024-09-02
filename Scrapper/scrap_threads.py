@@ -35,7 +35,7 @@ url_list = [
 
 last_url = "https://e-katalogroslin.pl/przegladaj-katalog?se=60e5c0024c14f99ceaa4840aa4d02bd1"
 
-no_description = "Ta roślina nie posiada opisu"
+no_description = "Ta roślina nie posiada opisu."
 no_image = "https://e-katalogroslin.pl/wp-content/themes/e-katalogroslin/img/e-kat_noimg.jpg"
 default_img = "default_plant.jpg"
 
@@ -48,9 +48,9 @@ def clean_description(description):
     description = description.strip().replace('"', "'").replace('\t', '\n')
 
     # usuwanie znaków specjalnych
-   # cleaned_description = re.sub(r'[^\w\s]', '', description)
+   # description = re.sub(r'[^\w\s]', '', description)
     # usuwanie nadmiarowych spacji pomiedzy wierszami
-    cleaned_description = re.sub(r'\s+', ' ', cleaned_description)
+    cleaned_description = re.sub(r'\s+', ' ', description)
     return cleaned_description
 
 async def fetch(session, url):
@@ -239,6 +239,7 @@ test_file = "testowy.csv"
 def main():
     start_time = time.time()
     
+    print("Rozpoczęcie scrapowania...")
     commit_scrap(url_list, output_name)
     
     end_time = time.time()
