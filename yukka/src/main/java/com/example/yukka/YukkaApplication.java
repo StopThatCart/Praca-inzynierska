@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.dzialka.Dzialka;
@@ -27,8 +29,12 @@ import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.service.DzialkaService;
+import com.example.yukka.model.roslina.RoslinaRequest;
+import com.example.yukka.model.roslina.RoslinaResponse;
+import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.repository.KomentarzRepository;
@@ -76,6 +82,7 @@ public class YukkaApplication {
 	private final DzialkaService dzialkaService;
 	private final DzialkaRepository dzialkaRepository;
 
+	private final RoslinaService roslinaService;
 	private final RoslinaImporterService roslinaImporterService;
 
 	private final FileUtils fileUtils;
@@ -112,9 +119,51 @@ public class YukkaApplication {
 //roslinaImporterService.seedRosliny();
 		//	unseed();
         //	seed();
+		//roslinaSearchTest();
         };
     }
 	
+	void roslinaSearchTest() {
+		String roslinaNazwa = "a";
+		String roslinaNazwaLacinska = "";
+        String roslinaOpis = "";
+        Double wysokoscMin = 1.5;
+        Double wysokoscMax = 12.0;
+
+
+		WlasciwoscWithRelations kolorLisci = WlasciwoscWithRelations.builder()
+		.etykieta("Kolor").relacja("MA_KOLOR_LISCI").nazwa("ciemnozielone")
+		.build();
+		WlasciwoscWithRelations okresOwocowania = WlasciwoscWithRelations.builder()
+		.etykieta("Okres").relacja("MA_OKRES_OWOCOWANIA").nazwa("październik")
+		.build();
+
+		WlasciwoscWithRelations gleba1 = WlasciwoscWithRelations.builder()
+		.etykieta("Gleba").relacja("MA_GLEBE").nazwa("przeciętna ogrodowa")
+		.build();
+		WlasciwoscWithRelations gleba2 = WlasciwoscWithRelations.builder()
+		.etykieta("Gleba").relacja("MA_GLEBE").nazwa("próchniczna")
+		.build();
+		RoslinaRequest exampleRoslina = RoslinaRequest.builder()
+            //.id(12345678L)
+            .nazwa(roslinaNazwa)
+			//.nazwaLacinska(roslinaNazwaLacinska)
+           // .opis(roslinaOpis)
+            .wysokoscMin(wysokoscMin)
+            .wysokoscMax(wysokoscMax)
+			.wlasciwosci(Arrays.asList(kolorLisci, okresOwocowania, gleba1, gleba2))
+			.build();
+
+		System.out.println("Testowanie wyszukiwania rośliny z parametrami");
+		PageResponse<RoslinaResponse> res = roslinaService.findAllRoslinyWithParameters(0, 12, exampleRoslina);
+		if(res.getContent().isEmpty()) {
+			System.out.println("Nie znaleziono rośliny");
+		} else {
+			System.out.println("Znaleziono pierwszą roślinę: " + res.getContent().get(0).getNazwa());
+			System.out.println("Liczba znalezionych roślin: " + res.getContent().size());
+		}
+
+	}
 
 	void unseed() {
 		uzytkownikService.seedRemoveUzytkownicyObrazy();

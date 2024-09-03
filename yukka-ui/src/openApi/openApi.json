@@ -73,46 +73,6 @@
       }
     },
     "/rest/neo4j/rosliny": {
-      "get": {
-        "tags": [
-          "Roslina"
-        ],
-        "operationId": "findAllRosliny_1",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PageResponseRoslinaResponse"
-                }
-              }
-            }
-          }
-        }
-      },
       "put": {
         "tags": [
           "Roslina"
@@ -620,6 +580,58 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RozmowaPrywatna"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rest/neo4j/rosliny/szukaj": {
+      "post": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "findAllRoslinyWithParameters",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoslinaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseRoslinaResponse"
                 }
               }
             }
@@ -2206,10 +2218,10 @@
           "name": {
             "type": "string"
           },
-          "normalUzytkownik": {
+          "admin": {
             "type": "boolean"
           },
-          "admin": {
+          "normalUzytkownik": {
             "type": "boolean"
           },
           "pracownik": {
@@ -2218,14 +2230,14 @@
           "username": {
             "type": "string"
           },
+          "password": {
+            "type": "string"
+          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
-          },
-          "password": {
-            "type": "string"
           },
           "enabled": {
             "type": "boolean"
@@ -2440,109 +2452,36 @@
           }
         }
       },
-      "PostRequest": {
-        "required": [
-          "tytul"
-        ],
+      "PageResponseRoslinaResponse": {
         "type": "object",
         "properties": {
-          "tytul": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoslinaResponse"
+            }
           },
-          "opis": {
-            "maxLength": 3000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "obraz": {
-            "maxLength": 200,
-            "minLength": 0,
-            "type": "string"
-          }
-        }
-      },
-      "KomentarzRequest": {
-        "required": [
-          "opis",
-          "targetId"
-        ],
-        "type": "object",
-        "properties": {
-          "opis": {
-            "maxLength": 3000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string"
-          },
-          "targetId": {
-            "type": "string"
-          }
-        }
-      },
-      "DzialkaRoslinaRequest": {
-        "required": [
-          "numerDzialki",
-          "x",
-          "y"
-        ],
-        "type": "object",
-        "properties": {
-          "roslinaId": {
-            "type": "string"
-          },
-          "nazwaLacinska": {
-            "type": "string"
-          },
-          "numerDzialki": {
-            "maximum": 10,
-            "minimum": 1,
+          "number": {
             "type": "integer",
             "format": "int32"
           },
-          "x": {
-            "maximum": 20,
-            "minimum": 1,
+          "size": {
             "type": "integer",
             "format": "int32"
           },
-          "y": {
-            "maximum": 20,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "obraz": {
-            "type": "string"
-          }
-        }
-      },
-      "DzialkaResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
+          "totalElements": {
             "type": "integer",
             "format": "int64"
           },
-          "numer": {
+          "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "wlascicielNazwa": {
-            "type": "string"
+          "first": {
+            "type": "boolean"
           },
-          "zasadzoneRosliny": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ZasadzonaRoslinaResponse"
-            }
-          },
-          "liczbaRoslin": {
-            "type": "integer",
-            "format": "int32"
+          "last": {
+            "type": "boolean"
           }
         }
       },
@@ -2715,6 +2654,112 @@
           }
         }
       },
+      "PostRequest": {
+        "required": [
+          "tytul"
+        ],
+        "type": "object",
+        "properties": {
+          "tytul": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "opis": {
+            "maxLength": 3000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "obraz": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          }
+        }
+      },
+      "KomentarzRequest": {
+        "required": [
+          "opis",
+          "targetId"
+        ],
+        "type": "object",
+        "properties": {
+          "opis": {
+            "maxLength": 3000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "obraz": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          }
+        }
+      },
+      "DzialkaRoslinaRequest": {
+        "required": [
+          "numerDzialki",
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "roslinaId": {
+            "type": "string"
+          },
+          "nazwaLacinska": {
+            "type": "string"
+          },
+          "numerDzialki": {
+            "maximum": 10,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "x": {
+            "maximum": 20,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "y": {
+            "maximum": 20,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "obraz": {
+            "type": "string"
+          }
+        }
+      },
+      "DzialkaResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "numer": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "wlascicielNazwa": {
+            "type": "string"
+          },
+          "zasadzoneRosliny": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ZasadzonaRoslinaResponse"
+            }
+          },
+          "liczbaRoslin": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "ZasadzonaRoslinaResponse": {
         "type": "object",
         "properties": {
@@ -2812,19 +2857,19 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ynowy": {
-            "type": "integer",
-            "format": "int32"
-          },
           "xstary": {
             "type": "integer",
             "format": "int32"
           },
           "ystary": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "xnowy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           }
@@ -3344,39 +3389,6 @@
           "ostatnioAktualizowana": {
             "type": "string",
             "format": "date-time"
-          }
-        }
-      },
-      "PageResponseRoslinaResponse": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RoslinaResponse"
-            }
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
           }
         }
       },

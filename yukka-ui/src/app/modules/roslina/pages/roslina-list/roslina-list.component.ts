@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RoslinaService } from '../../../../services/services/roslina.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { findAllRosliny } from '../../../../services/fn/uzytkownik-roslina/find-all-rosliny';
-import { PageResponseRoslinaResponse } from '../../../../services/models';
+import { PageResponseRoslinaResponse, RoslinaRequest, WlasciwoscWithRelations } from '../../../../services/models';
 import { CommonModule } from '@angular/common';
 import { RoslinaCardComponent } from "../../components/roslina-card/roslina-card.component";
 
@@ -16,6 +16,29 @@ import { RoslinaCardComponent } from "../../components/roslina-card/roslina-card
 })
 export class RoslinaListComponent implements OnInit{
   roslinaResponse: PageResponseRoslinaResponse = {};
+
+  request: RoslinaRequest = {
+    nazwa: 'a',
+    nazwaLacinska: '',
+    obraz: '',
+    opis: '',
+    wlasciwosci: [
+      {
+        etykieta: 'Kolor', relacja: 'MA_KOLOR_LISCI', nazwa: 'ciemnozielone'
+      },
+      {
+        etykieta: 'Okres', relacja: 'MA_OKRES_OWOCOWANIA', nazwa: 'październik'
+      },
+      {
+        etykieta: 'Gleba', relacja: 'MA_GLEBE', nazwa: 'przeciętna ogrodowa'
+      },
+      {
+        etykieta: 'Gleba', relacja: 'MA_GLEBE', nazwa: 'próchniczna'
+      }
+    ],
+    wysokoscMax: 12,
+    wysokoscMin: 1.5,
+  };
   // Na backendzie jest size 10, więc tutaj tylko testuję
   page = 1;
   size = 12;
@@ -36,16 +59,45 @@ export class RoslinaListComponent implements OnInit{
     });
   }
 
+
   findAllRosliny() {
     //console.log('findAllRosliny');
-    this.roslinaService.findAllRosliny1({ page: this.page - 1, size: this.size })
-      .subscribe({
+    console.log(typeof this.request.wlasciwosci)
+   //   this.request.wlasciwosci = Array(0);
+
+    this.roslinaService.findAllRoslinyWithParameters({ page: this.page - 1, size: this.size,
+      body: this.request })
+      .subscribe(
+        {
         next: (rosliny) => {
           this.roslinaResponse = rosliny;
           this.updatePages();
+        },
+        error: (error) => {
+          console.error('Error fetching rosliny:', error);
         }
       });
   }
+
+  /*
+  findAllRoslinyOld() {
+    //console.log('findAllRosliny');
+    console.log(typeof this.request.wlasciwosci)
+      this.request.wlasciwosci = Array(0);
+
+    this.roslinaService.findAllRoslinyWithParameters({ page: this.page - 1, size: this.size, request: this.request })
+      .subscribe(
+        {
+        next: (rosliny) => {
+          this.roslinaResponse = rosliny;
+          this.updatePages();
+        },
+        error: (error) => {
+          console.error('Error fetching rosliny:', error);
+        }
+      });
+  }
+      */
 
   updatePages() {
     const totalPages = this.roslinaResponse.totalPages as number;

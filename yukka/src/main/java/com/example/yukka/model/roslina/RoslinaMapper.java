@@ -145,6 +145,9 @@ public class RoslinaMapper {
             .wysokoscMax(request.getWysokoscMax())
             .build();
         
+        if(request.getWlasciwosci() == null || request.getWlasciwosci().isEmpty()) {
+                return roslina;
+        }
         mapWlasciwosciToRoslina(roslina, request.getWlasciwosci());
         
         return roslina;
@@ -200,10 +203,48 @@ public class RoslinaMapper {
                 .build();
     }
 
+    public RoslinaResponse toRoslinaResponse(RoslinaRequest request) {
+        return RoslinaResponse.builder()
+            .roslinaId(request.getRoslinaId())
+            .nazwa(request.getNazwa())
+            .nazwaLacinska(request.getNazwaLacinska())
+            .opis(request.getOpis())
+            .wysokoscMin(request.getWysokoscMin())
+            .wysokoscMax(request.getWysokoscMax())
+            .obraz(fileUtils.readRoslinaObrazFile(request.getObraz()))
+            .grupy(extractNazwy(request.getWlasciwosci(), "grupy"))
+            .formy(extractNazwy(request.getWlasciwosci(), "formy"))
+            .gleby(extractNazwy(request.getWlasciwosci(), "gleby"))
+            .koloryLisci(extractNazwy(request.getWlasciwosci(), "koloryLisci"))
+            .koloryKwiatow(extractNazwy(request.getWlasciwosci(), "koloryKwiatow"))
+            .kwiaty(extractNazwy(request.getWlasciwosci(), "kwiaty"))
+            .nagrody(extractNazwy(request.getWlasciwosci(), "nagrody"))
+            .odczyny(extractNazwy(request.getWlasciwosci(), "odczyny"))
+            .okresyKwitnienia(extractNazwy(request.getWlasciwosci(), "okresyKwitnienia"))
+            .okresyOwocowania(extractNazwy(request.getWlasciwosci(), "okresyOwocowania"))
+            .owoce(extractNazwy(request.getWlasciwosci(), "owoce"))
+            .podgrupa(extractNazwy(request.getWlasciwosci(), "podgrupa"))
+            .pokroje(extractNazwy(request.getWlasciwosci(), "pokroje"))
+            .silyWzrostu(extractNazwy(request.getWlasciwosci(), "silyWzrostu"))
+            .stanowiska(extractNazwy(request.getWlasciwosci(), "stanowiska"))
+            .walory(extractNazwy(request.getWlasciwosci(), "walory"))
+            .wilgotnosci(extractNazwy(request.getWlasciwosci(), "wilgotnosci"))
+            .zastosowania(extractNazwy(request.getWlasciwosci(), "zastosowania"))
+            .zimozielonosci(extractNazwy(request.getWlasciwosci(), "zimozielonosci"))
+            .build();
+    }
+
     private Set<String> extractNazwy(Set<Wlasciwosc> wlasciwosci) {
         return wlasciwosci.stream()
                           .map(Wlasciwosc::getNazwa)
                           .collect(Collectors.toSet());
+    }
+
+    private Set<String> extractNazwy(List<WlasciwoscWithRelations> wlasciwosci, String relacja) {
+        return wlasciwosci.stream()
+            .filter(w -> w.getRelacja().equalsIgnoreCase(relacja))
+            .map(WlasciwoscWithRelations::getNazwa)
+            .collect(Collectors.toSet());
     }
 
     private List<WlasciwoscWithRelations> mapWlasciwosciWithRelationsToMap(Roslina roslina) {

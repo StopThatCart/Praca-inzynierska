@@ -11,8 +11,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { deleteRoslina1 } from '../fn/roslina/delete-roslina-1';
 import { DeleteRoslina1$Params } from '../fn/roslina/delete-roslina-1';
-import { findAllRosliny1 } from '../fn/roslina/find-all-rosliny-1';
-import { FindAllRosliny1$Params } from '../fn/roslina/find-all-rosliny-1';
+import { findAllRoslinyWithParameters } from '../fn/roslina/find-all-rosliny-with-parameters';
+import { FindAllRoslinyWithParameters$Params } from '../fn/roslina/find-all-rosliny-with-parameters';
 import { findByNazwaLacinska } from '../fn/roslina/find-by-nazwa-lacinska';
 import { FindByNazwaLacinska$Params } from '../fn/roslina/find-by-nazwa-lacinska';
 import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
@@ -32,31 +32,6 @@ import { UpdateRoslina$Params } from '../fn/roslina/update-roslina';
 export class RoslinaService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
-  }
-
-  /** Path part for operation `findAllRosliny1()` */
-  static readonly FindAllRosliny1Path = '/rest/neo4j/rosliny';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findAllRosliny1()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findAllRosliny1$Response(params?: FindAllRosliny1$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
-    return findAllRosliny1(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findAllRosliny1$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findAllRosliny1(params?: FindAllRosliny1$Params, context?: HttpContext): Observable<PageResponseRoslinaResponse> {
-    return this.findAllRosliny1$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PageResponseRoslinaResponse>): PageResponseRoslinaResponse => r.body)
-    );
   }
 
   /** Path part for operation `updateRoslina()` */
@@ -172,6 +147,31 @@ export class RoslinaService extends BaseService {
   saveRoslina2$FormData$Any(params: SaveRoslina2$FormData$Any$Params, context?: HttpContext): Observable<string> {
     return this.saveRoslina2$FormData$Any$Response(params, context).pipe(
       map((r: StrictHttpResponse<string>): string => r.body)
+    );
+  }
+
+  /** Path part for operation `findAllRoslinyWithParameters()` */
+  static readonly FindAllRoslinyWithParametersPath = '/rest/neo4j/rosliny/szukaj';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `findAllRoslinyWithParameters()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  findAllRoslinyWithParameters$Response(params: FindAllRoslinyWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
+    return findAllRoslinyWithParameters(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `findAllRoslinyWithParameters$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  findAllRoslinyWithParameters(params: FindAllRoslinyWithParameters$Params, context?: HttpContext): Observable<PageResponseRoslinaResponse> {
+    return this.findAllRoslinyWithParameters$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PageResponseRoslinaResponse>): PageResponseRoslinaResponse => r.body)
     );
   }
 

@@ -1,4 +1,5 @@
 package com.example.yukka.model.roslina;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,7 +47,8 @@ public class RoslinaRequest {
     private Double wysokoscMax;
 
     @NotNull(message = "Właściwości nie mogą być nullem. Daj puste jak musisz.")
-    private List<WlasciwoscWithRelations> wlasciwosci;
+    @Builder.Default
+    private List<WlasciwoscWithRelations> wlasciwosci = new ArrayList<>();
 
     public boolean areWlasciwosciEmpty() {
         if (wlasciwosci == null || wlasciwosci.isEmpty()) {
@@ -62,6 +64,9 @@ public class RoslinaRequest {
 
     @JsonIgnore
     public List<Map<String, String>> getWlasciwosciAsMap() {
+        if(wlasciwosci == null) {
+            return new ArrayList<>();
+        }
         return wlasciwosci.stream()
             .map(w -> Map.of(
                 "etykieta", w.getEtykieta(),

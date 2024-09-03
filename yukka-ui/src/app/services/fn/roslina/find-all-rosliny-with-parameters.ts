@@ -7,17 +7,20 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { PageResponseRoslinaResponse } from '../../models/page-response-roslina-response';
+import { RoslinaRequest } from '../../models/roslina-request';
 
-export interface FindAllRosliny1$Params {
+export interface FindAllRoslinyWithParameters$Params {
   page?: number;
   size?: number;
+      body: RoslinaRequest
 }
 
-export function findAllRosliny1(http: HttpClient, rootUrl: string, params?: FindAllRosliny1$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
-  const rb = new RequestBuilder(rootUrl, findAllRosliny1.PATH, 'get');
+export function findAllRoslinyWithParameters(http: HttpClient, rootUrl: string, params: FindAllRoslinyWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
+  const rb = new RequestBuilder(rootUrl, findAllRoslinyWithParameters.PATH, 'post');
   if (params) {
     rb.query('page', params.page, {});
     rb.query('size', params.size, {});
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -30,4 +33,4 @@ export function findAllRosliny1(http: HttpClient, rootUrl: string, params?: Find
   );
 }
 
-findAllRosliny1.PATH = '/rest/neo4j/rosliny';
+findAllRoslinyWithParameters.PATH = '/rest/neo4j/rosliny/szukaj';

@@ -66,6 +66,38 @@ public class RoslinaService {
         );
     }
 
+    public PageResponse<RoslinaResponse> findAllRoslinyWithParameters(int page, int size, RoslinaRequest request) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").descending());
+
+        Roslina ros = roslinaMapper.toRoslina(request);
+
+        //System.out.println("Rozmiar relat: " + request.getWlasciwosciAsMap().size());
+      //  System.out.println("Rozmiar okresow: " + ros.getOkresyOwocowania().size());
+     //   System.out.println("Rozmiar kwiatow: " + ros.getKwiaty().size());
+
+        Page<Roslina> rosliny = roslinaRepository.findAllRoslinyWithParameters(
+            ros, 
+            ros.getFormy(), ros.getGleby(), ros.getGrupy(), ros.getKoloryLisci(),
+            ros.getKoloryKwiatow(), ros.getKwiaty(), ros.getNagrody(), ros.getOdczyny(),
+            ros.getOkresyKwitnienia(), ros.getOkresyOwocowania(), ros.getOwoce(), ros.getPodgrupa(),
+            ros.getPokroje(), ros.getSilyWzrostu(), ros.getStanowiska(), ros.getWalory(),
+            ros.getWilgotnosci(), ros.getZastosowania(), ros.getZimozielonosci(),
+            pageable);
+
+        List<RoslinaResponse> roslinyResponse = rosliny.stream()
+                .map(roslinaMapper::toRoslinaResponse)
+                .toList();
+        return new PageResponse<>(
+                roslinyResponse,
+                rosliny.getNumber(),
+                rosliny.getSize(),
+                rosliny.getTotalElements(),
+                rosliny.getTotalPages(),
+                rosliny.isFirst(),
+                rosliny.isLast()
+        );
+    }
+
     public RoslinaResponse findById(Long id) {
         Roslina ros = roslinaRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id: " + id));

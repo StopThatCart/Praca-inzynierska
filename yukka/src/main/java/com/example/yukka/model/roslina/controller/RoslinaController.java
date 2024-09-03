@@ -39,12 +39,23 @@ public class RoslinaController {
     @Autowired
     RoslinaRepository roslinaRepository;
 
+    /*
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllRosliny(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            Authentication connectedUser) {
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
         return ResponseEntity.ok(roslinaService.findAllRosliny(page, size));
+    }
+         */
+
+         // Pomijam valid bo tutaj się szuka rośliny i wiele parametrów może być pustych
+         // Post bo nie można dawać request
+    @PostMapping(value="/szukaj", produces="application/json")
+    public ResponseEntity<PageResponse<RoslinaResponse>> findAllRoslinyWithParameters(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestBody RoslinaRequest request) {
+        return ResponseEntity.ok(roslinaService.findAllRoslinyWithParameters(page, size, request));
     }
 /* 
     @GetMapping
