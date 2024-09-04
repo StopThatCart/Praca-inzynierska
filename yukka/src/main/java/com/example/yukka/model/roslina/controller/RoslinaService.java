@@ -2,7 +2,10 @@ package com.example.yukka.model.roslina.controller;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,12 +24,18 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwosciRodzaje;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 @Service
 public class RoslinaService {
     @Autowired
     RoslinaRepository roslinaRepository;
+
+    @Autowired
+    WlasciwoscRepository wlasciwoscRepository;
 
     @Autowired
     FileStoreService fileStoreService;
@@ -113,6 +122,16 @@ public class RoslinaService {
         System.out.println("Gleba: " + ros.getGleby() + " ||| " + "Response gleby " + res.getGleby());
 
         return res;
+    }
+
+    public Set<WlasciwoscResponse> getWlasciwosciWithRelations() {
+        Set<WlasciwosciRodzaje> responses = wlasciwoscRepository.getWlasciwosciWithRelacje();
+        return responses.stream()
+            .map(response -> WlasciwoscResponse.builder()
+                .etykieta(response.getEtykieta())
+                .nazwy(response.getNazwy())
+                .build())
+            .collect(Collectors.toSet());
     }
 
     public Roslina save(RoslinaRequest request) {

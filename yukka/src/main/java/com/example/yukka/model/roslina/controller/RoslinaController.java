@@ -1,6 +1,9 @@
 package com.example.yukka.model.roslina.controller;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +25,8 @@ import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwosciRodzaje;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -65,6 +70,12 @@ public class RoslinaController {
         return roslinaService.getSome(amount);
     }
 */
+    @GetMapping("/wlasciwosci")
+    public ResponseEntity<Set<WlasciwoscResponse>> getWlasciwosciWithRelations() {
+        Set<WlasciwoscResponse> response = roslinaService.getWlasciwosciWithRelations();
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping(value = "/{nazwa-lacinska}", produces="application/json")
     public ResponseEntity<RoslinaResponse> findByNazwaLacinska(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
      //   String nazwaLacinska = URLDecoder.decode(encodedNazwaLacinska, StandardCharsets.UTF_8);
