@@ -12,12 +12,17 @@
       <div class="col d-flex justify-content-center align-items-center mx-auto">
         <div class="vstack">
           <div class="d-flex justify-content-center align-items-center input-group p-4 ">
-            <input [(ngModel)]="request.nazwa" type="search" class="form-control rounded-start text-black" placeholder="Wyszukaj roślinę">
-              <button (click)="onSearch()" class="btn text-uppercase btn-primary input-group-append" type="button">
+            <input [(ngModel)]="request.nazwa" type="text" class="form-control rounded-start text-black" placeholder="Wyszukaj roślinę">
+            <input [(ngModel)]="request.nazwaLacinska" type="text" class="form-control rounded-start text-black" placeholder="Nazwa łacińska rośliny">
+            <button (click)="onSearch()" class="btn text-uppercase btn-primary input-group-append" type="button">
               <i class="fas fa-search" style="font-size: 1em; color: currentColor;"></i>
             </button>
+
           </div>
-            <app-wlasciwosc-tag [wlasciwosci]="request.wlasciwosci"></app-wlasciwosc-tag>
+            <app-wlasciwosc-tag
+            [wlasciwosci]="request.wlasciwosci"
+            (wlasciwoscRemoved)="onWlasciwoscRemoved($event)"
+            ></app-wlasciwosc-tag>
         </div>
       </div>
     </div>
@@ -25,8 +30,11 @@
       <div class="col-md-3 d-flex flex-column justify-content-between p-1 rounded" style="background: var(--bs-primary-border-subtle);" >
         <div class="offcanvas-body d-flex flex-column justify-content-between p-2 rounded">
           <app-wlasciwosc-dropdown
+          [wlasciwosciResponse]="wlasciwosciResponse"
+          [selectedWlasciwosci]="request.wlasciwosci"
           (wysokoscMinChange)="onWysokoscMinChange($event)"
-          (wysokoscMaxChange)="onWysokoscMaxChange($event)">
+          (wysokoscMaxChange)="onWysokoscMaxChange($event)"
+          (selectedWlasciwosciChange)="onWlasciwoscToggled($event)">
           </app-wlasciwosc-dropdown>
         </div>
       </div>
@@ -34,10 +42,8 @@
       <div class="col-md-9">
         <div class="row mb-3">
           <div class="col-md-8 col-xl-6 text-center mx-auto">
-            <span class="fs-3 text-primary p-2">
-              <span class="fs-3 fw-semibold text-primary p-2" id="roslinaCount">({{ roslinaCount }})</span>
-              &nbsp;Roślin
-              </span>
+            <span class="fs-3 text-primary p-2"> Znalezione rośliny:</span>
+            <span class="fs-3 fw-semibold text-primary p-2">({{ roslinaCount }})</span>
             </div>
         </div>
         <div class="row gy-4 d-flex justify-content-center">

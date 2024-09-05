@@ -1439,7 +1439,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "uniqueItems": true,
                   "type": "array",
@@ -2254,14 +2254,14 @@
           "username": {
             "type": "string"
           },
+          "password": {
+            "type": "string"
+          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
-          },
-          "password": {
-            "type": "string"
           },
           "enabled": {
             "type": "boolean"
@@ -2269,10 +2269,10 @@
           "accountNonLocked": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           }
         }
@@ -2881,7 +2881,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "xstary": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
@@ -2889,11 +2889,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "ystary": {
+          "xstary": {
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "ystary": {
             "type": "integer",
             "format": "int32"
           }

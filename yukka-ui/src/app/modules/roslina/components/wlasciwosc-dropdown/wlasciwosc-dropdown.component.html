@@ -19,59 +19,20 @@
       </div>
     </div>
   </li>
-  <li class="nav-item my-1 w-100">
+
+
+  <li *ngFor="let wlasciwosc of wlasciwosciResponse" class="nav-item my-1 w-100">
     <div class="nav-item dropdown">
       <button
         class="btn dropdown-toggle text-uppercase link-dark w-100"
         aria-expanded="false" data-bs-toggle="dropdown"
         data-bs-auto-close="false" type="button"
-        data-bs-display="static">Grupa</button>
+        data-bs-display="static">{{ wlasciwosc.etykieta }}</button>
       <div class="dropdown-menu">
-        <a class="dropdown-item link-dark" href="#">
-          <input type="checkbox" id="formCheck-4" class="form-check-input mx-1">Zimozielone ale takie potężnie długie</a>
-          <a class="dropdown-item link-dark" href="#">
-            <input type="checkbox" id="formCheck-5" class="form-check-input mx-1">Second item</a>
-          <a class="dropdown-item link-dark" href="#">
-          <input type="checkbox" id="formCheck-6" class="form-check-input mx-1">Third item
-          </a>
-      </div>
-    </div>
-  </li>
-  <li class="nav-item my-1 w-100">
-    <div class="nav-item dropdown">
-      <button
-        class="btn dropdown-toggle text-uppercase link-dark w-100"
-        aria-expanded="false" data-bs-toggle="dropdown"
-        data-bs-auto-close="false" type="button"
-        data-bs-display="static">
-        Podgrupa
-      </button>
-      <div class="dropdown-menu">
-        <a class="dropdown-item link-dark" href="#">
-          <input type="checkbox" id="formCheck-1" class="form-check-input mx-1">Zimozielone ale takie potężnie długie</a>
-        <a class="dropdown-item link-dark" href="#">
-          <input type="checkbox" id="formCheck-2" class="form-check-input mx-1">Second item</a>
-        <a class="dropdown-item link-dark" href="#">
-          <input type="checkbox" id="formCheck-3" class="form-check-input mx-1">Third item</a>
-      </div>
-    </div>
-  </li>
-  <li class="nav-item my-1 w-100">
-    <div class="nav-item dropdown">
-      <button
-        class="btn dropdown-toggle text-uppercase link-dark w-100"
-        aria-expanded="false" data-bs-toggle="dropdown"
-        data-bs-auto-close="false" type="button"
-        data-bs-display="static">
-        Okres kwitnienia
-      </button>
-      <div class="dropdown-menu">
-        <a class="dropdown-item link-dark" href="#">
-          <input type="checkbox" id="formCheck-1" class="form-check-input mx-1">Styczeń</a>
-        <a class="dropdown-item link-dark" href="#">
-          <input type="checkbox" id="formCheck-2" class="form-check-input mx-1">Luty</a>
-        <a class="dropdown-item link-dark" href="#">
-          <input type="checkbox" id="formCheck-3" class="form-check-input mx-1">Marzec</a>
+        <a *ngFor="let nazwa of wlasciwosc.nazwy" class="dropdown-item link-dark">
+          <input [checked]="isSelected(wlasciwosc, nazwa)"
+           type="checkbox" class="form-check-input mx-1"
+           (change)="toggleWlasciwosc(wlasciwosc, nazwa)">{{ nazwa }}</a>
       </div>
     </div>
   </li>

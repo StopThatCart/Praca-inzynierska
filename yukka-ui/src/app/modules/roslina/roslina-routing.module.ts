@@ -20,10 +20,6 @@ const routes: Routes = [
         component: RoslinaPageComponent,
         data: { breadcrumb: (data: any) =>`${data.roslina.nazwaLacinska}` },
         resolve: { roslina: RoslinaResolverService }
-      },
-      {
-        path: 'page/:page',
-        component: RoslinaListComponent
       }
     ]
   }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { WlasciwoscWithRelations } from '../../../../services/models';
 import { RoslinaRelacje } from '../../enums/roslina-relacje';
 
@@ -13,6 +13,8 @@ import { RoslinaRelacje } from '../../enums/roslina-relacje';
 export class WlasciwoscTagComponent implements OnChanges {
   @Input() wlasciwosci: WlasciwoscWithRelations[] = [];
   sortedWlasciwosci: WlasciwoscWithRelations[] = [];
+
+  @Output() wlasciwoscRemoved = new EventEmitter<number>();
 
   // Na siłe wklejone, ale działa
   ngOnChanges(changes: SimpleChanges): void {
@@ -35,5 +37,40 @@ export class WlasciwoscTagComponent implements OnChanges {
         return 0;
       });
     }
+  }
+
+  updateSortedWlasciwosci(wlasciwosci: WlasciwoscWithRelations[]): void {
+    this.sortedWlasciwosci = [...wlasciwosci].map(w => {
+      if (w.relacja === RoslinaRelacje.MA_OKRES_KWITNIENIA) {
+        w.etykieta = 'Okres kwitnienia';
+      } else if (w.relacja === RoslinaRelacje.MA_OKRES_OWOCOWANIA) {
+        w.etykieta = 'Okres owocowania';
+      } else if (w.relacja === RoslinaRelacje.MA_KOLOR_KWIATOW) {
+        w.etykieta = 'Kolor kwiatów';
+      } else if (w.relacja === RoslinaRelacje.MA_KOLOR_LISCI) {
+        w.etykieta = 'Kolor liści';
+      }
+      return w;
+    }).sort((a, b) => {
+      if (a.etykieta && b.etykieta) {
+        return a.etykieta.localeCompare(b.etykieta);
+      }
+      return 0;
+    });
+  }
+
+  removeWlasciwosc(wlasciwosc: WlasciwoscWithRelations): void {
+    console.log('Usuwam wlasciwosc', wlasciwosc);
+
+    let index = this.sortedWlasciwosci.findIndex(w =>
+      w.etykieta === wlasciwosc.etykieta
+      && w.nazwa === wlasciwosc.nazwa
+      && w.relacja === wlasciwosc.relacja);
+    if(index === -1) {
+      console.log('Nie znaleziono wlasciwosci do usuniecia');
+      return;
+    }
+    this.sortedWlasciwosci.splice(index, 1);
+    this.wlasciwoscRemoved.emit(index);
   }
 }
