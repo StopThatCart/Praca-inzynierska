@@ -38,5 +38,6 @@ export type { UzytkownikRoslina } from './models/uzytkownik-roslina';
 export type { UzytkownikRoslinaRequest } from './models/uzytkownik-roslina-request';
 export type { UzytkownikRoslinaResponse } from './models/uzytkownik-roslina-response';
 export type { Wlasciwosc } from './models/wlasciwosc';
+export type { WlasciwoscResponse } from './models/wlasciwosc-response';
 export type { WlasciwoscWithRelations } from './models/wlasciwosc-with-relations';
 export type { ZasadzonaRoslinaResponse } from './models/zasadzona-roslina-response';

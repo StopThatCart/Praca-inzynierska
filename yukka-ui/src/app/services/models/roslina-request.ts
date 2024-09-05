@@ -8,6 +8,6 @@ export interface RoslinaRequest {
   opis: string;
   roslinaId?: string;
   wlasciwosci: Array<WlasciwoscWithRelations>;
-  wysokoscMax: number;
   wysokoscMin: number;
+  wysokoscMax: number;
 }

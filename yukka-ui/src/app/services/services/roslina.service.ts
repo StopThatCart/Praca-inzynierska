@@ -15,6 +15,8 @@ import { findAllRoslinyWithParameters } from '../fn/roslina/find-all-rosliny-wit
 import { FindAllRoslinyWithParameters$Params } from '../fn/roslina/find-all-rosliny-with-parameters';
 import { findByNazwaLacinska } from '../fn/roslina/find-by-nazwa-lacinska';
 import { FindByNazwaLacinska$Params } from '../fn/roslina/find-by-nazwa-lacinska';
+import { getWlasciwosciWithRelations } from '../fn/roslina/get-wlasciwosci-with-relations';
+import { GetWlasciwosciWithRelations$Params } from '../fn/roslina/get-wlasciwosci-with-relations';
 import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
 import { RoslinaResponse } from '../models/roslina-response';
 import { saveRoslina2$FormData$Any } from '../fn/roslina/save-roslina-2-form-data-any';
@@ -27,6 +29,7 @@ import { saveRoslina2$Json$Json } from '../fn/roslina/save-roslina-2-json-json';
 import { SaveRoslina2$Json$Json$Params } from '../fn/roslina/save-roslina-2-json-json';
 import { updateRoslina } from '../fn/roslina/update-roslina';
 import { UpdateRoslina$Params } from '../fn/roslina/update-roslina';
+import { WlasciwoscResponse } from '../models/wlasciwosc-response';
 
 @Injectable({ providedIn: 'root' })
 export class RoslinaService extends BaseService {
@@ -197,6 +200,31 @@ export class RoslinaService extends BaseService {
   findByNazwaLacinska(params: FindByNazwaLacinska$Params, context?: HttpContext): Observable<RoslinaResponse> {
     return this.findByNazwaLacinska$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `getWlasciwosciWithRelations()` */
+  static readonly GetWlasciwosciWithRelationsPath = '/rest/neo4j/rosliny/wlasciwosci';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getWlasciwosciWithRelations()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getWlasciwosciWithRelations$Response(params?: GetWlasciwosciWithRelations$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WlasciwoscResponse>>> {
+    return getWlasciwosciWithRelations(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getWlasciwosciWithRelations$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getWlasciwosciWithRelations(params?: GetWlasciwosciWithRelations$Params, context?: HttpContext): Observable<Array<WlasciwoscResponse>> {
+    return this.getWlasciwosciWithRelations$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<WlasciwoscResponse>>): Array<WlasciwoscResponse> => r.body)
     );
   }
 

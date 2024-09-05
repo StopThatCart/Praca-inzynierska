@@ -1429,6 +1429,30 @@
         }
       }
     },
+    "/rest/neo4j/rosliny/wlasciwosci": {
+      "get": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "getWlasciwosciWithRelations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "uniqueItems": true,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WlasciwoscResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rest/neo4j/posty/{post-id}": {
       "get": {
         "tags": [
@@ -2218,10 +2242,10 @@
           "name": {
             "type": "string"
           },
-          "admin": {
+          "normalUzytkownik": {
             "type": "boolean"
           },
-          "normalUzytkownik": {
+          "admin": {
             "type": "boolean"
           },
           "pracownik": {
@@ -2230,25 +2254,25 @@
           "username": {
             "type": "string"
           },
-          "password": {
-            "type": "string"
-          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
+          "password": {
+            "type": "string"
+          },
           "enabled": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonLocked": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonLocked": {
+          "credentialsNonExpired": {
             "type": "boolean"
           }
         }
@@ -2861,11 +2885,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "ystary": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ystary": {
             "type": "integer",
             "format": "int32"
           },
@@ -3293,6 +3317,9 @@
       "Wlasciwosc": {
         "type": "object",
         "properties": {
+          "labels": {
+            "type": "string"
+          },
           "nazwa": {
             "type": "string"
           }
@@ -3389,6 +3416,21 @@
           "ostatnioAktualizowana": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "WlasciwoscResponse": {
+        "type": "object",
+        "properties": {
+          "etykieta": {
+            "type": "string"
+          },
+          "nazwy": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },

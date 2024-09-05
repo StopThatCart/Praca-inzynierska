@@ -1,75 +1,102 @@
 <section>
   <div class="container">
-      <h2 class="text-uppercase text-center text-primary">Katalog RoŚlin</h2>
-      <div class="row">
-          <div class="col"></div>
-      </div>
+    <h2 class="text-uppercase text-center text-primary">Katalog RoŚlin</h2>
+    <div class="row">
+      <div class="col"></div>
+    </div>
   </div><!-- Start: Articles Cards -->
   <div class="container p-2">
-      <div class="row mb-5">
-          <div class="col-md-8 col-xl-6 text-center mx-auto">
-              <p class="w-lg-50 text-primary">Tutaj będą opcje wyszukiwania w katalogu</p>
+
+    <div class="row w-100 justify-content-center align-items-center"
+      style="background: var(--bs-primary-border-subtle);">
+      <div class="col d-flex justify-content-center align-items-center mx-auto">
+        <div class="vstack">
+          <div class="d-flex justify-content-center align-items-center input-group p-4 ">
+            <input [(ngModel)]="request.nazwa" type="search" class="form-control rounded-start text-black" placeholder="Wyszukaj roślinę">
+              <button (click)="onSearch()" class="btn text-uppercase btn-primary input-group-append" type="button">
+              <i class="fas fa-search" style="font-size: 1em; color: currentColor;"></i>
+            </button>
           </div>
+            <app-wlasciwosc-tag [wlasciwosci]="request.wlasciwosci"></app-wlasciwosc-tag>
+        </div>
+      </div>
+    </div>
+    <div class="row gx-5 gy-2 h-100 mx-auto my-auto">
+      <div class="col-md-3 d-flex flex-column justify-content-between p-1 rounded" style="background: var(--bs-primary-border-subtle);" >
+        <div class="offcanvas-body d-flex flex-column justify-content-between p-2 rounded">
+          <app-wlasciwosc-dropdown
+          (wysokoscMinChange)="onWysokoscMinChange($event)"
+          (wysokoscMaxChange)="onWysokoscMaxChange($event)">
+          </app-wlasciwosc-dropdown>
+        </div>
       </div>
 
-      <div class="row gy-4 row-cols-5 row-cols-md-2 row-cols-xl-3 d-flex justify-content-center">
-
-        <app-roslina-card
-          class="col-auto col-sm-8 col-md-6 col-lg-3 col-xl-3 col-xxl-3 d-flex align-items-stretch" style="min-width: 25%;"
-          *ngFor="let roslina of roslinaResponse?.content"
-          [roslina]="roslina"
-          >
-        </app-roslina-card>
-
+      <div class="col-md-9">
+        <div class="row mb-3">
+          <div class="col-md-8 col-xl-6 text-center mx-auto">
+            <span class="fs-3 text-primary p-2">
+              <span class="fs-3 fw-semibold text-primary p-2" id="roslinaCount">({{ roslinaCount }})</span>
+              &nbsp;Roślin
+              </span>
+            </div>
+        </div>
+        <div class="row gy-4 d-flex justify-content-center">
+          <app-roslina-card
+            class="col-auto col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 d-flex align-items-stretch"
+            style="min-width: 25%;"
+            *ngFor="let roslina of roslinaResponse?.content"
+            [roslina]="roslina">
+          </app-roslina-card>
+        </div>
       </div>
+    </div>
   </div><!-- End: Articles Cards -->
 </section>
 <nav class="d-flex justify-content-center align-items-lg-center">
   <ul class="pagination pagination-lg">
-      <li class="page-item">
-        <a (click)="goToFirstPage()"
-          class="page-link"
-          aria-label="Previous"
-          href="javascript:void(0)"
-          [class.disabled]="page === 1">
-          <span aria-hidden="true"><<</span>
-        </a>
-      </li>
-      <li class="page-item">
-        <a (click)="goToPreviousPage()"
-          class="page-link"
-          aria-label="Previous"
-          href="javascript:void(0)"
-          [class.disabled]="page === 1">
+    <li class="page-item">
+      <a (click)="goToFirstPage()"
+        class="page-link"
+        aria-label="Previous"
+        href="javascript:void(0)"
+        [class.disabled]="page === 1">
+        <span aria-hidden="true"><<</span>
+      </a>
+    </li>
+    <li class="page-item">
+      <a (click)="goToPreviousPage()"
+        class="page-link"
+        aria-label="Previous"
+        href="javascript:void(0)"
+        [class.disabled]="page === 1">
         <
-        </a>
-      </li>
+      </a>
+    </li>
 
-      <li class="page-item" *ngFor="let pageIndex of pages">
-        <a
-          (click)="gotToPage(pageIndex)"
-          class="page-link"
-          [class.active]="page === pageIndex"
-          href="javascript:void(0)"
-        >{{ pageIndex }}</a>
-      </li>
-      <li class="page-item">
-        <a (click)="goToNextPage()"
-          class="page-link"
-          href="javascript:void(0)"
-          aria-label="Next"
-          [class.disabled]="isLastPage">
-          >
-        </a>
-      </li>
-      <li class="page-item">
-        <a (click)="goToLastPage()"
-          class="page-link"
-          href="javascript:void(0)"
-          aria-label="Next"
-          [class.disabled]="isLastPage">
-          <span aria-hidden="true">>></span>
-        </a>
-      </li>
+    <li class="page-item" *ngFor="let pageIndex of pages">
+      <a
+        (click)="goToPage(pageIndex)"
+        class="page-link"
+        [class.active]="page === pageIndex"
+        href="javascript:void(0)">{{ pageIndex }}</a>
+    </li>
+    <li class="page-item">
+      <a (click)="goToNextPage()"
+        class="page-link"
+        href="javascript:void(0)"
+        aria-label="Next"
+        [class.disabled]="isLastPage">
+        >
+      </a>
+    </li>
+    <li class="page-item">
+      <a (click)="goToLastPage()"
+        class="page-link"
+        href="javascript:void(0)"
+        aria-label="Next"
+        [class.disabled]="isLastPage">
+        <span aria-hidden="true">>></span>
+      </a>
+    </li>
   </ul>
 </nav>
