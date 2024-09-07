@@ -46,10 +46,17 @@
                         <div class="card-body">
                             <div id="myTabContent" class="tab-content">
                                 <div id="posts" class="tab-pane fade show active" role="tabpanel" aria-labelledby="posts-tab">
-                                    <form class="my-2"><textarea class="bg-light form-control form-control" id="message" rows="3" placeholder="Napisz coś no" minlength="1" required="" maxlength="300" style="--bs-body-color: #000000;"></textarea><label class="form-label sr-only" for="message" value="Upload image">Postuj coś</label></form>
+                                    <form class="my-2">
+                                        <div class="mb-3"><label class="form-label sr-only" for="message" value="Upload image">Postuj coś</label><textarea id="message" class="bg-light form-control form-control" rows="3" placeholder="Napisz coś no" minlength="1" required maxlength="300" style="--bs-body-color: #000000;"></textarea></div>
+                                        <div class="mb-3"><input class="form-control border-0" type="file" accept="image/*" style="--bs-body-color: #000000;" /></div>
+                                    </form>
                                 </div>
                                 <div id="images" class="tab-pane fade" role="tabpanel" aria-labelledby="images-tab">
-                                    <form><input class="form-control custom-file-input" type="file" id="customFile"><label class="form-label custom-file-label" for="customFile" value="Upload image">Label</label></form>
+                                    <form>
+                                        <input class="form-control custom-file-input" type="file" id="customFile">
+                                        <label class="form-label custom-file-label" for="customFile" value="Upload image">Label</label>
+                                        
+                                    </form>
                                 </div>
                             </div>
                             <div class="btn-toolbar justify-content-between">

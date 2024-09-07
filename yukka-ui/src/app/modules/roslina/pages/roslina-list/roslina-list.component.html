@@ -44,7 +44,10 @@
           <div class="col-md-8 col-xl-6 text-center mx-auto">
             <span class="fs-3 text-primary p-2"> Znalezione rośliny:</span>
             <span class="fs-3 fw-semibold text-primary p-2">({{ roslinaCount }})</span>
-            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="message.length">
+              <p >{{ message }}</p>
+          </div>
+          </div>
         </div>
         <div class="row gy-4 d-flex justify-content-center">
           <app-roslina-card

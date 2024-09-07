@@ -29,6 +29,7 @@
     "express": "^4.18.2",
     "jquery": "^3.7.1",
     "ng-openapi-gen": "^0.51.0",
+    "ngx-infinite-scroll": "^18.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "yukka-ui": "file:",

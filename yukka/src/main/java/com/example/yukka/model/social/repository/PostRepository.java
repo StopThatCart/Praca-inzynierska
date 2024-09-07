@@ -69,7 +69,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
         """,
        countQuery = """
-        MATCH (post:Post)
+        MATCH (post:Post)<-[:MA_POST]-(:Uzytkownik)
         RETURN count(post)
         """)
     Page<Post> findAllPosts(Pageable pageable);
@@ -151,8 +151,9 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         WITH uzyt, $post.__properties__ AS pt 
         CREATE (uzyt)-[relu:MA_POST]->(post:Post{postId: pt.postId, 
                                         tytul: pt.tytul, opis: pt.opis, 
-                                        ocenyLubi: 0, ocenyNieLubi: 0, 
-                                        obraz: COALESCE(pt.obraz, null), dataUtworzenia: localdatetime()})
+                                        ocenyLubi: 0, ocenyNieLubi: 0, liczbaKomentarzy: 0,
+                                        obraz: COALESCE(pt.obraz, null), dataUtworzenia: localdatetime()
+                                        })
         RETURN post
         """)
     Optional<Post> addPost(@Param("email") String email, @Param("post") Post post);

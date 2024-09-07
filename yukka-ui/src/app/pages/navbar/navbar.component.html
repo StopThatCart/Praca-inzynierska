@@ -5,7 +5,7 @@
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item"><a [routerLink]="'rosliny'" routerLinkActive="active" class="nav-link">Przeglądaj katalog</a></li>
                 <li class="nav-item"><a routerLinkActive="active" class="nav-link" >Mój ogród</a></li>
-                <li class="nav-item"><a routerLinkActive="active" class="nav-link" >Społeczność</a></li>
+                <li class="nav-item"><a [routerLink]="'posty'" routerLinkActive="active" class="nav-link" >Społeczność</a></li>
             </ul>
             <button *ngIf="!isLogged()" (click)="toLogin()" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</button>
             <button *ngIf="isLogged()" (click)="logout()" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Wyloguj się</button></div>

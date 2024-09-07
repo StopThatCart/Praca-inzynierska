@@ -47,6 +47,8 @@ public class PostMapper {
                 .id(post.getId())
                 .postId(post.getPostId())
                 .tytul(post.getTytul())
+                .opis(post.getOpis())   
+                .dataUtworzenia(post.getDataUtworzenia())
                 .ocenyLubi(post.getOcenyLubi())
                 .ocenyNieLubi(post.getOcenyNieLubi())
                 .liczbaKomentarzy(post.getLiczbaKomentarzy())

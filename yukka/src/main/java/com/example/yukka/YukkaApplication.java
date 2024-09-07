@@ -265,6 +265,30 @@ public class YukkaApplication {
 			e.printStackTrace();
 		}
 		//postRepository.addPost(michalEmail, p3);
+
+		// Dodawanie parę zwykłych postów do sprawdzania paginacji
+		System.out.println("Dodawanie postów testowych...");
+		for(int i = 0; i < 1000; i++) {
+			Post post = Post.builder()
+			.postId(postService.createPostId())
+			.tytul("Jakiś post testowy " + i)
+			.opis("Jakiś postowy testowy opis " + i)
+			.build();
+			int rand = (int)(Math.random() * 3);
+			switch(rand) {
+				case 0:
+					postRepository.addPost(piotrEmail, post);
+					break;
+				case 1:
+					postRepository.addPost(katarzynaEmail, post);
+					break;
+				case 2:
+					postRepository.addPost(michalEmail, post);
+					break;
+			}
+		}
+		System.out.println("Dodano posty testowe. Może lepiej dać je potem w batchu.");
+
 	
 		// Dodawanie ocen do postów
 		postRepository.addOcenaToPost(katarzynaEmail, postId1, false);

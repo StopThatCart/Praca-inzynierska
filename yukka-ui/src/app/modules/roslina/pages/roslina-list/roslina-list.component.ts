@@ -115,6 +115,8 @@ export class RoslinaListComponent implements OnInit{
 
   findAllRosliny() {
    // console.log('Request:', this.request);
+    this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 1;
+
     this.roslinaService.findAllRoslinyWithParameters({
       page: this.page - 1,
       size: this.size,
@@ -136,6 +138,7 @@ export class RoslinaListComponent implements OnInit{
         },
         error: (error) => {
           console.error('Error fetching rosliny:', error);
+          this.message = 'Wystąpił błąd podczas pobierania roślin.';
         }
       });
 

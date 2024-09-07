@@ -1,0 +1,86 @@
+<section class=" " style="--bs-body-bg: rgba(255,255,255,0);"
+
+
+
+>
+  <!-- Start: Napisz post -->
+  <div class="container w-100  py-3 my-3" style="background: transparent;border-radius: 5px;max-width: 800px;">
+    <div class="row">
+      <div class="col">
+        <div class="card" style="background: var(--bs-secondary);">
+          <!-- Start: card header -->
+          <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="moj-tabus">
+              <li class="nav-item">
+                <a class="nav-link active link-light" id="posts-tab2" href="#posts" data-toggle="tab" role="tab"
+                  aria-controls="posts" aria-selected="true">Stwórz post</a>
+              </li>
+            </ul>
+          </div><!-- End: card header -->
+          <div class="card-body">
+            <div id="myTabContent" class="tab-content">
+              <div id="posts" class="tab-pane fade show active" role="tabpanel" aria-labelledby="posts-tab">
+                <form class="my-2">
+                  <div class="mb-3"><label class="form-label sr-only" for="message" value="Upload image">Postuj
+                      coś</label><textarea id="message" class="bg-light form-control form-control" rows="3"
+                      placeholder="Napisz coś no" minlength="1" required maxlength="300"
+                      style="--bs-body-color: #000000;"></textarea></div>
+                  <div class="mb-3"><input class="form-control border-0" type="file" accept="image/*"
+                      style="--bs-body-color: #000000;" /></div>
+                </form>
+              </div>
+              <div id="images" class="tab-pane fade" role="tabpanel" aria-labelledby="images-tab">
+                <form>
+                  <input class="form-control custom-file-input" type="file" id="customFile">
+                  <label class="form-label custom-file-label" for="customFile" value="Upload image">Label</label>
+                </form>
+              </div>
+            </div>
+            <div class="btn-toolbar justify-content-between">
+              <div class="btn-group" role="group">
+                <button class="btn btn-primary" type="submit">Postuj</button>
+              </div>
+              <div class="btn-group" role="group">
+                <div class="dropdown btn-group dropdown-menu-right" role="group" aria-labelledby="btnGroupDrop1">
+                  <button
+                    class="btn dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                    <i class="fas fa-globe-americas"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">First Item</a>
+                    <a class="dropdown-item" href="#">Second Item</a>
+                    <a class="dropdown-item" href="#">Third Item</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- End: Napisz post -->
+
+
+  <div class="container w-100 search-results" style="background: transparent;border-radius: 5px;max-width: 800px;"
+  infiniteScroll
+  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="500"
+  (scrolled)="onScroll()"
+
+     *ngIf="postResponse"
+    >
+    <app-post-card
+      *ngFor="let post of postResponse?.content"
+      [post]="post">
+    </app-post-card>
+
+    <div class="d-flex justify-content-center" *ngIf="isLoading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+  </div>
+
+</section>
