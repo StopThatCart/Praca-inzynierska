@@ -6,15 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Komentarz } from '../../models/komentarz';
-import { KomentarzRequest } from '../../models/komentarz-request';
+import { AuthenticationResponse } from '../../models/authentication-response';
 
-export interface AddOdpowiedzToKomentarz1$Json$Json$Params {
-      body: KomentarzRequest
+export interface RefreshToken$Params {
+      body: string
 }
 
-export function addOdpowiedzToKomentarz1$Json$Json(http: HttpClient, rootUrl: string, params: AddOdpowiedzToKomentarz1$Json$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
-  const rb = new RequestBuilder(rootUrl, addOdpowiedzToKomentarz1$Json$Json.PATH, 'post');
+export function refreshToken(http: HttpClient, rootUrl: string, params: RefreshToken$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResponse>> {
+  const rb = new RequestBuilder(rootUrl, refreshToken.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -24,9 +23,9 @@ export function addOdpowiedzToKomentarz1$Json$Json(http: HttpClient, rootUrl: st
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Komentarz>;
+      return r as StrictHttpResponse<AuthenticationResponse>;
     })
   );
 }
 
-addOdpowiedzToKomentarz1$Json$Json.PATH = '/komentarze/odpowiedzi';
+refreshToken.PATH = '/api/auth/refresh-token';

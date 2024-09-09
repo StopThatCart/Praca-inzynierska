@@ -30,4 +30,4 @@ export function getDzialkaOfUzytkownikByNumer(http: HttpClient, rootUrl: string,
   );
 }
 
-getDzialkaOfUzytkownikByNumer.PATH = '/rest/neo4j/dzialki/{numer}/uzytkownicy/{nazwa}';
+getDzialkaOfUzytkownikByNumer.PATH = '/dzialki/{numer}/uzytkownicy/{nazwa}';

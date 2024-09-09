@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("rest/neo4j/dzialki")
+@RequestMapping("dzialki")
 @Tag(name = "Dzialka")
 public class DzialkaController {
 @Autowired

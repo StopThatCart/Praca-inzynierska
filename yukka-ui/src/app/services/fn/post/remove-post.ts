@@ -18,7 +18,7 @@ export function removePost(http: HttpClient, rootUrl: string, params: RemovePost
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
@@ -27,4 +27,4 @@ export function removePost(http: HttpClient, rootUrl: string, params: RemovePost
   );
 }
 
-removePost.PATH = '/rest/neo4j/posty/{post-id}';
+removePost.PATH = '/posty/{post-id}';

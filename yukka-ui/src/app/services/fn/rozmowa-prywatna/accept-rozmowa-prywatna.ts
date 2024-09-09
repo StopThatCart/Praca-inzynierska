@@ -26,4 +26,4 @@ export function acceptRozmowaPrywatna(http: HttpClient, rootUrl: string, params?
   );
 }
 
-acceptRozmowaPrywatna.PATH = '/rest/neo4j/rozmowy/{nadawca-uzyt-id}/accept';
+acceptRozmowaPrywatna.PATH = '/rozmowy/{nadawca-uzyt-id}/accept';

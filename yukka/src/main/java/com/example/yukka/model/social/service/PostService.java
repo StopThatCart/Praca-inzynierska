@@ -131,13 +131,14 @@ public class PostService {
         return postRepository.addPost(uzyt.getEmail(), post).get();
     }
 
-    public Post addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
+    public PostResponse addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
 
         post =  postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
         postRepository.updateOcenyCountOfPost(post.getPostId());
-        return post;
+
+        return postMapper.toPostResponse(post);
     }
 
     public void removeOcenaFromPost(OcenaRequest request, Authentication connectedUser) {

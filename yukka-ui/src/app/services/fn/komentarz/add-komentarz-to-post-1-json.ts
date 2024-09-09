@@ -29,4 +29,4 @@ export function addKomentarzToPost1$Json(http: HttpClient, rootUrl: string, para
   );
 }
 
-addKomentarzToPost1$Json.PATH = '/rest/neo4j/komentarze/posty';
+addKomentarzToPost1$Json.PATH = '/komentarze/posty';

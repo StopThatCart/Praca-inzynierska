@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/rest/neo4j/uzytkownicy")
+@RequestMapping("uzytkownicy")
 @RequiredArgsConstructor
 @Tag(name = "Uzytkownik")
 public class UzytkownikController {

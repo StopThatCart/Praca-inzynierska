@@ -26,4 +26,4 @@ export function getWlasciwosciWithRelations(http: HttpClient, rootUrl: string, p
   );
 }
 
-getWlasciwosciWithRelations.PATH = '/rest/neo4j/rosliny/wlasciwosci';
+getWlasciwosciWithRelations.PATH = '/rosliny/wlasciwosci';

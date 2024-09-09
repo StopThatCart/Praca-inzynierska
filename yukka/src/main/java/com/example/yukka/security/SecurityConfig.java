@@ -67,14 +67,30 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> 
-                    auth.requestMatchers( 
+                    auth.requestMatchers("/rosliny/szukaj",
+                                        "/rosliny/wlasciwosci",
+                                        "/rosliny/{nazwa-lacinska}"
+                    ).permitAll()
+                    .requestMatchers( 
                                     //"/**",
-                                  //"/auth/test",
+                                  "/auth/test",
                                   "/komentarze/oceny",
                                   "/posty/oceny",
-                                  "/rozmowy/**"
+                                  "/rozmowy/**",
+                                  "/dzialki/**"
                       )
                       .authenticated()
+   
+                      .requestMatchers(HttpMethod.POST, "/posty").authenticated()
+                      .requestMatchers(HttpMethod.DELETE, "/posty/{post-id}").authenticated()
+                      .requestMatchers("/posty/uzytkownik/**").authenticated()
+                      .requestMatchers(HttpMethod.DELETE, "/komentarze/{komentarz-id}").authenticated()
+                      .requestMatchers(HttpMethod.PATCH, "/komentarze/{komentarz-id}").authenticated()
+
+                      .requestMatchers(HttpMethod.DELETE, "/rosliny/{nazwa-lacinska}").authenticated()
+                      .requestMatchers(HttpMethod.POST, "/rosliny").authenticated()
+                      .requestMatchers(HttpMethod.PUT, "/rosliny").authenticated()
+
                       // Do swaggera
                       .requestMatchers("/v2/api-docs",
                                         "/v3/api-docs",
@@ -98,7 +114,7 @@ public class SecurityConfig {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(banCheckFilter, UsernamePasswordAuthenticationFilter.class)
+              //  .addFilterBefore(banCheckFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

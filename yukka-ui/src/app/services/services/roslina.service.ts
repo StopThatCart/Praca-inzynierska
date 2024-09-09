@@ -38,7 +38,7 @@ export class RoslinaService extends BaseService {
   }
 
   /** Path part for operation `updateRoslina()` */
-  static readonly UpdateRoslinaPath = '/rest/neo4j/rosliny';
+  static readonly UpdateRoslinaPath = '/rosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -63,7 +63,7 @@ export class RoslinaService extends BaseService {
   }
 
   /** Path part for operation `saveRoslina2()` */
-  static readonly SaveRoslina2Path = '/rest/neo4j/rosliny';
+  static readonly SaveRoslina2Path = '/rosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -154,7 +154,7 @@ export class RoslinaService extends BaseService {
   }
 
   /** Path part for operation `findAllRoslinyWithParameters()` */
-  static readonly FindAllRoslinyWithParametersPath = '/rest/neo4j/rosliny/szukaj';
+  static readonly FindAllRoslinyWithParametersPath = '/rosliny/szukaj';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -179,7 +179,7 @@ export class RoslinaService extends BaseService {
   }
 
   /** Path part for operation `findByNazwaLacinska()` */
-  static readonly FindByNazwaLacinskaPath = '/rest/neo4j/rosliny/{nazwa-lacinska}';
+  static readonly FindByNazwaLacinskaPath = '/rosliny/{nazwa-lacinska}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -204,7 +204,7 @@ export class RoslinaService extends BaseService {
   }
 
   /** Path part for operation `getWlasciwosciWithRelations()` */
-  static readonly GetWlasciwosciWithRelationsPath = '/rest/neo4j/rosliny/wlasciwosci';
+  static readonly GetWlasciwosciWithRelationsPath = '/rosliny/wlasciwosci';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -229,7 +229,7 @@ export class RoslinaService extends BaseService {
   }
 
   /** Path part for operation `deleteRoslina1()` */
-  static readonly DeleteRoslina1Path = '/rest/neo4j/rosliny/{nazwaLacinska}';
+  static readonly DeleteRoslina1Path = '/rosliny/{nazwaLacinska}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

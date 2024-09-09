@@ -28,4 +28,4 @@ export function findKomentarzById(http: HttpClient, rootUrl: string, params: Fin
   );
 }
 
-findKomentarzById.PATH = '/rest/neo4j/komentarze/{komentarz-id}';
+findKomentarzById.PATH = '/komentarze/{komentarz-id}';

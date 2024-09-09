@@ -27,4 +27,4 @@ export function remove(http: HttpClient, rootUrl: string, params: Remove$Params,
   );
 }
 
-remove.PATH = '/rest/neo4j/uzytkownicy/{email}';
+remove.PATH = '/uzytkownicy/{email}';

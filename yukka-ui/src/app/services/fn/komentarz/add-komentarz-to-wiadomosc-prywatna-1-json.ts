@@ -31,4 +31,4 @@ export function addKomentarzToWiadomoscPrywatna1$Json(http: HttpClient, rootUrl:
   );
 }
 
-addKomentarzToWiadomoscPrywatna1$Json.PATH = '/rest/neo4j/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}';
+addKomentarzToWiadomoscPrywatna1$Json.PATH = '/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}';

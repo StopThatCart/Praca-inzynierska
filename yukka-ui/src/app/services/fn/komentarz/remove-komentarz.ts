@@ -27,4 +27,4 @@ export function removeKomentarz(http: HttpClient, rootUrl: string, params: Remov
   );
 }
 
-removeKomentarz.PATH = '/rest/neo4j/komentarze/{komentarz-id}';
+removeKomentarz.PATH = '/komentarze/{komentarz-id}';

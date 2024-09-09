@@ -16,6 +16,8 @@ import { confirm2 } from '../fn/authentication/confirm-2';
 import { Confirm2$Params } from '../fn/authentication/confirm-2';
 import { login } from '../fn/authentication/login';
 import { Login$Params } from '../fn/authentication/login';
+import { refreshToken } from '../fn/authentication/refresh-token';
+import { RefreshToken$Params } from '../fn/authentication/refresh-token';
 import { register } from '../fn/authentication/register';
 import { Register$Params } from '../fn/authentication/register';
 
@@ -26,7 +28,7 @@ export class AuthenticationService extends BaseService {
   }
 
   /** Path part for operation `register()` */
-  static readonly RegisterPath = '/rest/neo4j/api/auth/register';
+  static readonly RegisterPath = '/api/auth/register';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -54,8 +56,33 @@ export class AuthenticationService extends BaseService {
     );
   }
 
+  /** Path part for operation `refreshToken()` */
+  static readonly RefreshTokenPath = '/api/auth/refresh-token';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `refreshToken()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  refreshToken$Response(params: RefreshToken$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResponse>> {
+    return refreshToken(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `refreshToken$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  refreshToken(params: RefreshToken$Params, context?: HttpContext): Observable<AuthenticationResponse> {
+    return this.refreshToken$Response(params, context).pipe(
+      map((r: StrictHttpResponse<AuthenticationResponse>): AuthenticationResponse => r.body)
+    );
+  }
+
   /** Path part for operation `login()` */
-  static readonly LoginPath = '/rest/neo4j/api/auth/login';
+  static readonly LoginPath = '/api/auth/login';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -80,7 +107,7 @@ export class AuthenticationService extends BaseService {
   }
 
   /** Path part for operation `confirm()` */
-  static readonly ConfirmPath = '/rest/neo4j/api/auth/test';
+  static readonly ConfirmPath = '/api/auth/test';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -105,7 +132,7 @@ export class AuthenticationService extends BaseService {
   }
 
   /** Path part for operation `confirm2()` */
-  static readonly Confirm2Path = '/rest/neo4j/api/auth/testUnprotected';
+  static readonly Confirm2Path = '/api/auth/testUnprotected';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

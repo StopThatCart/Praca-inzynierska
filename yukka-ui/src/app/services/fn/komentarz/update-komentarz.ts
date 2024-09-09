@@ -31,4 +31,4 @@ export function updateKomentarz(http: HttpClient, rootUrl: string, params: Updat
   );
 }
 
-updateKomentarz.PATH = '/rest/neo4j/komentarze/{komentarz-id}';
+updateKomentarz.PATH = '/komentarze/{komentarz-id}';

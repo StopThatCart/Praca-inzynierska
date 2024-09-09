@@ -27,4 +27,4 @@ export function deleteRoslina(http: HttpClient, rootUrl: string, params: DeleteR
   );
 }
 
-deleteRoslina.PATH = '/rest/neo4j/uzytkownicy/rosliny/{roslinaId}';
+deleteRoslina.PATH = '/uzytkownikRosliny/{roslinaId}';

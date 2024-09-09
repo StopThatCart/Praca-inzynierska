@@ -30,4 +30,4 @@ export function setBanUzytkownik(http: HttpClient, rootUrl: string, params: SetB
   );
 }
 
-setBanUzytkownik.PATH = '/rest/neo4j/uzytkownicy/pracownik/ban/{email}/{ban}';
+setBanUzytkownik.PATH = '/uzytkownicy/pracownik/ban/{email}/{ban}';

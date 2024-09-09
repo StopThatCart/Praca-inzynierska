@@ -19,7 +19,7 @@ export function removeOcenaFromPost(http: HttpClient, rootUrl: string, params: R
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
@@ -28,4 +28,4 @@ export function removeOcenaFromPost(http: HttpClient, rootUrl: string, params: R
   );
 }
 
-removeOcenaFromPost.PATH = '/rest/neo4j/posty/oceny';
+removeOcenaFromPost.PATH = '/posty/oceny';

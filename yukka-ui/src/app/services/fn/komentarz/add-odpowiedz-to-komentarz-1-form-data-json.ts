@@ -32,4 +32,4 @@ export function addOdpowiedzToKomentarz1$FormData$Json(http: HttpClient, rootUrl
   );
 }
 
-addOdpowiedzToKomentarz1$FormData$Json.PATH = '/rest/neo4j/komentarze/odpowiedzi';
+addOdpowiedzToKomentarz1$FormData$Json.PATH = '/komentarze/odpowiedzi';

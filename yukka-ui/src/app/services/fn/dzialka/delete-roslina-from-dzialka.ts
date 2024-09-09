@@ -28,4 +28,4 @@ export function deleteRoslinaFromDzialka(http: HttpClient, rootUrl: string, para
   );
 }
 
-deleteRoslinaFromDzialka.PATH = '/rest/neo4j/dzialki/rosliny';
+deleteRoslinaFromDzialka.PATH = '/dzialki/rosliny';

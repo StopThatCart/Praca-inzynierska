@@ -30,7 +30,7 @@ export class RozmowaPrywatnaService extends BaseService {
   }
 
   /** Path part for operation `rejectRozmowaPrywatna()` */
-  static readonly RejectRozmowaPrywatnaPath = '/rest/neo4j/rozmowy/{nadawca-uzyt-id}/reject';
+  static readonly RejectRozmowaPrywatnaPath = '/rozmowy/{nadawca-uzyt-id}/reject';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -55,7 +55,7 @@ export class RozmowaPrywatnaService extends BaseService {
   }
 
   /** Path part for operation `acceptRozmowaPrywatna()` */
-  static readonly AcceptRozmowaPrywatnaPath = '/rest/neo4j/rozmowy/{nadawca-uzyt-id}/accept';
+  static readonly AcceptRozmowaPrywatnaPath = '/rozmowy/{nadawca-uzyt-id}/accept';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -80,7 +80,7 @@ export class RozmowaPrywatnaService extends BaseService {
   }
 
   /** Path part for operation `getRozmowaPrywatna()` */
-  static readonly GetRozmowaPrywatnaPath = '/rest/neo4j/rozmowy/{odbiorca-uzyt-id}';
+  static readonly GetRozmowaPrywatnaPath = '/rozmowy/{odbiorca-uzyt-id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -105,7 +105,7 @@ export class RozmowaPrywatnaService extends BaseService {
   }
 
   /** Path part for operation `inviteToRozmowaPrywatna()` */
-  static readonly InviteToRozmowaPrywatnaPath = '/rest/neo4j/rozmowy/{odbiorca-uzyt-id}';
+  static readonly InviteToRozmowaPrywatnaPath = '/rozmowy/{odbiorca-uzyt-id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -130,7 +130,7 @@ export class RozmowaPrywatnaService extends BaseService {
   }
 
   /** Path part for operation `findRozmowyPrywatneOfUzytkownik()` */
-  static readonly FindRozmowyPrywatneOfUzytkownikPath = '/rest/neo4j/rozmowy';
+  static readonly FindRozmowyPrywatneOfUzytkownikPath = '/rozmowy';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

@@ -29,4 +29,4 @@ export function addPost1$Json(http: HttpClient, rootUrl: string, params: AddPost
   );
 }
 
-addPost1$Json.PATH = '/rest/neo4j/posty';
+addPost1$Json.PATH = '/posty';

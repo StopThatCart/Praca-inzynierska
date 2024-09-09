@@ -34,4 +34,4 @@ export function addKomentarzToWiadomoscPrywatna1$FormData(http: HttpClient, root
   );
 }
 
-addKomentarzToWiadomoscPrywatna1$FormData.PATH = '/rest/neo4j/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}';
+addKomentarzToWiadomoscPrywatna1$FormData.PATH = '/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}';

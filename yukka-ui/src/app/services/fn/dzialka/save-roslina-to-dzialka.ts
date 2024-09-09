@@ -29,4 +29,4 @@ export function saveRoslinaToDzialka(http: HttpClient, rootUrl: string, params: 
   );
 }
 
-saveRoslinaToDzialka.PATH = '/rest/neo4j/dzialki/rosliny';
+saveRoslinaToDzialka.PATH = '/dzialki/rosliny';

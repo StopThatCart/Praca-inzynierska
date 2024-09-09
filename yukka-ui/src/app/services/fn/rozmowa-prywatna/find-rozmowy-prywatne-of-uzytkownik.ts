@@ -30,4 +30,4 @@ export function findRozmowyPrywatneOfUzytkownik(http: HttpClient, rootUrl: strin
   );
 }
 
-findRozmowyPrywatneOfUzytkownik.PATH = '/rest/neo4j/rozmowy';
+findRozmowyPrywatneOfUzytkownik.PATH = '/rozmowy';

@@ -28,4 +28,4 @@ export function getDzialkiOfUzytkownik(http: HttpClient, rootUrl: string, params
   );
 }
 
-getDzialkiOfUzytkownik.PATH = '/rest/neo4j/dzialki/uzytkownicy/{nazwa}';
+getDzialkiOfUzytkownik.PATH = '/dzialki/uzytkownicy/{nazwa}';

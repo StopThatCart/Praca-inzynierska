@@ -25,4 +25,4 @@ export function confirm(http: HttpClient, rootUrl: string, params?: Confirm$Para
   );
 }
 
-confirm.PATH = '/rest/neo4j/api/auth/test';
+confirm.PATH = '/api/auth/test';

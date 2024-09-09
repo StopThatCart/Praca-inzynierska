@@ -38,7 +38,7 @@ export class PostService extends BaseService {
   }
 
   /** Path part for operation `addOcenaToPost()` */
-  static readonly AddOcenaToPostPath = '/rest/neo4j/posty/oceny';
+  static readonly AddOcenaToPostPath = '/posty/oceny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -46,7 +46,7 @@ export class PostService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOcenaToPost$Response(params: AddOcenaToPost$Params, context?: HttpContext): Observable<StrictHttpResponse<Post>> {
+  addOcenaToPost$Response(params: AddOcenaToPost$Params, context?: HttpContext): Observable<StrictHttpResponse<PostResponse>> {
     return addOcenaToPost(this.http, this.rootUrl, params, context);
   }
 
@@ -56,14 +56,14 @@ export class PostService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOcenaToPost(params: AddOcenaToPost$Params, context?: HttpContext): Observable<Post> {
+  addOcenaToPost(params: AddOcenaToPost$Params, context?: HttpContext): Observable<PostResponse> {
     return this.addOcenaToPost$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Post>): Post => r.body)
+      map((r: StrictHttpResponse<PostResponse>): PostResponse => r.body)
     );
   }
 
   /** Path part for operation `removeOcenaFromPost()` */
-  static readonly RemoveOcenaFromPostPath = '/rest/neo4j/posty/oceny';
+  static readonly RemoveOcenaFromPostPath = '/posty/oceny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -88,7 +88,7 @@ export class PostService extends BaseService {
   }
 
   /** Path part for operation `findAllPosty()` */
-  static readonly FindAllPostyPath = '/rest/neo4j/posty';
+  static readonly FindAllPostyPath = '/posty';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -113,7 +113,7 @@ export class PostService extends BaseService {
   }
 
   /** Path part for operation `addPost1()` */
-  static readonly AddPost1Path = '/rest/neo4j/posty';
+  static readonly AddPost1Path = '/posty';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -160,7 +160,7 @@ export class PostService extends BaseService {
   }
 
   /** Path part for operation `findPostById()` */
-  static readonly FindPostByIdPath = '/rest/neo4j/posty/{post-id}';
+  static readonly FindPostByIdPath = '/posty/{post-id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -185,7 +185,7 @@ export class PostService extends BaseService {
   }
 
   /** Path part for operation `removePost()` */
-  static readonly RemovePostPath = '/rest/neo4j/posty/{post-id}';
+  static readonly RemovePostPath = '/posty/{post-id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -210,7 +210,7 @@ export class PostService extends BaseService {
   }
 
   /** Path part for operation `findAllPostyByConnectedUzytkownik()` */
-  static readonly FindAllPostyByConnectedUzytkownikPath = '/rest/neo4j/posty/uzytkownik';
+  static readonly FindAllPostyByConnectedUzytkownikPath = '/posty/uzytkownik';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -235,7 +235,7 @@ export class PostService extends BaseService {
   }
 
   /** Path part for operation `findAllPostyByUzytkownik()` */
-  static readonly FindAllPostyByUzytkownikPath = '/rest/neo4j/posty/uzytkownik/{email}';
+  static readonly FindAllPostyByUzytkownikPath = '/posty/uzytkownik/{email}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

@@ -30,4 +30,4 @@ export function findAllPosty(http: HttpClient, rootUrl: string, params?: FindAll
   );
 }
 
-findAllPosty.PATH = '/rest/neo4j/posty';
+findAllPosty.PATH = '/posty';

@@ -32,4 +32,4 @@ export function updateRoslinaObrazInDzialka(http: HttpClient, rootUrl: string, p
   );
 }
 
-updateRoslinaObrazInDzialka.PATH = '/rest/neo4j/dzialki/rosliny/obraz';
+updateRoslinaObrazInDzialka.PATH = '/dzialki/rosliny/obraz';

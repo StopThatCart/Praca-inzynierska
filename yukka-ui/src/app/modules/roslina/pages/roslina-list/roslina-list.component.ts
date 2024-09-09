@@ -8,21 +8,22 @@ import { RoslinaCardComponent } from "../../components/roslina-card/roslina-card
 import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";
 import { WlasciwoscDropdownComponent } from "../../components/wlasciwosc-dropdown/wlasciwosc-dropdown.component";
 import { FormsModule } from '@angular/forms';
-import { Convert } from '../../../../services/models/wlasciwosc-with-relations';
+import { SpinnerComponent } from "../../../../services/LoaderSpinner/spinner/spinner.component";
+import { Convert } from '../../../../services/converts/wlasciwosc-with-relations-convert';
 
 @Component({
   selector: 'app-roslina-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent],
+  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, SpinnerComponent],
   templateUrl: './roslina-list.component.html',
   styleUrl: './roslina-list.component.css'
 })
 export class RoslinaListComponent implements OnInit{
   roslinaResponse: PageResponseRoslinaResponse = {};
-
   wlasciwosciResponse: WlasciwoscResponse[] = [];
+  isLoading = false;
+  message = '';
 
-  // TODO: Daj sprawdzenia przeciwko from injection
   request: RoslinaRequest = {
     nazwa: '',
     nazwaLacinska: '',
@@ -58,7 +59,7 @@ export class RoslinaListComponent implements OnInit{
   pages: number[] = [];
   roslinaCount: number = 0;
 
-  message = '';
+
   level: 'success' |'error' = 'success';
 
   @ViewChild(WlasciwoscTagComponent) wlasciwoscTagComponent!: WlasciwoscTagComponent;
@@ -81,7 +82,7 @@ export class RoslinaListComponent implements OnInit{
       // Uwaga: uważaj na api-gen, bo trzeba ręcznie tworzyć konwersję na JSON
       // Tutaj link dla przyszłego mnie. https://app.quicktype.io/
       let wlasciwosci2 = params['wlasciwosci'] ? JSON.parse(params['wlasciwosci']) : [];
-      console.log("Właściwości2: " + wlasciwosci2);
+     // console.log("Właściwości2: " + wlasciwosci2);
 
       this.request.wlasciwosci = Convert.toWlasciwoscWithRelationsArray(JSON.stringify(wlasciwosci2));
 
@@ -117,6 +118,7 @@ export class RoslinaListComponent implements OnInit{
    // console.log('Request:', this.request);
     this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 1;
 
+    this.isLoading = true;
     this.roslinaService.findAllRoslinyWithParameters({
       page: this.page - 1,
       size: this.size,
@@ -126,7 +128,7 @@ export class RoslinaListComponent implements OnInit{
           this.roslinaResponse = rosliny;
           this.roslinaCount = rosliny.totalElements as number;
           let totalPages = rosliny.totalPages as number;
-          console.log('Total number:', rosliny.number);
+        //  console.log('Total number:', rosliny.number);
 
           if(this.page - 1 > totalPages) {
             this.page = totalPages;
@@ -139,6 +141,9 @@ export class RoslinaListComponent implements OnInit{
         error: (error) => {
           console.error('Error fetching rosliny:', error);
           this.message = 'Wystąpił błąd podczas pobierania roślin.';
+        },
+        complete: () => {
+          this.isLoading = false;
         }
       });
 

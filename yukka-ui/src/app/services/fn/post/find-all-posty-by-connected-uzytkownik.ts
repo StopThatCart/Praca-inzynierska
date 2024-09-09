@@ -30,4 +30,4 @@ export function findAllPostyByConnectedUzytkownik(http: HttpClient, rootUrl: str
   );
 }
 
-findAllPostyByConnectedUzytkownik.PATH = '/rest/neo4j/posty/uzytkownik';
+findAllPostyByConnectedUzytkownik.PATH = '/posty/uzytkownik';

@@ -28,4 +28,4 @@ export function saveRoslina1$Json(http: HttpClient, rootUrl: string, params: Sav
   );
 }
 
-saveRoslina1$Json.PATH = '/rest/neo4j/uzytkownicy/rosliny';
+saveRoslina1$Json.PATH = '/uzytkownikRosliny';

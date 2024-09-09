@@ -20,7 +20,7 @@ import com.example.yukka.model.social.service.RozmowaPrywatnaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/rest/neo4j/rozmowy")
+@RequestMapping("rozmowy")
 @Tag(name = "RozmowaPrywatna")
 public class RozmowaPrywatnaController {
 

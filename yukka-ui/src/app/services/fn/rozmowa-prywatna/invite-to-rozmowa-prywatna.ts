@@ -26,4 +26,4 @@ export function inviteToRozmowaPrywatna(http: HttpClient, rootUrl: string, param
   );
 }
 
-inviteToRozmowaPrywatna.PATH = '/rest/neo4j/rozmowy/{odbiorca-uzyt-id}';
+inviteToRozmowaPrywatna.PATH = '/rozmowy/{odbiorca-uzyt-id}';

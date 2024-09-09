@@ -25,11 +25,12 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
     @Nonnull List<Post> findAll();
     @Query("""
         MATCH (post:Post {postId: $postId})
-        OPTIONAL MATCH path = (:Uzytkownik)-[:MA_POST]->(post)-[:MA_KOMENTARZ]->
+        MATCH (autor:Uzytkownik)-[r1:MA_POST]->(post)
+        OPTIONAL MATCH path = (post)-[:MA_KOMENTARZ]->
                               (kom:Komentarz)
                               <-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
                               <-[:SKOMENTOWAL]-(uzytkownik:Uzytkownik)
-        RETURN post, collect(nodes(path)), collect(relationships(path))
+        RETURN post, r1, autor, collect(nodes(path)), collect(relationships(path))
         """)
     Optional<Post> findPostByPostIdButWithPath(@Param("postId") String postId);
      
@@ -107,7 +108,9 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
             SET oceniany.postyOcenyPozytywne = ocenyPozytywne, 
                 oceniany.postyOcenyNegatywne = ocenyNegatywne
 
-            RETURN post
+            WITH post
+            MATCH (autor:Uzytkownik)-[r1:MA_POST]->(post)
+            RETURN post, r1, autor
             """)
     Post addOcenaToPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
 

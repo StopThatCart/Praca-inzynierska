@@ -28,4 +28,4 @@ export function getDzialkaByNumer(http: HttpClient, rootUrl: string, params: Get
   );
 }
 
-getDzialkaByNumer.PATH = '/rest/neo4j/dzialki/{numer}';
+getDzialkaByNumer.PATH = '/dzialki/{numer}';

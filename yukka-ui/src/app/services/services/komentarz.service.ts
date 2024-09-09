@@ -50,7 +50,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `addOcenaToKomentarz()` */
-  static readonly AddOcenaToKomentarzPath = '/rest/neo4j/komentarze/oceny';
+  static readonly AddOcenaToKomentarzPath = '/komentarze/oceny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -75,7 +75,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `removeOcenaFromKomentarz()` */
-  static readonly RemoveOcenaFromKomentarzPath = '/rest/neo4j/komentarze/oceny';
+  static readonly RemoveOcenaFromKomentarzPath = '/komentarze/oceny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -100,7 +100,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `addKomentarzToWiadomoscPrywatna1()` */
-  static readonly AddKomentarzToWiadomoscPrywatna1Path = '/rest/neo4j/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}';
+  static readonly AddKomentarzToWiadomoscPrywatna1Path = '/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -147,7 +147,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `addKomentarzToPost1()` */
-  static readonly AddKomentarzToPost1Path = '/rest/neo4j/komentarze/posty';
+  static readonly AddKomentarzToPost1Path = '/komentarze/posty';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -194,7 +194,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `addOdpowiedzToKomentarz1()` */
-  static readonly AddOdpowiedzToKomentarz1Path = '/rest/neo4j/komentarze/odpowiedzi';
+  static readonly AddOdpowiedzToKomentarz1Path = '/komentarze/odpowiedzi';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -285,7 +285,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `findKomentarzById()` */
-  static readonly FindKomentarzByIdPath = '/rest/neo4j/komentarze/{komentarz-id}';
+  static readonly FindKomentarzByIdPath = '/komentarze/{komentarz-id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -310,7 +310,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `removeKomentarz()` */
-  static readonly RemoveKomentarzPath = '/rest/neo4j/komentarze/{komentarz-id}';
+  static readonly RemoveKomentarzPath = '/komentarze/{komentarz-id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -335,7 +335,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `updateKomentarz()` */
-  static readonly UpdateKomentarzPath = '/rest/neo4j/komentarze/{komentarz-id}';
+  static readonly UpdateKomentarzPath = '/komentarze/{komentarz-id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -360,7 +360,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `findKomentarzeOfUzytkownik()` */
-  static readonly FindKomentarzeOfUzytkownikPath = '/rest/neo4j/komentarze/uzytkownicy';
+  static readonly FindKomentarzeOfUzytkownikPath = '/komentarze/uzytkownicy';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -385,7 +385,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `removeKomentarzFromPost()` */
-  static readonly RemoveKomentarzFromPostPath = '/rest/neo4j/komentarze/{komentarz-id}/posty/{post-id}';
+  static readonly RemoveKomentarzFromPostPath = '/komentarze/{komentarz-id}/posty/{post-id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

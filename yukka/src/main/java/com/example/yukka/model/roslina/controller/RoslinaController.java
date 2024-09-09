@@ -31,7 +31,7 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping("/rest/neo4j/rosliny")
+@RequestMapping("rosliny")
 @Tag(name = "Roslina")
 public class RoslinaController {
 

@@ -28,4 +28,4 @@ export function removeOcenaFromKomentarz(http: HttpClient, rootUrl: string, para
   );
 }
 
-removeOcenaFromKomentarz.PATH = '/rest/neo4j/komentarze/oceny';
+removeOcenaFromKomentarz.PATH = '/komentarze/oceny';

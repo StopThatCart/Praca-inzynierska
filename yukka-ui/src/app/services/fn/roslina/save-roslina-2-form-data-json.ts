@@ -31,4 +31,4 @@ export function saveRoslina2$FormData$Json(http: HttpClient, rootUrl: string, pa
   );
 }
 
-saveRoslina2$FormData$Json.PATH = '/rest/neo4j/rosliny';
+saveRoslina2$FormData$Json.PATH = '/rosliny';

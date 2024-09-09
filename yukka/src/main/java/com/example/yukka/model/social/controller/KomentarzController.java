@@ -28,7 +28,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/rest/neo4j/komentarze")
+@RequestMapping("komentarze")
 @RequiredArgsConstructor
 @Tag(name = "Komentarz")
 public class KomentarzController {

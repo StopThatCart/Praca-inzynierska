@@ -26,4 +26,4 @@ export function getDzialki(http: HttpClient, rootUrl: string, params?: GetDzialk
   );
 }
 
-getDzialki.PATH = '/rest/neo4j/dzialki';
+getDzialki.PATH = '/dzialki';

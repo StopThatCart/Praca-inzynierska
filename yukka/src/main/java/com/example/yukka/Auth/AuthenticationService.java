@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -94,6 +95,18 @@ class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public AuthenticationResponse refreshToken(String token) {
+    if (jwtService.isTokenExpired(token)) {
+        throw new IllegalArgumentException("Token JWT wygasł.");
+    }
+    String username = jwtService.extractUsername(token);
+    UserDetails userDetails = uzytkownikService.loadUserByUsername(username);
+    String newToken = jwtService.generateToken(userDetails);
+    return AuthenticationResponse.builder()
+            .token(newToken)
+            .build();
     }
 
     String createUzytkownikId() {

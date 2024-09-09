@@ -32,4 +32,4 @@ export function addPost1$FormData(http: HttpClient, rootUrl: string, params: Add
   );
 }
 
-addPost1$FormData.PATH = '/rest/neo4j/posty';
+addPost1$FormData.PATH = '/posty';

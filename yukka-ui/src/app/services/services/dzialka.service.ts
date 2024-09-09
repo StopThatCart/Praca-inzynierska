@@ -36,7 +36,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `saveRoslinaToDzialka()` */
-  static readonly SaveRoslinaToDzialkaPath = '/rest/neo4j/dzialki/rosliny';
+  static readonly SaveRoslinaToDzialkaPath = '/dzialki/rosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -61,7 +61,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `deleteRoslinaFromDzialka()` */
-  static readonly DeleteRoslinaFromDzialkaPath = '/rest/neo4j/dzialki/rosliny';
+  static readonly DeleteRoslinaFromDzialkaPath = '/dzialki/rosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -86,7 +86,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `updateRoslinaPositionInDzialka()` */
-  static readonly UpdateRoslinaPositionInDzialkaPath = '/rest/neo4j/dzialki/rosliny/pozycja';
+  static readonly UpdateRoslinaPositionInDzialkaPath = '/dzialki/rosliny/pozycja';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -111,7 +111,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `deleteRoslinaObrazFromDzialka()` */
-  static readonly DeleteRoslinaObrazFromDzialkaPath = '/rest/neo4j/dzialki/rosliny/obraz';
+  static readonly DeleteRoslinaObrazFromDzialkaPath = '/dzialki/rosliny/obraz';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -136,7 +136,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `updateRoslinaObrazInDzialka()` */
-  static readonly UpdateRoslinaObrazInDzialkaPath = '/rest/neo4j/dzialki/rosliny/obraz';
+  static readonly UpdateRoslinaObrazInDzialkaPath = '/dzialki/rosliny/obraz';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -161,7 +161,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `getDzialki()` */
-  static readonly GetDzialkiPath = '/rest/neo4j/dzialki';
+  static readonly GetDzialkiPath = '/dzialki';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -186,7 +186,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `getDzialkaByNumer()` */
-  static readonly GetDzialkaByNumerPath = '/rest/neo4j/dzialki/{numer}';
+  static readonly GetDzialkaByNumerPath = '/dzialki/{numer}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -211,7 +211,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `getDzialkaOfUzytkownikByNumer()` */
-  static readonly GetDzialkaOfUzytkownikByNumerPath = '/rest/neo4j/dzialki/{numer}/uzytkownicy/{nazwa}';
+  static readonly GetDzialkaOfUzytkownikByNumerPath = '/dzialki/{numer}/uzytkownicy/{nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -236,7 +236,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `getDzialkiOfUzytkownik()` */
-  static readonly GetDzialkiOfUzytkownikPath = '/rest/neo4j/dzialki/uzytkownicy/{nazwa}';
+  static readonly GetDzialkiOfUzytkownikPath = '/dzialki/uzytkownicy/{nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

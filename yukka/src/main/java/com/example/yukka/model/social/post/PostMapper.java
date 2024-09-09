@@ -55,8 +55,8 @@ public class PostMapper {
                 .komentarze(post.getKomentarze().stream()
                     .map(commonMapperService::toKomentarzResponse)
                     .collect(Collectors.toList()))
-                .uzytkownik(post.getAutor().getNazwa())
-                .avatar(fileUtils.readAvatarFile(post.getAutor().getAvatar()))
+                .uzytkownik(post.getAutor() != null ? post.getAutor().getNazwa() : null)
+                .avatar(fileUtils.readAvatarFile(post.getAutor() != null ? post.getAutor().getAvatar(): null))
                 .obraz(fileUtils.readPostObrazFile(post.getObraz()))
                 .build();
     }

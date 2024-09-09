@@ -29,4 +29,4 @@ export function updateRoslinaPositionInDzialka(http: HttpClient, rootUrl: string
   );
 }
 
-updateRoslinaPositionInDzialka.PATH = '/rest/neo4j/dzialki/rosliny/pozycja';
+updateRoslinaPositionInDzialka.PATH = '/dzialki/rosliny/pozycja';

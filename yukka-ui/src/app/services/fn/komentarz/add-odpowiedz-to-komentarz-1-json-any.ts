@@ -29,4 +29,4 @@ export function addOdpowiedzToKomentarz1$Json$Any(http: HttpClient, rootUrl: str
   );
 }
 
-addOdpowiedzToKomentarz1$Json$Any.PATH = '/rest/neo4j/komentarze/odpowiedzi';
+addOdpowiedzToKomentarz1$Json$Any.PATH = '/komentarze/odpowiedzi';

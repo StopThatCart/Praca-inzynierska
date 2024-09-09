@@ -26,4 +26,4 @@ export function findAllUzytkownicy(http: HttpClient, rootUrl: string, params?: F
   );
 }
 
-findAllUzytkownicy.PATH = '/rest/neo4j/uzytkownicy';
+findAllUzytkownicy.PATH = '/uzytkownicy';

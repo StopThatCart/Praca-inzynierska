@@ -28,4 +28,4 @@ export function findUzytkownikRoslinaByRoslinaId(http: HttpClient, rootUrl: stri
   );
 }
 
-findUzytkownikRoslinaByRoslinaId.PATH = '/rest/neo4j/uzytkownicy/rosliny/{roslinaId}';
+findUzytkownikRoslinaByRoslinaId.PATH = '/uzytkownikRosliny/{roslinaId}';

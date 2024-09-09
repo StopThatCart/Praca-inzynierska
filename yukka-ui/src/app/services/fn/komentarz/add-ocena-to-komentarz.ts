@@ -29,4 +29,4 @@ export function addOcenaToKomentarz(http: HttpClient, rootUrl: string, params: A
   );
 }
 
-addOcenaToKomentarz.PATH = '/rest/neo4j/komentarze/oceny';
+addOcenaToKomentarz.PATH = '/komentarze/oceny';

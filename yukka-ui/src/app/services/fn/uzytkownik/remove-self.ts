@@ -25,4 +25,4 @@ export function removeSelf(http: HttpClient, rootUrl: string, params?: RemoveSel
   );
 }
 
-removeSelf.PATH = '/rest/neo4j/uzytkownicy';
+removeSelf.PATH = '/uzytkownicy';

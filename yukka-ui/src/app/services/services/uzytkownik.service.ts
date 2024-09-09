@@ -36,7 +36,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `sendSpecjalnePowiadomienie()` */
-  static readonly SendSpecjalnePowiadomieniePath = '/rest/neo4j/uzytkownicy/pracownik/powiadomienie';
+  static readonly SendSpecjalnePowiadomieniePath = '/uzytkownicy/pracownik/powiadomienie';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -61,7 +61,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `sendSpecjalnePowiadomienieToPracownicy()` */
-  static readonly SendSpecjalnePowiadomienieToPracownicyPath = '/rest/neo4j/uzytkownicy/admin/powiadomienie';
+  static readonly SendSpecjalnePowiadomienieToPracownicyPath = '/uzytkownicy/admin/powiadomienie';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -86,7 +86,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `setBanUzytkownik()` */
-  static readonly SetBanUzytkownikPath = '/rest/neo4j/uzytkownicy/pracownik/ban/{email}/{ban}';
+  static readonly SetBanUzytkownikPath = '/uzytkownicy/pracownik/ban/{email}/{ban}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -111,7 +111,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `updateAvatar()` */
-  static readonly UpdateAvatarPath = '/rest/neo4j/uzytkownicy/avatar';
+  static readonly UpdateAvatarPath = '/uzytkownicy/avatar';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -136,7 +136,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `findAllUzytkownicy()` */
-  static readonly FindAllUzytkownicyPath = '/rest/neo4j/uzytkownicy';
+  static readonly FindAllUzytkownicyPath = '/uzytkownicy';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -161,7 +161,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `removeSelf()` */
-  static readonly RemoveSelfPath = '/rest/neo4j/uzytkownicy';
+  static readonly RemoveSelfPath = '/uzytkownicy';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -186,7 +186,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `getByEmail()` */
-  static readonly GetByEmailPath = '/rest/neo4j/uzytkownicy/{email}';
+  static readonly GetByEmailPath = '/uzytkownicy/{email}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -211,7 +211,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `remove()` */
-  static readonly RemovePath = '/rest/neo4j/uzytkownicy/{email}';
+  static readonly RemovePath = '/uzytkownicy/{email}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

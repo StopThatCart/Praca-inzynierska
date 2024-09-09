@@ -30,7 +30,7 @@
     }
   ],
   "paths": {
-    "/rest/neo4j/rozmowy/{nadawca-uzyt-id}/reject": {
+    "/rozmowy/{nadawca-uzyt-id}/reject": {
       "put": {
         "tags": [
           "RozmowaPrywatna"
@@ -51,7 +51,7 @@
         }
       }
     },
-    "/rest/neo4j/rozmowy/{nadawca-uzyt-id}/accept": {
+    "/rozmowy/{nadawca-uzyt-id}/accept": {
       "put": {
         "tags": [
           "RozmowaPrywatna"
@@ -72,7 +72,7 @@
         }
       }
     },
-    "/rest/neo4j/rosliny": {
+    "/rosliny": {
       "put": {
         "tags": [
           "Roslina"
@@ -152,7 +152,7 @@
         }
       }
     },
-    "/rest/neo4j/posty/oceny": {
+    "/posty/oceny": {
       "put": {
         "tags": [
           "Post"
@@ -172,9 +172,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Post"
+                  "$ref": "#/components/schemas/PostResponse"
                 }
               }
             }
@@ -200,7 +200,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "string"
                 }
@@ -210,7 +210,7 @@
         }
       }
     },
-    "/rest/neo4j/komentarze/oceny": {
+    "/komentarze/oceny": {
       "put": {
         "tags": [
           "Komentarz"
@@ -268,7 +268,7 @@
         }
       }
     },
-    "/rest/neo4j/uzytkownicy/rosliny": {
+    "/uzytkownikRosliny": {
       "get": {
         "tags": [
           "UzytkownikRoslina"
@@ -383,7 +383,7 @@
         }
       }
     },
-    "/rest/neo4j/uzytkownicy/rosliny/{roslinaId}": {
+    "/uzytkownikRosliny/{roslinaId}": {
       "get": {
         "tags": [
           "UzytkownikRoslina"
@@ -487,7 +487,7 @@
         }
       }
     },
-    "/rest/neo4j/uzytkownicy/pracownik/powiadomienie": {
+    "/uzytkownicy/pracownik/powiadomienie": {
       "post": {
         "tags": [
           "Uzytkownik"
@@ -517,7 +517,7 @@
         }
       }
     },
-    "/rest/neo4j/uzytkownicy/admin/powiadomienie": {
+    "/uzytkownicy/admin/powiadomienie": {
       "post": {
         "tags": [
           "Uzytkownik"
@@ -547,7 +547,7 @@
         }
       }
     },
-    "/rest/neo4j/rozmowy/{odbiorca-uzyt-id}": {
+    "/rozmowy/{odbiorca-uzyt-id}": {
       "get": {
         "tags": [
           "RozmowaPrywatna"
@@ -587,7 +587,7 @@
         }
       }
     },
-    "/rest/neo4j/rosliny/szukaj": {
+    "/rosliny/szukaj": {
       "post": {
         "tags": [
           "Roslina"
@@ -639,7 +639,7 @@
         }
       }
     },
-    "/rest/neo4j/posty": {
+    "/posty": {
       "get": {
         "tags": [
           "Post"
@@ -726,7 +726,7 @@
         }
       }
     },
-    "/rest/neo4j/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}": {
+    "/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}": {
       "post": {
         "tags": [
           "Komentarz"
@@ -783,7 +783,7 @@
         }
       }
     },
-    "/rest/neo4j/komentarze/posty": {
+    "/komentarze/posty": {
       "post": {
         "tags": [
           "Komentarz"
@@ -830,7 +830,7 @@
         }
       }
     },
-    "/rest/neo4j/komentarze/odpowiedzi": {
+    "/komentarze/odpowiedzi": {
       "post": {
         "tags": [
           "Komentarz"
@@ -882,7 +882,7 @@
         }
       }
     },
-    "/rest/neo4j/dzialki/rosliny": {
+    "/dzialki/rosliny": {
       "post": {
         "tags": [
           "Dzialka"
@@ -940,7 +940,7 @@
         }
       }
     },
-    "/rest/neo4j/api/auth/register": {
+    "/api/auth/register": {
       "post": {
         "tags": [
           "Authentication"
@@ -970,7 +970,37 @@
         }
       }
     },
-    "/rest/neo4j/api/auth/login": {
+    "/api/auth/refresh-token": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "refreshToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
       "post": {
         "tags": [
           "Authentication"
@@ -1000,7 +1030,7 @@
         }
       }
     },
-    "/rest/neo4j/uzytkownicy/pracownik/ban/{email}/{ban}": {
+    "/uzytkownicy/pracownik/ban/{email}/{ban}": {
       "patch": {
         "tags": [
           "Uzytkownik"
@@ -1038,7 +1068,7 @@
         }
       }
     },
-    "/rest/neo4j/uzytkownicy/avatar": {
+    "/uzytkownicy/avatar": {
       "patch": {
         "tags": [
           "Uzytkownik"
@@ -1076,7 +1106,7 @@
         }
       }
     },
-    "/rest/neo4j/komentarze/{komentarz-id}": {
+    "/komentarze/{komentarz-id}": {
       "get": {
         "tags": [
           "Komentarz"
@@ -1172,7 +1202,7 @@
         }
       }
     },
-    "/rest/neo4j/dzialki/rosliny/pozycja": {
+    "/dzialki/rosliny/pozycja": {
       "patch": {
         "tags": [
           "Dzialka"
@@ -1202,7 +1232,7 @@
         }
       }
     },
-    "/rest/neo4j/dzialki/rosliny/obraz": {
+    "/dzialki/rosliny/obraz": {
       "delete": {
         "tags": [
           "Dzialka"
@@ -1272,7 +1302,7 @@
         }
       }
     },
-    "/rest/neo4j/uzytkownicy": {
+    "/uzytkownicy": {
       "get": {
         "tags": [
           "Uzytkownik"
@@ -1306,7 +1336,7 @@
         }
       }
     },
-    "/rest/neo4j/uzytkownicy/{email}": {
+    "/uzytkownicy/{email}": {
       "get": {
         "tags": [
           "Uzytkownik"
@@ -1357,7 +1387,7 @@
         }
       }
     },
-    "/rest/neo4j/rozmowy": {
+    "/rozmowy": {
       "get": {
         "tags": [
           "RozmowaPrywatna"
@@ -1399,7 +1429,7 @@
         }
       }
     },
-    "/rest/neo4j/rosliny/{nazwa-lacinska}": {
+    "/rosliny/{nazwa-lacinska}": {
       "get": {
         "tags": [
           "Roslina"
@@ -1429,7 +1459,7 @@
         }
       }
     },
-    "/rest/neo4j/rosliny/wlasciwosci": {
+    "/rosliny/wlasciwosci": {
       "get": {
         "tags": [
           "Roslina"
@@ -1453,7 +1483,30 @@
         }
       }
     },
-    "/rest/neo4j/posty/{post-id}": {
+    "/rest/neo4j/gleba": {
+      "get": {
+        "tags": [
+          "soil-resource"
+        ],
+        "operationId": "getAllSoils",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Gleba"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posty/{post-id}": {
       "get": {
         "tags": [
           "Post"
@@ -1501,7 +1554,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "string"
                 }
@@ -1511,7 +1564,7 @@
         }
       }
     },
-    "/rest/neo4j/posty/uzytkownik": {
+    "/posty/uzytkownik": {
       "get": {
         "tags": [
           "Post"
@@ -1553,7 +1606,7 @@
         }
       }
     },
-    "/rest/neo4j/posty/uzytkownik/{email}": {
+    "/posty/uzytkownik/{email}": {
       "get": {
         "tags": [
           "Post"
@@ -1603,7 +1656,7 @@
         }
       }
     },
-    "/rest/neo4j/komentarze/uzytkownicy": {
+    "/komentarze/uzytkownicy": {
       "get": {
         "tags": [
           "Komentarz"
@@ -1645,30 +1698,7 @@
         }
       }
     },
-    "/rest/neo4j/gleba": {
-      "get": {
-        "tags": [
-          "soil-resource"
-        ],
-        "operationId": "getAllSoils",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Gleba"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/rest/neo4j/dzialki": {
+    "/dzialki": {
       "get": {
         "tags": [
           "Dzialka"
@@ -1691,7 +1721,7 @@
         }
       }
     },
-    "/rest/neo4j/dzialki/{numer}": {
+    "/dzialki/{numer}": {
       "get": {
         "tags": [
           "Dzialka"
@@ -1722,7 +1752,7 @@
         }
       }
     },
-    "/rest/neo4j/dzialki/{numer}/uzytkownicy/{nazwa}": {
+    "/dzialki/{numer}/uzytkownicy/{nazwa}": {
       "get": {
         "tags": [
           "Dzialka"
@@ -1761,7 +1791,7 @@
         }
       }
     },
-    "/rest/neo4j/dzialki/uzytkownicy/{nazwa}": {
+    "/dzialki/uzytkownicy/{nazwa}": {
       "get": {
         "tags": [
           "Dzialka"
@@ -1794,7 +1824,7 @@
         }
       }
     },
-    "/rest/neo4j/api/auth/test": {
+    "/api/auth/test": {
       "get": {
         "tags": [
           "Authentication"
@@ -1814,7 +1844,7 @@
         }
       }
     },
-    "/rest/neo4j/api/auth/testUnprotected": {
+    "/api/auth/testUnprotected": {
       "get": {
         "tags": [
           "Authentication"
@@ -1834,7 +1864,7 @@
         }
       }
     },
-    "/rest/neo4j/rosliny/{nazwaLacinska}": {
+    "/rosliny/{nazwaLacinska}": {
       "delete": {
         "tags": [
           "Roslina"
@@ -1864,7 +1894,7 @@
         }
       }
     },
-    "/rest/neo4j/komentarze/{komentarz-id}/posty/{post-id}": {
+    "/komentarze/{komentarz-id}/posty/{post-id}": {
       "delete": {
         "tags": [
           "Komentarz"
@@ -2269,10 +2299,10 @@
           "accountNonLocked": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           }
         }
@@ -2346,6 +2376,110 @@
           },
           "lubi": {
             "type": "boolean"
+          }
+        }
+      },
+      "KomentarzResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "komentarzId": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
+          "edytowany": {
+            "type": "boolean"
+          },
+          "ocenyLubi": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ocenyNieLubi": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dataUtworzenia": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "post": {
+            "$ref": "#/components/schemas/PostResponse"
+          },
+          "odpowiadaKomentarzowi": {
+            "$ref": "#/components/schemas/KomentarzResponse"
+          },
+          "odpowiedzi": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KomentarzResponse"
+            }
+          },
+          "uzytkownikNazwa": {
+            "type": "string"
+          },
+          "obraz": {
+            "type": "string",
+            "format": "byte"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      },
+      "PostResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "postId": {
+            "type": "string"
+          },
+          "tytul": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
+          "ocenyLubi": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ocenyNieLubi": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "liczbaKomentarzy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "komentarze": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KomentarzResponse"
+            }
+          },
+          "uzytkownik": {
+            "type": "string"
+          },
+          "obraz": {
+            "type": "string",
+            "format": "byte"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "byte"
+          },
+          "dataUtworzenia": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -2832,6 +2966,14 @@
           }
         }
       },
+      "AuthenticationResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
       "AuthRequest": {
         "required": [
           "email",
@@ -2845,14 +2987,6 @@
           "haslo": {
             "maxLength": 2147483647,
             "minLength": 8,
-            "type": "string"
-          }
-        }
-      },
-      "AuthenticationResponse": {
-        "type": "object",
-        "properties": {
-          "token": {
             "type": "string"
           }
         }
@@ -2885,7 +3019,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ystary": {
             "type": "integer",
             "format": "int32"
           },
@@ -2893,60 +3027,9 @@
             "type": "integer",
             "format": "int32"
           },
-          "ystary": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "UzytkownikResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "uzytId": {
-            "type": "string"
-          },
-          "labels": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          },
-          "komentarzeOcenyPozytywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "komentarzeOcenyNegatywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "postyOcenyPozytywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "postyOcenyNegatywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ban": {
-            "type": "boolean"
           }
         }
       },
@@ -3325,6 +3408,57 @@
           }
         }
       },
+      "UzytkownikResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uzytId": {
+            "type": "string"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nazwa": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "byte"
+          },
+          "komentarzeOcenyPozytywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "komentarzeOcenyNegatywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "postyOcenyPozytywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "postyOcenyNegatywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dataUtworzenia": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ban": {
+            "type": "boolean"
+          }
+        }
+      },
       "KomentarzSimpleResponse": {
         "type": "object",
         "properties": {
@@ -3431,176 +3565,6 @@
             "items": {
               "type": "string"
             }
-          }
-        }
-      },
-      "KomentarzResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "komentarzId": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "edytowany": {
-            "type": "boolean"
-          },
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "post": {
-            "$ref": "#/components/schemas/PostResponse"
-          },
-          "odpowiadaKomentarzowi": {
-            "$ref": "#/components/schemas/KomentarzResponse"
-          },
-          "odpowiedzi": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KomentarzResponse"
-            }
-          },
-          "uzytkownikNazwa": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          }
-        }
-      },
-      "PageResponsePostResponse": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PostResponse"
-            }
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
-        }
-      },
-      "PostResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "postId": {
-            "type": "string"
-          },
-          "tytul": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "liczbaKomentarzy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "komentarze": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KomentarzResponse"
-            }
-          },
-          "uzytkownik": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "PageResponseKomentarzResponse": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KomentarzResponse"
-            }
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
           }
         }
       },
@@ -3784,6 +3748,72 @@
             "items": {
               "$ref": "#/components/schemas/Wlasciwosc"
             }
+          }
+        }
+      },
+      "PageResponsePostResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageResponseKomentarzResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KomentarzResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           }
         }
       }

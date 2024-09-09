@@ -31,4 +31,4 @@ export function saveRoslina2$FormData$Any(http: HttpClient, rootUrl: string, par
   );
 }
 
-saveRoslina2$FormData$Any.PATH = '/rest/neo4j/rosliny';
+saveRoslina2$FormData$Any.PATH = '/rosliny';

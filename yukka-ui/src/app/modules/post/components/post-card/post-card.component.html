@@ -26,18 +26,18 @@
   <div class="fs-4 card-footer">
     <div class="btn-toolbar justify-content-between">
       <div class="btn-group" role="group">
-        <a class="link-light link-underline link-underline-opacity-0" href="#">
+        <a (click)="addOcenaToPost(post.postId, true)" class="link-light link-underline link-underline-opacity-0">
           <i class="fas fs-5 fa-thumbs-up"></i>
           <span>&nbsp;{{post.ocenyLubi}}</span>
         </a>
-        <a class="link-light mx-3 link-underline link-underline-opacity-0" href="#">
+        <a (click)="addOcenaToPost(post.postId, false)" class="link-light mx-3 link-underline link-underline-opacity-0">
           <i class="fas fs-5 fa-thumbs-down"></i>
           <span>&nbsp;{{post.ocenyNieLubi}}</span>
         </a>
       </div>
 
       <div class="btn-group" role="group">
-        <a class="link-light link-underline link-underline-opacity-0" href="#">
+        <a (click)="goToPost(post.postId)" class="link-light link-underline link-underline-opacity-0">
           <i class="fas fs-5 fa-comment"></i>
           <span>&nbsp;{{post.liczbaKomentarzy}}</span>
         </a>

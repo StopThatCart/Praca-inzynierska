@@ -28,4 +28,4 @@ export function getByEmail(http: HttpClient, rootUrl: string, params: GetByEmail
   );
 }
 
-getByEmail.PATH = '/rest/neo4j/uzytkownicy/{email}';
+getByEmail.PATH = '/uzytkownicy/{email}';

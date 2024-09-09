@@ -30,4 +30,4 @@ export function findAllRosliny(http: HttpClient, rootUrl: string, params?: FindA
   );
 }
 
-findAllRosliny.PATH = '/rest/neo4j/uzytkownicy/rosliny';
+findAllRosliny.PATH = '/uzytkownikRosliny';

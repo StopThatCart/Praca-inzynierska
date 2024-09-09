@@ -29,4 +29,4 @@ export function sendSpecjalnePowiadomienieToPracownicy(http: HttpClient, rootUrl
   );
 }
 
-sendSpecjalnePowiadomienieToPracownicy.PATH = '/rest/neo4j/uzytkownicy/admin/powiadomienie';
+sendSpecjalnePowiadomienieToPracownicy.PATH = '/uzytkownicy/admin/powiadomienie';

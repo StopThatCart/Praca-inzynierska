@@ -30,4 +30,4 @@ export function updateAvatar(http: HttpClient, rootUrl: string, params?: UpdateA
   );
 }
 
-updateAvatar.PATH = '/rest/neo4j/uzytkownicy/avatar';
+updateAvatar.PATH = '/uzytkownicy/avatar';

@@ -33,7 +33,7 @@ export class UzytkownikRoslinaService extends BaseService {
   }
 
   /** Path part for operation `findAllRosliny()` */
-  static readonly FindAllRoslinyPath = '/rest/neo4j/uzytkownicy/rosliny';
+  static readonly FindAllRoslinyPath = '/uzytkownikRosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -58,7 +58,7 @@ export class UzytkownikRoslinaService extends BaseService {
   }
 
   /** Path part for operation `saveRoslina1()` */
-  static readonly SaveRoslina1Path = '/rest/neo4j/uzytkownicy/rosliny';
+  static readonly SaveRoslina1Path = '/uzytkownikRosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -105,7 +105,7 @@ export class UzytkownikRoslinaService extends BaseService {
   }
 
   /** Path part for operation `updateRoslina1()` */
-  static readonly UpdateRoslina1Path = '/rest/neo4j/uzytkownicy/rosliny';
+  static readonly UpdateRoslina1Path = '/uzytkownikRosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -130,7 +130,7 @@ export class UzytkownikRoslinaService extends BaseService {
   }
 
   /** Path part for operation `findUzytkownikRoslinaByRoslinaId()` */
-  static readonly FindUzytkownikRoslinaByRoslinaIdPath = '/rest/neo4j/uzytkownicy/rosliny/{roslinaId}';
+  static readonly FindUzytkownikRoslinaByRoslinaIdPath = '/uzytkownikRosliny/{roslinaId}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -155,7 +155,7 @@ export class UzytkownikRoslinaService extends BaseService {
   }
 
   /** Path part for operation `updateRoslinaObraz()` */
-  static readonly UpdateRoslinaObrazPath = '/rest/neo4j/uzytkownicy/rosliny/{roslinaId}';
+  static readonly UpdateRoslinaObrazPath = '/uzytkownikRosliny/{roslinaId}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -184,7 +184,7 @@ export class UzytkownikRoslinaService extends BaseService {
   }
 
   /** Path part for operation `deleteRoslina()` */
-  static readonly DeleteRoslinaPath = '/rest/neo4j/uzytkownicy/rosliny/{roslinaId}';
+  static readonly DeleteRoslinaPath = '/uzytkownikRosliny/{roslinaId}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

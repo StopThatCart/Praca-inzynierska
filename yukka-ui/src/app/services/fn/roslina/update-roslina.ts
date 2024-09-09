@@ -28,4 +28,4 @@ export function updateRoslina(http: HttpClient, rootUrl: string, params: UpdateR
   );
 }
 
-updateRoslina.PATH = '/rest/neo4j/rosliny';
+updateRoslina.PATH = '/rosliny';

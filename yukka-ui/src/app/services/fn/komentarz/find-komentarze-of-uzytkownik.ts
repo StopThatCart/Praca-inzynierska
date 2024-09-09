@@ -30,4 +30,4 @@ export function findKomentarzeOfUzytkownik(http: HttpClient, rootUrl: string, pa
   );
 }
 
-findKomentarzeOfUzytkownik.PATH = '/rest/neo4j/komentarze/uzytkownicy';
+findKomentarzeOfUzytkownik.PATH = '/komentarze/uzytkownicy';

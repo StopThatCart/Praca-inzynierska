@@ -25,4 +25,4 @@ export function confirm2(http: HttpClient, rootUrl: string, params?: Confirm2$Pa
   );
 }
 
-confirm2.PATH = '/rest/neo4j/api/auth/testUnprotected';
+confirm2.PATH = '/api/auth/testUnprotected';

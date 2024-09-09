@@ -32,4 +32,4 @@ export function findAllPostyByUzytkownik(http: HttpClient, rootUrl: string, para
   );
 }
 
-findAllPostyByUzytkownik.PATH = '/rest/neo4j/posty/uzytkownik/{email}';
+findAllPostyByUzytkownik.PATH = '/posty/uzytkownik/{email}';

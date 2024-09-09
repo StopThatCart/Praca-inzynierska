@@ -28,4 +28,4 @@ export function findPostById(http: HttpClient, rootUrl: string, params: FindPost
   );
 }
 
-findPostById.PATH = '/rest/neo4j/posty/{post-id}';
+findPostById.PATH = '/posty/{post-id}';

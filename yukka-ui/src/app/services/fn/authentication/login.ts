@@ -29,4 +29,4 @@ export function login(http: HttpClient, rootUrl: string, params: Login$Params, c
   );
 }
 
-login.PATH = '/rest/neo4j/api/auth/login';
+login.PATH = '/api/auth/login';

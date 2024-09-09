@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
  * Służy do obsługi zapytań związanych z roślinami użytkownika dla samego użytkownika.
  */
 @RestController
-@RequestMapping("/rest/neo4j/uzytkownicy/rosliny")
+@RequestMapping("uzytkownikRosliny")
 @Tag(name = "UzytkownikRoslina")
 @RequiredArgsConstructor
 public class UzytkownikRoslinaController {

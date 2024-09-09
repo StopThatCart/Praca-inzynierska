@@ -26,4 +26,4 @@ export function getRozmowaPrywatna(http: HttpClient, rootUrl: string, params?: G
   );
 }
 
-getRozmowaPrywatna.PATH = '/rest/neo4j/rozmowy/{odbiorca-uzyt-id}';
+getRozmowaPrywatna.PATH = '/rozmowy/{odbiorca-uzyt-id}';

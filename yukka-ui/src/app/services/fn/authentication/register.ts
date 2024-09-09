@@ -30,4 +30,4 @@ export function register(http: HttpClient, rootUrl: string, params: Register$Par
   );
 }
 
-register.PATH = '/rest/neo4j/api/auth/register';
+register.PATH = '/api/auth/register';

@@ -1,31 +1,51 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor, HttpHeaders
-} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpHandlerFn, HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { HttpRequest, HttpHandler, HttpEvent, HttpHeaders } from '@angular/common/http';
+import { catchError, Observable, switchMap, throwError } from 'rxjs';
 import { TokenService } from '../token/token.service';
+import { AuthenticationService } from '../services';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
-@Injectable()
-export class HttpTokenInterceptor implements HttpInterceptor {
-  constructor(
-    private tokenService: TokenService
-  ) {}
+export const httpTokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
+  const tokenService = inject(TokenService);
+  const authService = inject(AuthenticationService);
+  const token = tokenService.token;
+  const jwtHelper = new JwtHelperService();
 
-  intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const token = this.tokenService.token;
-    if (token) {
-      const authReq = req.clone({
-        headers: new HttpHeaders({
-          Authorization: 'Bearer ' + token
+
+ // console.log('HttpTokenInterceptor token:', token);
+
+  if (token) {
+    if (jwtHelper.isTokenExpired(token)) {
+      return authService.refreshToken({ body: token }).pipe(
+        switchMap((response) => {
+          if (response.token) {
+            tokenService.token = response.token;
+          } else {
+            tokenService.clearToken();
+            return next(req);
+          }
+          const authReq = req.clone({
+            headers: new HttpHeaders({
+              Authorization: 'Bearer ' + response.token
+            })
+          });
+          return next(authReq);
+        }),
+        catchError((error) => {
+          tokenService.clearToken();
+          return throwError(error);
         })
-      });
-      return next.handle(authReq);
+      );
     }
-    return next.handle(req);
-  }
 
-}
+
+    const authReq = req.clone({
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + token
+      })
+    });
+    return next(authReq);
+  }
+  return next(req);
+};
