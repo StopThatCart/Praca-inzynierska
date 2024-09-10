@@ -1,191 +1,34 @@
 
-    <section class="mx-1">
-        <!-- Start: Post -->
-        <div class="container" style="max-width: 800px;">
-            <app-post-card class="my-5" [post]="post || {}"></app-post-card>
+<section class="mx-1">
+  <div class="container" style="max-width: 800px;">
+      <app-post-card class="my-5" [post]="post"></app-post-card>
+  </div>
+  <div class="container" style="max-width: 800px;background: transparent;">
+      <!--Dodaj komentarz-->
+    <div class="row d-flex justify-content-center my-3">
+          <div class="col col-auto col-12">
+            <app-add-komentarz-card
+            [targetId]="postId">
 
-
-        </div>
-
-        <!-- End: Post -->
-        <!-- Start: Komentarze -->
-        <div class="container" style="max-width: 800px;background: transparent;">
-            <!--Dodaj komentarz-->
-          <div class="row d-flex justify-content-center my-3">
-                <div class="col col-auto col-12">
-                    <div class="card" style="background: var(--bs-secondary);">
-                        <div class="card-body">
-                            <h4 class="card-title">Dodaj komentarz</h4>
-                            <form method="post">
-                                <div class="mb-3"><textarea class="form-control" id="message-2" name="message" rows="6" placeholder="Komentarz"></textarea></div>
-                                <div class="hstack fs-4 justify-content-between">
-                                    <div>
-                                        <a class="link-light link-opacity-75 mx-3 link-underline link-underline-opacity-0" href="#">
-                                          <i class="fas fa-camera"></i><span>&nbsp;Dołącz obraz</span>
-                                        </a>
-                                    </div>
-                                    <div><button class="btn btn-primary d-block w-100" type="submit">DODAJ KOMENTARZ</button></div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--Komentarze-->
-            <div class="row d-flex justify-content-center">
-                <div class="col-auto col-md-12 col-lg-12 col-xl-12">
-                    <div class="card" style="background: var(--bs-secondary);">
-                        <div class="card-body p-4">
-                            <h4 class="text-center mb-4 pb-2">Komentarze</h4>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="d-flex flex-start"><img class="rounded-circle shadow-1-strong me-3" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp" alt="avatar" width="50" height="50">
-                                        <div class="flex-grow-1 flex-shrink-1">
-                                            <div>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <div>
-                                                        <p class="mb-1"> Maria Smantha <span class="text-muted small">- 2 godziny temu</span></p>
-                                                    </div>
-                                                </div>
-                                                <p class="text-break small"> It is a long established fact that a reader will be distracted by the readable content of a page.aaaaaaaaaaaaaaa&nbsp; aaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
-                                                <div class="hstack justify-content-between p-1" style="border-top: 1px solid var(--bs-primary-border-subtle) ;border-bottom: 1px solid var(--bs-primary-border-subtle) ;">
-                                                    <div>
-                                                      <a class="link-light mx-3 link-underline link-underline-opacity-0 justify-content-center" href="#">
-                                                        <i class="fas fa-thumbs-up text-info"></i><span>21</span>
-                                                      </a>
-                                                      <a class="link-light link-underline link-underline-opacity-0" href="#">
-                                                        <i class="fas fa-thumbs-down text-danger"></i>&nbsp;21
-                                                      </a>
-                                                    </div><a class="link-info link-underline link-underline-opacity-0" href="#!"><i class="fas fa-reply fa-xs"></i><span class="small">&nbsp;Odpisz</span></a>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex flex-start mt-4"><a class="me-3" href="#"><img class="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(11).webp" alt="avatar" width="50" height="50"></a>
-                                                <div class="flex-grow-1 flex-shrink-1">
-                                                    <div>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-1"> Simona Disa <span class="text-muted small">- 3 godziny temu</span></p>
-                                                        </div><a class="link-info link-underline link-underline-opacity-0" href="#">Maria Smantha:</a>
-                                                        <p class="text-break small">Kto pytał?</p>
-                                                        <div class="hstack justify-content-between p-1" style="border-top: 1px solid var(--bs-primary-border-subtle) ;border-bottom: 1px solid var(--bs-primary-border-subtle) ;">
-                                                            <div>
-                                                              <a class="link-light mx-3 link-underline link-underline-opacity-0 justify-content-center" href="#">
-                                                                <i class="fas fa-thumbs-up text-info"></i><span>21</span>
-                                                              </a>
-                                                              <a class="link-light link-underline link-underline-opacity-0" href="#">
-                                                                <i class="fas fa-thumbs-down text-danger"></i>&nbsp;21
-                                                              </a>
-                                                            </div><a class="link-info link-underline link-underline-opacity-0" href="#!"><i class="fas fa-reply fa-xs"></i><span class="small">&nbsp;Odpisz</span></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex flex-start mt-4"><a class="me-3" href="#"><img class="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(32).webp" alt="avatar" width="50" height="50"></a>
-                                                <div class="flex-grow-1 flex-shrink-1">
-                                                    <div>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-1"> John Smith <span class="text-muted small">- 4 godziny temu</span></p>
-                                                        </div><a class="link-info link-underline link-underline-opacity-0" href="#">Simona Disa:</a>
-                                                        <p class="text-break small"> the majority have suffered alteration in some form, by injected humour, or randomised words. </p>
-                                                        <div class="hstack justify-content-between p-1" style="border-top: 1px solid var(--bs-primary-border-subtle) ;border-bottom: 1px solid var(--bs-primary-border-subtle) ;">
-                                                            <div>
-                                                              <a class="link-light mx-3 link-underline link-underline-opacity-0 justify-content-center" href="#">
-                                                                <i class="fas fa-thumbs-up text-info"></i><span>21</span>
-                                                              </a>
-                                                              <a class="link-light link-underline link-underline-opacity-0" href="#">
-                                                                <i class="fas fa-thumbs-down text-danger"></i>&nbsp;21
-                                                              </a>
-                                                            </div><a class="link-info link-underline link-underline-opacity-0" href="#!"><i class="fas fa-reply fa-xs"></i><span class="small">&nbsp;Odpisz</span></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-start mt-4"><img class="rounded-circle shadow-1-strong me-3" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(12).webp" alt="avatar" width="50" height="50">
-                                        <div class="flex-grow-1 flex-shrink-1">
-                                            <div>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <p class="mb-1"> Natalie Smith <span class="text-muted small">- 2 godziny temu</span></p>
-                                                </div>
-                                                <p class="text-break small"> The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33. </p>
-                                                <div class="hstack justify-content-between p-1" style="border-top: 1px solid var(--bs-primary-border-subtle) ;border-bottom: 1px solid var(--bs-primary-border-subtle) ;">
-                                                    <div>
-                                                      <a class="link-light mx-3 link-underline link-underline-opacity-0 justify-content-center" href="#">
-                                                        <i class="fas fa-thumbs-up text-info"></i><span>21</span>
-                                                      </a>
-                                                      <a class="link-light link-underline link-underline-opacity-0" href="#">
-                                                        <i class="fas fa-thumbs-down text-danger"></i>&nbsp;21
-                                                      </a>
-                                                    </div><a class="link-info link-underline link-underline-opacity-0" href="#!"><i class="fas fa-reply fa-xs"></i><span class="small">&nbsp;Odpisz</span></a>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex flex-start mt-4"><a class="me-3" href="#"><img class="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(31).webp" alt="avatar" width="50" height="50"></a>
-                                                <div class="flex-grow-1 flex-shrink-1">
-                                                    <div>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-1"> Lisa Cudrow <span class="text-muted small">- 4 godziny temu</span></p>
-                                                        </div><a class="link-info link-underline link-underline-opacity-0" href="#">Natalie Smith:</a>
-                                                        <p class="text-break small"> Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. </p>
-                                                        <div class="hstack justify-content-between p-1" style="border-top: 1px solid var(--bs-primary-border-subtle) ;border-bottom: 1px solid var(--bs-primary-border-subtle) ;">
-                                                            <div>
-                                                              <a class="link-light mx-3 link-underline link-underline-opacity-0 justify-content-center" href="#">
-                                                                <i class="fas fa-thumbs-up text-info"></i><span>21</span>
-                                                              </a>
-                                                              <a class="link-light link-underline link-underline-opacity-0" href="#">
-                                                                <i class="fas fa-thumbs-down text-danger"></i>&nbsp;21
-                                                              </a>
-                                                            </div><a class="link-info link-underline link-underline-opacity-0" href="#!"><i class="fas fa-reply fa-xs"></i><span class="small">&nbsp;Odpisz</span></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex flex-start mt-4"><a class="me-3" href="#"><img class="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(29).webp" alt="avatar" width="50" height="50"></a>
-                                                <div class="flex-grow-1 flex-shrink-1">
-                                                    <div>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-1"> Maggie McLoan <span class="text-muted small">- 5 godzin temu</span></p>
-                                                        </div><a class="link-info link-underline link-underline-opacity-0" href="#">Lisa Cudrow:</a>
-                                                        <p class="text-break small"> a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur </p>
-                                                    </div>
-                                                    <div class="hstack justify-content-between p-1" style="border-top: 1px solid var(--bs-primary-border-subtle) ;border-bottom: 1px solid var(--bs-primary-border-subtle) ;">
-                                                        <div>
-                                                          <a class="link-light mx-3 link-underline link-underline-opacity-0 justify-content-center" href="#">
-                                                            <i class="fas fa-thumbs-up text-info"></i><span>21</span>
-                                                          </a>
-                                                          <a class="link-light link-underline link-underline-opacity-0" href="#">
-                                                            <i class="fas fa-thumbs-down text-danger"></i>&nbsp;21
-                                                          </a>
-                                                        </div><a class="link-info link-underline link-underline-opacity-0" href="#!"><i class="fas fa-reply fa-xs"></i><span class="small">&nbsp;Odpisz</span></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex flex-start mt-4"><a class="me-3" href="#"><img class="rounded-circle shadow-1-strong" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(32).webp" alt="avatar" width="50" height="50"></a>
-                                                <div class="flex-grow-1 flex-shrink-1">
-                                                    <div>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-1"> John Smith <span class="text-muted small">- 6 godzin temu</span></p>
-                                                        </div><a class="link-info link-underline link-underline-opacity-0" href="#">Natalie Smith:</a>
-                                                        <p class="text-break small"> Autem, totam debitis suscipit saepe sapiente magnam officiis quaerat necessitatibus odio assumenda, perferendis quae iusto labore laboriosam minima numquam impedit quam dolorem! </p>
-                                                        <div class="hstack justify-content-between p-1" style="border-top: 1px solid var(--bs-primary-border-subtle) ;border-bottom: 1px solid var(--bs-primary-border-subtle) ;">
-                                                            <div>
-                                                              <a class="link-light mx-3 link-underline link-underline-opacity-0 justify-content-center" href="#">
-                                                                <i class="fas fa-thumbs-up text-info"></i><span>21</span>
-                                                              </a>
-                                                              <a class="link-light link-underline link-underline-opacity-0" href="#">
-                                                                <i class="fas fa-thumbs-down text-danger"></i>&nbsp;21
-                                                              </a>
-                                                            </div><a class="link-info link-underline link-underline-opacity-0" href="#!"><i class="fas fa-reply fa-xs"></i><span class="small">&nbsp;Odpisz</span></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div><!-- End: Komentarze -->
-    </section>
+            </app-add-komentarz-card>
+          </div>
+      </div>
+      <!--Komentarze-->
+      <div class="row d-flex justify-content-center">
+          <div class="col-auto col-md-12 col-lg-12 col-xl-12">
+              <div class="card" style="background: var(--bs-secondary);">
+                  <div class="card-body p-4">
+                      <h4 class="text-center mb-4 pb-2">Komentarze</h4>
+                      <div class="row">
+                          <div class="col">
+                            <ng-container *ngFor="let komentarz of post?.komentarze">
+                              <app-komentarz-card [komentarz]="komentarz" [depth]="0"></app-komentarz-card>
+                            </ng-container>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div><!-- End: Komentarze -->
+</section>

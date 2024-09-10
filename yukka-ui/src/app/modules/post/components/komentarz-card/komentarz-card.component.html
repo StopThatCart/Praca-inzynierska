@@ -1,0 +1,58 @@
+<div class="komentarz-card" [style.marginLeft.px]="setStartMargin() * 15">
+  <div class="flex-grow-1 flex-shrink-1">
+    <div class="komentarz-header">
+        <p class="mb-1">
+          <a class="me-1" href="#">
+            <img [src]="getKomentarzAvatar()" class="komentarz-avatar" alt="avatar" width="30" height="30">
+          </a>
+          <span class="komentarz-username">{{ komentarz.uzytkownikNazwa }}&nbsp;</span>
+          <span class="komentarz-date">{{ komentarz.dataUtworzenia }}</span>
+        </p>
+    </div>
+    <ng-container *ngIf="komentarz.odpowiadaKomentarzowi">
+        <a class="komentarz-option" href="#">{{ komentarz.odpowiadaKomentarzowi.uzytkownikNazwa  }}:</a>
+    </ng-container>
+    <p class="text-break small">{{ komentarz.opis }}</p>
+    <div class="bg-secondary" >
+      <div *ngIf="komentarz.obraz">
+        <img
+          class="rounded img-fluid mb-3"
+          [alt]="'Obraz komentarz'"
+          [src]="getKomentarzObraz()"
+          style="max-width: 100%; height: auto; max-height: 250px;"
+          loading="lazy">
+      </div>
+      </div>
+    <div class="hstack justify-content-between p-1 komentarz-border">
+        <div class="hstack gap-3">
+          <a (click)="addOcenaToKomentarz(komentarz.komentarzId, true)"
+              class="komentarz-option justify-content-center">
+            <i class="fas fa-thumbs-up text-info"></i><span>{{ komentarz.ocenyLubi }}</span>
+          </a>
+          <a (click)="addOcenaToKomentarz(komentarz.komentarzId, false)"
+              class="komentarz-option">
+            <i class="fas fa-thumbs-down text-danger"></i>&nbsp;{{ komentarz.ocenyNieLubi }}
+          </a>
+          <a class="komentarz-option" href="#!">
+            <i class="fas fa-reply fa-xs"></i>
+            <span class="small">&nbsp;Odpisz</span>
+          </a>
+        </div>
+        <ng-container *ngIf="komentarz.odpowiedzi && komentarz.odpowiedzi.length > 0">
+          <a class="komentarz-option" (click)="toggleOdpowiedzi()">
+            <i class="fas fa-chevron-down fa-xs" *ngIf="!showOdpowiedzi"></i>
+            <i class="fas fa-chevron-up fa-xs" *ngIf="showOdpowiedzi"></i>
+            <span class="small">&nbsp;{{ showOdpowiedzi ? 'Zwiń' : 'Rozwiń' }} odpowiedzi</span>
+          </a>
+        </ng-container>
+    </div>
+
+    <!-- Rekursywne odpowiedzi  -->
+    <div *ngIf="showOdpowiedzi">
+      <div *ngFor="let odpowiedz of komentarz.odpowiedzi">
+        <app-komentarz-card [komentarz]="odpowiedz" [depth]="depth + 1"></app-komentarz-card>
+      </div>
+    </div>
+  </div>
+
+</div>

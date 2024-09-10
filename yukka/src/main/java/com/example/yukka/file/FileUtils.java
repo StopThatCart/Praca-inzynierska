@@ -61,7 +61,7 @@ public class FileUtils {
     }
 
     public byte[] readKomentarzObrazFile(String fileUrl) {
-        System.out.println("Komentarz: " + fileUrl);
+        //System.out.println("Komentarz: " + fileUrl);
         return readPostObrazFile(fileUrl);
     }
 

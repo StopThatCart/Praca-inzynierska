@@ -28,8 +28,6 @@ export class PostCardComponent {
   ) {}
 
   getPost(): PostResponse {
-    console.log('getPost');
-    console.log(this.post);
     return this.post;
   }
 

@@ -10,7 +10,7 @@ import { RoslinaRequest } from '../../models/roslina-request';
 
 export interface SaveRoslina2$FormData$Any$Params {
       body: {
-'request'?: RoslinaRequest;
+'request': RoslinaRequest;
 'file': Blob;
 }
 }

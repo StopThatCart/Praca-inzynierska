@@ -6,15 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Komentarz } from '../../models/komentarz';
 import { KomentarzRequest } from '../../models/komentarz-request';
+import { KomentarzResponse } from '../../models/komentarz-response';
 
 export interface AddKomentarzToWiadomoscPrywatna1$Json$Params {
   'other-uzyt-nazwa': string;
       body: KomentarzRequest
 }
 
-export function addKomentarzToWiadomoscPrywatna1$Json(http: HttpClient, rootUrl: string, params: AddKomentarzToWiadomoscPrywatna1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+export function addKomentarzToWiadomoscPrywatna1$Json(http: HttpClient, rootUrl: string, params: AddKomentarzToWiadomoscPrywatna1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
   const rb = new RequestBuilder(rootUrl, addKomentarzToWiadomoscPrywatna1$Json.PATH, 'post');
   if (params) {
     rb.path('other-uzyt-nazwa', params['other-uzyt-nazwa'], {});
@@ -26,7 +26,7 @@ export function addKomentarzToWiadomoscPrywatna1$Json(http: HttpClient, rootUrl:
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Komentarz>;
+      return r as StrictHttpResponse<KomentarzResponse>;
     })
   );
 }

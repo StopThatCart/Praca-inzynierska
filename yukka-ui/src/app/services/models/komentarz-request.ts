@@ -2,6 +2,6 @@
 /* eslint-disable */
 export interface KomentarzRequest {
   obraz?: string;
-  opis: string;
+  opis?: string;
   targetId: string;
 }

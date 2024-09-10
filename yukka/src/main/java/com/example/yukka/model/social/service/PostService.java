@@ -47,6 +47,11 @@ public class PostService {
     private final PostMapper postMapper;
 
     public PostResponse findByPostId(String postId) {
+        Post post = postRepository.findPostByPostIdButWithPath(postId).orElse(null);
+        if(post == null) {
+            throw new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId);
+        }
+
         return postRepository.findPostByPostIdButWithPath(postId)
                 .map(postMapper::toPostResponse)
                 .orElseThrow();

@@ -125,7 +125,7 @@ public class UzytkownikService implements  UserDetailsService {
             throw new IllegalArgumentException("Nie można usuwać samego admina lub pracownika, przynajmniej na razie.");
         }
 
-        Path path = Paths.get(fileUploadPath + separator + "users" + separator + uzytOpt.getUzytId());
+        Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzytOpt.getUzytId());
         System.out.println("Usuwanie folderu: " + path);
         uzytkownikRepository.removeUzytkownik(uzytOpt.getEmail());
         fileUtils.deleteDirectory(path);
@@ -141,7 +141,7 @@ public class UzytkownikService implements  UserDetailsService {
         // Wylogowanie
         SecurityContextHolder.clearContext();
 
-        Path path = Paths.get(fileUploadPath + separator + "users" + separator + uzyt.getUzytId());
+        Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUzytId());
         System.out.println("Usuwanie folderu: " + path);
         uzytkownikRepository.removeUzytkownik(uzyt.getEmail());
         fileUtils.deleteDirectory(path);
@@ -153,7 +153,7 @@ public class UzytkownikService implements  UserDetailsService {
         for(Uzytkownik uzyt : uzytkownicy) {
 
            // uzytkownikRepository.delete(uzyt);
-            Path path = Paths.get(fileUploadPath + separator + "users" + separator + uzyt.getUzytId());
+            Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUzytId());
             System.out.println("Usuwanie folderu: " + path);
             fileUtils.deleteDirectory(path);
         }

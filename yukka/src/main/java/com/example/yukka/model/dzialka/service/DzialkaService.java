@@ -299,7 +299,7 @@ public class DzialkaService {
             if (dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()).getObraz() != null) {
                 fileUtils.deleteObraz(dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()).getObraz());
             }
-            String pfp = fileStoreService.saveRoslinaObrazInDzialka(file, uzyt.getUsername());
+            String pfp = fileStoreService.saveRoslinaObrazInDzialka(file, uzyt.getUzytId());
             if(pfp == null){
                 return null;
             }

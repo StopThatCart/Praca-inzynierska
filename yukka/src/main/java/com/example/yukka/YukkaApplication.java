@@ -117,8 +117,8 @@ public class YukkaApplication {
     public CommandLineRunner seedDatabase() {
         return args -> {
 //roslinaImporterService.seedRosliny();
-		//	unseed();
-        //	seed();
+			unseed();
+        	seed();
 		//roslinaSearchTest();
         };
     }
@@ -268,7 +268,7 @@ public class YukkaApplication {
 
 		// Dodawanie parę zwykłych postów do sprawdzania paginacji
 		System.out.println("Dodawanie postów testowych...");
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 2; i++) {
 			Post post = Post.builder()
 			.postId(postService.createPostId())
 			.tytul("Jakiś post testowy " + i)
@@ -353,7 +353,7 @@ public class YukkaApplication {
 
 		KomentarzRequest komReq1 = KomentarzRequest.builder().opis("Piotr2 opis").targetId(kom2.getKomentarzId()).build();
 		Komentarz kom4 = null;
-		KomentarzRequest komReq2 = KomentarzRequest.builder().opis("Kata2 opis").targetId(kom2.getKomentarzId()).build();
+		KomentarzRequest komReq2 = KomentarzRequest.builder().opis("Odpowiedź katarzyny głębokość 1").targetId(kom2.getKomentarzId()).build();
 		Komentarz kom5 = null;
 		try {
 			kom4 = komentarzService.addOdpowiedzToKomentarz(komReq1, obraz1, usPiotr);
@@ -363,16 +363,31 @@ public class YukkaApplication {
 		}
 
 		
-		
-
-		KomentarzRequest komReq3 = KomentarzRequest.builder().opis("Kata3 opis").targetId(kom5.getKomentarzId()).build();
+		KomentarzRequest komReq3 = KomentarzRequest.builder().opis("Odpowiedź katarzyny głębokość 2").targetId(kom5.getKomentarzId()).build();
 		Komentarz kom6 = komentarzService.addOdpowiedzToKomentarz(komReq3, usKatarzyna);
+
+		KomentarzRequest komReq3_1 = KomentarzRequest.builder().opis("Odpowiedź piotra głębokość 3").targetId(kom6.getKomentarzId()).build();
+		Komentarz kom6_1 = komentarzService.addOdpowiedzToKomentarz(komReq3_1, usPiotr);
+
+		KomentarzRequest komReq3_2 = KomentarzRequest.builder().opis("Odpowiedź michała głębokość 4").targetId(kom6_1.getKomentarzId()).build();
+		Komentarz kom6_2 = komentarzService.addOdpowiedzToKomentarz(komReq3_2, usMichal);
+
+		KomentarzRequest komReq3_3 = KomentarzRequest.builder().opis("Odpowiedź katarzyny głębokość 5").targetId(kom6_2.getKomentarzId()).build();
+		Komentarz kom6_3 = komentarzService.addOdpowiedzToKomentarz(komReq3_3, usKatarzyna);
+
+		KomentarzRequest komReq3_4 = KomentarzRequest.builder().opis("Odpowiedź piotra głębokość 6").targetId(kom6_3.getKomentarzId()).build();
+		Komentarz kom6_4 = komentarzService.addOdpowiedzToKomentarz(komReq3_4, usPiotr);
+
+		KomentarzRequest komReq3_5 = KomentarzRequest.builder().opis("Odpowiedź piotra głębokość 7").targetId(kom6_4.getKomentarzId()).build();
+		Komentarz kom6_5 = komentarzService.addOdpowiedzToKomentarz(komReq3_5, usPiotr);
+
+		KomentarzRequest komReq3_6 = KomentarzRequest.builder().opis("Odpowiedź piotra głębokość 4-1").targetId(kom6.getKomentarzId()).build();
+		Komentarz kom6_6 = komentarzService.addOdpowiedzToKomentarz(komReq3_6, usPiotr);
+
+
 
 		KomentarzRequest komReq4 = KomentarzRequest.builder().opis("Michał opis").targetId(kom4.getKomentarzId()).build();
 		Komentarz kom7 = komentarzService.addOdpowiedzToKomentarz(komReq4, usMichal);
-
-				
-
 
 		// Ocenianie
 	//	System.out.println("\n\n\nocenia1\n\n\n\n\n\n");

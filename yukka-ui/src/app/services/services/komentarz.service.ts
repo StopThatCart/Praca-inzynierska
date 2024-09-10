@@ -31,7 +31,6 @@ import { findKomentarzById } from '../fn/komentarz/find-komentarz-by-id';
 import { FindKomentarzById$Params } from '../fn/komentarz/find-komentarz-by-id';
 import { findKomentarzeOfUzytkownik } from '../fn/komentarz/find-komentarze-of-uzytkownik';
 import { FindKomentarzeOfUzytkownik$Params } from '../fn/komentarz/find-komentarze-of-uzytkownik';
-import { Komentarz } from '../models/komentarz';
 import { KomentarzResponse } from '../models/komentarz-response';
 import { PageResponseKomentarzResponse } from '../models/page-response-komentarz-response';
 import { removeKomentarz } from '../fn/komentarz/remove-komentarz';
@@ -58,7 +57,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOcenaToKomentarz$Response(params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  addOcenaToKomentarz$Response(params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
     return addOcenaToKomentarz(this.http, this.rootUrl, params, context);
   }
 
@@ -68,9 +67,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOcenaToKomentarz(params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<Komentarz> {
+  addOcenaToKomentarz(params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.addOcenaToKomentarz$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Komentarz>): Komentarz => r.body)
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
@@ -108,7 +107,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addKomentarzToWiadomoscPrywatna1$Json$Response(params: AddKomentarzToWiadomoscPrywatna1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  addKomentarzToWiadomoscPrywatna1$Json$Response(params: AddKomentarzToWiadomoscPrywatna1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
     return addKomentarzToWiadomoscPrywatna1$Json(this.http, this.rootUrl, params, context);
   }
 
@@ -118,9 +117,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addKomentarzToWiadomoscPrywatna1$Json(params: AddKomentarzToWiadomoscPrywatna1$Json$Params, context?: HttpContext): Observable<Komentarz> {
+  addKomentarzToWiadomoscPrywatna1$Json(params: AddKomentarzToWiadomoscPrywatna1$Json$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.addKomentarzToWiadomoscPrywatna1$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Komentarz>): Komentarz => r.body)
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
@@ -130,7 +129,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addKomentarzToWiadomoscPrywatna1$FormData$Response(params: AddKomentarzToWiadomoscPrywatna1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  addKomentarzToWiadomoscPrywatna1$FormData$Response(params: AddKomentarzToWiadomoscPrywatna1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
     return addKomentarzToWiadomoscPrywatna1$FormData(this.http, this.rootUrl, params, context);
   }
 
@@ -140,9 +139,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addKomentarzToWiadomoscPrywatna1$FormData(params: AddKomentarzToWiadomoscPrywatna1$FormData$Params, context?: HttpContext): Observable<Komentarz> {
+  addKomentarzToWiadomoscPrywatna1$FormData(params: AddKomentarzToWiadomoscPrywatna1$FormData$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.addKomentarzToWiadomoscPrywatna1$FormData$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Komentarz>): Komentarz => r.body)
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
@@ -155,7 +154,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addKomentarzToPost1$Json$Response(params: AddKomentarzToPost1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  addKomentarzToPost1$Json$Response(params: AddKomentarzToPost1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
     return addKomentarzToPost1$Json(this.http, this.rootUrl, params, context);
   }
 
@@ -165,9 +164,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addKomentarzToPost1$Json(params: AddKomentarzToPost1$Json$Params, context?: HttpContext): Observable<Komentarz> {
+  addKomentarzToPost1$Json(params: AddKomentarzToPost1$Json$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.addKomentarzToPost1$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Komentarz>): Komentarz => r.body)
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
@@ -177,7 +176,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addKomentarzToPost1$FormData$Response(params: AddKomentarzToPost1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  addKomentarzToPost1$FormData$Response(params: AddKomentarzToPost1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
     return addKomentarzToPost1$FormData(this.http, this.rootUrl, params, context);
   }
 
@@ -187,9 +186,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addKomentarzToPost1$FormData(params: AddKomentarzToPost1$FormData$Params, context?: HttpContext): Observable<Komentarz> {
+  addKomentarzToPost1$FormData(params: AddKomentarzToPost1$FormData$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.addKomentarzToPost1$FormData$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Komentarz>): Komentarz => r.body)
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
@@ -202,7 +201,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOdpowiedzToKomentarz1$Json$Json$Response(params: AddOdpowiedzToKomentarz1$Json$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  addOdpowiedzToKomentarz1$Json$Json$Response(params: AddOdpowiedzToKomentarz1$Json$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
     return addOdpowiedzToKomentarz1$Json$Json(this.http, this.rootUrl, params, context);
   }
 
@@ -212,9 +211,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOdpowiedzToKomentarz1$Json$Json(params: AddOdpowiedzToKomentarz1$Json$Json$Params, context?: HttpContext): Observable<Komentarz> {
+  addOdpowiedzToKomentarz1$Json$Json(params: AddOdpowiedzToKomentarz1$Json$Json$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.addOdpowiedzToKomentarz1$Json$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Komentarz>): Komentarz => r.body)
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
@@ -224,7 +223,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOdpowiedzToKomentarz1$Json$Any$Response(params: AddOdpowiedzToKomentarz1$Json$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  addOdpowiedzToKomentarz1$Json$Any$Response(params: AddOdpowiedzToKomentarz1$Json$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
     return addOdpowiedzToKomentarz1$Json$Any(this.http, this.rootUrl, params, context);
   }
 
@@ -234,9 +233,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOdpowiedzToKomentarz1$Json$Any(params: AddOdpowiedzToKomentarz1$Json$Any$Params, context?: HttpContext): Observable<Komentarz> {
+  addOdpowiedzToKomentarz1$Json$Any(params: AddOdpowiedzToKomentarz1$Json$Any$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.addOdpowiedzToKomentarz1$Json$Any$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Komentarz>): Komentarz => r.body)
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
@@ -246,7 +245,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addOdpowiedzToKomentarz1$FormData$Json$Response(params: AddOdpowiedzToKomentarz1$FormData$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  addOdpowiedzToKomentarz1$FormData$Json$Response(params: AddOdpowiedzToKomentarz1$FormData$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
     return addOdpowiedzToKomentarz1$FormData$Json(this.http, this.rootUrl, params, context);
   }
 
@@ -256,9 +255,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addOdpowiedzToKomentarz1$FormData$Json(params: AddOdpowiedzToKomentarz1$FormData$Json$Params, context?: HttpContext): Observable<Komentarz> {
+  addOdpowiedzToKomentarz1$FormData$Json(params: AddOdpowiedzToKomentarz1$FormData$Json$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.addOdpowiedzToKomentarz1$FormData$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Komentarz>): Komentarz => r.body)
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
@@ -268,7 +267,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addOdpowiedzToKomentarz1$FormData$Any$Response(params: AddOdpowiedzToKomentarz1$FormData$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  addOdpowiedzToKomentarz1$FormData$Any$Response(params: AddOdpowiedzToKomentarz1$FormData$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
     return addOdpowiedzToKomentarz1$FormData$Any(this.http, this.rootUrl, params, context);
   }
 
@@ -278,9 +277,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addOdpowiedzToKomentarz1$FormData$Any(params: AddOdpowiedzToKomentarz1$FormData$Any$Params, context?: HttpContext): Observable<Komentarz> {
+  addOdpowiedzToKomentarz1$FormData$Any(params: AddOdpowiedzToKomentarz1$FormData$Any$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.addOdpowiedzToKomentarz1$FormData$Any$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Komentarz>): Komentarz => r.body)
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
@@ -343,7 +342,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateKomentarz$Response(params: UpdateKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<Komentarz>> {
+  updateKomentarz$Response(params: UpdateKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
     return updateKomentarz(this.http, this.rootUrl, params, context);
   }
 
@@ -353,9 +352,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateKomentarz(params: UpdateKomentarz$Params, context?: HttpContext): Observable<Komentarz> {
+  updateKomentarz(params: UpdateKomentarz$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.updateKomentarz$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Komentarz>): Komentarz => r.body)
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 

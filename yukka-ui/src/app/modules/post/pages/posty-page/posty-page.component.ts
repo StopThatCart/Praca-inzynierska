@@ -4,16 +4,19 @@ import { PostResponse } from '../../../../services/models/post-response';
 import { ActivatedRoute } from '@angular/router';
 import { PostService } from '../../../../services/services';
 import { PostCardComponent } from "../../components/post-card/post-card.component";
+import { KomentarzCardComponent } from '../../components/komentarz-card/komentarz-card.component';
+import { AddKomentarzCardComponent } from '../../components/add-komentarz-card/add-komentarz-card.component';
 
 @Component({
   selector: 'app-posty-page',
   standalone: true,
-  imports: [CommonModule, PostCardComponent],
+  imports: [CommonModule, PostCardComponent, KomentarzCardComponent, AddKomentarzCardComponent],
   templateUrl: './posty-page.component.html',
   styleUrl: './posty-page.component.css'
 })
 export class PostyPageComponent implements OnInit {
-  post : PostResponse | null = null;
+  post : PostResponse = {};
+  postId: string | undefined;
 
   private _postObraz: string | undefined;
 
@@ -26,10 +29,10 @@ export class PostyPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const postId = params['postId'];
-      if (postId) {
-        this.getPostByPostId(postId);
-        this.route.snapshot.data['postId'] = postId;
+      this.postId = params['postId'];
+      if (this.postId) {
+        this.getPostByPostId(this.postId);
+        this.route.snapshot.data['postId'] = this.postId;
       }
     });
 
@@ -42,7 +45,6 @@ export class PostyPageComponent implements OnInit {
         this.errorMessage = null;
       },
       error: (err) => {
-        this.post = null;
         this.errorMessage = 'Nie znaleziono posta o podanym ID.';
       }
     });

@@ -68,7 +68,7 @@ public class PostController {
     }
 
     @PostMapping(consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<Post> addPost(@Valid @RequestBody PostRequest request, 
+    public ResponseEntity<Post> addPost(@Valid @RequestPart("request") PostRequest request, 
     @Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) throws FileUploadException {
         return ResponseEntity.ok(postService.save(request, file, connectedUser));
     }

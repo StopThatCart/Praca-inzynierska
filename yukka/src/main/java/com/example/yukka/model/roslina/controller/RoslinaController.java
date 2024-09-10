@@ -87,7 +87,7 @@ public class RoslinaController {
     }
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request, 
+    public ResponseEntity<String> saveRoslina(@Valid @RequestPart("request") RoslinaRequest request, 
     @Parameter() @RequestPart("file") MultipartFile file,
     Authentication currentUser) {
         roslinaService.save(request, file, currentUser);

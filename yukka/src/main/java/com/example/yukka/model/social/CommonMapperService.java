@@ -67,6 +67,11 @@ public class CommonMapperService {
 
 
     public KomentarzResponse toKomentarzResponse(Komentarz komentarz) {
+        if (komentarz == null) {
+            return null;
+        }
+        
+      //  System.out.println("Komentarz: " + komentarz);
         return KomentarzResponse.builder()
             .id(komentarz.getId())
             .komentarzId(komentarz.getKomentarzId())

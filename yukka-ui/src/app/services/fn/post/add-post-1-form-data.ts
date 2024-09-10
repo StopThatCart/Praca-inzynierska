@@ -11,7 +11,7 @@ import { PostRequest } from '../../models/post-request';
 
 export interface AddPost1$FormData$Params {
       body: {
-'request'?: PostRequest;
+'request': PostRequest;
 'file': Blob;
 }
 }

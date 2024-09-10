@@ -80,7 +80,7 @@ public class KomentarzService {
         return komentarzMapper.komentarzResponsetoPageResponse(komentarze);
     }
 
-    public Komentarz addOcenaToKomentarz(OcenaRequest request, Authentication connectedUser) {
+    public KomentarzResponse addOcenaToKomentarz(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(request.getOcenialnyId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
 
@@ -92,10 +92,13 @@ public class KomentarzService {
             throw new IllegalArgumentException("Nie można oceniać własnych komentarzy");
         }
 
-        return komentarzRepository.addOcenaToKomentarz(uzyt.getEmail(), komentarz.getKomentarzId(), request.isLubi());
+        return komentarzMapper.toKomentarzResponse(
+            komentarzRepository.addOcenaToKomentarz(uzyt.getEmail(), 
+            komentarz.getKomentarzId(), 
+            request.isLubi()));
     }
 
-    public Komentarz addOcenaToKomentarzTest(OcenaRequest request, Uzytkownik connectedUser) {
+    public KomentarzResponse addOcenaToKomentarzTest(OcenaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         if(uzyt.isBan()) {
             throw new BannedUzytkownikException("Użytkownik jest zbanowany");
@@ -110,7 +113,10 @@ public class KomentarzService {
             throw new IllegalArgumentException("Nie można oceniać własnych komentarzy");
         }
 
-        return komentarzRepository.addOcenaToKomentarz(uzyt.getEmail(), komentarz.getKomentarzId(), request.isLubi());
+        return komentarzMapper.toKomentarzResponse(
+            komentarzRepository.addOcenaToKomentarz(uzyt.getEmail(), 
+            komentarz.getKomentarzId(), 
+            request.isLubi()));
     }
 
 
@@ -131,7 +137,7 @@ public class KomentarzService {
     }
 
 
-    public Komentarz addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, @Valid KomentarzRequest request,
+    public KomentarzResponse addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, @Valid KomentarzRequest request,
         Authentication connectedUser) {
         Uzytkownik nadawca = ((Uzytkownik) connectedUser.getPrincipal());
         if(nadawca.getNazwa().equals(otherUzytNazwa)) {
@@ -152,10 +158,10 @@ public class KomentarzService {
         .build();
         powiadomienieService.addPowiadomienie(powiadomienie, odbiorca);
 
-        return response; 
+        return komentarzMapper.toKomentarzResponse(response); 
     }
 
-    public Komentarz addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, @Valid KomentarzRequest request,
+    public KomentarzResponse addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, @Valid KomentarzRequest request,
         Uzytkownik connectedUser) {
         Uzytkownik nadawca = connectedUser;
         
@@ -178,10 +184,10 @@ public class KomentarzService {
 
         powiadomienieService.addPowiadomienie(powiadomienie, odbiorca);
 
-        return response; 
+        return komentarzMapper.toKomentarzResponse(response); 
     }
 
-    public Komentarz addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, @Valid KomentarzRequest request,
+    public KomentarzResponse addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, @Valid KomentarzRequest request,
         MultipartFile file, Authentication connectedUser) throws FileUploadException {
         Uzytkownik nadawca = ((Uzytkownik) connectedUser.getPrincipal());
         
@@ -203,7 +209,7 @@ public class KomentarzService {
         .build();
         powiadomienieService.addPowiadomienie(powiadomienie, odbiorca);
 
-        return response;
+        return komentarzMapper.toKomentarzResponse(response);
     }
 
     public Komentarz addKomentarzToPost(KomentarzRequest request, Uzytkownik connectedUser) {
@@ -240,7 +246,7 @@ public class KomentarzService {
         return response;
     }
 
-    public Komentarz addKomentarzToPost(KomentarzRequest request, Authentication connectedUser) {
+    public KomentarzResponse addKomentarzToPost(KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
@@ -264,10 +270,10 @@ public class KomentarzService {
         .build();
         powiadomienieService.addPowiadomienie(powiadomienie, post.getAutor());
  */
-        return response;
+        return komentarzMapper.toKomentarzResponse(response);
     }
 
-    public Komentarz addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Authentication connectedUser) throws FileUploadException {
+    public KomentarzResponse addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Authentication connectedUser) throws FileUploadException {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
@@ -292,10 +298,10 @@ public class KomentarzService {
         powiadomienieService.addPowiadomienie(powiadomienie, post.getAutor());
  */
 
-        return response;
+        return komentarzMapper.toKomentarzResponse(response);
     }
 
-    public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, Authentication connectedUser) {
+    public KomentarzResponse addOdpowiedzToKomentarz(@Valid KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastKomentarz(newestKomentarz);
@@ -317,7 +323,7 @@ public class KomentarzService {
             powiadomienieService.addPowiadomienie(powiadomienie, komentarzDoOdpowiedzi.getUzytkownik());
         }
         
-        return response;
+        return komentarzMapper.toKomentarzResponse(response);
     }
 
     public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, Uzytkownik connectedUser) {
@@ -346,7 +352,7 @@ public class KomentarzService {
         
     }
 
-    public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Authentication connectedUser) throws FileUploadException {
+    public KomentarzResponse addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Authentication connectedUser) throws FileUploadException {
         
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
@@ -369,7 +375,7 @@ public class KomentarzService {
             powiadomienieService.addPowiadomienie(powiadomienie, komentarzDoOdpowiedzi.getUzytkownik());
         }
 
-        return response;
+        return komentarzMapper.toKomentarzResponse(response);
     }
 
     public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Uzytkownik connectedUser) throws FileUploadException {
@@ -398,12 +404,13 @@ public class KomentarzService {
         return response;
     }
 
-    public Komentarz updateKomentarz(String komentarzId, @Valid KomentarzRequest request, Authentication connectedUser) {
+    public KomentarzResponse updateKomentarz(String komentarzId, @Valid KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Komentarz kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
                 .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik(), connectedUser))
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
-        return komentarzRepository.updateKomentarz(uzyt.getEmail(), komentarzId, kom);
+        
+        return komentarzMapper.toKomentarzResponse(komentarzRepository.updateKomentarz(uzyt.getEmail(), komentarzId, kom));
     }
 
 

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
@@ -52,7 +51,7 @@ public class KomentarzController {
     }
 
     @PostMapping(value = "/odpowiedzi", produces="application/json")
-    public ResponseEntity<Komentarz> addOdpowiedzToKomentarz(
+    public ResponseEntity<KomentarzResponse> addOdpowiedzToKomentarz(
                   //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     Authentication connectedUser) {
@@ -60,42 +59,44 @@ public class KomentarzController {
     }
 
     @PostMapping(value = "/odpowiedzi", consumes = "multipart/form-data")
-    public ResponseEntity<Komentarz> addOdpowiedzToKomentarz(
+    public ResponseEntity<KomentarzResponse> addOdpowiedzToKomentarz(
                   //  @PathVariable("komentarz-id") String komentarzId, 
-                    @Valid @RequestBody KomentarzRequest request, 
+                    @Valid @RequestPart("request") KomentarzRequest request, 
                     @Parameter() @RequestPart("file") MultipartFile file, 
                     Authentication connectedUser) throws FileUploadException {
         return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, file, connectedUser));
     }
 
     @PostMapping(value = "/posty", produces="application/json")
-    public ResponseEntity<Komentarz> addKomentarzToPost(
+    public ResponseEntity<KomentarzResponse> addKomentarzToPost(
                     //@PathVariable("post-id") String postId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, connectedUser));
     }
 
+    // TODO: Jak masz problem z plikami to w endpointach z plikami zamień @RequestBody na @RequestPart("request")
     @PostMapping(value =  "/posty", consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<Komentarz> addKomentarzToPost(
+    public ResponseEntity<KomentarzResponse> addKomentarzToPost(
                   //  @PathVariable("post-id") String postId, 
-                    @Valid @RequestBody KomentarzRequest request, 
-                    @Parameter() @RequestPart("file") MultipartFile file,
+                     @Valid @RequestPart("request") KomentarzRequest request, 
+                     @RequestPart("file") MultipartFile file,
                     Authentication connectedUser) throws FileUploadException {
+        System.out.println("Received file: " + file.getOriginalFilename());
         return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, file, connectedUser));
     }
 
     @PostMapping(value =  "/wiadomosciPrywatne/{other-uzyt-nazwa}", consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<Komentarz> addKomentarzToWiadomoscPrywatna(
+    public ResponseEntity<KomentarzResponse> addKomentarzToWiadomoscPrywatna(
                     @PathVariable("other-uzyt-nazwa") String otherUzytNazwa, 
-                    @Valid @RequestBody KomentarzRequest request, 
+                    @Valid @RequestPart("request") KomentarzRequest request, 
                     @Parameter() @RequestPart("file") MultipartFile file,
                     Authentication connectedUser) throws FileUploadException {
         return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(otherUzytNazwa, request, file, connectedUser));
     }
 
     @PostMapping(value = "/wiadomosciPrywatne/{other-uzyt-nazwa}", produces="application/json")
-    public ResponseEntity<Komentarz> addKomentarzToWiadomoscPrywatna(
+    public ResponseEntity<KomentarzResponse> addKomentarzToWiadomoscPrywatna(
                     @PathVariable("other-uzyt-nazwa") String otherUzytNazwa, 
                     @Valid @RequestBody KomentarzRequest request, 
                     Authentication connectedUser){
@@ -104,7 +105,7 @@ public class KomentarzController {
 
     // Działa też jako update
     @PutMapping(value = "/oceny", produces="application/json")
-    public ResponseEntity<Komentarz> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
+    public ResponseEntity<KomentarzResponse> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addOcenaToKomentarz(request, connectedUser));
     }
 
@@ -115,7 +116,7 @@ public class KomentarzController {
     }
 
     @PatchMapping(value = "/{komentarz-id}", produces="application/json")
-    public ResponseEntity<Komentarz> updateKomentarz(
+    public ResponseEntity<KomentarzResponse> updateKomentarz(
                     @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 
                     Authentication connectedUser) {

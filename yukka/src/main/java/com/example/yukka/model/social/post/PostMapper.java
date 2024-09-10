@@ -43,22 +43,7 @@ public class PostMapper {
     }
 
      public PostResponse toPostResponse(Post post) {
-        return PostResponse.builder()
-                .id(post.getId())
-                .postId(post.getPostId())
-                .tytul(post.getTytul())
-                .opis(post.getOpis())   
-                .dataUtworzenia(post.getDataUtworzenia())
-                .ocenyLubi(post.getOcenyLubi())
-                .ocenyNieLubi(post.getOcenyNieLubi())
-                .liczbaKomentarzy(post.getLiczbaKomentarzy())
-                .komentarze(post.getKomentarze().stream()
-                    .map(commonMapperService::toKomentarzResponse)
-                    .collect(Collectors.toList()))
-                .uzytkownik(post.getAutor() != null ? post.getAutor().getNazwa() : null)
-                .avatar(fileUtils.readAvatarFile(post.getAutor() != null ? post.getAutor().getAvatar(): null))
-                .obraz(fileUtils.readPostObrazFile(post.getObraz()))
-                .build();
+        return commonMapperService.mapToPostResponse(post);
     }
 
     public PageResponse<PostResponse> postResponsetoPageResponse(Page<Post> posty) {

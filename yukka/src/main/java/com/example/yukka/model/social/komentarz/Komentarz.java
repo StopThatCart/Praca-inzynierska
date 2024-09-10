@@ -44,6 +44,7 @@ public class Komentarz extends Oceniany {
     @Property(name = "edytowany")
     private boolean edytowany;
     
+    
     @CreatedDate
     @Property(name = "dataUtworzenia")
     @Builder.Default
@@ -77,6 +78,8 @@ public class Komentarz extends Oceniany {
                 "id=" + id +
                 ", komentarzId='" + komentarzId + '\'' +
                 ", opis='" + opis + '\'' +
+                ", polubienia='" + getOcenyLubi() + '\'' +
+                ", niepolubienia='" + getOcenyNieLubi() + '\'' +
                 ", edytowany=" + edytowany +
                 ", dataUtworzenia=" + dataUtworzenia +
                 ", postId=" + (post != null ? post.getPostId() : "null") +

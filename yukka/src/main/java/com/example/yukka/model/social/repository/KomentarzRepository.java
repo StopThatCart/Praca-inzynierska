@@ -78,8 +78,8 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
             MATCH (kom)<-[r:OCENIL]-(:Uzytkownik)
             WITH kom, 
                     COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
-                    COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNielubi
-            SET kom.ocenyLubi = ocenyLubi, kom.ocenyNielubi = ocenyNielubi
+                    COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
+            SET kom.ocenyLubi = ocenyLubi, kom.ocenyNieLubi = ocenyNieLubi
 
             WITH kom
             MATCH (oceniany:Uzytkownik)-[:SKOMENTOWAL]->(kom)
@@ -102,8 +102,8 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
             MATCH (kom)<-[r:OCENIL]-(:Uzytkownik)
             WITH kom, 
                     COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
-                    COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNielubi
-            SET kom.ocenyLubi = ocenyLubi, kom.ocenyNielubi = ocenyNielubi
+                    COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
+            SET kom.ocenyLubi = ocenyLubi, kom.ocenyNieLubi = ocenyNieLubi
 
             WITH kom
             MATCH (oceniany:Uzytkownik)-[:SKOMENTOWAL]->(kom)
@@ -153,8 +153,8 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         WITH kom
         MATCH (kom)<-[r:OCENIL]-(:Uzytkownik)
         WITH kom, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
-                  COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNielubi
-        SET kom.ocenyLubi = ocenyLubi, kom.ocenyNielubi = ocenyNielubi
+                  COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
+        SET kom.ocenyLubi = ocenyLubi, kom.ocenyNieLubi = ocenyNieLubi
 
         WITH kom
         MATCH (oceniany:Uzytkownik)-[:SKOMENTOWAL]->(kom)
@@ -175,7 +175,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         WITH uzyt, kom2, $kom.__properties__ AS pt 
         CREATE (uzyt)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
-                ocenyLubi: 0, ocenyNielubi: 0, 
+                ocenyLubi: 0, ocenyNieLubi: 0, 
                 obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 -[:ODPOWIEDZIAL]->(kom2)
 
@@ -203,7 +203,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         WITH uzyt, kom2, $kom.__properties__ AS pt 
         CREATE (uzyt)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
-                ocenyLubi: 0, ocenyNielubi: 0, 
+                ocenyLubi: 0, ocenyNieLubi: 0, 
                 obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 -[:ODPOWIEDZIAL]->(kom2)
         RETURN kom
@@ -216,7 +216,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         WITH uzyt, post, $kom.__properties__ AS pt 
         CREATE (uzyt)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false, 
-                ocenyLubi: 0, ocenyNielubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
+                ocenyLubi: 0, ocenyNieLubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 <-[:MA_KOMENTARZ]-(post)
         CREATE (kom)-[:JEST_W_POSCIE]->(post)
 
@@ -237,7 +237,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         WITH uzyt1, priv, $kom.__properties__ as pt
         CREATE (uzyt1)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
-                ocenyLubi: 0, ocenyNielubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
+                ocenyLubi: 0, ocenyNieLubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 <-[:MA_WIADOMOSC]-(priv)
         WITH priv, kom
         SET priv.ostatnioAktualizowane = localdatetime()
