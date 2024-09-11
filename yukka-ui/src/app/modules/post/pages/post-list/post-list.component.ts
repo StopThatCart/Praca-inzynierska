@@ -7,11 +7,12 @@ import { PostCardComponent } from "../../components/post-card/post-card.componen
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { AddPostCardComponent } from "../../components/add-post-card/add-post-card.component";
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, PostCardComponent, InfiniteScrollModule],
+  imports: [CommonModule, FormsModule, PostCardComponent, InfiniteScrollModule, AddPostCardComponent],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
