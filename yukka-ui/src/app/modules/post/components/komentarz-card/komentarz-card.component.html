@@ -1,19 +1,39 @@
 <div class="komentarz-card" [style.marginLeft.px]="setStartMargin() * 15">
   <div class="flex-grow-1 flex-shrink-1">
+    <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
+      <p *ngFor="let msg of errorMsg">{{ msg }}</p>
+    </div>
     <div class="komentarz-header">
+
         <p class="mb-1">
           <a class="me-1" href="#">
             <img [src]="getKomentarzAvatar()" class="komentarz-avatar" alt="avatar" width="30" height="30">
           </a>
           <span class="komentarz-username">{{ komentarz.uzytkownikNazwa }}&nbsp;</span>
           <span class="komentarz-date">{{ komentarz.dataUtworzenia }}</span>
+          <ng-container *ngIf="komentarz.edytowany">
+            <span class="komentarz-date">&nbsp; (edytowany)</span>
+          </ng-container>
         </p>
     </div>
     <ng-container *ngIf="komentarz.odpowiadaKomentarzowi">
         <a class="komentarz-option" href="#">{{ komentarz.odpowiadaKomentarzowi.uzytkownikNazwa  }}:</a>
     </ng-container>
-    <p class="text-break small">{{ komentarz.opis }}</p>
-    <div class="bg-secondary" >
+    <ng-container *ngIf="!isEditing">
+      <p class="text-break small">{{ komentarz.opis }}</p>
+      <div class="bg-secondary" >
+        <div *ngIf="komentarz.obraz">
+          <img
+            class="rounded img-fluid mb-3"
+            [alt]="'Obraz komentarz'"
+            [src]="getKomentarzObraz()"
+            style="max-width: 100%; height: auto; max-height: 250px;"
+            loading="lazy">
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="isEditing">
+      <textarea [(ngModel)]="editedOpis" class="form-control text-black" rows="3"></textarea>
       <div *ngIf="komentarz.obraz">
         <img
           class="rounded img-fluid mb-3"
@@ -22,7 +42,11 @@
           style="max-width: 100%; height: auto; max-height: 250px;"
           loading="lazy">
       </div>
+      <div class="hstack gap-2 mt-2">
+        <button (click)="confirmEditing()" class="btn btn-success">POTWIERDŹ</button>
+        <button (click)="cancelEditing()" class="btn btn-secondary">ANULUJ</button>
       </div>
+    </ng-container>
     <div class="hstack justify-content-between p-1 komentarz-border">
         <div class="hstack gap-3">
           <a (click)="addOcenaToKomentarz(komentarz.komentarzId, true)"
@@ -33,10 +57,21 @@
               class="komentarz-option">
             <i class="fas fa-thumbs-down text-danger"></i>&nbsp;{{ komentarz.ocenyNieLubi }}
           </a>
-          <a class="komentarz-option" href="#!">
+          <a (click)="toggleReplying()" class="komentarz-option">
             <i class="fas fa-reply fa-xs"></i>
             <span class="small">&nbsp;Odpisz</span>
           </a>
+          <ng-container *ngIf="canEdit">
+            <a (click)="startEditing()" class="komentarz-option">
+              <i class="fas fa-edit fa-xs"></i>
+              <span class="small">&nbsp;Edytuj</span>
+            </a>
+            <a (click)="deleteKomentarz()" class="komentarz-option">
+              <i class="fas fa-trash fa-xs"></i>
+              <span class="small">&nbsp;Usuń</span>
+            </a>
+          </ng-container>
+
         </div>
         <ng-container *ngIf="komentarz.odpowiedzi && komentarz.odpowiedzi.length > 0">
           <a class="komentarz-option" (click)="toggleOdpowiedzi()">
@@ -45,6 +80,15 @@
             <span class="small">&nbsp;{{ showOdpowiedzi ? 'Zwiń' : 'Rozwiń' }} odpowiedzi</span>
           </a>
         </ng-container>
+    </div>
+
+    <!-- Add Komentarz Card for replying -->
+    <div *ngIf="isReplying">
+      <app-add-komentarz-card
+        [targetId]="komentarz.komentarzId"
+        [isReply]="true"
+        (onCancelReply)="cancelOdpowiedz()">
+      </app-add-komentarz-card>
     </div>
 
     <!-- Rekursywne odpowiedzi  -->

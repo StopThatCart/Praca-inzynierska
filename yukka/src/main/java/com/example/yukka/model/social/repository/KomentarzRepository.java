@@ -29,7 +29,10 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
             MATCH (kom:Komentarz{komentarzId: $komentarzId})<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik)
             OPTIONAL MATCH (rozmowa:RozmowaPrywatna)-[r3:MA_WIADOMOSC]->(kom)
             OPTIONAL MATCH path = (:Post)-[:MA_KOMENTARZ]->(kom)
-            RETURN kom, r1, uzyt, rozmowa, r3, collect(nodes(path)) as pathNodes, collect(relationships(path)) as pathRels
+            OPTIONAL MATCH path2 = (:Post)<-[:JEST_W_POSCIE]-(kom)
+            RETURN kom, r1, uzyt, rozmowa, r3, 
+            collect(nodes(path)) as pathNodes, collect(relationships(path)) as pathRels,
+            collect(nodes(path2)) as pathNodes2, collect(relationships(path2)) as pathRels2
             """)
     Optional<Komentarz> findKomentarzByKomentarzId(@Param("komentarzId") String komentarzId);
 
@@ -271,11 +274,11 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
 
     @Query("""
-        MATCH (:Uzytkownik{email:email})-[:SKOMENTOWAL]->(komentarz:Komentarz{$kom.__properies__.komentarzId})
-        SET komentarz.opis = $kom.__properies__.opis, komentarz.edytowany = true
+        MATCH (komentarz:Komentarz{ komentarzId:$komentarzId })
+        SET komentarz.opis = $opis, komentarz.edytowany = true
         RETURN komentarz
         """)
-    Komentarz updateKomentarz(@Param("email") String email, @Param("postId") String postId, @Param("kom") Komentarz kom);
+    Optional<Komentarz> updateKomentarz(@Param("komentarzId") String komentarzId, @Param("opis") String opis);
 
 
     // TODO: Komentarze na profilowe, ogród, galerię, może jeszcze rośliny

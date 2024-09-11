@@ -70,12 +70,21 @@ public class CommonMapperService {
         if (komentarz == null) {
             return null;
         }
+
+        Post post;
+        if(komentarz.getPost() != null) {
+            post = komentarz.getPost();
+        } else if (komentarz.getWPoscie() != null) {
+            post = komentarz.getWPoscie();
+        } else {
+            post = null;
+        }
         
       //  System.out.println("Komentarz: " + komentarz);
         return KomentarzResponse.builder()
             .id(komentarz.getId())
             .komentarzId(komentarz.getKomentarzId())
-            .post(komentarz.getPost() != null ? mapPostForKomentarzResponse(komentarz.getPost()) : null)
+            .post(post != null ? mapPostForKomentarzResponse(post) : null)
             .opis(komentarz.getOpis())
             .edytowany(komentarz.isEdytowany())
             .ocenyLubi(komentarz.getOcenyLubi())
@@ -135,10 +144,21 @@ public class CommonMapperService {
         if (komentarz == null) {
             return null;
         }
+
+        Post post;
+        if(komentarz.getPost() != null) {
+            post = komentarz.getPost();
+        } else if (komentarz.getWPoscie() != null) {
+            post = komentarz.getWPoscie();
+        } else {
+            post = null;
+        }
+
         return KomentarzSimpleResponse.builder()
             .id(komentarz.getId())
             .komentarzId(komentarz.getKomentarzId())
             .opis(komentarz.getOpis())
+            .postId(post != null ? post.getPostId() : null)
             .uzytkownikNazwa(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getNazwa() : null)
             .avatar(fileUtils.readAvatarFile(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getAvatar() : null))
             .obraz(fileUtils.readKomentarzObrazFile(komentarz.getObraz()))
@@ -161,8 +181,19 @@ public class CommonMapperService {
         if (kom == null) {
             return null;
         }
+
+        Post post;
+        if(kom.getPost() != null) {
+            post = kom.getPost();
+        } else if (kom.getWPoscie() != null) {
+            post = kom.getWPoscie();
+        } else {
+            post = null;
+        }
+
         return KomentarzResponse.builder()
             .komentarzId(kom.getKomentarzId())
+            .post(post != null ? mapPostForKomentarzResponse(post) : null)
             .opis(kom.getOpis())
             .uzytkownikNazwa(kom.getUzytkownik() != null ? kom.getUzytkownik().getNazwa() : null)
             .build();

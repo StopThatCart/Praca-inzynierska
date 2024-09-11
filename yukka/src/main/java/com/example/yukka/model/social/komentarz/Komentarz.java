@@ -54,6 +54,12 @@ public class Komentarz extends Oceniany {
      @ToString.Exclude
      private RozmowaPrywatna rozmowaPrywatna;
 
+
+    @Relationship(type = "JEST_W_POSCIE", direction = Relationship.Direction.OUTGOING)
+    // @JsonBackReference
+    @ToString.Exclude
+    private Post wPoscie;
+
     @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.INCOMING)
    // @JsonBackReference
     @ToString.Exclude
@@ -87,5 +93,19 @@ public class Komentarz extends Oceniany {
                 ", odpowiedziCount=" + (odpowiedzi != null ? odpowiedzi.size() : 0) +
                 '}';
     }
+
+    private boolean isInPost() {
+        return wPoscie != null;
+    }
+
+    private String getPostId() {
+      if(isInPost()) {
+        return wPoscie.getPostId();
+      }
+      return null;
+  }
+
+
+
 
 }

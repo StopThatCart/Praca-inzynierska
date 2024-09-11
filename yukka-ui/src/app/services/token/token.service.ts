@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Uzytkownik } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -53,9 +54,63 @@ export class TokenService {
     if (token) {
       const jwtHelper = new JwtHelperService();
       const decodedToken = jwtHelper.decodeToken(token);
-      console.log(decodedToken.authorities);
       return decodedToken.authorities;
     }
     return [];
   }
+
+  get uzytId(): string {
+    const token = this.token;
+    if (token) {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      return decodedToken.UzytId;
+    }
+    return '';
+  }
+
+  get nazwa(): string {
+    const token = this.token;
+    if (token) {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      return decodedToken.Nazwa;
+    }
+    return '';
+  }
+
+  get email(): string {
+    const token = this.token;
+    if (token) {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      return decodedToken.Email;
+    }
+    return '';
+  }
+
+  isAdmin(): boolean {
+    return this.userRoles.includes('Admin');
+  }
+
+  isPracownik(): boolean {
+    return this.userRoles.includes('Pracownik');
+  }
+
+  isNormalUzytkownik() {
+    return !this.isAdmin() && !this.isPracownik();
+  }
+
+  hasAuthenticationRights(targetUzytNazwa: string): boolean {
+    if(this.isAdmin()) {
+        return true;
+    }if (this.isPracownik()) {
+        return true;
+    } else {
+        return this.nazwa === targetUzytNazwa;
+    }
+}
+
+
+
 }

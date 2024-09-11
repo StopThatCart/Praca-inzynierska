@@ -123,7 +123,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.updateKomentarz(komentarzId, request, connectedUser));
     }
 
-    @DeleteMapping("/{komentarz-id}")
+    @DeleteMapping(value = "/{komentarz-id}", produces="application/json")
     public ResponseEntity<String> removeKomentarz(
                     @PathVariable("komentarz-id") String komentarzId,
                     Authentication currentUser) {
@@ -133,7 +133,7 @@ public class KomentarzController {
     }
 
     // Być może to wywalić i używać tylko removeKomentarz
-    @DeleteMapping("{komentarz-id}/posty/{post-id}")
+    @DeleteMapping(value = "{komentarz-id}/posty/{post-id}", produces="application/json")
     public ResponseEntity<String> removeKomentarzFromPost(
                     @PathVariable("post-id") String postId,
                     @PathVariable("komentarz-id") String komentarzId,

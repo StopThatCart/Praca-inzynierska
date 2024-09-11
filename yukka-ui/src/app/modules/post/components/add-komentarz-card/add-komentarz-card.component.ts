@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KomentarzRequest } from '../../../../services/models/komentarz-request';
 import { KomentarzService } from '../../../../services/services';
@@ -14,6 +14,10 @@ import { Router } from '@angular/router';
 })
 export class AddKomentarzCardComponent implements OnInit {
   @Input() targetId: string | undefined;
+  @Input() isReply: boolean = false;
+  @Output() onCancelOdpowiedz = new EventEmitter<void>();
+
+
   @ViewChild('fileInput') fileInput!: ElementRef;
   request: KomentarzRequest = {
     opis: '',
@@ -60,10 +64,21 @@ export class AddKomentarzCardComponent implements OnInit {
     this.fileInput.nativeElement.value = '';
   }
 
-  addKomentarzToPost() {
+
+  addKomentarz() {
     console.log("Request przy dodawaniu");
     console.log(this.request);
     this.errorMsg = [];
+
+    if(this.isReply) {
+      console.log("Odpowiedz na komentarz");
+      this.addOdpowiedzToKomentarz();
+    } else {
+      this.addKomentarzToPost();
+    }
+  }
+
+  private addKomentarzToPost() {
     if(this.request.obraz === '') {
       this.komentarzService.addKomentarzToPost1$Json({
         body: this.request
@@ -86,6 +101,30 @@ export class AddKomentarzCardComponent implements OnInit {
       });
     }
   }
+
+  private addOdpowiedzToKomentarz() {
+    if(this.request.obraz === '') {
+      this.komentarzService.addOdpowiedzToKomentarz1$Json$Json ({
+        body: this.request
+      }).subscribe( {
+          next: (res) => { window.location.reload(); },
+          error: (err) => { this.handleErrors(err); }
+      });
+    }else {
+      this.komentarzService.addOdpowiedzToKomentarz1$FormData$Json({
+        body: { request: this.request, file: this.wybranyPlik }
+      }).subscribe( {
+          next: (res) => { window.location.reload(); },
+          error: (err) => { this.handleErrors(err); }
+      });
+    }
+  }
+
+  cancelOdpowiedz() {
+    this.onCancelOdpowiedz.emit();
+  }
+
+
 
   private handleErrors(err: any) {
     console.log(err);

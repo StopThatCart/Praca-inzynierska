@@ -304,13 +304,16 @@ public class KomentarzService {
         return response;
     }
 
-    public KomentarzResponse updateKomentarz(String komentarzId, @Valid KomentarzRequest request, Authentication connectedUser) {
+    public KomentarzResponse updateKomentarz(String komentarzId, KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Komentarz kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
                 .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik(), connectedUser))
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
-        
-        return komentarzMapper.toKomentarzResponse(komentarzRepository.updateKomentarz(uzyt.getEmail(), komentarzId, kom));
+
+        kom = komentarzRepository.updateKomentarz(komentarzId, request.getOpis())
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza do aktualizacji o podanym ID: " + komentarzId));
+
+        return komentarzMapper.toKomentarzResponse(kom);
     }
 
 
@@ -318,13 +321,30 @@ public class KomentarzService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());        
         Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
             .orElseThrow();
+
+        System.out.println("Uzytkownik: " + uzyt.getNazwa());
+        System.out.println("Komentarz: " + komentarz.getKomentarzId());
+        System.out.println("Komentarz uzytkownik: " + komentarz.getUzytkownik().getNazwa());
+       // System.out.println("Komentarz ale co." + komentarz.getPost);
+        System.out.println("Role: " + uzyt.getAuthorities());
         
-        if (uzyt.hasAuthenticationRights(komentarz.getUzytkownik(), connectedUser)) {
+        if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik(), connectedUser)) {
             throw new AccessDeniedException("Nie masz uprawnień do usunięcia komentarza");
         }
 
-        fileUtils.deleteObraz(komentarz.getObraz());
-        komentarzRepository.removeKomentarz(komentarz.getKomentarzId());
+        if(komentarz.getWPoscie() != null) {
+            System.out.println("Usuwanie komentarza z posta BO TAKI WYKRYTO");
+            deleteKomentarzFromPost(komentarz.getWPoscie().getPostId(), komentarzId, uzyt);
+        } else if(komentarz.getRozmowaPrywatna() != null) {
+            komentarzRepository.removeKomentarz(komentarzId);
+        } else if (komentarz.getOdpowiadaKomentarzowi() != null) {
+            throw new UnsupportedOperationException("Usuwanie komentarza odpowiadającego nie z posta nie jest jeszcze obsługiwane");
+        } else {
+            throw new IllegalArgumentException("Nie można usunąć komentarza, bo nie komentuje ani posta, ani komentarza, ani rozmowy prywatnej.");
+        }
+
+        //fileUtils.deleteObraz(komentarz.getObraz());
+       // komentarzRepository.removeKomentarz(komentarz.getKomentarzId());
     }
 
     public void deleteKomentarzFromPost(String postId, String komentarzId, Authentication connectedUser) {
@@ -333,7 +353,7 @@ public class KomentarzService {
         Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
         
-        if (uzyt.hasAuthenticationRights(kom.getUzytkownik(), connectedUser)) {
+        if (!uzyt.hasAuthenticationRights(kom.getUzytkownik(), connectedUser)) {
             throw new AccessDeniedException("Nie masz uprawnień do usunięcia komentarza");
         }
 

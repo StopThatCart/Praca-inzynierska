@@ -13,6 +13,7 @@ import { UzytkownikService } from './services/uzytkownik.service';
 import { DzialkaService } from './services/dzialka.service';
 import { AuthenticationService } from './services/authentication.service';
 import { SoilResourceService } from './services/soil-resource.service';
+import {TimeAgoPipe} from 'time-ago-pipe';
 
 /**
  * Module that provides all services and configuration.
@@ -31,7 +32,8 @@ import { SoilResourceService } from './services/soil-resource.service';
     DzialkaService,
     AuthenticationService,
     SoilResourceService,
-    ApiConfiguration
+    ApiConfiguration,
+
   ],
 })
 export class ApiModule {
@@ -47,7 +49,7 @@ export class ApiModule {
     }
   }
 
-  constructor( 
+  constructor(
     @Optional() @SkipSelf() parentModule: ApiModule,
     @Optional() http: HttpClient
   ) {
