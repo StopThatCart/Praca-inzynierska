@@ -1,8 +1,13 @@
 package com.example.yukka.model.social;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
+import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +57,7 @@ public class CommonMapperService {
                 .postId(post.getPostId())
                 .tytul(post.getTytul())
                 .opis(post.getOpis())
-                .dataUtworzenia(post.getDataUtworzenia())
+                .dataUtworzenia(timeAgo(post.getDataUtworzenia()))
                 .ocenyLubi(post.getOcenyLubi())
                 .ocenyNieLubi(post.getOcenyNieLubi())
                 .liczbaKomentarzy(post.getLiczbaKomentarzy())
@@ -89,7 +94,7 @@ public class CommonMapperService {
             .edytowany(komentarz.isEdytowany())
             .ocenyLubi(komentarz.getOcenyLubi())
             .ocenyNieLubi(komentarz.getOcenyNieLubi())
-            .dataUtworzenia(komentarz.getDataUtworzenia())
+            .dataUtworzenia(timeAgo(komentarz.getDataUtworzenia()))
             .odpowiadaKomentarzowi(mapOdpowiadaKomentarzowiForKomentarzResponse(komentarz.getOdpowiadaKomentarzowi()))
             .odpowiedzi(komentarz.getOdpowiedzi().stream()
                 .map(this::toKomentarzResponse)
@@ -197,6 +202,11 @@ public class CommonMapperService {
             .opis(kom.getOpis())
             .uzytkownikNazwa(kom.getUzytkownik() != null ? kom.getUzytkownik().getNazwa() : null)
             .build();
+    }
+
+    public static String timeAgo(LocalDateTime dateTime) {
+        PrettyTime p = new PrettyTime(Locale.forLanguageTag("pl"));
+        return p.format(Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));
     }
 
 }
