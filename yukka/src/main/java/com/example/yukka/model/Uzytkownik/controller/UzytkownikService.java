@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.file.FileStoreService;
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UzytkownikService implements  UserDetailsService {
     @Value("${application.file.uploads.photos-output-path}")
     String fileUploadPath;
@@ -40,16 +42,18 @@ public class UzytkownikService implements  UserDetailsService {
     private final CommonMapperService commonMapperService;
 
     @Override
-   // @Transactional
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String nazwa) throws UsernameNotFoundException {
         return uzytkownikRepository.findByNazwa(nazwa)
                 .orElseThrow(() -> new UsernameNotFoundException("Użytkownika nie znaleziono"));
     }
 
+    @Transactional(readOnly = true)
     public List<Uzytkownik> findAll(){
         return uzytkownikRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public UzytkownikResponse findByEmail(String userEmail){
         Uzytkownik uzyt = uzytkownikRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Użytkownik nie istnieje"));

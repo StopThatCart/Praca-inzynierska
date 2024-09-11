@@ -2,7 +2,6 @@ package com.example.yukka.model.roslina.controller;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
@@ -25,11 +25,11 @@ import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
-import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwosciRodzaje;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 @Service
+@Transactional
 public class RoslinaService {
     @Autowired
     RoslinaRepository roslinaRepository;
@@ -58,6 +58,7 @@ public class RoslinaService {
         return roslinaRepository.getSomePlants(2);
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<RoslinaResponse> findAllRosliny(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").descending());
         Page<Roslina> rosliny = roslinaRepository.findAllRosliny(pageable);
@@ -75,6 +76,7 @@ public class RoslinaService {
         );
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<RoslinaResponse> findAllRoslinyWithParameters(int page, int size, RoslinaRequest request) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").descending());
 
@@ -107,12 +109,14 @@ public class RoslinaService {
         );
     }
 
+    @Transactional(readOnly = true)
     public RoslinaResponse findById(Long id) {
         Roslina ros = roslinaRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id: " + id));
         return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
+    @Transactional(readOnly = true)
     public RoslinaResponse findByNazwaLacinska(String nazwaLacinska) {
         Roslina ros = roslinaRepository.findByNazwaLacinskaWithWlasciwosci(nazwaLacinska)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
@@ -124,6 +128,7 @@ public class RoslinaService {
         return res;
     }
 
+    @Transactional(readOnly = true)
     public Set<WlasciwoscResponse> getWlasciwosciWithRelations() {
         Set<WlasciwosciRodzaje> responses = wlasciwoscRepository.getWlasciwosciWithRelacje();
         return responses.stream()

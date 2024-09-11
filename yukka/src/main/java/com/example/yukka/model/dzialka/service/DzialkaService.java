@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.file.FileStoreService;
@@ -29,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DzialkaService {
     private final DzialkaRepository dzialkaRepository;
     private final RoslinaRepository roslinaRepository;
@@ -44,6 +46,7 @@ public class DzialkaService {
 
 
 
+    @Transactional(readOnly = true)
     public List<DzialkaResponse> getDzialki(Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
 
@@ -54,6 +57,7 @@ public class DzialkaService {
         return dzialkiResponse;
     }
 
+    @Transactional(readOnly = true)
     public List<DzialkaResponse> getDzialkiOfUzytkownik(String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
 
@@ -74,6 +78,7 @@ public class DzialkaService {
 
 
     // Pobiera działki jakiegoś użytkownika, o ile on na to pozwala
+    @Transactional(readOnly = true)
     public DzialkaResponse getDzialkaOfUzytkownikByNumer(int numer, String nazwa) {
         Uzytkownik wlasciciel = uzytkownikRepository.findByNazwa(nazwa).orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika " + nazwa));
 
@@ -91,6 +96,7 @@ public class DzialkaService {
     }
 
     // Pobiera WŁASNĄ działkę
+    @Transactional(readOnly = true)
     public DzialkaResponse getDzialkaByNumer(int numer, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), numer)
@@ -274,7 +280,7 @@ public class DzialkaService {
             if (dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()).getObraz() != null) {
                 fileUtils.deleteObraz(dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()).getObraz());
             }
-            String pfp = fileStoreService.saveRoslinaObrazInDzialka(file, uzyt.getUsername());
+            String pfp = fileStoreService.saveRoslinaObrazInDzialka(file, uzyt.getUzytId());
             if(pfp == null){
                 return null;
             }

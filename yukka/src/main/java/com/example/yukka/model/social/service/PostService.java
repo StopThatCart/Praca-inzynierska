@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
@@ -35,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
     @Value("${post.add.cooldown}")
     private Integer postAddCD;
@@ -46,6 +48,7 @@ public class PostService {
     private final FileUtils fileUtils;
     private final PostMapper postMapper;
 
+    @Transactional(readOnly = true)
     public PostResponse findByPostId(String postId) {
         Post post = postRepository.findPostByPostIdButWithPath(postId).orElse(null);
         if(post == null) {
@@ -57,6 +60,7 @@ public class PostService {
                 .orElseThrow();
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<PostResponse> findAllPosts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPosts(pageable);
@@ -64,6 +68,7 @@ public class PostService {
         return postMapper.postResponsetoPageResponse(posts);
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<PostResponse> findAllPostyByConnectedUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
@@ -71,6 +76,7 @@ public class PostService {
         return postMapper.postResponsetoPageResponse(posts);
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, String email, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByEmail(email);
@@ -156,10 +162,25 @@ public class PostService {
 
     public void deletePost(String postId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(postId).orElseThrow();
-        if(uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
-            postRepository.deletePost(postId);
+        Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+        if(!uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
+            throw new IllegalArgumentException("Nie masz uprawnień do usunięcia tego posta");
+          //  postRepository.deletePost(postId);
         }
+        List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(postId);
+
+        fileUtils.deleteObraz(post.getObraz());
+        postRepository.deletePost(postId);
+
+        for (Uzytkownik u : uzytkownicyInPost) {
+            komentarzRepository.updateUzytkownikKomentarzeOcenyCount(u.getUzytId());
+        }
+
+        for (Komentarz kom : post.getKomentarze()) {
+            fileUtils.deleteObraz(kom.getObraz());
+        }
+
+        postRepository.updateOcenyCountOfPost(post.getPostId());
     }
 
     public void deletePost(String postId, Uzytkownik connectedUser) {

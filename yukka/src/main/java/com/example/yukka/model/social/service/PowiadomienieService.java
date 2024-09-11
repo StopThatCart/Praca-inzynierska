@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.yukka.YukkaApplication;
 import com.example.yukka.common.PageResponse;
@@ -31,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @EnableScheduling
+@Transactional
 public class PowiadomienieService {
     private final PowiadomienieRepository powiadomienieRepository;
     private final PowiadomienieMapper powiadomienieMapper;
@@ -44,6 +46,7 @@ public class PowiadomienieService {
     @Value("${powiadomienia.obraz.default.name}")
     private String powiadomienieAvatar;
 
+    @Transactional(readOnly = true)
     public PageResponse<PowiadomienieDTO> findPowiadomieniaOfUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
