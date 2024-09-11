@@ -165,7 +165,6 @@ public class PostService {
         Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
         if(!uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
             throw new IllegalArgumentException("Nie masz uprawnień do usunięcia tego posta");
-          //  postRepository.deletePost(postId);
         }
         List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(postId);
 

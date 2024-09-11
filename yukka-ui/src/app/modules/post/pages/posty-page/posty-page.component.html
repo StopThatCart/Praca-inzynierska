@@ -1,7 +1,9 @@
 
 <section class="mx-1">
   <div class="container" style="max-width: 800px;">
+    <ng-container *ngIf="post">
       <app-post-card class="my-5" [post]="post"></app-post-card>
+    </ng-container>
   </div>
   <div class="container" style="max-width: 800px;background: transparent;">
       <!--Dodaj komentarz-->

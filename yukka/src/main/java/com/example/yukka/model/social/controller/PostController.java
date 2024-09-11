@@ -102,7 +102,7 @@ public class PostController {
     public ResponseEntity<String> removePost(
                     @PathVariable("post-id") String postId,
                     Authentication currentUser) {
-
+                        
         postService.deletePost(postId, currentUser);
         return ResponseEntity.noContent().build();
     }

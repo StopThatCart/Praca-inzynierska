@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { PostResponse } from '../../../../services/models';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { OcenaRequest } from '../../../../services/models/ocena-request';
 import { remove } from '../../../../services/fn/uzytkownik/remove';
 import { removeOcenaFromPost } from '../../../../services/fn/post/remove-ocena-from-post';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TokenService } from '../../../../services/token/token.service';
 
 @Component({
   selector: 'app-post-card',
@@ -16,16 +17,30 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css'
 })
-export class PostCardComponent {
+export class PostCardComponent implements OnInit {
   @Input()  post:PostResponse = {};
   private _postObraz: string | undefined;
   private _postAvatar: string | undefined;
 
-  // TODO: Time ago.
+  errorMsg: Array<string> = [];
 
   constructor(private router: Router,
-              private postService: PostService
-  ) {}
+              private postService: PostService,
+              private tokenService: TokenService) {}
+
+  ngOnInit(): void {
+
+  }
+
+  canModify(): boolean {
+    if(this.tokenService.isTokenValid()) {
+      if (this.post.uzytkownik && this.tokenService.hasAuthenticationRights(this.post.uzytkownik)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   getPost(): PostResponse {
     return this.post;
@@ -57,8 +72,6 @@ export class PostCardComponent {
 
   addOcenaToPost(postId: string | undefined, ocena: boolean) {
     if (postId) {
-
-
       let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: postId };
       this.postService.addOcenaToPost({ body: ocenaRequest }).subscribe({
         next: (post) => {
@@ -94,6 +107,37 @@ export class PostCardComponent {
         }
       });
 
+    }
+  }
+
+
+  deletePost() {
+    this.errorMsg = [];
+    if(confirm("Czy aby na pewno chcesz usunąć ten post?")) {
+      if (this.post.postId) {
+        this.postService.removePost({ 'post-id': this.post.postId }).subscribe({
+          next: (res) => {
+            console.log('Post usunięty');
+            console.log(res);
+            this.router.navigate(['/posty']);
+          },
+          error: (err) => {
+            this.handleErrors(err);
+          }
+        });
+      }
+    }
+  }
+
+
+  private handleErrors(err: any) {
+    console.log(err);
+    if(err.error.validationErrors) {
+      this.errorMsg = err.error.validationErrors
+    } else if (err.error.error) {
+      this.errorMsg.push(err.error.error);
+    } else {
+      this.errorMsg.push(err.message);
     }
   }
 

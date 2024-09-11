@@ -171,18 +171,10 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
     // Ewentualnie porzucić te atrybuty i tylko zwracać liczbę ocen/komentarzy w countach
     @Query("""
         MATCH (post:Post {postId: $postId})
-    
-        OPTIONAL MATCH (post)-[:MA_KOMENTARZ]->(komentarz:Komentarz)
-        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
-            
-        WITH post, komentarz, collect(odpowiedz) AS odpowiedzi
-        UNWIND odpowiedzi AS odp
-        DETACH DELETE odp
+        OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(komentarz:Komentarz)
 
         WITH post, komentarz
-        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
-        DETACH DELETE komentarz
-        DETACH DELETE post
+        DETACH DELETE komentarz, post
         """)
     void deletePost(@Param("postId") String postId);
 
