@@ -6,5 +6,6 @@ export interface KomentarzSimpleResponse {
   komentarzId?: string;
   obraz?: string;
   opis?: string;
+  postId?: string;
   uzytkownikNazwa?: string;
 }

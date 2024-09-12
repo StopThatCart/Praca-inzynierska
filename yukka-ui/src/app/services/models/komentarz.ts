@@ -19,4 +19,5 @@ export interface Komentarz {
   post?: Post;
   rozmowaPrywatna?: RozmowaPrywatna;
   uzytkownik?: Uzytkownik;
+  wposcie?: Post;
 }

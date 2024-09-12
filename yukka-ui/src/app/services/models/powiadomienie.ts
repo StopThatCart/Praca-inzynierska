@@ -10,6 +10,7 @@ export interface Powiadomienie {
   nazwyRoslin?: Array<string>;
   odnosnik?: string;
   opis?: string;
+  przeczytane?: boolean;
   typ?: string;
   tytul?: string;
   uzytkownik?: Uzytkownik;

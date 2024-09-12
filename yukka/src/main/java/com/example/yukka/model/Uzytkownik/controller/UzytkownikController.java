@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -25,6 +26,7 @@ import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequestMapping("uzytkownicy")
@@ -42,13 +44,23 @@ public class UzytkownikController {
         return uzytkownikService.findAll();
     }
     
+    @GetMapping(value = "/{nazwa}", produces="application/json")
+    public ResponseEntity<UzytkownikResponse> findByNazwa(@PathVariable("nazwa") String nazwa) {
+        return ResponseEntity.ok(uzytkownikService.findByEmail(nazwa));
+    }
+
     @GetMapping(value = "/{email}", produces="application/json")
-    public ResponseEntity<UzytkownikResponse> getByEmail(@PathVariable("email") String email) {
+    public ResponseEntity<UzytkownikResponse> findByEmail(@PathVariable("email") String email) {
         return ResponseEntity.ok(uzytkownikService.findByEmail(email));
     }
 
+    @GetMapping(value = "/avatar", produces="application/json")
+    public ResponseEntity<UzytkownikResponse> getAvatar(Authentication connectedUser) {
+        return ResponseEntity.ok(uzytkownikService.getLoggedInAvatar(connectedUser));
+    }
+
     @PatchMapping(value = "/avatar", consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<Uzytkownik> updateAvatar(@Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) {
+    public ResponseEntity<UzytkownikResponse> updateAvatar(@Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.updateUzytkownikAvatar(file, connectedUser));
     }
 
@@ -68,6 +80,11 @@ public class UzytkownikController {
     @PostMapping(value = "pracownik/powiadomienie", produces="application/json")
     public ResponseEntity<Powiadomienie> sendSpecjalnePowiadomienie(@RequestBody PowiadomienieDTO powiadomienieDTO) {
         return ResponseEntity.ok(powiadomienieService.addSpecjalnePowiadomienie(powiadomienieDTO));
+    }
+
+    @PutMapping(value = "{nazwa}/powiadomienie/{id}/przeczytane", produces="application/json")
+    public ResponseEntity<Powiadomienie> setPowiadomieniePrzeczytane(@PathVariable("nazwa") String nazwa, @PathVariable("id") Long id) {
+        return ResponseEntity.ok(powiadomienieService.setPrzeczytane(nazwa, id));
     }
 
     @DeleteMapping

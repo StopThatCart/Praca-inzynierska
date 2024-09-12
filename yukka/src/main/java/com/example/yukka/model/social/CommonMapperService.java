@@ -30,6 +30,14 @@ import lombok.RequiredArgsConstructor;
 public class CommonMapperService {
     private final FileUtils fileUtils;
 
+    public UzytkownikResponse toSimpleAvatar(Uzytkownik uzytkownik) {
+        if (uzytkownik == null) {
+            return null;
+        }
+        return UzytkownikResponse.builder()
+            .avatar(fileUtils.readAvatarFile(uzytkownik.getAvatar()))
+            .build();
+    }
 
     public UzytkownikResponse toUzytkownikResponse(Uzytkownik uzytkownik) {
         if (uzytkownik == null) {

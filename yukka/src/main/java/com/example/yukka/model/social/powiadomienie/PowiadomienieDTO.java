@@ -18,6 +18,7 @@ import lombok.ToString;
 // Tak naprawdę to jest DTO, ale nie chce mi się zmieniać nazwy
 public class PowiadomienieDTO {
     private String typ;
+    private boolean przeczytane;
     private String tytul;
     private String odnosnik;
     private String opis;

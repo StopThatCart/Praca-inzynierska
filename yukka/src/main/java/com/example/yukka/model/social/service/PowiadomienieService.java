@@ -144,6 +144,7 @@ public class PowiadomienieService {
     public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieDTO request, Uzytkownik uzytkownik) {
         String opis = generatePowiadomienieOpis(typ, request);
         return Powiadomienie.builder()
+        
                 .typ(typ.name())
                 .odnosnik(request.getOdnosnik())
                 .tytul(request.getTytul())
@@ -168,6 +169,11 @@ public class PowiadomienieService {
                 .uzytkownikNazwa(request.getUzytkownikNazwa())
                 .data(request.getData())
                 .build();
+    }
+
+
+    public Powiadomienie setPrzeczytane(String nazwa, Long id) {
+        return powiadomienieRepository.setPrzeczytane(nazwa, id).orElse(null);
     }
 
     /* 

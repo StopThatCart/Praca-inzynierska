@@ -117,8 +117,7 @@ export class PostCardComponent implements OnInit {
       if (this.post.postId) {
         this.postService.removePost({ 'post-id': this.post.postId }).subscribe({
           next: (res) => {
-            console.log('Post usunięty');
-            console.log(res);
+            //console.log('Post usunięty');
             this.router.navigate(['/posty']);
           },
           error: (err) => {

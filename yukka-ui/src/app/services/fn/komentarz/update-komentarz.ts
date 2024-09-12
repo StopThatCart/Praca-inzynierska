@@ -11,7 +11,7 @@ import { KomentarzResponse } from '../../models/komentarz-response';
 
 export interface UpdateKomentarz$Params {
   'komentarz-id': string;
-    body: KomentarzRequest
+      body: KomentarzRequest
 }
 
 export function updateKomentarz(http: HttpClient, rootUrl: string, params: UpdateKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {

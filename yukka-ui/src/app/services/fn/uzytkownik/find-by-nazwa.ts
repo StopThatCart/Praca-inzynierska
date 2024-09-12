@@ -8,16 +8,14 @@ import { RequestBuilder } from '../../request-builder';
 
 import { UzytkownikResponse } from '../../models/uzytkownik-response';
 
-export interface UpdateAvatar$Params {
-      body?: {
-'file': Blob;
-}
+export interface FindByNazwa$Params {
+  nazwa: string;
 }
 
-export function updateAvatar(http: HttpClient, rootUrl: string, params?: UpdateAvatar$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
-  const rb = new RequestBuilder(rootUrl, updateAvatar.PATH, 'patch');
+export function findByNazwa(http: HttpClient, rootUrl: string, params: FindByNazwa$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+  const rb = new RequestBuilder(rootUrl, findByNazwa.PATH, 'get');
   if (params) {
-    rb.body(params.body, 'multipart/form-data');
+    rb.path('nazwa', params.nazwa, {});
   }
 
   return http.request(
@@ -30,4 +28,4 @@ export function updateAvatar(http: HttpClient, rootUrl: string, params?: UpdateA
   );
 }
 
-updateAvatar.PATH = '/uzytkownicy/avatar';
+findByNazwa.PATH = '/uzytkownicy/{nazwa}';

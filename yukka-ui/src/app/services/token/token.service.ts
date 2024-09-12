@@ -89,6 +89,21 @@ export class TokenService {
     return '';
   }
 
+  get avatar(): string {
+    const token = this.token;
+    if (token) {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      if (decodedToken.Avatar) {
+        return 'data:image/jpeg;base64,' + decodedToken.Avatar;
+      }
+      return decodedToken.Avatar;
+    }
+    return '';
+  }
+
+
+
   isAdmin(): boolean {
     return this.userRoles.includes('Admin');
   }

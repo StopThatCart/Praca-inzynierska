@@ -31,6 +31,10 @@ public class Powiadomienie {
     @Property(name = "typ")
     private String typ;
 
+    @Property(name = "przeczytane")
+    @Builder.Default
+    private boolean przeczytane = false;
+
     @Property(name = "odnosnik")
     private String odnosnik;
 
@@ -68,6 +72,7 @@ public class Powiadomienie {
         return "Powiadomienie{" +
                 "id=" + id +
                 ", typ='" + typ + '\'' +
+                ", przeczytane='" + przeczytane + '\'' +
                 ", odnosnik='" + odnosnik + '\'' +
                 ", tytul='" + tytul + '\'' +
                 ", opis='" + opis + '\'' +

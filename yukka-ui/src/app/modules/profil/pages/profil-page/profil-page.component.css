@@ -1,0 +1,52 @@
+.avatar-info {
+  border-width: 0;
+}
+
+.avatar-info img {
+  border-width: 0;
+}
+
+.btn-custom {
+  max-width: 250px;
+}
+
+.list-custom {
+  max-width: 450px;
+}
+
+.list-custom li {
+  color: var(--bs-primary-border-subtle);
+}
+
+.list-custom li span {
+  color: rgb(255, 255, 255);
+}
+
+.btn-outline-custom {
+  border-radius: 25px;
+  border-width: 0;
+  border-style: none;
+}
+
+.statystyki .col {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.statystyki .bs-icon {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+
+.border-ridge {
+  border-bottom-width: 1px;
+  border-bottom-style: ridge;
+}

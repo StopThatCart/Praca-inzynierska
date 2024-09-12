@@ -11,8 +11,12 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { findAllUzytkownicy } from '../fn/uzytkownik/find-all-uzytkownicy';
 import { FindAllUzytkownicy$Params } from '../fn/uzytkownik/find-all-uzytkownicy';
-import { getByEmail } from '../fn/uzytkownik/get-by-email';
-import { GetByEmail$Params } from '../fn/uzytkownik/get-by-email';
+import { findByEmail } from '../fn/uzytkownik/find-by-email';
+import { FindByEmail$Params } from '../fn/uzytkownik/find-by-email';
+import { findByNazwa } from '../fn/uzytkownik/find-by-nazwa';
+import { FindByNazwa$Params } from '../fn/uzytkownik/find-by-nazwa';
+import { getAvatar } from '../fn/uzytkownik/get-avatar';
+import { GetAvatar$Params } from '../fn/uzytkownik/get-avatar';
 import { Powiadomienie } from '../models/powiadomienie';
 import { remove } from '../fn/uzytkownik/remove';
 import { Remove$Params } from '../fn/uzytkownik/remove';
@@ -24,6 +28,8 @@ import { sendSpecjalnePowiadomienieToPracownicy } from '../fn/uzytkownik/send-sp
 import { SendSpecjalnePowiadomienieToPracownicy$Params } from '../fn/uzytkownik/send-specjalne-powiadomienie-to-pracownicy';
 import { setBanUzytkownik } from '../fn/uzytkownik/set-ban-uzytkownik';
 import { SetBanUzytkownik$Params } from '../fn/uzytkownik/set-ban-uzytkownik';
+import { setPowiadomieniePrzeczytane } from '../fn/uzytkownik/set-powiadomienie-przeczytane';
+import { SetPowiadomieniePrzeczytane$Params } from '../fn/uzytkownik/set-powiadomienie-przeczytane';
 import { updateAvatar } from '../fn/uzytkownik/update-avatar';
 import { UpdateAvatar$Params } from '../fn/uzytkownik/update-avatar';
 import { Uzytkownik } from '../models/uzytkownik';
@@ -33,6 +39,31 @@ import { UzytkownikResponse } from '../models/uzytkownik-response';
 export class UzytkownikService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `setPowiadomieniePrzeczytane()` */
+  static readonly SetPowiadomieniePrzeczytanePath = '/uzytkownicy/{nazwa}/powiadomienie/{id}/przeczytane';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `setPowiadomieniePrzeczytane()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  setPowiadomieniePrzeczytane$Response(params: SetPowiadomieniePrzeczytane$Params, context?: HttpContext): Observable<StrictHttpResponse<Powiadomienie>> {
+    return setPowiadomieniePrzeczytane(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `setPowiadomieniePrzeczytane$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  setPowiadomieniePrzeczytane(params: SetPowiadomieniePrzeczytane$Params, context?: HttpContext): Observable<Powiadomienie> {
+    return this.setPowiadomieniePrzeczytane$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Powiadomienie>): Powiadomienie => r.body)
+    );
   }
 
   /** Path part for operation `sendSpecjalnePowiadomienie()` */
@@ -110,6 +141,31 @@ export class UzytkownikService extends BaseService {
     );
   }
 
+  /** Path part for operation `getAvatar()` */
+  static readonly GetAvatarPath = '/uzytkownicy/avatar';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAvatar()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAvatar$Response(params?: GetAvatar$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+    return getAvatar(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAvatar$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAvatar(params?: GetAvatar$Params, context?: HttpContext): Observable<UzytkownikResponse> {
+    return this.getAvatar$Response(params, context).pipe(
+      map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
+    );
+  }
+
   /** Path part for operation `updateAvatar()` */
   static readonly UpdateAvatarPath = '/uzytkownicy/avatar';
 
@@ -119,7 +175,7 @@ export class UzytkownikService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  updateAvatar$Response(params?: UpdateAvatar$Params, context?: HttpContext): Observable<StrictHttpResponse<Uzytkownik>> {
+  updateAvatar$Response(params?: UpdateAvatar$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
     return updateAvatar(this.http, this.rootUrl, params, context);
   }
 
@@ -129,9 +185,9 @@ export class UzytkownikService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  updateAvatar(params?: UpdateAvatar$Params, context?: HttpContext): Observable<Uzytkownik> {
+  updateAvatar(params?: UpdateAvatar$Params, context?: HttpContext): Observable<UzytkownikResponse> {
     return this.updateAvatar$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Uzytkownik>): Uzytkownik => r.body)
+      map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
     );
   }
 
@@ -185,27 +241,52 @@ export class UzytkownikService extends BaseService {
     );
   }
 
-  /** Path part for operation `getByEmail()` */
-  static readonly GetByEmailPath = '/uzytkownicy/{email}';
+  /** Path part for operation `findByNazwa()` */
+  static readonly FindByNazwaPath = '/uzytkownicy/{nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getByEmail()` instead.
+   * To access only the response body, use `findByNazwa()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getByEmail$Response(params: GetByEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
-    return getByEmail(this.http, this.rootUrl, params, context);
+  findByNazwa$Response(params: FindByNazwa$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+    return findByNazwa(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getByEmail$Response()` instead.
+   * To access the full response (for headers, for example), `findByNazwa$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getByEmail(params: GetByEmail$Params, context?: HttpContext): Observable<UzytkownikResponse> {
-    return this.getByEmail$Response(params, context).pipe(
+  findByNazwa(params: FindByNazwa$Params, context?: HttpContext): Observable<UzytkownikResponse> {
+    return this.findByNazwa$Response(params, context).pipe(
+      map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `findByEmail()` */
+  static readonly FindByEmailPath = '/uzytkownicy/{email}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `findByEmail()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findByEmail$Response(params: FindByEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+    return findByEmail(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `findByEmail$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findByEmail(params: FindByEmail$Params, context?: HttpContext): Observable<UzytkownikResponse> {
+    return this.findByEmail$Response(params, context).pipe(
       map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
     );
   }

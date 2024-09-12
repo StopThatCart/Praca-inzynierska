@@ -1,0 +1,25 @@
+.notification-dropdown-menu {
+  padding-bottom: 0;
+  min-width: 528px;
+  left: auto;
+  transform: translateX(-70%);
+  top: 100%;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .notification-dropdown-menu {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .notification-dropdown-menu {
+    min-width: 400px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

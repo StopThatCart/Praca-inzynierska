@@ -1,15 +1,67 @@
   <!-- Start: Navbar Centered Links -->
   <nav class="navbar navbar-expand-md py-3" style="background: var(--bs-secondary);">
-    <div class="container"><a class="navbar-brand d-flex align-items-center" href="index.html"><img class="d-flex justify-content-center align-items-center me-2 filter" src="ico.svg" alt="a" width="48" height="48" style="background: var(--bs-primary);border-radius: 5px;"><span style="color: #ffffff;">Wirtualny Ogród Yukka</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-3"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <img class="d-flex justify-content-center align-items-center me-2 filter" src="ico.svg" alt="a" width="48" height="48" style="background: var(--bs-primary);border-radius: 5px;">
+        <span style="color: #ffffff;">Wirtualny Ogród Yukka</span>
+      </a>
+      <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-3">
+        <span class="visually-hidden">Toggle navigation</span>
+        <span class="navbar-toggler-icon"></span>
+      </button>
         <div class="collapse navbar-collapse" id="navcol-3">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item"><a [routerLink]="'rosliny'" routerLinkActive="active" class="nav-link">Przeglądaj katalog</a></li>
                 <li class="nav-item"><a routerLinkActive="active" class="nav-link" >Mój ogród</a></li>
                 <li class="nav-item"><a [routerLink]="'posty'" routerLinkActive="active" class="nav-link" >Społeczność</a></li>
-            </ul>
-            <button *ngIf="!isLogged()" (click)="toLogin()" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</button>
-            <button *ngIf="isLogged()" (click)="logout()" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Wyloguj się</button></div>
+              </ul>
+            <ng-container *ngIf="!isLogged()">
+              <button  (click)="toLogin()" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</button>
+            </ng-container>
+
+            <ng-container *ngIf="isLogged()">
+
+
+              <div class="dropdown nav-item hstack gap-3">
+                <app-powiadomienia-dropdown></app-powiadomienia-dropdown>
+
+                <button class="btn btn-secondary dropdown-toggle d-flex align-items-center" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);"
+                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img [src]="getUzytAvatar()" class="me-2 filter" alt="ico.svg" width="30" height="30">
+                  <span>{{ getUzytkownikNazwa()}}</span>
+                </button>
+
+                <ul class="dropdown-menu bg-secondary" aria-labelledby="dropdownMenuButton1">
+                  <li><a class="dropdown-item">
+                    <span><i class="fas fa-house"></i>&nbsp;Profil</span>
+                  </a></li>
+                  <li><a class="dropdown-item">
+                    <span><i class="fa-solid fa-envelope"></i>&nbsp;Wiadomości prywatne</span>
+                  </a></li>
+                  <li><a class="dropdown-item">
+                    <span><i class="fa-solid fa-images"></i>&nbsp;Moja galeria</span>
+                  </a></li>
+                  <li><a class="dropdown-item">
+                    <span><i class="fa-solid fa-signs-post"></i>&nbsp;Moje posty</span>
+                  </a></li>
+                  <li><a class="dropdown-item">
+                    <span><i class="fa-solid fa-comment"></i>&nbsp;Moje komentarze</span>
+                  </a></li>
+                  <li><a (click)="logout()" class="dropdown-item">
+                    <span><i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;Wyloguj się</span>
+                  </a></li>
+                </ul>
+              </div>
+            </ng-container>
+
+        </div>
+
+
+
+
+
     </div>
+
 
 </nav>
 <!-- End: Navbar Centered Links -->

@@ -4,16 +4,15 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { UzytkownikService } from './services/uzytkownik.service';
 import { RozmowaPrywatnaService } from './services/rozmowa-prywatna.service';
 import { RoslinaService } from './services/roslina.service';
 import { PostService } from './services/post.service';
 import { KomentarzService } from './services/komentarz.service';
 import { UzytkownikRoslinaService } from './services/uzytkownik-roslina.service';
-import { UzytkownikService } from './services/uzytkownik.service';
 import { DzialkaService } from './services/dzialka.service';
 import { AuthenticationService } from './services/authentication.service';
 import { SoilResourceService } from './services/soil-resource.service';
-import {TimeAgoPipe} from 'time-ago-pipe';
 
 /**
  * Module that provides all services and configuration.
@@ -23,17 +22,16 @@ import {TimeAgoPipe} from 'time-ago-pipe';
   exports: [],
   declarations: [],
   providers: [
+    UzytkownikService,
     RozmowaPrywatnaService,
     RoslinaService,
     PostService,
     KomentarzService,
     UzytkownikRoslinaService,
-    UzytkownikService,
     DzialkaService,
     AuthenticationService,
     SoilResourceService,
-    ApiConfiguration,
-
+    ApiConfiguration
   ],
 })
 export class ApiModule {
@@ -49,7 +47,7 @@ export class ApiModule {
     }
   }
 
-  constructor(
+  constructor( 
     @Optional() @SkipSelf() parentModule: ApiModule,
     @Optional() http: HttpClient
   ) {

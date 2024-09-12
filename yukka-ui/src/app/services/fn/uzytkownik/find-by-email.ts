@@ -8,12 +8,12 @@ import { RequestBuilder } from '../../request-builder';
 
 import { UzytkownikResponse } from '../../models/uzytkownik-response';
 
-export interface GetByEmail$Params {
+export interface FindByEmail$Params {
   email: string;
 }
 
-export function getByEmail(http: HttpClient, rootUrl: string, params: GetByEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
-  const rb = new RequestBuilder(rootUrl, getByEmail.PATH, 'get');
+export function findByEmail(http: HttpClient, rootUrl: string, params: FindByEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+  const rb = new RequestBuilder(rootUrl, findByEmail.PATH, 'get');
   if (params) {
     rb.path('email', params.email, {});
   }
@@ -28,4 +28,4 @@ export function getByEmail(http: HttpClient, rootUrl: string, params: GetByEmail
   );
 }
 
-getByEmail.PATH = '/uzytkownicy/{email}';
+findByEmail.PATH = '/uzytkownicy/{email}';

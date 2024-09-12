@@ -61,12 +61,29 @@ public class UzytkownikService implements  UserDetailsService {
         return commonMapperService.toUzytkownikResponse(uzyt);
     }
 
-    public Uzytkownik updateUzytkownikAvatar(MultipartFile file, Authentication currentUser) {
+    @Transactional(readOnly = true)
+    public UzytkownikResponse findByNazwa(String nazwa){
+        Uzytkownik uzyt = uzytkownikRepository.findByNazwa(nazwa)
+                .orElseThrow(() -> new EntityNotFoundException("Użytkownik nie istnieje"));
+
+        return commonMapperService.toUzytkownikResponse(uzyt);
+    }
+
+    public UzytkownikResponse getLoggedInAvatar(Authentication currentUser) {
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+
+        Uzytkownik uzyt2 = uzytkownikRepository.findByEmail(uzyt.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("Użytkownik nie istnieje"));
+
+        return commonMapperService.toSimpleAvatar(uzyt2);
+    }
+
+    public UzytkownikResponse updateUzytkownikAvatar(MultipartFile file, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
 
         String leObraz = fileStoreService.saveAvatar(file, uzyt.getUzytId());
         Uzytkownik uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
-        return uzytkownik;
+        return commonMapperService.toUzytkownikResponse(uzyt);
     }
 
     public Uzytkownik updateUzytkownikAvatar(MultipartFile file, Uzytkownik currentUser) {

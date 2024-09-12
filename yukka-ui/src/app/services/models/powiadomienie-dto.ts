@@ -8,6 +8,7 @@ export interface PowiadomienieDto {
   nazwyRoslin?: Array<string>;
   odnosnik?: string;
   opis?: string;
+  przeczytane?: boolean;
   typ?: string;
   tytul?: string;
   uzytkownikNazwa?: string;
