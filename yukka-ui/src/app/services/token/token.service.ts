@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Uzytkownik } from '../models';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
+  private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.isTokenValid());
+
   private isLocalStorageAvailable(): boolean {
     return typeof localStorage !== 'undefined';
   }
@@ -13,6 +16,7 @@ export class TokenService {
   set token(token: string) {
     if (this.isLocalStorageAvailable()) {
       localStorage.setItem('token', token);
+      this.loggedIn.next(this.isTokenValid());
     }
   }
 
@@ -26,6 +30,7 @@ export class TokenService {
   clearToken() {
     if (this.isLocalStorageAvailable()) {
       localStorage.removeItem('token');
+      this.loggedIn.next(false);
     }
   }
 
@@ -34,9 +39,7 @@ export class TokenService {
     if (!token) {
       return false;
     }
-    // decode the token
     const jwtHelper = new JwtHelperService();
-    // check expiry date
     const isTokenExpired = jwtHelper.isTokenExpired(token);
     if (isTokenExpired) {
       this.clearToken();
@@ -102,7 +105,9 @@ export class TokenService {
     return '';
   }
 
-
+  get isLoggedIn() {
+    return this.loggedIn.asObservable();
+  }
 
   isAdmin(): boolean {
     return this.userRoles.includes('Admin');

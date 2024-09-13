@@ -13,12 +13,12 @@ import com.example.yukka.model.social.powiadomienie.Powiadomienie;
 public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, Long> {
 
     @Query(value = """
-        MATCH path=(powiadomienie:Powiadomienie)-[:POWIADAMIA]->(uzyt:Uzytkownik{nazwa: $nazwa})
+        MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
         WHERE id(powiadomienie) = $id
-        SET powiadomienie.przeczytane = true
-        RETURN powiadomienie
+        SET r1.przeczytane = true
+        RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
         """)
-    Optional<Powiadomienie> setPrzeczytane(@Param("nazwa") String nazwa, @Param("id") Long id);
+    Optional<Powiadomienie> setPrzeczytane(@Param("email") String email, @Param("id") Long id);
 
     @Query(value = """
         MATCH path=(powiadomienie:Powiadomienie)-[:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
@@ -32,48 +32,74 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
         """)
     Page<Powiadomienie> findPowiadomieniaOfUzytkownik(@Param("email") String email, Pageable pageable);
 
+    @Query(value = """
+        MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+        WHERE r1.przeczytane = false
+        RETURN COUNT(r1)
+        """)
+    Integer getNieprzeczytaneCountOfUzytkownik(@Param("email") String email);
+
 
     // Niestety z jakiegos powowdu przypisanie całego $powiadomienie.__properties__  
     // SETem nie działa, więc trzeba przypisywać każde pole osobno
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
         WITH uzyt,  $powiadomienie.__properties__ as pp
-        CREATE (pow:Powiadomienie{  przeczytane: false,
+        CREATE (pow:Powiadomienie{  
                                     typ:  pp.typ, odnosnik: pp.odnosnik, 
                                     tytul: pp.tytul, uzytkownikNazwa: pp.uzytkownikNazwa, 
                                     opis: pp.opis, avatar: pp.avatar, 
                                     nazwyRoslin: pp.nazwyRoslin, iloscPolubien: pp.iloscPolubien, 
                                     data: pp.data, dataUtworzenia: pp.dataUtworzenia}
-                )-[r1:POWIADAMIA]->(uzyt)
+                )-[r1:POWIADAMIA{przeczytane: false}]->(uzyt)
         RETURN pow, r1, uzyt
         """)
     Powiadomienie addPowiadomienieToUzytkownik(@Param("email") String email, @Param("powiadomienie") Powiadomienie powiadomienie);
 
     @Query("""
-        MATCH (uzyt:Uzytkownik)
-        CREATE (pow:Powiadomienie{  przeczytane: false,    
-                                    typ:  pp.typ, odnosnik: pp.odnosnik, 
-                                    tytul: pp.tytul, uzytkownikNazwa: pp.uzytkownikNazwa, 
+        WITH $powiadomienie.__properties__ as pp
+        CREATE (pow:Powiadomienie{      
+                                    typ:  pp.typ,
+                                    tytul: pp.tytul,  
                                     opis: pp.opis, avatar: pp.avatar, 
-                                    nazwyRoslin: pp.nazwyRoslin, iloscPolubien: pp.iloscPolubien, 
-                                    data: pp.data, dataUtworzenia: pp.dataUtworzenia}
-                )-[r1:POWIADAMIA]->(uzyt)
-        RETURN pow
+                                    dataUtworzenia: pp.dataUtworzenia}
+                )
+        WITH pow
+        MATCH (uzyt:Uzytkownik)
+        CREATE (pow)-[:POWIADAMIA{przeczytane: false}]->(uzyt)
+        
         """)
-    Powiadomienie addGlobalCustomPowiadomienie(@Param("powiadomienie") Powiadomienie powiadomienie);
+    void addGlobalCustomPowiadomienie(@Param("powiadomienie") Powiadomienie powiadomienie);
 
     @Query("""
-        MATCH (uzyt:Uzytkownik)
-        WHERE uzyt:Pracownik
-        CREATE (pow:Powiadomienie{  przeczytane: false,
-                                    typ:  pp.typ, odnosnik: pp.odnosnik, 
-                                    tytul: pp.tytul, uzytkownikNazwa: pp.uzytkownikNazwa, 
+        WITH $powiadomienie.__properties__ as pp
+        CREATE (pow:Powiadomienie{      
+                                    typ:  pp.typ,
+                                    tytul: pp.tytul,  
                                     opis: pp.opis, avatar: pp.avatar, 
-                                    nazwyRoslin: pp.nazwyRoslin, iloscPolubien: pp.iloscPolubien, 
-                                    data: pp.data, dataUtworzenia: pp.dataUtworzenia}
-                )-[r1:POWIADAMIA]->(uzyt)
-        RETURN pow
+                                    dataUtworzenia: pp.dataUtworzenia}
+                )
+        WITH pow
+        MATCH (uzyt:Uzytkownik:Pracownik)
+        CREATE (pow)-[:POWIADAMIA{przeczytane: false}]->(uzyt)
         """)
-    Powiadomienie addCustomPowiadomienieToPracownicy(@Param("powiadomienie") Powiadomienie powiadomienie);
+    void addCustomPowiadomienieToPracownicy(@Param("powiadomienie") Powiadomienie powiadomienie);
+
+
+
+
+    @Query(value = """
+        MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+        WHERE id(powiadomienie) = $id
+        DELETE r1
+
+        WITH powiadomienie
+        OPTIONAL MATCH (powiadomienie)-[:POWIADAMIA]->(uzyt2:Uzytkownik)
+        WITH powiadomienie, count(uzyt2) as uzytkownicy
+        WHERE uzytkownicy = 0
+
+        DETACH DELETE powiadomienie
+        """)
+    void remove(@Param("email") String email, @Param("id") Long id);
 
 }

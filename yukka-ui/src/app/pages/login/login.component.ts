@@ -15,7 +15,7 @@ import { TokenService } from '../../services/token/token.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  authRequest: AuthRequest = {email: 'jan@email.pl', haslo: 'jan12345678'};
+  authRequest: AuthRequest = {email: 'katarzyna@email.pl', haslo: 'katarzyna12345678'};
   errorMsg: Array<string> = [];
 
   constructor(

@@ -4,14 +4,15 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
-import { UzytkownikService } from './services/uzytkownik.service';
 import { RozmowaPrywatnaService } from './services/rozmowa-prywatna.service';
 import { RoslinaService } from './services/roslina.service';
 import { PostService } from './services/post.service';
 import { KomentarzService } from './services/komentarz.service';
 import { UzytkownikRoslinaService } from './services/uzytkownik-roslina.service';
+import { PowiadomienieService } from './services/powiadomienie.service';
 import { DzialkaService } from './services/dzialka.service';
 import { AuthenticationService } from './services/authentication.service';
+import { UzytkownikService } from './services/uzytkownik.service';
 import { SoilResourceService } from './services/soil-resource.service';
 
 /**
@@ -22,14 +23,15 @@ import { SoilResourceService } from './services/soil-resource.service';
   exports: [],
   declarations: [],
   providers: [
-    UzytkownikService,
     RozmowaPrywatnaService,
     RoslinaService,
     PostService,
     KomentarzService,
     UzytkownikRoslinaService,
+    PowiadomienieService,
     DzialkaService,
     AuthenticationService,
+    UzytkownikService,
     SoilResourceService,
     ApiConfiguration
   ],

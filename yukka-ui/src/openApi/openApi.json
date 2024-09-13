@@ -30,45 +30,6 @@
     }
   ],
   "paths": {
-    "/uzytkownicy/{nazwa}/powiadomienie/{id}/przeczytane": {
-      "put": {
-        "tags": [
-          "Uzytkownik"
-        ],
-        "operationId": "setPowiadomieniePrzeczytane",
-        "parameters": [
-          {
-            "name": "nazwa",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Powiadomienie"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/rozmowy/{nadawca-uzyt-id}/reject": {
       "put": {
         "tags": [
@@ -527,66 +488,6 @@
         }
       }
     },
-    "/uzytkownicy/pracownik/powiadomienie": {
-      "post": {
-        "tags": [
-          "Uzytkownik"
-        ],
-        "operationId": "sendSpecjalnePowiadomienie",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PowiadomienieDTO"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Powiadomienie"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/uzytkownicy/admin/powiadomienie": {
-      "post": {
-        "tags": [
-          "Uzytkownik"
-        ],
-        "operationId": "sendSpecjalnePowiadomienieToPracownicy",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PowiadomienieDTO"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Powiadomienie"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/rozmowy/{odbiorca-uzyt-id}": {
       "get": {
         "tags": [
@@ -672,6 +573,66 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponseRoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/powiadomienia/pracownik": {
+      "post": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "sendSpecjalnePowiadomienie",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PowiadomienieDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PowiadomienieResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/powiadomienia/admin": {
+      "post": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "sendSpecjalnePowiadomienieToPracownicy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PowiadomienieDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PowiadomienieResponse"
                 }
               }
             }
@@ -1168,6 +1129,37 @@
         }
       }
     },
+    "/powiadomienia/{id}/przeczytane": {
+      "patch": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "setPowiadomieniePrzeczytane",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PowiadomienieResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/komentarze/{komentarz-id}": {
       "get": {
         "tags": [
@@ -1598,6 +1590,69 @@
         }
       }
     },
+    "/powiadomienia": {
+      "get": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "getPowiadomienia",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponsePowiadomienieResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/powiadomienia/nieprzeczytane/count": {
+      "get": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "getNieprzeczytaneCountOfUzytkownik",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posty/{post-id}": {
       "get": {
         "tags": [
@@ -1986,6 +2041,37 @@
         }
       }
     },
+    "/powiadomienia/{id}": {
+      "delete": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "remove_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/komentarze/{komentarz-id}/posty/{post-id}": {
       "delete": {
         "tags": [
@@ -2187,58 +2273,6 @@
           }
         }
       },
-      "Powiadomienie": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "typ": {
-            "type": "string"
-          },
-          "przeczytane": {
-            "type": "boolean"
-          },
-          "odnosnik": {
-            "type": "string"
-          },
-          "tytul": {
-            "type": "string"
-          },
-          "uzytkownikNazwa": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "avatar": {
-            "type": "string"
-          },
-          "nazwyRoslin": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "iloscPolubien": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "data": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "uzytkownik": {
-            "$ref": "#/components/schemas/Uzytkownik"
-          }
-        }
-      },
       "RozmowaPrywatna": {
         "type": "object",
         "properties": {
@@ -2419,13 +2453,13 @@
           "name": {
             "type": "string"
           },
-          "normalUzytkownik": {
+          "pracownik": {
             "type": "boolean"
           },
           "admin": {
             "type": "boolean"
           },
-          "pracownik": {
+          "normalUzytkownik": {
             "type": "boolean"
           },
           "username": {
@@ -2443,13 +2477,13 @@
           "enabled": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "accountNonLocked": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
             "type": "boolean"
           },
-          "accountNonLocked": {
+          "accountNonExpired": {
             "type": "boolean"
           }
         }
@@ -2664,51 +2698,6 @@
           }
         }
       },
-      "PowiadomienieDTO": {
-        "type": "object",
-        "properties": {
-          "typ": {
-            "type": "string"
-          },
-          "przeczytane": {
-            "type": "boolean"
-          },
-          "tytul": {
-            "type": "string"
-          },
-          "odnosnik": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "nazwyRoslin": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "avatar": {
-            "type": "string"
-          },
-          "uzytkownikNazwa": {
-            "type": "string"
-          },
-          "iloscPolubien": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "data": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
       "PageResponseRoslinaResponse": {
         "type": "object",
         "properties": {
@@ -2908,6 +2897,105 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "PowiadomienieDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "typ": {
+            "type": "string"
+          },
+          "przeczytane": {
+            "type": "boolean"
+          },
+          "tytul": {
+            "type": "string"
+          },
+          "odnosnik": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
+          "nazwyRoslin": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "uzytkownikNazwa": {
+            "type": "string"
+          },
+          "iloscPolubien": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataUtworzenia": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PowiadomienieResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "typ": {
+            "type": "string"
+          },
+          "przeczytane": {
+            "type": "boolean"
+          },
+          "tytul": {
+            "type": "string"
+          },
+          "odnosnik": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
+          "nazwyRoslin": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "avatar": {
+            "type": "string",
+            "format": "byte"
+          },
+          "uzytkownikNazwa": {
+            "type": "string"
+          },
+          "iloscPolubien": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataUtworzenia": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -3164,11 +3252,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "ystary": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "ystary": {
             "type": "integer",
             "format": "int32"
           },
@@ -3849,6 +3937,39 @@
             "items": {
               "$ref": "#/components/schemas/Wlasciwosc"
             }
+          }
+        }
+      },
+      "PageResponsePowiadomienieResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PowiadomienieResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           }
         }
       },

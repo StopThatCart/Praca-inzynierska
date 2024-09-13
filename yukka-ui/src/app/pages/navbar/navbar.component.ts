@@ -17,19 +17,27 @@ import { UzytkownikResponse } from '../../services/models';
 })
 export class NavbarComponent implements OnInit {
   private _avatar: string | undefined;
+  loggedIn: boolean = false;
 
   constructor(private router: Router,
     private tokenService: TokenService,
     private uzytService: UzytkownikService) {
-
+      this.loggedIn = this.tokenService.isTokenValid();
   }
 
   ngOnInit() {
     this.loadAvatar();
+    this.tokenService.isLoggedIn.subscribe((status: boolean) => {
+      this.loggedIn = status;
+    });
+
+    if (!this.tokenService.isTokenValid()) {
+      this.loggedIn = false;
+    }
   }
 
   private loadAvatar() {
-    console.log('loadAvatar');
+   //  console.log('loadAvatar');
     if (this.tokenService.isTokenValid()) {
       this.uzytService.getAvatar().subscribe({
         next: (uzyt) => {
@@ -48,7 +56,7 @@ export class NavbarComponent implements OnInit {
   }
 
   getUzytAvatar(): string | undefined {
-    console.log('getUzytAvatar');
+    //console.log('getUzytAvatar');
     if(this._avatar) {
       return 'data:image/jpeg;base64,' + this._avatar;
     } else {
@@ -70,7 +78,7 @@ export class NavbarComponent implements OnInit {
   }
 
   isLogged() {
-    return this.tokenService.isTokenValid();
+    return this.loggedIn;
   }
   logout() {
     this.tokenService.clearToken();

@@ -4,6 +4,7 @@ export interface PowiadomienieDto {
   avatar?: string;
   data?: string;
   dataUtworzenia?: string;
+  id?: number;
   iloscPolubien?: number;
   nazwyRoslin?: Array<string>;
   odnosnik?: string;

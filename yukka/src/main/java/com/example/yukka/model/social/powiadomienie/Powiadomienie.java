@@ -10,8 +10,6 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import com.example.yukka.model.uzytkownik.Uzytkownik;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,10 +28,6 @@ public class Powiadomienie {
 
     @Property(name = "typ")
     private String typ;
-
-    @Property(name = "przeczytane")
-    @Builder.Default
-    private boolean przeczytane = false;
 
     @Property(name = "odnosnik")
     private String odnosnik;
@@ -65,14 +59,14 @@ public class Powiadomienie {
     private LocalDateTime dataUtworzenia = LocalDateTime.now();
 
     @Relationship(type = "POWIADAMIA", direction = Relationship.Direction.OUTGOING)
-    private Uzytkownik uzytkownik;
+    private Powiadamia powiadamia;
 
     @Override
     public String toString() {
         return "Powiadomienie{" +
                 "id=" + id +
                 ", typ='" + typ + '\'' +
-                ", przeczytane='" + przeczytane + '\'' +
+                ", przeczytane='" + (powiadamia != null ? powiadamia.getPrzeczytane() : "null") + '\'' +
                 ", odnosnik='" + odnosnik + '\'' +
                 ", tytul='" + tytul + '\'' +
                 ", opis='" + opis + '\'' +
@@ -80,7 +74,7 @@ public class Powiadomienie {
                 ", nazwyRoslin=" + nazwyRoslin +
                 ", iloscPolubien=" + iloscPolubien +
                 ", dataUtworzenia=" + dataUtworzenia +
-                ", uzytkownik=" + uzytkownik +
+                ", powiadamia=" + (powiadamia != null && powiadamia.getOceniany() != null ? powiadamia.getOceniany().getNazwa() : "null") +
                 '}';
     }
 }

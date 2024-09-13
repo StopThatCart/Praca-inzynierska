@@ -1,7 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Uzytkownik } from '../models/uzytkownik';
-export interface Powiadomienie {
+export interface PowiadomienieResponse {
   avatar?: string;
   data?: string;
   dataUtworzenia?: string;
@@ -13,6 +12,5 @@ export interface Powiadomienie {
   przeczytane?: boolean;
   typ?: string;
   tytul?: string;
-  uzytkownik?: Uzytkownik;
   uzytkownikNazwa?: string;
 }

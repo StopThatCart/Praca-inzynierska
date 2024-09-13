@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.service;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,8 +21,10 @@ import com.example.yukka.YukkaApplication;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
+import com.example.yukka.model.social.powiadomienie.Powiadamia;
 import com.example.yukka.model.social.powiadomienie.Powiadomienie;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
+import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
 import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.PowiadomienieRepository;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
@@ -47,7 +50,16 @@ public class PowiadomienieService {
     private String powiadomienieAvatar;
 
     @Transactional(readOnly = true)
-    public PageResponse<PowiadomienieDTO> findPowiadomieniaOfUzytkownik(int page, int size, Authentication connectedUser) {
+    public Integer getNieprzeczytaneCountOfUzytkownik(Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+
+        Integer powiadomienia = powiadomienieRepository.getNieprzeczytaneCountOfUzytkownik(uzyt.getEmail());
+
+        return powiadomienia;
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<PowiadomienieResponse> findPowiadomieniaOfUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("powiadomienie.dataUtworzenia").descending());
@@ -69,9 +81,9 @@ public class PowiadomienieService {
         if(uzytkownicy.isEmpty()) return;
         
 
-        //Miesiac aktualnyMiesiac = Miesiac.values()[LocalDate.now().getMonthValue() - 1];
-       // System.out.println("Aktualny miesiąc: " + aktualnyMiesiac.name());
-        Miesiac aktualnyMiesiac = Miesiac.MAJ;  // Test
+        Miesiac aktualnyMiesiac = Miesiac.values()[LocalDate.now().getMonthValue() - 1];
+        System.out.println("Aktualny miesiąc: " + aktualnyMiesiac.name());
+       // Miesiac aktualnyMiesiac = Miesiac.MAJ;  // Test
 
         for (Uzytkownik uzytkownik : uzytkownicy) {
             Set<String> nazwyRoslinOwocowanie = new HashSet<>();
@@ -88,31 +100,16 @@ public class PowiadomienieService {
         }
     }
 
-    private void przetworzOkresy(Set<Wlasciwosc> okresy, Miesiac aktualnyMiesiac, Set<String> nazwyRoslin, String nazwaRosliny) {
-        okresy.stream()
-              .filter(okres -> okres.getNazwa().equalsIgnoreCase(aktualnyMiesiac.name()))
-              .forEach(okres -> nazwyRoslin.add(nazwaRosliny));
-    }
 
-    private void utworzOkresPowiadomienie(Set<String> nazwyRoslin, TypPowiadomienia typ, Uzytkownik uzytkownik) {
-        if (!nazwyRoslin.isEmpty()) {
-            PowiadomienieDTO powiadomienieRequest = PowiadomienieDTO.builder()
-                    .typ(typ.toString())
-                    .odnosnik(uzytkownik.getUzytId())
-                    .nazwyRoslin(nazwyRoslin)
-                    .build();
-            addPowiadomienie(powiadomienieRequest, uzytkownik);
-        }
-    }
-
-    public Powiadomienie addSpecjalnePowiadomienie(PowiadomienieDTO powiadomienieRequest) {
+    public void addSpecjalnePowiadomienie(PowiadomienieDTO powiadomienieRequest) {
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest);
-        return powiadomienieRepository.addGlobalCustomPowiadomienie(powiadomienie);
+        powiadomienieRepository.addGlobalCustomPowiadomienie(powiadomienie);
+
     }
 
-    public Powiadomienie addSpecjalnePowiadomienieToPracownicy(PowiadomienieDTO powiadomienieRequest) {
+    public void addSpecjalnePowiadomienieToPracownicy(PowiadomienieDTO powiadomienieRequest) {
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest);
-        return powiadomienieRepository.addCustomPowiadomienieToPracownicy(powiadomienie);
+        powiadomienieRepository.addCustomPowiadomienieToPracownicy(powiadomienie);
     }
 
     public Powiadomienie addPowiadomienie(PowiadomienieDTO request, Uzytkownik uzytkownik) {
@@ -121,7 +118,62 @@ public class PowiadomienieService {
         return powiadomienieRepository.addPowiadomienieToUzytkownik(uzytkownik.getEmail(), powiadomienie);
     }
 
-    public String generatePowiadomienieOpis(TypPowiadomienia typ, PowiadomienieDTO request) {
+    public PowiadomienieResponse setPrzeczytane(Long id, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        Powiadomienie powiadomienie = powiadomienieRepository.setPrzeczytane(uzyt.getEmail(), id).orElse(null);;
+
+        return powiadomienieMapper.toPowiadomienieResponse(powiadomienie);
+    }
+
+    public void remove(Long id, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        powiadomienieRepository.remove(uzyt.getEmail(), id);
+    }
+
+    public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieDTO request, Uzytkownik uzytkownik) {
+        String opis = generatePowiadomienieOpis(typ, request);
+
+        Powiadamia powiadamia = Powiadamia.builder()
+                .przeczytane(false)
+                .oceniany(uzytkownik)
+                .build();
+
+        return Powiadomienie.builder()
+                .typ(typ.name())
+                .odnosnik(request.getOdnosnik())
+                .tytul(request.getTytul())
+                .opis(opis)
+                .avatar(request.getAvatar())
+                .nazwyRoslin(request.getNazwyRoslin())
+                .powiadamia(powiadamia)
+                .uzytkownikNazwa(request.getUzytkownikNazwa())
+                .data(request.getData())
+                .build();
+    }
+
+    public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieDTO request) {
+        String opis = generatePowiadomienieOpis(typ, request);
+
+        Powiadamia powiadamia = Powiadamia.builder()
+                .przeczytane(false)
+                .oceniany(null)
+                .build();
+
+        return Powiadomienie.builder()
+                .typ(typ.name())
+                .powiadamia(powiadamia)
+                .odnosnik(request.getOdnosnik())
+                .tytul(request.getTytul())
+                .opis(opis)
+                .avatar(request.getAvatar())
+                .nazwyRoslin(request.getNazwyRoslin())
+                .uzytkownikNazwa(request.getUzytkownikNazwa())
+                .data(request.getData())
+                .build();
+    }
+
+
+    private String generatePowiadomienieOpis(TypPowiadomienia typ, PowiadomienieDTO request) {
         String template = typ.getTemplate();
         template = template.replace("{tytul}", request.getTytul() != null ? request.getTytul() : "");
         template = template.replace("{odnosnik}", request.getOdnosnik() != null ? request.getOdnosnik() : "");
@@ -141,40 +193,24 @@ public class PowiadomienieService {
         return template;
     }
 
-    public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieDTO request, Uzytkownik uzytkownik) {
-        String opis = generatePowiadomienieOpis(typ, request);
-        return Powiadomienie.builder()
-        
-                .typ(typ.name())
-                .odnosnik(request.getOdnosnik())
-                .tytul(request.getTytul())
-                .opis(opis)
-                .avatar(request.getAvatar())
-                .nazwyRoslin(request.getNazwyRoslin())
-                .uzytkownik(uzytkownik)
-                .uzytkownikNazwa(request.getUzytkownikNazwa())
-                .data(request.getData())
-                .build();
+
+    private void przetworzOkresy(Set<Wlasciwosc> okresy, Miesiac aktualnyMiesiac, Set<String> nazwyRoslin, String nazwaRosliny) {
+        okresy.stream()
+              .filter(okres -> okres.getNazwa().equalsIgnoreCase(aktualnyMiesiac.name()))
+              .forEach(okres -> nazwyRoslin.add(nazwaRosliny));
     }
 
-    public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieDTO request) {
-        String opis = generatePowiadomienieOpis(typ, request);
-        return Powiadomienie.builder()
-                .typ(typ.name())
-                .odnosnik(request.getOdnosnik())
-                .tytul(request.getTytul())
-                .opis(opis)
-                .avatar(request.getAvatar())
-                .nazwyRoslin(request.getNazwyRoslin())
-                .uzytkownikNazwa(request.getUzytkownikNazwa())
-                .data(request.getData())
-                .build();
+    private void utworzOkresPowiadomienie(Set<String> nazwyRoslin, TypPowiadomienia typ, Uzytkownik uzytkownik) {
+        if (!nazwyRoslin.isEmpty()) {
+            PowiadomienieDTO powiadomienieRequest = PowiadomienieDTO.builder()
+                    .typ(typ.toString())
+                    .odnosnik(uzytkownik.getUzytId())
+                    .nazwyRoslin(nazwyRoslin)
+                    .build();
+            addPowiadomienie(powiadomienieRequest, uzytkownik);
+        }
     }
 
-
-    public Powiadomienie setPrzeczytane(String nazwa, Long id) {
-        return powiadomienieRepository.setPrzeczytane(nazwa, id).orElse(null);
-    }
 
     /* 
     public static void main(String[] args) {

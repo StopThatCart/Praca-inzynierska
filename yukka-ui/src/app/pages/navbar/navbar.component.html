@@ -15,13 +15,11 @@
                 <li class="nav-item"><a routerLinkActive="active" class="nav-link" >Mój ogród</a></li>
                 <li class="nav-item"><a [routerLink]="'posty'" routerLinkActive="active" class="nav-link" >Społeczność</a></li>
               </ul>
-            <ng-container *ngIf="!isLogged()">
+            <ng-template #loggedOut>
               <button  (click)="toLogin()" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</button>
-            </ng-container>
+            </ng-template>
 
-            <ng-container *ngIf="isLogged()">
-
-
+            <ng-container *ngIf="isLogged(); else loggedOut">
               <div class="dropdown nav-item hstack gap-3">
                 <app-powiadomienia-dropdown></app-powiadomienia-dropdown>
 

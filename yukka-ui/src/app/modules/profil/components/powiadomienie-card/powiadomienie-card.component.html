@@ -1,17 +1,30 @@
-<a class="link-underline link-underline-opacity-0 link-light" >
+<a class="link-underline link-underline-opacity-0 link-light"
+(mouseenter)="onHover()"
+(click)="goToTarget()"
+>
   <div class="d-flex align-items-lg-center card-header my-2">
-    <div class="rounded-circle bg-danger flex-shrink-0 ms-1 me-2" style="width: 10px; height: 10px;"></div>
-    <img class="rounded-circle bg-white flex-shrink-0 me-3 fit-cover" width="50" height="50" src="">
+
+    <div [ngClass]="{'bg-danger': !pow.przeczytane, 'bg-transparent': pow.przeczytane}"
+         class="rounded-circle flex-shrink-0 ms-1 me-2"
+         style="width: 10px; height: 10px;">
+    </div>
+    <img [src]="getAvatar()" alt="" class="rounded-circle bg-white bg-opacity-75 flex-shrink-0 me-3 fit-cover" width="75" height="75">
       <div class="w-100">
-          <div class="hstack gap-1 justify-content-between w-100">
+          <div class="hstack gap-1 justify-content-between w-100" style="min-height: 70px;">
               <div>
                   <p class="fw-normal mb-0" style="overflow: hidden;max-height: 6em;text-overflow: ellipsis;">
-                    <span class="fw-bold">Adam Gessler</span>
-                    &nbsp;odpowiedział na twój komentarz dasdasds adasd asd asd asda sdasdasdas asdasdasd asdasd asdasd pod postem:&nbsp;
-                    <span class="fw-bold">Jakiś post</span>
+                   <!-- <span class="fw-bold">Adam Gessler</span> -->
+                    &nbsp; {{ pow.opis }} &nbsp;
+                   <!-- <span class="fw-bold">Jakiś post</span> -->
                   </p>
               </div>
 
+              <div class="dropstart">
+                <button (click)="remove($event)" class="btn" type="button">
+                  &nbsp;<i class="fa-solid fa-x"></i>
+                </button>
+              </div>
+            <!--
               <div class="dropstart">
                 <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                   &nbsp;<i class="fas fa-ellipsis-v fs-4"></i>
@@ -21,7 +34,7 @@
                   <li><button class="dropdown-item" type="button">Usuń powiadomienie</button></li>
                 </ul>
               </div>
-
+            -->
               <!--
                <div class="dropstart justify-content-center align-items-center d-flex">
                 <button class="btn justify-content-center align-items-center d-flex"

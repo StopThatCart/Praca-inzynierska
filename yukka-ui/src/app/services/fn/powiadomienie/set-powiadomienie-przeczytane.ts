@@ -6,17 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Powiadomienie } from '../../models/powiadomienie';
+import { PowiadomienieResponse } from '../../models/powiadomienie-response';
 
 export interface SetPowiadomieniePrzeczytane$Params {
-  nazwa: string;
   id: number;
 }
 
-export function setPowiadomieniePrzeczytane(http: HttpClient, rootUrl: string, params: SetPowiadomieniePrzeczytane$Params, context?: HttpContext): Observable<StrictHttpResponse<Powiadomienie>> {
-  const rb = new RequestBuilder(rootUrl, setPowiadomieniePrzeczytane.PATH, 'put');
+export function setPowiadomieniePrzeczytane(http: HttpClient, rootUrl: string, params: SetPowiadomieniePrzeczytane$Params, context?: HttpContext): Observable<StrictHttpResponse<PowiadomienieResponse>> {
+  const rb = new RequestBuilder(rootUrl, setPowiadomieniePrzeczytane.PATH, 'patch');
   if (params) {
-    rb.path('nazwa', params.nazwa, {});
     rb.path('id', params.id, {});
   }
 
@@ -25,9 +23,9 @@ export function setPowiadomieniePrzeczytane(http: HttpClient, rootUrl: string, p
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Powiadomienie>;
+      return r as StrictHttpResponse<PowiadomienieResponse>;
     })
   );
 }
 
-setPowiadomieniePrzeczytane.PATH = '/uzytkownicy/{nazwa}/powiadomienie/{id}/przeczytane';
+setPowiadomieniePrzeczytane.PATH = '/powiadomienia/{id}/przeczytane';

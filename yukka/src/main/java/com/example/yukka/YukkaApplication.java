@@ -37,6 +37,7 @@ import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
+import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
@@ -458,10 +459,20 @@ public class YukkaApplication {
 		//OcenaRequest ocenaDoWiadomosciPrywatnej = OcenaRequest.builder().ocenialnyId(k3.getKomentarzId()).lubi(false).build();
 		//komentarzService.addOcenaToKomentarzTest(ocenaDoWiadomosciPrywatnej, katarzyna);
 
-		LocalDateTime what = LocalDateTime.now();
+		PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
+		.tytul("""
+                       Przyszed\u0142em og\u0142osi\u0107: Shadow the Hedgehog to skurwysyn, nasika\u0142 na moj\u0105 jeban\u0105 \u017con\u0119. 
+					   Zgadza si\u0119, wyj\u0105\u0142 swojego je\u017co-jebanego kutasa i nasika\u0142 na moj\u0105 jeban\u0105 \u017con\u0119, i powiedzia\u0142, \u017ce jego kutas jest \u201eTAKI DU\u017bY\u201d, a ja powiedzia\u0142em \u201eto obrzydliwe\u201d, wi\u0119c robi\u0119 wpis na moim Twitter.com: Shadow the Hedgehog, masz ma\u0142ego kutasa. 
+					   Jest wielko\u015bci tego orzecha w\u0142oskiego, tyle \u017ce DU\u017bO mniejszy. I zgadnij co? Oto jak wygl\u0105da m\u00f3j kutas.
+                       [Zgadza si\u0119, skarbie. Wszystkie punkty, \u017cadnych pi\u00f3rek, \u017cadnych poduszek - sp\u00f3jrz na to, wygl\u0105da jak dwie kulki i bong. 
+					   On zer\u017cn\u0105\u0142 moj\u0105 \u017con\u0119, wi\u0119c zgadnij co, ja zer\u017cn\u0119 Ziemi\u0119. Zgadza si\u0119, oto co dostajesz: M\u00d3J SUPER LASEROWY SIKACZ!!! 
+					   Tylko, \u017ce ja nie b\u0119d\u0119 sika\u0142 na Ziemi\u0119, ja p\u00f3jd\u0119 wy\u017cej; b\u0119d\u0119 sika\u0142 na Ksi\u0119\u017cyc! 
+					   Jak ci si\u0119 to podoba, Obama?! NASIKA\u0141EM NA KSI\u0118\u017bYC, IDIOTO!
+                       Masz dwadzie\u015bcia trzy godziny, zanim K R O P E L K I szczochów uderz\u0105 w pieprzon\u0105 Ziemi\u0119, a teraz zejd\u017a mi, kurwa, z oczu, zanim ja te\u017c na ciebie nasikam!
 
-		//System.out.println("Czas: " + timeAgo(what));
-		//testPrettyTime();
+                       """).build();
+
+		powiadomienieService.addSpecjalnePowiadomienie(pow1);
 
 		// Testowanie usuwanka
 		//System.out.println("Usuwanie komentarzy");
