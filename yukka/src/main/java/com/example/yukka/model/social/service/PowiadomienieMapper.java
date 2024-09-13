@@ -1,8 +1,13 @@
 package com.example.yukka.model.social.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
+import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +46,7 @@ public class PowiadomienieMapper {
             .uzytkownikNazwa(powiadomienie.getUzytkownikNazwa())
             .iloscPolubien(powiadomienie.getIloscPolubien())
             .data(powiadomienie.getData())
-            .dataUtworzenia(powiadomienie.getDataUtworzenia())
+            .dataUtworzenia(timeAgo(powiadomienie.getDataUtworzenia()))
             .build();
     }
 
@@ -82,4 +87,9 @@ public class PowiadomienieMapper {
         );
     }
 
+
+    public static String timeAgo(LocalDateTime dateTime) {
+        PrettyTime p = new PrettyTime(Locale.forLanguageTag("pl"));
+        return p.format(Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));
+    }
 }

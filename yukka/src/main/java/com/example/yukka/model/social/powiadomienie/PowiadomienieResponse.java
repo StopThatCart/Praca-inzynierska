@@ -1,7 +1,11 @@
     package com.example.yukka.model.social.powiadomienie;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
+
+import org.ocpsoft.prettytime.PrettyTime;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +29,6 @@ public class PowiadomienieResponse {
     private int iloscPolubien;
     private LocalDateTime data;
     @Builder.Default
-    private LocalDateTime dataUtworzenia = LocalDateTime.now();
+    private String dataUtworzenia = new PrettyTime(Locale.forLanguageTag("pl")).format(new Date());
 
 }

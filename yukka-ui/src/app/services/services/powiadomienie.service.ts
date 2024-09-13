@@ -39,7 +39,8 @@ export class PowiadomienieService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  sendSpecjalnePowiadomienie$Response(params: SendSpecjalnePowiadomienie$Params, context?: HttpContext): Observable<StrictHttpResponse<PowiadomienieResponse>> {
+  sendSpecjalnePowiadomienie$Response(params: SendSpecjalnePowiadomienie$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
     return sendSpecjalnePowiadomienie(this.http, this.rootUrl, params, context);
   }
 
@@ -49,9 +50,12 @@ export class PowiadomienieService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  sendSpecjalnePowiadomienie(params: SendSpecjalnePowiadomienie$Params, context?: HttpContext): Observable<PowiadomienieResponse> {
+  sendSpecjalnePowiadomienie(params: SendSpecjalnePowiadomienie$Params, context?: HttpContext): Observable<{
+}> {
     return this.sendSpecjalnePowiadomienie$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PowiadomienieResponse>): PowiadomienieResponse => r.body)
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
     );
   }
 
@@ -64,7 +68,8 @@ export class PowiadomienieService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  sendSpecjalnePowiadomienieToPracownicy$Response(params: SendSpecjalnePowiadomienieToPracownicy$Params, context?: HttpContext): Observable<StrictHttpResponse<PowiadomienieResponse>> {
+  sendSpecjalnePowiadomienieToPracownicy$Response(params: SendSpecjalnePowiadomienieToPracownicy$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
     return sendSpecjalnePowiadomienieToPracownicy(this.http, this.rootUrl, params, context);
   }
 
@@ -74,9 +79,12 @@ export class PowiadomienieService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  sendSpecjalnePowiadomienieToPracownicy(params: SendSpecjalnePowiadomienieToPracownicy$Params, context?: HttpContext): Observable<PowiadomienieResponse> {
+  sendSpecjalnePowiadomienieToPracownicy(params: SendSpecjalnePowiadomienieToPracownicy$Params, context?: HttpContext): Observable<{
+}> {
     return this.sendSpecjalnePowiadomienieToPracownicy$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PowiadomienieResponse>): PowiadomienieResponse => r.body)
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
     );
   }
 
