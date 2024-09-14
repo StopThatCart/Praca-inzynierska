@@ -3,6 +3,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { IndeksusComponent } from './pages/indeksus/indeksus.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { Post } from './services/models/post';
+import { ProfilModule } from './modules/profil/profil.module';
 
 export const routes: Routes = [
   { path: '', component: IndeksusComponent },
@@ -23,5 +24,10 @@ export const routes: Routes = [
   {
     path: 'posty',
     loadChildren: () => import('./modules/post/post.module').then(m => m.PostModule)
-  }
+  },
+  {
+    path: 'profil',
+    loadChildren: () => import('./modules/profil/profil.module').then(m => m.ProfilModule)
+  },
+  { path: '**', redirectTo: '' }
 ];

@@ -6,6 +6,7 @@ import { PowiadomienieService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { PowiadomienieResponse } from '../../../../services/models';
+import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powiadomienia-sync.service';
 
 @Component({
   selector: 'app-powiadomienia-dropdown',
@@ -26,9 +27,9 @@ export class PowiadomieniaDropdownComponent implements OnInit {
   isDropdownOpen = false;
 
   toggleLoading: () => void;
-
   constructor(
     private powService: PowiadomienieService,
+    private powiadomieniaSyncService: PowiadomieniaSyncService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -37,6 +38,20 @@ export class PowiadomieniaDropdownComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateUnreadCount();
+    this.powiadomieniaSyncService.unreadCountUpdated$.subscribe(() => {
+      this.updateUnreadCount();
+    });
+
+    this.powiadomieniaSyncService.powiadomieniePrzeczytane$.subscribe((pow) => {
+      this.updatePowiadomienie(pow);
+    });
+
+    this.powiadomieniaSyncService.powiadomienieUsuniete$.subscribe((pow) => {
+      if (this.powResponse.content) {
+        this.powResponse.content = this.powResponse.content.filter((p: any) => p.id !== pow.id);
+      }
+    });
+
    // this.findAllPowiadomienia();
    // console.log(this.powResponse);
   }
@@ -106,6 +121,7 @@ export class PowiadomieniaDropdownComponent implements OnInit {
   }
 
   updateUnreadCount() {
+    console.log('updateUnreadCount: DROPDOWN  - start');
     this.powService.getNieprzeczytaneCountOfUzytkownik().subscribe({
       next: (count) => {
         this.unreadCount = count;
@@ -116,9 +132,24 @@ export class PowiadomieniaDropdownComponent implements OnInit {
     });
   }
 
+  updatePowiadomienie(pow: PowiadomienieResponse) {
+    if (this.powResponse.content) {
+      const index = this.powResponse.content.findIndex(p => p.id === pow.id);
+      if (index !== -1) {
+        this.powResponse.content[index] = pow;
+      }
+    }
+  }
+
   usunPowiadomienie(pow: PowiadomienieResponse) {
     if (this.powResponse.content) {
       this.powResponse.content = this.powResponse.content.filter(p => p.id !== pow.id);
     }
+  }
+
+
+  goToPowiadomieniaPage() {
+    console.log('goToPowiadomieniaPage - start');
+    this.router.navigate(['/profil/powiadomienia']);
   }
 }

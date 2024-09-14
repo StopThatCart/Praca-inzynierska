@@ -1,10 +1,16 @@
 <section class="mx-1">
-  <div class="container p-2">
+  <div class="container p-2" style="background: var(--bs-secondary);border-radius: 5px;max-width: 800px;">
     <div class="row gx-5 gy-3 d-flex justify-content-center align-items-center py-3">
-      <div class="col-auto d-flex flex-column avatar-info">
-        <img class="rounded mb-2 img-thumbnail mr-3" width="250" src="...">
-        <a class="btn btn-primary btn-custom" role="button" id="btn-edytuj-profil" href="edycja/edycja-profil.html">Edytuj profil</a>
-        <a class="btn btn-primary btn-custom" role="button" id="btn-wyslij-wiadomosc" href="#">Wyślij wiadomość</a>
+      <div class="gap-1 col-auto d-flex flex-column avatar-info">
+        <img [src]="getAvatar()" class="rounded-circle mb-2 border border-3 border-success-subtle mr-3" width="250" alt="">
+        <ng-container *ngIf="isCurrentUserBoi" else wyslijWiadomosc>
+          <a class="btn btn-primary btn-custom" role="button">Edytuj profil</a>
+        </ng-container>
+
+        <ng-template #wyslijWiadomosc>
+          <a class="btn btn-primary btn-custom" role="button">Wyślij wiadomość</a>
+        </ng-template>
+
     </div>
       <div class="col-auto col-md-7">
           <h1 id="username-heading">{{ uzyt.nazwa }}</h1>
@@ -57,7 +63,7 @@
               <i class="fas fa-mailbox"></i>
           </div>
           <div class="px-3">
-              <h2 class="fw-bold mb-0">67+</h2>
+              <h2 class="fw-bold mb-0">{{ postyCount }}</h2>
               <p class="mb-0">Postów</p>
           </div>
       </div>
@@ -66,7 +72,7 @@
               <i class="fas fa-thumbs-up"></i>
           </div>
           <div class="px-3">
-              <h2 class="fw-bold mb-0">{{ getOverallOceny() }}</h2>
+              <h2 class="fw-bold mb-0">{{ oceny }}</h2>
               <p class="mb-0">Łącznych polubień</p>
           </div>
       </div>

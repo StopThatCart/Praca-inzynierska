@@ -10,11 +10,12 @@ import { WlasciwoscDropdownComponent } from "../../components/wlasciwosc-dropdow
 import { FormsModule } from '@angular/forms';
 import { SpinnerComponent } from "../../../../services/LoaderSpinner/spinner/spinner.component";
 import { Convert } from '../../../../services/converts/wlasciwosc-with-relations-convert';
+import { PaginationComponent } from "../../../../components/pagination/pagination.component";
 
 @Component({
   selector: 'app-roslina-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, SpinnerComponent],
+  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, SpinnerComponent, PaginationComponent],
   templateUrl: './roslina-list.component.html',
   styleUrl: './roslina-list.component.css'
 })
@@ -56,11 +57,7 @@ export class RoslinaListComponent implements OnInit{
   // Na backendzie jest size 10, więc tutaj tylko testuję
   page = 1;
   size = 12;
-  pages: number[] = [];
   roslinaCount: number = 0;
-
-
-  level: 'success' |'error' = 'success';
 
   @ViewChild(WlasciwoscTagComponent) wlasciwoscTagComponent!: WlasciwoscTagComponent;
 
@@ -127,16 +124,6 @@ export class RoslinaListComponent implements OnInit{
         next: (rosliny) => {
           this.roslinaResponse = rosliny;
           this.roslinaCount = rosliny.totalElements as number;
-          let totalPages = rosliny.totalPages as number;
-        //  console.log('Total number:', rosliny.number);
-
-          if(this.page - 1 > totalPages) {
-            this.page = totalPages;
-            this.goToFirstPage();
-            console.log('Page:', this.page);
-          }
-
-          this.updatePages();
         },
         error: (error) => {
           console.error('Error fetching rosliny:', error);
@@ -159,7 +146,7 @@ export class RoslinaListComponent implements OnInit{
   }
 
   onSearch() {
-    console.log('Search:', this.request);
+   // console.log('Search:', this.request);
     this.goToFirstPage();
    // this.findAllRosliny();
   }
@@ -186,23 +173,6 @@ export class RoslinaListComponent implements OnInit{
   }
 
   // Paginacja
-
-  updatePages() {
-    const totalPages = this.roslinaResponse.totalPages as number;
-    let startPage = Math.max(1, this.page - 2);
-    let endPage = Math.min(totalPages, this.page + 2);
-
-    if (totalPages <= 5) {
-      startPage = 1;
-      endPage = totalPages;
-    } else if (this.page <= 3) {
-      endPage = Math.min(totalPages, 5);
-    } else if (this.page >= totalPages - 2) {
-      startPage = Math.max(1, totalPages - 4);
-    }
-
-    this.pages = Array(endPage - startPage + 1).fill(0).map((_, i) => startPage + i);
-  }
 
   goToPage(page: number) {
     const wlasciwosciJson = Convert.wlasciwoscWithRelationsArrayToJson(this.request.wlasciwosci);

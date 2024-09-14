@@ -25,7 +25,7 @@ export class NavbarComponent implements OnInit {
       this.loggedIn = this.tokenService.isTokenValid();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadAvatar();
     this.tokenService.isLoggedIn.subscribe((status: boolean) => {
       this.loggedIn = status;
@@ -83,6 +83,24 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.tokenService.clearToken();
     this.router.navigate(['login']);
+  }
+
+
+  // Routing
+  goToProfil() {
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      this.router.navigate([`/profil/${nazwa}`]);
+    }
+  }
+
+  goToPowiadomieniaPage() {
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      console.log('goToPowiadomieniaPage - start');
+      this.router.navigate([`/profil/powiadomienia`]);
+    }
+
   }
 
 

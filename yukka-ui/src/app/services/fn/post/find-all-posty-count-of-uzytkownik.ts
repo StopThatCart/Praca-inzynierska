@@ -6,14 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UzytkownikResponse } from '../../models/uzytkownik-response';
 
-export interface FindByNazwa$Params {
+export interface FindAllPostyCountOfUzytkownik$Params {
   nazwa: string;
 }
 
-export function findByNazwa(http: HttpClient, rootUrl: string, params: FindByNazwa$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
-  const rb = new RequestBuilder(rootUrl, findByNazwa.PATH, 'get');
+export function findAllPostyCountOfUzytkownik(http: HttpClient, rootUrl: string, params: FindAllPostyCountOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+  const rb = new RequestBuilder(rootUrl, findAllPostyCountOfUzytkownik.PATH, 'get');
   if (params) {
     rb.path('nazwa', params.nazwa, {});
   }
@@ -23,9 +22,9 @@ export function findByNazwa(http: HttpClient, rootUrl: string, params: FindByNaz
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<UzytkownikResponse>;
+      return (r as HttpResponse<any>).clone({ body: parseFloat(String((r as HttpResponse<any>).body)) }) as StrictHttpResponse<number>;
     })
   );
 }
 
-findByNazwa.PATH = '/uzytkownicy/nazwa/{nazwa}';
+findAllPostyCountOfUzytkownik.PATH = '/posty/uzytkownik/{nazwa}/count';

@@ -160,7 +160,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `findByNazwa()` */
-  static readonly FindByNazwaPath = '/uzytkownicy/{nazwa}';
+  static readonly FindByNazwaPath = '/uzytkownicy/nazwa/{nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -185,7 +185,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `findByEmail()` */
-  static readonly FindByEmailPath = '/uzytkownicy/{email}';
+  static readonly FindByEmailPath = '/uzytkownicy/email/{email}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

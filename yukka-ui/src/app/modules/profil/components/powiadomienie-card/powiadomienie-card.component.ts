@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { PowiadomieniaDropdownComponent } from '../powiadomienia-dropdown/powiadomienia-dropdown.component';
 import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
+import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powiadomienia-sync.service';
 
 @Component({
   selector: 'app-powiadomienie-card',
@@ -15,13 +16,15 @@ import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
 })
 export class PowiadomienieCardComponent {
   @Input() pow: PowiadomienieResponse = {};
-  @Input() dropdownComponent!: PowiadomieniaDropdownComponent;
+  @Input() isOnDropdown: boolean = false;
   @Output() powiadomienieUsuniete = new EventEmitter<PowiadomienieResponse>();
+  @Output() powiadomieniePrzeczytane = new EventEmitter<PowiadomienieResponse>();
 
   private _avatar: string | undefined;
 
   constructor(
     private powiadomienieService : PowiadomienieService,
+    private powiadomieniaSyncService: PowiadomieniaSyncService,
     private router: Router
   ) {}
 
@@ -87,7 +90,8 @@ export class PowiadomienieCardComponent {
           if(pow) {
             console.log('Powiadomienie set: ', pow);
             this.pow.przeczytane = pow.przeczytane;
-            this.dropdownComponent.updateUnreadCount();
+            this.powiadomieniePrzeczytane.emit(this.pow);
+            this.powiadomieniaSyncService.notifyPowiadomieniePrzeczytane(this.pow);
           }
         },
         error: (error) => {
@@ -103,6 +107,7 @@ export class PowiadomienieCardComponent {
       this.powiadomienieService.remove1({ id: this.pow.id }).subscribe({
         next: () => {
           this.powiadomienieUsuniete.emit(this.pow);
+          this.powiadomieniaSyncService.notifyPowiadomienieUsuniete(this.pow);
         },
         error: (error) => {
           console.error('Error removing powiadomienie:', error);

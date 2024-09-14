@@ -53,13 +53,19 @@ public class PostController {
         return ResponseEntity.ok(postService.findAllPostyByConnectedUzytkownik(page, size, connectedUser));
     }
 
-    @GetMapping(value = "/uzytkownik/{email}", produces="application/json")
+    @GetMapping(value = "/uzytkownik/{nazwa}", produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPostyByUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            @PathVariable("email") String email,
+            @PathVariable("nazwa") String nazwa,
             Authentication connectedUser) {
-        return ResponseEntity.ok(postService.findAllPostyByUzytkownik(page, size, email,connectedUser));
+        return ResponseEntity.ok(postService.findAllPostyByUzytkownik(page, size, nazwa, connectedUser));
+    }
+
+    @GetMapping(value = "/uzytkownik/{nazwa}/count", produces="application/json")
+    public ResponseEntity<Integer> findAllPostyCountOfUzytkownik(
+            @PathVariable("nazwa") String nazwa) {
+        return ResponseEntity.ok(postService.findAllPostyCountOfUzytkownik(nazwa));
     }
 
     @PostMapping(produces="application/json")

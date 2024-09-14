@@ -39,12 +39,12 @@ public class UzytkownikController {
         return uzytkownikService.findAll();
     }
     
-    @GetMapping(value = "/{nazwa}", produces="application/json")
+    @GetMapping(value = "/nazwa/{nazwa}", produces="application/json")
     public ResponseEntity<UzytkownikResponse> findByNazwa(@PathVariable("nazwa") String nazwa) {
-        return ResponseEntity.ok(uzytkownikService.findByEmail(nazwa));
+        return ResponseEntity.ok(uzytkownikService.findByNazwa(nazwa));
     }
 
-    @GetMapping(value = "/{email}", produces="application/json")
+    @GetMapping(value = "/email/{email}", produces="application/json")
     public ResponseEntity<UzytkownikResponse> findByEmail(@PathVariable("email") String email) {
         return ResponseEntity.ok(uzytkownikService.findByEmail(email));
     }

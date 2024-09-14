@@ -11,7 +11,7 @@ import { PageResponsePostResponse } from '../../models/page-response-post-respon
 export interface FindAllPostyByUzytkownik$Params {
   page?: number;
   size?: number;
-  email: string;
+  nazwa: string;
 }
 
 export function findAllPostyByUzytkownik(http: HttpClient, rootUrl: string, params: FindAllPostyByUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponsePostResponse>> {
@@ -19,7 +19,7 @@ export function findAllPostyByUzytkownik(http: HttpClient, rootUrl: string, para
   if (params) {
     rb.query('page', params.page, {});
     rb.query('size', params.size, {});
-    rb.path('email', params.email, {});
+    rb.path('nazwa', params.nazwa, {});
   }
 
   return http.request(
@@ -32,4 +32,4 @@ export function findAllPostyByUzytkownik(http: HttpClient, rootUrl: string, para
   );
 }
 
-findAllPostyByUzytkownik.PATH = '/posty/uzytkownik/{email}';
+findAllPostyByUzytkownik.PATH = '/posty/uzytkownik/{nazwa}';

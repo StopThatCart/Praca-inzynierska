@@ -21,6 +21,8 @@ import { findAllPostyByConnectedUzytkownik } from '../fn/post/find-all-posty-by-
 import { FindAllPostyByConnectedUzytkownik$Params } from '../fn/post/find-all-posty-by-connected-uzytkownik';
 import { findAllPostyByUzytkownik } from '../fn/post/find-all-posty-by-uzytkownik';
 import { FindAllPostyByUzytkownik$Params } from '../fn/post/find-all-posty-by-uzytkownik';
+import { findAllPostyCountOfUzytkownik } from '../fn/post/find-all-posty-count-of-uzytkownik';
+import { FindAllPostyCountOfUzytkownik$Params } from '../fn/post/find-all-posty-count-of-uzytkownik';
 import { findPostById } from '../fn/post/find-post-by-id';
 import { FindPostById$Params } from '../fn/post/find-post-by-id';
 import { PageResponsePostResponse } from '../models/page-response-post-response';
@@ -235,7 +237,7 @@ export class PostService extends BaseService {
   }
 
   /** Path part for operation `findAllPostyByUzytkownik()` */
-  static readonly FindAllPostyByUzytkownikPath = '/posty/uzytkownik/{email}';
+  static readonly FindAllPostyByUzytkownikPath = '/posty/uzytkownik/{nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -256,6 +258,31 @@ export class PostService extends BaseService {
   findAllPostyByUzytkownik(params: FindAllPostyByUzytkownik$Params, context?: HttpContext): Observable<PageResponsePostResponse> {
     return this.findAllPostyByUzytkownik$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageResponsePostResponse>): PageResponsePostResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `findAllPostyCountOfUzytkownik()` */
+  static readonly FindAllPostyCountOfUzytkownikPath = '/posty/uzytkownik/{nazwa}/count';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `findAllPostyCountOfUzytkownik()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findAllPostyCountOfUzytkownik$Response(params: FindAllPostyCountOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+    return findAllPostyCountOfUzytkownik(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `findAllPostyCountOfUzytkownik$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findAllPostyCountOfUzytkownik(params: FindAllPostyCountOfUzytkownik$Params, context?: HttpContext): Observable<number> {
+    return this.findAllPostyCountOfUzytkownik$Response(params, context).pipe(
+      map((r: StrictHttpResponse<number>): number => r.body)
     );
   }
 

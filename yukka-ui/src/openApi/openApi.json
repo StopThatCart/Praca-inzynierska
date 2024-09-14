@@ -1390,7 +1390,7 @@
         }
       }
     },
-    "/uzytkownicy/{nazwa}": {
+    "/uzytkownicy/nazwa/{nazwa}": {
       "get": {
         "tags": [
           "Uzytkownik"
@@ -1420,7 +1420,7 @@
         }
       }
     },
-    "/uzytkownicy/{email}": {
+    "/uzytkownicy/email/{email}": {
       "get": {
         "tags": [
           "Uzytkownik"
@@ -1446,27 +1446,6 @@
                 }
               }
             }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Uzytkownik"
-        ],
-        "operationId": "remove",
-        "parameters": [
-          {
-            "name": "email",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -1753,7 +1732,7 @@
         }
       }
     },
-    "/posty/uzytkownik/{email}": {
+    "/posty/uzytkownik/{nazwa}": {
       "get": {
         "tags": [
           "Post"
@@ -1781,7 +1760,7 @@
             }
           },
           {
-            "name": "email",
+            "name": "nazwa",
             "in": "path",
             "required": true,
             "schema": {
@@ -1796,6 +1775,37 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponsePostResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posty/uzytkownik/{nazwa}/count": {
+      "get": {
+        "tags": [
+          "Post"
+        ],
+        "operationId": "findAllPostyCountOfUzytkownik",
+        "parameters": [
+          {
+            "name": "nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
                 }
               }
             }
@@ -2007,6 +2017,29 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/uzytkownicy/{email}": {
+      "delete": {
+        "tags": [
+          "Uzytkownik"
+        ],
+        "operationId": "remove",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -2453,9 +2486,6 @@
           "name": {
             "type": "string"
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
           "pracownik": {
             "type": "boolean"
           },
@@ -2471,19 +2501,22 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
           "password": {
             "type": "string"
           },
           "enabled": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "accountNonLocked": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
             "type": "boolean"
           },
-          "accountNonLocked": {
+          "accountNonExpired": {
             "type": "boolean"
           }
         }
@@ -3251,7 +3284,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xstary": {
+          "xnowy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
@@ -3259,11 +3296,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ynowy": {
+          "xstary": {
             "type": "integer",
             "format": "int32"
           }

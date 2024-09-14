@@ -1,4 +1,13 @@
-<div class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="background: var(--bs-secondary);">
+<div class="d-flex flex-column align-items-center">
+  <img rel="preload"
+    [src]="getUzytAvatar()" priority
+    class="mb-2 img-thumbnail rounded-circle"
+    width="100" height="100"
+    style="border-width: 4px; border-color: var(--bs-primary-border-subtle);"
+  >
+
+
+<div class="list-group" aria-labelledby="dropdownMenuButton1" style="background: var(--bs-secondary);">
   <a class="list-group-item list-group-item-action btn-link" href="../profil.html">
     <span><i class="fas fa-house"></i>&nbsp;Profil</span>
   </a>
@@ -20,4 +29,5 @@
   <a class="list-group-item list-group-item-action btn-link" href="edycja-usun-konto.html">
     <span><i class="fas fa-user-slash"></i>&nbsp;Usuń konto</span>
   </a>
+</div>
 </div>

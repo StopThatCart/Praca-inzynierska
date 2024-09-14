@@ -77,9 +77,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, String email, Authentication connectedUser) {
+    public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByEmail(email);
+        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
         if(targetUzyt.isEmpty()) {
             return new PageResponse<>();
         }
@@ -87,8 +87,18 @@ public class PostService {
             return new PageResponse<>();
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
-        Page<Post> posts = postRepository.findAllPostyByUzytkownik(email, pageable);
+        Page<Post> posts = postRepository.findAllPostyByUzytkownik(nazwa, pageable);
         return postMapper.postResponsetoPageResponse(posts);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Integer findAllPostyCountOfUzytkownik(String nazwa) {
+        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
+        if(targetUzyt.isEmpty()) {
+            return 0;
+        }
+        return postRepository.findAllPostyCountOfUzytkownik(nazwa);
     }
 
 

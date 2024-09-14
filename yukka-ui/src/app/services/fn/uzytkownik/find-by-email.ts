@@ -28,4 +28,4 @@ export function findByEmail(http: HttpClient, rootUrl: string, params: FindByEma
   );
 }
 
-findByEmail.PATH = '/uzytkownicy/{email}';
+findByEmail.PATH = '/uzytkownicy/email/{email}';
