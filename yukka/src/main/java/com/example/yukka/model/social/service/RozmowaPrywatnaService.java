@@ -1,5 +1,7 @@
 package com.example.yukka.model.social.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -93,7 +95,7 @@ public class RozmowaPrywatnaService {
             throw new EntityAlreadyExistsException("Rozmowa prywatna już istnieje");
         }
 
-        return rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
+        return rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId(), LocalDateTime.now());
     }
 
     public RozmowaPrywatna inviteToRozmowaPrywatnaNoPunjabi(Uzytkownik currentUser, String odbiorcaId) {
@@ -109,7 +111,7 @@ public class RozmowaPrywatnaService {
       //      throw new EntityAlreadyExistsException("Rozmowa prywatna już istnieje");
       //  }
 
-        return rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
+        return rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId(), LocalDateTime.now());
     }
 
     public RozmowaPrywatna acceptRozmowaPrywatna(String nazwa, Authentication currentUser) {

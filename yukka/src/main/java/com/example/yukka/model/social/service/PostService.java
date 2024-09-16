@@ -111,7 +111,7 @@ public class PostService {
         Post post = postMapper.toPost(request);
         post.setPostId(createPostId());
         
-        return postRepository.addPost(uzyt.getEmail(), post).get();
+        return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
     }
 
     public Post save(PostRequest request, MultipartFile file, Authentication connectedUser) throws FileUploadException {
@@ -129,14 +129,14 @@ public class PostService {
         }
         post.setObraz(leObraz);
         
-        return postRepository.addPost(uzyt.getEmail(), post).get();
+        return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
     }
 
     public Post save(PostRequest request, MultipartFile file, Uzytkownik connectedUser) throws FileUploadException {
         Uzytkownik uzyt = connectedUser;
         
         Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
-        checkTimeSinceLastPost(newestPost);
+        //checkTimeSinceLastPost(newestPost);
 
         Post post = postMapper.toPost(request);
         post.setPostId(createPostId());
@@ -149,7 +149,7 @@ public class PostService {
 
         System.out.println("Obraz: " + leObraz);
         
-        return postRepository.addPost(uzyt.getEmail(), post).get();
+        return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
     }
 
     public PostResponse addOcenaToPost(OcenaRequest request, Authentication connectedUser) {

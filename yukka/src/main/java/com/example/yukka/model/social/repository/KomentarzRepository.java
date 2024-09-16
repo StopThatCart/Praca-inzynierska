@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -179,7 +180,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         CREATE (uzyt)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
                 ocenyLubi: 0, ocenyNieLubi: 0, 
-                obraz: pt.obraz, dataUtworzenia: localdatetime()})
+                obraz: pt.obraz, dataUtworzenia: $time})
                 -[:ODPOWIEDZIAL]->(kom2)
 
         WITH kom, kom2
@@ -197,7 +198,9 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
         RETURN kom
         """)
-    Komentarz addOdpowiedzToKomentarzInPost(@Param("email") String email, @Param("kom") Komentarz kom, @Param("komentarzId") String targetKomentarzId);
+    Komentarz addOdpowiedzToKomentarzInPost(@Param("email") String email, @Param("kom") Komentarz kom, 
+    @Param("komentarzId") String targetKomentarzId,
+    @Param("time") LocalDateTime time);
 
 
     @Query("""
@@ -207,11 +210,13 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         CREATE (uzyt)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
                 ocenyLubi: 0, ocenyNieLubi: 0, 
-                obraz: pt.obraz, dataUtworzenia: localdatetime()})
+                obraz: pt.obraz, dataUtworzenia: $time})
                 -[:ODPOWIEDZIAL]->(kom2)
         RETURN kom
         """)
-    Komentarz addOdpowiedzToKomentarzButOld(@Param("email") String email, @Param("kom") Komentarz kom, @Param("komentarzId") String targetKomentarzId);
+    Komentarz addOdpowiedzToKomentarzButOld(@Param("email") String email, @Param("kom") Komentarz kom, 
+    @Param("komentarzId") String targetKomentarzId,
+    @Param("time") LocalDateTime time);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
@@ -219,7 +224,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         WITH uzyt, post, $kom.__properties__ AS pt 
         CREATE (uzyt)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false, 
-                ocenyLubi: 0, ocenyNieLubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
+                ocenyLubi: 0, ocenyNieLubi: 0, obraz: pt.obraz, dataUtworzenia: $time})
                 <-[:MA_KOMENTARZ]-(post)
         CREATE (kom)-[:JEST_W_POSCIE]->(post)
 
@@ -233,17 +238,18 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
     
         RETURN kom
         """)
-    Komentarz addKomentarzToPost(@Param("email") String email, @Param("postId") String postId, @Param("kom") Komentarz kom);
+    Komentarz addKomentarzToPost(@Param("email") String email, @Param("postId") String postId, @Param("kom") Komentarz kom,
+        @Param("time") LocalDateTime time);
 
     @Query("""
         MATCH (uzyt1:Uzytkownik{nazwa: $nadawca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $odbiorca})
         WITH uzyt1, priv, $kom.__properties__ as pt
         CREATE (uzyt1)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
-                obraz: pt.obraz, dataUtworzenia: localdatetime()})
+                obraz: pt.obraz, dataUtworzenia: $time})
                 <-[:MA_WIADOMOSC]-(priv)
         WITH priv, kom
-        SET priv.ostatnioAktualizowana = localdatetime()
+        SET priv.ostatnioAktualizowana = $time
 
         WITH priv, kom
         MATCH (priv)-[:MA_WIADOMOSC]->(komentarze:Komentarz)
@@ -252,7 +258,9 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
         RETURN kom
         """)
-    Komentarz addKomentarzToRozmowaPrywatna(@Param("nadawca") String nadawca, @Param("odbiorca") String odbiorca, @Param("kom") Komentarz kom);
+    Komentarz addKomentarzToRozmowaPrywatna(@Param("nadawca") String nadawca, @Param("odbiorca") String odbiorca, 
+        @Param("kom") Komentarz kom,
+        @Param("time") LocalDateTime time);
 
     // Jakimś cudem działa z i bez odpowiedzi. Czary.
     @Query("""

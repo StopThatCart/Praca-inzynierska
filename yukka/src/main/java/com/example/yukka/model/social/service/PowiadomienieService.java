@@ -1,8 +1,10 @@
 package com.example.yukka.model.social.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -114,8 +116,13 @@ public class PowiadomienieService {
 
     public Powiadomienie addPowiadomienie(PowiadomienieDTO request, Uzytkownik uzytkownik) {
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.valueOf(request.getTyp()), request, uzytkownik);
-      //  System.out.println("Powiadomienie: " + powiadomienie);
-        return powiadomienieRepository.addPowiadomienieToUzytkownik(uzytkownik.getEmail(), powiadomienie);
+
+        Optional<Powiadomienie> powOpt = powiadomienieRepository.checkIfSamePowiadomienieExists(uzytkownik.getEmail(), powiadomienie.getTyp(), powiadomienie.getOpis());
+        if(powOpt.isPresent()) {
+            return powiadomienieRepository.updateData(uzytkownik.getEmail(), powOpt.get().getId(), LocalDateTime.now()).get();
+        } else{
+            return powiadomienieRepository.addPowiadomienieToUzytkownik(uzytkownik.getEmail(), powiadomienie);
+        }
     }
 
     public PowiadomienieResponse setPrzeczytane(Long id, Authentication connectedUser) {

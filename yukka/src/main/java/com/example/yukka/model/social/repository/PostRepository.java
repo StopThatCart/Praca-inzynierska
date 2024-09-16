@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -162,11 +163,11 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         CREATE (uzyt)-[relu:MA_POST]->(post:Post{postId: pt.postId, 
                                         tytul: pt.tytul, opis: pt.opis, 
                                         ocenyLubi: 0, ocenyNieLubi: 0, liczbaKomentarzy: 0,
-                                        obraz: COALESCE(pt.obraz, null), dataUtworzenia: localdatetime()
+                                        obraz: COALESCE(pt.obraz, null), dataUtworzenia: $time
                                         })
         RETURN post
         """)
-    Optional<Post> addPost(@Param("email") String email, @Param("post") Post post);
+    Optional<Post> addPost(@Param("email") String email, @Param("post") Post post, @Param("time") LocalDateTime time);
 
     @Query("""
         MATCH (post:Post{postId: $postId})

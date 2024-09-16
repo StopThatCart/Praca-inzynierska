@@ -266,8 +266,8 @@ public class YukkaApplication {
 		"image/png", fileUtils.readFileFromLocation(cheezyPath));
 
 		// Dodawanie postów
-		postRepository.addPost(michalEmail, p1);
-		postRepository.addPost(michalEmail, p2);
+		postRepository.addPost(michalEmail, p1, LocalDateTime.now());
+		postRepository.addPost(michalEmail, p2, LocalDateTime.now());
 
 		//
 		try {
@@ -288,13 +288,13 @@ public class YukkaApplication {
 			int rand = (int)(Math.random() * 3);
 			switch(rand) {
 				case 0:
-					postRepository.addPost(piotrEmail, post);
+					postRepository.addPost(piotrEmail, post, LocalDateTime.now());
 					break;
 				case 1:
-					postRepository.addPost(katarzynaEmail, post);
+					postRepository.addPost(katarzynaEmail, post, LocalDateTime.now());
 					break;
 				case 2:
-					postRepository.addPost(michalEmail, post);
+					postRepository.addPost(michalEmail, post, LocalDateTime.now());
 					break;
 			}
 		}
@@ -439,7 +439,8 @@ public class YukkaApplication {
 		Uzytkownik katarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
 
 		// Zaproszenie do rozmowy prywatnej
-		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(usKatarzyna.getUzytId(), usPiotr.getUzytId());
+		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(usKatarzyna.getUzytId(), usPiotr.getUzytId(),
+		LocalDateTime.now());
 
 		// Akceptacja rozmowy prywatnej
 		RozmowaPrywatna meh = rozmowaPrywatnaRepository.acceptRozmowaPrywatna(piotr.getUzytId(), katarzyna.getUzytId());

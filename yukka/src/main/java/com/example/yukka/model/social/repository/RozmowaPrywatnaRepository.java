@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,10 +79,13 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         MATCH (uzyt2:Uzytkownik{uzytId: $odbiorcaId})
         WITH uzyt1, uzyt2
         MERGE (uzyt1)-[:JEST_W_ROZMOWIE]->
-               (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uzytId, dataUtworzenia: localdatetime(), ostatnioAktualizowana: localdatetime()})
+               (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uzytId, 
+               dataUtworzenia: $time, 
+               ostatnioAktualizowana: $time})
                <-[:JEST_W_ROZMOWIE]-(uzyt2)
         """)
-    RozmowaPrywatna inviteToRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca);
+    RozmowaPrywatna inviteToRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca,
+     @Param("time") LocalDateTime localdatetime);
 
     // To pójdzie do admina potem
     @Query("""

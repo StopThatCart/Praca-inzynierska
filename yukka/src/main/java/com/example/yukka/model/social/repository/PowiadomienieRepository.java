@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -11,6 +12,37 @@ import org.springframework.data.repository.query.Param;
 import com.example.yukka.model.social.powiadomienie.Powiadomienie;
 
 public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, Long> {
+
+
+    @Query(value = """
+        MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+        WHERE powiadomienie.typ = $typ AND powiadomienie.opis = $opis
+        RETURN powiadomienie, collect(nodes(path)), collect(relationships(path)) 
+        ORDER BY powiadomienie.dataUtworzenia DESC LIMIT 1
+        """)
+    Optional<Powiadomienie> checkIfSamePowiadomienieExists(@Param("email") String email,
+    @Param("typ") String typ,
+    @Param("opis") String opis);
+
+    @Query(value = """
+        MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+        WHERE powiadomienie.typ = $typ AND powiadomienie.uzytkownikNazwa = $uzytkownikNazwa
+        RETURN powiadomienie, collect(nodes(path)), collect(relationships(path)) 
+        ORDER BY powiadomienie.dataUtworzenia DESC LIMIT 1
+        """)
+    Optional<Powiadomienie> checkIfRozmowaPowiadomienieExists(@Param("email") String email,
+    @Param("typ") String typ,
+    @Param("uzytkownikNazwa") String uzytkownikNazwa);
+
+
+    @Query(value = """
+        MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+        WHERE id(powiadomienie) = $id
+        SET powiadomienie.dataUtworzenia = 	$time, r1.przeczytane = false
+        RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+        """)
+    Optional<Powiadomienie> updateData(@Param("email") String email, @Param("id") Long id,
+    @Param("time") LocalDateTime localdatetime);
 
     @Query(value = """
         MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
