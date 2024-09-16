@@ -25,6 +25,18 @@
                   loading="lazy">
               </div>
             </div>
+            <div class="hstack justify-content-between p-1 komentarz-border">
+              <div class="hstack gap-3">
+                <ng-container *ngIf="canEdit">
+                  <a (click)="deleteKomentarz()" class="komentarz-option">
+                    <i class="fas fa-trash fa-xs"></i>
+                    <span class="small">&nbsp;Usuń</span>
+                  </a>
+                </ng-container>
+
+              </div>
+
+          </div>
 
         </div>
     </div>

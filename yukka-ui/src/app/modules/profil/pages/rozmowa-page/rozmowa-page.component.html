@@ -23,6 +23,7 @@
                                           <app-wiadomosc-card
                                           *ngFor="let wiad of rozmowa.komentarze"
                                           [wiadomosc]="wiad"
+                                          (onRemove)="handleRemove($event)"
                                           ></app-wiadomosc-card>
 
                                         </div>

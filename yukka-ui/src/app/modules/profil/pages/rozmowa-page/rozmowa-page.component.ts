@@ -17,6 +17,7 @@ import { TypKomentarza } from '../../../post/enums/TypKomentarza';
   styleUrl: './rozmowa-page.component.css'
 })
 export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked {
+
   @ViewChild('scrollus') private myScrollContainer!: ElementRef;
 
   rozmowa: RozmowaPrywatnaResponse = {};
@@ -100,6 +101,15 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
 
 
   handleNewMessage(newMessage: any) {
+    if (this.rozmowa.komentarze) {
+      if (this.odbiorcaNazwa) {
+        this.getRozmowa(this.odbiorcaNazwa);
+      }
+      //this.rozmowa.komentarze.push(newMessage);
+    }
+  }
+
+  handleRemove($event: any) {
     if (this.rozmowa.komentarze) {
       if (this.odbiorcaNazwa) {
         this.getRozmowa(this.odbiorcaNazwa);
