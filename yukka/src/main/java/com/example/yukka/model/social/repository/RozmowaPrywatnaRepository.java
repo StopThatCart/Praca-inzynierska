@@ -99,8 +99,8 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
 
     // funkcja seedowania, spokojnie.
     @Query("""
-        MATCH (u:RozmowaPrywatna) 
-        DETACH DELETE u 
+        MATCH (u:RozmowaPrywatna)-[:MA_WIADOMOSC]->(kom:Komentarz) 
+        DETACH DELETE u, kom
         """)
     void clearRozmowyPrywatne();
 

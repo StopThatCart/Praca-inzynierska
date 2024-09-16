@@ -1,5 +1,12 @@
 <div class="d-flex flex-start mt-2">
-  <img [src]="getKomentarzAvatar()" class="rounded-circle bg-white shadow-1-strong me-3" alt="avatar" width="50" height="50">
+  <img
+  [src]="getKomentarzAvatar()"
+  [srcset]="getKomentarzAvatarSrcSet()"
+  sizes="(max-width: 50px) 100vw, 50px"
+  priority
+  loading="eager"
+  width="50" height="50"
+  class="rounded-circle bg-white shadow-1-strong me-3" alt="avatar" >
     <div class="flex-grow-1 flex-shrink-1">
         <div>
             <div class="d-flex justify-content-between align-items-center">
@@ -12,6 +19,8 @@
                   class="rounded img-fluid mb-3"
                   [alt]="'Obraz wiadomosc'"
                   [src]="getKomentarzObraz()"
+                  [srcset]="getKomentarzObrazSrcSet()"
+                  sizes="(max-width: 250px) 100vw, 250px"
                   style="max-width: 100%; height: auto; max-height: 250px;"
                   loading="lazy">
               </div>

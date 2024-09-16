@@ -17,6 +17,7 @@ export class AddKomentarzCardComponent implements OnInit {
   @Input() targetId: string | undefined;
   @Input() typ: TypKomentarza | undefined;
   @Output() onCancelOdpowiedz = new EventEmitter<void>();
+  @Output() onNewMessage = new EventEmitter<any>();
 
 
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -140,17 +141,21 @@ export class AddKomentarzCardComponent implements OnInit {
       this.komentarzService.addKomentarzToWiadomoscPrywatna1$Json({
         body: this.request
       }).subscribe( {
-          next: (res) => { window.location.reload(); },
+          next: (res) => { this.updateRozmowa(res); },
           error: (err) => { this.handleErrors(err); }
       });
     } else {
       this.komentarzService.addKomentarzToWiadomoscPrywatna1$FormData({
         body: { request: this.request, file: this.wybranyPlik }
       }).subscribe( {
-          next: (res) => { window.location.reload(); },
+          next: (res) => { this.updateRozmowa(res); },
           error: (err) => { this.handleErrors(err); }
       });
     }
+  }
+
+  private updateRozmowa(newMessage: any) {
+    this.onNewMessage.emit(newMessage);
   }
 
   cancelOdpowiedz() {

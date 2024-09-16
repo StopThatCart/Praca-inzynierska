@@ -167,9 +167,18 @@ public class YukkaApplication {
 	}
 
 	void unseed() {
+		System.out.println("Czyszczenie bazy danych...");
+
+		System.out.println("Usuwanie obrazów użytkownika");
 		uzytkownikService.seedRemoveUzytkownicyObrazy();
+
+		System.out.println("Usuwanie rozmów prywatnych");
+		rozmowaPrywatnaRepository.clearRozmowyPrywatne();
+
+		System.out.println("Usuwanie użytkowników");
 		uzytkownikRepository.clearUzytkowicy();
 
+		System.out.println("Usuwanie komentarzy");
 		//komentarzService.seedRemoveKomentarzeObrazy();
 		komentarzRepository.clearKomentarze();
 		//postService.seedRemovePostyObrazy();
@@ -177,6 +186,7 @@ public class YukkaApplication {
 	}
 
 	void seed() {
+		System.out.println("Seedowanie bazy danych...");
 		// Użytkownicy na razie bez relacji
 
 		Uzytkownik usJan = Uzytkownik.builder()

@@ -17,7 +17,7 @@
                                         </div>
                                     </div>
                                     <h4 class="text-center mb-4 pb-2">Rozmowa prywatna z {{ rozmowaUzyt.nazwa }}</h4>
-                                    <div class="row">
+                                    <div class="row search-results rozmowa-divus" #scrollus>
                                         <div class="col">
 
                                           <app-wiadomosc-card
@@ -37,6 +37,7 @@
                           <app-add-komentarz-card
                           [targetId]="odbiorcaNazwa"
                           [typ]="TypKomentarza.WIADOMOSC"
+                          (onNewMessage)="handleNewMessage($event)"
                           ></app-add-komentarz-card>
 
                         </div>
