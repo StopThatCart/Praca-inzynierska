@@ -449,9 +449,9 @@ public class YukkaApplication {
 		// To samo, ale service wysyła powiadomienia
 
 		System.out.println("Dodawanie komentarzy do rozmowy prywatnej");
-		komentarzService.addKomentarzToWiadomoscPrywatna(katarzyna.getNazwa(), KomentarzRequest.builder().opis("Wiadomość od Piotra").targetId(komId7).build(), usPiotr);
-		komentarzService.addKomentarzToWiadomoscPrywatna(piotr.getNazwa(), KomentarzRequest.builder().opis("Wiadomość od Katarzyny").targetId(komId8).build(), usKatarzyna);
-		komentarzService.addKomentarzToWiadomoscPrywatna(katarzyna.getNazwa(), KomentarzRequest.builder().opis("Kolejna wiadomość od Piotra").targetId(komId9).build(), usPiotr);
+		komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Piotra").targetId(katarzyna.getNazwa()).build(), usPiotr);
+		komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Katarzyny").targetId(piotr.getNazwa()).build(), usKatarzyna);
+		komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Kolejna wiadomość od Piotra").targetId(katarzyna.getNazwa()).build(), usPiotr);
 
 
 		//log.info("\nąŚwiętość\n");

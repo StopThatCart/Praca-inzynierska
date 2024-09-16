@@ -10,14 +10,12 @@ import { KomentarzRequest } from '../../models/komentarz-request';
 import { KomentarzResponse } from '../../models/komentarz-response';
 
 export interface AddKomentarzToWiadomoscPrywatna1$Json$Params {
-  'other-uzyt-nazwa': string;
       body: KomentarzRequest
 }
 
 export function addKomentarzToWiadomoscPrywatna1$Json(http: HttpClient, rootUrl: string, params: AddKomentarzToWiadomoscPrywatna1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
   const rb = new RequestBuilder(rootUrl, addKomentarzToWiadomoscPrywatna1$Json.PATH, 'post');
   if (params) {
-    rb.path('other-uzyt-nazwa', params['other-uzyt-nazwa'], {});
     rb.body(params.body, 'application/json');
   }
 
@@ -31,4 +29,4 @@ export function addKomentarzToWiadomoscPrywatna1$Json(http: HttpClient, rootUrl:
   );
 }
 
-addKomentarzToWiadomoscPrywatna1$Json.PATH = '/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}';
+addKomentarzToWiadomoscPrywatna1$Json.PATH = '/komentarze/wiadomosciPrywatne';

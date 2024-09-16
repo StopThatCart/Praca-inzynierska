@@ -240,10 +240,10 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         WITH uzyt1, priv, $kom.__properties__ as pt
         CREATE (uzyt1)-[:SKOMENTOWAL]->
                 (kom:Komentarz{komentarzId: pt.komentarzId, opis: pt.opis, edytowany: false,
-                ocenyLubi: 0, ocenyNieLubi: 0, obraz: pt.obraz, dataUtworzenia: localdatetime()})
+                obraz: pt.obraz, dataUtworzenia: localdatetime()})
                 <-[:MA_WIADOMOSC]-(priv)
         WITH priv, kom
-        SET priv.ostatnioAktualizowane = localdatetime()
+        SET priv.ostatnioAktualizowana = localdatetime()
 
         WITH priv, kom
         MATCH (priv)-[:MA_WIADOMOSC]->(komentarze:Komentarz)

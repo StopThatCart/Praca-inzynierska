@@ -33,20 +33,34 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
     MATCH path = (uzyt1:Uzytkownik{uzytId: $nadawcaId})-[:JEST_W_ROZMOWIE]->
                 (priv:RozmowaPrywatna)
                 <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $odbiorcaId})
-    OPTIONAL MATCH (priv)<-[:MA_WIADOMOSC]-(kom:Komentarz)
-    RETURN priv, collect(nodes(path)), collect(relationships(path)),  collect(kom) AS komentarze
+    OPTIONAL MATCH komPath = (priv)-[r1:MA_WIADOMOSC]->(kom:Komentarz)<-[:SKOMENTOWAL]-(diff:Uzytkownik)
+    WITH priv, path, komPath, kom
+    ORDER BY kom.dataUtworzenia
+    RETURN priv, collect(nodes(path)), collect(relationships(path)), 
+                collect(nodes(komPath)), collect(relationships(komPath))
        """
        )
-    Optional<RozmowaPrywatna> findRozmowaPrywatnaWithKomentarze(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca);
+    Optional<RozmowaPrywatna> findRozmowaPrywatnaWithKomentarze(@Param("odbiorcaId") String odbiorca, @Param("nadawcaId") String nadawca);
+
+
+    @Query("""
+    MATCH path = (priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt:Uzytkownik)
+                WHERE id(priv) = $id
+    OPTIONAL MATCH komPath = (priv)-[r1:MA_WIADOMOSC]->(kom:Komentarz)
+    RETURN priv, collect(nodes(path)), collect(relationships(path)), 
+                collect(nodes(komPath)), collect(relationships(komPath))
+       """
+       )
+    Optional<RozmowaPrywatna> findRozmowaPrywatnaById(@Param("id") Long id);
 
 
     @Query(value ="""
-        MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)
+        MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik)
         RETURN priv, collect(nodes(path)), collect(relationships(path))
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
            """,
            countQuery = """
-        MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)
+        MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik)
         RETURN count(priv)
             """)
     Page<RozmowaPrywatna> findRozmowyPrywatneOfUzytkownik(@Param("email") String email, Pageable pageable);
@@ -64,7 +78,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         MATCH (uzyt2:Uzytkownik{uzytId: $odbiorcaId})
         WITH uzyt1, uzyt2
         MERGE (uzyt1)-[:JEST_W_ROZMOWIE]->
-               (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uzytId, dataUtworzenia: localdatetime(), ostatnioAktualizowane: localdatetime()})
+               (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uzytId, dataUtworzenia: localdatetime(), ostatnioAktualizowana: localdatetime()})
                <-[:JEST_W_ROZMOWIE]-(uzyt2)
         """)
     RozmowaPrywatna inviteToRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca);

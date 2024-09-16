@@ -9,11 +9,13 @@ import { RequestBuilder } from '../../request-builder';
 import { RozmowaPrywatna } from '../../models/rozmowa-prywatna';
 
 export interface RejectRozmowaPrywatna$Params {
+  nazwa: string;
 }
 
-export function rejectRozmowaPrywatna(http: HttpClient, rootUrl: string, params?: RejectRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
+export function rejectRozmowaPrywatna(http: HttpClient, rootUrl: string, params: RejectRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
   const rb = new RequestBuilder(rootUrl, rejectRozmowaPrywatna.PATH, 'put');
   if (params) {
+    rb.path('nazwa', params.nazwa, {});
   }
 
   return http.request(
@@ -26,4 +28,4 @@ export function rejectRozmowaPrywatna(http: HttpClient, rootUrl: string, params?
   );
 }
 
-rejectRozmowaPrywatna.PATH = '/rozmowy/{nadawca-uzyt-id}/reject';
+rejectRozmowaPrywatna.PATH = '/rozmowy/{nazwa}/reject';

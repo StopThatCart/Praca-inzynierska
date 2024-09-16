@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, signal } from '@angular/core';
 import { AuthRequest } from '../../services/models/auth-request';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformServer } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthenticationService } from '../../services/services';
 import { Router } from '@angular/router';
@@ -15,14 +15,25 @@ import { TokenService } from '../../services/token/token.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  isUser = signal(false)
+  isServer = false;
+
+
   authRequest: AuthRequest = {email: 'katarzyna@email.pl', haslo: 'katarzyna12345678'};
   errorMsg: Array<string> = [];
 
   constructor(
     private router: Router,
     private authService: AuthenticationService,
-    private tokenService: TokenService) {
+    private tokenService: TokenService,
+    @Inject(PLATFORM_ID) platformId: Object) {
+      this.isServer = isPlatformServer(platformId);
+      console.log('aqui')
 
+      const userToken = this.tokenService.token;
+      if(userToken){
+        this.isUser.set(true)
+      }
   }
 
   login() {

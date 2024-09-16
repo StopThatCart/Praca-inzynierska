@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import { KomentarzSimpleResponse } from '../models/komentarz-simple-response';
+import { UzytkownikResponse } from '../models/uzytkownik-response';
 export interface RozmowaPrywatnaResponse {
   aktywna?: boolean;
   id?: number;
@@ -8,5 +9,5 @@ export interface RozmowaPrywatnaResponse {
   liczbaWiadomosci?: number;
   nadawca?: string;
   ostatnioAktualizowana?: string;
-  uzytkownicy?: Array<string>;
+  uzytkownicy?: Array<UzytkownikResponse>;
 }

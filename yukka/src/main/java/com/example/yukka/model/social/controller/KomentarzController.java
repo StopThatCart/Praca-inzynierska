@@ -86,21 +86,19 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, file, connectedUser));
     }
 
-    @PostMapping(value =  "/wiadomosciPrywatne/{other-uzyt-nazwa}", consumes = "multipart/form-data", produces="application/json")
+    @PostMapping(value =  "/wiadomosciPrywatne", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<KomentarzResponse> addKomentarzToWiadomoscPrywatna(
-                    @PathVariable("other-uzyt-nazwa") String otherUzytNazwa, 
                     @Valid @RequestPart("request") KomentarzRequest request, 
                     @Parameter() @RequestPart("file") MultipartFile file,
                     Authentication connectedUser) throws FileUploadException {
-        return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(otherUzytNazwa, request, file, connectedUser));
+        return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(request, file, connectedUser));
     }
 
-    @PostMapping(value = "/wiadomosciPrywatne/{other-uzyt-nazwa}", produces="application/json")
+    @PostMapping(value = "/wiadomosciPrywatne", produces="application/json")
     public ResponseEntity<KomentarzResponse> addKomentarzToWiadomoscPrywatna(
-                    @PathVariable("other-uzyt-nazwa") String otherUzytNazwa, 
                     @Valid @RequestBody KomentarzRequest request, 
                     Authentication connectedUser){
-        return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(otherUzytNazwa, request, connectedUser));
+        return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(request, connectedUser));
     }
 
     // Działa też jako update

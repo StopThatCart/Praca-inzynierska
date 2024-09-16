@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Uzytkownik, UzytkownikResponse } from '../../../../services/models';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PostService, UzytkownikService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule } from '@angular/common';
@@ -27,6 +27,7 @@ export class ProfilPageComponent implements OnInit {
 
   constructor(
     private tokenService: TokenService,
+    private router: Router,
     private route: ActivatedRoute,
     private postService: PostService,
     private uzytService: UzytkownikService
@@ -85,15 +86,19 @@ export class ProfilPageComponent implements OnInit {
     return 0;
   }
 
-
   isCurrentUser(): boolean {
-
     if(this.tokenService) {
       if(this.tokenService.nazwa === this.uzyt.nazwa) {
         return true;
       }
     }
     return false;
+  }
+
+
+
+  goToRozmowy() {
+    this.router.navigate(['profil/rozmowy']);
   }
 
 }

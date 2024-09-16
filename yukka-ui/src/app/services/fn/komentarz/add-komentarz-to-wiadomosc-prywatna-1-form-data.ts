@@ -10,7 +10,6 @@ import { KomentarzRequest } from '../../models/komentarz-request';
 import { KomentarzResponse } from '../../models/komentarz-response';
 
 export interface AddKomentarzToWiadomoscPrywatna1$FormData$Params {
-  'other-uzyt-nazwa': string;
       body: {
 'request': KomentarzRequest;
 'file': Blob;
@@ -20,7 +19,6 @@ export interface AddKomentarzToWiadomoscPrywatna1$FormData$Params {
 export function addKomentarzToWiadomoscPrywatna1$FormData(http: HttpClient, rootUrl: string, params: AddKomentarzToWiadomoscPrywatna1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
   const rb = new RequestBuilder(rootUrl, addKomentarzToWiadomoscPrywatna1$FormData.PATH, 'post');
   if (params) {
-    rb.path('other-uzyt-nazwa', params['other-uzyt-nazwa'], {});
     rb.body(params.body, 'multipart/form-data');
   }
 
@@ -34,4 +32,4 @@ export function addKomentarzToWiadomoscPrywatna1$FormData(http: HttpClient, root
   );
 }
 
-addKomentarzToWiadomoscPrywatna1$FormData.PATH = '/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}';
+addKomentarzToWiadomoscPrywatna1$FormData.PATH = '/komentarze/wiadomosciPrywatne';

@@ -6,6 +6,7 @@ import { PostService } from '../../../../services/services';
 import { PostCardComponent } from "../../components/post-card/post-card.component";
 import { KomentarzCardComponent } from '../../components/komentarz-card/komentarz-card.component';
 import { AddKomentarzCardComponent } from '../../components/add-komentarz-card/add-komentarz-card.component';
+import { TypKomentarza } from '../../enums/TypKomentarza';
 
 @Component({
   selector: 'app-posty-page',
@@ -17,11 +18,13 @@ import { AddKomentarzCardComponent } from '../../components/add-komentarz-card/a
 export class PostyPageComponent implements OnInit {
   post : PostResponse = {};
   postId: string | undefined;
+  typ: TypKomentarza = TypKomentarza.POST;
 
   private _postObraz: string | undefined;
 
   errorMessage: string | null = null;
 
+  public TypKomentarza = TypKomentarza;
   constructor(
     private route: ActivatedRoute,
     private postService: PostService

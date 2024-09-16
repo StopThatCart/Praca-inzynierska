@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, MaybeAsync, Resolve, RouterStateSnapshot } from '@angular/router';
-import { PostResponse, UzytkownikResponse } from '../../../services/models';
-import { PostService } from '../../../services/services/post.service';
+import { PostResponse, UzytkownikResponse } from '../../../../services/models';
+import { PostService } from '../../../../services/services/post.service';
 import { Observable } from 'rxjs';
-import { UzytkownikService } from '../../../services/services';
+import { UzytkownikService } from '../../../../services/services';
 
 @Injectable({
   providedIn: 'root'

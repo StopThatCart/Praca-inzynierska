@@ -15,6 +15,8 @@ public class KomentarzSimpleResponse {
     private Long id;
     private String komentarzId;
     private String opis;
+    private boolean edytowany;
+    private String dataUtworzenia;
     private String uzytkownikNazwa;
     private String postId;
     public byte[] obraz;

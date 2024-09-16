@@ -30,13 +30,22 @@
     }
   ],
   "paths": {
-    "/rozmowy/{nadawca-uzyt-id}/reject": {
+    "/rozmowy/{nazwa}/reject": {
       "put": {
         "tags": [
           "RozmowaPrywatna"
         ],
         "operationId": "rejectRozmowaPrywatna",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -51,13 +60,22 @@
         }
       }
     },
-    "/rozmowy/{nadawca-uzyt-id}/accept": {
+    "/rozmowy/{nazwa}/accept": {
       "put": {
         "tags": [
           "RozmowaPrywatna"
         ],
         "operationId": "acceptRozmowaPrywatna",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -488,13 +506,22 @@
         }
       }
     },
-    "/rozmowy/{odbiorca-uzyt-id}": {
+    "/rozmowy/{nazwa}": {
       "get": {
         "tags": [
           "RozmowaPrywatna"
         ],
         "operationId": "getRozmowaPrywatna",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -513,7 +540,16 @@
           "RozmowaPrywatna"
         ],
         "operationId": "inviteToRozmowaPrywatna",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -728,22 +764,12 @@
         }
       }
     },
-    "/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}": {
+    "/komentarze/wiadomosciPrywatne": {
       "post": {
         "tags": [
           "Komentarz"
         ],
         "operationId": "addKomentarzToWiadomoscPrywatna_1",
-        "parameters": [
-          {
-            "name": "other-uzyt-nazwa",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1485,6 +1511,37 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponseRozmowaPrywatnaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rozmowy/id/{id}": {
+      "get": {
+        "tags": [
+          "RozmowaPrywatna"
+        ],
+        "operationId": "getRozmowaPrywatnaById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RozmowaPrywatnaResponse"
                 }
               }
             }
@@ -2489,6 +2546,9 @@
           "pracownik": {
             "type": "boolean"
           },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
           "admin": {
             "type": "boolean"
           },
@@ -2501,22 +2561,19 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
           "password": {
             "type": "string"
           },
           "enabled": {
             "type": "boolean"
           },
-          "accountNonLocked": {
-            "type": "boolean"
-          },
           "credentialsNonExpired": {
             "type": "boolean"
           },
           "accountNonExpired": {
+            "type": "boolean"
+          },
+          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -3284,6 +3341,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "xstary": {
+            "type": "integer",
+            "format": "int32"
+          },
           "xnowy": {
             "type": "integer",
             "format": "int32"
@@ -3293,10 +3354,6 @@
             "format": "int32"
           },
           "ystary": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "xstary": {
             "type": "integer",
             "format": "int32"
           }
@@ -3690,6 +3747,12 @@
           "opis": {
             "type": "string"
           },
+          "edytowany": {
+            "type": "boolean"
+          },
+          "dataUtworzenia": {
+            "type": "string"
+          },
           "uzytkownikNazwa": {
             "type": "string"
           },
@@ -3755,7 +3818,7 @@
           "uzytkownicy": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/UzytkownikResponse"
             }
           },
           "komentarze": {
@@ -3769,8 +3832,7 @@
             "format": "int32"
           },
           "ostatnioAktualizowana": {
-            "type": "string",
-            "format": "date-time"
+            "type": "string"
           }
         }
       },

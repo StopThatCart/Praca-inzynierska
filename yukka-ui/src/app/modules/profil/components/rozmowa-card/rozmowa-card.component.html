@@ -1,0 +1,17 @@
+<a (click)="goToRozmowa()" class="link-underline link-underline-opacity-0 link-light">
+  <div class="d-flex align-items-lg-center card-header my-2">
+    <img [src]="getAvatar()" class="rounded-circle bg-white flex-shrink-0 me-3 fit-cover"
+    width="50" height="50">
+      <div class="w-100">
+          <div class="hstack gap-1 justify-content-between w-100">
+              <div>
+                  <h4>{{ selectedUzyt?.nazwa }}</h4>
+              </div>
+          </div>
+          <div class="text-muted">
+            <i class="fas fa-clock me-1"></i>
+            <span>Ostatnia wiadomość: {{ rozmowa.ostatnioAktualizowana }}</span>
+            </div>
+      </div>
+  </div>
+</a>

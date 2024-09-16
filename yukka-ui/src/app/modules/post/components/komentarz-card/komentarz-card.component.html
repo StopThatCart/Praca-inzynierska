@@ -6,7 +6,7 @@
     <div class="komentarz-header">
 
         <p class="mb-1">
-          <a class="me-1" href="#">
+          <a class="me-1">
             <img [src]="getKomentarzAvatar()" class="komentarz-avatar" alt="avatar" width="30" height="30">
           </a>
           <span class="komentarz-username">{{ komentarz.uzytkownikNazwa }}&nbsp;</span>
@@ -17,7 +17,7 @@
         </p>
     </div>
     <ng-container *ngIf="komentarz.odpowiadaKomentarzowi">
-        <a class="komentarz-option" href="#">{{ komentarz.odpowiadaKomentarzowi.uzytkownikNazwa  }}:</a>
+        <a class="komentarz-option">{{ komentarz.odpowiadaKomentarzowi.uzytkownikNazwa  }}:</a>
     </ng-container>
     <ng-container *ngIf="!isEditing">
       <p class="text-break small">{{ komentarz.opis }}</p>
@@ -86,7 +86,7 @@
     <div *ngIf="isReplying">
       <app-add-komentarz-card
         [targetId]="komentarz.komentarzId"
-        [isReply]="true"
+        [typ]="TypKomentarza.ODPOWIEDZ"
         (onCancelReply)="cancelOdpowiedz()">
       </app-add-komentarz-card>
     </div>

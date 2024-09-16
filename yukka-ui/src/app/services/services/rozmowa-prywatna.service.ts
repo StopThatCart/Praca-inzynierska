@@ -15,6 +15,8 @@ import { findRozmowyPrywatneOfUzytkownik } from '../fn/rozmowa-prywatna/find-roz
 import { FindRozmowyPrywatneOfUzytkownik$Params } from '../fn/rozmowa-prywatna/find-rozmowy-prywatne-of-uzytkownik';
 import { getRozmowaPrywatna } from '../fn/rozmowa-prywatna/get-rozmowa-prywatna';
 import { GetRozmowaPrywatna$Params } from '../fn/rozmowa-prywatna/get-rozmowa-prywatna';
+import { getRozmowaPrywatnaById } from '../fn/rozmowa-prywatna/get-rozmowa-prywatna-by-id';
+import { GetRozmowaPrywatnaById$Params } from '../fn/rozmowa-prywatna/get-rozmowa-prywatna-by-id';
 import { inviteToRozmowaPrywatna } from '../fn/rozmowa-prywatna/invite-to-rozmowa-prywatna';
 import { InviteToRozmowaPrywatna$Params } from '../fn/rozmowa-prywatna/invite-to-rozmowa-prywatna';
 import { PageResponseRozmowaPrywatnaResponse } from '../models/page-response-rozmowa-prywatna-response';
@@ -30,7 +32,7 @@ export class RozmowaPrywatnaService extends BaseService {
   }
 
   /** Path part for operation `rejectRozmowaPrywatna()` */
-  static readonly RejectRozmowaPrywatnaPath = '/rozmowy/{nadawca-uzyt-id}/reject';
+  static readonly RejectRozmowaPrywatnaPath = '/rozmowy/{nazwa}/reject';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -38,7 +40,7 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  rejectRozmowaPrywatna$Response(params?: RejectRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
+  rejectRozmowaPrywatna$Response(params: RejectRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
     return rejectRozmowaPrywatna(this.http, this.rootUrl, params, context);
   }
 
@@ -48,14 +50,14 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  rejectRozmowaPrywatna(params?: RejectRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatna> {
+  rejectRozmowaPrywatna(params: RejectRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatna> {
     return this.rejectRozmowaPrywatna$Response(params, context).pipe(
       map((r: StrictHttpResponse<RozmowaPrywatna>): RozmowaPrywatna => r.body)
     );
   }
 
   /** Path part for operation `acceptRozmowaPrywatna()` */
-  static readonly AcceptRozmowaPrywatnaPath = '/rozmowy/{nadawca-uzyt-id}/accept';
+  static readonly AcceptRozmowaPrywatnaPath = '/rozmowy/{nazwa}/accept';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -63,7 +65,7 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  acceptRozmowaPrywatna$Response(params?: AcceptRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
+  acceptRozmowaPrywatna$Response(params: AcceptRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
     return acceptRozmowaPrywatna(this.http, this.rootUrl, params, context);
   }
 
@@ -73,14 +75,14 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  acceptRozmowaPrywatna(params?: AcceptRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatna> {
+  acceptRozmowaPrywatna(params: AcceptRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatna> {
     return this.acceptRozmowaPrywatna$Response(params, context).pipe(
       map((r: StrictHttpResponse<RozmowaPrywatna>): RozmowaPrywatna => r.body)
     );
   }
 
   /** Path part for operation `getRozmowaPrywatna()` */
-  static readonly GetRozmowaPrywatnaPath = '/rozmowy/{odbiorca-uzyt-id}';
+  static readonly GetRozmowaPrywatnaPath = '/rozmowy/{nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -88,7 +90,7 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRozmowaPrywatna$Response(params?: GetRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatnaResponse>> {
+  getRozmowaPrywatna$Response(params: GetRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatnaResponse>> {
     return getRozmowaPrywatna(this.http, this.rootUrl, params, context);
   }
 
@@ -98,14 +100,14 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getRozmowaPrywatna(params?: GetRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatnaResponse> {
+  getRozmowaPrywatna(params: GetRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatnaResponse> {
     return this.getRozmowaPrywatna$Response(params, context).pipe(
       map((r: StrictHttpResponse<RozmowaPrywatnaResponse>): RozmowaPrywatnaResponse => r.body)
     );
   }
 
   /** Path part for operation `inviteToRozmowaPrywatna()` */
-  static readonly InviteToRozmowaPrywatnaPath = '/rozmowy/{odbiorca-uzyt-id}';
+  static readonly InviteToRozmowaPrywatnaPath = '/rozmowy/{nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -113,7 +115,7 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  inviteToRozmowaPrywatna$Response(params?: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
+  inviteToRozmowaPrywatna$Response(params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
     return inviteToRozmowaPrywatna(this.http, this.rootUrl, params, context);
   }
 
@@ -123,7 +125,7 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  inviteToRozmowaPrywatna(params?: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatna> {
+  inviteToRozmowaPrywatna(params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatna> {
     return this.inviteToRozmowaPrywatna$Response(params, context).pipe(
       map((r: StrictHttpResponse<RozmowaPrywatna>): RozmowaPrywatna => r.body)
     );
@@ -151,6 +153,31 @@ export class RozmowaPrywatnaService extends BaseService {
   findRozmowyPrywatneOfUzytkownik(params?: FindRozmowyPrywatneOfUzytkownik$Params, context?: HttpContext): Observable<PageResponseRozmowaPrywatnaResponse> {
     return this.findRozmowyPrywatneOfUzytkownik$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageResponseRozmowaPrywatnaResponse>): PageResponseRozmowaPrywatnaResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `getRozmowaPrywatnaById()` */
+  static readonly GetRozmowaPrywatnaByIdPath = '/rozmowy/id/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getRozmowaPrywatnaById()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getRozmowaPrywatnaById$Response(params: GetRozmowaPrywatnaById$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatnaResponse>> {
+    return getRozmowaPrywatnaById(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getRozmowaPrywatnaById$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getRozmowaPrywatnaById(params: GetRozmowaPrywatnaById$Params, context?: HttpContext): Observable<RozmowaPrywatnaResponse> {
+    return this.getRozmowaPrywatnaById$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RozmowaPrywatnaResponse>): RozmowaPrywatnaResponse => r.body)
     );
   }
 

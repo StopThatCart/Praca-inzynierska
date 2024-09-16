@@ -6,7 +6,7 @@
       </div>
       <form method="post">
           <div class="mb-3">
-            <textarea [(ngModel)]="request.opis" class="form-control text-black" id="message-2" name="message" rows="6" placeholder="Komentarz"></textarea>
+            <textarea [(ngModel)]="request.opis" class="form-control bg-white text-black" id="message-2" name="message" rows="6" placeholder="Komentarz"></textarea>
           </div>
           <div class="hstack fs-4 justify-content-between">
               <div>
@@ -24,7 +24,7 @@
                 </div>
               </div>
               <div class="hstack gap-2">
-                <ng-container *ngIf="isReply">
+                <ng-container *ngIf="typ === TypKomentarza.ODPOWIEDZ">
                   <div>
                     <button (click)="cancelOdpowiedz()" class="btn btn-primary bg-primary-subtle d-block w-100 text-uppercase" type="submit">ANULUJ</button>
                   </div>

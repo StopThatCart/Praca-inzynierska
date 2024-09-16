@@ -99,7 +99,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `addKomentarzToWiadomoscPrywatna1()` */
-  static readonly AddKomentarzToWiadomoscPrywatna1Path = '/komentarze/wiadomosciPrywatne/{other-uzyt-nazwa}';
+  static readonly AddKomentarzToWiadomoscPrywatna1Path = '/komentarze/wiadomosciPrywatne';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

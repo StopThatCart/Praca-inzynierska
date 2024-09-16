@@ -1,0 +1,22 @@
+<div class="d-flex flex-start mt-2">
+  <img [src]="getKomentarzAvatar()" class="rounded-circle bg-white shadow-1-strong me-3" alt="avatar" width="50" height="50">
+    <div class="flex-grow-1 flex-shrink-1">
+        <div>
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="mb-1">{{wiadomosc.uzytkownikNazwa}} &nbsp;<span class="text-muted small">- {{ wiadomosc.dataUtworzenia }}</span></p>
+            </div>
+            <p class="text-break small">{{ wiadomosc.opis }}</p>
+            <div class="bg-secondary" >
+              <div *ngIf="wiadomosc.obraz">
+                <img
+                  class="rounded img-fluid mb-3"
+                  [alt]="'Obraz wiadomosc'"
+                  [src]="getKomentarzObraz()"
+                  style="max-width: 100%; height: auto; max-height: 250px;"
+                  loading="lazy">
+              </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -142,13 +142,22 @@ public class CommonMapperService {
             .aktywna(rozmowaPrywatna.isAktywna())
             .nadawca(rozmowaPrywatna.getNadawca())
             .uzytkownicy(rozmowaPrywatna.getUzytkownicy().stream()
-                .map(Uzytkownik::getNazwa)
+                .map(this::toUzytkownikSimpleResponse)
                 .collect(Collectors.toList()))
             .komentarze(rozmowaPrywatna.getWiadomosci().stream()
                 .map(this::toKomentarzSimpleResponse)
                 .collect(Collectors.toList()))
             .liczbaWiadomosci(rozmowaPrywatna.getLiczbaWiadomosci())
-            .ostatnioAktualizowana(rozmowaPrywatna.getOstatnioAktualizowana())
+            .ostatnioAktualizowana(timeAgo(rozmowaPrywatna.getOstatnioAktualizowana()))
+            .build();
+    }
+
+    private UzytkownikResponse toUzytkownikSimpleResponse(Uzytkownik uzytkownik) {
+        return UzytkownikResponse.builder()
+            .id(uzytkownik.getId())
+            .uzytId(uzytkownik.getUzytId())
+            .nazwa(uzytkownik.getNazwa())
+            .avatar(fileUtils.readAvatarFile(uzytkownik.getAvatar()))
             .build();
     }
 
@@ -171,10 +180,13 @@ public class CommonMapperService {
             .id(komentarz.getId())
             .komentarzId(komentarz.getKomentarzId())
             .opis(komentarz.getOpis())
+            .edytowany(komentarz.isEdytowany())
+            .dataUtworzenia(timeAgo(komentarz.getDataUtworzenia()))
             .postId(post != null ? post.getPostId() : null)
             .uzytkownikNazwa(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getNazwa() : null)
             .avatar(fileUtils.readAvatarFile(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getAvatar() : null))
             .obraz(fileUtils.readKomentarzObrazFile(komentarz.getObraz()))
+            
             .build();
     }
 

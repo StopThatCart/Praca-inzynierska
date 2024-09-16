@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UzytkownikResponse } from '../../../../services/models';
 import { TokenService } from '../../../../services/token/token.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UzytkownikService } from '../../../../services/services';
 
 @Component({
@@ -17,6 +17,7 @@ export class EdycjaNavComponent implements OnInit {
 
   constructor(
     private tokenService: TokenService,
+    private router: Router,
     private route: ActivatedRoute,
     private uzytService: UzytkownikService
   ) {}
@@ -43,12 +44,28 @@ export class EdycjaNavComponent implements OnInit {
   }
 
   getUzytAvatar(): string | undefined {
-  if(this._avatar) {
-    return 'data:image/jpeg;base64,' + this._avatar;
-  } else {
-    this.loadAvatar();
+    if(this._avatar) {
+      return 'data:image/jpeg;base64,' + this._avatar;
+    } else {
+      this.loadAvatar();
+    }
+    return this._avatar;
   }
-  return this._avatar;
-}
+
+  goToProfil() {
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      this.router.navigate([`/profil/${nazwa}`]);
+    }
+  }
+
+  goToPowiadomienia() {
+    this.router.navigate(['profil/powiadomienia']);
+  }
+
+  goToRozmowy() {
+    this.router.navigate(['profil/rozmowy']);
+  }
+
 
 }

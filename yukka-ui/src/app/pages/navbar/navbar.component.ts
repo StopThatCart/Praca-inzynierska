@@ -103,6 +103,10 @@ export class NavbarComponent implements OnInit {
 
   }
 
+  goToRozmowy() {
+    this.router.navigate([`profil/rozmowy`]);
+  }
+
 
 
 

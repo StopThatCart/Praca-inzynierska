@@ -9,6 +9,7 @@ import { TokenService } from '../../../../services/token/token.service';
 import { FormsModule } from '@angular/forms';
 import { AddKomentarzCardComponent } from "../add-komentarz-card/add-komentarz-card.component";
 import {TimeAgoPipe} from 'time-ago-pipe';
+import { TypKomentarza } from '../../enums/TypKomentarza';
 
 @Component({
   selector: 'app-komentarz-card',
@@ -20,6 +21,8 @@ import {TimeAgoPipe} from 'time-ago-pipe';
 export class KomentarzCardComponent implements OnInit {
   @Input()  komentarz:KomentarzResponse = {};
   @Input() depth: number = 0;
+
+  typ: TypKomentarza = TypKomentarza.ODPOWIEDZ;
 
   private _komentarzObraz: string | undefined;
   private _komentarzAvatar: string | undefined;
@@ -39,6 +42,7 @@ export class KomentarzCardComponent implements OnInit {
     obraz: ''
   };
 
+  public TypKomentarza = TypKomentarza;
   constructor(
     private router: Router,
     private komentarzService: KomentarzService,

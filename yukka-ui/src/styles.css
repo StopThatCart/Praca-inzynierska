@@ -22,3 +22,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
   scrollbar-width: none;  /* Firefox */
 }
+
+
+.search-results {
+  height: 100%;
+}

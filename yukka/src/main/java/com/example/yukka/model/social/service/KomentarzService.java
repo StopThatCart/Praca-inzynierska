@@ -124,12 +124,13 @@ public class KomentarzService {
     }
 
 
-    public KomentarzResponse addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, KomentarzRequest request, Authentication connectedUser) {
+    public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik nadawca = ((Uzytkownik) connectedUser.getPrincipal());
-        return addKomentarzToWiadomoscPrywatna(otherUzytNazwa, request, nadawca);
+        return addKomentarzToWiadomoscPrywatna(request, nadawca);
     }
 
-    public KomentarzResponse addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, KomentarzRequest request, Uzytkownik connectedUser) {
+    public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request, Uzytkownik connectedUser) {
+        String otherUzytNazwa = request.getTargetId();
         Uzytkownik nadawca = connectedUser;
         
         if(nadawca.getNazwa().equals(otherUzytNazwa)) {
@@ -154,8 +155,10 @@ public class KomentarzService {
         return komentarzMapper.toKomentarzResponse(response); 
     }
 
-    public KomentarzResponse addKomentarzToWiadomoscPrywatna(String otherUzytNazwa, @Valid KomentarzRequest request,
+    public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request,
         MultipartFile file, Authentication connectedUser) throws FileUploadException {
+
+        String otherUzytNazwa = request.getTargetId();
         Uzytkownik nadawca = ((Uzytkownik) connectedUser.getPrincipal());
         
         if(nadawca.getNazwa().equals(otherUzytNazwa)) {

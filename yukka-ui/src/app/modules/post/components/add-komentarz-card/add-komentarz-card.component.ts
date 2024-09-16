@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { KomentarzRequest } from '../../../../services/models/komentarz-request';
 import { KomentarzService } from '../../../../services/services';
 import { Router } from '@angular/router';
+import { TypKomentarza } from '../../enums/TypKomentarza';
 
 @Component({
   selector: 'app-add-komentarz-card',
@@ -14,7 +15,7 @@ import { Router } from '@angular/router';
 })
 export class AddKomentarzCardComponent implements OnInit {
   @Input() targetId: string | undefined;
-  @Input() isReply: boolean = false;
+  @Input() typ: TypKomentarza | undefined;
   @Output() onCancelOdpowiedz = new EventEmitter<void>();
 
 
@@ -29,10 +30,13 @@ export class AddKomentarzCardComponent implements OnInit {
 
   errorMsg: Array<string> = [];
 
+  public TypKomentarza = TypKomentarza;
+
   constructor(private komentarzService : KomentarzService, private router : Router) { }
 
   ngOnInit() {
     if(this.targetId) {
+      console.log("TargetId przy załadowaniu: " + this.targetId);
       this.request.targetId = this.targetId;
     }
 
@@ -70,12 +74,22 @@ export class AddKomentarzCardComponent implements OnInit {
     console.log(this.request);
     this.errorMsg = [];
 
-    if(this.isReply) {
-      console.log("Odpowiedz na komentarz");
-      this.addOdpowiedzToKomentarz();
+    if(this.typ) {
+      if(this.typ === TypKomentarza.ODPOWIEDZ) {
+        console.log("Odpowiedz na komentarz");
+        this.addOdpowiedzToKomentarz();
+      } else if(this.typ === TypKomentarza.POST) {
+        console.log("Komentarz na post");
+        this.addKomentarzToPost();
+      } else if(this.typ === TypKomentarza.WIADOMOSC) {
+        console.log("Wiadomość do użytkownika");
+        this.addWiadomoscToRozmowaPrywatna();
+      }
+
     } else {
-      this.addKomentarzToPost();
+      console.log("Nie wybrano typu komentarza");
     }
+
   }
 
   private addKomentarzToPost() {
@@ -112,6 +126,25 @@ export class AddKomentarzCardComponent implements OnInit {
       });
     }else {
       this.komentarzService.addOdpowiedzToKomentarz1$FormData$Json({
+        body: { request: this.request, file: this.wybranyPlik }
+      }).subscribe( {
+          next: (res) => { window.location.reload(); },
+          error: (err) => { this.handleErrors(err); }
+      });
+    }
+  }
+
+
+  private addWiadomoscToRozmowaPrywatna() {
+    if(this.request.obraz === '') {
+      this.komentarzService.addKomentarzToWiadomoscPrywatna1$Json({
+        body: this.request
+      }).subscribe( {
+          next: (res) => { window.location.reload(); },
+          error: (err) => { this.handleErrors(err); }
+      });
+    } else {
+      this.komentarzService.addKomentarzToWiadomoscPrywatna1$FormData({
         body: { request: this.request, file: this.wybranyPlik }
       }).subscribe( {
           next: (res) => { window.location.reload(); },
