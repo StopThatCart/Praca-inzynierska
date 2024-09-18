@@ -43,10 +43,10 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.odbiorcaNazwa = params['nazwa'];
+      this.odbiorcaNazwa = params['uzytkownikNazwa'];
       if (this.odbiorcaNazwa) {
         this.getRozmowa(this.odbiorcaNazwa);
-        this.route.snapshot.data['nazwa'] = this.odbiorcaNazwa;
+        this.route.snapshot.data['uzytkownikNazwa'] = this.odbiorcaNazwa;
       }
     });
 
@@ -72,9 +72,13 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   getRozmowa(nazwa: string): void {
-    this.rozService.getRozmowaPrywatna({ nazwa: nazwa }).subscribe({
+    this.rozService.getRozmowaPrywatna({ uzytkownikNazwa: nazwa }).subscribe({
       next: (rozmowa) => {
         this.rozmowa = rozmowa;
+        if (!this.rozmowa.aktywna) {
+          this.router.navigate(['/profil/rozmowy']);
+        }
+
         this.errorMessage = null;
         if(this.rozmowa.uzytkownicy) {
           const otherUzyt = this.rozmowa.uzytkownicy.find(user => user.nazwa === nazwa);

@@ -34,7 +34,7 @@ const routes: Routes = [
         data: { breadcrumb: 'Rozmowy' }
       },
       {
-        path: 'rozmowy/:nazwa',
+        path: 'rozmowy/:uzytkownikNazwa',
         component: RozmowaPageComponent,
         canActivate: [authGuard],
         data: { breadcrumb: (data: any) => `Rozmowa z ${data.uzytkownik.nazwa}` },

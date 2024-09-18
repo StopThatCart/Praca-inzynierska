@@ -30,7 +30,7 @@
     }
   ],
   "paths": {
-    "/rozmowy/{nazwa}/reject": {
+    "/rozmowy/{uzytkownikNazwa}/reject": {
       "put": {
         "tags": [
           "RozmowaPrywatna"
@@ -38,7 +38,7 @@
         "operationId": "rejectRozmowaPrywatna",
         "parameters": [
           {
-            "name": "nazwa",
+            "name": "uzytkownikNazwa",
             "in": "path",
             "required": true,
             "schema": {
@@ -60,7 +60,7 @@
         }
       }
     },
-    "/rozmowy/{nazwa}/accept": {
+    "/rozmowy/{uzytkownikNazwa}/accept": {
       "put": {
         "tags": [
           "RozmowaPrywatna"
@@ -68,7 +68,7 @@
         "operationId": "acceptRozmowaPrywatna",
         "parameters": [
           {
-            "name": "nazwa",
+            "name": "uzytkownikNazwa",
             "in": "path",
             "required": true,
             "schema": {
@@ -506,7 +506,7 @@
         }
       }
     },
-    "/rozmowy/{nazwa}": {
+    "/rozmowy/{uzytkownikNazwa}": {
       "get": {
         "tags": [
           "RozmowaPrywatna"
@@ -514,7 +514,7 @@
         "operationId": "getRozmowaPrywatna",
         "parameters": [
           {
-            "name": "nazwa",
+            "name": "uzytkownikNazwa",
             "in": "path",
             "required": true,
             "schema": {
@@ -542,7 +542,7 @@
         "operationId": "inviteToRozmowaPrywatna",
         "parameters": [
           {
-            "name": "nazwa",
+            "name": "uzytkownikNazwa",
             "in": "path",
             "required": true,
             "schema": {
@@ -2543,13 +2543,13 @@
           "name": {
             "type": "string"
           },
-          "pracownik": {
-            "type": "boolean"
-          },
           "normalUzytkownik": {
             "type": "boolean"
           },
           "admin": {
+            "type": "boolean"
+          },
+          "pracownik": {
             "type": "boolean"
           },
           "username": {
@@ -2564,7 +2564,7 @@
           "password": {
             "type": "string"
           },
-          "enabled": {
+          "accountNonLocked": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
@@ -2573,7 +2573,7 @@
           "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonLocked": {
+          "enabled": {
             "type": "boolean"
           }
         }
@@ -3341,11 +3341,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xstary": {
+          "ystary": {
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "xstary": {
             "type": "integer",
             "format": "int32"
           },
@@ -3353,7 +3353,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "ystary": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           }

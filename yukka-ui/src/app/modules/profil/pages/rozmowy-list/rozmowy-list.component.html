@@ -19,30 +19,25 @@
             *ngIf="rozResponse"
             >
 
-            <div class="search-results">
-              <app-rozmowa-card
-                *ngFor="let rozmowa of rozResponse?.content"
-                [rozmowa]="rozmowa">
-              </app-rozmowa-card>
-            </div>
+              <div class="search-results">
+                <app-rozmowa-card
+                  *ngFor="let rozmowa of rozResponse?.content"
+                  [rozmowa]="rozmowa"
+                  (onReject)="handleReject($event)">
+                </app-rozmowa-card>
+              </div>
 
-            <div *ngIf="!rozResponse?.content?.length" class="text-center text-white-50 mt-3 mb-3">
-              Brak rozmów
-            </div>
+              <div *ngIf="!rozResponse?.content?.length" class="text-center text-white-50 mt-3 mb-3">
+                Brak rozmów
+              </div>
 
 
-            <div class="d-flex justify-content-center" *ngIf="isLoading">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+              <div class="d-flex justify-content-center" *ngIf="isLoading">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
               </div>
             </div>
-
-            <app-rozmowa-card></app-rozmowa-card>
-            <app-rozmowa-card></app-rozmowa-card>
-            <app-rozmowa-card></app-rozmowa-card>
-            <app-rozmowa-card></app-rozmowa-card>
-            </div>
-
           </div>
         </div>
       </div>

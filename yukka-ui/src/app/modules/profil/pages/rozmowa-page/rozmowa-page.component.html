@@ -17,15 +17,13 @@
                                         </div>
                                     </div>
                                     <h4 class="text-center mb-4 pb-2">Rozmowa prywatna z {{ rozmowaUzyt.nazwa }}</h4>
-                                    <div class="row search-results rozmowa-divus" #scrollus>
+                                    <div class="row search-results rozmowa-divus scroll-container" #scrollus>
                                         <div class="col">
-
                                           <app-wiadomosc-card
                                           *ngFor="let wiad of rozmowa.komentarze"
                                           [wiadomosc]="wiad"
                                           (onRemove)="handleRemove($event)"
                                           ></app-wiadomosc-card>
-
                                         </div>
                                     </div>
                                 </div>

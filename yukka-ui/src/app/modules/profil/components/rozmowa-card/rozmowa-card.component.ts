@@ -1,18 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RozmowaPrywatnaResponse, UzytkownikResponse } from '../../../../services/models';
 import { RozmowaPrywatnaService } from '../../../../services/services';
 import { Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
+import { CommonModule } from '@angular/common';
+import { acceptRozmowaPrywatna } from '../../../../services/fn/rozmowa-prywatna/accept-rozmowa-prywatna';
+import { error } from 'console';
 
 @Component({
   selector: 'app-rozmowa-card',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './rozmowa-card.component.html',
   styleUrl: './rozmowa-card.component.css'
 })
 export class RozmowaCardComponent implements OnInit {
   @Input() rozmowa: RozmowaPrywatnaResponse = {};
+  @Output() onReject = new EventEmitter<string>();
 
   private _avatar: string | undefined;
   selectedUzyt: UzytkownikResponse | undefined;
@@ -36,7 +40,7 @@ export class RozmowaCardComponent implements OnInit {
   }
 
   goToRozmowa() {
-    if (this.selectedUzyt) {
+    if (this.selectedUzyt && this.rozmowa.aktywna) {
       this.router.navigate(['profil/rozmowy', this.selectedUzyt?.nazwa]);
     }
   }
@@ -59,6 +63,39 @@ export class RozmowaCardComponent implements OnInit {
     if (this.rozmowa.uzytkownicy) {
       const loggedUzytNazwa = this.tokenService.nazwa;
       this.selectedUzyt = this.rozmowa.uzytkownicy.find(user => user.nazwa !== loggedUzytNazwa);
+    }
+  }
+
+
+  acceptRozmowaPrywatna() {
+    if(this.selectedUzyt && this.selectedUzyt.nazwa) {
+      this.rozService.acceptRozmowaPrywatna({ 'uzytkownikNazwa': this.selectedUzyt.nazwa }).subscribe({
+        next: (rozmowa) => {
+          console.log('Rozmowa prywatna accepted: ', rozmowa);
+          if(rozmowa.aktywna) {
+            this.rozmowa.aktywna = rozmowa.aktywna;
+          }
+
+        },
+        error: (err) => {
+          console.error('Error while accepting rozmowa prywatna: ', err);
+        }
+      });
+    }
+  }
+
+  // TODO: Blokowanie użytkownika
+  rejectRozmowaPrywatna() {
+    if(this.selectedUzyt && this.selectedUzyt.nazwa) {
+      this.rozService.rejectRozmowaPrywatna({ 'uzytkownikNazwa': this.selectedUzyt.nazwa }).subscribe({
+        next: () => {
+          console.log('Rozmowa prywatna odrzucona');
+          this.onReject.emit(this.selectedUzyt?.nazwa);
+        },
+        error: (err) => {
+          console.error('Error while rejecting rozmowa prywatna: ', err);
+        }
+      });
     }
   }
 

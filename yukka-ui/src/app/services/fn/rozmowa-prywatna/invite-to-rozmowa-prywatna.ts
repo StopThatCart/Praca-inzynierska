@@ -9,13 +9,13 @@ import { RequestBuilder } from '../../request-builder';
 import { RozmowaPrywatna } from '../../models/rozmowa-prywatna';
 
 export interface InviteToRozmowaPrywatna$Params {
-  nazwa: string;
+  uzytkownikNazwa: string;
 }
 
 export function inviteToRozmowaPrywatna(http: HttpClient, rootUrl: string, params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
   const rb = new RequestBuilder(rootUrl, inviteToRozmowaPrywatna.PATH, 'post');
   if (params) {
-    rb.path('nazwa', params.nazwa, {});
+    rb.path('uzytkownikNazwa', params.uzytkownikNazwa, {});
   }
 
   return http.request(
@@ -28,4 +28,4 @@ export function inviteToRozmowaPrywatna(http: HttpClient, rootUrl: string, param
   );
 }
 
-inviteToRozmowaPrywatna.PATH = '/rozmowy/{nazwa}';
+inviteToRozmowaPrywatna.PATH = '/rozmowy/{uzytkownikNazwa}';

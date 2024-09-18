@@ -36,6 +36,14 @@ export class RozmowyListComponent {
     console.log(this.rozResponse);
   }
 
+  handleReject(nazwa: string) {
+    if (this.rozResponse.content) {
+      this.rozResponse.content = this.rozResponse.content.filter(rozmowa =>
+        !(rozmowa.uzytkownicy ?? []).some(user => user.nazwa === nazwa)
+      );
+    }
+  }
+
 
   findRozmowyOfUzytkownik() {
     console.log('findRozmowyOfUzytkownik');
