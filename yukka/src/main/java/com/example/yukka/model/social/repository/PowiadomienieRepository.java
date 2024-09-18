@@ -38,10 +38,11 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
     @Query(value = """
         MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
         WHERE id(powiadomienie) = $id
-        SET powiadomienie.dataUtworzenia = 	$time, r1.przeczytane = false
+        SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
         RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
         """)
     Optional<Powiadomienie> updateData(@Param("email") String email, @Param("id") Long id,
+    @Param("avatar") String avatar,
     @Param("time") LocalDateTime localdatetime);
 
     @Query(value = """

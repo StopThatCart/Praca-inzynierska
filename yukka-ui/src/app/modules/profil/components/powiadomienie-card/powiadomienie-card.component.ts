@@ -59,7 +59,7 @@ export class PowiadomienieCardComponent {
           this.router.navigate(['/posty', this.pow.odnosnik]);
           break;
         case TypPowiadomienia.WIADOMOSC_PRYWATNA:
-          this.router.navigate(['/wiadomosci', this.pow.odnosnik]);
+          this.router.navigate(['profil/rozmowy', this.pow.odnosnik]);
           break;
 
         case TypPowiadomienia.OWOCOWANIE_ROSLIN:

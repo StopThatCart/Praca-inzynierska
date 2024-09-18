@@ -119,7 +119,8 @@ public class PowiadomienieService {
 
         Optional<Powiadomienie> powOpt = powiadomienieRepository.checkIfSamePowiadomienieExists(uzytkownik.getEmail(), powiadomienie.getTyp(), powiadomienie.getOpis());
         if(powOpt.isPresent()) {
-            return powiadomienieRepository.updateData(uzytkownik.getEmail(), powOpt.get().getId(), LocalDateTime.now()).get();
+            return powiadomienieRepository.updateData(uzytkownik.getEmail(), powOpt.get().getId(), 
+            powiadomienie.getAvatar(),LocalDateTime.now()).get();
         } else{
             return powiadomienieRepository.addPowiadomienieToUzytkownik(uzytkownik.getEmail(), powiadomienie);
         }

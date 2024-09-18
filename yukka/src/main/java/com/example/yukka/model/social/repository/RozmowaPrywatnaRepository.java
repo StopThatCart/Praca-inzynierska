@@ -87,6 +87,32 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
     RozmowaPrywatna inviteToRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca,
      @Param("time") LocalDateTime localdatetime);
 
+    @Query("""
+        MATCH (uzyt1:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
+                (priv:RozmowaPrywatna)
+                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawcaId})
+        WHERE  priv.aktywna = false
+        SET    priv.aktywna = true, priv.liczbaWiadomosci = 0
+        WITH   priv
+        REMOVE priv.nadawca
+        RETURN priv
+        """
+        )
+    RozmowaPrywatna acceptRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
+                                        @Param("odbiorcaId") String odbiorcaId);
+
+    @Query("""
+        MATCH (uzyt1:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
+                (priv:RozmowaPrywatna)
+                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawcaId})
+        WHERE priv.aktywna = false AND priv.nadawcaId <> uzyt1.uzytId
+        DETACH DELETE priv
+        """
+        )
+    void rejectRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
+                                        @Param("odbiorcaId") String odbiorcaId,
+                                        @Param("rozmowa") RozmowaPrywatna rozmowa);
+
     // To pójdzie do admina potem
     @Query("""
         MATCH  (uzyt1:Uzytkownik{uzytId: $uczestnik1})-[:JEST_W_ROZMOWIE]->
@@ -107,32 +133,4 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         DETACH DELETE u, kom
         """)
     void clearRozmowyPrywatne();
-
-
-    @Query("""
-        MATCH (uzyt1:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
-                (priv:RozmowaPrywatna)
-                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawcaId})
-        WHERE  priv.aktywna = false
-        SET    priv.aktywna = true, priv.liczbaWiadomosci = 0
-        WITH   priv
-        REMOVE priv.nadawca
-        RETURN priv
-        """
-        )
-    RozmowaPrywatna acceptRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
-                                        @Param("odbiorcaId") String odbiorcaId);
-
-
-    @Query("""
-        MATCH (uzyt1:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
-                (priv:RozmowaPrywatna)
-                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawcaId})
-        WHERE priv.aktywna = false AND priv.nadawcaId <> uzyt1.uzytId
-        DETACH DELETE priv
-        """
-        )
-    void rejectRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
-                                        @Param("odbiorcaId") String odbiorcaId,
-                                        @Param("rozmowa") RozmowaPrywatna rozmowa);
 }

@@ -107,9 +107,18 @@ public class PostService {
 
         Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastPost(newestPost);
+        
+        return save(request, uzyt);
+    }
+
+    public Post save(PostRequest request, Uzytkownik connectedUser) {
+        Uzytkownik uzyt = connectedUser;
 
         Post post = postMapper.toPost(request);
-        post.setPostId(createPostId());
+        if(post.getPostId() == null) {
+            post.setPostId(createPostId());
+        }
+        
         
         return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
     }
@@ -120,23 +129,11 @@ public class PostService {
         Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastPost(newestPost);
 
-        Post post = postMapper.toPost(request);
-        post.setPostId(createPostId());
-
-        String leObraz = fileStoreService.savePost(file, post.getPostId(), uzyt.getUzytId());
-        if(leObraz == null) {
-            throw new FileUploadException("Wystąpił błąd podczas wysyłania pliku");
-        }
-        post.setObraz(leObraz);
-        
-        return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
+        return save(request, file, uzyt);
     }
 
     public Post save(PostRequest request, MultipartFile file, Uzytkownik connectedUser) throws FileUploadException {
         Uzytkownik uzyt = connectedUser;
-        
-        Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
-        //checkTimeSinceLastPost(newestPost);
 
         Post post = postMapper.toPost(request);
         post.setPostId(createPostId());
@@ -146,8 +143,6 @@ public class PostService {
             throw new FileUploadException("Wystąpił błąd podczas wysyłania pliku");
         }
         post.setObraz(leObraz);
-
-        System.out.println("Obraz: " + leObraz);
         
         return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
     }

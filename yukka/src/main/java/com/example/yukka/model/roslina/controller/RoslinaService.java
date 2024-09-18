@@ -142,7 +142,7 @@ public class RoslinaService {
     public Roslina save(RoslinaRequest request) {
         Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
-            System.out.println("\n\n\nBITCH IS PRESENT\n\n\n");
+            System.out.println("\n\n\nROSLINA IS PRESENT\n\n\n");
             return null;
         }
         

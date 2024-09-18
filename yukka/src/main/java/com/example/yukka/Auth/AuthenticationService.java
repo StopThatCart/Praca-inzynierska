@@ -89,6 +89,7 @@ class AuthenticationService {
         claims.put("UzytId", uzyt.getUzytId());
         claims.put("Nazwa", uzyt.getUsername());
         claims.put("Email", uzyt.getEmail());
+        claims.put("Avatar", uzyt.getAvatar());
         
        // claims.put("authorities", user.getAuthorities()); // To już jest robione w JwtService
 

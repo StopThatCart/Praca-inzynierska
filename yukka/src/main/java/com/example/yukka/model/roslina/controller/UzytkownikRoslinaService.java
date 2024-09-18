@@ -70,7 +70,7 @@ public class UzytkownikRoslinaService {
 
         Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
-            System.out.println("\n\n\nBITCH IS PRESENT\n\n\n");
+            System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
         }
         
@@ -93,7 +93,7 @@ public class UzytkownikRoslinaService {
 
         Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
-            System.out.println("\n\n\nBITCH IS PRESENT\n\n\n");
+            System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
         }
         
@@ -114,7 +114,7 @@ public class UzytkownikRoslinaService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
-            System.out.println("\n\n\nBITCH IS PRESENT\n\n\n");
+            System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
         }
         

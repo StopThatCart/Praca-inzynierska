@@ -24,6 +24,16 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         RETURN post
         """)
     @Nonnull List<Post> findAll();
+
+
+    // Używane tylko do seedowania
+    @Query("""
+        MATCH (post:Post)
+        RETURN post
+        ORDER BY post.dataUtworzenia DESC
+        LIMIT 1
+        """)
+    Optional<Post> findLatestPost();
     @Query("""
         MATCH (post:Post {postId: $postId})
         MATCH (autor:Uzytkownik)-[r1:MA_POST]->(post)

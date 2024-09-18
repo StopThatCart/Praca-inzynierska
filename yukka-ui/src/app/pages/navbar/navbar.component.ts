@@ -22,14 +22,12 @@ export class NavbarComponent implements OnInit {
   constructor(private router: Router,
     private tokenService: TokenService,
     private uzytService: UzytkownikService) {
-      this.loggedIn = this.tokenService.isTokenValid();
+    this.loggedIn = this.tokenService.isTokenValid();
   }
 
   ngOnInit(): void {
     this.loadAvatar();
-    this.tokenService.isLoggedIn.subscribe((status: boolean) => {
-      this.loggedIn = status;
-    });
+
 
     if (!this.tokenService.isTokenValid()) {
       this.loggedIn = false;
@@ -78,9 +76,11 @@ export class NavbarComponent implements OnInit {
   }
 
   isLogged() {
-    return this.loggedIn;
+    return this.tokenService.isTokenValid();
   }
+
   logout() {
+    this._avatar = undefined;
     this.tokenService.clearToken();
     this.router.navigate(['login']);
   }

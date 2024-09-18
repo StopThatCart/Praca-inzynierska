@@ -193,30 +193,34 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     @Query("""
         MATCH (u:Uzytkownik) DETACH DELETE u 
         WITH u
+
         MATCH(ust:Ustawienia) DETACH DELETE ust
         WITH ust
-        MATCH(roz:RozmowaPrywatna)
-        OPTIONAL MATCH (roz)-[:MA_WIADOMOSC]->(kom:Komentarz)
-        DETACH DELETE roz, kom
-        WITH roz
-        MATCH (powiadomienie:Powiadomienie)
-        DETACH DELETE powiadomienie
-        WITH powiadomienie
+
         MATCH (o:Ogrod)
         OPTIONAL MATCH (o)-[:MA_DZIALKE]->(d:Dzialka)
         DETACH DELETE d, o
         WITH d
 
+        MATCH (u:Uzytkownik)
+        DETACH DELETE u 
+        """)
+    void clearUzytkowicy();
+
+
+    @Query("""
+        MATCH (powiadomienie:Powiadomienie)
+        DETACH DELETE powiadomienie
+        """)
+    void clearPowiadomienia();   
+    
+
+    @Query("""
         MATCH (roslina:UzytkownikRoslina)
         OPTIONAL MATCH (roslina)<-[:MA_ROSLINE]-(wl:UzytkownikWlasciwosc)
         DETACH DELETE roslina, wl
-        
-        WITH roslina
-        MATCH (u:Uzytkownik)
-        DETACH DELETE u 
-
         """)
-    void clearUzytkowicy();
+    void clearUzytkownikRoslina(); 
 
 
 

@@ -7,8 +7,6 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class TokenService {
-  private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.isTokenValid());
-
   private isLocalStorageAvailable(): boolean {
     return typeof localStorage !== 'undefined';
   }
@@ -16,7 +14,6 @@ export class TokenService {
   set token(token: string) {
     if (this.isLocalStorageAvailable()) {
       localStorage.setItem('token', token);
-      this.loggedIn.next(this.isTokenValid());
     }
   }
 
@@ -30,7 +27,6 @@ export class TokenService {
   clearToken() {
     if (this.isLocalStorageAvailable()) {
       localStorage.removeItem('token');
-      this.loggedIn.next(false);
     }
   }
 
@@ -103,10 +99,6 @@ export class TokenService {
       return decodedToken.Avatar;
     }
     return '';
-  }
-
-  get isLoggedIn() {
-    return this.loggedIn.asObservable();
   }
 
   isAdmin(): boolean {

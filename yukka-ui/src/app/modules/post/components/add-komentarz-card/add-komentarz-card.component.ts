@@ -99,7 +99,6 @@ export class AddKomentarzCardComponent implements OnInit {
         body: this.request
       }).subscribe( {
           next: (res) => {
-         //   console.log(res);
             window.location.reload();
           },
           error: (err) => { this.handleErrors(err); }
@@ -109,7 +108,6 @@ export class AddKomentarzCardComponent implements OnInit {
         body: { request: this.request, file: this.wybranyPlik }
       }).subscribe( {
           next: (res) => {
-         //   console.log(res);
             window.location.reload();
           },
           error: (err) => { this.handleErrors(err); }

@@ -13,7 +13,6 @@ import { UzytkownikService } from '../../../../services/services';
 })
 export class EdycjaNavComponent implements OnInit {
   private _avatar: string | undefined;
-  loggedIn: boolean = false;
 
   constructor(
     private tokenService: TokenService,
@@ -24,13 +23,7 @@ export class EdycjaNavComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAvatar();
-    this.tokenService.isLoggedIn.subscribe((status: boolean) => {
-      this.loggedIn = status;
-    });
 
-    if (!this.tokenService.isTokenValid()) {
-      this.loggedIn = false;
-    }
   }
 
   private loadAvatar() {

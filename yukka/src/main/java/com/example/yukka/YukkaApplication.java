@@ -5,10 +5,11 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
+import java.util.Random;
 
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -42,6 +43,7 @@ import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
+import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.social.service.KomentarzService;
@@ -95,6 +97,11 @@ public class YukkaApplication {
 
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
+
+	private final int MAX_POSTY = 10;
+	private final int MAX_KOMENTARZE = 5;
+	private final int MAX_ODPOWIEDZI_DEPTH = 2;
+	private final int MAX_ODPOWIEDZI = 3;
 	
 
 
@@ -175,14 +182,27 @@ public class YukkaApplication {
 		System.out.println("Usuwanie rozmów prywatnych");
 		rozmowaPrywatnaRepository.clearRozmowyPrywatne();
 
+		System.out.println("Usuwanie komentarzy");
+		komentarzRepository.clearKomentarze();
+
+		System.out.println("Usuwanie postów");
+		postRepository.clearPosts();
+
+		System.out.println("Usuwanie powiadomień");
+		uzytkownikRepository.clearPowiadomienia();
+
+		System.out.println("Usuwanie roślin użytkowników");
+		uzytkownikRepository.clearUzytkownikRoslina();
+
 		System.out.println("Usuwanie użytkowników");
 		uzytkownikRepository.clearUzytkowicy();
 
-		System.out.println("Usuwanie komentarzy");
-		//komentarzService.seedRemoveKomentarzeObrazy();
-		komentarzRepository.clearKomentarze();
-		//postService.seedRemovePostyObrazy();
-		postRepository.clearPosts();
+
+
+
+
+		
+
 	}
 
 	void seed() {
@@ -237,119 +257,21 @@ public class YukkaApplication {
 
 		uzytkownikService.updateUzytkownikAvatar(obrazAvatar1, usPiotr);
 		
+
+		usJan = uzytkownikRepository.findByEmail(usJan.getEmail()).get();
+		usPrac = uzytkownikRepository.findByEmail(usPrac.getEmail()).get();
+		usPiotr = uzytkownikRepository.findByEmail(piotrEmail).get();
+		usKatarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
+		usMichal = uzytkownikRepository.findByEmail(michalEmail).get();
 		
-		String postId1 = UUID.randomUUID().toString();
-		Post p1 = Post.builder()
-        .postId(postId1)
-        .tytul("Jakiś post1")
-        .opis("Jakiś postowy opis1")
-        .build();
-
-		String postId2 = UUID.randomUUID().toString();
-		Post p2 = Post.builder()
-        .postId(postId2)
-        .tytul("Jakiś post2")
-        .opis("Jakiś postowy opis2")
-        .build();
-
-		String postId3 = UUID.randomUUID().toString();
-		Post p3 = Post.builder()
-        .postId(postId3)
-        .tytul("Jakiś post3")
-        .opis("Jakiś postowy opis3")
-        .build();
-
-		PostRequest postReq1 = PostRequest.builder().tytul("Jakiś post3").opis("Jakiś postowy opis3").build();
-
-		Path cheezyPath = Paths.get(obrazSeedPath, "cheezy.jpg");
-		MockMultipartFile obrazPost1 = new MockMultipartFile("tempFileName", "cheezy.jpg", 
-		"image/png", fileUtils.readFileFromLocation(cheezyPath));
-
-		// Dodawanie postów
-		postRepository.addPost(michalEmail, p1, LocalDateTime.now());
-		postRepository.addPost(michalEmail, p2, LocalDateTime.now());
-
-		//
-		try {
-			p3 = postService.save(postReq1, obrazPost1, usMichal);
-		} catch (FileUploadException e) {
-			e.printStackTrace();
-		}
-		//postRepository.addPost(michalEmail, p3);
+		List<Uzytkownik> uzytkownicy = Arrays.asList(usPiotr, usKatarzyna, usMichal, usJan, usPrac);
+		
 
 		// Dodawanie parę zwykłych postów do sprawdzania paginacji
 		System.out.println("Dodawanie postów testowych...");
-		for(int i = 0; i < 2; i++) {
-			Post post = Post.builder()
-			.postId(postService.createPostId())
-			.tytul("Jakiś post testowy " + i)
-			.opis("Jakiś postowy testowy opis " + i)
-			.build();
-			int rand = (int)(Math.random() * 3);
-			switch(rand) {
-				case 0:
-					postRepository.addPost(piotrEmail, post, LocalDateTime.now());
-					break;
-				case 1:
-					postRepository.addPost(katarzynaEmail, post, LocalDateTime.now());
-					break;
-				case 2:
-					postRepository.addPost(michalEmail, post, LocalDateTime.now());
-					break;
-			}
-		}
+		addPostyWithKomentarze(uzytkownicy);
 		System.out.println("Dodano posty testowe. Może lepiej dać je potem w batchu.");
 
-	
-		// Dodawanie ocen do postów
-		postRepository.addOcenaToPost(katarzynaEmail, postId1, false);
-		postRepository.addOcenaToPost(piotrEmail, postId1, false);
-		postRepository.addOcenaToPost(katarzynaEmail, postId2, true);
-		postRepository.addOcenaToPost(piotrEmail, postId2, true);
-		postRepository.addOcenaToPost(katarzynaEmail, postId3, true);
-		postRepository.addOcenaToPost(piotrEmail, postId3, false);
-	
-		// Komentarze
-		String komId1 = UUID.randomUUID().toString();
-		String komId2 = UUID.randomUUID().toString();
-		String komId3 = UUID.randomUUID().toString();
-		String komId4 = UUID.randomUUID().toString();
-		String komId5 = UUID.randomUUID().toString();
-
-		Komentarz k1 = Komentarz.builder().komentarzId(komId1).opis("Piotr opis").build();
-		Komentarz k2 = Komentarz.builder().komentarzId(komId2).opis("Kata opis").build();
-		Komentarz k3 = Komentarz.builder().komentarzId(komId2 + "dasd").opis("Kata opis innego posta").build();
-		Komentarz k4 = Komentarz.builder().komentarzId(komId3).opis("Piotr2 opis").build();
-		Komentarz k5 = Komentarz.builder().komentarzId(komId4).opis("Kata2 opis").build();
-		Komentarz k6 = Komentarz.builder().komentarzId(komId5).opis("Kata3 opis").build();
-
-		//komentarzRepository.addKomentarzToPost(piotrEmail, postId3, k1);
-	///	komentarzRepository.addKomentarzToPost(katarzynaEmail, postId3, k2);
-
-		//komentarzRepository.addKomentarzToKomentarz(piotrEmail, k4, komId2);
-	//	komentarzRepository.addKomentarzToKomentarz(katarzynaEmail, k5, komId2);
-	//	komentarzRepository.addKomentarzToKomentarz(katarzynaEmail, k6, komId3);
-
-	//	komentarzRepository.addKomentarzToPost(katarzynaEmail, postId2, k3);
-		// To się da do service potem
-		//komentarzRepository.updateKomentarzeCountInPost(postId3);
-
-		// komentarzRepository.addKomentarzToPost(postId1, k10);
-		// komentarzRepository.addKomentarzToPost(postId2, k11);
-		// komentarzRepository.addKomentarzToPost(postId3, k12);
-
-		// To samo, tylko daje powiadomienia użytkownikom
-
-
-		
-		System.out.println("Dodawanie komentarzy do postów");
-
-		Komentarz kom1 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 1 od Piotra").targetId(p1.getPostId()).build(), usPiotr);
-		Komentarz kom2 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3 od Katarzyny").targetId(p3.getPostId()).build(), usKatarzyna);
-		//System.out.println("Komentarz 2: " + kom2.toString());
-		Komentarz kom3 = komentarzService.addKomentarzToPost(KomentarzRequest.builder().opis("Komentarz do posta 3 od Piotra").targetId(p3.getPostId()).build(), usPiotr);
-
-		System.out.println("Dodawanie odpowiedzi do komentarzy");
 
 		Path kotPath = Paths.get(obrazSeedPath, "kot.png");
 		MockMultipartFile obraz1 = new MockMultipartFile("tempFileName", "kot.png", 
@@ -359,138 +281,31 @@ public class YukkaApplication {
 		MockMultipartFile obraz2 = new MockMultipartFile("tempFileName", "peppino.png", 
 		"image/png", fileUtils.readFileFromLocation(peppinoPath));
 
-	//	System.out.println("Obraz: " + obraz.length);
-	//	System.out.println("Multipart: " + obraz1.getContentType());
-
-		KomentarzRequest komReq1 = KomentarzRequest.builder().opis("Piotr2 opis").targetId(kom2.getKomentarzId()).build();
-		Komentarz kom4 = null;
-		KomentarzRequest komReq2 = KomentarzRequest.builder().opis("Odpowiedź katarzyny głębokość 1").targetId(kom2.getKomentarzId()).build();
-		Komentarz kom5 = null;
-		try {
-			kom4 = komentarzService.addOdpowiedzToKomentarz(komReq1, obraz1, usPiotr);
-			kom5 = komentarzService.addOdpowiedzToKomentarz(komReq2, obraz2, usKatarzyna);
-		} catch (FileUploadException e) {
-			e.printStackTrace();
-		}
-
-		
-		KomentarzRequest komReq3 = KomentarzRequest.builder().opis("Odpowiedź katarzyny głębokość 2").targetId(kom5.getKomentarzId()).build();
-		Komentarz kom6 = komentarzService.addOdpowiedzToKomentarz(komReq3, usKatarzyna);
-
-		KomentarzRequest komReq3_1 = KomentarzRequest.builder().opis("Odpowiedź piotra głębokość 3").targetId(kom6.getKomentarzId()).build();
-		Komentarz kom6_1 = komentarzService.addOdpowiedzToKomentarz(komReq3_1, usPiotr);
-
-		KomentarzRequest komReq3_2 = KomentarzRequest.builder().opis("Odpowiedź michała głębokość 4").targetId(kom6_1.getKomentarzId()).build();
-		Komentarz kom6_2 = komentarzService.addOdpowiedzToKomentarz(komReq3_2, usMichal);
-
-		KomentarzRequest komReq3_3 = KomentarzRequest.builder().opis("Odpowiedź katarzyny głębokość 5").targetId(kom6_2.getKomentarzId()).build();
-		Komentarz kom6_3 = komentarzService.addOdpowiedzToKomentarz(komReq3_3, usKatarzyna);
-
-		KomentarzRequest komReq3_4 = KomentarzRequest.builder().opis("Odpowiedź piotra głębokość 6").targetId(kom6_3.getKomentarzId()).build();
-		Komentarz kom6_4 = komentarzService.addOdpowiedzToKomentarz(komReq3_4, usPiotr);
-
-		KomentarzRequest komReq3_5 = KomentarzRequest.builder().opis("Odpowiedź piotra głębokość 7").targetId(kom6_4.getKomentarzId()).build();
-		Komentarz kom6_5 = komentarzService.addOdpowiedzToKomentarz(komReq3_5, usPiotr);
-
-		KomentarzRequest komReq3_6 = KomentarzRequest.builder().opis("Odpowiedź piotra głębokość 4-1").targetId(kom6.getKomentarzId()).build();
-		Komentarz kom6_6 = komentarzService.addOdpowiedzToKomentarz(komReq3_6, usPiotr);
-
-
-
-		KomentarzRequest komReq4 = KomentarzRequest.builder().opis("Michał opis").targetId(kom4.getKomentarzId()).build();
-		Komentarz kom7 = komentarzService.addOdpowiedzToKomentarz(komReq4, usMichal);
-
-		// Ocenianie
-	//	System.out.println("\n\n\nocenia1\n\n\n\n\n\n");
-		//komentarzRepository.addOcenaToKomentarz(piotrEmail, komId2, false);
-	//	System.out.println("ocenia2");
-		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom1.getKomentarzId(), true);
-		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom3.getKomentarzId(), false);
-		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom4.getKomentarzId(), false);
-		komentarzRepository.addOcenaToKomentarz(katarzynaEmail, kom7.getKomentarzId(), false);
-
-	//	System.out.println("ocenia3");
-		komentarzRepository.addOcenaToKomentarz(michalEmail, kom1.getKomentarzId(), true);
-		komentarzRepository.addOcenaToKomentarz(michalEmail, kom2.getKomentarzId(), false);
-		komentarzRepository.addOcenaToKomentarz(michalEmail, kom3.getKomentarzId(), true); 
-		komentarzRepository.addOcenaToKomentarz(michalEmail, kom4.getKomentarzId(), false); 
-		komentarzRepository.addOcenaToKomentarz(michalEmail, kom5.getKomentarzId(), true);
-		komentarzRepository.addOcenaToKomentarz(michalEmail, kom6.getKomentarzId(), true);
-
-		komentarzRepository.addOcenaToKomentarz(piotrEmail, kom2.getKomentarzId(), false);
-		komentarzRepository.addOcenaToKomentarz(piotrEmail, kom5.getKomentarzId(), false);
-		 
-		//komentarzRepository.addOcenaToKomentarz(piotrEmail, komId5, true); 
-
-		// Usunięcie oceny
-		komentarzRepository.addOcenaToKomentarz(michalEmail, kom3.getKomentarzId(), false);
-		//komentarzRepository.removeOcenaFromKomentarz(michalEmail, kom3.getKomentarzId());
-
-		// Rozmowy prywatne
-
-		// Initialize UUIDs for Komentarz IDs
-		String komId7 = UUID.randomUUID().toString();
-		String komId8 = UUID.randomUUID().toString();
-		String komId9 = UUID.randomUUID().toString();
-		String komId10 = UUID.randomUUID().toString();
-
-		// Do testów
-		Uzytkownik piotr = uzytkownikRepository.findByEmail(piotrEmail).get();
-		Uzytkownik katarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
-
 		// Zaproszenie do rozmowy prywatnej
-		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(usKatarzyna.getUzytId(), usPiotr.getUzytId(),
-		LocalDateTime.now());
+		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaRepository
+		.inviteToRozmowaPrywatna(usKatarzyna.getUzytId(), usPiotr.getUzytId(), LocalDateTime.now());
 
 		// Akceptacja rozmowy prywatnej
-		RozmowaPrywatna meh = rozmowaPrywatnaRepository.acceptRozmowaPrywatna(piotr.getUzytId(), katarzyna.getUzytId());
-		//System.out.println("Meh: " + meh.toString());
-		//rozmowaPrywatnaService.acceptRozmowaPrywatnaNoPunjabi(katarzyna.getNazwa(), piotr);
-
-		// Dodanie komentarzy do rozmowy prywatnej
-		
-		//Komentarz k7 = Komentarz.builder().komentarzId(komId7).opis("Wiadomość od Piotra").build();
-	//	Komentarz k8 = Komentarz.builder().komentarzId(komId8).opis("Wiadomość od Katarzyny").build();
-		//Komentarz k9 = Komentarz.builder().komentarzId(komId9).opis("Kolejna wiadomość od Piotra").build();
-
-		// komentarzRepository.addKomentarzToRozmowaPrywatna(katarzyna.getNazwa(), piotr.getNazwa(), k7);
-		// komentarzRepository.addKomentarzToRozmowaPrywatna(piotr.getNazwa(), katarzyna.getNazwa(), k8);
-		// komentarzRepository.addKomentarzToRozmowaPrywatna(katarzyna.getNazwa(), piotr.getNazwa(), k9);
-
-		// To samo, ale service wysyła powiadomienia
+		RozmowaPrywatna meh = rozmowaPrywatnaRepository.acceptRozmowaPrywatna(usPiotr.getUzytId(), usKatarzyna.getUzytId());
 
 		System.out.println("Dodawanie komentarzy do rozmowy prywatnej");
-		komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Piotra").targetId(katarzyna.getNazwa()).build(), usPiotr);
-		komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Katarzyny").targetId(piotr.getNazwa()).build(), usKatarzyna);
-		komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Kolejna wiadomość od Piotra").targetId(katarzyna.getNazwa()).build(), usPiotr);
+		for (int i = 0; i < 10; i++) {
+			komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Piotra " + i).targetId(usKatarzyna.getNazwa()).build(), usPiotr);
+			komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Katarzyny " + i).targetId(usPiotr.getNazwa()).build(), usKatarzyna);
+		}
 
-
-		//log.info("\nąŚwiętość\n");
-		// To wyrzuci IllegalArgumentException
-		//OcenaRequest ocenaDoWiadomosciPrywatnej = OcenaRequest.builder().ocenialnyId(k3.getKomentarzId()).lubi(false).build();
-		//komentarzService.addOcenaToKomentarzTest(ocenaDoWiadomosciPrywatnej, katarzyna);
+		// Dodanie paru zaproszeń
+		rozmowaPrywatnaService.inviteToRozmowaPrywatna(usKatarzyna.getNazwa(), usJan);
+		rozmowaPrywatnaService.inviteToRozmowaPrywatna(usMichal.getNazwa(), usKatarzyna);
 
 		PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
 		.tytul("""
-                       Przyszed\u0142em og\u0142osi\u0107: Shadow the Hedgehog to skurwysyn, nasika\u0142 na moj\u0105 jeban\u0105 \u017con\u0119. 
-					   Zgadza si\u0119, wyj\u0105\u0142 swojego je\u017co-jebanego kutasa i nasika\u0142 na moj\u0105 jeban\u0105 \u017con\u0119, i powiedzia\u0142, \u017ce jego kutas jest \u201eTAKI DU\u017bY\u201d, a ja powiedzia\u0142em \u201eto obrzydliwe\u201d, wi\u0119c robi\u0119 wpis na moim Twitter.com: Shadow the Hedgehog, masz ma\u0142ego kutasa. 
-					   Jest wielko\u015bci tego orzecha w\u0142oskiego, tyle \u017ce DU\u017bO mniejszy. I zgadnij co? Oto jak wygl\u0105da m\u00f3j kutas.
-                       [Zgadza si\u0119, skarbie. Wszystkie punkty, \u017cadnych pi\u00f3rek, \u017cadnych poduszek - sp\u00f3jrz na to, wygl\u0105da jak dwie kulki i bong. 
-					   On zer\u017cn\u0105\u0142 moj\u0105 \u017con\u0119, wi\u0119c zgadnij co, ja zer\u017cn\u0119 Ziemi\u0119. Zgadza si\u0119, oto co dostajesz: M\u00d3J SUPER LASEROWY SIKACZ!!! 
-					   Tylko, \u017ce ja nie b\u0119d\u0119 sika\u0142 na Ziemi\u0119, ja p\u00f3jd\u0119 wy\u017cej; b\u0119d\u0119 sika\u0142 na Ksi\u0119\u017cyc! 
-					   Jak ci si\u0119 to podoba, Obama?! NASIKA\u0141EM NA KSI\u0118\u017bYC, IDIOTO!
-                       Masz dwadzie\u015bcia trzy godziny, zanim K R O P E L K I szczochów uderz\u0105 w pieprzon\u0105 Ziemi\u0119, a teraz zejd\u017a mi, kurwa, z oczu, zanim ja te\u017c na ciebie nasikam!
-
-                       """).build();
+				Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
+				Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
+				Ten komunikat został wygenerowany.
+				""").build();
 
 		powiadomienieService.addSpecjalnePowiadomienie(pow1);
-
-		// Testowanie usuwanka
-		//System.out.println("Usuwanie komentarzy");
-		//komentarzService.deleteKomentarzFromPost(postId3, kom4.getKomentarzId(), usJan);
-
-		//System.out.println("Usuwanie posta");
-		//postService.deletePost(postId3, usJan);
 
 		DzialkaRoslinaRequest req = DzialkaRoslinaRequest.builder()
 		.numerDzialki(1).x(1).y(1)
@@ -542,6 +357,119 @@ public class YukkaApplication {
 		System.out.println("Zmienianie pozycji rośliny w działce do nowej działki");
 		dzialkaService.updateRoslinaPositionInDzialka(moveRequest2, usPiotr);
 
+	}
+
+	private void addPostyWithKomentarze(List<Uzytkownik> uzytkownicy) {
+		for(int i = 0; i < MAX_POSTY; i++) {
+			Post post = null;
+			PostRequest postReq = PostRequest.builder()
+				.tytul("Jakiś post testowy" + i)
+				.opis("Jakiś postowy testowy opis" + i)
+				.build();
+
+			int rand = (int)(Math.random() * uzytkownicy.size());
+
+			// Losowe dodawanie obrazka z postem
+			if (Math.random() < 0.5) {
+				Path cheezyPath = Paths.get(obrazSeedPath, "cheezy.jpg");
+				MockMultipartFile obrazPost = new MockMultipartFile("tempFileName", "cheezy.jpg", 
+					"image/png", fileUtils.readFileFromLocation(cheezyPath));
+				try {
+					post = postService.save(postReq, obrazPost, uzytkownicy.get(rand));
+				} catch (FileUploadException e) {}
+			} else {
+				post = postService.save(postReq, uzytkownicy.get(rand));
+			}
+			
+			// Dodawanie ocen do postów
+			Collections.shuffle(uzytkownicy);
+			int liczbaOcen = (int) (Math.random() * uzytkownicy.size()) + 1;
+			for (int j = 0; j < liczbaOcen; j++) {
+				boolean ocena = Math.random() < 0.5;
+				if (post != null) {
+					postRepository.addOcenaToPost(uzytkownicy.get(j).getEmail(), post.getPostId(), ocena);
+				}
+			}
+
+			// Dodawanie losowej ilości komentarzy do postu
+			Random random = new Random();
+			int liczbaKomentarzy = random.nextInt(MAX_KOMENTARZE) + 1; 
+
+			for (int j = 0; j < liczbaKomentarzy; j++) {
+				KomentarzRequest komReq = KomentarzRequest.builder()
+					.targetId(post != null ? post.getPostId() : null)
+					.opis("Jakiś komentarz " + j)
+					.build();
+
+				rand = (int)(Math.random() * uzytkownicy.size());
+
+				Komentarz kom = null;
+				if (Math.random() < 0.5) {
+					Path kotPath = Paths.get(obrazSeedPath, "kot.png");
+					MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
+					"image/png", fileUtils.readFileFromLocation(kotPath));
+					try {
+						kom = komentarzService.addKomentarzToPost(komReq, obrazKom, uzytkownicy.get(rand));
+					} catch (FileUploadException e) {}
+				} else {
+					kom = komentarzService.addKomentarzToPost(komReq, uzytkownicy.get(rand));
+				}
+
+				// Dodawanie losowej ilości odpowiedzi do komentarza
+				addOdpowiedziRekursywne(kom, uzytkownicy, random, 1);
+
+				// Dodawanie ocen do komentarzy
+				addOcenyToKomentarz(kom, uzytkownicy);
+			}
+		}
+	}
+
+	private void addOdpowiedziRekursywne(Komentarz kom, List<Uzytkownik> uzytkownicy, Random random, int depth) {
+		if (depth > MAX_ODPOWIEDZI_DEPTH) return;
+	
+		int liczbaOdpowiedzi = random.nextInt(MAX_ODPOWIEDZI) + 1;
+		Collections.shuffle(uzytkownicy);
+	
+		for (int k = 0; k < liczbaOdpowiedzi; k++) {
+			KomentarzRequest odp = KomentarzRequest.builder()
+				.targetId(kom.getKomentarzId())
+				.opis("Jakaś odpowiedź " + k)
+				.build();
+	
+			int rand = (int) (Math.random() * uzytkownicy.size());
+
+			Komentarz nowaOdp = null;
+				if (Math.random() < 0.5) {
+					Path kotPath = Paths.get(obrazSeedPath, "kot.png");
+					MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
+					"image/png", fileUtils.readFileFromLocation(kotPath));
+					try {
+						nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, obrazKom, uzytkownicy.get(rand));
+					} catch (FileUploadException e) {}
+				} else {
+					nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, uzytkownicy.get(rand));
+				}
+	
+			addOdpowiedziRekursywne(nowaOdp, uzytkownicy, random, depth + 1);
+			addOcenyToKomentarz(nowaOdp, uzytkownicy);
+		}
+	}
+
+	private void addOcenyToKomentarz(Komentarz kom, List<Uzytkownik> uzytkownicy) {
+		int liczbaOcen = (int) (Math.random() * uzytkownicy.size()) + 1;
+		Collections.shuffle(uzytkownicy);
+	
+		for (int j = 0; j < liczbaOcen; j++) {
+			OcenaRequest ocenaReq = OcenaRequest.builder()
+				.ocenialnyId(kom.getKomentarzId())
+				.lubi(Math.random() < 0.5)
+				.build();
+	
+			// Na wypadek, gdyby użytkownik próbował ocenić własny komentarz
+			try {
+				komentarzService.addOcenaToKomentarz(ocenaReq, uzytkownicy.get(j));
+			} catch (IllegalArgumentException e) {}
+		}
 	}
 
 	public static String timeAgo(LocalDateTime dateTime) {
