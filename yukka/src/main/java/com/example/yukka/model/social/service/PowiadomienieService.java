@@ -23,12 +23,15 @@ import com.example.yukka.YukkaApplication;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
+import com.example.yukka.model.social.komentarz.Komentarz;
+import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.powiadomienie.Powiadamia;
 import com.example.yukka.model.social.powiadomienie.Powiadomienie;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
 import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.PowiadomienieRepository;
+import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
@@ -117,7 +120,9 @@ public class PowiadomienieService {
     public Powiadomienie addPowiadomienie(PowiadomienieDTO request, Uzytkownik uzytkownik) {
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.valueOf(request.getTyp()), request, uzytkownik);
 
-        Optional<Powiadomienie> powOpt = powiadomienieRepository.checkIfSamePowiadomienieExists(uzytkownik.getEmail(), powiadomienie.getTyp(), powiadomienie.getOpis());
+        Optional<Powiadomienie> powOpt = powiadomienieRepository
+            .checkIfSamePowiadomienieExists(uzytkownik.getEmail(), powiadomienie.getTyp(), powiadomienie.getOpis());
+            
         if(powOpt.isPresent()) {
             return powiadomienieRepository.updateData(uzytkownik.getEmail(), powOpt.get().getId(), 
             powiadomienie.getAvatar(),LocalDateTime.now()).get();
@@ -178,6 +183,46 @@ public class PowiadomienieService {
                 .uzytkownikNazwa(request.getUzytkownikNazwa())
                 .data(request.getData())
                 .build();
+    }
+
+
+
+    // TODO: Jakoś to połączyć jak mnie już głowa przestanie boleć
+    public void sendPowiadomienieOfRozmowa(Uzytkownik nadawca, Uzytkownik odbiorca, RozmowaPrywatna rozmowa) {
+        PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
+            .typ(TypPowiadomienia.WIADOMOSC_PRYWATNA.name())
+            .odnosnik(rozmowa.getNadawca())
+            .uzytkownikNazwa(nadawca.getNazwa())
+            .avatar(nadawca.getAvatar())
+            .odnosnik(nadawca.getNazwa())
+            .build();
+        addPowiadomienie(powiadomienie, odbiorca);
+    }
+
+    public void sendPowiadomienieOfKomentarz(Uzytkownik nadawca, Uzytkownik odbiorca, Komentarz komentarz) {
+        if(komentarz.getUzytkownik().getUzytId().equals(nadawca.getUzytId())) {
+            return;
+        }
+
+        Post post =  komentarz.getPost();
+
+        if(post == null && komentarz.getWPoscie() != null) {
+            post = komentarz.getWPoscie();
+            if(post == null) {
+                System.out.println("\n\n\nPost jest nullem\n\n\n");
+                return;
+            }
+        }
+
+        PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
+            .typ(TypPowiadomienia.KOMENTARZ_POST.name())
+            .tytul(post.getTytul())
+            .odnosnik(post.getPostId())
+            .uzytkownikNazwa(nadawca.getNazwa()).avatar(nadawca.getAvatar())
+            .avatar(nadawca.getAvatar())
+            .build();
+            
+        addPowiadomienie(powiadomienie, komentarz.getUzytkownik());
     }
 
 

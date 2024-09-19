@@ -23,6 +23,8 @@
                 <app-rozmowa-card
                   *ngFor="let rozmowa of rozResponse?.content"
                   [rozmowa]="rozmowa"
+                  [isBlokowany]="isBlokowany(rozmowa.uzytkownicy)"
+                  [isBlokujacy]="isBlokujacy(rozmowa.uzytkownicy)"
                   (onReject)="handleReject($event)">
                 </app-rozmowa-card>
               </div>

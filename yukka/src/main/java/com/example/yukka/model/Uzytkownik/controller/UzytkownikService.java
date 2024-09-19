@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
+import com.example.yukka.handler.BlockedUzytkownikException;
 import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Ustawienia;
@@ -56,7 +58,7 @@ public class UzytkownikService implements  UserDetailsService {
     @Transactional(readOnly = true)
     public UzytkownikResponse findByEmail(String userEmail){
         Uzytkownik uzyt = uzytkownikRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new EntityNotFoundException("Użytkownik nie istnieje"));
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + userEmail));
 
         return commonMapperService.toUzytkownikResponse(uzyt);
     }
@@ -64,19 +66,32 @@ public class UzytkownikService implements  UserDetailsService {
     @Transactional(readOnly = true)
     public UzytkownikResponse findByNazwa(String nazwa){
         Uzytkownik uzyt = uzytkownikRepository.findByNazwa(nazwa)
-                .orElseThrow(() -> new EntityNotFoundException("Użytkownik nie istnieje"));
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
 
         return commonMapperService.toUzytkownikResponse(uzyt);
     }
 
+    @Transactional(readOnly = true)
     public UzytkownikResponse getLoggedInAvatar(Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
 
         Uzytkownik uzyt2 = uzytkownikRepository.findByEmail(uzyt.getEmail())
-                .orElseThrow(() -> new EntityNotFoundException("Użytkownik nie istnieje"));
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + uzyt.getEmail()));
 
         return commonMapperService.toSimpleAvatar(uzyt2);
     }
+
+    @Transactional(readOnly = true)
+    public UzytkownikResponse getBlokowaniAndBlokujacy(Authentication currentUser) {
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+
+        System.out.println("Pobieranie blokowanych i blokujących użytkowników");
+        Uzytkownik uzyt2 = uzytkownikRepository.getBlokowaniAndBlokujacy(uzyt.getNazwa())
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + uzyt.getNazwa()));
+
+        return commonMapperService.toUzytkownikResponse(uzyt2);
+    }
+    
 
     public UzytkownikResponse updateUzytkownikAvatar(MultipartFile file, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
@@ -93,6 +108,43 @@ public class UzytkownikService implements  UserDetailsService {
         System.out.println("Zapisano avatar: " + leObraz);
         Uzytkownik uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
         return uzytkownik;
+    }
+
+
+    public Boolean setBlokUzytkownik(String nazwa, Authentication currentUser, boolean blok){
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+
+        Uzytkownik blokowany = uzytkownikRepository.findByNazwa(nazwa)
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
+
+        if(blokowany.getEmail().equals(uzyt.getEmail())) {
+            throw new IllegalArgumentException("Nie można blokować samego siebie");
+        }
+
+        if(blokowany.isAdmin() || blokowany.isPracownik()) {
+            throw new IllegalArgumentException("Admini i pracownicy nie mogą być blokowani.");
+        }
+
+        System.out.println("Pobieranie blokowanych użytkowników");
+        Optional<Uzytkownik> uzyt2 = uzytkownikRepository.getBlokowaniUzytkownicyOfUzytkownik(uzyt.getEmail());
+        
+        System.out.println("Sprawdzanie czy użytkownik jest już zablokowany");
+        if(blok) {
+            if(uzyt2.isPresent()) {
+                System.out.println("SET BLOKUJE");
+                Set<Uzytkownik> blokowani = uzyt2.get().getBlokowaniUzytkownicy();
+
+                if(blokowani.stream().anyMatch(b -> b.getEmail().equals(blokowany.getEmail()))) {
+                    throw new IllegalArgumentException("Użytkownik jest już zablokowany");
+                }
+            }
+            return uzytkownikRepository.zablokujUzyt(blokowany.getEmail(), uzyt.getEmail());
+        } else if(uzyt2.isEmpty()) {
+            throw new IllegalArgumentException("Nie znaleziono blokowanych użytkowników");
+        }
+
+        System.out.println("Odblokowywanie użytkownika");
+        return uzytkownikRepository.odblokujUzyt(blokowany.getEmail(), uzyt.getEmail());
     }
 
     public Uzytkownik setBanUzytkownik(String email, Authentication currentUser, boolean ban){
@@ -166,6 +218,32 @@ public class UzytkownikService implements  UserDetailsService {
         System.out.println("Usuwanie folderu: " + path);
         uzytkownikRepository.removeUzytkownik(uzyt.getEmail());
         fileUtils.deleteDirectory(path);
+    }
+
+
+    // Pomocnicze
+    
+    public Uzytkownik sprawdzBlokowanie(String nazwaUzytkownika, Uzytkownik connectedUser) {
+        Uzytkownik odbiorca = uzytkownikRepository.getBlokowaniAndBlokujacy(nazwaUzytkownika)
+            .orElse(null);
+        if(odbiorca == null) {
+            return uzytkownikRepository.findByNazwa(nazwaUzytkownika)
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o podanej nazwie: " + nazwaUzytkownika));
+        }
+        
+        for(Uzytkownik blokujacy : odbiorca.getBlokujacyUzytkownicy()) {
+            if(blokujacy.getUzytId().equals(connectedUser.getUzytId())) {
+                throw new BlockedUzytkownikException("Nie można komentować ani oceniać treści blokujących użytkowników");
+            }
+        }
+
+        for(Uzytkownik blokowany : odbiorca.getBlokowaniUzytkownicy()) {
+            if(blokowany.getUzytId().equals(connectedUser.getUzytId())) {
+                throw new BlockedUzytkownikException("Nie można komentować ani oceniać treści zablokowanych użytkowników");
+            }
+        }
+        
+        return odbiorca;
     }
 
     public void seedRemoveUzytkownicyObrazy() {

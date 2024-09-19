@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PostService, UzytkownikService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule } from '@angular/common';
+import { RozmowaPrywatnaService } from '../../../../services/services/rozmowa-prywatna.service';
 
 @Component({
   selector: 'app-profil-page',
@@ -24,13 +25,17 @@ export class ProfilPageComponent implements OnInit {
   postyCount: number = 0;
   oceny: number = 0;
 
+  zaproszony: boolean | undefined;
+  isZaproszonyChecked: boolean = false;
+  zaproszenieWyslane: boolean = false;
 
   constructor(
     private tokenService: TokenService,
     private router: Router,
     private route: ActivatedRoute,
     private postService: PostService,
-    private uzytService: UzytkownikService
+    private uzytService: UzytkownikService,
+    private rozService: RozmowaPrywatnaService
   ) {}
 
   ngOnInit(): void {
@@ -41,10 +46,9 @@ export class ProfilPageComponent implements OnInit {
         this.route.snapshot.data['nazwa'] = this.nazwa;
       }
     });
-    this.isCurrentUserBoi = this.isCurrentUser();
+    this.isCurrentUserBoi =   this.isCurrentUser();
   //  this.postyCount = this.getPostyCount();
     this.oceny = this.getOverallOceny();
-
   }
 
   getUzytkownikByNazwa(nazwa: string): void {
@@ -93,6 +97,73 @@ export class ProfilPageComponent implements OnInit {
       }
     }
     return false;
+  }
+
+
+  checkIfZaproszony(): void {
+    if(this.zaproszony) {
+      return;
+    }
+  }
+
+  isZaproszony(): boolean {
+   // console.log('Is zaproszony: ', this.zaproszony);
+    if (this.isZaproszonyChecked) {
+      return this.zaproszony || false;
+    }
+
+    if (this.zaproszony) {
+     // console.log('Zaproszony: ', this.zaproszony);
+      this.isZaproszonyChecked = true;
+      return this.zaproszony;
+    }
+
+    if (this.tokenService.token && this.uzyt.nazwa
+      && this.tokenService.nazwa !== this.uzyt.nazwa) {
+
+    //  console.log('Check if zaproszony');
+      this.rozService.getRozmowaPrywatna({ uzytkownikNazwa: this.uzyt.nazwa })
+        .subscribe({
+          next: (roz) => {
+           // console.log('Rozmowa: ', roz);
+            if (roz && !roz.aktywna) {
+              this.zaproszony = true;
+            }
+            this.isZaproszonyChecked = true;
+            return this.zaproszony;
+          },
+          error: (err) => {
+            if (err.status === 404) {
+              this.isZaproszonyChecked = true;
+              return null;
+            }
+            this.isZaproszonyChecked = true;
+            return false;
+          }
+      });
+    }
+    return false;
+  }
+
+
+  zaprosDoRozmowaPrywatna() {
+    if (this.uzyt.nazwa) {
+      this.rozService.inviteToRozmowaPrywatna({ uzytkownikNazwa: this.uzyt.nazwa })
+        .subscribe({
+          next: (roz) => {
+            if(roz) {
+              console.log('Zaproszenie do rozmowy prywatnej wysłane: ', roz);
+              this.zaproszenieWyslane = true;
+            } else {
+              console.log('Coś poszło nie tak.');
+            }
+          }
+        });
+    }
+  }
+
+  goToRozmowa() {
+    this.router.navigate(['profil/rozmowy', this.uzyt.nazwa]);
   }
 
 

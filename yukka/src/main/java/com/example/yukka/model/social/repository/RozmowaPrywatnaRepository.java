@@ -83,6 +83,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
                dataUtworzenia: $time, 
                ostatnioAktualizowana: $time})
                <-[:JEST_W_ROZMOWIE]-(uzyt2)
+        RETURN priv
         """)
     RozmowaPrywatna inviteToRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca,
      @Param("time") LocalDateTime localdatetime);
@@ -102,10 +103,10 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
                                         @Param("odbiorcaId") String odbiorcaId);
 
     @Query("""
-        MATCH (uzyt1:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
+        MATCH (odbiorca:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
                 (priv:RozmowaPrywatna)
-                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawcaId})
-        WHERE priv.aktywna = false AND priv.nadawcaId <> uzyt1.uzytId
+                <-[:JEST_W_ROZMOWIE]-(nadawca:Uzytkownik{uzytId: $nadawcaId})
+        WHERE priv.aktywna = false AND priv.nadawca <> odbiorca.uzytId
         DETACH DELETE priv
         """
         )

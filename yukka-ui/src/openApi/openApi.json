@@ -556,7 +556,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RozmowaPrywatna"
+                  "$ref": "#/components/schemas/RozmowaPrywatnaResponse"
                 }
               }
             }
@@ -1099,6 +1099,44 @@
         }
       }
     },
+    "/uzytkownicy/blok/{nazwa}/{blok}": {
+      "patch": {
+        "tags": [
+          "Uzytkownik"
+        ],
+        "operationId": "setBlokUzytkownik",
+        "parameters": [
+          {
+            "name": "nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "blok",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/uzytkownicy/avatar": {
       "get": {
         "tags": [
@@ -1462,6 +1500,26 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UzytkownikResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/uzytkownicy/blokowani": {
+      "get": {
+        "tags": [
+          "Uzytkownik"
+        ],
+        "operationId": "getBlokowaniAndBlokujacy",
         "responses": {
           "200": {
             "description": "OK",
@@ -2543,10 +2601,10 @@
           "name": {
             "type": "string"
           },
-          "normalUzytkownik": {
+          "admin": {
             "type": "boolean"
           },
-          "admin": {
+          "normalUzytkownik": {
             "type": "boolean"
           },
           "pracownik": {
@@ -2564,7 +2622,7 @@
           "password": {
             "type": "string"
           },
-          "accountNonLocked": {
+          "enabled": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
@@ -2573,7 +2631,7 @@
           "accountNonExpired": {
             "type": "boolean"
           },
-          "enabled": {
+          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -2784,6 +2842,140 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WlasciwoscWithRelations"
+            }
+          }
+        }
+      },
+      "KomentarzSimpleResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "komentarzId": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
+          "edytowany": {
+            "type": "boolean"
+          },
+          "dataUtworzenia": {
+            "type": "string"
+          },
+          "uzytkownikNazwa": {
+            "type": "string"
+          },
+          "postId": {
+            "type": "string"
+          },
+          "obraz": {
+            "type": "string",
+            "format": "byte"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      },
+      "RozmowaPrywatnaResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "aktywna": {
+            "type": "boolean"
+          },
+          "nadawca": {
+            "type": "string"
+          },
+          "uzytkownicy": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UzytkownikResponse"
+            }
+          },
+          "komentarze": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KomentarzSimpleResponse"
+            }
+          },
+          "liczbaWiadomosci": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ostatnioAktualizowana": {
+            "type": "string"
+          }
+        }
+      },
+      "UzytkownikResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uzytId": {
+            "type": "string"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nazwa": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "byte"
+          },
+          "komentarzeOcenyPozytywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "komentarzeOcenyNegatywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "postyOcenyPozytywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "postyOcenyNegatywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dataUtworzenia": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ban": {
+            "type": "boolean"
+          },
+          "blokowaniUzytkownicy": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UzytkownikResponse"
+            }
+          },
+          "blokujacyUzytkownicy": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UzytkownikResponse"
             }
           }
         }
@@ -3217,57 +3409,6 @@
           }
         }
       },
-      "UzytkownikResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "uzytId": {
-            "type": "string"
-          },
-          "labels": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          },
-          "komentarzeOcenyPozytywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "komentarzeOcenyNegatywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "postyOcenyPozytywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "postyOcenyNegatywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ban": {
-            "type": "boolean"
-          }
-        }
-      },
       "PowiadomienieResponse": {
         "type": "object",
         "properties": {
@@ -3345,7 +3486,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "xstary": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
@@ -3353,7 +3494,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "xstary": {
             "type": "integer",
             "format": "int32"
           }
@@ -3734,41 +3875,6 @@
           }
         }
       },
-      "KomentarzSimpleResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "komentarzId": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "edytowany": {
-            "type": "boolean"
-          },
-          "dataUtworzenia": {
-            "type": "string"
-          },
-          "uzytkownikNazwa": {
-            "type": "string"
-          },
-          "postId": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          }
-        }
-      },
       "PageResponseRozmowaPrywatnaResponse": {
         "type": "object",
         "properties": {
@@ -3799,40 +3905,6 @@
           },
           "last": {
             "type": "boolean"
-          }
-        }
-      },
-      "RozmowaPrywatnaResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "aktywna": {
-            "type": "boolean"
-          },
-          "nadawca": {
-            "type": "string"
-          },
-          "uzytkownicy": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UzytkownikResponse"
-            }
-          },
-          "komentarze": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KomentarzSimpleResponse"
-            }
-          },
-          "liczbaWiadomosci": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ostatnioAktualizowana": {
-            "type": "string"
           }
         }
       },

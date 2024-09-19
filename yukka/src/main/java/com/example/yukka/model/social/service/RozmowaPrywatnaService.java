@@ -15,6 +15,8 @@ import com.example.yukka.common.PageResponse;
 import com.example.yukka.handler.EntityAlreadyExistsException;
 import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.social.CommonMapperService;
+import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
+import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
@@ -35,6 +37,9 @@ public class RozmowaPrywatnaService {
 
     @Autowired
     private final CommonMapperService commonMapperService;
+
+    @Autowired
+    private final PowiadomienieService powiadomienieService;
 
 
     public PageResponse<RozmowaPrywatnaResponse> findRozmowyPrywatneOfUzytkownik(
@@ -94,10 +99,10 @@ public class RozmowaPrywatnaService {
         return commonMapperService.toRozmowaPrywatnaResponse(rozmowa);
     }
 
-    public RozmowaPrywatna inviteToRozmowaPrywatna(String odbiorcaNazwa, Authentication currentUser) {
+    public RozmowaPrywatnaResponse inviteToRozmowaPrywatna(String odbiorcaNazwa, Authentication currentUser) {
         Uzytkownik nadawca = (Uzytkownik) currentUser.getPrincipal();
 
-        return inviteToRozmowaPrywatna(odbiorcaNazwa, nadawca);
+        return commonMapperService.toRozmowaPrywatnaResponse(inviteToRozmowaPrywatna(odbiorcaNazwa, nadawca));
     }
 
     public RozmowaPrywatna inviteToRozmowaPrywatna(String odbiorcaNazwa, Uzytkownik currentUser) {
@@ -113,16 +118,20 @@ public class RozmowaPrywatnaService {
             throw new EntityAlreadyExistsException("Rozmowa prywatna już istnieje");
         }
 
-        return rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId(), LocalDateTime.now());
+        RozmowaPrywatna rozmowaPrywatna = rozmowaPrywatnaRepository.inviteToRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId(), LocalDateTime.now());
+
+        createPowiadomienie(TypPowiadomienia.ZAPROSZENIE, nadawca, odbiorca);
+
+        return rozmowaPrywatna;
     }
 
     public RozmowaPrywatna acceptRozmowaPrywatna(String nazwa, Authentication currentUser) {
         Uzytkownik odbiorca = (Uzytkownik) currentUser.getPrincipal();
 
-        return acceptRozmowaPrywatnaNoPunjabi(nazwa, odbiorca);
+        return acceptRozmowaPrywatna(nazwa, odbiorca);
     }
 
-    public RozmowaPrywatna acceptRozmowaPrywatnaNoPunjabi(String nazwa, Uzytkownik currentUser) {
+    public RozmowaPrywatna acceptRozmowaPrywatna(String nazwa, Uzytkownik currentUser) {
         Uzytkownik odbiorca = currentUser;
         Uzytkownik nadawca = uzytkownikRepository.findByNazwa(nazwa)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
@@ -142,18 +151,18 @@ public class RozmowaPrywatnaService {
             throw new IllegalArgumentException("Nie możesz zaakceptować rozmowy, do której sam zaprosiłeś");
         }
 
-        //System.out.println("\n\n\n\n\n");
-        //System.out.println("Nadawca: " + nadawca.getUzytId());
-       // System.out.println("Odbiorca: " + odbiorca.getUzytId());
-       // System.out.println("Rozmowa: " + rozmowa.toString());
         rozmowa.setAktywna(true);
-        return rozmowaPrywatnaRepository.acceptRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
+        rozmowa = rozmowaPrywatnaRepository.acceptRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId());
+
+        createPowiadomienie(TypPowiadomienia.ZAPROSZENIE_ZAAKCEPTOWANE, nadawca, odbiorca);
+
+        return rozmowa;
     }
 
-    public void rejectRozmowaPrywatna(String nazwa, Authentication currentUser) {
+    public void rejectRozmowaPrywatna(String uzytkownikNazwa, Authentication currentUser) {
         Uzytkownik odbiorca = (Uzytkownik) currentUser.getPrincipal();
-        Uzytkownik nadawca = uzytkownikRepository.findByNazwa(nazwa)
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + nazwa));
+        Uzytkownik nadawca = uzytkownikRepository.findByNazwa(uzytkownikNazwa)
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + uzytkownikNazwa));
 
         if (nadawca.getEmail().equals(odbiorca.getEmail())) {
             throw new IllegalArgumentException("Nie można odrzucać rozmowy z samym sobą");
@@ -168,6 +177,18 @@ public class RozmowaPrywatnaService {
 
         rozmowa.setAktywna(false);
         rozmowaPrywatnaRepository.rejectRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId(), rozmowa);
+
+        createPowiadomienie(TypPowiadomienia.ZAPROSZENIE_ODRUCONE, nadawca, odbiorca);
+    }
+
+    private void createPowiadomienie(TypPowiadomienia typ, Uzytkownik nadawca, Uzytkownik odbiorca) {
+        PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
+            .typ(typ.name())
+            .odnosnik(nadawca.getNazwa())
+            .uzytkownikNazwa(nadawca.getNazwa())
+            .avatar(nadawca.getAvatar())
+            .build();
+        powiadomienieService.addPowiadomienie(powiadomienie, odbiorca);
     }
 
 

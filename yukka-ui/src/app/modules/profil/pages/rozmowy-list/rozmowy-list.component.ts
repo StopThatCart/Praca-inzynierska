@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.component";
 import { RozmowaCardComponent } from "../../components/rozmowa-card/rozmowa-card.component";
-import { PageResponseRozmowaPrywatnaResponse } from '../../../../services/models';
-import { RozmowaPrywatnaService } from '../../../../services/services';
+import { PageResponseRozmowaPrywatnaResponse, UzytkownikResponse } from '../../../../services/models';
+import { RozmowaPrywatnaService, UzytkownikService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { getBlokowaniAndBlokujacy } from '../../../../services/fn/uzytkownik/get-blokowani-and-blokujacy';
 
 @Component({
   selector: 'app-rozmowy-list',
@@ -21,10 +22,15 @@ export class RozmowyListComponent {
   size = 5;
   pages: number[] = [];
 
+  currentUzyt: UzytkownikResponse = {};
+  blokowaniUzytkownicy: UzytkownikResponse[] = [];
+  blokujacyUzytkownicy: UzytkownikResponse[] = [];
+
   toggleLoading: () => void;
 
   constructor(
     private rozmowaService: RozmowaPrywatnaService,
+    private uzytService: UzytkownikService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -32,6 +38,7 @@ export class RozmowyListComponent {
   }
 
   ngOnInit(): void {
+    this.getBlokowaniAndBlokujacy();
     this.findRozmowyOfUzytkownik();
     console.log(this.rozResponse);
   }
@@ -44,6 +51,19 @@ export class RozmowyListComponent {
     }
   }
 
+  getBlokowaniAndBlokujacy() {
+    this.uzytService.getBlokowaniAndBlokujacy().subscribe({
+      next: (response) => {
+        console.log('getBlokowaniAndBlokujacy response:', response);
+        this.currentUzyt = response;
+        this.blokowaniUzytkownicy = response.blokowaniUzytkownicy ?? [];
+        this.blokujacyUzytkownicy = response.blokujacyUzytkownicy ?? [];
+      },
+      error: (error) => {
+        console.error('Error fetching blokowani and blokujacy:', error);
+      }
+    });
+  }
 
   findRozmowyOfUzytkownik() {
     console.log('findRozmowyOfUzytkownik');
@@ -64,6 +84,24 @@ export class RozmowyListComponent {
         complete:()=> this.toggleLoading()
 
       });
+  }
+
+  isBlokowany(uzytkownicy: Array<UzytkownikResponse> | undefined): boolean {
+    if (uzytkownicy) {
+      return uzytkownicy.some(uzytkownik =>
+        this.blokowaniUzytkownicy?.some(blokowany => blokowany.nazwa === uzytkownik.nazwa)
+      );
+    }
+    return false;
+  }
+
+  isBlokujacy(uzytkownicy: Array<UzytkownikResponse> | undefined): boolean {
+    if (uzytkownicy) {
+      return uzytkownicy.some(uzytkownik =>
+        this.blokujacyUzytkownicy?.some(blokowany => blokowany.nazwa === uzytkownik.nazwa)
+      );
+    }
+    return false;
   }
 
   appendPost= ()=>{

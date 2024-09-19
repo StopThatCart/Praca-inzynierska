@@ -29,8 +29,8 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
     @Query("""
             MATCH (kom:Komentarz{komentarzId: $komentarzId})<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik)
             OPTIONAL MATCH (rozmowa:RozmowaPrywatna)-[r3:MA_WIADOMOSC]->(kom)
-            OPTIONAL MATCH path = (:Post)-[:MA_KOMENTARZ]->(kom)
-            OPTIONAL MATCH path2 = (:Post)<-[:JEST_W_POSCIE]-(kom)
+            OPTIONAL MATCH path = (:Uzytkownik)-[:MA_POST]->(:Post)-[:MA_KOMENTARZ]->(kom)
+            OPTIONAL MATCH path2 = (:Uzytkownik)-[:MA_POST]->(:Post)<-[:JEST_W_POSCIE]-(kom)
             RETURN kom, r1, uzyt, rozmowa, r3, 
             collect(nodes(path)) as pathNodes, collect(relationships(path)) as pathRels,
             collect(nodes(path2)) as pathNodes2, collect(relationships(path2)) as pathRels2

@@ -16,6 +16,8 @@ import { error } from 'console';
 })
 export class RozmowaCardComponent implements OnInit {
   @Input() rozmowa: RozmowaPrywatnaResponse = {};
+  @Input() isBlokowany: boolean = false;
+  @Input() isBlokujacy: boolean = false;
   @Output() onReject = new EventEmitter<string>();
 
   private _avatar: string | undefined;
@@ -40,7 +42,7 @@ export class RozmowaCardComponent implements OnInit {
   }
 
   goToRozmowa() {
-    if (this.selectedUzyt && this.rozmowa.aktywna) {
+    if (this.selectedUzyt) {
       this.router.navigate(['profil/rozmowy', this.selectedUzyt?.nazwa]);
     }
   }
@@ -66,8 +68,16 @@ export class RozmowaCardComponent implements OnInit {
     }
   }
 
+  isNadawca(): boolean | undefined {
+    if (this.rozmowa.nadawca) {
+      return this.rozmowa.nadawca === this.tokenService.uzytId;
+    }
+    return undefined;
+  }
 
-  acceptRozmowaPrywatna() {
+
+  acceptRozmowaPrywatna(event : Event) {
+    event.stopPropagation();
     if(this.selectedUzyt && this.selectedUzyt.nazwa) {
       this.rozService.acceptRozmowaPrywatna({ 'uzytkownikNazwa': this.selectedUzyt.nazwa }).subscribe({
         next: (rozmowa) => {
@@ -85,9 +95,13 @@ export class RozmowaCardComponent implements OnInit {
   }
 
   // TODO: Blokowanie użytkownika
-  rejectRozmowaPrywatna() {
+  rejectRozmowaPrywatna(event : Event) {
+    event.stopPropagation();
     if(this.selectedUzyt && this.selectedUzyt.nazwa) {
-      this.rozService.rejectRozmowaPrywatna({ 'uzytkownikNazwa': this.selectedUzyt.nazwa }).subscribe({
+      console.log('Rejecting rozmowa prywatna');
+      console.log('Selected user: ', this.selectedUzyt.nazwa);
+
+      this.rozService.rejectRozmowaPrywatna({ uzytkownikNazwa: this.selectedUzyt.nazwa }).subscribe({
         next: () => {
           console.log('Rozmowa prywatna odrzucona');
           this.onReject.emit(this.selectedUzyt?.nazwa);

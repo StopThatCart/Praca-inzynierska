@@ -112,7 +112,7 @@ public class Uzytkownik implements UserDetails, Principal{
     private Set<Uzytkownik> blokowaniUzytkownicy;
 
     @ToString.Exclude
-    @Relationship(type = "JEST_BLOKOWANY_PRZEZ", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "BLOKUJE", direction = Relationship.Direction.INCOMING)
     private Set<Uzytkownik> blokujacyUzytkownicy;
 
 

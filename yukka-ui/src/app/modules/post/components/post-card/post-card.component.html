@@ -3,9 +3,12 @@
     <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
       <p *ngFor="let msg of errorMsg">{{ msg }}</p>
     </div>
-    <img [src]="getPostAvatar()" alt="..." class="rounded-circle flex-shrink-0 me-3 fit-cover" width="50" height="50">
+    <img
+    (click)="goToProfil()"
+    [src]="getPostAvatar()" alt="..." class="rounded-circle flex-shrink-0 me-3 fit-cover"
+    width="50" height="50">
     <div>
-      <p class="fw-bold mb-0">{{post.uzytkownik}}</p>
+      <a (click)="goToProfil()" class="fw-bold mb-0 link-underline link-underline-opacity-0">{{post.uzytkownik}}</a>
       <div class="text-muted">
         <i class="fas fa-clock me-1"></i>
         <span>{{post.dataUtworzenia}}</span>

@@ -15,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -228,16 +227,16 @@ public class RozmowaPrywatnaControllerTest {
    // @Test
    // @WithMockUser(username = "uzytkownik", roles = {"Uzytkownik"})
     void testInviteToRozmowaPrywatnaAsUzytkownik() throws Exception {
-        rozmowaPrywatnaController.inviteToRozmowaPrywatna(odbiorca.getUzytId(), senderAuth);
+    //    rozmowaPrywatnaController.inviteToRozmowaPrywatna(odbiorca.getUzytId(), senderAuth);
         
-        RozmowaPrywatna rozmowa1 = rozmowaPrywatnaService.inviteToRozmowaPrywatna(odbiorca.getUzytId(), senderAuth);
-        RozmowaPrywatna rozmowa = new RozmowaPrywatna();
-        when(rozmowaPrywatnaService.inviteToRozmowaPrywatna(odbiorca.getUzytId(), senderAuth))
-                .thenReturn(rozmowa);
+      //  RozmowaPrywatna rozmowa1 = rozmowaPrywatnaService.inviteToRozmowaPrywatna(odbiorca.getUzytId(), senderAuth);
+     //   RozmowaPrywatna rozmowa = new RozmowaPrywatna();
+     //   when(rozmowaPrywatnaService.inviteToRozmowaPrywatna(odbiorca.getUzytId(), senderAuth))
+      //          .thenReturn(rozmowa);
 
-        mockMvc.perform(post("/rozmowy/{odbiorca-uzyt-id}")
-                .principal(senderAuth))
-                .andExpect(status().isCreated());
+       // mockMvc.perform(post("/rozmowy/{odbiorca-uzyt-id}")
+      //          .principal(senderAuth))
+      //          .andExpect(status().isCreated());
     }
     /*
     @Test

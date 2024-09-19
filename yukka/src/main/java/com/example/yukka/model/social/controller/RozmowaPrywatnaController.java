@@ -51,8 +51,8 @@ public class RozmowaPrywatnaController {
     }
 
     @PostMapping(value = "/{uzytkownikNazwa}", produces="application/json")
-    public ResponseEntity<RozmowaPrywatna> inviteToRozmowaPrywatna(@PathVariable("uzytkownikNazwa") String nazwa, Authentication connectedUser) {
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaService.inviteToRozmowaPrywatna(nazwa, connectedUser);
+    public ResponseEntity<RozmowaPrywatnaResponse> inviteToRozmowaPrywatna(@PathVariable("uzytkownikNazwa") String nazwa, Authentication connectedUser) {
+        RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.inviteToRozmowaPrywatna(nazwa, connectedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(rozmowa);
     }
 
@@ -63,8 +63,8 @@ public class RozmowaPrywatnaController {
     }
 
     @PutMapping(value = "/{uzytkownikNazwa}/reject")
-    public ResponseEntity<RozmowaPrywatna> rejectRozmowaPrywatna(@PathVariable("uzytkownikNazwa") String nazwa, Authentication connectedUser) {
-        rozmowaPrywatnaService.rejectRozmowaPrywatna(nazwa, connectedUser);
+    public ResponseEntity<RozmowaPrywatna> rejectRozmowaPrywatna(@PathVariable("uzytkownikNazwa") String uzytkownikNazwa, Authentication connectedUser) {
+        rozmowaPrywatnaService.rejectRozmowaPrywatna(uzytkownikNazwa, connectedUser);
         return ResponseEntity.ok().build();
     }
 }

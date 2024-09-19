@@ -56,8 +56,16 @@ public class CommonMapperService {
             .postyOcenyPozytywne(uzytkownik.getPostyOcenyPozytywne())
             .dataUtworzenia(uzytkownik.getDataUtworzenia())
             .ban(uzytkownik.isBan())
+            .blokowaniUzytkownicy(uzytkownik.getBlokowaniUzytkownicy().stream()
+                .map(this::toUzytkownikSimpleResponse)
+                .collect(Collectors.toSet()))
+            .blokujacyUzytkownicy(uzytkownik.getBlokujacyUzytkownicy().stream()
+                .map(this::toUzytkownikSimpleResponse)
+                .collect(Collectors.toSet()))
             .build();
     }
+
+    
     
     public PostResponse mapToPostResponse(Post post) {
         return PostResponse.builder()

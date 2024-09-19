@@ -98,10 +98,10 @@ public class YukkaApplication {
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
 
-	private final int MAX_POSTY = 3;
-	private final int MAX_KOMENTARZE = 5;
+	private final int MAX_POSTY = 20;
+	private final int MAX_KOMENTARZE = 4;
 	private final int MAX_ODPOWIEDZI_DEPTH = 2;
-	private final int MAX_ODPOWIEDZI = 3;
+	private final int MAX_ODPOWIEDZI = 2;
 	
 
 
@@ -125,8 +125,8 @@ public class YukkaApplication {
     public CommandLineRunner seedDatabase() {
         return args -> {
 //roslinaImporterService.seedRosliny();
-			unseed();
-        	seed();
+			//unseed();
+        //	seed();
 		//roslinaSearchTest();
         };
     }

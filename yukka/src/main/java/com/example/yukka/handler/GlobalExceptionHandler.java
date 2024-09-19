@@ -21,6 +21,7 @@ import org.springframework.web.context.request.WebRequest;
 import static com.example.yukka.handler.YukkaErrorCodes.ACCOUNT_BANNED;
 import static com.example.yukka.handler.YukkaErrorCodes.ACCOUNT_DISABLED;
 import static com.example.yukka.handler.YukkaErrorCodes.BAD_CREDENTIALS;
+import static com.example.yukka.handler.YukkaErrorCodes.BLOCKED_UZYTKOWNIK;
 import static com.example.yukka.handler.YukkaErrorCodes.ENTITY_NOT_FOUND;
 
 @RestControllerAdvice
@@ -52,6 +53,19 @@ public class GlobalExceptionHandler {
                         ExceptionResponse.builder()
                                 .businessErrorCode(ACCOUNT_BANNED.getCode())
                                 .businessErrorDescription(ACCOUNT_BANNED.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(BlockedUzytkownikException.class)
+    public ResponseEntity<ExceptionResponse> handleException(BlockedUzytkownikException exp) {
+        return ResponseEntity
+                .status(UNAUTHORIZED)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BLOCKED_UZYTKOWNIK.getCode())
+                                .businessErrorDescription(BLOCKED_UZYTKOWNIK.getDescription())
                                 .error(exp.getMessage())
                                 .build()
                 );

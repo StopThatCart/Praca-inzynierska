@@ -53,11 +53,16 @@ export class PowiadomienieCardComponent {
         case TypPowiadomienia.GRATULACJE:
         case TypPowiadomienia.SPECJALNE:
         case TypPowiadomienia.BAN:
+        case TypPowiadomienia.ZAPROSZENIE_ODRUCONE:
           break;
         case TypPowiadomienia.KOMENTARZ_POST:
         case TypPowiadomienia.POLUBIENIA_POST:
           this.router.navigate(['/posty', this.pow.odnosnik]);
           break;
+        case TypPowiadomienia.ZAPROSZENIE:
+          this.router.navigate(['profil/rozmowy']);
+          break;
+        case TypPowiadomienia.ZAPROSZENIE_ZAAKCEPTOWANE:
         case TypPowiadomienia.WIADOMOSC_PRYWATNA:
           this.router.navigate(['profil/rozmowy', this.pow.odnosnik]);
           break;

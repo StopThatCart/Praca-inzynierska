@@ -54,17 +54,29 @@ public class UzytkownikController {
         return ResponseEntity.ok(uzytkownikService.getLoggedInAvatar(connectedUser));
     }
 
+    @GetMapping(value = "/blokowani", produces="application/json")
+    public ResponseEntity<UzytkownikResponse> getBlokowaniAndBlokujacy(Authentication connectedUser) {
+        return ResponseEntity.ok(uzytkownikService.getBlokowaniAndBlokujacy(connectedUser));
+    }
+
     @PatchMapping(value = "/avatar", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<UzytkownikResponse> updateAvatar(@Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.updateUzytkownikAvatar(file, connectedUser));
     }
 
+    @PatchMapping(value = "/blok/{nazwa}/{blok}", produces="application/json")
+    public ResponseEntity<Boolean> setBlokUzytkownik(@PathVariable("nazwa") String nazwa, 
+            @PathVariable("blok") boolean blok, Authentication currentUser) {
+        return ResponseEntity.ok(uzytkownikService.setBlokUzytkownik(nazwa, currentUser, blok));
+    }
+
 
     @PatchMapping(value = "pracownik/ban/{email}/{ban}", produces="application/json")
     public ResponseEntity<Uzytkownik> setBanUzytkownik(@PathVariable("email") String email, 
-    @PathVariable("ban") boolean ban, Authentication currentUser) {
+            @PathVariable("ban") boolean ban, Authentication currentUser) {
         return ResponseEntity.ok(uzytkownikService.setBanUzytkownik(email, currentUser, ban));
     }
+    
 
     @DeleteMapping
     public void removeSelf(Authentication currentUser) {

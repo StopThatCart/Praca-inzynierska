@@ -31,6 +31,7 @@ import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
+import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,6 +45,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final KomentarzRepository komentarzRepository;
     private final UzytkownikRepository uzytkownikRepository;
+    private final UzytkownikService uzytkownikService;
     private final FileStoreService fileStoreService;
     private final FileUtils fileUtils;
     private final PostMapper postMapper;
@@ -149,7 +151,10 @@ public class PostService {
 
     public PostResponse addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
+        Post post = postRepository.findPostByPostId(request.getOcenialnyId())
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getOcenialnyId()));
+        
+        uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
 
         post =  postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
         postRepository.updateOcenyCountOfPost(post.getPostId());
@@ -159,7 +164,10 @@ public class PostService {
 
     public void removeOcenaFromPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
+        Post post = postRepository.findPostByPostId(request.getOcenialnyId())
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getOcenialnyId()));
+        
+        uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
 
         postRepository.removeOcenaFromPost(uzyt.getEmail(), post.getPostId());
         postRepository.updateOcenyCountOfPost(post.getPostId());

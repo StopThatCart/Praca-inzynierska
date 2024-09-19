@@ -70,8 +70,20 @@ export class PostCardComponent implements OnInit {
     }
   }
 
+  goToProfil() {
+    if (this.post.uzytkownik) {
+      this.router.navigate([`/profil/${this.post.uzytkownik}`]);
+    }
+  }
+
+
   addOcenaToPost(postId: string | undefined, ocena: boolean) {
-    if (postId) {
+    if (postId && this.tokenService) {
+
+      if(this.tokenService.nazwa === this.post.uzytkownik) {
+        return;
+      }
+
       let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: postId };
       this.postService.addOcenaToPost({ body: ocenaRequest }).subscribe({
         next: (post) => {

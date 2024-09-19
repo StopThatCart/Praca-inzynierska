@@ -17,14 +17,41 @@
                                         </div>
                                     </div>
                                     <h4 class="text-center mb-4 pb-2">Rozmowa prywatna z {{ rozmowaUzyt.nazwa }}</h4>
+                                    <div class="hstack gap-2 justify-content-center">
+                                      <button (click)="zablokujUzyt()" class="btn btn-danger" type="button">
+                                        Zablokuj &nbsp;<i class="fa-solid fa-user-slash" ></i>
+                                      </button>
+                                      <button (click)="odblokujUzyt()" class="btn btn-danger" type="button">
+                                        Odblokuj &nbsp;<i class="fa-solid fa-user-slash" ></i>
+                                      </button>
+                                      <button class="btn btn-danger" type="button">
+                                        Zgłoś &nbsp;<i class="fa-solid fa-flag" ></i>
+                                      </button>
+                                    </div>
                                     <div class="row search-results rozmowa-divus scroll-container" #scrollus>
                                         <div class="col">
-                                          <app-wiadomosc-card
-                                          *ngFor="let wiad of rozmowa.komentarze"
-                                          [wiadomosc]="wiad"
-                                          (onRemove)="handleRemove($event)"
-                                          ></app-wiadomosc-card>
+                                          <ng-container *ngIf="wiadomoscCount && wiadomoscCount > 0; else brakWiadomosci">
+                                            <app-wiadomosc-card
+                                                *ngFor="let wiad of rozmowa.komentarze"
+                                                [wiadomosc]="wiad"
+                                                (onRemove)="handleRemove($event)">
+                                            </app-wiadomosc-card>
+                                          </ng-container>
+                                          <ng-template #brakWiadomosci>
+                                              <ng-container *ngIf="rozmowa.aktywna else zaproszony">
+                                                <h5 class="text-center p-5">brak wiadomości</h5>
+                                              </ng-container>
+                                              <ng-template #zaproszony>
+                                                <h5 class="text-center p-5">Nie zaakceptowano jeszcze zaproszenia</h5>
+                                              </ng-template>
+                                          </ng-template>
                                         </div>
+                                    </div>
+                                    <div *ngIf="zablokowany" class="alert alert-danger text-center mt-3">
+                                      Użytkownik jest zablokowany. Nie możesz wysyłać wiadomości.
+                                    </div>
+                                    <div *ngIf="blokujacy" class="alert alert-warning text-center mt-3">
+                                      Użytkownik Cię blokuje. Nie możesz wysyłać wiadomości.
                                     </div>
                                 </div>
                             </div>
@@ -32,13 +59,13 @@
                     </div>
                     <div class="row d-flex justify-content-center my-3">
                         <div class="col col-auto col-12">
-
-                          <app-add-komentarz-card
-                          [targetId]="odbiorcaNazwa"
-                          [typ]="TypKomentarza.WIADOMOSC"
-                          (onNewMessage)="handleNewMessage($event)"
-                          ></app-add-komentarz-card>
-
+                          <ng-container *ngIf="rozmowa.aktywna  && !zablokowany && !blokujacy">
+                            <app-add-komentarz-card
+                                [targetId]="odbiorcaNazwa"
+                                [typ]="TypKomentarza.WIADOMOSC"
+                                (onNewMessage)="handleNewMessage($event)">
+                            </app-add-komentarz-card>
+                          </ng-container>
                         </div>
                     </div>
                 </div>

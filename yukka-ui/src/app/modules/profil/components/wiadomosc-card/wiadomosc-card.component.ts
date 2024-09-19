@@ -88,6 +88,12 @@ export class WiadomoscCardComponent implements OnInit {
     return undefined;
   }
 
+  goToProfil() {
+    if (this.wiadomosc.uzytkownikNazwa) {
+      this.router.navigate([`/profil/${this.wiadomosc.uzytkownikNazwa}`]);
+    }
+  }
+
 
   startEditing() {
     this.isEditing = true;

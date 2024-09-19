@@ -3,7 +3,7 @@ import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.compo
 import { AddKomentarzCardComponent } from "../../../post/components/add-komentarz-card/add-komentarz-card.component";
 import { WiadomoscCardComponent } from "../../components/wiadomosc-card/wiadomosc-card.component";
 import { PageResponseRozmowaPrywatnaResponse, RozmowaPrywatna, RozmowaPrywatnaResponse, UzytkownikResponse } from '../../../../services/models';
-import { RozmowaPrywatnaService } from '../../../../services/services';
+import { RozmowaPrywatnaService, UzytkownikService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
@@ -21,7 +21,18 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
   @ViewChild('scrollus') private myScrollContainer!: ElementRef;
 
   rozmowa: RozmowaPrywatnaResponse = {};
+  wiadomoscCount: number | undefined;
+
+
   odbiorcaNazwa: string | undefined;
+
+
+  zablokowany: boolean = false;
+  blokujacy: boolean = false;
+  blokowaniUzytkownicy: UzytkownikResponse[] = [];
+  blokujacyUzytkownicy: UzytkownikResponse[] = [];
+
+
 
   rozmowaUzyt : UzytkownikResponse = {};
 
@@ -34,6 +45,7 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
   public TypKomentarza = TypKomentarza;
   constructor(
     private rozService: RozmowaPrywatnaService,
+    private uzytService: UzytkownikService,
     private router: Router,
     private route: ActivatedRoute,
     private tokenService: TokenService
@@ -45,6 +57,7 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
     this.route.params.subscribe(params => {
       this.odbiorcaNazwa = params['uzytkownikNazwa'];
       if (this.odbiorcaNazwa) {
+        this.getBlokowaniAndBlokujacy();
         this.getRozmowa(this.odbiorcaNazwa);
         this.route.snapshot.data['uzytkownikNazwa'] = this.odbiorcaNazwa;
       }
@@ -71,12 +84,25 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
     this.scrollToBottom();
   }
 
+  getBlokowaniAndBlokujacy() {
+    this.uzytService.getBlokowaniAndBlokujacy().subscribe({
+      next: (response) => {
+        this.blokowaniUzytkownicy = response.blokowaniUzytkownicy ?? [];
+        this.blokujacyUzytkownicy = response.blokujacyUzytkownicy ?? [];
+      },
+      error: (error) => {
+        console.error('Error fetching blokowani and blokujacy:', error);
+      }
+    });
+  }
+
   getRozmowa(nazwa: string): void {
     this.rozService.getRozmowaPrywatna({ uzytkownikNazwa: nazwa }).subscribe({
       next: (rozmowa) => {
         this.rozmowa = rozmowa;
+        this.wiadomoscCount = rozmowa.komentarze?.length;
         if (!this.rozmowa.aktywna) {
-          this.router.navigate(['/profil/rozmowy']);
+          //this.router.navigate(['/profil/rozmowy']);
         }
 
         this.errorMessage = null;
@@ -87,6 +113,9 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
             this._avatar = 'data:image/jpeg;base64,' + otherUzyt.avatar;
           }
         }
+
+        this.zablokowany = this.isBlokowany(this.rozmowa.uzytkownicy);
+        this.blokujacy = this.isBlokujacy(this.rozmowa.uzytkownicy);
       },
       error: (err) => {
         this.errorMessage = 'Nie znaleziono rozmowy o podanym ID.';
@@ -101,6 +130,25 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
   getNazwa(): string | undefined {
     return this.rozmowaUzyt.nazwa;
   }
+
+  isBlokowany(uzytkownicy: Array<UzytkownikResponse> | undefined): boolean {
+    if (uzytkownicy) {
+      return uzytkownicy.some(uzytkownik =>
+        this.blokowaniUzytkownicy?.some(blokowany => blokowany.nazwa === uzytkownik.nazwa)
+      );
+    }
+    return false;
+  }
+
+  isBlokujacy(uzytkownicy: Array<UzytkownikResponse> | undefined): boolean {
+    if (uzytkownicy) {
+      return uzytkownicy.some(uzytkownik =>
+        this.blokujacyUzytkownicy?.some(blokowany => blokowany.nazwa === uzytkownik.nazwa)
+      );
+    }
+    return false;
+  }
+
 
 
 
@@ -139,5 +187,56 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
       }
     }
   }
+
+
+  zablokujUzyt() {
+    if(confirm("Czy aby na pewno chcesz zablokować użytkownika? Nie będziesz mógł z nim rozmawiać, dopoki go nie odblokujesz.")) {
+      if (this.odbiorcaNazwa) {
+
+        this.uzytService.setBlokUzytkownik({ nazwa: this.odbiorcaNazwa, blok: true }).subscribe({
+          next: (res) => {
+            if(res) {
+              console.log('Użytkownik zablokowany');
+              console.log(res);
+              this.zablokowany = true;
+            } else {
+              console.log('Nie udało się zablokować użytkownika');
+            }
+          },
+          error: (err) => {
+           // this.handleErrors(err);
+          }
+        });
+
+      }
+    }
+  }
+
+  odblokujUzyt() {
+    if(confirm("Czy aby na pewno chcesz odblokować użytkownika?")) {
+      if (this.odbiorcaNazwa) {
+
+        this.uzytService.setBlokUzytkownik({ nazwa: this.odbiorcaNazwa, blok: false }).subscribe({
+          next: (res) => {
+            if(res) {
+              console.log('Użytkownik odblokowany');
+              console.log(res);
+              this.zablokowany = false;
+            } else {
+              console.log('Nie udało się odblokować użytkownika');
+            }
+          },
+          error: (err) => {
+           // this.handleErrors(err);
+          }
+        });
+
+      }
+    }
+  }
+
+
+
+
 
 }

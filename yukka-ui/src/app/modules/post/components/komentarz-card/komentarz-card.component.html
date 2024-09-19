@@ -7,9 +7,11 @@
 
         <p class="mb-1">
           <a class="me-1">
-            <img [src]="getKomentarzAvatar()" class="komentarz-avatar" alt="avatar" width="30" height="30">
+            <img (click)="goToProfil()"
+            [src]="getKomentarzAvatar()" class="komentarz-avatar" alt="avatar"
+            width="30" height="30">
           </a>
-          <span class="komentarz-username">{{ komentarz.uzytkownikNazwa }}&nbsp;</span>
+          <span (click)="goToProfil()" class="komentarz-username">{{ komentarz.uzytkownikNazwa }}&nbsp;</span>
           <span class="komentarz-date">{{ komentarz.dataUtworzenia }}</span>
           <ng-container *ngIf="komentarz.edytowany">
             <span class="komentarz-date">&nbsp; (edytowany)</span>
@@ -87,7 +89,7 @@
       <app-add-komentarz-card
         [targetId]="komentarz.komentarzId"
         [typ]="TypKomentarza.ODPOWIEDZ"
-        (onCancelReply)="cancelOdpowiedz()">
+        (onCancelOdpowiedz)="cancelOdpowiedz()">
       </app-add-komentarz-card>
     </div>
 

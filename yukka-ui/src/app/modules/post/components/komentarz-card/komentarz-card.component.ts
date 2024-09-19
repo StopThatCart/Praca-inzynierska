@@ -90,6 +90,14 @@ export class KomentarzCardComponent implements OnInit {
     return this._komentarzAvatar;
   }
 
+  goToProfil() {
+    if (this.komentarz.uzytkownikNazwa) {
+      this.router.navigate([`/profil/${this.komentarz.uzytkownikNazwa}`]);
+    }
+  }
+
+
+
   toggleReplying() {
     this.isReplying = !this.isReplying;
   }
@@ -101,7 +109,10 @@ export class KomentarzCardComponent implements OnInit {
 
   addOcenaToKomentarz(komentarzId: string | undefined, ocena: boolean) {
     this.errorMsg = [];
-    if (komentarzId) {
+    if (komentarzId && this.tokenService) {
+      if(this.tokenService.nazwa === this.komentarz.uzytkownikNazwa) {
+        return;
+      }
       let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: komentarzId };
       this.komentarzService.addOcenaToKomentarz({ body: ocenaRequest }).subscribe({
         next: (komentarz) => {

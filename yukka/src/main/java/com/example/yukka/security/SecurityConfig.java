@@ -78,35 +78,46 @@ public class SecurityConfig {
                                   "/posty/oceny",
                                   "/rozmowy/**",
                                   "/dzialki/**"
-                      )
-                      .authenticated()
-   
-                      .requestMatchers(HttpMethod.POST, "/posty").authenticated()
-                      .requestMatchers(HttpMethod.DELETE, "/posty/{post-id}").authenticated()
-                      .requestMatchers("/posty/uzytkownik/**").authenticated()
-                      .requestMatchers(HttpMethod.DELETE, "/komentarze/{komentarz-id}").authenticated()
-                      .requestMatchers(HttpMethod.PATCH, "/komentarze/{komentarz-id}").authenticated()
+                    ).authenticated()
 
-                      .requestMatchers(HttpMethod.DELETE, "/rosliny/{nazwa-lacinska}").authenticated()
-                      .requestMatchers(HttpMethod.POST, "/rosliny").authenticated()
-                      .requestMatchers(HttpMethod.PUT, "/rosliny").authenticated()
 
-                      // Do swaggera
-                      .requestMatchers("/v2/api-docs",
-                                        "/v3/api-docs",
-                                        "/v3/api-docs/**",
-                                        "/swagger-resources",
-                                        "/swagger-resources/**",
-                                        "/configuration/ui",
-                                        "/configuration/security",
-                                        "/swagger-ui/**",
-                                        "/webjars/**",
-                                        "/swagger-ui.html").permitAll()
-                      .requestMatchers("/admin/**").hasRole(ROLE.Admin.toString())
-                      .requestMatchers("/pracownik/**").hasAnyRole(ROLE.Admin.toString(), ROLE.Pracownik.toString())
-                      .requestMatchers("/auth/**").permitAll()
-                      .requestMatchers( "/favicon.ico").permitAll()
-                      .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers("/uzytkownicy/pracownik/ban/{email}/{ban}")
+                        .hasAnyRole(ROLE.Admin.toString(), ROLE.Pracownik.toString())
+                    .requestMatchers("/uzytkownicy/blok/{nazwa}/{blok}").authenticated()
+                    .requestMatchers("/uzytkownicy/blokowani").authenticated()
+                    .requestMatchers(HttpMethod.PATCH,"/uzytkownicy/avatar").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/uzytkownicy/{email}",
+                                                                    "/uzytkownicy"
+                    ).authenticated()
+
+
+
+                    .requestMatchers(HttpMethod.POST, "/posty").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/posty/{post-id}").authenticated()
+                    .requestMatchers("/posty/uzytkownik/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/komentarze/{komentarz-id}").authenticated()
+                    .requestMatchers(HttpMethod.PATCH, "/komentarze/{komentarz-id}").authenticated()
+
+                    .requestMatchers(HttpMethod.DELETE, "/rosliny/{nazwa-lacinska}").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/rosliny").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/rosliny").authenticated()
+
+                    // Do swaggera
+                    .requestMatchers("/v2/api-docs",
+                                    "/v3/api-docs",
+                                    "/v3/api-docs/**",
+                                    "/swagger-resources",
+                                    "/swagger-resources/**",
+                                    "/configuration/ui",
+                                    "/configuration/security",
+                                    "/swagger-ui/**",
+                                    "/webjars/**",
+                                    "/swagger-ui.html").permitAll()
+                    .requestMatchers("/admin/**").hasRole(ROLE.Admin.toString())
+                    .requestMatchers("/pracownik/**").hasAnyRole(ROLE.Admin.toString(), ROLE.Pracownik.toString())
+                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers( "/favicon.ico").permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                      // .requestMatchers("/rest/neo4j/rozmowy").hasRole(ROLE.Admin.toString())
 
 

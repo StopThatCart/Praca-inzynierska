@@ -115,7 +115,7 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  inviteToRozmowaPrywatna$Response(params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
+  inviteToRozmowaPrywatna$Response(params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatnaResponse>> {
     return inviteToRozmowaPrywatna(this.http, this.rootUrl, params, context);
   }
 
@@ -125,9 +125,9 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  inviteToRozmowaPrywatna(params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatna> {
+  inviteToRozmowaPrywatna(params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatnaResponse> {
     return this.inviteToRozmowaPrywatna$Response(params, context).pipe(
-      map((r: StrictHttpResponse<RozmowaPrywatna>): RozmowaPrywatna => r.body)
+      map((r: StrictHttpResponse<RozmowaPrywatnaResponse>): RozmowaPrywatnaResponse => r.body)
     );
   }
 

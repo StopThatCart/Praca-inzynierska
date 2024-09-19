@@ -48,23 +48,6 @@ export class LoginComponent {
         },
         error: (err) => {
           console.log(err);
-          /*
-          if (err.error instanceof Blob) {
-            console.log('Blob');
-            const reader = new FileReader();
-            reader.onload = (e: any) => {
-                const errorResponse = JSON.parse(e.target.result);
-                console.log(errorResponse);
-                if (errorResponse.validationErrors) {
-                  console.log('validationErrors');
-                    this.errorMsg = errorResponse.validationErrors;
-                } else {
-                  console.log('errorMsg');
-                    this.errorMsg.push(errorResponse.error);
-                }
-            };
-            reader.readAsText(err.error);
-          } else */
            if (err.error.validationErrors) {
             this.errorMsg = err.error.validationErrors;
           } else if (typeof err.error === 'string') {
