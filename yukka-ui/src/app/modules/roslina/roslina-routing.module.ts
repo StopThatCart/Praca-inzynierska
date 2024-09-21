@@ -2,8 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RoslinaListComponent } from './pages/roslina-list/roslina-list.component';
 import { CommonModule } from '@angular/common';
-import { RoslinaPageComponent } from './roslina-page/roslina-page.component';
+import { RoslinaPageComponent } from './pages/roslina-page/roslina-page.component';
 import { RoslinaResolverService } from './services/roslina-resolver.service';
+import { AddRoslinaPageComponent } from './pages/add-roslina-page/add-roslina-page.component';
+import { authGuard } from '../../services/guard/auth/auth.guard';
+import { pracownikGuard } from '../../services/guard/pracownik/pracownik.guard';
 
 const routes: Routes = [
   {
@@ -14,6 +17,12 @@ const routes: Routes = [
       {
         path: '',
         component: RoslinaListComponent
+      },
+      {
+        path: 'dodaj',
+        component: AddRoslinaPageComponent,
+        canActivate: [pracownikGuard],
+        data: { breadcrumb: 'Dodawanie rośliny' }
       },
       {
         path: ':nazwaLacinska',

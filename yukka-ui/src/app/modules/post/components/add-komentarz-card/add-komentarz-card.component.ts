@@ -117,14 +117,14 @@ export class AddKomentarzCardComponent implements OnInit {
 
   private addOdpowiedzToKomentarz() {
     if(this.request.obraz === '') {
-      this.komentarzService.addOdpowiedzToKomentarz1$Json$Json ({
+      this.komentarzService.addOdpowiedzToKomentarz1$Json({
         body: this.request
       }).subscribe( {
           next: (res) => { window.location.reload(); },
           error: (err) => { this.handleErrors(err); }
       });
     }else {
-      this.komentarzService.addOdpowiedzToKomentarz1$FormData$Json({
+      this.komentarzService.addOdpowiedzToKomentarz1$FormData({
         body: { request: this.request, file: this.wybranyPlik }
       }).subscribe( {
           next: (res) => { window.location.reload(); },

@@ -1,0 +1,9 @@
+<div class="mb-2">
+  <div class="vstack">
+    <label class="form-label">Min. wysokość: {{ wysokoscMin }}</label>
+    <input (ngModelChange)="onWysokoscMinChange()" [(ngModel)]="wysokoscMin" class="form-range" type="range" >
+
+    <label class="form-label">Max. Wysokość: {{ wysokoscMax }}</label>
+    <input (ngModelChange)="onWysokoscMaxChange()" [(ngModel)]="wysokoscMax" class="form-range" type="range" >
+  </div>
+</div>

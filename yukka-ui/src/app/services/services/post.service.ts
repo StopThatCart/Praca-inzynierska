@@ -119,28 +119,6 @@ export class PostService extends BaseService {
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addPost1$Json()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  addPost1$Json$Response(params: AddPost1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Post>> {
-    return addPost1$Json(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addPost1$Json$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  addPost1$Json(params: AddPost1$Json$Params, context?: HttpContext): Observable<Post> {
-    return this.addPost1$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Post>): Post => r.body)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `addPost1$FormData()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
@@ -157,6 +135,28 @@ export class PostService extends BaseService {
    */
   addPost1$FormData(params: AddPost1$FormData$Params, context?: HttpContext): Observable<Post> {
     return this.addPost1$FormData$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Post>): Post => r.body)
+    );
+  }
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `addPost1$Json()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  addPost1$Json$Response(params: AddPost1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Post>> {
+    return addPost1$Json(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `addPost1$Json$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  addPost1$Json(params: AddPost1$Json$Params, context?: HttpContext): Observable<Post> {
+    return this.addPost1$Json$Response(params, context).pipe(
       map((r: StrictHttpResponse<Post>): Post => r.body)
     );
   }

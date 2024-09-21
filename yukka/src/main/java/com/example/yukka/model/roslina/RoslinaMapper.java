@@ -30,6 +30,9 @@ public class RoslinaMapper {
     private final FileUtils fileUtils;
 
     public DzialkaResponse toDzialkaResponse(Dzialka dzialka) {
+        if (dzialka == null) {
+            return null;
+        }
         Uzytkownik uzyt = null;
         String nazwa = null;
         if(dzialka.getOgrod() != null && dzialka.getOgrod().getUzytkownik() != null) {
@@ -69,6 +72,9 @@ public class RoslinaMapper {
     }
 
     public UzytkownikRoslinaRequest toUzytkownikRoslinaRequest(UzytkownikRoslina roslina) {
+        if (roslina == null) {
+            return null;
+        }
         return UzytkownikRoslinaRequest.builder()
             .roslinaId(roslina.getRoslinaId())
             .nazwa(roslina.getNazwa())
@@ -81,6 +87,9 @@ public class RoslinaMapper {
     }
 
     public UzytkownikRoslina toUzytkownikRoslina(@Valid UzytkownikRoslinaRequest request) {
+        if (request == null) {
+            return null;
+        }
         UzytkownikRoslina roslina = UzytkownikRoslina.builder()
             .roslinaId(request.getRoslinaId())
             .nazwa(request.getNazwa())
@@ -95,6 +104,9 @@ public class RoslinaMapper {
     }
 
     public UzytkownikRoslinaResponse toUzytkownikRoslinaResponseWithoutWlasciwosci(UzytkownikRoslina roslina) {
+        if (roslina == null) {
+            return null;
+        }
         return UzytkownikRoslinaResponse.builder()
                 .id(roslina.getId())
                 .roslinaId(roslina.getRoslinaId())
@@ -108,6 +120,9 @@ public class RoslinaMapper {
     }
 
     public UzytkownikRoslinaResponse toUzytkownikRoslinaResponse(UzytkownikRoslina roslina) {
+        if (roslina == null) {
+            return null;
+        }
         return UzytkownikRoslinaResponse.builder()
                 .id(roslina.getId())
                 .roslinaId(roslina.getRoslinaId())
@@ -122,6 +137,9 @@ public class RoslinaMapper {
 
 
     public RoslinaRequest toRoslinaRequest(Roslina roslina) {
+        if (roslina == null) {
+            return null;
+        }
         return RoslinaRequest.builder()
             .roslinaId(roslina.getRoslinaId())
             .nazwa(roslina.getNazwa())
@@ -135,6 +153,9 @@ public class RoslinaMapper {
     }
 
     public Roslina toRoslina(@Valid RoslinaRequest request) {
+        if (request == null) {
+            return null;
+        }
         Roslina roslina = Roslina.builder()
             .roslinaId(request.getRoslinaId())
             .nazwa(request.getNazwa())
@@ -154,6 +175,10 @@ public class RoslinaMapper {
     }
 
     public RoslinaResponse toRoslinaResponse(Roslina roslina) {
+        if (roslina == null) {
+            return null;
+        }
+
         Uzytkownik uzytkownik = roslina.getUzytkownik();
         return RoslinaResponse.builder()
                 .id(roslina.getId())
@@ -169,6 +194,10 @@ public class RoslinaMapper {
     }
 
     public RoslinaResponse roslinaToRoslinaResponseWithWlasciwosci(Roslina roslina) {
+        if (roslina == null) {
+            return null;
+        }
+
         return RoslinaResponse.builder()
                 .id(roslina.getId())
                 .roslinaId(roslina.getRoslinaId())
@@ -204,6 +233,9 @@ public class RoslinaMapper {
     }
 
     public RoslinaResponse toRoslinaResponse(RoslinaRequest request) {
+        if (request == null) {
+            return null;
+        }
         return RoslinaResponse.builder()
             .roslinaId(request.getRoslinaId())
             .nazwa(request.getNazwa())

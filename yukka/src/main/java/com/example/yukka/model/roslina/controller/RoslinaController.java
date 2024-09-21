@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.roslina.Roslina;
+import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
@@ -40,6 +41,9 @@ public class RoslinaController {
 
     @Autowired
     RoslinaRepository roslinaRepository;
+
+    @Autowired
+    RoslinaMapper roslinaMapper;
 
     /*
     @GetMapping(produces="application/json")
@@ -79,25 +83,25 @@ public class RoslinaController {
         return ResponseEntity.ok(roslinaService.findByNazwaLacinska(nazwaLacinska.toLowerCase()));
     }
 
-    @PostMapping(produces="application/json")
-    public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request,
+    @PostMapping(consumes="application/json", produces="application/json")
+    public ResponseEntity<RoslinaResponse> saveRoslina(@Valid @RequestBody RoslinaRequest request,
     Authentication currentUser) {
-        roslinaService.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
+        Roslina roslina = roslinaService.save(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(roslinaMapper.toRoslinaResponse(roslina));
     }
 
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<String> saveRoslina(@Valid @RequestPart("request") RoslinaRequest request, 
+    @PostMapping(consumes = "multipart/form-data", produces="application/json")
+    public ResponseEntity<RoslinaResponse> saveRoslina(@Valid @RequestPart("request") RoslinaRequest request, 
     @Parameter() @RequestPart("file") MultipartFile file,
     Authentication currentUser) {
-        roslinaService.save(request, file, currentUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
+        Roslina roslina = roslinaService.save(request, file, currentUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(roslinaMapper.toRoslinaResponse(roslina));
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateRoslina(@Valid @RequestBody RoslinaRequest request) {
-        roslinaService.update(request);
-        return ResponseEntity.status(HttpStatus.OK).body("Roślina została pomyślnie zaktualizowana.");
+    @PutMapping(produces="application/json")
+    public ResponseEntity<RoslinaResponse> updateRoslina(@Valid @RequestBody RoslinaRequest request) {
+        RoslinaResponse roslina = roslinaService.update(request);
+        return ResponseEntity.status(HttpStatus.OK).body(roslina);
     }
     
     

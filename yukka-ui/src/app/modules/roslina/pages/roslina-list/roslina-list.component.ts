@@ -11,15 +11,20 @@ import { FormsModule } from '@angular/forms';
 import { SpinnerComponent } from "../../../../services/LoaderSpinner/spinner/spinner.component";
 import { Convert } from '../../../../services/converts/wlasciwosc-with-relations-convert';
 import { PaginationComponent } from "../../../../components/pagination/pagination.component";
+import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
+import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
+import { TokenService } from '../../../../services/token/token.service';
 
 @Component({
   selector: 'app-roslina-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, SpinnerComponent, PaginationComponent],
+  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, SpinnerComponent, PaginationComponent, WysokoscInputComponent],
   templateUrl: './roslina-list.component.html',
   styleUrl: './roslina-list.component.css'
 })
 export class RoslinaListComponent implements OnInit{
+  canAddRoslina: boolean = false;
+
   roslinaResponse: PageResponseRoslinaResponse = {};
   wlasciwosciResponse: WlasciwoscResponse[] = [];
   isLoading = false;
@@ -31,27 +36,27 @@ export class RoslinaListComponent implements OnInit{
     obraz: '',
     opis: '',
     wysokoscMin: 0,
-    wysokoscMax: Number.MAX_VALUE,
+    wysokoscMax: 100,
     wlasciwosci: [
-
+/*
       {
         etykieta: 'Kolor', relacja: 'MA_KOLOR_LISCI', nazwa: 'ciemnozielone'
       },
       {
         etykieta: 'Okres', relacja: 'MA_OKRES_OWOCOWANIA', nazwa: 'październik'
       },
-      /*
+
       {
         etykieta: 'Okres', relacja: 'MA_OKRES_KWITNIENIA', nazwa: 'lipiec'
       },
-      */
+
       {
         etykieta: 'Gleba', relacja: 'MA_GLEBE', nazwa: 'przeciętna ogrodowa'
       },
       {
         etykieta: 'Gleba', relacja: 'MA_GLEBE', nazwa: 'próchniczna'
       }
-
+*/
     ] as WlasciwoscWithRelations[],
   };
   // Na backendzie jest size 10, więc tutaj tylko testuję
@@ -63,11 +68,15 @@ export class RoslinaListComponent implements OnInit{
 
   constructor(
     private roslinaService: RoslinaService,
+    private wlasciwoscProcessService: WlasciwoscProcessService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
+    this.checkRoles();
+
     this.route.queryParams.subscribe(params => {
       this.page = +params['page'] || 1;
 
@@ -85,6 +94,16 @@ export class RoslinaListComponent implements OnInit{
 
       this.findAllRosliny();
     });
+  }
+
+  private checkRoles() {
+    this.canAddRoslina = this.tokenService.isAdmin() || this.tokenService.isPracownik();
+  }
+
+  goToAddRoslina() {
+    if(this.canAddRoslina) {
+      this.router.navigate(['rosliny/dodaj']);
+    }
   }
 
   /*
@@ -137,7 +156,7 @@ export class RoslinaListComponent implements OnInit{
     this.roslinaService.getWlasciwosciWithRelations()
     .subscribe({
       next: (wlasciwosci) => {
-        this.wlasciwosciResponse = wlasciwosci;
+        this.wlasciwosciResponse = this.wlasciwoscProcessService.processWlasciwosciResponse(wlasciwosci);
       },
       error: (error) => {
         console.error('Error fetching wlasciwosci:', error);

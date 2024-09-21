@@ -7,25 +7,26 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { RoslinaRequest } from '../../models/roslina-request';
+import { RoslinaResponse } from '../../models/roslina-response';
 
-export interface SaveRoslina2$Json$Any$Params {
+export interface SaveRoslina2$Json$Params {
       body: RoslinaRequest
 }
 
-export function saveRoslina2$Json$Any(http: HttpClient, rootUrl: string, params: SaveRoslina2$Json$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, saveRoslina2$Json$Any.PATH, 'post');
+export function saveRoslina2$Json(http: HttpClient, rootUrl: string, params: SaveRoslina2$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+  const rb = new RequestBuilder(rootUrl, saveRoslina2$Json.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<string>;
+      return r as StrictHttpResponse<RoslinaResponse>;
     })
   );
 }
 
-saveRoslina2$Json$Any.PATH = '/rosliny';
+saveRoslina2$Json.PATH = '/rosliny';

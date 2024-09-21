@@ -19,14 +19,10 @@ import { getWlasciwosciWithRelations } from '../fn/roslina/get-wlasciwosci-with-
 import { GetWlasciwosciWithRelations$Params } from '../fn/roslina/get-wlasciwosci-with-relations';
 import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
 import { RoslinaResponse } from '../models/roslina-response';
-import { saveRoslina2$FormData$Any } from '../fn/roslina/save-roslina-2-form-data-any';
-import { SaveRoslina2$FormData$Any$Params } from '../fn/roslina/save-roslina-2-form-data-any';
-import { saveRoslina2$FormData$Json } from '../fn/roslina/save-roslina-2-form-data-json';
-import { SaveRoslina2$FormData$Json$Params } from '../fn/roslina/save-roslina-2-form-data-json';
-import { saveRoslina2$Json$Any } from '../fn/roslina/save-roslina-2-json-any';
-import { SaveRoslina2$Json$Any$Params } from '../fn/roslina/save-roslina-2-json-any';
-import { saveRoslina2$Json$Json } from '../fn/roslina/save-roslina-2-json-json';
-import { SaveRoslina2$Json$Json$Params } from '../fn/roslina/save-roslina-2-json-json';
+import { saveRoslina2$FormData } from '../fn/roslina/save-roslina-2-form-data';
+import { SaveRoslina2$FormData$Params } from '../fn/roslina/save-roslina-2-form-data';
+import { saveRoslina2$Json } from '../fn/roslina/save-roslina-2-json';
+import { SaveRoslina2$Json$Params } from '../fn/roslina/save-roslina-2-json';
 import { updateRoslina } from '../fn/roslina/update-roslina';
 import { UpdateRoslina$Params } from '../fn/roslina/update-roslina';
 import { WlasciwoscResponse } from '../models/wlasciwosc-response';
@@ -46,7 +42,7 @@ export class RoslinaService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateRoslina$Response(params: UpdateRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  updateRoslina$Response(params: UpdateRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
     return updateRoslina(this.http, this.rootUrl, params, context);
   }
 
@@ -56,9 +52,9 @@ export class RoslinaService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateRoslina(params: UpdateRoslina$Params, context?: HttpContext): Observable<string> {
+  updateRoslina(params: UpdateRoslina$Params, context?: HttpContext): Observable<RoslinaResponse> {
     return this.updateRoslina$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
     );
   }
 
@@ -67,89 +63,45 @@ export class RoslinaService extends BaseService {
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslina2$Json$Json()` instead.
+   * To access only the response body, use `saveRoslina2$FormData()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslina2$Json$Json$Response(params: SaveRoslina2$Json$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return saveRoslina2$Json$Json(this.http, this.rootUrl, params, context);
+  saveRoslina2$FormData$Response(params: SaveRoslina2$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+    return saveRoslina2$FormData(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslina2$Json$Json$Response()` instead.
+   * To access the full response (for headers, for example), `saveRoslina2$FormData$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslina2$Json$Json(params: SaveRoslina2$Json$Json$Params, context?: HttpContext): Observable<string> {
-    return this.saveRoslina2$Json$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+  saveRoslina2$FormData(params: SaveRoslina2$FormData$Params, context?: HttpContext): Observable<RoslinaResponse> {
+    return this.saveRoslina2$FormData$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
     );
   }
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslina2$Json$Any()` instead.
+   * To access only the response body, use `saveRoslina2$Json()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveRoslina2$Json$Any$Response(params: SaveRoslina2$Json$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return saveRoslina2$Json$Any(this.http, this.rootUrl, params, context);
+  saveRoslina2$Json$Response(params: SaveRoslina2$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+    return saveRoslina2$Json(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslina2$Json$Any$Response()` instead.
+   * To access the full response (for headers, for example), `saveRoslina2$Json$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveRoslina2$Json$Any(params: SaveRoslina2$Json$Any$Params, context?: HttpContext): Observable<string> {
-    return this.saveRoslina2$Json$Any$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslina2$FormData$Json()` instead.
-   *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
-   */
-  saveRoslina2$FormData$Json$Response(params: SaveRoslina2$FormData$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return saveRoslina2$FormData$Json(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslina2$FormData$Json$Response()` instead.
-   *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
-   */
-  saveRoslina2$FormData$Json(params: SaveRoslina2$FormData$Json$Params, context?: HttpContext): Observable<string> {
-    return this.saveRoslina2$FormData$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslina2$FormData$Any()` instead.
-   *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
-   */
-  saveRoslina2$FormData$Any$Response(params: SaveRoslina2$FormData$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return saveRoslina2$FormData$Any(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslina2$FormData$Any$Response()` instead.
-   *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
-   */
-  saveRoslina2$FormData$Any(params: SaveRoslina2$FormData$Any$Params, context?: HttpContext): Observable<string> {
-    return this.saveRoslina2$FormData$Any$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+  saveRoslina2$Json(params: SaveRoslina2$Json$Params, context?: HttpContext): Observable<RoslinaResponse> {
+    return this.saveRoslina2$Json$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
     );
   }
 

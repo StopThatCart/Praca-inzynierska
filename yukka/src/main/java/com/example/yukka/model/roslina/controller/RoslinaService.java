@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
+import com.example.yukka.handler.EntityAlreadyExistsException;
 import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
@@ -44,6 +46,9 @@ public class RoslinaService {
 
     @Autowired
     RoslinaMapper roslinaMapper;
+
+    @Value("${roslina.obraz.default.name}")
+    private String defaultRoslinaObrazName;
 
     public Collection<Roslina> getSome(int amount) {
         System.out.println("BOOOOOOOOOI " + amount);
@@ -112,18 +117,15 @@ public class RoslinaService {
     @Transactional(readOnly = true)
     public RoslinaResponse findById(Long id) {
         Roslina ros = roslinaRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id: " + id));
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id: " + id));
         return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
     @Transactional(readOnly = true)
     public RoslinaResponse findByNazwaLacinska(String nazwaLacinska) {
         Roslina ros = roslinaRepository.findByNazwaLacinskaWithWlasciwosci(nazwaLacinska)
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
         RoslinaResponse res = roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
-
-        System.out.println("Roslina: " + ros.getNazwa());
-        System.out.println("Gleba: " + ros.getGleby() + " ||| " + "Response gleby " + res.getGleby());
 
         return res;
     }
@@ -140,10 +142,10 @@ public class RoslinaService {
     }
 
     public Roslina save(RoslinaRequest request) {
+        request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
         Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
-            System.out.println("\n\n\nROSLINA IS PRESENT\n\n\n");
-            return null;
+            throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje.");
         }
         
         if(request.areWlasciwosciEmpty()) {
@@ -159,15 +161,14 @@ public class RoslinaService {
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosciAsMap());
-
     }
 
     public Roslina save(RoslinaRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
         Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
-            System.out.println("\n\n\nENTITY IS PRESENT\n\n\n");
-            return null;
+            throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje.");
         }
         
         String leObraz = fileStoreService.saveRoslina(file, request.getNazwaLacinska(), uzyt.getUzytId());
@@ -187,6 +188,7 @@ public class RoslinaService {
     }
 
     public Roslina saveSeededRoslina(RoslinaRequest request, MultipartFile file) {
+        request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
         Roslina pl = roslinaMapper.toRoslina(request);
         
         String leObraz = fileStoreService.saveSeededRoslina(file, request.getObraz());
@@ -205,8 +207,9 @@ public class RoslinaService {
     }
 
     public RoslinaResponse update(RoslinaRequest request) {
+        request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
         Roslina roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska())
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + request.getNazwaLacinska()));
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + request.getNazwaLacinska()));
 
         if(request.areWlasciwosciEmpty()) {
             Roslina ros = roslinaRepository.updateRoslina(

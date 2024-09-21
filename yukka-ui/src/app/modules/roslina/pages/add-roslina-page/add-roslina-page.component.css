@@ -1,0 +1,36 @@
+.add-roslina-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.add-roslina-card {
+  background: var(--bs-primary-border-subtle);
+
+}
+
+.add-roslina-page form {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.add-roslina-page form div {
+  margin-bottom: 1rem;
+}
+
+.add-roslina-page form label {
+  font-weight: bold;
+}
+
+.add-roslina-page form input,
+.add-roslina-page form textarea {
+  color: black;
+  --bs-bg-opacity: 1;
+  background-color: rgba(248, 249, 250, 1) !important;
+}
+
+.add-roslina-page form button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}

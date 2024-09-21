@@ -50,7 +50,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.findKomentarzeOfUzytkownik(page, size, email, connectedUser));
     }
 
-    @PostMapping(value = "/odpowiedzi", produces="application/json")
+    @PostMapping(value = "/odpowiedzi", consumes="application/json", produces="application/json")
     public ResponseEntity<KomentarzResponse> addOdpowiedzToKomentarz(
                   //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -58,7 +58,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, connectedUser));
     }
 
-    @PostMapping(value = "/odpowiedzi", consumes = "multipart/form-data")
+    @PostMapping(value = "/odpowiedzi", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<KomentarzResponse> addOdpowiedzToKomentarz(
                   //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestPart("request") KomentarzRequest request, 
@@ -67,7 +67,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, file, connectedUser));
     }
 
-    @PostMapping(value = "/posty", produces="application/json")
+    @PostMapping(value = "/posty", consumes="application/json", produces="application/json")
     public ResponseEntity<KomentarzResponse> addKomentarzToPost(
                     //@PathVariable("post-id") String postId, 
                     @Valid @RequestBody KomentarzRequest request, 
@@ -94,7 +94,7 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(request, file, connectedUser));
     }
 
-    @PostMapping(value = "/wiadomosciPrywatne", produces="application/json")
+    @PostMapping(value = "/wiadomosciPrywatne", consumes="application/json", produces="application/json")
     public ResponseEntity<KomentarzResponse> addKomentarzToWiadomoscPrywatna(
                     @Valid @RequestBody KomentarzRequest request, 
                     Authentication connectedUser){
@@ -102,7 +102,7 @@ public class KomentarzController {
     }
 
     // Działa też jako update
-    @PutMapping(value = "/oceny", produces="application/json")
+    @PutMapping(value = "/oceny", consumes="application/json", produces="application/json")
     public ResponseEntity<KomentarzResponse> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addOcenaToKomentarz(request, connectedUser));
     }
@@ -113,7 +113,7 @@ public class KomentarzController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping(value = "/{komentarz-id}", produces="application/json")
+    @PatchMapping(value = "/{komentarz-id}", consumes="application/json", produces="application/json")
     public ResponseEntity<KomentarzResponse> updateKomentarz(
                     @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestBody KomentarzRequest request, 

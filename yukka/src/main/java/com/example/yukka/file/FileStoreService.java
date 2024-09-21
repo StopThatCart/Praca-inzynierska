@@ -39,7 +39,7 @@ public class FileStoreService {
     public String saveSeededRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String obraz) {
         String fileUploadSubPath = "defaults";
         if(!obraz.equals(defaultRoslinaObrazName)) {
-            fileUploadSubPath = fileUploadSubPath + separator + "rosliny";
+            fileUploadSubPath = fileUploadSubPath + separator + "rosliny" + separator + "seed";
              //String fileName = generateFileName(obraz);
             return uploadFile(sourceFile, fileUploadSubPath, obraz);
         }
@@ -56,7 +56,7 @@ public class FileStoreService {
     public String saveRoslina(@Nonnull MultipartFile sourceFile,
                               @Nonnull String obraz, @Nonnull String uzytId) {
         if(!obraz.equals(defaultRoslinaObrazName)) {
-            String fileUploadSubPath = "uzytkownicy" + separator + "rosliny";
+            String fileUploadSubPath = "rosliny" + separator + "pracownicy";
             String fileName = generateFileName(obraz) + "_" + System.currentTimeMillis();
             return uploadFile(sourceFile, fileUploadSubPath, fileName);
         }

@@ -110,9 +110,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/RoslinaResponse"
                 }
               }
             }
@@ -126,11 +126,6 @@
         "operationId": "saveRoslina_2",
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
-            },
             "multipart/form-data": {
               "schema": {
                 "required": [
@@ -148,6 +143,11 @@
                   }
                 }
               }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoslinaRequest"
+              }
             }
           },
           "required": true
@@ -158,12 +158,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
-                }
-              },
-              "*/*": {
-                "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/RoslinaResponse"
                 }
               }
             }
@@ -724,11 +719,6 @@
         "operationId": "addPost_1",
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostRequest"
-              }
-            },
             "multipart/form-data": {
               "schema": {
                 "required": [
@@ -745,6 +735,11 @@
                     "format": "binary"
                   }
                 }
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostRequest"
               }
             }
           },
@@ -772,11 +767,6 @@
         "operationId": "addKomentarzToWiadomoscPrywatna_1",
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/KomentarzRequest"
-              }
-            },
             "multipart/form-data": {
               "schema": {
                 "required": [
@@ -793,6 +783,11 @@
                     "format": "binary"
                   }
                 }
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KomentarzRequest"
               }
             }
           },
@@ -820,11 +815,6 @@
         "operationId": "addKomentarzToPost_1",
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/KomentarzRequest"
-              }
-            },
             "multipart/form-data": {
               "schema": {
                 "required": [
@@ -841,6 +831,11 @@
                     "format": "binary"
                   }
                 }
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KomentarzRequest"
               }
             }
           },
@@ -868,11 +863,6 @@
         "operationId": "addOdpowiedzToKomentarz_1",
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/KomentarzRequest"
-              }
-            },
             "multipart/form-data": {
               "schema": {
                 "required": [
@@ -890,6 +880,11 @@
                   }
                 }
               }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KomentarzRequest"
+              }
             }
           },
           "required": true
@@ -899,11 +894,6 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/KomentarzResponse"
-                }
-              },
-              "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/KomentarzResponse"
                 }
@@ -2601,13 +2591,13 @@
           "name": {
             "type": "string"
           },
+          "pracownik": {
+            "type": "boolean"
+          },
           "admin": {
             "type": "boolean"
           },
           "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "pracownik": {
             "type": "boolean"
           },
           "username": {
@@ -2625,13 +2615,13 @@
           "enabled": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonLocked": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonLocked": {
+          "credentialsNonExpired": {
             "type": "boolean"
           }
         }
@@ -2664,10 +2654,12 @@
             "type": "string"
           },
           "wysokoscMin": {
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "wysokoscMax": {
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
@@ -2690,6 +2682,175 @@
           },
           "relacja": {
             "type": "string"
+          }
+        }
+      },
+      "RoslinaResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "roslinaId": {
+            "type": "string"
+          },
+          "nazwa": {
+            "type": "string"
+          },
+          "nazwaLacinska": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
+          "wysokoscMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "wysokoscMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "obraz": {
+            "type": "string",
+            "format": "byte"
+          },
+          "autor": {
+            "type": "string"
+          },
+          "grupy": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "formy": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "gleby": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "koloryLisci": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "koloryKwiatow": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "kwiaty": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nagrody": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "odczyny": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "okresyKwitnienia": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "okresyOwocowania": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "owoce": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "podgrupa": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pokroje": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "silyWzrostu": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "stanowiska": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "walory": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "wilgotnosci": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "zastosowania": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "zimozielonosci": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -3013,175 +3174,6 @@
           }
         }
       },
-      "RoslinaResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "roslinaId": {
-            "type": "string"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "nazwaLacinska": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "wysokoscMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "wysokoscMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "autor": {
-            "type": "string"
-          },
-          "grupy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "formy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "gleby": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "koloryLisci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "koloryKwiatow": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "kwiaty": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "nagrody": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "odczyny": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "okresyKwitnienia": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "okresyOwocowania": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "owoce": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "podgrupa": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "pokroje": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "silyWzrostu": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "stanowiska": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "walory": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "wilgotnosci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "zastosowania": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "zimozielonosci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
       "PowiadomienieDTO": {
         "type": "object",
         "properties": {
@@ -3482,6 +3474,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "xstary": {
+            "type": "integer",
+            "format": "int32"
+          },
           "ystary": {
             "type": "integer",
             "format": "int32"
@@ -3491,10 +3487,6 @@
             "format": "int32"
           },
           "ynowy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "xstary": {
             "type": "integer",
             "format": "int32"
           }

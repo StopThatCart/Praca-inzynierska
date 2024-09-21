@@ -9,21 +9,21 @@ import { RequestBuilder } from '../../request-builder';
 import { KomentarzRequest } from '../../models/komentarz-request';
 import { KomentarzResponse } from '../../models/komentarz-response';
 
-export interface AddOdpowiedzToKomentarz1$FormData$Any$Params {
+export interface AddOdpowiedzToKomentarz1$FormData$Params {
       body: {
 'request': KomentarzRequest;
 'file': Blob;
 }
 }
 
-export function addOdpowiedzToKomentarz1$FormData$Any(http: HttpClient, rootUrl: string, params: AddOdpowiedzToKomentarz1$FormData$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-  const rb = new RequestBuilder(rootUrl, addOdpowiedzToKomentarz1$FormData$Any.PATH, 'post');
+export function addOdpowiedzToKomentarz1$FormData(http: HttpClient, rootUrl: string, params: AddOdpowiedzToKomentarz1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+  const rb = new RequestBuilder(rootUrl, addOdpowiedzToKomentarz1$FormData.PATH, 'post');
   if (params) {
     rb.body(params.body, 'multipart/form-data');
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
@@ -32,4 +32,4 @@ export function addOdpowiedzToKomentarz1$FormData$Any(http: HttpClient, rootUrl:
   );
 }
 
-addOdpowiedzToKomentarz1$FormData$Any.PATH = '/komentarze/odpowiedzi';
+addOdpowiedzToKomentarz1$FormData.PATH = '/komentarze/odpowiedzi';

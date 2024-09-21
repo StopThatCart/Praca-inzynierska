@@ -7,16 +7,17 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { RoslinaRequest } from '../../models/roslina-request';
+import { RoslinaResponse } from '../../models/roslina-response';
 
-export interface SaveRoslina2$FormData$Json$Params {
+export interface SaveRoslina2$FormData$Params {
       body: {
 'request': RoslinaRequest;
 'file': Blob;
 }
 }
 
-export function saveRoslina2$FormData$Json(http: HttpClient, rootUrl: string, params: SaveRoslina2$FormData$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, saveRoslina2$FormData$Json.PATH, 'post');
+export function saveRoslina2$FormData(http: HttpClient, rootUrl: string, params: SaveRoslina2$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+  const rb = new RequestBuilder(rootUrl, saveRoslina2$FormData.PATH, 'post');
   if (params) {
     rb.body(params.body, 'multipart/form-data');
   }
@@ -26,9 +27,9 @@ export function saveRoslina2$FormData$Json(http: HttpClient, rootUrl: string, pa
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<string>;
+      return r as StrictHttpResponse<RoslinaResponse>;
     })
   );
 }
 
-saveRoslina2$FormData$Json.PATH = '/rosliny';
+saveRoslina2$FormData.PATH = '/rosliny';

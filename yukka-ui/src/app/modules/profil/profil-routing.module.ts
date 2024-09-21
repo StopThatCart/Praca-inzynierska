@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ProfilPageComponent } from './pages/profil-page/profil-page.component';
 import { ProfilResolverService } from './services/profill-resolver-service/profil-resolver-service.service';
 import { PowiadomieniaPageComponent } from './pages/powiadomienia-page/powiadomienia-page.component';
-import { authGuard } from '../../services/guard/auth.guard';
+import { authGuard } from '../../services/guard/auth/auth.guard';
 import { RozmowyListComponent } from './pages/rozmowy-list/rozmowy-list.component';
 import { RozmowaPageComponent } from './pages/rozmowa-page/rozmowa-page.component';
 import { RozmowaResolverService } from './services/rozmowa-resolver-service/rozmowa-resolver.service';

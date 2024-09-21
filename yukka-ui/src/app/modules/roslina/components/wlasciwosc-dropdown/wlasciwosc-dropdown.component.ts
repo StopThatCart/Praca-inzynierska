@@ -21,18 +21,14 @@ export class WlasciwoscDropdownComponent {
   wysokoscMinLimit: number = 0.0;
   wysokoscMaxLimit: number = 100.0;
 
-  private miesiace: string[] = [
-    'styczeń', 'luty', 'marzec', 'kwiecień', 'maj', 'czerwiec',
-    'lipiec', 'sierpień', 'wrzesień', 'październik', 'listopad', 'grudzień'
-  ];
-
   @Output() wysokoscMinChange = new EventEmitter<number>();
   @Output() wysokoscMaxChange = new EventEmitter<number>();
   @Output() selectedWlasciwosciChange = new EventEmitter<WlasciwoscWithRelations[]>();
 
   ngOnChanges() {
-    this.wlasciwosciResponse = this.processWlasciwosciResponse(this.wlasciwosciResponse);
+
   }
+
 
   isSelected(wlasciwosc: WlasciwoscWithRelations, nazwa: string): boolean {
     return this.selectedWlasciwosci.some(
@@ -81,44 +77,6 @@ export class WlasciwoscDropdownComponent {
     }
     this.wysokoscMaxChange.emit(this.wysokoscMax);
   }
-
-
-  private processWlasciwosciResponse(wlasciwosci: WlasciwoscResponse[]): WlasciwoscResponse[] {
-    const processedWlasciwosci: WlasciwoscResponse[] = [];
-
-    wlasciwosci.forEach(w => {
-      if (w.etykieta === 'SilaWzrostu') {
-        w.etykieta = 'Siła wzrostu';
-      }
-
-      if (w.etykieta === 'Okres') {
-        const okresKwitnienia = { ...w, etykieta: 'Okres kwitnienia', nazwy: this.miesiace };
-        const okresDojrzewania = { ...w, etykieta: 'Okres owocowania', nazwy: this.miesiace };
-
-       // console.log(okresKwitnienia);
-        processedWlasciwosci.push(okresKwitnienia, okresDojrzewania);
-      } else if (w.etykieta === 'Kolor') {
-        const okresKwitnienia = { ...w, etykieta: 'Kolor kwiatów', nazwy: w.nazwy };
-        const okresDojrzewania = { ...w, etykieta: 'Kolor liści', nazwy: w.nazwy };
-
-        //console.log(okresKwitnienia);
-        processedWlasciwosci.push(okresKwitnienia, okresDojrzewania);
-      } else {
-        processedWlasciwosci.push(w);
-      }
-    });
-
-    processedWlasciwosci.sort((a, b) => {
-      if (a.etykieta && b.etykieta) {
-        return a.etykieta.localeCompare(b.etykieta, 'pl', { sensitivity: 'base' });
-      } else {
-        return 0;
-      }
-    });
-
-    return processedWlasciwosci;
-  }
-
 
   private addRelacjaToWlasciwoscCauseIAmTooLazyToChangeTheBackend(wlasciwosc: WlasciwoscWithRelations): WlasciwoscWithRelations {
     const relacja = wlasciwosc.etykieta ? getRelacjaByEtykieta(wlasciwosc.etykieta) : undefined;

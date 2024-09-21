@@ -40,14 +40,14 @@ export class AddPostCardComponent {
        };
        reader.readAsDataURL(this.wybranyPlik);
      }
-   }
+  }
 
   clearImage() {
      this.wybranyObraz = null;
      this.wybranyPlik = null;
      this.request.obraz = '';
      this.fileInput.nativeElement.value = '';
-   }
+  }
 
 
   addPost() {

@@ -9,18 +9,18 @@ import { RequestBuilder } from '../../request-builder';
 import { KomentarzRequest } from '../../models/komentarz-request';
 import { KomentarzResponse } from '../../models/komentarz-response';
 
-export interface AddOdpowiedzToKomentarz1$Json$Any$Params {
+export interface AddOdpowiedzToKomentarz1$Json$Params {
       body: KomentarzRequest
 }
 
-export function addOdpowiedzToKomentarz1$Json$Any(http: HttpClient, rootUrl: string, params: AddOdpowiedzToKomentarz1$Json$Any$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-  const rb = new RequestBuilder(rootUrl, addOdpowiedzToKomentarz1$Json$Any.PATH, 'post');
+export function addOdpowiedzToKomentarz1$Json(http: HttpClient, rootUrl: string, params: AddOdpowiedzToKomentarz1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+  const rb = new RequestBuilder(rootUrl, addOdpowiedzToKomentarz1$Json.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
@@ -29,4 +29,4 @@ export function addOdpowiedzToKomentarz1$Json$Any(http: HttpClient, rootUrl: str
   );
 }
 
-addOdpowiedzToKomentarz1$Json$Any.PATH = '/komentarze/odpowiedzi';
+addOdpowiedzToKomentarz1$Json.PATH = '/komentarze/odpowiedzi';

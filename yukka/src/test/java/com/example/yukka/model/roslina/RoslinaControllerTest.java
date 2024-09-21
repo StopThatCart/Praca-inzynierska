@@ -174,7 +174,7 @@ public class RoslinaControllerTest {
             .build();
 
         RoslinaRequest emptyRoslinaRequest = roslinaMapper.toRoslinaRequest(roslinaWithoutRelations);
-        ResponseEntity<String> response = roslinaController.saveRoslina(emptyRoslinaRequest, mockAuth);
+        ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(emptyRoslinaRequest, mockAuth);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
         Roslina roslina2 = roslinaRepository.findByNazwaLacinska(lacinskaNazwa2).get();
@@ -198,7 +198,7 @@ public class RoslinaControllerTest {
    // @Order(2)
     void testSaveRoslina() {
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
-        ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest, mockAuth);
+        ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(roslinaRequest, mockAuth);
        
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         
@@ -251,7 +251,7 @@ public class RoslinaControllerTest {
         roslina.setOwoce(owoceNew);  // Ustawienie zaktualizowanej listy
 
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
-        ResponseEntity<String> response = roslinaController.updateRoslina(roslinaRequest);
+        ResponseEntity<RoslinaResponse> response = roslinaController.updateRoslina(roslinaRequest);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -282,7 +282,7 @@ public class RoslinaControllerTest {
         System.out.println("\n\n\n<a[[er]]>: " + roslinaMapper.toRoslinaRequest(roslina) + "\n\n\n");
         
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
-        ResponseEntity<String> response = roslinaController.saveRoslina(roslinaRequest, mockAuth);
+        ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(roslinaRequest, mockAuth);
     
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Roslina roslina2 = roslinaRepository.findByNazwaLacinska(nazwaLacinska).get();

@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { RoslinaResponse } from '../../../services/models';
-import { RoslinaService } from '../../../services/services';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RoslinaResponse } from '../../../../services/models';
+import { RoslinaService } from '../../../../services/services';
 import { switchMap } from 'rxjs/operators';
-import { BreadcrumbComponent } from "../../../pages/breadcrumb/breadcrumb.component";
+import { BreadcrumbComponent } from "../../../../pages/breadcrumb/breadcrumb.component";
+import { TokenService } from '../../../../services/token/token.service';
 
 
 @Component({
@@ -21,12 +22,18 @@ export class RoslinaPageComponent implements OnInit {
 
   errorMessage: string | null = null;
 
+
+  isAdminOrPracownik: boolean = false;
+
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
-    private roslinaService: RoslinaService
+    private roslinaService: RoslinaService,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
+    this.checkRoles();
     this.route.params.subscribe(params => {
       const nazwaLacinska = params['nazwaLacinska'];
       if (nazwaLacinska) {
@@ -35,6 +42,24 @@ export class RoslinaPageComponent implements OnInit {
       }
     });
 
+  }
+
+
+  private checkRoles() {
+    this.isAdminOrPracownik = this.tokenService.isAdmin() || this.tokenService.isPracownik();
+  }
+
+
+  goToUpdateRoslina() {
+    if(this.isAdminOrPracownik) {
+
+    }
+  }
+
+  removeRoslina() {
+    if(this.isAdminOrPracownik) {
+
+    }
   }
 
   getRoslinaByNazwaLacinska(nazwaLacinska: string): void {

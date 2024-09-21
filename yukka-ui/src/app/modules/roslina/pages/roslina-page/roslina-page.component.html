@@ -9,6 +9,14 @@
               <div>
                 <h3 class="roslina-nazwa-color">{{roslina?.nazwa}}</h3>
                   <h5 class="roslina-nazwa-lacinska-color">{{roslina?.nazwaLacinska}}</h5>
+
+
+                  <div *ngIf="isAdminOrPracownik" class="btn-group">
+                      <button class="btn btn-warning text-uppercase">edytuj</button>
+                      <button class="btn btn-danger text-uppercase">usuń</button>
+                  </div>
+
+
               </div>
           </div>
       </div>

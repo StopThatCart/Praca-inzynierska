@@ -68,7 +68,7 @@ public class PostController {
         return ResponseEntity.ok(postService.findAllPostyCountOfUzytkownik(nazwa));
     }
 
-    @PostMapping(produces="application/json")
+    @PostMapping(consumes="application/json", produces="application/json")
     public ResponseEntity<Post> addPost(@Valid @RequestBody PostRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(postService.save(request, connectedUser));
     }
