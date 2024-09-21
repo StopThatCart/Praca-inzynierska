@@ -98,7 +98,7 @@ public class YukkaApplication {
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
 
-	private final int MAX_POSTY = 20;
+	private final int MAX_POSTY = 30;
 	private final int MAX_KOMENTARZE = 4;
 	private final int MAX_ODPOWIEDZI_DEPTH = 2;
 	private final int MAX_ODPOWIEDZI = 2;
@@ -124,9 +124,9 @@ public class YukkaApplication {
 	@Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
-//roslinaImporterService.seedRosliny();
-			//unseed();
-        //	seed();
+			//roslinaImporterService.seedRosliny();
+			unseed();
+        	seed();
 		//roslinaSearchTest();
         };
     }
@@ -269,7 +269,7 @@ public class YukkaApplication {
 
 		// Dodawanie parę zwykłych postów do sprawdzania paginacji
 		System.out.println("Dodawanie postów testowych...");
-		addPostyWithKomentarze(uzytkownicy);
+		//addPostyWithKomentarze(uzytkownicy);
 		System.out.println("Dodano posty testowe. Może lepiej dać je potem w batchu.");
 
 

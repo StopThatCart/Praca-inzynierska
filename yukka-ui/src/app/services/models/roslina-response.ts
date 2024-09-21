@@ -9,7 +9,6 @@ export interface RoslinaResponse {
   koloryKwiatow?: Array<string>;
   koloryLisci?: Array<string>;
   kwiaty?: Array<string>;
-  nagrody?: Array<string>;
   nazwa?: string;
   nazwaLacinska?: string;
   obraz?: string;

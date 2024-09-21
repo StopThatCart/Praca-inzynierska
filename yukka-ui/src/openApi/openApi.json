@@ -2638,10 +2638,13 @@
           "name": {
             "type": "string"
           },
-          "pracownik": {
-            "type": "boolean"
+          "password": {
+            "type": "string"
           },
           "normalUzytkownik": {
+            "type": "boolean"
+          },
+          "pracownik": {
             "type": "boolean"
           },
           "admin": {
@@ -2655,9 +2658,6 @@
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
-          },
-          "password": {
-            "type": "string"
           },
           "enabled": {
             "type": "boolean"
@@ -2801,13 +2801,6 @@
             }
           },
           "kwiaty": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "nagrody": {
             "uniqueItems": true,
             "type": "array",
             "items": {
@@ -3524,15 +3517,15 @@
             "type": "integer",
             "format": "int32"
           },
+          "ystary": {
+            "type": "integer",
+            "format": "int32"
+          },
           "ynowy": {
             "type": "integer",
             "format": "int32"
           },
           "xnowy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ystary": {
             "type": "integer",
             "format": "int32"
           }
@@ -3638,13 +3631,6 @@
             }
           },
           "kwiaty": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "nagrody": {
             "uniqueItems": true,
             "type": "array",
             "items": {
@@ -3803,13 +3789,6 @@
             }
           },
           "kwiaty": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "nagrody": {
             "uniqueItems": true,
             "type": "array",
             "items": {
@@ -4045,13 +4024,6 @@
             }
           },
           "kwiaty": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "nagrody": {
             "uniqueItems": true,
             "type": "array",
             "items": {

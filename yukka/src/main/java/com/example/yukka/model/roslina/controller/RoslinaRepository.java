@@ -224,11 +224,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
             MATCH (roslina)-[:MA_KWIAT]->(:Wlasciwosc {nazwa: wezel.__properties__.nazwa})
         })
 
-        WITH roslina, $nagrody AS wezly
-        WHERE size(wezly) = 0 OR ALL(wezel IN wezly WHERE EXISTS {
-            MATCH (roslina)-[:MA_NAGRODE]->(:Wlasciwosc {nazwa: wezel.__properties__.nazwa})
-        })
-
         WITH roslina, $odczyny AS wezly
         WHERE size(wezly) = 0 OR ALL(wezel IN wezly WHERE EXISTS {
             MATCH (roslina)-[:MA_ODCZYNY]->(:Wlasciwosc {nazwa: wezel.__properties__.nazwa})
@@ -299,7 +294,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         @Param("koloryLisci") Set<Wlasciwosc> koloryLisci,
         @Param("koloryKwiatow") Set<Wlasciwosc> koloryKwiatow,
         @Param("kwiaty") Set<Wlasciwosc> kwiaty,
-        @Param("nagrody") Set<Wlasciwosc> nagrody,
         @Param("odczyny") Set<Wlasciwosc> odczyny,
         @Param("okresyKwitnienia") Set<Wlasciwosc> okresyKwitnienia,
         @Param("okresyOwocowania") Set<Wlasciwosc> okresyOwocowania,

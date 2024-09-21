@@ -72,7 +72,6 @@ public class UzytkownikRoslinaSeeder {
             .koloryLisci(new HashSet<>(Arrays.asList(kolorLisciCiemnozielone)))
             .koloryKwiatow(new HashSet<>(Arrays.asList(kolorKwiatowKremowy)))
             .kwiaty(new HashSet<>(Arrays.asList(kwiatPojedynczy, kwiatPachnace)))
-            .nagrody(Collections.emptySet())
             .odczyny(Collections.emptySet())
             .okresyKwitnienia(new HashSet<>(Arrays.asList(okresKwitnieniaWrzesien)))
             .okresyOwocowania(new HashSet<>(Arrays.asList(okresOwocowaniaPazdziernik, okresOwocowaniaListopad)))

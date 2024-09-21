@@ -18,7 +18,7 @@ from selenium.common.exceptions import ElementClickInterceptedException, StaleEl
 firefox_options = webdriver.FirefoxOptions()
 firefox_options.add_argument("--headless")
 
-banned_properties = ['pochodzenie', 'zasieg_geograficzny', 'strefa']
+banned_properties = ['pochodzenie', 'zasieg_geograficzny', 'strefa', 'nagrody']
 
 url_list = [
     "https://e-katalogroslin.pl/przegladaj-katalog?se=b873c55f322d2ae7c077b52480a75f81",

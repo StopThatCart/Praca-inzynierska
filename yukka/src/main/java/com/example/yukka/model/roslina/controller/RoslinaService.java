@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +27,6 @@ import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwosciRodzaje;
-import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 @Service
 @Transactional
@@ -94,7 +92,7 @@ public class RoslinaService {
         Page<Roslina> rosliny = roslinaRepository.findAllRoslinyWithParameters(
             ros, 
             ros.getFormy(), ros.getGleby(), ros.getGrupy(), ros.getKoloryLisci(),
-            ros.getKoloryKwiatow(), ros.getKwiaty(), ros.getNagrody(), ros.getOdczyny(),
+            ros.getKoloryKwiatow(), ros.getKwiaty(), ros.getOdczyny(),
             ros.getOkresyKwitnienia(), ros.getOkresyOwocowania(), ros.getOwoce(), ros.getPodgrupa(),
             ros.getPokroje(), ros.getSilyWzrostu(), ros.getStanowiska(), ros.getWalory(),
             ros.getWilgotnosci(), ros.getZastosowania(), ros.getZimozielonosci(),

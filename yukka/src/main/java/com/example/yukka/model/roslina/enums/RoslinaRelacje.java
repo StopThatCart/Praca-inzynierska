@@ -18,7 +18,6 @@ public enum RoslinaRelacje {
     MA_KOLOR_LISCI("koloryLisci"),
     MA_KOLOR_KWIATOW("koloryKwiatow"),
     MA_KWIAT("kwiaty"),
-    MA_NAGRODE("nagrody"),
     MA_ODCZYNY("odczyny"),
     MA_OKRES_KWITNIENIA("okresyKwitnienia"),
     MA_OKRES_OWOCOWANIA("okresyOwocowania"),
@@ -44,7 +43,6 @@ public enum RoslinaRelacje {
         getters.put("koloryLisci", Roslina::getKoloryLisci);
         getters.put("koloryKwiatow", Roslina::getKoloryKwiatow);
         getters.put("kwiaty", Roslina::getKwiaty);
-        getters.put("nagrody", Roslina::getNagrody);
         getters.put("odczyny", Roslina::getOdczyny);
         getters.put("okresyKwitnienia", Roslina::getOkresyKwitnienia);
         getters.put("okresyOwocowania", Roslina::getOkresyOwocowania);
@@ -64,7 +62,6 @@ public enum RoslinaRelacje {
         setters.put("koloryLisci", Roslina::setKoloryLisci);
         setters.put("koloryKwiatow", Roslina::setKoloryKwiatow);
         setters.put("kwiaty", Roslina::setKwiaty);
-        setters.put("nagrody", Roslina::setNagrody);
         setters.put("odczyny", Roslina::setOdczyny);
         setters.put("okresyKwitnienia", Roslina::setOkresyKwitnienia);
         setters.put("okresyOwocowania", Roslina::setOkresyOwocowania);

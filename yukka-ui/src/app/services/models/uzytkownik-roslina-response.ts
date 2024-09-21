@@ -9,7 +9,6 @@ export interface UzytkownikRoslinaResponse {
   koloryKwiatow?: Array<string>;
   koloryLisci?: Array<string>;
   kwiaty?: Array<string>;
-  nagrody?: Array<string>;
   nazwa?: string;
   obraz?: string;
   odczyny?: Array<string>;

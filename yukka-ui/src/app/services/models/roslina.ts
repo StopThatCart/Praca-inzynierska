@@ -9,7 +9,6 @@ export interface Roslina {
   koloryKwiatow?: Array<Wlasciwosc>;
   koloryLisci?: Array<Wlasciwosc>;
   kwiaty?: Array<Wlasciwosc>;
-  nagrody?: Array<Wlasciwosc>;
   nazwa?: string;
   nazwaLacinska?: string;
   obraz?: string;

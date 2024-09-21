@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
@@ -153,24 +155,35 @@ public class RoslinaImporterService {
         try (CSVReader reader = new CSVReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
             List<String[]> rows = reader.readAll();
 
+            if (rows.isEmpty()) {
+                return roslinaRequests;
+            }
+
+            // Przeczytaj pierwszy wiersz, aby uzyskać nagłówki
+            String[] headers = rows.get(0);
+            Map<String, Integer> headerMap = new HashMap<>();
+            for (int i = 0; i < headers.length; i++) {
+                headerMap.put(headers[i], i);
+            }
+
             // Pomijanie pierwszego wiersza z nagłówkami
             for (int i = 1; i < rows.size(); i++) {
-                if(i >= limit){
+                if(i > limit){
                     break;
                 }
                 String[] row = rows.get(i);
 
-                Wysokosc heights = HeightProcessor.getWysokosc(row[9]);
+                Wysokosc heights = HeightProcessor.getWysokosc(row[headerMap.get("docelowa_wysokosc")]);
 
-                RoslinaRequest roslinaRequest = RoslinaRequest.builder()
-                        .nazwa(row[0])
-                        .nazwaLacinska(row[1])
-                        .opis(row[3])
-                        .wysokoscMin(heights.getMin())
-                        .wysokoscMax(heights.getMax())
-                        .obraz(row[24])
-                        .wlasciwosci(parseWlasciwosci(row))
-                        .build();
+            RoslinaRequest roslinaRequest = RoslinaRequest.builder()
+                    .nazwa(row[headerMap.get("name")])
+                    .nazwaLacinska(row[headerMap.get("latin_name")])
+                    .opis(row[headerMap.get("opis")])
+                    .wysokoscMin(heights.getMin())
+                    .wysokoscMax(heights.getMax())
+                    .obraz(row[headerMap.get("image_filename")])
+                    .wlasciwosci(parseWlasciwosci(row, headerMap))
+                    .build();
 
                 roslinaRequests.add(roslinaRequest);
             }
@@ -179,28 +192,29 @@ public class RoslinaImporterService {
         return roslinaRequests;
     }
 
-    
-    private List<WlasciwoscWithRelations> parseWlasciwosci(String[] row) {
+    private List<WlasciwoscWithRelations> parseWlasciwosci(String[] row, Map<String, Integer> headerMap) {
         List<WlasciwoscWithRelations> wlasciwosci = new ArrayList<>();
 
-        addWlasciwosc(wlasciwosci, "Forma", row[6]);
-        addWlasciwosc(wlasciwosci, "SilaWzrostu", row[7]);
-        addWlasciwosc(wlasciwosci, "Pokroj", row[8]);
-        addWlasciwosc(wlasciwosci, "KolorLisci", row[10]);
-        addWlasciwosc(wlasciwosci, "Zimozielonosc", row[11]);
-        addWlasciwosc(wlasciwosci, "Kwiat", row[12]);
-        addWlasciwosc(wlasciwosci, "OkresKwitnienia", row[13]);
-        addWlasciwosc(wlasciwosci, "Owoc", row[14]);
-        addWlasciwosc(wlasciwosci, "OkresOwocowania", row[15]);
-        addWlasciwosc(wlasciwosci, "Stanowisko", row[16]);
-        addWlasciwosc(wlasciwosci, "Wilgotnosc", row[17]);
-        addWlasciwosc(wlasciwosci, "Odczyn", row[18]);
-        addWlasciwosc(wlasciwosci, "Gleba", row[19]);
-        addWlasciwosc(wlasciwosci, "Walor", row[20]);
-        addWlasciwosc(wlasciwosci, "Zastosowanie", row[21]);
-        addWlasciwosc(wlasciwosci, "KolorKwiatow", row[22]);
-        addWlasciwosc(wlasciwosci, "Nagroda", row[23]);
-
+        addWlasciwosc(wlasciwosci, "Grupa", row[headerMap.get("grupa_roslin")]);
+        addWlasciwosc(wlasciwosci, "Podgrupa", row[headerMap.get("grupa_uzytkowa")]);
+        addWlasciwosc(wlasciwosci, "Forma", row[headerMap.get("forma")]);
+        addWlasciwosc(wlasciwosci, "SilaWzrostu", row[headerMap.get("sila_wzrostu")]);
+        addWlasciwosc(wlasciwosci, "Pokroj", row[headerMap.get("pokroj")]);
+        addWlasciwosc(wlasciwosci, "KolorLisci", row[headerMap.get("barwa_lisci_(igiel)")]);
+        addWlasciwosc(wlasciwosci, "Zimozielonosc", row[headerMap.get("zimozielonosc_lisci_(igiel)")]);
+        addWlasciwosc(wlasciwosci, "Kwiat", row[headerMap.get("rodzaj_kwiatow")]);
+        addWlasciwosc(wlasciwosci, "OkresKwitnienia", row[headerMap.get("pora_kwitnienia")]);
+        addWlasciwosc(wlasciwosci, "Owoc", row[headerMap.get("owoce")]);
+        addWlasciwosc(wlasciwosci, "OkresOwocowania", row[headerMap.get("pora_owocowania")]);
+        addWlasciwosc(wlasciwosci, "Stanowisko", row[headerMap.get("naslonecznienie")]);
+        addWlasciwosc(wlasciwosci, "Wilgotnosc", row[headerMap.get("wilgotnosc")]);
+        addWlasciwosc(wlasciwosci, "Odczyn", row[headerMap.get("ph_podloza")]);
+        addWlasciwosc(wlasciwosci, "Gleba", row[headerMap.get("rodzaj_gleby")]);
+        addWlasciwosc(wlasciwosci, "Walor", row[headerMap.get("walory")]);
+        addWlasciwosc(wlasciwosci, "Zastosowanie", row[headerMap.get("zastosowanie")]);
+        addWlasciwosc(wlasciwosci, "KolorKwiatow", row[headerMap.get("barwa_kwiatow")]);
+         //  addWlasciwosc(wlasciwosci, "Nagroda", row[23]);
+    
         return wlasciwosci;
     }
 
@@ -234,6 +248,8 @@ public class RoslinaImporterService {
     // 15
     private String determineRelacja(String label) {
         return switch (label) {
+            case "Grupa" -> "MA_GRUPE";
+            case "Podgrupa" -> "MA_PODGRUPE";
             case "Forma" -> "MA_FORME";
             case "Kwiat" -> "MA_KWIAT";
             //
@@ -254,7 +270,7 @@ public class RoslinaImporterService {
             case "OkresOwocowania" -> "MA_OKRES_OWOCOWANIA";
             case "Walor" -> "MA_WALOR";
             case "Zastosowanie" -> "MA_ZASTOSOWANIE";
-            case "Nagroda" -> "MA_NAGRODE";
+           // case "Nagroda" -> "MA_NAGRODE";
             default -> "";
         };
     }
