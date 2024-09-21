@@ -22,8 +22,8 @@ import { saveRoslina1$Json } from '../fn/uzytkownik-roslina/save-roslina-1-json'
 import { SaveRoslina1$Json$Params } from '../fn/uzytkownik-roslina/save-roslina-1-json';
 import { updateRoslina1 } from '../fn/uzytkownik-roslina/update-roslina-1';
 import { UpdateRoslina1$Params } from '../fn/uzytkownik-roslina/update-roslina-1';
-import { updateRoslinaObraz } from '../fn/uzytkownik-roslina/update-roslina-obraz';
-import { UpdateRoslinaObraz$Params } from '../fn/uzytkownik-roslina/update-roslina-obraz';
+import { updateRoslinaObraz1 } from '../fn/uzytkownik-roslina/update-roslina-obraz-1';
+import { UpdateRoslinaObraz1$Params } from '../fn/uzytkownik-roslina/update-roslina-obraz-1';
 import { UzytkownikRoslina } from '../models/uzytkownik-roslina';
 
 @Injectable({ providedIn: 'root' })
@@ -154,29 +154,29 @@ export class UzytkownikRoslinaService extends BaseService {
     );
   }
 
-  /** Path part for operation `updateRoslinaObraz()` */
-  static readonly UpdateRoslinaObrazPath = '/uzytkownikRosliny/{roslinaId}';
+  /** Path part for operation `updateRoslinaObraz1()` */
+  static readonly UpdateRoslinaObraz1Path = '/uzytkownikRosliny/{roslinaId}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateRoslinaObraz()` instead.
+   * To access only the response body, use `updateRoslinaObraz1()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  updateRoslinaObraz$Response(params: UpdateRoslinaObraz$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  updateRoslinaObraz1$Response(params: UpdateRoslinaObraz1$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 }>> {
-    return updateRoslinaObraz(this.http, this.rootUrl, params, context);
+    return updateRoslinaObraz1(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateRoslinaObraz$Response()` instead.
+   * To access the full response (for headers, for example), `updateRoslinaObraz1$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  updateRoslinaObraz(params: UpdateRoslinaObraz$Params, context?: HttpContext): Observable<{
+  updateRoslinaObraz1(params: UpdateRoslinaObraz1$Params, context?: HttpContext): Observable<{
 }> {
-    return this.updateRoslinaObraz$Response(params, context).pipe(
+    return this.updateRoslinaObraz1$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)

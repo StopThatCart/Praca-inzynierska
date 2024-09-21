@@ -92,9 +92,8 @@ public class RoslinaController {
 
     @PostMapping(consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<RoslinaResponse> saveRoslina(@Valid @RequestPart("request") RoslinaRequest request, 
-    @Parameter() @RequestPart("file") MultipartFile file,
-    Authentication currentUser) {
-        Roslina roslina = roslinaService.save(request, file, currentUser);
+    @Parameter() @RequestPart("file") MultipartFile file) {
+        Roslina roslina = roslinaService.save(request, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(roslinaMapper.toRoslinaResponse(roslina));
     }
 
@@ -102,6 +101,13 @@ public class RoslinaController {
     public ResponseEntity<RoslinaResponse> updateRoslina(@Valid @RequestBody RoslinaRequest request) {
         RoslinaResponse roslina = roslinaService.update(request);
         return ResponseEntity.status(HttpStatus.OK).body(roslina);
+    }
+
+    @PutMapping(value = "/{nazwa-lacinska}", consumes = "multipart/form-data", produces="application/json")
+    public ResponseEntity<byte[]> updateRoslinaObraz(@PathVariable("nazwa-lacinska") String nazwaLacinska,
+    @Parameter() @RequestPart("file") MultipartFile file) {
+        RoslinaResponse roslina = roslinaService.uploadRoslinaObraz(nazwaLacinska, file);
+        return ResponseEntity.status(HttpStatus.OK).body(roslina.getObraz());
     }
     
     

@@ -163,15 +163,14 @@ public class RoslinaService {
             request.getWlasciwosciAsMap());
     }
 
-    public Roslina save(RoslinaRequest request, MultipartFile file, Authentication connectedUser) {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+    public Roslina save(RoslinaRequest request, MultipartFile file) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
         Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
             throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje.");
         }
         
-        String leObraz = fileStoreService.saveRoslina(file, request.getNazwaLacinska(), uzyt.getUzytId());
+        String leObraz = fileStoreService.saveRoslina(file, request.getNazwaLacinska());
         request.setObraz(leObraz);
         if(request.areWlasciwosciEmpty()) {
             Roslina pl = roslinaMapper.toRoslina(request);
@@ -214,32 +213,33 @@ public class RoslinaService {
         if(request.areWlasciwosciEmpty()) {
             Roslina ros = roslinaRepository.updateRoslina(
                 request.getNazwa(), request.getNazwaLacinska(), 
-                request.getOpis(), request.getObraz(), 
+                request.getOpis(),  
                 request.getWysokoscMin(), request.getWysokoscMax());
             return roslinaMapper.toRoslinaResponse(ros);
         }
         
         Roslina ros = roslinaRepository.updateRoslina(
             request.getNazwa(), request.getNazwaLacinska(), 
-            request.getOpis(), request.getObraz(), 
+            request.getOpis(),
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosciAsMap());
         return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
     // Uwaga: to jest do głównej rośliny, nie customowej
-    public void uploadRoslinaObraz(MultipartFile file, Authentication connectedUser, String latinName) {
-        Roslina roslina = roslinaRepository.findByNazwaLacinska(latinName).get();
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+    public RoslinaResponse uploadRoslinaObraz(String nazwaLacinska, MultipartFile file) {
+        Roslina roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska).get();
         
-        String pfp = fileStoreService.saveRoslina(file, latinName, uzyt.getUsername());
+        String pfp = fileStoreService.saveRoslina(file, nazwaLacinska);
         if(pfp == null){
-            return;
+            throw new EntityNotFoundException("Nie udało się załadować pliku obrazu");
         }
         fileUtils.deleteObraz(roslina.getObraz());
-        
+
         roslina.setObraz(pfp);
-        roslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getObraz(), roslina.getWysokoscMin(), roslina.getWysokoscMax());
+        Roslina ros = roslinaRepository.updateRoslinaObraz(roslina.getNazwaLacinska(), pfp);
+        return roslinaMapper.toRoslinaResponse(ros);
+        //roslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getWysokoscMin(), roslina.getWysokoscMax());
     }
 
 

@@ -166,6 +166,83 @@
         }
       }
     },
+    "/rosliny/{nazwa-lacinska}": {
+      "get": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "findByNazwaLacinska",
+        "parameters": [
+          {
+            "name": "nazwa-lacinska",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "updateRoslinaObraz",
+        "parameters": [
+          {
+            "name": "nazwa-lacinska",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posty/oceny": {
       "put": {
         "tags": [
@@ -430,7 +507,7 @@
         "tags": [
           "UzytkownikRoslina"
         ],
-        "operationId": "updateRoslinaObraz",
+        "operationId": "updateRoslinaObraz_1",
         "parameters": [
           {
             "name": "roslinaId",
@@ -1597,36 +1674,6 @@
         }
       }
     },
-    "/rosliny/{nazwa-lacinska}": {
-      "get": {
-        "tags": [
-          "Roslina"
-        ],
-        "operationId": "findByNazwaLacinska",
-        "parameters": [
-          {
-            "name": "nazwa-lacinska",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/rosliny/wlasciwosci": {
       "get": {
         "tags": [
@@ -2594,10 +2641,10 @@
           "pracownik": {
             "type": "boolean"
           },
-          "admin": {
+          "normalUzytkownik": {
             "type": "boolean"
           },
-          "normalUzytkownik": {
+          "admin": {
             "type": "boolean"
           },
           "username": {
@@ -2630,7 +2677,6 @@
         "required": [
           "nazwa",
           "nazwaLacinska",
-          "obraz",
           "opis",
           "wlasciwosci",
           "wysokoscMax",
@@ -3478,7 +3524,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "ystary": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
@@ -3486,7 +3532,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "ystary": {
             "type": "integer",
             "format": "int32"
           }

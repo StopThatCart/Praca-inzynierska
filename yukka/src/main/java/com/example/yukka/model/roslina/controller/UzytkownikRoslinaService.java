@@ -118,7 +118,7 @@ public class UzytkownikRoslinaService {
             return null;
         }
         
-        String leObraz = fileStoreService.saveRoslina(file, request.getRoslinaId(), uzyt.getUzytId());
+        String leObraz = fileStoreService.saveUzytkownikRoslinaObraz(file, request.getRoslinaId(), uzyt.getUzytId());
         request.setObraz(leObraz);
         if(request.areWlasciwosciEmpty()) {
             UzytkownikRoslina pl = roslinaMapper.toUzytkownikRoslina(request);

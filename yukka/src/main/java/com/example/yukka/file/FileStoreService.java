@@ -53,8 +53,7 @@ public class FileStoreService {
             return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
-    public String saveRoslina(@Nonnull MultipartFile sourceFile,
-                              @Nonnull String obraz, @Nonnull String uzytId) {
+    public String saveRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String obraz) {
         if(!obraz.equals(defaultRoslinaObrazName)) {
             String fileUploadSubPath = "rosliny" + separator + "pracownicy";
             String fileName = generateFileName(obraz) + "_" + System.currentTimeMillis();

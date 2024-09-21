@@ -1,24 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WlasciwoscDropdownComponent } from '../../components/wlasciwosc-dropdown/wlasciwosc-dropdown.component';
-import { WlasciwoscResponse } from '../../../../services/models/wlasciwosc-response';
-import { RoslinaRequest, WlasciwoscWithRelations } from '../../../../services/models';
+import { WlasciwoscTagComponent } from '../../components/wlasciwosc-tag/wlasciwosc-tag.component';
+import { WysokoscInputComponent } from '../../components/wysokosc-input/wysokosc-input.component';
+import { RoslinaRequest, RoslinaResponse, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
 import { RoslinaService } from '../../../../services/services';
-import { Router } from '@angular/router';
-import { SpinnerComponent } from '../../../../services/LoaderSpinner/spinner/spinner.component';
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
-import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
-import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-add-roslina-page',
+  selector: 'app-update-roslina-page',
   standalone: true,
   imports: [CommonModule, FormsModule, WlasciwoscDropdownComponent, WysokoscInputComponent, WlasciwoscTagComponent],
-  templateUrl: './add-roslina-page.component.html',
-  styleUrl: './add-roslina-page.component.css'
+  templateUrl: './update-roslina-page.component.html',
+  styleUrl: './update-roslina-page.component.css'
 })
-export class AddRoslinaPageComponent implements OnInit {
+export class UpdateRoslinaPageComponent {
   wlasciwosciResponse: WlasciwoscResponse[] = [];
   message = '';
   errorMsg: Array<string> = [];
@@ -36,6 +34,8 @@ export class AddRoslinaPageComponent implements OnInit {
     wlasciwosci: [] as WlasciwoscWithRelations[],
   };
 
+  roslina: RoslinaResponse = {};
+
   wybranyObraz: any;
   wybranyPlik: any;
 
@@ -45,32 +45,33 @@ export class AddRoslinaPageComponent implements OnInit {
   constructor(
     private roslinaService: RoslinaService,
     private wlasciwoscProcessService: WlasciwoscProcessService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
-
-  onFileSelected(event: any) {
-    this.wybranyPlik = event.target.files[0];
-
-     if (this.wybranyPlik) {
-       this.request.obraz = this.wybranyPlik.name;
-
-       const reader = new FileReader();
-       reader.onload = () => {
-         this.wybranyObraz = reader.result as string;
-       };
-       reader.readAsDataURL(this.wybranyPlik);
-     }
-  }
-
-  clearImage() {
-     this.wybranyObraz = null;
-     this.wybranyPlik = null;
-     this.request.obraz = '';
-     this.fileInput.nativeElement.value = '';
-  }
 
   ngOnInit(): void {
     this.fetchWlasciwosci();
+    this.route.params.subscribe(params => {
+      const nazwaLacinska = params['nazwaLacinska'];
+      if (nazwaLacinska) {
+        this.getRoslinaByNazwaLacinska(nazwaLacinska);
+        this.route.snapshot.data['nazwaLacinska'] = nazwaLacinska;
+      }
+    });
+  }
+
+  getRoslinaByNazwaLacinska(nazwaLacinska: string): void {
+    this.roslinaService.findByNazwaLacinska({ 'nazwa-lacinska': nazwaLacinska }).subscribe({
+      next: (roslina) => {
+        this.roslina = roslina;
+        // TODO: przerobienie response na request
+        this.errorMsg = [];
+      },
+      error: (err) => {
+        this.roslina = {};
+        this.errorMsg.push('Nie znaleziono rośliny o podanej nazwie łacińskiej.');
+      }
+    });
   }
 
   onWysokoscMinChange(min: number) {
@@ -120,36 +121,23 @@ export class AddRoslinaPageComponent implements OnInit {
     }
   }
 
-  addRoslina(): void {
+  updateRoslina(): void {
     this.errorMsg = [];
     this.message = '';
     this.request.nazwaLacinska = this.request.nazwaLacinska.toLowerCase();
-    if(this.request.obraz === '') {
-      this.roslinaService.saveRoslina2$Json({ body: this.request }).subscribe({
-        next: () => {
-          this.afterAddRoslina();
-        },
-        error: (error) => {
-          this.message = 'Błąd podczas dodawania rośliny';
-          this.handleErrors(error);
-        }
-      });
-    } else {
-      this.roslinaService.saveRoslina2$FormData({ body: { request: this.request, file: this.wybranyPlik } }).subscribe({
-        next: () => {
-          this.afterAddRoslina();
-        },
-        error: (error) => {
-          this.message = 'Błąd podczas dodawania rośliny';
-          this.handleErrors(error);
-        }
-      });
-    }
-
+    this.roslinaService.updateRoslina({ body: this.request }).subscribe({
+      next: () => {
+        this.afterUpdateRoslina();
+      },
+      error: (error) => {
+        this.message = 'Błąd podczas aktualizacji rośliny';
+        this.handleErrors(error);
+      }
+    });
   }
 
-  afterAddRoslina(): void {
-    this.message = 'Roślina została dodana pomyślnie';
+  afterUpdateRoslina(): void {
+    this.message = 'Roślina została zaaktualizowana';
     this.request = {
       nazwa: '',
       nazwaLacinska: '',
@@ -159,7 +147,6 @@ export class AddRoslinaPageComponent implements OnInit {
       wysokoscMax: 100,
       wlasciwosci: [] as WlasciwoscWithRelations[],
     };
-    this.clearImage();
   }
 
   private handleErrors(err: any) {
@@ -172,6 +159,5 @@ export class AddRoslinaPageComponent implements OnInit {
       this.errorMsg.push(err.message);
     }
   }
-
 
 }

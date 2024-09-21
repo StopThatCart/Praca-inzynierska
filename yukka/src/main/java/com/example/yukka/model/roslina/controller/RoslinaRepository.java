@@ -365,7 +365,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     @Query("""
            MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina
            SET  p.nazwa = $name, p.opis = $description,
-                p.obraz = COALESCE($obraz, 'default_plant.jpg'),
                 p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
            WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
@@ -390,7 +389,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         @Param("name") String name,
         @Param("latinName") String latinName,
         @Param("description") String description,
-        @Param("obraz") String obraz,
+   
         @Param("heightMin") Double heightMin,
         @Param("heightMax") Double heightMax,
         @Param("relatLump") List<Map<String, String>> relatLump
@@ -400,16 +399,26 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     @Query("""
         MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina
         SET  p.nazwa = $name, p.opis = $description,
-            p.obraz = COALESCE($obraz, 'default_plant.jpg'),
+           
             p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
+        RETURN p
     """)
     Roslina updateRoslina(
     @Param("name") String name,
     @Param("latinName") String latinName,
     @Param("description") String description,
-    @Param("obraz") String obraz,
     @Param("heightMin") Double heightMin,
     @Param("heightMax") Double heightMax
+    );
+
+    @Query("""
+        MATCH (p:Roslina{nazwaLacinska: toLower($nazwaLacinska)}) WHERE NOT p:UzytkownikRoslina
+        SET  p.obraz = $obraz
+        RETURN p
+    """)
+    Roslina updateRoslinaObraz(
+    @Param("nazwaLacinska") String nazwaLacinska,
+    @Param("obraz") String obraz
     );
 
 
