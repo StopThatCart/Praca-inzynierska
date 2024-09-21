@@ -54,12 +54,36 @@
             (click)="clearImage()">X
           </button>
         </div>
+
+        <div class="mb-3">
+          <div class="mb-3">
+            <h3>Dodawanie własnych właściwości</h3>
+            <label for="customWlasciwoscType" class="form-label">Typ Właściwości:</label>
+            <select [(ngModel)]="selectedWlasciwoscType" name="customWlasciwoscType" class="form-select">
+              <option *ngFor="let wlasciwosc of wlasciwosciResponse" [ngValue]="wlasciwosc" class="text-black">
+                {{ wlasciwosc.etykieta }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="customWlasciwoscName" class="form-label">Nazwa Właściwości:</label>
+            <input [(ngModel)]="customWlasciwoscName" name="customWlasciwoscName" class="form-control" placeholder="Wpisz nazwę właściwości" />
+          </div>
+          <button type="button" class="btn btn-primary mb-3" (click)="addCustomWlasciwosc()">Dodaj Własną Właściwość</button>
+        </div>
+
+
         <div>
           <label for="wlasciwosci">Właściwości:</label>
-          <app-wlasciwosc-tag
-          [wlasciwosci]="request.wlasciwosci"
-          (wlasciwoscRemoved)="onWlasciwoscRemoved($event)">
-        </app-wlasciwosc-tag>
+          <div *ngIf="request.wlasciwosci.length > 0; else noWlasciwosci">
+            <app-wlasciwosc-tag
+              [wlasciwosci]="request.wlasciwosci"
+              (wlasciwoscRemoved)="onWlasciwoscRemoved($event)">
+            </app-wlasciwosc-tag>
+          </div>
+          <ng-template #noWlasciwosci>
+            <p>Nie wybrano żadnych właściwości.</p>
+          </ng-template>
           <div class="row mb-1">
             <div class="col-md-4" *ngFor="let wlasciwosc of wlasciwosciResponse">
               <app-wlasciwosc-dropdown

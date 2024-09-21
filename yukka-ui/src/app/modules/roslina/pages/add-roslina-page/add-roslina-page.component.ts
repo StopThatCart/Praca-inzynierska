@@ -38,6 +38,9 @@ export class AddRoslinaPageComponent implements OnInit {
   wybranyObraz: any;
   wybranyPlik: any;
 
+  selectedWlasciwoscType: WlasciwoscResponse | null = null;
+  customWlasciwoscName: string = '';
+
   constructor(
     private roslinaService: RoslinaService,
     private wlasciwoscProcessService: WlasciwoscProcessService,
@@ -100,6 +103,20 @@ export class AddRoslinaPageComponent implements OnInit {
         this.message = 'Błąd podczas pobierania właściwości';
       }
     });
+  }
+
+  addCustomWlasciwosc(): void {
+    if (this.selectedWlasciwoscType && this.customWlasciwoscName.trim()) {
+      let customWlasciwosc: WlasciwoscWithRelations = {
+        etykieta: this.selectedWlasciwoscType.etykieta,
+        nazwa: this.customWlasciwoscName.trim().toLowerCase(),
+        relacja: ''
+      };
+      customWlasciwosc = this.wlasciwoscProcessService.addRelacjaToWlasciwoscCauseIAmTooLazyToChangeTheBackend(customWlasciwosc);
+      this.request.wlasciwosci.push(customWlasciwosc);
+      this.wlasciwoscTagComponent.updateSortedWlasciwosci(this.request.wlasciwosci);
+      this.customWlasciwoscName = '';
+    }
   }
 
   addRoslina(): void {

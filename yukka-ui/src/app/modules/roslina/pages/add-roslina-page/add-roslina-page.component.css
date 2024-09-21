@@ -23,6 +23,7 @@
 }
 
 .add-roslina-page form input,
+.add-roslina-page form select,
 .add-roslina-page form textarea {
   color: black;
   --bs-bg-opacity: 1;

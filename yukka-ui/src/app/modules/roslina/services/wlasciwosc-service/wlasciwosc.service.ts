@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { WlasciwoscResponse } from '../../../../services/models';
-
+import { WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
+import { getRelacjaByEtykieta } from '../../enums/roslina-relacje';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +41,10 @@ export class WlasciwoscProcessService {
     });
 
     return processedWlasciwosci;
+  }
+
+  addRelacjaToWlasciwoscCauseIAmTooLazyToChangeTheBackend(wlasciwosc: WlasciwoscWithRelations): WlasciwoscWithRelations {
+    const relacja = wlasciwosc.etykieta ? getRelacjaByEtykieta(wlasciwosc.etykieta) : undefined;
+    return { ...wlasciwosc, relacja };
   }
 }
