@@ -9,11 +9,17 @@ import { RoslinaService } from '../../../../services/services';
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent } from "../../../../pages/breadcrumb/breadcrumb.component";
+import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasciwosc/add-custom-wlasciwosc.component';
 
 @Component({
   selector: 'app-update-roslina-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, WlasciwoscDropdownComponent, WysokoscInputComponent, WlasciwoscTagComponent, BreadcrumbComponent],
+  imports: [CommonModule, FormsModule,
+    WlasciwoscDropdownComponent,
+    WysokoscInputComponent,
+    WlasciwoscTagComponent,
+    AddCustomWlasciwoscComponent,
+    BreadcrumbComponent],
   templateUrl: './update-roslina-page.component.html',
   styleUrl: './update-roslina-page.component.css'
 })
@@ -98,6 +104,11 @@ export class UpdateRoslinaPageComponent {
     console.log('Request after removing:', this.request);
   }
 
+  onCustomWlasciwoscAdded(customWlasciwosc: WlasciwoscWithRelations): void {
+    this.request.wlasciwosci.push(customWlasciwosc);
+    this.wlasciwoscTagComponent.updateSortedWlasciwosci(this.request.wlasciwosci);
+  }
+
   fetchWlasciwosci(): void {
     this.roslinaService.getWlasciwosciWithRelations().subscribe({
       next: (response) => {
@@ -109,20 +120,6 @@ export class UpdateRoslinaPageComponent {
         this.message = 'Błąd podczas pobierania właściwości';
       }
     });
-  }
-
-  addCustomWlasciwosc(): void {
-    if (this.selectedWlasciwoscType && this.customWlasciwoscName.trim()) {
-      let customWlasciwosc: WlasciwoscWithRelations = {
-        etykieta: this.selectedWlasciwoscType.etykieta,
-        nazwa: this.customWlasciwoscName.trim().toLowerCase(),
-        relacja: ''
-      };
-      customWlasciwosc = this.wlasciwoscProcessService.addRelacjaToWlasciwoscCauseIAmTooLazyToChangeTheBackend(customWlasciwosc);
-      this.request.wlasciwosci.push(customWlasciwosc);
-      this.wlasciwoscTagComponent.updateSortedWlasciwosci(this.request.wlasciwosci);
-      this.customWlasciwoscName = '';
-    }
   }
 
   updateRoslina(): void {

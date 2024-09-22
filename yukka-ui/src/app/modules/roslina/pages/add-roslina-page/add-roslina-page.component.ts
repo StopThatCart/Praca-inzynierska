@@ -10,11 +10,15 @@ import { SpinnerComponent } from '../../../../services/LoaderSpinner/spinner/spi
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
 import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";
+import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasciwosc/add-custom-wlasciwosc.component';
 
 @Component({
   selector: 'app-add-roslina-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, WlasciwoscDropdownComponent, WysokoscInputComponent, WlasciwoscTagComponent],
+  imports: [CommonModule, FormsModule, WlasciwoscDropdownComponent,
+    WysokoscInputComponent,
+    AddCustomWlasciwoscComponent,
+    WlasciwoscTagComponent],
   templateUrl: './add-roslina-page.component.html',
   styleUrl: './add-roslina-page.component.css'
 })
@@ -92,6 +96,12 @@ export class AddRoslinaPageComponent implements OnInit {
     this.request.wlasciwosci.splice(index, 1);
     console.log('Request after removing:', this.request);
   }
+
+  onCustomWlasciwoscAdded(customWlasciwosc: WlasciwoscWithRelations): void {
+    this.request.wlasciwosci.push(customWlasciwosc);
+    this.wlasciwoscTagComponent.updateSortedWlasciwosci(this.request.wlasciwosci);
+  }
+
 
   fetchWlasciwosci(): void {
     this.roslinaService.getWlasciwosciWithRelations().subscribe({

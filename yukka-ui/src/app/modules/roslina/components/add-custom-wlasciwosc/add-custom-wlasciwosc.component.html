@@ -1,0 +1,15 @@
+<div class="mb-3">
+  <h3>Dodawanie własnych właściwości</h3>
+  <label for="customWlasciwoscType" class="form-label">Typ Właściwości:</label>
+  <select [(ngModel)]="selectedWlasciwoscType" name="customWlasciwoscType" class="form-select text-black">
+    <option value="" selected disabled>Wybierz typ...</option>
+    <option *ngFor="let wlasciwosc of deployWlasciwosci()" [ngValue]="wlasciwosc" class="text-black">
+      {{ wlasciwosc.etykieta }}
+    </option>
+  </select>
+</div>
+<div class="mb-3">
+  <label for="customWlasciwoscName" class="form-label">Nazwa Właściwości:</label>
+  <input [(ngModel)]="customWlasciwoscName" name="customWlasciwoscName" class="form-control text-black" placeholder="Wpisz nazwę właściwości" />
+</div>
+<button type="button" class="btn btn-primary mb-3" (click)="addCustomWlasciwosc()">Dodaj Własną Właściwość</button>
