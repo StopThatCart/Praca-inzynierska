@@ -11,6 +11,7 @@ import { PageResponsePostResponse } from '../../models/page-response-post-respon
 export interface FindAllPosty$Params {
   page?: number;
   size?: number;
+  szukaj?: string;
 }
 
 export function findAllPosty(http: HttpClient, rootUrl: string, params?: FindAllPosty$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponsePostResponse>> {
@@ -18,6 +19,7 @@ export function findAllPosty(http: HttpClient, rootUrl: string, params?: FindAll
   if (params) {
     rb.query('page', params.page, {});
     rb.query('size', params.size, {});
+    rb.query('szukaj', params.szukaj, {});
   }
 
   return http.request(

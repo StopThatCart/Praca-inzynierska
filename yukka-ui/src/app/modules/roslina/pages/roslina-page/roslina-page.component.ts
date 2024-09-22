@@ -35,10 +35,10 @@ export class RoslinaPageComponent implements OnInit {
   ngOnInit(): void {
     this.checkRoles();
     this.route.params.subscribe(params => {
-      const nazwaLacinska = params['nazwaLacinska'];
+      const nazwaLacinska = params['nazwa-lacinska'];
       if (nazwaLacinska) {
         this.getRoslinaByNazwaLacinska(nazwaLacinska);
-        this.route.snapshot.data['nazwaLacinska'] = nazwaLacinska;
+        this.route.snapshot.data['nazwa-lacinska'] = nazwaLacinska;
       }
     });
 
@@ -51,14 +51,31 @@ export class RoslinaPageComponent implements OnInit {
 
 
   goToUpdateRoslina() {
-    if(this.isAdminOrPracownik) {
+    if (this.isAdminOrPracownik && this.roslina?.nazwaLacinska) {
+      this.router.navigate([this.roslina.nazwaLacinska, 'aktualizuj'], { relativeTo: this.route });
+    }
+  }
 
+  goToUploadRoslinaObraz() {
+    if (this.isAdminOrPracownik && this.roslina?.nazwaLacinska) {
+      this.router.navigate([this.roslina.nazwaLacinska, 'obraz'], { relativeTo: this.route });
     }
   }
 
   removeRoslina() {
-    if(this.isAdminOrPracownik) {
+    if(!this.isAdminOrPracownik || !this.roslina?.nazwaLacinska) {
+      return;
+    }
 
+    if(confirm("Czy na pewno chcesz usunąć roślinę?")) {
+      this.roslinaService.deleteRoslina1({ 'nazwa-lacinska': this.roslina?.nazwaLacinska }).subscribe({
+        next: () => {
+          this.router.navigate(['..'], { relativeTo: this.route });
+        },
+        error: (err) => {
+          this.errorMessage = 'Nie udało się usunąć rośliny.';
+        }
+      });
     }
   }
 
@@ -103,7 +120,6 @@ export class RoslinaPageComponent implements OnInit {
         createWlasciwosc('Kolor Kwiatów', this.roslina.koloryKwiatow),
         createWlasciwosc('Kolor Liści', this.roslina.koloryLisci),
         createWlasciwosc('Kwiat', this.roslina.kwiaty),
-        createWlasciwosc('Nagroda', this.roslina.nagrody),
         createWlasciwosc('Odczyn', this.roslina.odczyny),
         createWlasciwosc('Okres Kwitnienia', this.roslina.okresyKwitnienia),
         createWlasciwosc('Okres Owocowania', this.roslina.okresyOwocowania),

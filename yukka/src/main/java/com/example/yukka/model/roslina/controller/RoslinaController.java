@@ -97,22 +97,24 @@ public class RoslinaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(roslinaMapper.toRoslinaResponse(roslina));
     }
 
-    @PutMapping(produces="application/json")
-    public ResponseEntity<RoslinaResponse> updateRoslina(@Valid @RequestBody RoslinaRequest request) {
-        RoslinaResponse roslina = roslinaService.update(request);
+    @PutMapping(value = "/{nazwa-lacinska}", consumes="application/json", produces="application/json")
+    public ResponseEntity<RoslinaResponse> updateRoslina(@PathVariable("nazwa-lacinska") String nazwaLacinska,
+            @Valid @RequestBody RoslinaRequest request) {
+        RoslinaResponse roslina = roslinaService.update(nazwaLacinska, request);
         return ResponseEntity.status(HttpStatus.OK).body(roslina);
     }
 
-    @PutMapping(value = "/{nazwa-lacinska}", consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<byte[]> updateRoslinaObraz(@PathVariable("nazwa-lacinska") String nazwaLacinska,
-    @Parameter() @RequestPart("file") MultipartFile file) {
+    @PutMapping(value = "/{nazwa-lacinska}/obraz", consumes = "multipart/form-data", produces="application/json")
+    public ResponseEntity<RoslinaResponse> updateRoslinaObraz(
+            @PathVariable("nazwa-lacinska") String nazwaLacinska,
+            @Parameter() @RequestPart("file") MultipartFile file) {
         RoslinaResponse roslina = roslinaService.uploadRoslinaObraz(nazwaLacinska, file);
-        return ResponseEntity.status(HttpStatus.OK).body(roslina.getObraz());
+        return ResponseEntity.status(HttpStatus.OK).body(roslina);
     }
     
     
-    @DeleteMapping("/{nazwaLacinska}")
-    public ResponseEntity<String> deleteRoslina(@PathVariable String nazwaLacinska) {
+    @DeleteMapping("/{nazwa-lacinska}")
+    public ResponseEntity<String> deleteRoslina(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
         Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska.toLowerCase());
 
         if (roslina.isEmpty()) {
@@ -121,7 +123,7 @@ public class RoslinaController {
 
         roslinaService.deleteByNazwaLacinska(nazwaLacinska.toLowerCase());
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usunięto rośline o nazwie łacińskiej - " + nazwaLacinska);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

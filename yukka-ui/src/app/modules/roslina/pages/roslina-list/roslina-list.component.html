@@ -24,8 +24,10 @@
           </div>
           <div class="my-2">
             <app-wysokosc-input
-            (wysokoscMinChange)="onWysokoscMinChange($event)"
-            (wysokoscMaxChange)="onWysokoscMaxChange($event)"
+              [wysokoscMin]="request.wysokoscMin"
+              [wysokoscMax]="request.wysokoscMax"
+              (wysokoscMinChange)="onWysokoscMinChange($event)"
+              (wysokoscMaxChange)="onWysokoscMaxChange($event)"
             >
             </app-wysokosc-input>
           </div>

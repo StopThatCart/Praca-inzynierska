@@ -125,8 +125,8 @@ public class YukkaApplication {
     public CommandLineRunner seedDatabase() {
         return args -> {
 			//roslinaImporterService.seedRosliny();
-			unseed();
-        	seed();
+		//	unseed();
+        //	seed();
 		//roslinaSearchTest();
         };
     }
@@ -269,7 +269,7 @@ public class YukkaApplication {
 
 		// Dodawanie parę zwykłych postów do sprawdzania paginacji
 		System.out.println("Dodawanie postów testowych...");
-		//addPostyWithKomentarze(uzytkownicy);
+		addPostyWithKomentarze(uzytkownicy);
 		System.out.println("Dodano posty testowe. Może lepiej dać je potem w batchu.");
 
 

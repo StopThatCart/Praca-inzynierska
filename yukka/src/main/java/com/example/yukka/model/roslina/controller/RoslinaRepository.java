@@ -118,11 +118,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
             MATCH (roslina)-[:MA_KWIAT]->(:Wlasciwosc {nazwa: wezel.__properties__.nazwa})
         })
 
-        WITH roslina, $nagrody AS wezly
-        WHERE size(wezly) = 0 OR ALL(wezel IN wezly WHERE EXISTS {
-            MATCH (roslina)-[:MA_NAGRODE]->(:Wlasciwosc {nazwa: wezel.__properties__.nazwa})
-        })
-
         WITH roslina, $odczyny AS wezly
         WHERE size(wezly) = 0 OR ALL(wezel IN wezly WHERE EXISTS {
             MATCH (roslina)-[:MA_ODCZYNY]->(:Wlasciwosc {nazwa: wezel.__properties__.nazwa})
@@ -358,7 +353,9 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 // Czas wykonania testu: 162ms, 179ms
     @Query("""
            MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina
-           SET  p.nazwa = $name, p.opis = $description,
+           SET  p.nazwa = $name, 
+                p.nazwaLacinska = toLower($nowaNazwaLacinska),
+                p.opis = $description,
                 p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
            WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
@@ -376,23 +373,31 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
            CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
            MERGE (w)-[:MA_ROSLINE]->(p)
 
-           WITH p OPTIONAL MATCH path=(p)-[r]->(w)
+           WITH p 
+           MATCH (wlasciwosc:Wlasciwosc) 
+           WHERE NOT (wlasciwosc)--()
+           DELETE wlasciwosc
+
+           WITH p 
+           OPTIONAL MATCH path=(p)-[r]->(w)
            RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
     Roslina updateRoslina(
         @Param("name") String name,
         @Param("latinName") String latinName,
         @Param("description") String description,
-   
         @Param("heightMin") Double heightMin,
         @Param("heightMax") Double heightMax,
+        @Param("nowaNazwaLacinska") String nowaNazwaLacinska,
         @Param("relatLump") List<Map<String, String>> relatLump
     );
 
 
     @Query("""
         MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina
-        SET  p.nazwa = $name, p.opis = $description,
+        SET p.nazwa = $name,
+            p.nazwaLacinska = toLower($nowaNazwaLacinska),
+            p.opis = $description,
            
             p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
         RETURN p
@@ -402,7 +407,8 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     @Param("latinName") String latinName,
     @Param("description") String description,
     @Param("heightMin") Double heightMin,
-    @Param("heightMax") Double heightMax
+    @Param("heightMax") Double heightMax,
+    @Param("nowaNazwaLacinska") String nowaNazwaLacinska
     );
 
     @Query("""
@@ -448,7 +454,15 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         @Param("relatLump") List<Map<String, String>> relatLump
     );
     
-    @Query("MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina DETACH DELETE p")
+    @Query("""
+            MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina
+            DETACH DELETE p
+
+            WITH p 
+            MATCH (wlasciwosc:Wlasciwosc) 
+            WHERE NOT (wlasciwosc)--()
+            DELETE wlasciwosc
+            """)
     void deleteByNazwaLacinska(@Param("latinName") String latinName);
 
 }

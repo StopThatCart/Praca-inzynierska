@@ -38,9 +38,9 @@ export class BreadcrumbService {
         ? child.snapshot.data['breadcrumb'](child.snapshot.data)
         : child.snapshot.data['breadcrumb'];
 
-      if (label) {
-        breadcrumbs.push({ label, url });
-      }
+        if (label && !breadcrumbs.some(b => b.label === label)) {
+          breadcrumbs.push({ label, url });
+        }
 
       return this.createBreadcrumbs(child, url, breadcrumbs);
     }

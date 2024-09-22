@@ -7,6 +7,8 @@ import { RoslinaResolverService } from './services/roslina-resolver.service';
 import { AddRoslinaPageComponent } from './pages/add-roslina-page/add-roslina-page.component';
 import { authGuard } from '../../services/guard/auth/auth.guard';
 import { pracownikGuard } from '../../services/guard/pracownik/pracownik.guard';
+import { UpdateRoslinaPageComponent } from './pages/update-roslina-page/update-roslina-page.component';
+import { UploadRoslinaObrazPageComponent } from './pages/upload-roslina-obraz-page/upload-roslina-obraz-page.component';
 
 const routes: Routes = [
   {
@@ -25,11 +27,29 @@ const routes: Routes = [
         data: { breadcrumb: 'Dodawanie rośliny' }
       },
       {
-        path: ':nazwaLacinska',
-        component: RoslinaPageComponent,
+        path: ':nazwa-lacinska',
         data: { breadcrumb: (data: any) =>`${data.roslina.nazwaLacinska}` },
-        resolve: { roslina: RoslinaResolverService }
-      }
+        resolve: { roslina: RoslinaResolverService },
+        children:[
+          {
+            path: '',
+            component: RoslinaPageComponent
+          },
+          {
+            path: ':nazwa-lacinska/aktualizuj',
+            component: UpdateRoslinaPageComponent,
+            data: { breadcrumb: 'Aktualizuj' },
+            canActivate: [pracownikGuard]
+          },
+          {
+            path: ':nazwa-lacinska/obraz',
+            component: UploadRoslinaObrazPageComponent,
+            data: { breadcrumb: 'Zmień obraz' },
+            canActivate: [pracownikGuard]
+          }
+        ]
+      },
+
     ]
   }
 ];

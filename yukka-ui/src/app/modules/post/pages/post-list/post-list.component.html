@@ -3,6 +3,22 @@
 
 
 >
+
+<div class="container w-100 py-3 my-3" style="background: transparent;border-radius: 5px;max-width: 800px;">
+  <div class="row">
+    <div class="col">
+      <div class="d-flex justify-content-center align-items-center input-group p-4 ">
+        <input [(ngModel)]="searchText" type="text" class="form-control rounded-start text-black" placeholder="Wyszukaj post...">
+        <button (click)="onSearch()" class="btn text-uppercase btn-primary input-group-append" type="button">
+          <i class="fas fa-search" style="font-size: 1em; color: currentColor;"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
   <!-- Start: Napisz post -->
   <div class="container w-100  py-3 my-3" style="background: transparent;border-radius: 5px;max-width: 800px;">
     <div class="row">

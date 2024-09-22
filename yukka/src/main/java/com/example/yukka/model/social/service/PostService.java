@@ -63,9 +63,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<PostResponse> findAllPosts(int page, int size) {
+    public PageResponse<PostResponse> findAllPosts(int page, int size, String szukaj) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
-        Page<Post> posts = postRepository.findAllPosts(pageable);
+        Page<Post> posts = postRepository.findAllPosts(szukaj, pageable);
 
         return postMapper.postResponsetoPageResponse(posts);
     }

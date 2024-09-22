@@ -90,82 +90,6 @@
         }
       }
     },
-    "/rosliny": {
-      "put": {
-        "tags": [
-          "Roslina"
-        ],
-        "operationId": "updateRoslina",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Roslina"
-        ],
-        "operationId": "saveRoslina_2",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "file",
-                  "request"
-                ],
-                "type": "object",
-                "properties": {
-                  "request": {
-                    "$ref": "#/components/schemas/RoslinaRequest"
-                  },
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/rosliny/{nazwa-lacinska}": {
       "get": {
         "tags": [
@@ -195,6 +119,74 @@
           }
         }
       },
+      "put": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "updateRoslina",
+        "parameters": [
+          {
+            "name": "nazwa-lacinska",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoslinaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "deleteRoslina_1",
+        "parameters": [
+          {
+            "name": "nazwa-lacinska",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rosliny/{nazwa-lacinska}/obraz": {
       "put": {
         "tags": [
           "Roslina"
@@ -234,8 +226,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "byte"
+                  "$ref": "#/components/schemas/RoslinaResponse"
                 }
               }
             }
@@ -636,6 +627,54 @@
         }
       }
     },
+    "/rosliny": {
+      "post": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "saveRoslina_2",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file",
+                  "request"
+                ],
+                "type": "object",
+                "properties": {
+                  "request": {
+                    "$ref": "#/components/schemas/RoslinaRequest"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoslinaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rosliny/szukaj": {
       "post": {
         "tags": [
@@ -773,6 +812,14 @@
               "type": "integer",
               "format": "int32",
               "default": 10
+            }
+          },
+          {
+            "name": "szukaj",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -2196,36 +2243,6 @@
         }
       }
     },
-    "/rosliny/{nazwaLacinska}": {
-      "delete": {
-        "tags": [
-          "Roslina"
-        ],
-        "operationId": "deleteRoslina_1",
-        "parameters": [
-          {
-            "name": "nazwaLacinska",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/powiadomienia/{id}": {
       "delete": {
         "tags": [
@@ -2638,8 +2655,14 @@
           "name": {
             "type": "string"
           },
-          "password": {
-            "type": "string"
+          "authorities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedAuthority"
+            }
+          },
+          "admin": {
+            "type": "boolean"
           },
           "normalUzytkownik": {
             "type": "boolean"
@@ -2647,28 +2670,22 @@
           "pracownik": {
             "type": "boolean"
           },
-          "admin": {
-            "type": "boolean"
-          },
           "username": {
             "type": "string"
           },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
+          "password": {
+            "type": "string"
           },
           "enabled": {
-            "type": "boolean"
-          },
-          "accountNonLocked": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
+            "type": "boolean"
+          },
+          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -3513,19 +3530,19 @@
             "type": "integer",
             "format": "int32"
           },
-          "xstary": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ystary": {
-            "type": "integer",
-            "format": "int32"
-          },
           "ynowy": {
             "type": "integer",
             "format": "int32"
           },
+          "xstary": {
+            "type": "integer",
+            "format": "int32"
+          },
           "xnowy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ystary": {
             "type": "integer",
             "format": "int32"
           }

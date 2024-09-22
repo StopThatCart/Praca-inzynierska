@@ -250,7 +250,7 @@ public class RoslinaControllerTest {
         roslina.setOwoce(owoceNew);  // Ustawienie zaktualizowanej listy
 
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
-        ResponseEntity<RoslinaResponse> response = roslinaController.updateRoslina(roslinaRequest);
+        ResponseEntity<RoslinaResponse> response = roslinaController.updateRoslina(roslinaRequest.getNazwaLacinska(), roslinaRequest);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());

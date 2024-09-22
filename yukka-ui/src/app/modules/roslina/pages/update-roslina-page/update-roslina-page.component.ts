@@ -8,11 +8,12 @@ import { RoslinaRequest, RoslinaResponse, WlasciwoscResponse, WlasciwoscWithRela
 import { RoslinaService } from '../../../../services/services';
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BreadcrumbComponent } from "../../../../pages/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: 'app-update-roslina-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, WlasciwoscDropdownComponent, WysokoscInputComponent, WlasciwoscTagComponent],
+  imports: [CommonModule, FormsModule, WlasciwoscDropdownComponent, WysokoscInputComponent, WlasciwoscTagComponent, BreadcrumbComponent],
   templateUrl: './update-roslina-page.component.html',
   styleUrl: './update-roslina-page.component.css'
 })
@@ -36,6 +37,8 @@ export class UpdateRoslinaPageComponent {
 
   roslina: RoslinaResponse = {};
 
+  nazwaLacinska: string = '';
+
   wybranyObraz: any;
   wybranyPlik: any;
 
@@ -52,10 +55,10 @@ export class UpdateRoslinaPageComponent {
   ngOnInit(): void {
     this.fetchWlasciwosci();
     this.route.params.subscribe(params => {
-      const nazwaLacinska = params['nazwaLacinska'];
+      const nazwaLacinska = params['nazwa-lacinska'];
       if (nazwaLacinska) {
         this.getRoslinaByNazwaLacinska(nazwaLacinska);
-        this.route.snapshot.data['nazwaLacinska'] = nazwaLacinska;
+        this.route.snapshot.data['nazwa-lacinska'] = nazwaLacinska;
       }
     });
   }
@@ -64,7 +67,8 @@ export class UpdateRoslinaPageComponent {
     this.roslinaService.findByNazwaLacinska({ 'nazwa-lacinska': nazwaLacinska }).subscribe({
       next: (roslina) => {
         this.roslina = roslina;
-        // TODO: przerobienie response na request
+
+        this.request = this.wlasciwoscProcessService.convertRoslinaResponseToRequest(roslina);
         this.errorMsg = [];
       },
       error: (err) => {
@@ -122,31 +126,28 @@ export class UpdateRoslinaPageComponent {
   }
 
   updateRoslina(): void {
+    if(!this.roslina.nazwaLacinska) {
+      return;
+    }
     this.errorMsg = [];
     this.message = '';
-    this.request.nazwaLacinska = this.request.nazwaLacinska.toLowerCase();
-    this.roslinaService.updateRoslina({ body: this.request }).subscribe({
-      next: () => {
-        this.afterUpdateRoslina();
-      },
-      error: (error) => {
-        this.message = 'Błąd podczas aktualizacji rośliny';
-        this.handleErrors(error);
-      }
-    });
-  }
 
-  afterUpdateRoslina(): void {
-    this.message = 'Roślina została zaaktualizowana';
-    this.request = {
-      nazwa: '',
-      nazwaLacinska: '',
-      obraz: '',
-      opis: '',
-      wysokoscMin: 0,
-      wysokoscMax: 100,
-      wlasciwosci: [] as WlasciwoscWithRelations[],
-    };
+    this.request.nazwaLacinska = this.request.nazwaLacinska.toLowerCase();
+
+    this.roslinaService.updateRoslina({
+      'nazwa-lacinska':this.roslina.nazwaLacinska,
+      body: this.request })
+      .subscribe({
+        next: () => {
+          this.message = 'Roślina została zaaktualizowana';
+          //this.getRoslinaByNazwaLacinska(this.request.nazwaLacinska);
+          this.router.navigate(['/rosliny', this.request.nazwaLacinska]);
+        },
+        error: (error) => {
+          this.message = 'Błąd podczas aktualizacji rośliny';
+          this.handleErrors(error);
+        }
+      });
   }
 
   private handleErrors(err: any) {

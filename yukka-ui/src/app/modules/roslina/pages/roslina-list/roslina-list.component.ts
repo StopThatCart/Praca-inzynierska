@@ -81,7 +81,7 @@ export class RoslinaListComponent implements OnInit{
       this.page = +params['page'] || 1;
 
       this.request.wysokoscMin = params['wysokoscMin'] || 0;
-      this.request.wysokoscMax = params['wysokoscMax'] || Number.MAX_VALUE;
+      this.request.wysokoscMax = params['wysokoscMax'] || 100;
       this.request.nazwa = params['nazwa'] || '';
       this.request.nazwaLacinska = params['nazwaLacinska'] || '';
 

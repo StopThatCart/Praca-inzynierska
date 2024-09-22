@@ -81,7 +81,7 @@ public class RoslinaService {
 
     @Transactional(readOnly = true)
     public PageResponse<RoslinaResponse> findAllRoslinyWithParameters(int page, int size, RoslinaRequest request) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").ascending());
 
         Roslina ros = roslinaMapper.toRoslina(request);
 
@@ -203,30 +203,43 @@ public class RoslinaService {
         return ros;
     }
 
-    public RoslinaResponse update(RoslinaRequest request) {
+    public RoslinaResponse update(String staraNazwaLacinska, RoslinaRequest request) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
-        Roslina roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska())
+        Roslina roslina = roslinaRepository.findByNazwaLacinska(staraNazwaLacinska)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + request.getNazwaLacinska()));
+
+        if(!staraNazwaLacinska.equals(request.getNazwaLacinska())) {
+            Optional<Roslina> anotherRoslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
+            if(anotherRoslina.isPresent()) {
+                throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje.");
+            }           
+        }
+
+        System.out.println("\n\n\n Nazwa: " + request.getNazwa() + "\n\n\n");
+
 
         if(request.areWlasciwosciEmpty()) {
             Roslina ros = roslinaRepository.updateRoslina(
-                request.getNazwa(), request.getNazwaLacinska(), 
+                request.getNazwa(), staraNazwaLacinska, 
                 request.getOpis(),  
-                request.getWysokoscMin(), request.getWysokoscMax());
+                request.getWysokoscMin(), request.getWysokoscMax(),
+                request.getNazwaLacinska());
             return roslinaMapper.toRoslinaResponse(ros);
         }
         
         Roslina ros = roslinaRepository.updateRoslina(
-            request.getNazwa(), request.getNazwaLacinska(), 
+            request.getNazwa(), staraNazwaLacinska, 
             request.getOpis(),
-            request.getWysokoscMin(), request.getWysokoscMax(), 
+            request.getWysokoscMin(), request.getWysokoscMax(),
+            request.getNazwaLacinska(), 
             request.getWlasciwosciAsMap());
         return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
     // Uwaga: to jest do głównej rośliny, nie customowej
     public RoslinaResponse uploadRoslinaObraz(String nazwaLacinska, MultipartFile file) {
-        Roslina roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska).get();
+        Roslina roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
         
         String pfp = fileStoreService.saveRoslina(file, nazwaLacinska);
         if(pfp == null){
@@ -242,7 +255,15 @@ public class RoslinaService {
 
 
     // Usuwanie po ID zajmuje ogromną ilość czasu i wywołuje HeapOverflow, więc lepiej jest użyć UNIQUE atrybutu jak nazwaLacinska
+    /**
+     * Usuwa roślinę o podanej nazwie łacińskiej, a także te właściwości, które po usunięciu rośliny nie są już przypisane do żadnej innej rośliny.
+     * @param nazwaLacinska
+     */
     public void deleteByNazwaLacinska(String nazwaLacinska) {
+        Roslina roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
+        
+        fileUtils.deleteObraz(roslina.getObraz());
         roslinaRepository.deleteByNazwaLacinska(nazwaLacinska);
     }
 

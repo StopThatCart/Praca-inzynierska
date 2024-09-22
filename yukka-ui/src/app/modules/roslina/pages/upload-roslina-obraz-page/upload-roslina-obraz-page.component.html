@@ -1,1 +1,45 @@
-<p>upload-roslina-obraz-page works!</p>
+<div class="add-roslina-page py-5" >
+  <app-breadcrumb></app-breadcrumb>
+  <div class="card add-roslina-card " >
+    <div class="card-header">
+      <h4 class="card-title">Zmień obraz</h4>
+      <div class="alert alert-success" role="alert" *ngIf="message && !errorMsg.length">
+        {{ message }}
+      </div>
+      <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
+        <p *ngFor="let msg of errorMsg">{{ msg }}</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="uploadRoslinaObraz()">
+        <label class="form-label">Aktualny obraz: </label>
+        <div class="mb-3">
+          <img class="rounded-1 img-fluid"
+          [src]="getRoslinaObraz()"
+          style="max-width: 100%; height: auto; max-height: 250px;">
+        </div>
+        <div class="mb-3" data-mdb-ripple-init>
+          <label class="form-label text-white m-1" for="inputObraz">
+            <i class="fas fa-camera"></i>
+            <span>&nbsp;Dołącz obraz</span>
+          </label>
+          <input  #fileInput (change)="onFileSelected($event)"
+            class="form-control d-none"
+            id="inputObraz"
+            type="file"
+            accept="image/*"
+            />
+        </div>
+        <div class="position-relative d-inline-block" *ngIf="wybranyObraz">
+          <img class="rounded-1 img-fluid" [src]="wybranyObraz"
+          style="max-width: 100%; height: auto; max-height: 250px;">
+          <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
+            (click)="clearImage()">X
+          </button>
+        </div>
+        <button class="btn btn-primary text-uppercase" type="submit">Dodaj Obraz</button>
+      </form>
+    </div>
+  </div>
+</div>
+

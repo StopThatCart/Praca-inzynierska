@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -10,8 +10,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './wysokosc-input.component.css'
 })
 export class WysokoscInputComponent {
-  wysokoscMin: number = 0.0;
-  wysokoscMax: number = 100.0;
+  @Input() wysokoscMin: number = 0.0;
+  @Input() wysokoscMax: number = 100.0;
   wysokoscMinLimit: number = 0.0;
   wysokoscMaxLimit: number = 100.0;
 

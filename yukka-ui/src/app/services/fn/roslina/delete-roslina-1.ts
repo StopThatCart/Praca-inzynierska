@@ -8,13 +8,13 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface DeleteRoslina1$Params {
-  nazwaLacinska: string;
+  'nazwa-lacinska': string;
 }
 
 export function deleteRoslina1(http: HttpClient, rootUrl: string, params: DeleteRoslina1$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
   const rb = new RequestBuilder(rootUrl, deleteRoslina1.PATH, 'delete');
   if (params) {
-    rb.path('nazwaLacinska', params.nazwaLacinska, {});
+    rb.path('nazwa-lacinska', params['nazwa-lacinska'], {});
   }
 
   return http.request(
@@ -27,4 +27,4 @@ export function deleteRoslina1(http: HttpClient, rootUrl: string, params: Delete
   );
 }
 
-deleteRoslina1.PATH = '/rosliny/{nazwaLacinska}';
+deleteRoslina1.PATH = '/rosliny/{nazwa-lacinska}';

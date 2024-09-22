@@ -12,8 +12,8 @@ export class RoslinaResolverService implements Resolve<RoslinaResponse> {
   constructor(private roslinaService: RoslinaService) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RoslinaResponse> {
-    const nazwaLacinska = route.paramMap.get('nazwaLacinska');
-    console.log("RoslinaResolverService:resolve: nazwaLacinska: ", nazwaLacinska);
+    const nazwaLacinska = route.paramMap.get('nazwa-lacinska');
+    console.log("RoslinaResolverService:resolve: nazwa-lacinska: ", nazwaLacinska);
     return this.roslinaService.findByNazwaLacinska({ 'nazwa-lacinska': nazwaLacinska as string } );
   }
 }

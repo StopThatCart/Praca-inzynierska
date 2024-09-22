@@ -100,7 +100,7 @@ public class SecurityConfig {
 
                     .requestMatchers(HttpMethod.DELETE, "/rosliny/{nazwa-lacinska}").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers(HttpMethod.POST, "/rosliny").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
-                    .requestMatchers(HttpMethod.PUT, "/rosliny").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
+                    .requestMatchers(HttpMethod.PUT, "/rosliny/{nazwa-lacinska}/**").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
 
                     // Do swaggera
                     .requestMatchers("/v2/api-docs",

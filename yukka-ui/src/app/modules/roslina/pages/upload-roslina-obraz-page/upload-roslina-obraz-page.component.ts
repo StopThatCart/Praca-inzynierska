@@ -4,18 +4,18 @@ import { RoslinaService } from '../../../../services/services/roslina.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RoslinaResponse } from '../../../../services/models';
+import { BreadcrumbComponent } from "../../../../pages/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: 'app-upload-roslina-obraz-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, BreadcrumbComponent],
   templateUrl: './upload-roslina-obraz-page.component.html',
   styleUrl: './upload-roslina-obraz-page.component.css'
 })
 export class UploadRoslinaObrazPageComponent implements OnInit {
-  roslina: RoslinaResponse | null = null;
+  roslina: RoslinaResponse = {};
   private _roslinaObraz: string | undefined;
-
 
   nazwaLacinska: string = '';
 
@@ -36,10 +36,10 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const nazwaLacinska = params['nazwaLacinska'];
-      if (nazwaLacinska) {
-        this.getRoslinaByNazwaLacinska(nazwaLacinska);
-        this.route.snapshot.data['nazwaLacinska'] = nazwaLacinska;
+      this.nazwaLacinska = params['nazwa-lacinska'];
+      if (this.nazwaLacinska) {
+        this.getRoslinaByNazwaLacinska(this.nazwaLacinska);
+        this.route.snapshot.data['nazwa-lacinska'] = this.nazwaLacinska;
       }
     });
   }
@@ -51,10 +51,17 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
         this.errorMsg = [];
       },
       error: (err) => {
-        this.roslina = null;
+        this.roslina = {};
         this.errorMsg.push('Nie znaleziono rośliny o podanej nazwie łacińskiej.');
       }
     });
+  }
+
+  getRoslinaObraz(): string | undefined {
+    if(this.roslina.obraz) {
+      return 'data:image/jpeg;base64,' + this.roslina.obraz;
+    }
+    return this._roslinaObraz;
   }
 
   onFileSelected(event: any) {
@@ -81,21 +88,22 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
     this.errorMsg = [];
     this.message = '';
 
+    console.log("nazwa łacińska: " + this.nazwaLacinska);
+
     this.roslinaService.updateRoslinaObraz({
-      "nazwa-lacinska": this.nazwaLacinska,
+      'nazwa-lacinska': this.nazwaLacinska,
       body: { file: this.wybranyPlik } })
       .subscribe({
-        next: () => { this.afterUploadRoslina(); },
+        next: () => {
+          //this.message = 'Roślina została zaaktualizowana';
+         // this.clearImage();
+          this.router.navigate(['/rosliny', this.nazwaLacinska]);
+        },
         error: (error) => {
           this.message = 'Błąd podczas aktualizacji rośliny';
           this.handleErrors(error);
         }
       });
-  }
-
-  afterUploadRoslina(): void {
-    this.message = 'Roślina została zaaktualizowana';
-    this.clearImage();
   }
 
   private handleErrors(err: any) {

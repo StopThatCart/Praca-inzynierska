@@ -12,8 +12,9 @@
 
 
                   <div *ngIf="isAdminOrPracownik" class="btn-group">
-                      <button class="btn btn-warning text-uppercase">edytuj</button>
-                      <button class="btn btn-danger text-uppercase">usuń</button>
+                      <button (click)="goToUpdateRoslina()" class="btn btn-warning text-uppercase">edytuj</button>
+                      <button (click)="goToUploadRoslinaObraz()" class="btn btn-info text-uppercase">zmień obraz</button>
+                      <button (click)="removeRoslina()" class="btn btn-danger text-uppercase">usuń</button>
                   </div>
 
 

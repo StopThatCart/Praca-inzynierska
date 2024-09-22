@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
+import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostResponse;
 import com.example.yukka.model.social.request.OcenaRequest;
@@ -41,8 +42,9 @@ public class PostController {
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPosty(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
-        return ResponseEntity.ok(postService.findAllPosts(page, size));
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(name = "szukaj", required = false) String szukaj) {
+        return ResponseEntity.ok(postService.findAllPosts(page, size, szukaj));
     }
 
     @GetMapping(value = "/uzytkownik", produces="application/json")

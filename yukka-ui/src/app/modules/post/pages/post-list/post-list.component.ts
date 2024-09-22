@@ -21,6 +21,7 @@ export class PostListComponent {
   isLoading = false;
   page = 1;
   size = 5;
+  searchText = '';
   pages: number[] = [];
   //postCount: number = 0;
 
@@ -49,7 +50,8 @@ export class PostListComponent {
     this.toggleLoading();
     this.postService.findAllPosty({
       page: this.page - 1,
-      size: this.size
+      size: this.size,
+      szukaj: this.searchText.trim()
     }).subscribe({
         next: (posty) => {
           this.postResponse = posty;
@@ -65,7 +67,7 @@ export class PostListComponent {
 
   appendPost= ()=>{
     this.toggleLoading();
-    this.postService.findAllPosty({page: this.page, size: this.size})
+    this.postService.findAllPosty({page: this.page, size: this.size, szukaj: this.searchText.trim()})
     .subscribe({
       next:response=>{
         if (response && response.content) {
@@ -90,6 +92,11 @@ export class PostListComponent {
     this.page++;
     this.appendPost();
    }
+
+   onSearch = () => {
+    this.page = 1;
+    this.findAllPosty();
+  }
 
 
 }
