@@ -44,26 +44,26 @@ public class RozmowaPrywatnaController {
         return ResponseEntity.ok(rozmowa);
     }
 
-    @GetMapping(value = "/{uzytkownikNazwa}", produces="application/json")
-    public ResponseEntity<RozmowaPrywatnaResponse> getRozmowaPrywatna(@PathVariable("uzytkownikNazwa") String nazwa, Authentication connectedUser) {
+    @GetMapping(value = "/{uzytkownik-nazwa}", produces="application/json")
+    public ResponseEntity<RozmowaPrywatnaResponse> getRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String nazwa, Authentication connectedUser) {
         RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.findRozmowaPrywatnaByNazwa(nazwa, connectedUser);
         return ResponseEntity.ok(rozmowa);
     }
 
-    @PostMapping(value = "/{uzytkownikNazwa}", produces="application/json")
-    public ResponseEntity<RozmowaPrywatnaResponse> inviteToRozmowaPrywatna(@PathVariable("uzytkownikNazwa") String nazwa, Authentication connectedUser) {
+    @PostMapping(value = "/{uzytkownik-nazwa}", produces="application/json")
+    public ResponseEntity<RozmowaPrywatnaResponse> inviteToRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String nazwa, Authentication connectedUser) {
         RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.inviteToRozmowaPrywatna(nazwa, connectedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(rozmowa);
     }
 
-    @PutMapping(value = "/{uzytkownikNazwa}/accept", produces="application/json")
-    public ResponseEntity<RozmowaPrywatna> acceptRozmowaPrywatna(@PathVariable("uzytkownikNazwa") String nazwa, Authentication connectedUser) {
+    @PutMapping(value = "/{uzytkownik-nazwa}/accept", produces="application/json")
+    public ResponseEntity<RozmowaPrywatna> acceptRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String nazwa, Authentication connectedUser) {
         RozmowaPrywatna rozmowa = rozmowaPrywatnaService.acceptRozmowaPrywatna(nazwa, connectedUser);
         return ResponseEntity.ok(rozmowa);
     }
 
-    @PutMapping(value = "/{uzytkownikNazwa}/reject")
-    public ResponseEntity<RozmowaPrywatna> rejectRozmowaPrywatna(@PathVariable("uzytkownikNazwa") String uzytkownikNazwa, Authentication connectedUser) {
+    @PutMapping(value = "/{uzytkownik-nazwa}/reject")
+    public ResponseEntity<RozmowaPrywatna> rejectRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String uzytkownikNazwa, Authentication connectedUser) {
         rozmowaPrywatnaService.rejectRozmowaPrywatna(uzytkownikNazwa, connectedUser);
         return ResponseEntity.ok().build();
     }

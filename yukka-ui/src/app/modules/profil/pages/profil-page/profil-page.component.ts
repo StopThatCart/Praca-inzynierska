@@ -122,7 +122,7 @@ export class ProfilPageComponent implements OnInit {
       && this.tokenService.nazwa !== this.uzyt.nazwa) {
 
     //  console.log('Check if zaproszony');
-      this.rozService.getRozmowaPrywatna({ uzytkownikNazwa: this.uzyt.nazwa })
+      this.rozService.getRozmowaPrywatna({ 'uzytkownik-nazwa': this.uzyt.nazwa })
         .subscribe({
           next: (roz) => {
            // console.log('Rozmowa: ', roz);
@@ -148,7 +148,7 @@ export class ProfilPageComponent implements OnInit {
 
   zaprosDoRozmowaPrywatna() {
     if (this.uzyt.nazwa) {
-      this.rozService.inviteToRozmowaPrywatna({ uzytkownikNazwa: this.uzyt.nazwa })
+      this.rozService.inviteToRozmowaPrywatna({ 'uzytkownik-nazwa': this.uzyt.nazwa })
         .subscribe({
           next: (roz) => {
             if(roz) {

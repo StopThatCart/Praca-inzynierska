@@ -16,6 +16,8 @@ import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
 import com.example.yukka.model.dzialka.ZasadzonaRoslinaResponse;
+import com.example.yukka.model.ogrod.Ogrod;
+import com.example.yukka.model.ogrod.OgrodResponse;
 import com.example.yukka.model.roslina.enums.RoslinaRelacje;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
@@ -28,6 +30,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RoslinaMapper {
     private final FileUtils fileUtils;
+
+
+    public OgrodResponse toOgrodResponse(Ogrod ogrod) {
+        if (ogrod == null) {
+            return null;
+        }
+        return OgrodResponse.builder()
+            .id(ogrod.getId())
+            .nazwa(ogrod.getNazwa())
+            .wlascicielNazwa(ogrod.getUzytkownik() != null ? ogrod.getUzytkownik().getNazwa() : null)
+            .dzialki(ogrod.getDzialki().stream()
+                .map(this::toDzialkaResponse)
+                .collect(Collectors.toList()))
+            .build();
+    }
 
     public DzialkaResponse toDzialkaResponse(Dzialka dzialka) {
         if (dzialka == null) {

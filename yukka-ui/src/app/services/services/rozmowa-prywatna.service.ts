@@ -32,7 +32,7 @@ export class RozmowaPrywatnaService extends BaseService {
   }
 
   /** Path part for operation `rejectRozmowaPrywatna()` */
-  static readonly RejectRozmowaPrywatnaPath = '/rozmowy/{uzytkownikNazwa}/reject';
+  static readonly RejectRozmowaPrywatnaPath = '/rozmowy/{uzytkownik-nazwa}/reject';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -57,7 +57,7 @@ export class RozmowaPrywatnaService extends BaseService {
   }
 
   /** Path part for operation `acceptRozmowaPrywatna()` */
-  static readonly AcceptRozmowaPrywatnaPath = '/rozmowy/{uzytkownikNazwa}/accept';
+  static readonly AcceptRozmowaPrywatnaPath = '/rozmowy/{uzytkownik-nazwa}/accept';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -82,7 +82,7 @@ export class RozmowaPrywatnaService extends BaseService {
   }
 
   /** Path part for operation `getRozmowaPrywatna()` */
-  static readonly GetRozmowaPrywatnaPath = '/rozmowy/{uzytkownikNazwa}';
+  static readonly GetRozmowaPrywatnaPath = '/rozmowy/{uzytkownik-nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -107,7 +107,7 @@ export class RozmowaPrywatnaService extends BaseService {
   }
 
   /** Path part for operation `inviteToRozmowaPrywatna()` */
-  static readonly InviteToRozmowaPrywatnaPath = '/rozmowy/{uzytkownikNazwa}';
+  static readonly InviteToRozmowaPrywatnaPath = '/rozmowy/{uzytkownik-nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

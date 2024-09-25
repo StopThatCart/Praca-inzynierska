@@ -11,7 +11,7 @@ export class RozmowaResolverService implements Resolve<RozmowaPrywatnaResponse> 
   constructor(private rozService : RozmowaPrywatnaService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RozmowaPrywatnaResponse> {
-    const nazwa = route.paramMap.get('uzytkownikNazwa');
-    return this.rozService.getRozmowaPrywatna({ 'uzytkownikNazwa': nazwa as string } );
+    const nazwa = route.paramMap.get('uzytkownik-nazwa');
+    return this.rozService.getRozmowaPrywatna({ 'uzytkownik-nazwa': nazwa as string } );
   }
 }

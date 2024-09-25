@@ -8,14 +8,12 @@ import { RequestBuilder } from '../../request-builder';
 
 import { DzialkaResponse } from '../../models/dzialka-response';
 
-export interface GetDzialkiOfUzytkownik$Params {
-  'uzytkownik-nazwa': string;
+export interface GetDzialki1$Params {
 }
 
-export function getDzialkiOfUzytkownik(http: HttpClient, rootUrl: string, params: GetDzialkiOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<DzialkaResponse>>> {
-  const rb = new RequestBuilder(rootUrl, getDzialkiOfUzytkownik.PATH, 'get');
+export function getDzialki1(http: HttpClient, rootUrl: string, params?: GetDzialki1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<DzialkaResponse>>> {
+  const rb = new RequestBuilder(rootUrl, getDzialki1.PATH, 'get');
   if (params) {
-    rb.path('uzytkownik-nazwa', params['uzytkownik-nazwa'], {});
   }
 
   return http.request(
@@ -28,4 +26,4 @@ export function getDzialkiOfUzytkownik(http: HttpClient, rootUrl: string, params
   );
 }
 
-getDzialkiOfUzytkownik.PATH = '/dzialki/uzytkownicy/{uzytkownik-nazwa}';
+getDzialki1.PATH = '/dzialki';

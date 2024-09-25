@@ -18,8 +18,8 @@ import { getDzialkaByNumer } from '../fn/dzialka/get-dzialka-by-numer';
 import { GetDzialkaByNumer$Params } from '../fn/dzialka/get-dzialka-by-numer';
 import { getDzialkaOfUzytkownikByNumer } from '../fn/dzialka/get-dzialka-of-uzytkownik-by-numer';
 import { GetDzialkaOfUzytkownikByNumer$Params } from '../fn/dzialka/get-dzialka-of-uzytkownik-by-numer';
-import { getDzialki } from '../fn/dzialka/get-dzialki';
-import { GetDzialki$Params } from '../fn/dzialka/get-dzialki';
+import { getDzialki1 } from '../fn/dzialka/get-dzialki-1';
+import { GetDzialki1$Params } from '../fn/dzialka/get-dzialki-1';
 import { getDzialkiOfUzytkownik } from '../fn/dzialka/get-dzialki-of-uzytkownik';
 import { GetDzialkiOfUzytkownik$Params } from '../fn/dzialka/get-dzialki-of-uzytkownik';
 import { saveRoslinaToDzialka } from '../fn/dzialka/save-roslina-to-dzialka';
@@ -160,27 +160,27 @@ export class DzialkaService extends BaseService {
     );
   }
 
-  /** Path part for operation `getDzialki()` */
-  static readonly GetDzialkiPath = '/dzialki';
+  /** Path part for operation `getDzialki1()` */
+  static readonly GetDzialki1Path = '/dzialki';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getDzialki()` instead.
+   * To access only the response body, use `getDzialki1()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getDzialki$Response(params?: GetDzialki$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<DzialkaResponse>>> {
-    return getDzialki(this.http, this.rootUrl, params, context);
+  getDzialki1$Response(params?: GetDzialki1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<DzialkaResponse>>> {
+    return getDzialki1(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getDzialki$Response()` instead.
+   * To access the full response (for headers, for example), `getDzialki1$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getDzialki(params?: GetDzialki$Params, context?: HttpContext): Observable<Array<DzialkaResponse>> {
-    return this.getDzialki$Response(params, context).pipe(
+  getDzialki1(params?: GetDzialki1$Params, context?: HttpContext): Observable<Array<DzialkaResponse>> {
+    return this.getDzialki1$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<DzialkaResponse>>): Array<DzialkaResponse> => r.body)
     );
   }
@@ -211,7 +211,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `getDzialkaOfUzytkownikByNumer()` */
-  static readonly GetDzialkaOfUzytkownikByNumerPath = '/dzialki/{numer}/uzytkownicy/{nazwa}';
+  static readonly GetDzialkaOfUzytkownikByNumerPath = '/dzialki/{numer}/uzytkownicy/{uzytkownik-nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -236,7 +236,7 @@ export class DzialkaService extends BaseService {
   }
 
   /** Path part for operation `getDzialkiOfUzytkownik()` */
-  static readonly GetDzialkiOfUzytkownikPath = '/dzialki/uzytkownicy/{nazwa}';
+  static readonly GetDzialkiOfUzytkownikPath = '/dzialki/uzytkownicy/{uzytkownik-nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

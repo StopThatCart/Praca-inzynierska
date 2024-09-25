@@ -7,4 +7,5 @@ export { PowiadomienieService } from './services/powiadomienie.service';
 export { DzialkaService } from './services/dzialka.service';
 export { AuthenticationService } from './services/authentication.service';
 export { UzytkownikService } from './services/uzytkownik.service';
+export { OgrodService } from './services/ogrod.service';
 export { SoilResourceService } from './services/soil-resource.service';

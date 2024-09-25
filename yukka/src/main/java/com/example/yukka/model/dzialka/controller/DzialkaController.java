@@ -38,24 +38,25 @@ public class DzialkaController {
     private ZasadzonaNaService zasadzonaNaService;
 
 
-    @GetMapping
+    @GetMapping(produces="application/json")
     public ResponseEntity<List<DzialkaResponse>> getDzialki(Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getDzialki(connectedUser));
     }
 
-    @GetMapping(value = "/uzytkownicy/{nazwa}", produces="application/json")
-    public ResponseEntity<List<DzialkaResponse>> getDzialkiOfUzytkownik(@PathVariable String nazwa, Authentication connectedUser) {
+    @GetMapping(value = "/uzytkownicy/{uzytkownik-nazwa}", produces="application/json")
+    public ResponseEntity<List<DzialkaResponse>> getDzialkiOfUzytkownik(@PathVariable("uzytkownik-nazwa") String nazwa, 
+    Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getDzialkiOfUzytkownik(nazwa, connectedUser));
     }
 
     @GetMapping(value = "/{numer}", produces="application/json")
-    public ResponseEntity<DzialkaResponse> getDzialkaByNumer(@PathVariable int numer, Authentication connectedUser) {
+    public ResponseEntity<DzialkaResponse> getDzialkaByNumer(@PathVariable("numer") int numer, Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getDzialkaByNumer(numer, connectedUser));
     }
 
-    @GetMapping(value = "/{numer}/uzytkownicy/{nazwa}", produces="application/json")
-    public ResponseEntity<DzialkaResponse> getDzialkaOfUzytkownikByNumer(@PathVariable int numer, 
-    @PathVariable String nazwa) {
+    @GetMapping(value = "/{numer}/uzytkownicy/{uzytkownik-nazwa}", produces="application/json")
+    public ResponseEntity<DzialkaResponse> getDzialkaOfUzytkownikByNumer(@PathVariable("numer") int numer, 
+    @PathVariable("uzytkownik-nazwa") String nazwa) {
         return ResponseEntity.ok(dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa));
     }
 

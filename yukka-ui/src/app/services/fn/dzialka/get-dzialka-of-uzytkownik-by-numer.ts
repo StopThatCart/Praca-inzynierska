@@ -10,14 +10,14 @@ import { DzialkaResponse } from '../../models/dzialka-response';
 
 export interface GetDzialkaOfUzytkownikByNumer$Params {
   numer: number;
-  nazwa: string;
+  'uzytkownik-nazwa': string;
 }
 
 export function getDzialkaOfUzytkownikByNumer(http: HttpClient, rootUrl: string, params: GetDzialkaOfUzytkownikByNumer$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
   const rb = new RequestBuilder(rootUrl, getDzialkaOfUzytkownikByNumer.PATH, 'get');
   if (params) {
     rb.path('numer', params.numer, {});
-    rb.path('nazwa', params.nazwa, {});
+    rb.path('uzytkownik-nazwa', params['uzytkownik-nazwa'], {});
   }
 
   return http.request(
@@ -30,4 +30,4 @@ export function getDzialkaOfUzytkownikByNumer(http: HttpClient, rootUrl: string,
   );
 }
 
-getDzialkaOfUzytkownikByNumer.PATH = '/dzialki/{numer}/uzytkownicy/{nazwa}';
+getDzialkaOfUzytkownikByNumer.PATH = '/dzialki/{numer}/uzytkownicy/{uzytkownik-nazwa}';

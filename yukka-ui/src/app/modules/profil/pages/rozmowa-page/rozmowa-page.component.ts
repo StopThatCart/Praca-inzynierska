@@ -55,11 +55,11 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.odbiorcaNazwa = params['uzytkownikNazwa'];
+      this.odbiorcaNazwa = params['uzytkownik-nazwa'];
       if (this.odbiorcaNazwa) {
         this.getBlokowaniAndBlokujacy();
         this.getRozmowa(this.odbiorcaNazwa);
-        this.route.snapshot.data['uzytkownikNazwa'] = this.odbiorcaNazwa;
+        this.route.snapshot.data['uzytkownik-nazwa'] = this.odbiorcaNazwa;
       }
     });
 
@@ -97,7 +97,7 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   getRozmowa(nazwa: string): void {
-    this.rozService.getRozmowaPrywatna({ uzytkownikNazwa: nazwa }).subscribe({
+    this.rozService.getRozmowaPrywatna({ 'uzytkownik-nazwa': nazwa }).subscribe({
       next: (rozmowa) => {
         this.rozmowa = rozmowa;
         this.wiadomoscCount = rozmowa.komentarze?.length;
