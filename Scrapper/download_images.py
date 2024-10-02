@@ -86,8 +86,15 @@ def remove_column(file_path, column_name):
    
 
 
-# Przykładowe wywołanie funkcji
-file_path = 'katalog_roslin.csv'
+# Ustaw katalog roboczy na katalog, w którym znajduje się skrypt. Potem sie poprawi
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
+
+# Print the current working directory
+print("Current working directory:", os.getcwd())
+
+# Use an absolute path for the CSV file
+file_path = os.path.join(os.getcwd(), 'katalog_roslin.csv')
 image_link = 'image'
 name_label = 'latin_name'
 
