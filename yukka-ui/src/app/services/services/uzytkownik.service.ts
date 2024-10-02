@@ -19,6 +19,8 @@ import { getAvatar } from '../fn/uzytkownik/get-avatar';
 import { GetAvatar$Params } from '../fn/uzytkownik/get-avatar';
 import { getBlokowaniAndBlokujacy } from '../fn/uzytkownik/get-blokowani-and-blokujacy';
 import { GetBlokowaniAndBlokujacy$Params } from '../fn/uzytkownik/get-blokowani-and-blokujacy';
+import { getUstawienia } from '../fn/uzytkownik/get-ustawienia';
+import { GetUstawienia$Params } from '../fn/uzytkownik/get-ustawienia';
 import { remove } from '../fn/uzytkownik/remove';
 import { Remove$Params } from '../fn/uzytkownik/remove';
 import { removeSelf } from '../fn/uzytkownik/remove-self';
@@ -29,6 +31,8 @@ import { setBlokUzytkownik } from '../fn/uzytkownik/set-blok-uzytkownik';
 import { SetBlokUzytkownik$Params } from '../fn/uzytkownik/set-blok-uzytkownik';
 import { updateAvatar } from '../fn/uzytkownik/update-avatar';
 import { UpdateAvatar$Params } from '../fn/uzytkownik/update-avatar';
+import { updateUstawienia } from '../fn/uzytkownik/update-ustawienia';
+import { UpdateUstawienia$Params } from '../fn/uzytkownik/update-ustawienia';
 import { Uzytkownik } from '../models/uzytkownik';
 import { UzytkownikResponse } from '../models/uzytkownik-response';
 
@@ -36,6 +40,56 @@ import { UzytkownikResponse } from '../models/uzytkownik-response';
 export class UzytkownikService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `getUstawienia()` */
+  static readonly GetUstawieniaPath = '/uzytkownicy/ustawienia';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getUstawienia()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUstawienia$Response(params?: GetUstawienia$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+    return getUstawienia(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getUstawienia$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getUstawienia(params?: GetUstawienia$Params, context?: HttpContext): Observable<UzytkownikResponse> {
+    return this.getUstawienia$Response(params, context).pipe(
+      map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `updateUstawienia()` */
+  static readonly UpdateUstawieniaPath = '/uzytkownicy/ustawienia';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateUstawienia()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  updateUstawienia$Response(params?: UpdateUstawienia$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+    return updateUstawienia(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateUstawienia$Response()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  updateUstawienia(params?: UpdateUstawienia$Params, context?: HttpContext): Observable<UzytkownikResponse> {
+    return this.updateUstawienia$Response(params, context).pipe(
+      map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
+    );
   }
 
   /** Path part for operation `setBanUzytkownik()` */

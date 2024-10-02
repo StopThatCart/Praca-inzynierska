@@ -52,7 +52,7 @@ export class ProfilPageComponent implements OnInit {
   }
 
   getUzytkownikByNazwa(nazwa: string): void {
-    this.uzytService.findByNazwa({ 'nazwa': nazwa }).subscribe({
+    this.uzytService.findByNazwa({ nazwa: nazwa }).subscribe({
       next: (uzyt) => {
         this.uzyt = uzyt;
         this.errorMessage = null;
@@ -163,13 +163,15 @@ export class ProfilPageComponent implements OnInit {
   }
 
   goToRozmowa() {
-    this.router.navigate(['profil/rozmowy', this.uzyt.nazwa]);
+    this.router.navigate(['rozmowy', this.uzyt.nazwa], { relativeTo: this.route });
+    //this.router.navigate(['profil/rozmowy', this.uzyt.nazwa]);
   }
 
 
 
   goToRozmowy() {
-    this.router.navigate(['profil/rozmowy']);
+    this.router.navigate(['rozmowy'], { relativeTo: this.route });
+    //this.router.navigate(['profil/rozmowy']);
   }
 
 }

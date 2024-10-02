@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+import { Ustawienia } from '../models/ustawienia';
 export interface UzytkownikResponse {
   avatar?: string;
   ban?: boolean;
@@ -14,5 +15,6 @@ export interface UzytkownikResponse {
   nazwa?: string;
   postyOcenyNegatywne?: number;
   postyOcenyPozytywne?: number;
+  ustawienia?: Ustawienia;
   uzytId?: string;
 }

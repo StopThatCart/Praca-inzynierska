@@ -18,8 +18,10 @@ import com.example.yukka.model.social.komentarz.KomentarzResponse;
 import com.example.yukka.model.social.komentarz.KomentarzSimpleResponse;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostResponse;
+import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
+import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 
@@ -56,12 +58,32 @@ public class CommonMapperService {
             .postyOcenyPozytywne(uzytkownik.getPostyOcenyPozytywne())
             .dataUtworzenia(uzytkownik.getDataUtworzenia())
             .ban(uzytkownik.isBan())
+            .ustawienia(uzytkownik.getUstawienia())
             .blokowaniUzytkownicy(uzytkownik.getBlokowaniUzytkownicy().stream()
                 .map(this::toUzytkownikSimpleResponse)
                 .collect(Collectors.toSet()))
             .blokujacyUzytkownicy(uzytkownik.getBlokujacyUzytkownicy().stream()
                 .map(this::toUzytkownikSimpleResponse)
                 .collect(Collectors.toSet()))
+            .build();
+    }
+
+    public Ustawienia toUstawienia(UstawieniaRequest ustawieniaRequest) {
+        if (ustawieniaRequest == null) {
+            return null;
+        }
+        return Ustawienia.builder()
+            .statystykiProfilu(ustawieniaRequest.isStatystykiProfilu())
+            .galeriaPokaz(ustawieniaRequest.isGaleriaPokaz())
+            .galeriaOcenaKomentarze(ustawieniaRequest.isGaleriaOcenaKomentarze())
+            .ogrodPokaz(ustawieniaRequest.isOgrodPokaz())
+            .ogrodOcenaKomentarze(ustawieniaRequest.isOgrodOcenaKomentarze())
+            .powiadomieniaKomentarzeOdpowiedz(ustawieniaRequest.isPowiadomieniaKomentarzeOdpowiedz())
+            .powiadomieniaKomentarzeOgrod(ustawieniaRequest.isPowiadomieniaKomentarzeOgrod())
+            .powiadomieniaKomentarzeGaleria(ustawieniaRequest.isPowiadomieniaKomentarzeGaleria())
+            .powiadomieniaOgrodPodlewanie(ustawieniaRequest.isPowiadomieniaOgrodPodlewanie())
+            .powiadomieniaOgrodKwitnienie(ustawieniaRequest.isPowiadomieniaOgrodKwitnienie())
+            .powiadomieniaOgrodOwocowanie(ustawieniaRequest.isPowiadomieniaOgrodOwocowanie())
             .build();
     }
 

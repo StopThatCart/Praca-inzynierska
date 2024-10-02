@@ -64,9 +64,11 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
     @Query("""
         MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
-                    -[r:BLOKUJE]-(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+        OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
         
-        RETURN blokujacy, collect(nodes(p)), collect(relationships(p))
+        RETURN blokujacy, 
+        collect(nodes(p)), collect(relationships(p)), 
+        collect(nodes(p2)), collect(relationships(p2))
             """)
     Optional<Uzytkownik> getBlokowaniAndBlokujacy(@Param("nazwa") String nazwa);
 
@@ -167,6 +169,15 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
   //  @Query("CREATE (u:Uzytkownik:`:#{literal(#rola)}` {nazwa: $nazwa, email: $email, haslo: $haslo, data_utworzenia: localdatetime(), ban: false})")
    // void addNewPracownik(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo, @Param("rola") String rola);
 
+   @Query("""
+    MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(uzyt:Uzytkownik{email: $email})
+    SET ustawienia += $ustawienia.__properties__
+    RETURN uzyt, collect(NODES(path)), collect(RELATIONSHIPS(path))
+        """)
+    Uzytkownik updateUstawienia(@Param("ustawienia") Ustawienia ustawienia, @Param("email") String email);
+
+
+
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.avatar = $avatar RETURN u")
     Uzytkownik updateAvatar(@Param("email") String email, @Param("avatar") String avatar);
 
@@ -179,8 +190,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         
         RETURN COUNT(r) > 0 AS success
             """)
-    Boolean zablokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, 
-        @Param("blokujacyEmail") String blokujacyEmail);
+    Boolean zablokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, @Param("blokujacyEmail") String blokujacyEmail);
     
     @Query("""
         MATCH (blokujacy:Uzytkownik{email: $blokujacyEmail})-[r:BLOKUJE]->
@@ -188,8 +198,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         DELETE r
         RETURN COUNT(r) > 0 AS success
             """)
-    Boolean odblokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, 
-        @Param("blokujacyEmail") String blokujacyEmail);
+    Boolean odblokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, @Param("blokujacyEmail") String blokujacyEmail);
 
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.ban = $ban RETURN u")
     Uzytkownik banUzytkownik(@Param("email") String email, @Param("ban") boolean ban);

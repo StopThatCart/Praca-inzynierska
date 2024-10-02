@@ -23,6 +23,7 @@ import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.BlockedUzytkownikException;
 import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.social.CommonMapperService;
+import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
@@ -86,19 +87,42 @@ public class UzytkownikService implements  UserDetailsService {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
 
         System.out.println("Pobieranie blokowanych i blokujących użytkowników");
-        Uzytkownik uzyt2 = uzytkownikRepository.getBlokowaniAndBlokujacy(uzyt.getNazwa())
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + uzyt.getNazwa()));
+        Uzytkownik uzyt2 = uzytkownikRepository.getBlokowaniAndBlokujacy(uzyt.getNazwa()).orElse(null);
+      //  System.out.println("Użyt: " + uzyt2.getNazwa());
+    //.orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + uzyt.getNazwa()));
 
         return commonMapperService.toUzytkownikResponse(uzyt2);
+    }
+
+
+    public Ustawienia getUstawienia(Authentication currentUser) {
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        Uzytkownik uzytus = uzytkownikRepository.findByNazwa(uzyt.getNazwa())
+        .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + uzyt.getNazwa()));
+
+        return uzytus.getUstawienia();
+    }
+
+    public UzytkownikResponse updateUstawienia(UstawieniaRequest ustawienia, Authentication currentUser) {
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        Ustawienia ust = commonMapperService.toUstawienia(ustawienia);
+
+        System.out.println("\n\n\nUstawienia przed: " + uzyt.getUstawienia());
+        System.out.println("\nUstawienia zmiany: " + ust);
+
+        System.out.println("\nto samo ale request: " + ustawienia);
+
+        Uzytkownik uzytkownik = uzytkownikRepository.updateUstawienia(ust, uzyt.getEmail());
+
+        System.out.println("\nUstawienia po: " + uzytkownik.getUstawienia());
+
+        return commonMapperService.toUzytkownikResponse(uzytkownik);
     }
     
 
     public UzytkownikResponse updateUzytkownikAvatar(MultipartFile file, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
-
-        String leObraz = fileStoreService.saveAvatar(file, uzyt.getUzytId());
-        Uzytkownik uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
-        return commonMapperService.toUzytkownikResponse(uzyt);
+        return commonMapperService.toUzytkownikResponse(updateUzytkownikAvatar(file, uzyt));
     }
 
     public Uzytkownik updateUzytkownikAvatar(MultipartFile file, Uzytkownik currentUser) {

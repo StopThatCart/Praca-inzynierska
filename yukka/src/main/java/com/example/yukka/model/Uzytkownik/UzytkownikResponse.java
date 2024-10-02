@@ -30,7 +30,10 @@ private Long id;
     private int postyOcenyNegatywne;
     private LocalDateTime dataUtworzenia;
     private boolean ban;
-
+    private Ustawienia ustawienia;
+    
     private Set<UzytkownikResponse> blokowaniUzytkownicy;
     private Set<UzytkownikResponse> blokujacyUzytkownicy;
+
+    
 }

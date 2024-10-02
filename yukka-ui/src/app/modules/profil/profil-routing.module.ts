@@ -9,43 +9,56 @@ import { authGuard } from '../../services/guard/auth/auth.guard';
 import { RozmowyListComponent } from './pages/rozmowy-list/rozmowy-list.component';
 import { RozmowaPageComponent } from './pages/rozmowa-page/rozmowa-page.component';
 import { RozmowaResolverService } from './services/rozmowa-resolver-service/rozmowa-resolver.service';
+import { UstawieniaPageComponent } from './pages/ustawienia-page/ustawienia-page.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: '/',
-    pathMatch: 'full'
-  },
   {
     path: '',
     data: { breadcrumb: 'Profil' },
    // component: RoslinaComponent,
     children: [
       {
-        path: 'powiadomienia',
-        component: PowiadomieniaPageComponent,
-        canActivate: [authGuard],
-        data: { breadcrumb: 'Powiadomienia' }
-      },
-      {
-        path: 'rozmowy',
-        component: RozmowyListComponent,
-        canActivate: [authGuard],
-        data: { breadcrumb: 'Rozmowy' }
-      },
-      {
-        path: 'rozmowy/:uzytkownik-nazwa',
-        component: RozmowaPageComponent,
-        canActivate: [authGuard],
-        data: { breadcrumb: (data: any) => `Rozmowa z ${data.uzytkownik.nazwa}` },
-        resolve: { rozmowa: RozmowaResolverService }
-      },
-      {
         path: ':nazwa',
-        component: ProfilPageComponent,
-        pathMatch: 'full',
+        //component: ProfilPageComponent,
         data: { breadcrumb: (data: any) =>`${data.uzytkownik.nazwa}` },
-        resolve: { profil: ProfilResolverService }
+        resolve: { profil: ProfilResolverService },
+        children:[
+          {
+            path: '',
+            component: ProfilPageComponent,
+          },
+          {
+            path: 'powiadomienia',
+            component: PowiadomieniaPageComponent,
+            canActivate: [authGuard],
+            data: { breadcrumb: 'Powiadomienia' }
+          },
+          {
+            path: 'ustawienia',
+            component: UstawieniaPageComponent,
+            canActivate: [authGuard],
+            data: { breadcrumb: 'Ustawienia' }
+          },
+          {
+            path: 'rozmowy',
+            //component: RozmowyListComponent,
+            canActivate: [authGuard],
+            data: { breadcrumb: 'Rozmowy' },
+            children: [
+              {
+                path: '',
+                component: RozmowyListComponent,
+              },
+              {
+                path: ':uzytkownik-nazwa',
+                component: RozmowaPageComponent,
+                data: { breadcrumb: (data: any) => `Rozmowa z ${data.uzytkownik.nazwa}` },
+                resolve: { rozmowa: RozmowaResolverService }
+              }
+            ]
+          }
+
+        ]
       }
 
       /*,

@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { PowiadomienieResponse } from '../../../../services/models';
 import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powiadomienia-sync.service';
+import { TokenService } from '../../../../services/token/token.service';
 
 @Component({
   selector: 'app-powiadomienia-dropdown',
@@ -30,6 +31,7 @@ export class PowiadomieniaDropdownComponent implements OnInit {
   constructor(
     private powService: PowiadomienieService,
     private powiadomieniaSyncService: PowiadomieniaSyncService,
+    private tokenService: TokenService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -150,6 +152,7 @@ export class PowiadomieniaDropdownComponent implements OnInit {
 
   goToPowiadomieniaPage() {
     console.log('goToPowiadomieniaPage - start');
-    this.router.navigate(['/profil/powiadomienia']);
+    const nazwa = this.tokenService.nazwa;
+    this.router.navigate([`/profil/${nazwa}/powiadomienia`]);
   }
 }

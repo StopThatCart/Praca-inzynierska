@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RozmowaPrywatnaResponse, UzytkownikResponse } from '../../../../services/models';
 import { RozmowaPrywatnaService } from '../../../../services/services';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule } from '@angular/common';
 import { acceptRozmowaPrywatna } from '../../../../services/fn/rozmowa-prywatna/accept-rozmowa-prywatna';
@@ -26,6 +26,7 @@ export class RozmowaCardComponent implements OnInit {
   constructor(
     private rozService : RozmowaPrywatnaService,
     private router: Router,
+    private route: ActivatedRoute,
     private tokenService: TokenService
   ) {}
 
@@ -43,7 +44,8 @@ export class RozmowaCardComponent implements OnInit {
 
   goToRozmowa() {
     if (this.selectedUzyt) {
-      this.router.navigate(['profil/rozmowy', this.selectedUzyt?.nazwa]);
+      this.router.navigate([this.selectedUzyt?.nazwa], { relativeTo: this.route });
+     // this.router.navigate(['profil/rozmowy', this.selectedUzyt?.nazwa]);
     }
   }
 
@@ -79,7 +81,7 @@ export class RozmowaCardComponent implements OnInit {
   acceptRozmowaPrywatna(event : Event) {
     event.stopPropagation();
     if(this.selectedUzyt && this.selectedUzyt.nazwa) {
-      this.rozService.acceptRozmowaPrywatna({ 'uzytkownikNazwa': this.selectedUzyt.nazwa }).subscribe({
+      this.rozService.acceptRozmowaPrywatna({ 'uzytkownik-nazwa': this.selectedUzyt.nazwa }).subscribe({
         next: (rozmowa) => {
           console.log('Rozmowa prywatna accepted: ', rozmowa);
           if(rozmowa.aktywna) {
@@ -101,7 +103,7 @@ export class RozmowaCardComponent implements OnInit {
       console.log('Rejecting rozmowa prywatna');
       console.log('Selected user: ', this.selectedUzyt.nazwa);
 
-      this.rozService.rejectRozmowaPrywatna({ uzytkownikNazwa: this.selectedUzyt.nazwa }).subscribe({
+      this.rozService.rejectRozmowaPrywatna({ "uzytkownik-nazwa": this.selectedUzyt.nazwa }).subscribe({
         next: () => {
           console.log('Rozmowa prywatna odrzucona');
           this.onReject.emit(this.selectedUzyt?.nazwa);

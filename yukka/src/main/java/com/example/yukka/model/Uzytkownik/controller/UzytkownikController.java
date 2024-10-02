@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.social.service.PowiadomienieService;
+import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 
@@ -54,9 +58,21 @@ public class UzytkownikController {
         return ResponseEntity.ok(uzytkownikService.getLoggedInAvatar(connectedUser));
     }
 
+    @GetMapping(value = "/ustawienia", produces="application/json")
+    public ResponseEntity<UzytkownikResponse> getUstawienia(Authentication connectedUser) {
+        return ResponseEntity.ok(uzytkownikService.getLoggedInAvatar(connectedUser));
+    }
+
     @GetMapping(value = "/blokowani", produces="application/json")
     public ResponseEntity<UzytkownikResponse> getBlokowaniAndBlokujacy(Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.getBlokowaniAndBlokujacy(connectedUser));
+    }
+
+    @PatchMapping(value = "/ustawienia", consumes="multipart/form-data", produces="application/json")
+    public ResponseEntity<UzytkownikResponse> updateUstawienia(@Valid @RequestPart("ustawienia") UstawieniaRequest ustawienia, Authentication connectedUser) {
+        System.out.println("Received UstawieniaRequest: " + ustawienia);
+        
+        return ResponseEntity.ok(uzytkownikService.updateUstawienia(ustawienia, connectedUser));
     }
 
     @PatchMapping(value = "/avatar", consumes = "multipart/form-data", produces="application/json")

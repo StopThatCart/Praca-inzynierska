@@ -53,12 +53,27 @@ export class EdycjaNavComponent implements OnInit {
   }
 
   goToPowiadomienia() {
-    this.router.navigate(['profil/powiadomienia']);
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      console.log('goToPowiadomieniaPage - start');
+      this.router.navigate([`/profil/${nazwa}/powiadomienia`]);
+    }
   }
 
   goToRozmowy() {
-    this.router.navigate(['profil/rozmowy']);
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      this.router.navigate([`profil/${nazwa}/rozmowy`]);
+    }
   }
+
+  goToUstawienia() {
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      this.router.navigate([`profil/${nazwa}/ustawienia`]);
+    }
+  }
+
 
 
 }

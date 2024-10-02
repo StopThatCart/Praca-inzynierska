@@ -31,6 +31,6 @@ export const routes: Routes = [
   {
     path: 'profil',
     loadChildren: () => import('./modules/profil/profil.module').then(m => m.ProfilModule)
-  },
-  { path: '**', redirectTo: '' }
+  }//,
+//  { path: '**', redirectTo: '' }
 ];

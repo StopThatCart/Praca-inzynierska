@@ -52,13 +52,13 @@ export class RoslinaPageComponent implements OnInit {
 
   goToUpdateRoslina() {
     if (this.isAdminOrPracownik && this.roslina?.nazwaLacinska) {
-      this.router.navigate([this.roslina.nazwaLacinska, 'aktualizuj'], { relativeTo: this.route });
+      this.router.navigate(['aktualizuj'], { relativeTo: this.route });
     }
   }
 
   goToUploadRoslinaObraz() {
     if (this.isAdminOrPracownik && this.roslina?.nazwaLacinska) {
-      this.router.navigate([this.roslina.nazwaLacinska, 'obraz'], { relativeTo: this.route });
+      this.router.navigate(['obraz'], { relativeTo: this.route });
     }
   }
 

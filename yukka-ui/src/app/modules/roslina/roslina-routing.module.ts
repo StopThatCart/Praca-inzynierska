@@ -36,13 +36,13 @@ const routes: Routes = [
             component: RoslinaPageComponent
           },
           {
-            path: ':nazwa-lacinska/aktualizuj',
+            path: 'aktualizuj',
             component: UpdateRoslinaPageComponent,
             data: { breadcrumb: 'Aktualizuj' },
             canActivate: [pracownikGuard]
           },
           {
-            path: ':nazwa-lacinska/obraz',
+            path: 'obraz',
             component: UploadRoslinaObrazPageComponent,
             data: { breadcrumb: 'Zmień obraz' },
             canActivate: [pracownikGuard]

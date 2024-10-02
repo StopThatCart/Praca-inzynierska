@@ -1175,6 +1175,61 @@
         }
       }
     },
+    "/uzytkownicy/ustawienia": {
+      "get": {
+        "tags": [
+          "Uzytkownik"
+        ],
+        "operationId": "getUstawienia",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UzytkownikResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Uzytkownik"
+        ],
+        "operationId": "updateUstawienia",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "ustawienia"
+                ],
+                "type": "object",
+                "properties": {
+                  "ustawienia": {
+                    "$ref": "#/components/schemas/UstawieniaRequest"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UzytkownikResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/uzytkownicy/pracownik/ban/{email}/{ban}": {
       "patch": {
         "tags": [
@@ -2712,16 +2767,19 @@
               "$ref": "#/components/schemas/Uzytkownik"
             }
           },
+          "password": {
+            "type": "string"
+          },
           "name": {
             "type": "string"
           },
           "normalUzytkownik": {
             "type": "boolean"
           },
-          "pracownik": {
+          "admin": {
             "type": "boolean"
           },
-          "admin": {
+          "pracownik": {
             "type": "boolean"
           },
           "username": {
@@ -2733,16 +2791,13 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "password": {
-            "type": "string"
-          },
-          "enabled": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "enabled": {
             "type": "boolean"
           },
           "accountNonLocked": {
@@ -3241,6 +3296,9 @@
           "ban": {
             "type": "boolean"
           },
+          "ustawienia": {
+            "$ref": "#/components/schemas/Ustawienia"
+          },
           "blokowaniUzytkownicy": {
             "uniqueItems": true,
             "type": "array",
@@ -3517,6 +3575,57 @@
           }
         }
       },
+      "UstawieniaRequest": {
+        "required": [
+          "galeriaOcenaKomentarze",
+          "galeriaPokaz",
+          "ogrodOcenaKomentarze",
+          "ogrodPokaz",
+          "powiadomieniaKomentarzeGaleria",
+          "powiadomieniaKomentarzeOdpowiedz",
+          "powiadomieniaKomentarzeOgrod",
+          "powiadomieniaOgrodKwitnienie",
+          "powiadomieniaOgrodOwocowanie",
+          "powiadomieniaOgrodPodlewanie",
+          "statystykiProfilu"
+        ],
+        "type": "object",
+        "properties": {
+          "statystykiProfilu": {
+            "type": "boolean"
+          },
+          "galeriaPokaz": {
+            "type": "boolean"
+          },
+          "galeriaOcenaKomentarze": {
+            "type": "boolean"
+          },
+          "ogrodPokaz": {
+            "type": "boolean"
+          },
+          "ogrodOcenaKomentarze": {
+            "type": "boolean"
+          },
+          "powiadomieniaKomentarzeOdpowiedz": {
+            "type": "boolean"
+          },
+          "powiadomieniaKomentarzeOgrod": {
+            "type": "boolean"
+          },
+          "powiadomieniaKomentarzeGaleria": {
+            "type": "boolean"
+          },
+          "powiadomieniaOgrodPodlewanie": {
+            "type": "boolean"
+          },
+          "powiadomieniaOgrodKwitnienie": {
+            "type": "boolean"
+          },
+          "powiadomieniaOgrodOwocowanie": {
+            "type": "boolean"
+          }
+        }
+      },
       "PowiadomienieResponse": {
         "type": "object",
         "properties": {
@@ -3590,15 +3699,15 @@
             "type": "integer",
             "format": "int32"
           },
-          "xstary": {
-            "type": "integer",
-            "format": "int32"
-          },
           "ystary": {
             "type": "integer",
             "format": "int32"
           },
           "xnowy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "xstary": {
             "type": "integer",
             "format": "int32"
           },
