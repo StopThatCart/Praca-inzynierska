@@ -42,4 +42,5 @@ Scrapper/images/*
 #*.png
 
 ### obrazy ###
-uploads/
+uploads/defaults/rosliny
+uploads/uzytkownicy
