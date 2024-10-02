@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,20 +34,34 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
     MATCH path = (uzyt1:Uzytkownik{uzytId: $nadawcaId})-[:JEST_W_ROZMOWIE]->
                 (priv:RozmowaPrywatna)
                 <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $odbiorcaId})
-    OPTIONAL MATCH (priv)<-[:MA_WIADOMOSC]-(kom:Komentarz)
-    RETURN priv, collect(nodes(path)), collect(relationships(path)),  collect(kom) AS komentarze
+    OPTIONAL MATCH komPath = (priv)-[r1:MA_WIADOMOSC]->(kom:Komentarz)<-[:SKOMENTOWAL]-(diff:Uzytkownik)
+    WITH priv, path, komPath, kom
+    ORDER BY kom.dataUtworzenia
+    RETURN priv, collect(nodes(path)), collect(relationships(path)), 
+                collect(nodes(komPath)), collect(relationships(komPath))
        """
        )
-    Optional<RozmowaPrywatna> findRozmowaPrywatnaWithKomentarze(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca);
+    Optional<RozmowaPrywatna> findRozmowaPrywatnaWithKomentarze(@Param("odbiorcaId") String odbiorca, @Param("nadawcaId") String nadawca);
+
+
+    @Query("""
+    MATCH path = (priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt:Uzytkownik)
+                WHERE id(priv) = $id
+    OPTIONAL MATCH komPath = (priv)-[r1:MA_WIADOMOSC]->(kom:Komentarz)
+    RETURN priv, collect(nodes(path)), collect(relationships(path)), 
+                collect(nodes(komPath)), collect(relationships(komPath))
+       """
+       )
+    Optional<RozmowaPrywatna> findRozmowaPrywatnaById(@Param("id") Long id);
 
 
     @Query(value ="""
-        MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)
+        MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik)
         RETURN priv, collect(nodes(path)), collect(relationships(path))
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
            """,
            countQuery = """
-        MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)
+        MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik)
         RETURN count(priv)
             """)
     Page<RozmowaPrywatna> findRozmowyPrywatneOfUzytkownik(@Param("email") String email, Pageable pageable);
@@ -64,10 +79,40 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         MATCH (uzyt2:Uzytkownik{uzytId: $odbiorcaId})
         WITH uzyt1, uzyt2
         MERGE (uzyt1)-[:JEST_W_ROZMOWIE]->
-               (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uzytId, dataUtworzenia: localdatetime(), ostatnioAktualizowane: localdatetime()})
+               (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uzytId, 
+               dataUtworzenia: $time, 
+               ostatnioAktualizowana: $time})
                <-[:JEST_W_ROZMOWIE]-(uzyt2)
+        RETURN priv
         """)
-    RozmowaPrywatna inviteToRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca);
+    RozmowaPrywatna inviteToRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca,
+     @Param("time") LocalDateTime localdatetime);
+
+    @Query("""
+        MATCH (uzyt1:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
+                (priv:RozmowaPrywatna)
+                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawcaId})
+        WHERE  priv.aktywna = false
+        SET    priv.aktywna = true, priv.liczbaWiadomosci = 0
+        WITH   priv
+        REMOVE priv.nadawca
+        RETURN priv
+        """
+        )
+    RozmowaPrywatna acceptRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
+                                        @Param("odbiorcaId") String odbiorcaId);
+
+    @Query("""
+        MATCH (odbiorca:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
+                (priv:RozmowaPrywatna)
+                <-[:JEST_W_ROZMOWIE]-(nadawca:Uzytkownik{uzytId: $nadawcaId})
+        WHERE priv.aktywna = false AND priv.nadawca <> odbiorca.uzytId
+        DETACH DELETE priv
+        """
+        )
+    void rejectRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
+                                        @Param("odbiorcaId") String odbiorcaId,
+                                        @Param("rozmowa") RozmowaPrywatna rozmowa);
 
     // To pójdzie do admina potem
     @Query("""
@@ -85,36 +130,9 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
 
     // funkcja seedowania, spokojnie.
     @Query("""
-        MATCH (u:RozmowaPrywatna) 
-        DETACH DELETE u 
+        MATCH (roz:RozmowaPrywatna)
+        OPTIONAL MATCH (roz)-[:MA_WIADOMOSC]->(kom:Komentarz) 
+        DETACH DELETE roz, kom
         """)
     void clearRozmowyPrywatne();
-
-
-    @Query("""
-        MATCH (uzyt1:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
-                (priv:RozmowaPrywatna)
-                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawcaId})
-        WHERE  priv.aktywna = false
-        SET    priv.aktywna = true, priv.liczbaWiadomosci = 0
-        WITH   priv
-        REMOVE priv.nadawca
-        RETURN priv
-        """
-        )
-    RozmowaPrywatna acceptRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
-                                        @Param("odbiorcaId") String odbiorcaId);
-
-
-    @Query("""
-        MATCH (uzyt1:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
-                (priv:RozmowaPrywatna)
-                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawcaId})
-        WHERE priv.aktywna = false AND priv.nadawcaId <> uzyt1.uzytId
-        DETACH DELETE priv
-        """
-        )
-    void rejectRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
-                                        @Param("odbiorcaId") String odbiorcaId,
-                                        @Param("rozmowa") RozmowaPrywatna rozmowa);
 }

@@ -1,0 +1,37 @@
+<a (click)="goToRozmowa()" class="link-underline link-underline-opacity-0 link-light">
+  <div class="d-flex align-items-lg-center card-header my-2">
+    <img [src]="getAvatar()" class="rounded-circle bg-white flex-shrink-0 me-3 fit-cover"
+    width="50" height="50">
+      <div class="w-100">
+          <div class="hstack gap-1 justify-content-between w-100">
+            <h4>{{ selectedUzyt?.nazwa }}</h4>
+            <span *ngIf="isBlokowany" class="badge bg-danger">Zablokowany</span>
+            <span *ngIf="isBlokujacy" class="badge bg-warning">Blokuje</span>
+          </div>
+
+          <ng-container *ngIf="rozmowa.aktywna; else zaproszenie">
+            <div class="text-muted">
+              <i class="fas fa-clock me-1"></i>
+              <span>Ostatnia wiadomość: {{ rozmowa.ostatnioAktualizowana }}</span>
+            </div>
+          </ng-container>
+
+          <ng-template #zaproszenie>
+            <ng-container *ngIf="isNadawca() else decyzja">
+              <p class="text-break">Zaproszono użytkownika...</p>
+
+            </ng-container>
+            <ng-template #decyzja>
+              <h5 class="text-break">Zaproszenie do rozmowy!</h5>
+              <div class="hstack gap-2">
+                <button (click)="acceptRozmowaPrywatna($event)" class="btn btn-primary">Akceptuj</button>
+                <button (click)="rejectRozmowaPrywatna($event)" class="btn btn-danger">Odrzuć</button>
+                <button  class="btn btn-danger">Zablokuj</button>
+              </div>
+            </ng-template>
+
+          </ng-template>
+
+      </div>
+  </div>
+</a>

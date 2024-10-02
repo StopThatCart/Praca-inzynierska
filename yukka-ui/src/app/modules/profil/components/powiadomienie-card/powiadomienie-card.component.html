@@ -1,0 +1,63 @@
+<a class="link-underline link-underline-opacity-0 link-light"
+(mouseenter)="onHover()"
+(click)="goToTarget()"
+>
+
+  <div class="d-flex  card-header my-2">
+
+    <div class="hstack align-self-start">
+      <div [ngClass]="{'bg-danger': !pow.przeczytane, 'bg-transparent': pow.przeczytane}"
+      class="rounded-circle flex-shrink-0 ms-1 me-2"
+      style="width: 10px; height: 10px;">
+      </div>
+      <img [src]="getAvatar()" alt="" class="rounded-circle bg-white bg-opacity-75 flex-shrink-0 me-3 fit-cover" width="75" height="75">
+    </div>
+      <div class="w-100">
+          <div class="hstack gap-1 justify-content-between w-100" style="min-height: 70px;">
+
+              <div>
+                <div class="text-muted">
+                  <i class="fas fa-clock me-1"></i><span>{{ pow.dataUtworzenia }}</span>
+                </div>
+                  <p class="fw-normal mb-0"
+                  [ngClass]="{'pow-opis': isOnDropdown}">
+                   <!-- <span class="fw-bold">Adam Gessler</span> -->
+                     {{ pow.opis }}
+                   <!-- <span class="fw-bold">Jakiś post</span> -->
+                  </p>
+              </div>
+
+              <div class="dropstart">
+                <button (click)="remove($event)" class="btn" type="button">
+                  &nbsp;<i class="fa-solid fa-x"></i>
+                </button>
+              </div>
+            <!--
+              <div class="dropstart">
+                <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  &nbsp;<i class="fas fa-ellipsis-v fs-4"></i>
+                </button>
+                <ul class="dropdown-menu" style="background: var(--bs-primary);max-width: 250px;">
+                  <li><button class="dropdown-item" type="button">Przejdź do komentarza</button></li>
+                  <li><button class="dropdown-item" type="button">Usuń powiadomienie</button></li>
+                </ul>
+              </div>
+            -->
+              <!--
+               <div class="dropstart justify-content-center align-items-center d-flex">
+                <button class="btn justify-content-center align-items-center d-flex"
+                  type="button"  data-bs-toggle="dropdown" aria-expanded="false">
+                  &nbsp;<i class="fas fa-ellipsis-v fs-1"></i>
+                </button>
+                <div class="dropdown-menu"  style="background: var(--bs-primary);max-width: 250px;">
+                  <a class="dropdown-item bg-transparent" style="word-wrap: break-word;">Przejdź do komentarza</a>
+                  <a class="dropdown-item bg-transparent">Usuń powiadomienie</a>
+                </div>
+              </div>
+              -->
+
+          </div>
+
+      </div>
+  </div>
+</a>

@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
  * Służy do obsługi zapytań związanych z roślinami użytkownika dla samego użytkownika.
  */
 @RestController
-@RequestMapping("/rest/neo4j/uzytkownicy/rosliny")
+@RequestMapping("uzytkownikRosliny")
 @Tag(name = "UzytkownikRoslina")
 @RequiredArgsConstructor
 public class UzytkownikRoslinaController {
@@ -40,14 +40,14 @@ public class UzytkownikRoslinaController {
   //  private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
 
 
-    @GetMapping("/{roslinaId}")
+    @GetMapping(value = "/{roslinaId}", produces="application/json")
     public ResponseEntity<UzytkownikRoslina> findUzytkownikRoslinaByRoslinaId(
         @PathVariable("roslinaId") String roslinaId, 
             Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikRoslinaService.findByRoslinaId(roslinaId).orElse(null));
     }
 
-    @GetMapping
+    @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<UzytkownikRoslinaResponse>> findAllRosliny(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,

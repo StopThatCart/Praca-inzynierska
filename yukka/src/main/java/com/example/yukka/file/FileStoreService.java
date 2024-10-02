@@ -39,7 +39,7 @@ public class FileStoreService {
     public String saveSeededRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String obraz) {
         String fileUploadSubPath = "defaults";
         if(!obraz.equals(defaultRoslinaObrazName)) {
-            fileUploadSubPath = fileUploadSubPath + separator + "rosliny";
+            fileUploadSubPath = fileUploadSubPath + separator + "rosliny" + separator + "seed";
              //String fileName = generateFileName(obraz);
             return uploadFile(sourceFile, fileUploadSubPath, obraz);
         }
@@ -53,10 +53,9 @@ public class FileStoreService {
             return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
-    public String saveRoslina(@Nonnull MultipartFile sourceFile,
-                              @Nonnull String obraz, @Nonnull String uzytId) {
+    public String saveRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String obraz) {
         if(!obraz.equals(defaultRoslinaObrazName)) {
-            String fileUploadSubPath = "uzytkownicy" + separator + "rosliny";
+            String fileUploadSubPath = "rosliny" + separator + "pracownicy";
             String fileName = generateFileName(obraz) + "_" + System.currentTimeMillis();
             return uploadFile(sourceFile, fileUploadSubPath, fileName);
         }
@@ -72,14 +71,25 @@ public class FileStoreService {
     public String savePost(@Nonnull MultipartFile sourceFile,
                            @Nonnull String postId, @Nonnull String uzytId) {
         final String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "posty";
-        String fileName = generateFileName(postId) + "_" + System.currentTimeMillis();
+        String fileName = "";
+        if (!sourceFile.getName().isEmpty()) {
+            fileName =  generateFileName(sourceFile.getName()) + System.currentTimeMillis();
+        } else {
+            fileName = generateFileName(postId) + System.currentTimeMillis();
+        }
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
     public String saveKomentarz(@Nonnull MultipartFile sourceFile,
                                 @Nonnull String komentarzId, @Nonnull String uzytId) {
         final String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "komentarze";
-        String fileName = generateFileName(komentarzId) + "_" + System.currentTimeMillis();
+        
+        String fileName = "";
+        if (!sourceFile.getName().isEmpty()) {
+            fileName =  generateFileName(sourceFile.getName()) + "_" + System.currentTimeMillis();
+        } else {
+            fileName = generateFileName(komentarzId) + "_" + System.currentTimeMillis();
+        }
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 

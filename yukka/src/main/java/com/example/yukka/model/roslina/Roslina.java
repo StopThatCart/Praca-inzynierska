@@ -23,7 +23,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.Builder;
-
 @Node
 @NoArgsConstructor
 @AllArgsConstructor
@@ -90,10 +89,6 @@ public class Roslina {
     @Relationship(type = "MA_KWIAT", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
     private Set<Wlasciwosc> kwiaty = new HashSet<>();
-
-    @Relationship(type = "MA_NAGRODE", direction = Relationship.Direction.OUTGOING)
-    @Builder.Default
-    private Set<Wlasciwosc> nagrody = new HashSet<>();
 
     @Relationship(type = "MA_ODCZYNY", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
@@ -165,7 +160,6 @@ public class Roslina {
             case MA_KOLOR_LISCI -> setKoloryLisci(wlasciwosci);
             case MA_KOLOR_KWIATOW -> setKoloryKwiatow(wlasciwosci);
             case MA_KWIAT -> setKwiaty(wlasciwosci);
-            case MA_NAGRODE -> setNagrody(wlasciwosci);
             case MA_ODCZYNY -> setOdczyny(wlasciwosci);
             case MA_OKRES_KWITNIENIA -> setOkresyKwitnienia(wlasciwosci);
             case MA_OKRES_OWOCOWANIA -> setOkresyOwocowania(wlasciwosci);

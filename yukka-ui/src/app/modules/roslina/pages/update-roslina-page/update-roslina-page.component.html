@@ -1,0 +1,71 @@
+<div class="add-roslina-page py-5" >
+  <app-breadcrumb></app-breadcrumb>
+  <div class="card add-roslina-card " >
+    <div class="card-header">
+      <h4 class="card-title">Dodaj roślinę</h4>
+      <div class="alert alert-success" role="alert" *ngIf="message && !errorMsg.length">
+        {{ message }}
+      </div>
+      <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
+        <p *ngFor="let msg of errorMsg">{{ msg }}</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="updateRoslina()" class="my-2">
+        <div>
+          <label class="form-label">Nazwa:</label>
+          <input [(ngModel)]="request.nazwa"
+          class="mb-2 form-control" name="nazwa" placeholder="nazwa" required />
+        </div>
+        <div>
+          <label class="form-label">Nazwa Łacińska:</label>
+          <input
+          [(ngModel)]="request.nazwaLacinska"
+          class="mb-2 form-control" name="nazwaLacinska" placeholder="nazwa łacińska" required />
+        </div>
+        <div>
+          <label class="form-label">Opis:</label>
+          <textarea [(ngModel)]="request.opis"
+          class="mb-2 form-control" name="opis" placeholder="opis"></textarea>
+        </div>
+        <div class="my-2">
+          <app-wysokosc-input
+          [wysokoscMin]="request.wysokoscMin"
+          [wysokoscMax]="request.wysokoscMax"
+          (wysokoscMinChange)="onWysokoscMinChange($event)"
+          (wysokoscMaxChange)="onWysokoscMaxChange($event)"
+          >
+          </app-wysokosc-input>
+        </div>
+        <div class="mb-3">
+          <app-add-custom-wlasciwosc
+          [wlasciwosciResponse]="wlasciwosciResponse"
+          (customWlasciwoscAdded)="onCustomWlasciwoscAdded($event)">
+        </app-add-custom-wlasciwosc>
+        </div>
+        <div>
+          <label for="wlasciwosci">Właściwości:</label>
+          <div *ngIf="request.wlasciwosci.length > 0; else noWlasciwosci">
+            <app-wlasciwosc-tag
+              [wlasciwosci]="request.wlasciwosci"
+              (wlasciwoscRemoved)="onWlasciwoscRemoved($event)">
+            </app-wlasciwosc-tag>
+          </div>
+          <ng-template #noWlasciwosci>
+            <p>Nie wybrano żadnych właściwości.</p>
+          </ng-template>
+          <div class="row mb-1">
+            <div class="col-md-4" *ngFor="let wlasciwosc of wlasciwosciResponse">
+              <app-wlasciwosc-dropdown
+                [wlasciwosciResponse]="[wlasciwosc]"
+                [(selectedWlasciwosci)]="request.wlasciwosci"
+                (selectedWlasciwosciChange)="onWlasciwoscToggled($event)">
+              </app-wlasciwosc-dropdown>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary text-uppercase" type="submit">Zaktualizuj roślinę</button>
+      </form>
+    </div>
+  </div>
+</div>

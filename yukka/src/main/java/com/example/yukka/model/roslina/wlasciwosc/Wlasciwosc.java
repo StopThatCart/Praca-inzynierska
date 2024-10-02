@@ -14,69 +14,69 @@ import org.springframework.data.neo4j.core.schema.Node;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
-    import lombok.NoArgsConstructor;
-    import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    @Node
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public class Wlasciwosc {
-        @JsonIgnore
-        @DynamicLabels
-        private List<String> labels;
-        @JsonIgnore
-        @Id @GeneratedValue
-        private long id;
-        @Property("nazwa")
-        private String nazwa;
+@Node
+@Getter
+@Setter
+@NoArgsConstructor
+public class Wlasciwosc {
 
-        @JsonIgnore
-        @Relationship(type="MA_ROSLINE", direction=Relationship.Direction.OUTGOING)
-        private List<Roslina> plants;
+ //   @JsonIgnore
+    @DynamicLabels
+    private List<String> labels;
+    @JsonIgnore
+    @Id @GeneratedValue
+    private long id;
+    @Property("nazwa")
+    private String nazwa;
 
-        // Na razie nieużywane
-        /* 
-        public List<Roslina> getPlants() {
-            return plants;
-        }
-        */
+    @JsonIgnore
+    @Relationship(type="MA_ROSLINE", direction=Relationship.Direction.OUTGOING)
+    private List<Roslina> plants;
 
-        public Wlasciwosc(List<String> labels, String nazwa) {
-            this.labels = labels;
-            this.nazwa = nazwa;
-        }
-        
-
-        
-        public String getLabels() {
-            if(labels.isEmpty()) return null;
-            return  labels.get(0);
-        }
-        
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Wlasciwosc that = (Wlasciwosc) o;
-            return Objects.equals(labels, that.labels) &&
-                // Objects.equals(id, that.id) &&
-                Objects.equals(nazwa, that.nazwa);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(labels, nazwa);
-        }
-
-
-
-        @Override
-        public String toString() {
-            return "Wlasciwosc [labels=" + labels + ", id=" + id + ", nazwa=" + nazwa + "]";
-        }
-
-
-
-
+    // Na razie nieużywane
+    /* 
+    public List<Roslina> getPlants() {
+        return plants;
     }
+    */
+
+    public Wlasciwosc(List<String> labels, String nazwa) {
+        this.labels = labels;
+        this.nazwa = nazwa;
+    }
+    
+
+    
+    public String getLabels() {
+        if(labels.isEmpty()) return null;
+        return  labels.get(0);
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wlasciwosc that = (Wlasciwosc) o;
+        return Objects.equals(labels, that.labels) &&
+            Objects.equals(nazwa, that.nazwa);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(labels, nazwa);
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Wlasciwosc [labels=" + labels + ", nazwa=" + nazwa + "]";
+    }
+
+
+
+
+}

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
+import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostResponse;
 import com.example.yukka.model.social.request.OcenaRequest;
@@ -27,25 +28,26 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/rest/neo4j/posty")
+@RequestMapping("posty")
 @RequiredArgsConstructor
 @Tag(name = "Post")
 public class PostController {
     private final PostService postService;
 
-    @GetMapping("/{post-id}")
+    @GetMapping(value = "/{post-id}", produces="application/json")
     public ResponseEntity<PostResponse> findPostById(@PathVariable("post-id") String postId) {
         return ResponseEntity.ok(postService.findByPostId(postId));
     }
 
-    @GetMapping
+    @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPosty(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
-        return ResponseEntity.ok(postService.findAllPosts(page, size));
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(name = "szukaj", required = false) String szukaj) {
+        return ResponseEntity.ok(postService.findAllPosts(page, size, szukaj));
     }
 
-    @GetMapping("/uzytkownik")
+    @GetMapping(value = "/uzytkownik", produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPostyByConnectedUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
@@ -53,33 +55,39 @@ public class PostController {
         return ResponseEntity.ok(postService.findAllPostyByConnectedUzytkownik(page, size, connectedUser));
     }
 
-    @GetMapping("/uzytkownik/{email}")
+    @GetMapping(value = "/uzytkownik/{nazwa}", produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPostyByUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            @PathVariable("email") String email,
+            @PathVariable("nazwa") String nazwa,
             Authentication connectedUser) {
-        return ResponseEntity.ok(postService.findAllPostyByUzytkownik(page, size, email,connectedUser));
+        return ResponseEntity.ok(postService.findAllPostyByUzytkownik(page, size, nazwa, connectedUser));
     }
 
-    @PostMapping
+    @GetMapping(value = "/uzytkownik/{nazwa}/count", produces="application/json")
+    public ResponseEntity<Integer> findAllPostyCountOfUzytkownik(
+            @PathVariable("nazwa") String nazwa) {
+        return ResponseEntity.ok(postService.findAllPostyCountOfUzytkownik(nazwa));
+    }
+
+    @PostMapping(consumes="application/json", produces="application/json")
     public ResponseEntity<Post> addPost(@Valid @RequestBody PostRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(postService.save(request, connectedUser));
     }
 
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Post> addPost(@Valid @RequestBody PostRequest request, 
+    @PostMapping(consumes = "multipart/form-data", produces="application/json")
+    public ResponseEntity<Post> addPost(@Valid @RequestPart("request") PostRequest request, 
     @Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) throws FileUploadException {
         return ResponseEntity.ok(postService.save(request, file, connectedUser));
     }
 
 
-    @PutMapping("/oceny")
-    public ResponseEntity<Post> addOcenaToPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
+    @PutMapping(value = "/oceny", produces="application/json")
+    public ResponseEntity<PostResponse> addOcenaToPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(postService.addOcenaToPost(request, connectedUser));
     }
 
-    @DeleteMapping("/oceny")
+    @DeleteMapping(value = "/oceny", produces="application/json")
     public ResponseEntity<String> removeOcenaFromPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         postService.removeOcenaFromPost(request, connectedUser);
         return ResponseEntity.noContent().build();
@@ -98,11 +106,11 @@ public class PostController {
         return ResponseEntity.accepted().build();
     }
  */
-    @DeleteMapping("/{post-id}")
+    @DeleteMapping(value = "/{post-id}", produces="application/json")
     public ResponseEntity<String> removePost(
                     @PathVariable("post-id") String postId,
                     Authentication currentUser) {
-
+                        
         postService.deletePost(postId, currentUser);
         return ResponseEntity.noContent().build();
     }

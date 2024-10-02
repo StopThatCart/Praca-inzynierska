@@ -13,25 +13,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 import com.example.yukka.security.JwtService;
+import com.example.yukka.security.Neo4JAuthenticationProvider;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 class AuthenticationService {
     private final UzytkownikRepository uzytkownikRepository;
     private final UzytkownikService uzytkownikService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    //private final Neo4JAuthenticationProvider neo4jAuthenticationProvider;
+    private final Neo4JAuthenticationProvider neo4jAuthenticationProvider;
 
 //    @Value("${application.mailing.frontend.activation-url}")
 //    private String activationUrl;
@@ -73,8 +77,9 @@ class AuthenticationService {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(),request.getHaslo())
         );*/
-        //Authentication auth = neo4jAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
+        Authentication auth = neo4jAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
+        // Z poniższym authenticate wywołuje się dwa razy
+       // Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getHaslo()));
 
         System.out.println("Auth: " + auth.toString());
         
@@ -84,6 +89,7 @@ class AuthenticationService {
         claims.put("UzytId", uzyt.getUzytId());
         claims.put("Nazwa", uzyt.getUsername());
         claims.put("Email", uzyt.getEmail());
+        claims.put("Avatar", uzyt.getAvatar());
         
        // claims.put("authorities", user.getAuthorities()); // To już jest robione w JwtService
 
@@ -92,6 +98,18 @@ class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public AuthenticationResponse refreshToken(String token) {
+    if (jwtService.isTokenExpired(token)) {
+        throw new IllegalArgumentException("Token JWT wygasł.");
+    }
+    String username = jwtService.extractUsername(token);
+    UserDetails userDetails = uzytkownikService.loadUserByUsername(username);
+    String newToken = jwtService.generateToken(userDetails);
+    return AuthenticationResponse.builder()
+            .token(newToken)
+            .build();
     }
 
     String createUzytkownikId() {

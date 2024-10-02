@@ -1,5 +1,4 @@
 package com.example.yukka.model.social.post;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
@@ -36,6 +35,6 @@ public class PostResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private byte[] avatar;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private LocalDateTime dataUtworzenia;
+    private String dataUtworzenia;
     
 }

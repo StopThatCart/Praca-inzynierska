@@ -1,0 +1,86 @@
+<section>
+  <div class="container">
+    <h2 class="text-uppercase text-center text-primary">Katalog RoŚlin</h2>
+    <div class="row">
+      <div class="col"></div>
+    </div>
+  </div><!-- Start: Articles Cards -->
+  <div class="container p-2">
+    <div *ngIf="canAddRoslina">
+      <button (click)="goToAddRoslina()" class="btn btn-primary mb-2">Dodaj roślinę</button>
+    </div>
+    <div class="row w-100 justify-content-center align-items-center"
+      style="background: var(--bs-primary-border-subtle);">
+
+      <div class="col d-flex justify-content-center align-items-center mx-auto">
+        <div class="vstack">
+          <div class="d-flex justify-content-center align-items-center input-group p-4 ">
+            <input [(ngModel)]="request.nazwa" type="text" class="form-control rounded-start text-black" placeholder="Wyszukaj roślinę">
+            <input [(ngModel)]="request.nazwaLacinska" type="text" class="form-control rounded-start text-black" placeholder="Nazwa łacińska rośliny">
+            <button (click)="onSearch()" class="btn text-uppercase btn-primary input-group-append" type="button">
+              <i class="fas fa-search" style="font-size: 1em; color: currentColor;"></i>
+            </button>
+
+          </div>
+          <div class="my-2">
+            <app-wysokosc-input
+              [wysokoscMin]="request.wysokoscMin"
+              [wysokoscMax]="request.wysokoscMax"
+              (wysokoscMinChange)="onWysokoscMinChange($event)"
+              (wysokoscMaxChange)="onWysokoscMaxChange($event)"
+            >
+            </app-wysokosc-input>
+          </div>
+
+            <app-wlasciwosc-tag
+            [wlasciwosci]="request.wlasciwosci"
+            (wlasciwoscRemoved)="onWlasciwoscRemoved($event)"
+            ></app-wlasciwosc-tag>
+        </div>
+      </div>
+    </div>
+    <div class="row gx-5 gy-2 h-100 mx-auto my-auto">
+      <div class="col-md-3 d-flex flex-column justify-content-between p-1 rounded" style="background: var(--bs-primary-border-subtle);" >
+        <div class="offcanvas-body d-flex flex-column justify-content-between p-2 rounded">
+          <app-wlasciwosc-dropdown
+          [wlasciwosciResponse]="wlasciwosciResponse"
+          [selectedWlasciwosci]="request.wlasciwosci"
+          (wysokoscMinChange)="onWysokoscMinChange($event)"
+          (wysokoscMaxChange)="onWysokoscMaxChange($event)"
+          (selectedWlasciwosciChange)="onWlasciwoscToggled($event)">
+          </app-wlasciwosc-dropdown>
+        </div>
+      </div>
+
+      <div class="col-md-9">
+        <div class="row mb-3">
+          <div class="col-md-8 col-xl-6 text-center mx-auto">
+            <span class="fs-3 text-primary p-2"> Znalezione rośliny:</span>
+            <span class="fs-3 fw-semibold text-primary p-2">({{ roslinaCount }})</span>
+            <div class="alert alert-danger" role="alert" *ngIf="message.length">
+              <p >{{ message }}</p>
+          </div>
+          </div>
+        </div>
+        <div class="row gy-4 d-flex justify-content-center">
+          <div class="d-flex justify-content-center" *ngIf="isLoading">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <app-roslina-card
+            class="col-auto col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 d-flex align-items-stretch"
+            style="min-width: 25%;"
+            *ngFor="let roslina of roslinaResponse?.content"
+            [roslina]="roslina">
+          </app-roslina-card>
+        </div>
+      </div>
+    </div>
+  </div><!-- End: Articles Cards -->
+</section>
+<app-pagination
+  [page]="page"
+  [totalPages]="roslinaResponse.totalPages ?? 0"
+  (pageChange)="goToPage($event)">
+</app-pagination>

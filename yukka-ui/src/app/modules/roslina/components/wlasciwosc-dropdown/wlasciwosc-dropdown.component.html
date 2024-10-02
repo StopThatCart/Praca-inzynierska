@@ -1,0 +1,18 @@
+<ul class="nav nav-pills flex-column text-truncate mb-auto">
+  <li *ngFor="let wlasciwosc of wlasciwosciResponse" class="nav-item my-1 w-100">
+    <div class="nav-item dropdown">
+      <button
+        class="btn dropdown-toggle text-uppercase link-white w-100"
+        aria-expanded="false" data-bs-toggle="dropdown"
+        data-bs-auto-close="false" type="button"
+        data-bs-display="static">{{ wlasciwosc.etykieta }}</button>
+      <div class="dropdown-menu">
+        <a *ngFor="let nazwa of wlasciwosc.nazwy" class="dropdown-item link-white">
+          <input [checked]="isSelected(wlasciwosc, nazwa)"
+           type="checkbox" class="form-check-input mx-1"
+           (change)="toggleWlasciwosc(wlasciwosc, nazwa)">{{ nazwa }}</a>
+      </div>
+    </div>
+  </li>
+</ul>
+

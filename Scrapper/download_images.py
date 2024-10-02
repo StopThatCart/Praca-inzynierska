@@ -73,10 +73,24 @@ def get_images(file_path, image_link, name_label):
     df.to_csv(file_path, index=False)
     
     print("Zakończono działanie programu.")
+    
+    
+def remove_column(file_path, column_name):
+    df = pd.read_csv(file_path)
+    
+    if column_name in df.columns:
+        df = df.drop(columns=[column_name])
+        print(f"Kolumna {column_name} została usunięta.")
+    
+    df.to_csv(file_path, index=False)
+   
+
 
 # Przykładowe wywołanie funkcji
 file_path = 'katalog_roslin.csv'
 image_link = 'image'
 name_label = 'latin_name'
 
+#remove_column(file_path, 'nagrody')
 get_images(file_path, image_link, name_label)
+

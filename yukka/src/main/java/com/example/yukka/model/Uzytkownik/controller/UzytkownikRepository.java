@@ -53,6 +53,25 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa OR u.email = $email RETURN u")
     Optional<Uzytkownik> checkIfUzytkownikExists(@Param("nazwa") String nazwa, @Param("email") String email);
 
+
+    @Query("""
+        MATCH p = (blokujacy:Uzytkownik{email: $email})-[r:BLOKUJE]->(blokowany:Uzytkownik)
+        
+        RETURN blokujacy, collect(nodes(p)), collect(relationships(p))
+            """)
+    Optional<Uzytkownik> getBlokowaniUzytkownicyOfUzytkownik(@Param("email") String email);
+
+
+    @Query("""
+        MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+        OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+        
+        RETURN blokujacy, 
+        collect(nodes(p)), collect(relationships(p)), 
+        collect(nodes(p2)), collect(relationships(p2))
+            """)
+    Optional<Uzytkownik> getBlokowaniAndBlokujacy(@Param("nazwa") String nazwa);
+
     @Query("""
         MATCH path = (uzyt:Uzytkownik)-[:MA_OGROD]->(:Ogrod)
             -[:MA_DZIALKE]->(:Dzialka)
@@ -150,9 +169,36 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
   //  @Query("CREATE (u:Uzytkownik:`:#{literal(#rola)}` {nazwa: $nazwa, email: $email, haslo: $haslo, data_utworzenia: localdatetime(), ban: false})")
    // void addNewPracownik(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo, @Param("rola") String rola);
 
+   @Query("""
+    MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(uzyt:Uzytkownik{email: $email})
+    SET ustawienia += $ustawienia.__properties__
+    RETURN uzyt, collect(NODES(path)), collect(RELATIONSHIPS(path))
+        """)
+    Uzytkownik updateUstawienia(@Param("ustawienia") Ustawienia ustawienia, @Param("email") String email);
+
+
+
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.avatar = $avatar RETURN u")
     Uzytkownik updateAvatar(@Param("email") String email, @Param("avatar") String avatar);
 
+
+    @Query("""
+        MATCH (blokowany:Uzytkownik{email: $blokowanyEmail})
+        MATCH (blokujacy:Uzytkownik{email: $blokujacyEmail})
+
+        MERGE (blokujacy)-[r:BLOKUJE]->(blokowany)
+        
+        RETURN COUNT(r) > 0 AS success
+            """)
+    Boolean zablokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, @Param("blokujacyEmail") String blokujacyEmail);
+    
+    @Query("""
+        MATCH (blokujacy:Uzytkownik{email: $blokujacyEmail})-[r:BLOKUJE]->
+                (blokowany:Uzytkownik{email: $blokowanyEmail})
+        DELETE r
+        RETURN COUNT(r) > 0 AS success
+            """)
+    Boolean odblokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, @Param("blokujacyEmail") String blokujacyEmail);
 
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.ban = $ban RETURN u")
     Uzytkownik banUzytkownik(@Param("email") String email, @Param("ban") boolean ban);
@@ -193,30 +239,34 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     @Query("""
         MATCH (u:Uzytkownik) DETACH DELETE u 
         WITH u
+
         MATCH(ust:Ustawienia) DETACH DELETE ust
         WITH ust
-        MATCH(roz:RozmowaPrywatna)
-        OPTIONAL MATCH (roz)-[:MA_WIADOMOSC]->(kom:Komentarz)
-        DETACH DELETE roz, kom
-        WITH roz
-        MATCH (powiadomienie:Powiadomienie)
-        DETACH DELETE powiadomienie
-        WITH powiadomienie
+
         MATCH (o:Ogrod)
         OPTIONAL MATCH (o)-[:MA_DZIALKE]->(d:Dzialka)
         DETACH DELETE d, o
         WITH d
 
+        MATCH (u:Uzytkownik)
+        DETACH DELETE u 
+        """)
+    void clearUzytkowicy();
+
+
+    @Query("""
+        MATCH (powiadomienie:Powiadomienie)
+        DETACH DELETE powiadomienie
+        """)
+    void clearPowiadomienia();   
+    
+
+    @Query("""
         MATCH (roslina:UzytkownikRoslina)
         OPTIONAL MATCH (roslina)<-[:MA_ROSLINE]-(wl:UzytkownikWlasciwosc)
         DETACH DELETE roslina, wl
-        
-        WITH roslina
-        MATCH (u:Uzytkownik)
-        DETACH DELETE u 
-
         """)
-    void clearUzytkowicy();
+    void clearUzytkownikRoslina(); 
 
 
 

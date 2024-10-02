@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.controller.RoslinaService;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
@@ -154,24 +155,35 @@ public class RoslinaImporterService {
         try (CSVReader reader = new CSVReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
             List<String[]> rows = reader.readAll();
 
+            if (rows.isEmpty()) {
+                return roslinaRequests;
+            }
+
+            // Przeczytaj pierwszy wiersz, aby uzyskać nagłówki
+            String[] headers = rows.get(0);
+            Map<String, Integer> headerMap = new HashMap<>();
+            for (int i = 0; i < headers.length; i++) {
+                headerMap.put(headers[i], i);
+            }
+
             // Pomijanie pierwszego wiersza z nagłówkami
             for (int i = 1; i < rows.size(); i++) {
-                if(i >= limit){
+                if(i > limit){
                     break;
                 }
                 String[] row = rows.get(i);
 
-                Wysokosc heights = HeightProcessor.getWysokosc(row[9]);
+                Wysokosc heights = HeightProcessor.getWysokosc(row[headerMap.get("docelowa_wysokosc")]);
 
-                RoslinaRequest roslinaRequest = RoslinaRequest.builder()
-                        .nazwa(row[0])
-                        .nazwaLacinska(row[1])
-                        .opis(row[3])
-                        .wysokoscMin(heights.getMin())
-                        .wysokoscMax(heights.getMax())
-                        .obraz(row[24])
-                        .wlasciwosci(parseWlasciwosci(row))
-                        .build();
+            RoslinaRequest roslinaRequest = RoslinaRequest.builder()
+                    .nazwa(row[headerMap.get("name")])
+                    .nazwaLacinska(row[headerMap.get("latin_name")])
+                    .opis(row[headerMap.get("opis")])
+                    .wysokoscMin(heights.getMin())
+                    .wysokoscMax(heights.getMax())
+                    .obraz(row[headerMap.get("image_filename")])
+                    .wlasciwosci(parseWlasciwosci(row, headerMap))
+                    .build();
 
                 roslinaRequests.add(roslinaRequest);
             }
@@ -180,32 +192,33 @@ public class RoslinaImporterService {
         return roslinaRequests;
     }
 
+    private List<WlasciwoscWithRelations> parseWlasciwosci(String[] row, Map<String, Integer> headerMap) {
+        List<WlasciwoscWithRelations> wlasciwosci = new ArrayList<>();
+
+        addWlasciwosc(wlasciwosci, "Grupa", row[headerMap.get("grupa_roslin")]);
+        addWlasciwosc(wlasciwosci, "Podgrupa", row[headerMap.get("grupa_uzytkowa")]);
+        addWlasciwosc(wlasciwosci, "Forma", row[headerMap.get("forma")]);
+        addWlasciwosc(wlasciwosci, "SilaWzrostu", row[headerMap.get("sila_wzrostu")]);
+        addWlasciwosc(wlasciwosci, "Pokroj", row[headerMap.get("pokroj")]);
+        addWlasciwosc(wlasciwosci, "KolorLisci", row[headerMap.get("barwa_lisci_(igiel)")]);
+        addWlasciwosc(wlasciwosci, "Zimozielonosc", row[headerMap.get("zimozielonosc_lisci_(igiel)")]);
+        addWlasciwosc(wlasciwosci, "Kwiat", row[headerMap.get("rodzaj_kwiatow")]);
+        addWlasciwosc(wlasciwosci, "OkresKwitnienia", row[headerMap.get("pora_kwitnienia")]);
+        addWlasciwosc(wlasciwosci, "Owoc", row[headerMap.get("owoce")]);
+        addWlasciwosc(wlasciwosci, "OkresOwocowania", row[headerMap.get("pora_owocowania")]);
+        addWlasciwosc(wlasciwosci, "Stanowisko", row[headerMap.get("naslonecznienie")]);
+        addWlasciwosc(wlasciwosci, "Wilgotnosc", row[headerMap.get("wilgotnosc")]);
+        addWlasciwosc(wlasciwosci, "Odczyn", row[headerMap.get("ph_podloza")]);
+        addWlasciwosc(wlasciwosci, "Gleba", row[headerMap.get("rodzaj_gleby")]);
+        addWlasciwosc(wlasciwosci, "Walor", row[headerMap.get("walory")]);
+        addWlasciwosc(wlasciwosci, "Zastosowanie", row[headerMap.get("zastosowanie")]);
+        addWlasciwosc(wlasciwosci, "KolorKwiatow", row[headerMap.get("barwa_kwiatow")]);
+         //  addWlasciwosc(wlasciwosci, "Nagroda", row[23]);
     
-    private List<Map<String, String>> parseWlasciwosci(String[] row) {
-        List<Map<String, String>> wlasciwosci = new ArrayList<>();
-
-        addWlasciwosc(wlasciwosci, "Forma", row[6]);
-        addWlasciwosc(wlasciwosci, "SilaWzrostu", row[7]);
-        addWlasciwosc(wlasciwosci, "Pokroj", row[8]);
-        addWlasciwosc(wlasciwosci, "KolorLisci", row[10]);
-        addWlasciwosc(wlasciwosci, "Zimozielonosc", row[11]);
-        addWlasciwosc(wlasciwosci, "Kwiat", row[12]);
-        addWlasciwosc(wlasciwosci, "OkresKwitnienia", row[13]);
-        addWlasciwosc(wlasciwosci, "Owoc", row[14]);
-        addWlasciwosc(wlasciwosci, "OkresOwocowania", row[15]);
-        addWlasciwosc(wlasciwosci, "Stanowisko", row[16]);
-        addWlasciwosc(wlasciwosci, "Wilgotnosc", row[17]);
-        addWlasciwosc(wlasciwosci, "Odczyn", row[18]);
-        addWlasciwosc(wlasciwosci, "Gleba", row[19]);
-        addWlasciwosc(wlasciwosci, "Walor", row[20]);
-        addWlasciwosc(wlasciwosci, "Zastosowanie", row[21]);
-        addWlasciwosc(wlasciwosci, "KolorKwiatow", row[22]);
-        addWlasciwosc(wlasciwosci, "Nagroda", row[23]);
-
         return wlasciwosci;
     }
 
-    private void addWlasciwosc(List<Map<String, String>> wlasciwosci, String label, String value) {
+    private void addWlasciwosc(List<WlasciwoscWithRelations> wlasciwosci, String label, String value) {
         if (value != null && !value.isEmpty() && !value.toLowerCase().equals(emptyCsvValue.toLowerCase()) 
         && label != null && !label.isEmpty() &&  !label.toLowerCase().equals(emptyCsvValue.toLowerCase())) {
            
@@ -220,11 +233,11 @@ public class RoslinaImporterService {
             for (String part : parts) {
                 part = part.trim();
                 if (!part.isEmpty()) {
-                    Map<String, String> wlasciwosc = new HashMap<>();
+                    WlasciwoscWithRelations wlasciwosc = new WlasciwoscWithRelations(label, part, determineRelacja(meh));
 
-                    wlasciwosc.put("labels", label);
-                    wlasciwosc.put("nazwa",  part);
-                    wlasciwosc.put("relacja", determineRelacja(meh));
+               //     wlasciwosc.put("labels", label);
+               //     wlasciwosc.put("nazwa",  part);
+               //     wlasciwosc.put("relacja", determineRelacja(meh));
                     wlasciwosci.add(wlasciwosc);
                    }
             }
@@ -235,6 +248,8 @@ public class RoslinaImporterService {
     // 15
     private String determineRelacja(String label) {
         return switch (label) {
+            case "Grupa" -> "MA_GRUPE";
+            case "Podgrupa" -> "MA_PODGRUPE";
             case "Forma" -> "MA_FORME";
             case "Kwiat" -> "MA_KWIAT";
             //
@@ -255,7 +270,7 @@ public class RoslinaImporterService {
             case "OkresOwocowania" -> "MA_OKRES_OWOCOWANIA";
             case "Walor" -> "MA_WALOR";
             case "Zastosowanie" -> "MA_ZASTOSOWANIE";
-            case "Nagroda" -> "MA_NAGRODE";
+           // case "Nagroda" -> "MA_NAGRODE";
             default -> "";
         };
     }

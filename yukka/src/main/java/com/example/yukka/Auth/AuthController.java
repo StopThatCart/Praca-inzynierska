@@ -13,14 +13,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+//@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("api/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication")
 public class AuthController {
     private final AuthenticationService service;
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", produces="application/json")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> register(
             @RequestBody 
@@ -31,9 +32,14 @@ public class AuthController {
         return ResponseEntity.accepted().build();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthRequest request) {
+    @PostMapping(value = "/login", produces="application/json")
+    public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody AuthRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @PostMapping(value = "/refresh-token", produces="application/json")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody String token) {
+        return ResponseEntity.ok(service.refreshToken(token));
     }
 
     @GetMapping("/test")

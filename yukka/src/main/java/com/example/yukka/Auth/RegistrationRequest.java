@@ -1,40 +1,51 @@
 package com.example.yukka.auth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 public class RegistrationRequest {
     //@JsonProperty("nazwa")
-    @NotEmpty(message = "name is mandatory")
+    @Pattern(regexp = "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$", message = "Nazwa nie może zawierać znaków specjalnych")
+    @Size(min = 3, message = "Nazwa powinna mieć co najmniej 3 znaki")
+    @NotEmpty(message = "nazwa jest wymagana")
     private String nazwa;
 
    // @JsonProperty("email")
-    @Email(message = "Email is not well formatted")
-    @NotEmpty(message = "Email is mandatory")
+    @Email(message = "Niepoprawny format adresu email")
+    @NotEmpty(message = "Email jest wymagany")
     private String email;
 
    // @JsonProperty("haslo")
-    @NotEmpty(message = "Password is mandatory")
-    @Size(min = 8, message = "Password should be 8 characters long minimum")
+    @NotEmpty(message = "haslo jest wymagane")
+    @Size(min = 8, message = "Hasło powinno mieć co najmniej 8 znaków")
     private String haslo;
+
+    @NotEmpty(message = "Hasła nie zgadzają się")
+    private String powtorzHaslo;
+
+    @JsonIgnore
+    @AssertTrue(message = "Hasło i potwierdzenie hasła muszą być takie same")
+    public boolean isHasloMatching() {
+        return haslo != null && haslo.equals(powtorzHaslo);
+    }
+
     public RegistrationRequest() {
         super();
-    }
-    public RegistrationRequest(String nazwa, String email, String haslo) {
-        this.nazwa = nazwa;
-        this.email = email;
-        this.haslo = haslo;
-    }
-    @Override
-    public String toString() {
-        return "RegistrationRequest [nazwa=" + this.nazwa + ", email=" + this.email + ", haslo=" + this.haslo + "]";
     }
 
 }

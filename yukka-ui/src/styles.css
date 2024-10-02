@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../../Projekt bootstrap/assets/bootstrap/css/bootstrap.min.css";
+@import "../../Projekt bootstrap/assets/css/Articles-Cards-images.css";
+@import "../../Projekt bootstrap/assets/css/bs-theme-overrides.css";
+@import "../../Projekt bootstrap/assets/css/Lightbox-Gallery-baguetteBox.min.css";
+@import "../../Projekt bootstrap/assets/css/Navbar-Centered-Links-icons.css";
+@import "../../Projekt bootstrap/assets/css/untitled.css";
+
+/*@import "@fortawesome/fontawesome-free";*/
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+.scrollable-content::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollable-content {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+
+.search-results {
+  height: 100%;
+}

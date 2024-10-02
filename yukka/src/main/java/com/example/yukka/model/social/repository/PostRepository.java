@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,13 +24,24 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         RETURN post
         """)
     @Nonnull List<Post> findAll();
+
+
+    // Używane tylko do seedowania
+    @Query("""
+        MATCH (post:Post)
+        RETURN post
+        ORDER BY post.dataUtworzenia DESC
+        LIMIT 1
+        """)
+    Optional<Post> findLatestPost();
     @Query("""
         MATCH (post:Post {postId: $postId})
-        OPTIONAL MATCH path = (:Uzytkownik)-[:MA_POST]->(post)-[:MA_KOMENTARZ]->
+        MATCH (autor:Uzytkownik)-[r1:MA_POST]->(post)
+        OPTIONAL MATCH path = (post)-[:MA_KOMENTARZ]->
                               (kom:Komentarz)
                               <-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
                               <-[:SKOMENTOWAL]-(uzytkownik:Uzytkownik)
-        RETURN post, collect(nodes(path)), collect(relationships(path))
+        RETURN post, r1, autor, collect(nodes(path)), collect(relationships(path))
         """)
     Optional<Post> findPostByPostIdButWithPath(@Param("postId") String postId);
      
@@ -65,25 +77,34 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @Query(value = """
         MATCH path = (post:Post)<-[:MA_POST]-(:Uzytkownik)
+        WHERE $szukaj IS NULL OR post.tytul CONTAINS $szukaj OR post.opis CONTAINS $szukaj
         RETURN post, collect(nodes(path)), collect(relationships(path)) 
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
         """,
        countQuery = """
-        MATCH (post:Post)
+        MATCH (post:Post)<-[:MA_POST]-(:Uzytkownik)
+        WHERE $szukaj IS NULL OR post.tytul CONTAINS $szukaj OR post.opis CONTAINS $szukaj
         RETURN count(post)
         """)
-    Page<Post> findAllPosts(Pageable pageable);
+    Page<Post> findAllPosts(@Param("szukaj") String szukaj, Pageable pageable);
 
     @Query(value = """
-        MATCH path = (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{email: $email})
+        MATCH path = (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{nazwa: $nazwa})
         RETURN post, collect(nodes(path)), collect(relationships(path)) 
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
             """,
             countQuery = """
-        MATCH (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{email: $email})
+        MATCH (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{nazwa: $nazwa})
         RETURN count(post)
         """)
-    Page<Post> findAllPostyByUzytkownik(@Param("email") String email, Pageable pageable);
+    Page<Post> findAllPostyByUzytkownik(@Param("nazwa") String nazwa, Pageable pageable);
+
+
+    @Query("""
+        MATCH path = (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{nazwa: $nazwa})
+        RETURN count(post)
+            """)
+    Integer findAllPostyCountOfUzytkownik(@Param("nazwa") String nazwa);
 
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})
@@ -107,7 +128,9 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
             SET oceniany.postyOcenyPozytywne = ocenyPozytywne, 
                 oceniany.postyOcenyNegatywne = ocenyNegatywne
 
-            RETURN post
+            WITH post
+            MATCH (autor:Uzytkownik)-[r1:MA_POST]->(post)
+            RETURN post, r1, autor
             """)
     Post addOcenaToPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
 
@@ -151,11 +174,12 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         WITH uzyt, $post.__properties__ AS pt 
         CREATE (uzyt)-[relu:MA_POST]->(post:Post{postId: pt.postId, 
                                         tytul: pt.tytul, opis: pt.opis, 
-                                        ocenyLubi: 0, ocenyNieLubi: 0, 
-                                        obraz: COALESCE(pt.obraz, null), dataUtworzenia: localdatetime()})
+                                        ocenyLubi: 0, ocenyNieLubi: 0, liczbaKomentarzy: 0,
+                                        obraz: COALESCE(pt.obraz, null), dataUtworzenia: $time
+                                        })
         RETURN post
         """)
-    Optional<Post> addPost(@Param("email") String email, @Param("post") Post post);
+    Optional<Post> addPost(@Param("email") String email, @Param("post") Post post, @Param("time") LocalDateTime time);
 
     @Query("""
         MATCH (post:Post{postId: $postId})
@@ -167,18 +191,10 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
     // Ewentualnie porzucić te atrybuty i tylko zwracać liczbę ocen/komentarzy w countach
     @Query("""
         MATCH (post:Post {postId: $postId})
-    
-        OPTIONAL MATCH (post)-[:MA_KOMENTARZ]->(komentarz:Komentarz)
-        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
-            
-        WITH post, komentarz, collect(odpowiedz) AS odpowiedzi
-        UNWIND odpowiedzi AS odp
-        DETACH DELETE odp
+        OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(komentarz:Komentarz)
 
         WITH post, komentarz
-        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
-        DETACH DELETE komentarz
-        DETACH DELETE post
+        DETACH DELETE komentarz, post
         """)
     void deletePost(@Param("postId") String postId);
 

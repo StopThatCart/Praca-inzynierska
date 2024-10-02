@@ -1,0 +1,35 @@
+
+.col-md-3 {
+  background: var(--bs-primary-border-subtle);
+}
+
+.offcanvas-body {
+  padding: 2rem;
+  border-radius: 0.25rem;
+}
+
+.nav-item .dropdown-menu {
+  background: transparent;
+  border: 0;
+  position: relative;
+}
+
+.dropdown-item {
+  white-space: normal;
+}
+
+.dropdown-item .form-check-input {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+.vstack .form-label {
+  color: #000;
+}
+
+
+
+/*
+wysokość slider
+*/
+

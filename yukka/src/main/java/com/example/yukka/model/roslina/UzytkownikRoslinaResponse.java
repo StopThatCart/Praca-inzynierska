@@ -31,7 +31,6 @@ public class UzytkownikRoslinaResponse {
     private Set<String> koloryLisci;
     private Set<String> koloryKwiatow;
     private Set<String> kwiaty;
-    private Set<String> nagrody;
     private Set<String> odczyny;
     private Set<String> okresyKwitnienia;
     private Set<String> okresyOwocowania;

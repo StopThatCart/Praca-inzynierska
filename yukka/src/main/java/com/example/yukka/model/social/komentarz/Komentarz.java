@@ -44,6 +44,7 @@ public class Komentarz extends Oceniany {
     @Property(name = "edytowany")
     private boolean edytowany;
     
+    
     @CreatedDate
     @Property(name = "dataUtworzenia")
     @Builder.Default
@@ -52,6 +53,12 @@ public class Komentarz extends Oceniany {
     // @JsonBackReference
      @ToString.Exclude
      private RozmowaPrywatna rozmowaPrywatna;
+
+
+    @Relationship(type = "JEST_W_POSCIE", direction = Relationship.Direction.OUTGOING)
+    // @JsonBackReference
+    @ToString.Exclude
+    private Post wPoscie;
 
     @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.INCOMING)
    // @JsonBackReference
@@ -77,6 +84,8 @@ public class Komentarz extends Oceniany {
                 "id=" + id +
                 ", komentarzId='" + komentarzId + '\'' +
                 ", opis='" + opis + '\'' +
+                ", polubienia='" + getOcenyLubi() + '\'' +
+                ", niepolubienia='" + getOcenyNieLubi() + '\'' +
                 ", edytowany=" + edytowany +
                 ", dataUtworzenia=" + dataUtworzenia +
                 ", postId=" + (post != null ? post.getPostId() : "null") +
@@ -84,5 +93,19 @@ public class Komentarz extends Oceniany {
                 ", odpowiedziCount=" + (odpowiedzi != null ? odpowiedzi.size() : 0) +
                 '}';
     }
+
+    private boolean isInPost() {
+        return wPoscie != null;
+    }
+
+    private String getPostId() {
+      if(isInPost()) {
+        return wPoscie.getPostId();
+      }
+      return null;
+  }
+
+
+
 
 }

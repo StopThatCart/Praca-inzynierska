@@ -1,6 +1,7 @@
 package com.example.yukka.model.roslina.controller;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.roslina.Roslina;
+import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,19 +32,36 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping("/rest/neo4j/rosliny")
+@RequestMapping("rosliny")
 @Tag(name = "Roslina")
 public class RoslinaController {
 
     @Autowired
     RoslinaService roslinaService;
 
-    @GetMapping
+    @Autowired
+    RoslinaRepository roslinaRepository;
+
+    @Autowired
+    RoslinaMapper roslinaMapper;
+
+    /*
+    @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllRosliny(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            Authentication connectedUser) {
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
         return ResponseEntity.ok(roslinaService.findAllRosliny(page, size));
+    }
+         */
+
+         // Pomijam valid bo tutaj się szuka rośliny i wiele parametrów może być pustych
+         // Post bo nie można dawać request
+    @PostMapping(value="/szukaj", produces="application/json")
+    public ResponseEntity<PageResponse<RoslinaResponse>> findAllRoslinyWithParameters(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestBody RoslinaRequest request) {
+        return ResponseEntity.ok(roslinaService.findAllRoslinyWithParameters(page, size, request));
     }
 /* 
     @GetMapping
@@ -51,54 +71,59 @@ public class RoslinaController {
         return roslinaService.getSome(amount);
     }
 */
-    @GetMapping("/{nazwa-lacinska}")
-    public ResponseEntity<Roslina> getByNazwaLacinska(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
+    @GetMapping(value = "/wlasciwosci", produces="application/json")
+    public ResponseEntity<Set<WlasciwoscResponse>> getWlasciwosciWithRelations() {
+        Set<WlasciwoscResponse> response = roslinaService.getWlasciwosciWithRelations();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "/{nazwa-lacinska}", produces="application/json")
+    public ResponseEntity<RoslinaResponse> findByNazwaLacinska(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
      //   String nazwaLacinska = URLDecoder.decode(encodedNazwaLacinska, StandardCharsets.UTF_8);
-        Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(nazwaLacinska);
-
-        if (roslina.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(roslina.get(), HttpStatus.OK);
+        return ResponseEntity.ok(roslinaService.findByNazwaLacinska(nazwaLacinska.toLowerCase()));
     }
 
-    @PostMapping
-    public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request,
+    @PostMapping(consumes="application/json", produces="application/json")
+    public ResponseEntity<RoslinaResponse> saveRoslina(@Valid @RequestBody RoslinaRequest request,
     Authentication currentUser) {
-        roslinaService.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
+        Roslina roslina = roslinaService.save(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(roslinaMapper.toRoslinaResponse(roslina));
     }
 
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<String> saveRoslina(@Valid @RequestBody RoslinaRequest request, 
-    @Parameter() @RequestPart("file") MultipartFile file,
-    Authentication currentUser) {
-        roslinaService.save(request, file, currentUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
+    @PostMapping(consumes = "multipart/form-data", produces="application/json")
+    public ResponseEntity<RoslinaResponse> saveRoslina(@Valid @RequestPart("request") RoslinaRequest request, 
+    @Parameter() @RequestPart("file") MultipartFile file) {
+        Roslina roslina = roslinaService.save(request, file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(roslinaMapper.toRoslinaResponse(roslina));
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateRoslina(@Valid @RequestBody RoslinaRequest request) {
-        Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(request.getNazwaLacinska());
-        if (roslina.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Roślina o takiej nazwie łacińskiej już istnieje.");
-        }
-        roslinaService.update(request);
-        return ResponseEntity.status(HttpStatus.OK).body("Roślina została pomyślnie zaktualizowana.");
+    @PutMapping(value = "/{nazwa-lacinska}", consumes="application/json", produces="application/json")
+    public ResponseEntity<RoslinaResponse> updateRoslina(@PathVariable("nazwa-lacinska") String nazwaLacinska,
+            @Valid @RequestBody RoslinaRequest request) {
+        RoslinaResponse roslina = roslinaService.update(nazwaLacinska, request);
+        return ResponseEntity.status(HttpStatus.OK).body(roslina);
+    }
+
+    @PutMapping(value = "/{nazwa-lacinska}/obraz", consumes = "multipart/form-data", produces="application/json")
+    public ResponseEntity<RoslinaResponse> updateRoslinaObraz(
+            @PathVariable("nazwa-lacinska") String nazwaLacinska,
+            @Parameter() @RequestPart("file") MultipartFile file) {
+        RoslinaResponse roslina = roslinaService.uploadRoslinaObraz(nazwaLacinska, file);
+        return ResponseEntity.status(HttpStatus.OK).body(roslina);
     }
     
     
-    @DeleteMapping("/{nazwaLacinska}")
-    public ResponseEntity<String> deleteRoslina(@PathVariable String nazwaLacinska) {
-        Optional<Roslina> roslina = roslinaService.findByNazwaLacinska(nazwaLacinska);
+    @DeleteMapping("/{nazwa-lacinska}")
+    public ResponseEntity<String> deleteRoslina(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
+        Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska.toLowerCase());
 
         if (roslina.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nie znaleziono rośliny o nazwie łacińskiej - " + nazwaLacinska);
         }
 
-        roslinaService.deleteByNazwaLacinska(nazwaLacinska);
+        roslinaService.deleteByNazwaLacinska(nazwaLacinska.toLowerCase());
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usunięto rośline o nazwie łacińskiej - " + nazwaLacinska);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

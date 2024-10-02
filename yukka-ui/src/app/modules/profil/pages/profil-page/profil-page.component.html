@@ -1,0 +1,113 @@
+<section class="mx-1">
+  <div class="container p-2" style="background: var(--bs-secondary);border-radius: 5px;max-width: 800px;">
+    <div class="row gx-5 gy-3 d-flex justify-content-center align-items-center py-3">
+      <div class="gap-1 col-auto d-flex flex-column avatar-info">
+        <img [src]="getAvatar()" class="rounded-circle mb-2 border border-3 border-success-subtle mr-3" width="250" alt="">
+        <ng-container *ngIf="isCurrentUser() else wyslijWiadomosc">
+          <a class="btn btn-primary btn-custom" role="button">Edytuj profil</a>
+        </ng-container>
+
+        <ng-template #wyslijWiadomosc>
+          <ng-container *ngIf="isZaproszony() else wyslijZaproszenie">
+            <a (click)="goToRozmowa()" class="btn btn-primary btn-custom" role="button">Wyślij wiadomość</a>
+          </ng-container>
+          <ng-template #wyslijZaproszenie>
+            <a *ngIf="!zaproszenieWyslane; else zaproszenieWyslaneText" (click)="zaprosDoRozmowaPrywatna()" class="btn btn-primary btn-custom" role="button">Wyślij zaproszenie</a>
+            <ng-template #zaproszenieWyslaneText>
+              <a class="btn btn-secondary btn-custom" role="button">Zaproszenie Wysłane!</a>
+            </ng-template>
+          </ng-template>
+        </ng-template>
+
+
+
+    </div>
+      <div class="col-auto col-md-7">
+          <h1 id="username-heading">{{ uzyt.nazwa }}</h1>
+          <ul class="list-unstyled fs-5 list-custom">
+              <li id="list-username">Imię:&nbsp;&nbsp;<span class="text-break">AAAAAAAAAAAA</span></li>
+              <li id="list-other-city">Miasto:&nbsp;&nbsp;<span class="text-break">AAAAAAAAAAAA</span></li>
+              <li id="list-other-home">Miejsce zamieszkania:&nbsp;&nbsp;<span class="text-break">AAAAAAAAAAAA&nbsp;&nbsp;</span></li>
+          </ul>
+      </div>
+    </div>
+    <div class="row gx-2 gy-2 justify-content-center align-items-center">
+      <div class="col mx-2">
+          <a class="btn btn-outline-primary active btn-outline-custom" role="button" href="profil.html">Profil</a>
+      </div>
+      <div class="col">
+          <a class="btn btn-outline-primary btn-outline-custom" role="button">Ogród</a>
+      </div>
+      <div class="col">
+          <a class="btn btn-outline-primary btn-outline-custom" role="button">Posty</a>
+      </div>
+      <div class="col">
+          <a class="btn btn-outline-primary btn-outline-custom" role="button">Zdjęcia</a>
+      </div>
+      <div class="col">
+          <a (click)="goToRozmowy()" class="btn btn-outline-primary btn-outline-custom" role="button">Rozmowy prywatne</a>
+      </div>
+  </div>
+
+    <div class="row gy-4 row-cols-2 row-cols-md-4 statystyki">
+      <div class="col">
+          <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon lg">
+              <i class="fas fa-wrench"></i>
+          </div>
+          <div class="px-3">
+              <h2 class="fw-bold mb-0">123+</h2>
+              <p class="mb-0">Własnych roślin</p>
+          </div>
+      </div>
+      <div class="col">
+          <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon lg">
+              <i class="fas fa-comment-alt"></i>
+          </div>
+          <div class="px-3">
+              <h2 class="fw-bold mb-0">45+</h2>
+              <p class="mb-0">Komentarzy w ogrodzie</p>
+          </div>
+      </div>
+      <div class="col">
+          <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon lg">
+              <i class="fas fa-mailbox"></i>
+          </div>
+          <div class="px-3">
+              <h2 class="fw-bold mb-0">{{ postyCount }}</h2>
+              <p class="mb-0">Postów</p>
+          </div>
+      </div>
+      <div class="col">
+          <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon lg">
+              <i class="fas fa-thumbs-up"></i>
+          </div>
+          <div class="px-3">
+              <h2 class="fw-bold mb-0">{{ oceny }}</h2>
+              <p class="mb-0">Łącznych polubień</p>
+          </div>
+      </div>
+    </div>
+
+
+    <div class="row p-3">
+      <div class="col">
+          <h2 class="display-6 border-ridge">O mnie:</h2>
+          <span class="fs-6">Jakiś opis</span>
+      </div>
+    </div>
+    <div class="row p-3">
+        <div class="col">
+            <h2 class="display-6 border-ridge">Galeria roślin:</h2>
+        </div>
+    </div>
+    <div class="row gx-2 gy-2 row-cols-1 row-cols-md-2 row-cols-xl-2 photos" data-bss-baguettebox="">
+        <div class="col item"><a href="..."><img class="img-fluid" src="..."></a></div>
+        <div class="col item"><a href="..."><img class="img-fluid" src="..."></a></div>
+        <div class="col item"><a href="..."><img class="img-fluid" src="..."></a></div>
+    </div>
+
+    <div class="row justify-content-center align-items-center p-3">
+        <div class="col d-flex justify-content-center"><button class="btn btn-primary" id="btn-zobacz-zdjecia" type="button">Zobacz więcej zdjęć</button></div>
+    </div>
+  </div>
+</section>

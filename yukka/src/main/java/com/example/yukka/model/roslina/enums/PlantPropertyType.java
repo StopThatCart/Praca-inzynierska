@@ -15,7 +15,6 @@ public enum PlantPropertyType {
     Gleba,
     Walor,
     Zastosowanie,
-    Nagroda,
     Kwiat,
     Okres
 }

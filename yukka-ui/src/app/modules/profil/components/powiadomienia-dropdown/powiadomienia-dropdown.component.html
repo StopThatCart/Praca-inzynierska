@@ -1,0 +1,58 @@
+<div class="powiadomienia"
+
+>
+  <button type="button nav-item" class="btn position-relative me-2"
+  id="notifications-dropdown"
+  data-bs-toggle="dropdown" data-bs-auto-close="outside"
+  aria-haspopup="true" aria-expanded="false"
+  (click)="toggleDropdown()"
+  >
+    <i class="fa-solid fa-bell"></i>
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      {{ unreadCount }}
+      <span class="visually-hidden">nieprzeczytanych powiadomień</span>
+    </span>
+  </button>
+
+
+  <div class="dropdown-menu notification-dropdown-menu bg-secondary" aria-labelledby="notifications-dropdown"
+  infiniteScroll
+  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="500"
+  [scrollWindow]="false"
+  (scrolled)="onScroll()"
+    *ngIf="powResponse"
+  >
+    <div class="justify-content-between align-items-center hstack">
+      <h5 class="text-center ms-2">Powiadomienia</h5>
+      <button (click)="goToPowiadomieniaPage()" class="btn btn-primary me-1" style="background: var(--bs-primary);border-color: var(--bs-primary);">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </button>
+    </div>
+
+    <div class="search-results"
+    >
+      <!-- -->
+      <app-powiadomienie-card
+      *ngFor="let pow of powResponse?.content"
+      [pow]="pow"
+      [isOnDropdown]="true"
+      (powiadomienieUsuniete)="usunPowiadomienie($event)"
+      (powiadomieniePrzeczytane)="updateUnreadCount()">
+      </app-powiadomienie-card>
+    </div>
+
+    <div *ngIf="!powResponse?.content?.length" class="text-center text-white-50 mt-3 mb-3">
+      Brak powiadomień
+    </div>
+
+
+      <div class="d-flex justify-content-center" *ngIf="isLoading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+  </div>
+
+</div>

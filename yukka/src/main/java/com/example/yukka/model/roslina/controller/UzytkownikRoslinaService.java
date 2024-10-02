@@ -1,11 +1,9 @@
 package com.example.yukka.model.roslina.controller;
 
-import java.nio.file.FileStore;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +17,10 @@ import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
-import com.example.yukka.model.roslina.RoslinaRequest;
-import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.UzytkownikRoslina;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
 import com.example.yukka.model.roslina.UzytkownikRoslinaResponse;
 import com.example.yukka.model.social.CommonMapperService;
-import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
@@ -75,7 +70,7 @@ public class UzytkownikRoslinaService {
 
         Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
-            System.out.println("\n\n\nBITCH IS PRESENT\n\n\n");
+            System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
         }
         
@@ -88,7 +83,7 @@ public class UzytkownikRoslinaService {
             request.getNazwa(), createRoslinaId(),
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosci());
+            request.getWlasciwosciAsMap());
 
     }
 
@@ -98,7 +93,7 @@ public class UzytkownikRoslinaService {
 
         Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
-            System.out.println("\n\n\nBITCH IS PRESENT\n\n\n");
+            System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
         }
         
@@ -111,7 +106,7 @@ public class UzytkownikRoslinaService {
             request.getNazwa(), request.getRoslinaId(),
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosci());
+            request.getWlasciwosciAsMap());
 
     }
 
@@ -119,11 +114,11 @@ public class UzytkownikRoslinaService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
-            System.out.println("\n\n\nBITCH IS PRESENT\n\n\n");
+            System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
         }
         
-        String leObraz = fileStoreService.saveRoslina(file, request.getRoslinaId(), uzyt.getUzytId());
+        String leObraz = fileStoreService.saveUzytkownikRoslinaObraz(file, request.getRoslinaId(), uzyt.getUzytId());
         request.setObraz(leObraz);
         if(request.areWlasciwosciEmpty()) {
             UzytkownikRoslina pl = roslinaMapper.toUzytkownikRoslina(request);
@@ -135,7 +130,7 @@ public class UzytkownikRoslinaService {
             request.getNazwa(), createRoslinaId(),
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosci());
+            request.getWlasciwosciAsMap());
 
         return ros;
     }
@@ -154,7 +149,7 @@ public class UzytkownikRoslinaService {
             request.getNazwa(), request.getRoslinaId(),
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosci());
+            request.getWlasciwosciAsMap());
     }
 
 

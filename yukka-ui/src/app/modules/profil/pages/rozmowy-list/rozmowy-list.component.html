@@ -1,0 +1,49 @@
+<section class="mx-1" style="--bs-body-bg: rgba(255,255,255,0);">
+  <div class="container" style="max-width: 800px;">
+    <div class="row gx-3 gy-3 justify-content-center align-items-start">
+
+      <div class="col-lg-3 d-flex justify-content-sm-center flex-column">
+        <app-edycja-nav></app-edycja-nav>
+      </div>
+
+      <div class="col-auto col-lg-8">
+        <div class="card mb-5" style="background: var(--bs-secondary);">
+          <div class="card-body">
+            <h3 class="text-center mb-4">Rozmowy prywatne</h3>
+            <div
+            infiniteScroll
+            [infiniteScrollDistance]="2"
+            [infiniteScrollThrottle]="500"
+            (scrolled)="onScroll()"
+            [scrollWindow]="false"
+            *ngIf="rozResponse"
+            >
+
+              <div class="search-results">
+                <app-rozmowa-card
+                  *ngFor="let rozmowa of rozResponse?.content"
+                  [rozmowa]="rozmowa"
+                  [isBlokowany]="isBlokowany(rozmowa.uzytkownicy)"
+                  [isBlokujacy]="isBlokujacy(rozmowa.uzytkownicy)"
+                  (onReject)="handleReject($event)">
+                </app-rozmowa-card>
+              </div>
+
+              <div *ngIf="!rozResponse?.content?.length" class="text-center text-white-50 mt-3 mb-3">
+                Brak rozmów
+              </div>
+
+
+              <div class="d-flex justify-content-center" *ngIf="isLoading">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

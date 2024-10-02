@@ -1,0 +1,69 @@
+<div class="col-lg-3 d-flex justify-content-sm-center flex-column">
+  <app-edycja-nav></app-edycja-nav>
+</div>
+
+<div class="col-auto col-lg-8">
+  <div class="card mb-5" style="background: var(--bs-secondary);">
+      <div class="card-body p-sm-5">
+          <h3 class="text-center mb-4">Ustawienia konta</h3>
+          <form (ngSubmit)="updatePowiadomienia()">
+              <div class="mb-3">
+                  <h4>Profil</h4>
+                  <div class="form-check">
+                    <input [(ngModel)]="ustawienia.statystykiProfilu" class="form-check-input" type="checkbox" name="ukryj-statystyki">
+                    <label class="form-check-label">Pokaż statystyki profilu</label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="ustawienia.galeriaPokaz" class="form-check-input" type="checkbox"  name="ogladanie-galeria">
+                    <label class="form-check-label">Pozwól użytkownikom oglądać moją galerię</label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="ustawienia.galeriaOcenaKomentarze" class="form-check-input" type="checkbox" name="galeria-oceny-komentarze">
+                    <label class="form-check-label">Pozwól użytkownikom oceniać i komentować moją galerię</label>
+                  </div>
+              </div>
+              <div class="mb-3">
+                  <h4>Ogród</h4>
+                  <div class="form-check">
+                    <input  [(ngModel)]="ustawienia.ogrodPokaz" class="form-check-input" type="checkbox" name="ogladanie-ogrod">
+                    <label class="form-check-label">Pozwól użytkownikom oglądać mój ogród</label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="ustawienia.ogrodOcenaKomentarze" class="form-check-input" type="checkbox" name="ogrod-ocena-komentarze">
+                    <label class="form-check-label">Pozwól użytkonikom oceniać i komentować mój ogród</label>
+                  </div>
+              </div>
+              <div class="mb-3">
+                  <h4>Powiadomienia</h4>
+                  <div class="form-check">
+                    <input [(ngModel)]="ustawienia.powiadomieniaKomentarzeOdpowiedz" class="form-check-input" type="checkbox" name="powiadomienie-komentarz-odpowiedz">
+                    <label class="form-check-label">Powiadamiaj mnie, kiedy ktoś odpowie na mój komentarz</label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="ustawienia.powiadomieniaKomentarzeOgrod" class="form-check-input" type="checkbox" name="powiadomienia-ogrod-komentarz">
+                    <label class="form-check-label">Powiadamiaj mnie, kiedy ktoś skomentuje mój ogród</label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="ustawienia.powiadomieniaKomentarzeGaleria" class="form-check-input" type="checkbox" name="powiadomienia-galeria-komentarz">
+                    <label class="form-check-label">Powiadamiaj mnie, kiedy ktoś skomentuje moją galerię</label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="ustawienia.powiadomieniaOgrodPodlewanie" class="form-check-input" type="checkbox" name="powiadomienia-ogrod-wilgotnosc">
+                    <label class="form-check-label">Powiadamiaj mnie, kiedy jedna lub więcej z mych roślin powinna zostać podlana</label>
+                  </div>
+                  <div class="form-check">
+                    <input  [(ngModel)]="ustawienia.powiadomieniaOgrodKwitnienie" class="form-check-input" type="checkbox" name="powiadomienia-ogrod-okres-kwitnienia">
+                    <label class="form-check-label">Powiadamiaj mnie, kiedy dla jednej lub więcej z moich roślin nadchodzi pora kwitnienia</label>
+                  </div>
+                  <div class="form-check">
+                    <input [(ngModel)]="ustawienia.powiadomieniaOgrodOwocowanie" class="form-check-input" type="checkbox" name="powiadomienia-ogrod-komentarz">
+                    <label class="form-check-label">Powiadamiaj mnie, kiedy dla jednej lub więcej z moich roślin nadchodzi pora owocowania</label>
+                  </div>
+              </div>
+              <div>
+                <button class="btn btn-primary d-block w-100" type="submit">Zapisz zmiany</button>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>

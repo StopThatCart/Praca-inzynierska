@@ -10,7 +10,6 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.UzytkownikRoslina;
 
 public interface UzytkownikRoslinaRepository  extends Neo4jRepository<UzytkownikRoslina, Long> {
@@ -67,7 +66,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
 
         WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
-        WITH p, relat, [ relat.labels, 'UzytkownikWlasciwosc', 'Wlasciwosc' ] AS labels
+        WITH p, relat, [ relat.etykieta, 'UzytkownikWlasciwosc', 'Wlasciwosc' ] AS labels
         CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
         WITH p, w, relat
         CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
@@ -99,7 +98,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
 
            WITH p, newRelatLump AS relatLump
            UNWIND relatLump AS relat
-           WITH p, relat, [ relat.labels, 'UzytkownikWlasciwosc', 'Wlasciwosc' ] AS labels
+           WITH p, relat, [ relat.etykieta, 'UzytkownikWlasciwosc', 'Wlasciwosc' ] AS labels
            CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
            WITH p, w, relat
            CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel

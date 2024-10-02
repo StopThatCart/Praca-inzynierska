@@ -61,7 +61,7 @@ public class FileUtils {
     }
 
     public byte[] readKomentarzObrazFile(String fileUrl) {
-        System.out.println("Komentarz: " + fileUrl);
+        //System.out.println("Komentarz: " + fileUrl);
         return readPostObrazFile(fileUrl);
     }
 
@@ -164,7 +164,9 @@ public class FileUtils {
         if (StringUtils.isBlank(fileUrl)) {
             return false;
         }
-        if (fileUrl.equals(defaultAvatarObrazName) || fileUrl.equals(defaultRoslinaObrazName) || fileUrl.equals(powiadomieniaAvatarObrazName)) {
+        if (fileUrl.equals(defaultAvatarObrazName) 
+            || fileUrl.equals(defaultRoslinaObrazName) 
+            || fileUrl.equals(powiadomieniaAvatarObrazName)) {
             System.out.println("Nie można usunąć domyślnego obrazu");
             return false;
         }

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
@@ -30,11 +31,13 @@ import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
+import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
     @Value("${post.add.cooldown}")
     private Integer postAddCD;
@@ -42,23 +45,32 @@ public class PostService {
     private final PostRepository postRepository;
     private final KomentarzRepository komentarzRepository;
     private final UzytkownikRepository uzytkownikRepository;
+    private final UzytkownikService uzytkownikService;
     private final FileStoreService fileStoreService;
     private final FileUtils fileUtils;
     private final PostMapper postMapper;
 
+    @Transactional(readOnly = true)
     public PostResponse findByPostId(String postId) {
+        Post post = postRepository.findPostByPostIdButWithPath(postId).orElse(null);
+        if(post == null) {
+            throw new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId);
+        }
+
         return postRepository.findPostByPostIdButWithPath(postId)
                 .map(postMapper::toPostResponse)
                 .orElseThrow();
     }
 
-    public PageResponse<PostResponse> findAllPosts(int page, int size) {
+    @Transactional(readOnly = true)
+    public PageResponse<PostResponse> findAllPosts(int page, int size, String szukaj) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
-        Page<Post> posts = postRepository.findAllPosts(pageable);
+        Page<Post> posts = postRepository.findAllPosts(szukaj, pageable);
 
         return postMapper.postResponsetoPageResponse(posts);
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<PostResponse> findAllPostyByConnectedUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
@@ -66,9 +78,10 @@ public class PostService {
         return postMapper.postResponsetoPageResponse(posts);
     }
 
-    public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, String email, Authentication connectedUser) {
+    @Transactional(readOnly = true)
+    public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByEmail(email);
+        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
         if(targetUzyt.isEmpty()) {
             return new PageResponse<>();
         }
@@ -76,8 +89,18 @@ public class PostService {
             return new PageResponse<>();
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
-        Page<Post> posts = postRepository.findAllPostyByUzytkownik(email, pageable);
+        Page<Post> posts = postRepository.findAllPostyByUzytkownik(nazwa, pageable);
         return postMapper.postResponsetoPageResponse(posts);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Integer findAllPostyCountOfUzytkownik(String nazwa) {
+        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
+        if(targetUzyt.isEmpty()) {
+            return 0;
+        }
+        return postRepository.findAllPostyCountOfUzytkownik(nazwa);
     }
 
 
@@ -86,11 +109,20 @@ public class PostService {
 
         Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastPost(newestPost);
+        
+        return save(request, uzyt);
+    }
+
+    public Post save(PostRequest request, Uzytkownik connectedUser) {
+        Uzytkownik uzyt = connectedUser;
 
         Post post = postMapper.toPost(request);
-        post.setPostId(createPostId());
+        if(post.getPostId() == null) {
+            post.setPostId(createPostId());
+        }
         
-        return postRepository.addPost(uzyt.getEmail(), post).get();
+        
+        return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
     }
 
     public Post save(PostRequest request, MultipartFile file, Authentication connectedUser) throws FileUploadException {
@@ -99,23 +131,11 @@ public class PostService {
         Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastPost(newestPost);
 
-        Post post = postMapper.toPost(request);
-        post.setPostId(createPostId());
-
-        String leObraz = fileStoreService.savePost(file, post.getPostId(), uzyt.getUzytId());
-        if(leObraz == null) {
-            throw new FileUploadException("Wystąpił błąd podczas wysyłania pliku");
-        }
-        post.setObraz(leObraz);
-        
-        return postRepository.addPost(uzyt.getEmail(), post).get();
+        return save(request, file, uzyt);
     }
 
     public Post save(PostRequest request, MultipartFile file, Uzytkownik connectedUser) throws FileUploadException {
         Uzytkownik uzyt = connectedUser;
-        
-        Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
-        checkTimeSinceLastPost(newestPost);
 
         Post post = postMapper.toPost(request);
         post.setPostId(createPostId());
@@ -125,24 +145,29 @@ public class PostService {
             throw new FileUploadException("Wystąpił błąd podczas wysyłania pliku");
         }
         post.setObraz(leObraz);
-
-        System.out.println("Obraz: " + leObraz);
         
-        return postRepository.addPost(uzyt.getEmail(), post).get();
+        return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
     }
 
-    public Post addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
+    public PostResponse addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
+        Post post = postRepository.findPostByPostId(request.getOcenialnyId())
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getOcenialnyId()));
+        
+        uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
 
         post =  postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
         postRepository.updateOcenyCountOfPost(post.getPostId());
-        return post;
+
+        return postMapper.toPostResponse(post);
     }
 
     public void removeOcenaFromPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(request.getOcenialnyId()).orElseThrow();
+        Post post = postRepository.findPostByPostId(request.getOcenialnyId())
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getOcenialnyId()));
+        
+        uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
 
         postRepository.removeOcenaFromPost(uzyt.getEmail(), post.getPostId());
         postRepository.updateOcenyCountOfPost(post.getPostId());
@@ -150,10 +175,24 @@ public class PostService {
 
     public void deletePost(String postId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(postId).orElseThrow();
-        if(uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
-            postRepository.deletePost(postId);
+        Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+        if(!uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
+            throw new IllegalArgumentException("Nie masz uprawnień do usunięcia tego posta");
         }
+        List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(postId);
+
+        fileUtils.deleteObraz(post.getObraz());
+        postRepository.deletePost(postId);
+
+        for (Uzytkownik u : uzytkownicyInPost) {
+            komentarzRepository.updateUzytkownikKomentarzeOcenyCount(u.getUzytId());
+        }
+
+        for (Komentarz kom : post.getKomentarze()) {
+            fileUtils.deleteObraz(kom.getObraz());
+        }
+
+        postRepository.updateOcenyCountOfPost(post.getPostId());
     }
 
     public void deletePost(String postId, Uzytkownik connectedUser) {
