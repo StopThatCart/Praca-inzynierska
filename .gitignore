@@ -42,5 +42,7 @@ Scrapper/images/*
 #*.png
 
 ### obrazy ###
-uploads/defaults/rosliny
+uploads/defaults/rosliny/*
+!uploads/defaults/rosliny/.gitkeep 
+
 uploads/uzytkownicy
