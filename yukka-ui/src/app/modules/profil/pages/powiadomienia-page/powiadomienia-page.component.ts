@@ -17,6 +17,7 @@ import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powia
 })
 export class PowiadomieniaPageComponent implements OnInit {
   powiadomienia: PageResponsePowiadomienieResponse = {};
+  nazwa : string | undefined;
   isLoading = false;
   page = 1;
   size = 5;
@@ -35,6 +36,7 @@ export class PowiadomieniaPageComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.page = +params['page'] || 1;
+      this.nazwa = params['nazwa'];
       this.findAllPowiadomienia();
     });
 
@@ -97,9 +99,10 @@ export class PowiadomieniaPageComponent implements OnInit {
 
   goToPage(page: number) {
     console.log('goToPage', page);
-    this.router.navigate(['/profil/powiadomienia'], {
+    this.router.navigate([`/profil/${this.nazwa}/powiadomienia`], {
       queryParams: {
-        page: page
+        page: page,
+        nazwa: this.nazwa
       }
     });
   }

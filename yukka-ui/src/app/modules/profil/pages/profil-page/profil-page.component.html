@@ -20,7 +20,7 @@
         </ng-template>
 
 
-
+        <button (click)="getPostyCount()" class="btn btn-primary btn-custom" type="button">test post count</button>
     </div>
       <div class="col-auto col-md-7">
           <h1 id="username-heading">{{ uzyt.nazwa }}</h1>
@@ -82,7 +82,7 @@
               <i class="fas fa-thumbs-up"></i>
           </div>
           <div class="px-3">
-              <h2 class="fw-bold mb-0">{{ oceny }}</h2>
+              <h2 class="fw-bold mb-0">{{ getOverallOceny() }}</h2>
               <p class="mb-0">Łącznych polubień</p>
           </div>
       </div>
@@ -101,9 +101,9 @@
         </div>
     </div>
     <div class="row gx-2 gy-2 row-cols-1 row-cols-md-2 row-cols-xl-2 photos" data-bss-baguettebox="">
-        <div class="col item"><a href="..."><img class="img-fluid" src="..."></a></div>
-        <div class="col item"><a href="..."><img class="img-fluid" src="..."></a></div>
-        <div class="col item"><a href="..."><img class="img-fluid" src="..."></a></div>
+        <div class="col item"><a href=""><img class="img-fluid" src=""></a></div>
+        <div class="col item"><a href=""><img class="img-fluid" src=""></a></div>
+        <div class="col item"><a href=""><img class="img-fluid" src=""></a></div>
     </div>
 
     <div class="row justify-content-center align-items-center p-3">

@@ -75,7 +75,7 @@ public class SecurityConfig {
                                     //"/**",
                                   "/auth/test",
                                   "/komentarze/oceny",
-                                  "/posty/oceny",
+                                 // "/posty/oceny",
                                   "/rozmowy/**",
                                   "/dzialki/**"
                     ).authenticated()
@@ -94,7 +94,7 @@ public class SecurityConfig {
 
                     .requestMatchers(HttpMethod.POST, "/posty").authenticated()
                     .requestMatchers(HttpMethod.DELETE, "/posty/{post-id}").authenticated()
-                    .requestMatchers("/posty/uzytkownik/**").authenticated()
+                   // .requestMatchers("/posty/uzytkownik/**").authenticated()
                     .requestMatchers(HttpMethod.DELETE, "/komentarze/{komentarz-id}").authenticated()
                     .requestMatchers(HttpMethod.PATCH, "/komentarze/{komentarz-id}").authenticated()
 

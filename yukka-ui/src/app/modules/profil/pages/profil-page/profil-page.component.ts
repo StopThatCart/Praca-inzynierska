@@ -44,11 +44,11 @@ export class ProfilPageComponent implements OnInit {
       if (this.nazwa) {
         this.getUzytkownikByNazwa(this.nazwa);
         this.route.snapshot.data['nazwa'] = this.nazwa;
+        this.postyCount = this.getPostyCount();
+        this.oceny = this.getOverallOceny();
       }
     });
     this.isCurrentUserBoi =   this.isCurrentUser();
-  //  this.postyCount = this.getPostyCount();
-    this.oceny = this.getOverallOceny();
   }
 
   getUzytkownikByNazwa(nazwa: string): void {
@@ -72,10 +72,16 @@ export class ProfilPageComponent implements OnInit {
   }
 
   getPostyCount(): number {
-    if(this.uzyt?.nazwa) {
-      this.postService.findAllPostyCountOfUzytkownik({ nazwa: this.uzyt.nazwa }).subscribe({
+    if(this.nazwa) {
+      this.postService.findAllPostyCountOfUzytkownik({ nazwa: this.nazwa }).subscribe({
         next: (count) => {
-          return count;
+          console.log('Posty count: ', count);
+          this.postyCount = count;
+          return this.postyCount;
+        },
+        error: (err) => {
+          console.log('Error: ', err);
+          return 0;
         }
       });
     }
@@ -83,11 +89,13 @@ export class ProfilPageComponent implements OnInit {
   }
 
   getOverallOceny(): number {
-    if(this.uzyt?.komentarzeOcenyPozytywne !== undefined && this.uzyt?.komentarzeOcenyPozytywne >= 0
-        && this.uzyt?.postyOcenyPozytywne !== undefined && this.uzyt?.postyOcenyPozytywne >= 0) {
-      return (this.uzyt.komentarzeOcenyPozytywne + this.uzyt.postyOcenyPozytywne);
+    if(!this.uzyt) {
+      this.oceny = 0;
     }
-    return 0;
+    if(this.uzyt?.komentarzeOcenyPozytywne !== undefined && this.uzyt?.postyOcenyPozytywne !== undefined) {
+      this.oceny = (this.uzyt.komentarzeOcenyPozytywne + this.uzyt.postyOcenyPozytywne);
+    }
+    return this.oceny;
   }
 
   isCurrentUser(): boolean {
