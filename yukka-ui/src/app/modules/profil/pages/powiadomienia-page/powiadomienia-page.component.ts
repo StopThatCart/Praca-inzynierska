@@ -34,14 +34,22 @@ export class PowiadomieniaPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.nazwa = params['nazwa'];
+      if (this.nazwa) {
+        this.route.snapshot.data['nazwa'] = this.nazwa;
+      }
+    });
+
     this.route.queryParams.subscribe(params => {
       this.page = +params['page'] || 1;
-      this.nazwa = params['nazwa'];
+     // this.nazwa = params['nazwa'];
       this.findAllPowiadomienia();
     });
 
     this.powiadomieniaSyncService.powiadomienieUsuniete$.subscribe((pow) => {
       if (this.powiadomienia.content) {
+        this.findAllPowiadomienia();
         this.powiadomienia.content = this.powiadomienia.content.filter((p: any) => p.id !== pow.id);
       }
     });
