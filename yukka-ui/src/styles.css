@@ -9,8 +9,23 @@
 /*@import "@fortawesome/fontawesome-free";*/
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body { height: 100%;
+
+  /* zaimportuj potem poprawnie
+  --background: #e5ffee;
+  --primary: #086030;
+  --secondary: #25c86e;
+  --accent: #19be9d;
+*/
+}
+body { margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  background-color: #e5ffee;
+  --text: #040316;
+
+
+}
 
 
 
@@ -27,3 +42,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .search-results {
   height: 100%;
 }
+
+
+
