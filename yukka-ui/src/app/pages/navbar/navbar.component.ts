@@ -71,6 +71,16 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['rosliny']);
   }
 
+  toOgrod() {
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      this.router.navigate([`ogrod/${nazwa}`]);
+    }
+    else {
+      this.router.navigate([`ogrod/test`]);
+    }
+  }
+
   toSpolecznosc() {
     this.router.navigate(['spolecznosc']);
   }
@@ -116,6 +126,8 @@ export class NavbarComponent implements OnInit {
       this.router.navigate([`profil/${nazwa}/ustawienia`]);
     }
   }
+
+
 
 
 

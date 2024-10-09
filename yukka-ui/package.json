@@ -13,7 +13,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.2.0",
-    "@angular/cdk": "^18.2.3",
+    "@angular/cdk": "^18.2.7",
     "@angular/common": "^18.2.0",
     "@angular/compiler": "^18.2.0",
     "@angular/core": "^18.2.0",
@@ -29,6 +29,7 @@
     "express": "^5.0.0",
     "jquery": "^3.7.1",
     "ng-openapi-gen": "^0.51.0",
+    "ngx-drag-scroll": "^18.0.0",
     "ngx-infinite-scroll": "^18.0.0",
     "ngx-timeago": "^3.0.0",
     "rxjs": "~7.8.0",

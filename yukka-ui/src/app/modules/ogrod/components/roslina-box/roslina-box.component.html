@@ -1,0 +1,27 @@
+
+
+
+
+<div class="example-box"
+cdkDragBoundary=".example-boundary"
+[cdkDragFreeDragPosition]="dragPosition"
+cdkDrag
+(cdkDragEnded)="onDragEnded($event)"
+(cdkDragMoved)="onDrag($event)"
+>
+  <img cdkDragHandle class="rounded-circle border border-3 border-success-subtle"
+  width="150" height="150" alt="obraz.png">
+
+  <div class="overflow-visible text-nowrap position-absolute ">
+    <p>X: {{ dragPosition.x }}, Y: {{ dragPosition.y }}</p>
+  </div>
+
+
+    <div class="overflow-text" cdkDrag>
+      Jakaś nazwa fajna dsadsas czy coś aasdasdsad aaa   aaa
+    </div>
+
+
+</div>
+
+

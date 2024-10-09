@@ -1,0 +1,30 @@
+.example-boundary {
+  width: 2200px;
+
+  min-height: 600px;
+  max-height: 700px;
+  max-width: 100%;
+  border: dotted #ccc 2px;
+  background-color: purple;
+  position: relative;
+
+  overflow: scroll;
+}
+
+
+
+.example-boundary::before {
+  content: '';
+  display: block;
+  height: 1000px; /* Minimalna wysokość */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none; /* Zapobiega interakcji z pseudo-elementem */
+}
+
+.inner-boundary {
+  width: 2200px;
+  height: 100%;
+}
