@@ -1,6 +1,8 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import {  } from 'rxjs';
+
 @Component({
   selector: 'app-dzialka-page',
   standalone: true,
@@ -10,7 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class DzialkaPageComponent implements OnInit  {
   @ViewChild('canvas', { static: true }) canvasElement!: ElementRef;
-  tiles: { color: string }[] = [];
+  tiles: { image: string }[] = [];
 
 
   ngOnInit() {
@@ -18,9 +20,9 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   generateTiles() {
-    const colors = ['#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F6'];
+    const images = ['assets/tiles/grass.png', 'assets/tiles/dirt.png'];
     for (let i = 0; i < 400; i++) {
-      this.tiles.push({ color: colors[i % colors.length] });
+      this.tiles.push({ image: images[i % images.length] });
     }
   }
 

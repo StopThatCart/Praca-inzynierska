@@ -5,8 +5,9 @@
     <div class="">
         <h3 class="text-uppercase text-primary">Jakaś nazwa działki </h3>
 
+        <img src="../../../../../assets/tiles/dirt.png" class="img-fluid" alt="Responsive image">
         <div class="canvas" #canvas>
-          <div class="tile" *ngFor="let tile of tiles" [ngStyle]="{'background-color': tile.color}"></div>
+          <div class="tile" *ngFor="let tile of tiles" [ngStyle]="{'background-image': 'url(' + tile.image + ')'}"></div>
         </div>
 
     </div>
