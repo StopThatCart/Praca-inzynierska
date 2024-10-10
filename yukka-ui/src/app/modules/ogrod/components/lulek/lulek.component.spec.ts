@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RoslinaBoxComponent } from './roslina-box.component';
+import { LulekComponent } from './lulek.component';
 
-describe('RoslinaBoxComponent', () => {
-  let component: RoslinaBoxComponent;
-  let fixture: ComponentFixture<RoslinaBoxComponent>;
+describe('LulekComponent', () => {
+  let component: LulekComponent;
+  let fixture: ComponentFixture<LulekComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RoslinaBoxComponent]
+      imports: [LulekComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RoslinaBoxComponent);
+    fixture = TestBed.createComponent(LulekComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

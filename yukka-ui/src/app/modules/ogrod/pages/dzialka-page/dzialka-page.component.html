@@ -20,7 +20,14 @@
             [ngStyle]="{'background-image': 'url(' + tile.image + ')'}"
             [class.clickable]="tile.clickable"
             (click)="tile.clickable ? onTileClick(tile) : null"
-            ></div>
+            >
+            <app-lulek *ngIf="tile.showRoslinaBox"
+            [roslina]="tile.roslina ? tile.roslina : {}"
+            >
+
+            </app-lulek>
+
+          </div>
           </div>
         </div>
 
