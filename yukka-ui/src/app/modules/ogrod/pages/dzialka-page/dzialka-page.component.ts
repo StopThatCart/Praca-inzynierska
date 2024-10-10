@@ -12,18 +12,52 @@ import {  } from 'rxjs';
 })
 export class DzialkaPageComponent implements OnInit  {
   @ViewChild('canvas', { static: true }) canvasElement!: ElementRef;
-  tiles: { image: string }[] = [];
+  tiles: {
+    image: string,
+    x: number,
+    y: number,
+    clickable: boolean
+  }[] = [];
+
+  scale : number = 1;
 
 
   ngOnInit() {
-    this.generateTiles();
+    this.generatePlaceholderTiles();
   }
 
-  generateTiles() {
-    const images = ['assets/tiles/grass.png', 'assets/tiles/dirt.png'];
-    for (let i = 0; i < 400; i++) {
-      this.tiles.push({ image: images[i % images.length] });
+  // Uwaga, to są placeholdery. W prawidłowej implementacji obrazy są już załadowane base64 oprócz dirt i grass
+  // Samo dirt i grass zostaną przeniesione do backendu czy coś
+  generatePlaceholderTiles() {
+    const images = {
+      grass: 'assets/tiles/grass.png',
+      dirt: 'assets/tiles/dirt.png'
+    };
+
+    for (let y = 0; y < 20; y++) {
+      for (let x = 0; x < 20; x++) {
+        const isEdge = x < 2 || x >= 18 || y < 2 || y >= 18;
+        this.tiles.push({
+          image: isEdge ? images.grass : images.dirt,
+          x,
+          y,
+          clickable: !isEdge
+        });
+      }
     }
   }
+
+  onTileClick(tile: { image: string, x: number, y: number, clickable: boolean }) {
+    console.log(`Koordynaty kafelka: (${tile.x}, ${tile.y})`);
+    tile.image = 'assets/tiles/water.png';
+  }
+
+  onZoomChange(event: Event) {
+    const zoomLevel = (event.target as HTMLInputElement).value;
+    this.scale = Number(zoomLevel);
+    this.canvasElement.nativeElement.style.transform = `scale(${this.scale})`;
+  }
+
+
 
 }

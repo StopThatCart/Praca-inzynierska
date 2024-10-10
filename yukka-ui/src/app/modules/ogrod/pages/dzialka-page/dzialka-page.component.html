@@ -6,9 +6,24 @@
         <h3 class="text-uppercase text-primary">Jakaś nazwa działki </h3>
 
         <img src="assets/tiles/dirt.png" class="img-fluid" alt="Responsive image">
-        <div class="canvas" #canvas>
-          <div class="tile" *ngFor="let tile of tiles" [ngStyle]="{'background-image': 'url(' + tile.image + ')'}"></div>
+
+        <div>
+          <h3 class="text-primary">Dawaj zooma kurde</h3>
+          <input id="zoomControl" min="0.5" max="2" value="1" step="0.1" (input)="onZoomChange($event)" type="range" />
+          <p class="text-primary">Zoomen machen: {{ scale }}</p>
         </div>
+
+
+        <div class="canvas-container">
+          <div class="canvas" #canvas>
+            <div class="tile" *ngFor="let tile of tiles"
+            [ngStyle]="{'background-image': 'url(' + tile.image + ')'}"
+            [class.clickable]="tile.clickable"
+            (click)="tile.clickable ? onTileClick(tile) : null"
+            ></div>
+          </div>
+        </div>
+
 
     </div>
   </div>
