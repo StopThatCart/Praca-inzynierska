@@ -4,25 +4,11 @@
   <div class="row mb-5 pt-1">
     <div class="">
         <h3 class="text-uppercase text-primary">Jakaś nazwa działki </h3>
-        <div class="example-boundary" #boundary>
-          <div class="inner-boundary"></div>
-          <app-roslina-box
-          [dragPosition]="{x: 0, y: 0}"
-          ></app-roslina-box>
-          <app-roslina-box
-          [dragPosition]="{x: 100, y: 200}"
-          ></app-roslina-box>
-          <app-roslina-box
-          [dragPosition]="{x: 800, y: 30}"
-          ></app-roslina-box>
-          <app-roslina-box
-          [dragPosition]="{x: 1200, y: 90}"
-          ></app-roslina-box>
 
-          <app-roslina-box
-          [dragPosition]="{x: 80, y: 800}"
-          ></app-roslina-box>
+        <div class="canvas" #canvas>
+          <div class="tile" *ngFor="let tile of tiles" [ngStyle]="{'background-color': tile.color}"></div>
         </div>
+
     </div>
   </div>
 </div>
