@@ -34,7 +34,7 @@ public class Dzialka {
     @Property("numer")
     private int numer;
 
-    
+
 
   //  @Property("pola")
   //  private int[][] pola;
@@ -68,6 +68,7 @@ public class Dzialka {
         
         return "Dzialka{" +
                 "id=" + id +
+                ", nazwa='" + nazwa + '\'' +
                 ", numer=" + numer +
                 ", ogrod=" + ogrod.getNazwa() +
                 ", zasadzoneRosliny=" + zasadzoneRosliny.size() +

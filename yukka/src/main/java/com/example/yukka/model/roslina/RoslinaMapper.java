@@ -59,6 +59,7 @@ public class RoslinaMapper {
 
         return DzialkaResponse.builder()
             .id(dzialka.getId())
+            .nazwa(dzialka.getNazwa())
             .numer(dzialka.getNumer())
             .wlascicielNazwa(dzialka.getOgrod() != null ? nazwa : null)
             .zasadzoneRosliny(dzialka.getZasadzoneRosliny().stream()
@@ -84,6 +85,8 @@ public class RoslinaMapper {
             .roslina(roslinaToRoslinaResponseWithWlasciwosci(zasadzonaNaReverse.getRoslina()))
             .x(zasadzonaNaReverse.getX())
             .y(zasadzonaNaReverse.getY())
+            .tabX(zasadzonaNaReverse.getTabx())
+            .tabY(zasadzonaNaReverse.getTaby())
             .obraz(obraz)
             .build();
     }

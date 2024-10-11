@@ -15,6 +15,7 @@ import lombok.Setter;
 @Builder
 public class DzialkaResponse {
     private Long id;
+    private String nazwa;
     private int numer;
     private String wlascicielNazwa;
     private List<ZasadzonaRoslinaResponse> zasadzoneRosliny;
