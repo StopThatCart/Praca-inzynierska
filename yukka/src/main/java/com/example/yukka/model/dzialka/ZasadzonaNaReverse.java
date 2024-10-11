@@ -33,6 +33,13 @@ public class ZasadzonaNaReverse {
 
     @Property("obraz")
     private String obraz;
+
+    @Property("tabX")
+    private int[] tabx;
+
+    @Property("tabY")
+    private int[] taby;
+
     
     @TargetNode
     private Roslina roslina;

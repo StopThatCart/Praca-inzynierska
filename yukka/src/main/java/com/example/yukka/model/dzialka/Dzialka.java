@@ -28,8 +28,13 @@ public class Dzialka {
     @Id @GeneratedValue
     private Long id;
 
+    @Property("nazwa")
+    private String nazwa;
+
     @Property("numer")
     private int numer;
+
+    
 
   //  @Property("pola")
   //  private int[][] pola;

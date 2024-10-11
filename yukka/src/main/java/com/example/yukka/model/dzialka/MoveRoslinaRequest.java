@@ -2,6 +2,7 @@ package com.example.yukka.model.dzialka;
 
 import com.example.yukka.validations.ValidRoslinaIdAlboNazwaLacinska;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -48,5 +49,22 @@ public class MoveRoslinaRequest {
     @Min(value = 1, message = "Pozycja y musi być > 0")
     @Max(value = 20, message = "Pozycja y musi być <= 20")
     private int yNowy;
+
+
+    @NotEmpty(message = "Kafelki x są wymagane")
+    private int[] tabX;
+
+    @NotEmpty(message = "Kafelki y są wymagane")
+    private int[] tabY;
+
+
+    @AssertTrue(message = "Ilość kafelków x i y musi być z przedziału [1, 20]")
+    private boolean tabsWithinRange() {
+        boolean xLen = this.tabX.length >= 1 && this.tabX.length <= 20;
+        boolean yLen = this.tabY.length >= 1 && this.tabY.length <= 20;
+
+        return xLen && yLen && this.tabX.length == this.tabY.length;
+    }
+
 
 }

@@ -11,6 +11,7 @@ import com.example.yukka.model.dzialka.Dzialka;
 
 public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
 
+
     @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
                 (:Ogrod)-[:MA_DZIALKE]->
@@ -61,7 +62,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         DELETE existing
 
         WITH d, roslina
-        CREATE (d)<-[r:ZASADZONA_NA {x: $x, y: $y, obraz: $obraz}]-(roslina)
+        CREATE (d)<-[r:ZASADZONA_NA {x: $x, y: $y, tabX: $tabX, tabY: $tabY, obraz: $obraz}]-(roslina)
 
         WITH d
         MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
@@ -71,8 +72,30 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
     Dzialka saveRoslinaToDzialka(@Param("email") String email,
         @Param("numerDzialki") int numerDzialki, 
         @Param("x") int x, @Param("y") int y, 
+        @Param("tabX") int[] tabX, @Param("tabY") int[] tabY,
         @Param("obraz") String obraz,
         @Param("nazwaLacinska") String nazwaLacinska);
+
+// TODO: Zmień wszystko aby działało z koordynatami nowymi
+        @Query("""
+                MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
+                        (:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})
+                        
+                MATCH (d)<-[existing:ZASADZONA_NA {x: $xStary, y: $yStary}]-(existingRoslina)
+                SET existing.x = $xNowy, existing.y = $yNowy,
+                    existing.tabX = $tabX, existing.tabY = $tabY        
+
+                WITH d
+                MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
+                
+                RETURN d, collect(nodes(path)), collect(relationships(path))
+                """)
+        Dzialka changeRoslinaPozycjaInDzialka(@Param("email") String email, 
+        @Param("numerDzialki") int numerDzialki,
+        @Param("xStary") int xStary, @Param("yStary") int yStary,
+        @Param("nowyX") int nowyX, @Param("nowyY") int nowyY,
+        @Param("tabX") int[] tabX, @Param("tabY") int[] tabY);
+
 
 
     @Query("""
@@ -114,6 +137,10 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Param("numerDzialkiNowy") int numerDzialkiNowy, 
         @Param("xStary") int xStary, @Param("yStary") int yStary, 
         @Param("xNowy") int xNowy, @Param("yNowy") int getYNowy);
+
+
+
+
 
 
     @Query("""

@@ -18,6 +18,10 @@ public class ZasadzonaRoslinaResponse {
     private RoslinaResponse roslina;
     private int x;
     private int y;
+
+    private int[] tabX;
+    private int[] tabY;
+
     private byte[] obraz;
 
 
