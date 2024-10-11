@@ -8,6 +8,7 @@ import { LulekComponent } from "../../components/lulek/lulek.component";
 import { DzialkaResponse } from '../../../../services/models/dzialka-response';
 import { ActivatedRoute } from '@angular/router';
 import { DzialkaService } from '../../../../services/services';
+import { Tile } from '../../models/Tile';
 
 @Component({
   selector: 'app-dzialka-page',
@@ -19,11 +20,20 @@ import { DzialkaService } from '../../../../services/services';
 export class DzialkaPageComponent implements OnInit  {
   dzialka: DzialkaResponse = {};
   numer: number | undefined;
+  uzytNazwa: string | undefined;
 
   @ViewChild('canvas', { static: true }) canvasElement!: ElementRef;
-  tiles: { image: string, x: number, y: number, clickable: boolean, showRoslinaBox?: boolean, roslina?: RoslinaResponse }[] = [];
+  @ViewChild('slider', { static: true }) zoomEl!: ElementRef;
+  tiles: Tile[] = [];
 
   scale : number = 1;
+
+  private images = {
+    grass: 'assets/tiles/grass.png',
+    dirt: 'assets/tiles/dirt.png'
+  };
+
+  private placeholderColors = ['#FFCCCC', '#CCFFCC', '#CCCCFF'];
 
   constructor(
     private route: ActivatedRoute,
@@ -32,27 +42,30 @@ export class DzialkaPageComponent implements OnInit  {
 
 
   ngOnInit() {
+    // TODO: Dodawanie ładowania
+    this.generateInitialTiles();
+
     this.route.params.subscribe(params => {
       this.numer = Number(params['numer']);
-      if (this.numer) {
+      this.uzytNazwa = params['uzytkownik-nazwa'];
+
+      if (this.numer && this.uzytNazwa) {
         // Na razie dane są sztywne
-        this.getDzialkaByNumer(this.numer);
+        this.getDzialkaByNumer(this.numer, this.uzytNazwa);
         this.route.snapshot.data['numer'] = this.numer;
+        this.route.snapshot.data['uzytkownik-nazwa'] = this.uzytNazwa;
       }
     });
-
-
-
-    this.generatePlaceholderTiles();
   }
 
 
-  getDzialkaByNumer(numer: number): void {
+  getDzialkaByNumer(numer: number, uzytkownikNazwa: string): void {
     console.log('getDzialkaByNumer');
     this.dzialkaService.getDzialkaOfUzytkownikByNumer( { numer: 2, 'uzytkownik-nazwa': "Piotr Wiśniewski" }).subscribe({
       next: (dzialka) => {
         this.dzialka = dzialka;
         console.log(dzialka);
+        this.processRosliny(dzialka);
       },
       error: (err) => {
         console.error(err);
@@ -60,33 +73,106 @@ export class DzialkaPageComponent implements OnInit  {
     });
   }
 
+  processRosliny(dzialka: DzialkaResponse): void {
+    if (dzialka.zasadzoneRosliny) {
+      dzialka.zasadzoneRosliny.forEach(zasadzonaRoslina => {
+        if (zasadzonaRoslina.tabX && zasadzonaRoslina.tabY) {
+          this.updateTilesWithRoslina(zasadzonaRoslina);
+        }
+      });
+    }
+  }
+
+  updateTilesWithRoslina(zasadzonaRoslina: any): void {
+    zasadzonaRoslina.tabX.forEach((x: number, index: number) => {
+      const y = zasadzonaRoslina.tabY[index];
+      const tile = this.tiles.find(t => t.x === x && t.y === y);
+      if (tile) {
+        if (zasadzonaRoslina.roslina && zasadzonaRoslina.roslina.id) {
+          tile.roslinaId = zasadzonaRoslina.roslina.id;
+          tile.backgroundColor = this.placeholderColors[zasadzonaRoslina.roslina.id % this.placeholderColors.length];
+        }
+        if (tile.x == zasadzonaRoslina.x && tile.y == zasadzonaRoslina.y) {
+          tile.roslina = zasadzonaRoslina.roslina;
+          if (tile.roslina && zasadzonaRoslina.obraz) {
+            tile.roslina.obraz = zasadzonaRoslina.obraz;
+          }
+        }
+      }
+    });
+  }
+
+
+
+  generateInitialTiles(): void {
+    const tiles: Tile[] = [];
+    for (let y = 0; y < 20; y++) {
+      for (let x = 0; x < 20; x++) {
+        tiles.push({
+          image: this.images.dirt,
+          x,
+          y,
+          roslina: undefined,
+          clickable: true,
+          hovered: false
+        });
+      }
+    }
+    this.tiles = tiles;
+  }
+
 
   // Uwaga, to są placeholdery. W prawidłowej implementacji obrazy są już załadowane base64 oprócz dirt i grass
   // Samo dirt i grass zostaną przeniesione do backendu czy coś
   generatePlaceholderTiles() {
-    const images = {
-      grass: 'assets/tiles/grass.png',
-      dirt: 'assets/tiles/dirt.png'
-    };
-
+    const tiles: Tile[] = [];
     for (let y = 0; y < 20; y++) {
       for (let x = 0; x < 20; x++) {
         //const isEdge = x < 2 || x >= 18 || y < 2 || y >= 18;
         const isEveryXthTile = (x + y * 20) % 24 === 0
-        this.tiles.push({
-          image: images.dirt,
+        tiles.push({
+          image: this.images.dirt,
           x,
           y,
+          roslina: isEveryXthTile ? { nazwa: 'Jakaś roślina', obraz: 'assets/tiles/plant.png' } : undefined,
           clickable: true,
-          showRoslinaBox: isEveryXthTile,
-          roslina: isEveryXthTile ? { nazwa: 'Jakaś roślina', obraz: 'assets/tiles/plant.png' } : undefined
+          hovered: false
         });
       }
     }
+    this.tiles = tiles;
   }
 
-  onTileClick(tile: { image: string, x: number, y: number, clickable: boolean }) {
-    console.log(`Koordynaty kafelka: (${tile.x}, ${tile.y})`);
+  /*
+  Jak wywali dla tileów protokół 431 to tym można to objejść
+  */
+  /*
+  const imageBlob = this.base64ToBlob(zasadzonaRoslina.obraz ?? '', this.images.grass);
+  const imageUrl = URL.createObjectURL(imageBlob);
+  // I dla tile ustawiasz obraz taki:
+    image: imageUrl || this.images.grass,
+  */
+
+
+  base64ToBlob(base64: string, contentType: string): Blob {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: contentType });
+  }
+
+
+
+
+
+  onTileClick(tile: Tile) {
+    console.log(`Koordynaty kafelka: (${tile.x}, ${tile.y})
+      RoslinaId: ${tile.roslinaId}
+      Należy do rośliny: ${tile.roslina?.nazwa}
+      Kolorek: ${tile.backgroundColor}`);
    // tile.image = 'assets/tiles/water.png';
   }
 
@@ -94,6 +180,7 @@ export class DzialkaPageComponent implements OnInit  {
     const zoomLevel = (event.target as HTMLInputElement).value;
     this.scale = Number(zoomLevel);
     this.canvasElement.nativeElement.style.transform = `scale(${this.scale})`;
+    this.zoomEl.nativeElement.style.transform = `scale(${this.scale})`;
   }
 
 

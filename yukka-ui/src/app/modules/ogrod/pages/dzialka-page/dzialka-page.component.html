@@ -13,21 +13,31 @@
           <p class="text-primary">Zoomen machen: {{ scale }}</p>
         </div>
 
+        <div id="window">
+          <div id="slider" #slider class="zoomed">
+            <div id="obj1">1</div>
+            <div id="obj2">2</div>
+            <div id="obj3">3</div>
+            <div id="obj4">4</div>
+            <div id="obj5">5</div>
+          </div>
+        </div>
 
-        <div class="canvas-container border border-3 border-success-subtle">
+
+        <div class="canvas-container border border-3 border-success-subtle ">
           <div class="canvas" #canvas>
-            <div class="tile" *ngFor="let tile of tiles"
-            [ngStyle]="{'background-image': 'url(' + tile.image + ')'}"
+            <div class="tile " *ngFor="let tile of tiles"
+            [ngStyle]="{'background-image': 'url(' + tile.image + ')', 'background-color': tile.backgroundColor}"
             [class.clickable]="tile.clickable"
             (click)="tile.clickable ? onTileClick(tile) : null"
             >
-            <app-lulek *ngIf="tile.showRoslinaBox"
-            [roslina]="tile.roslina ? tile.roslina : {}"
-            >
 
-            </app-lulek>
+              <app-lulek *ngIf="tile.roslina"
+              [roslina]="tile.roslina ? tile.roslina : {}"
+              >
+              </app-lulek>
 
-          </div>
+            </div>
           </div>
         </div>
 
