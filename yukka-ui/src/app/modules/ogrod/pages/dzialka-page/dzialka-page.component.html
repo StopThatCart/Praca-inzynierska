@@ -9,39 +9,26 @@
 
         <div>
           <h3 class="text-primary">Dawaj zooma kurde</h3>
-          <input id="zoomControl" min="0.5" max="2" value="1" step="0.1" (input)="onZoomChange($event)" type="range" />
+          <input id="zoomControl" min="0.2" max="1.6" value="1" step="0.2" (input)="onZoomChange($event)" type="range" />
           <p class="text-primary">Zoomen machen: {{ scale }}</p>
         </div>
-
-        <div id="window">
-          <div id="slider" #slider class="zoomed">
-            <div id="obj1">1</div>
-            <div id="obj2">2</div>
-            <div id="obj3">3</div>
-            <div id="obj4">4</div>
-            <div id="obj5">5</div>
-          </div>
-        </div>
-
+        <button (click)="saveCanvasAsImage()">Zapisz jako obraz</button>
 
         <div class="canvas-container border border-3 border-success-subtle ">
           <div class="canvas" #canvas>
-            <div class="tile " *ngFor="let tile of tiles"
+            <div class="tile" *ngFor="let tile of tiles"
             [ngStyle]="{'background-image': 'url(' + tile.image + ')', 'background-color': tile.backgroundColor}"
             [class.clickable]="tile.clickable"
             (click)="tile.clickable ? onTileClick(tile) : null"
             >
-
               <app-lulek *ngIf="tile.roslina"
               [roslina]="tile.roslina ? tile.roslina : {}"
               >
               </app-lulek>
-
             </div>
           </div>
+
         </div>
-
-
     </div>
   </div>
 </div>

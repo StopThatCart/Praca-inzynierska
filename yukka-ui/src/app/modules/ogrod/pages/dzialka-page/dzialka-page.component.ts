@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import html2canvas from 'html2canvas';
 import {  } from 'rxjs';
 import { RoslinaResponse } from '../../../../services/models';
 import { PostCardComponent } from "../../../post/components/post-card/post-card.component";
@@ -24,6 +24,7 @@ export class DzialkaPageComponent implements OnInit  {
 
   @ViewChild('canvas', { static: true }) canvasElement!: ElementRef;
   @ViewChild('slider', { static: true }) zoomEl!: ElementRef;
+  @ViewChild('canvasElement', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   tiles: Tile[] = [];
 
   scale : number = 1;
@@ -91,6 +92,10 @@ export class DzialkaPageComponent implements OnInit  {
         if (zasadzonaRoslina.roslina && zasadzonaRoslina.roslina.id) {
           tile.roslinaId = zasadzonaRoslina.roslina.id;
           tile.backgroundColor = this.placeholderColors[zasadzonaRoslina.roslina.id % this.placeholderColors.length];
+          const imageBlob = this.base64ToBlob(zasadzonaRoslina.obraz ?? '', this.images.grass);
+          const imageUrl = URL.createObjectURL(imageBlob);
+          // I dla tile ustawiasz obraz taki:
+          tile.image = imageUrl || this.images.grass;
         }
         if (tile.x == zasadzonaRoslina.x && tile.y == zasadzonaRoslina.y) {
           tile.roslina = zasadzonaRoslina.roslina;
@@ -106,12 +111,13 @@ export class DzialkaPageComponent implements OnInit  {
 
   generateInitialTiles(): void {
     const tiles: Tile[] = [];
-    for (let y = 0; y < 20; y++) {
-      for (let x = 0; x < 20; x++) {
+    for (let y = 0; y < 22; y++) {
+      for (let x = 0; x < 22; x++) {
+        const isEdge = x < 2 || x >= 20 || y < 2 || y >= 20;
         tiles.push({
-          image: this.images.dirt,
-          x,
-          y,
+          image: isEdge ? this.images.grass : this.images.dirt,
+          x: isEdge ? x - 2 : x,
+          y: isEdge ? y - 2 : y,
           roslina: undefined,
           clickable: true,
           hovered: false
@@ -181,8 +187,18 @@ export class DzialkaPageComponent implements OnInit  {
     this.scale = Number(zoomLevel);
     this.canvasElement.nativeElement.style.transform = `scale(${this.scale})`;
     this.zoomEl.nativeElement.style.transform = `scale(${this.scale})`;
+    document.documentElement.style.setProperty('--scale', this.scale.toString());
   }
 
+  // Uwaga: Nie będzie działać chyba że podaż base64 dla defaultowych kafelków
+  saveCanvasAsImage(): void {
+    html2canvas(this.canvasElement.nativeElement).then(canvas => {
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'canvas-image.png';
+      link.click();
+    });
+  }
 
 
 }

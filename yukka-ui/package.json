@@ -27,6 +27,7 @@
     "@fortawesome/fontawesome-free": "^6.6.0",
     "bootstrap": "^5.3.3",
     "express": "^5.0.0",
+    "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",
     "ng-openapi-gen": "^0.51.0",
     "ngx-drag-scroll": "^18.0.0",
