@@ -6,7 +6,6 @@ import java.util.HashSet;
 
 import org.springframework.stereotype.Service;
 
-import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
@@ -29,7 +28,7 @@ public class UzytkownikRoslinaSeeder {
 
     UzytkownikRoslina roslina1;
 
-	void seedUzytkownikRosliny(Uzytkownik uzyt) {
+	void seedUzytkownikRosliny(Uzytkownik uzyt, String lolId) {
         String roslinaNazwa = "pierwsza roślina użytkownika";
         String roslinaOpis = "To jest dramat.";
         String roslinaObraz = "tilia_henryana.jpg";
@@ -61,7 +60,7 @@ public class UzytkownikRoslinaSeeder {
 
         UzytkownikRoslina lipaHenryego = UzytkownikRoslina.builder()
             //.id(12345678L)
-            .roslinaId("12345678")
+            .roslinaId(lolId)
             .nazwa(roslinaNazwa)
             .opis(roslinaOpis)
             .wysokoscMin(wysokoscMin)
@@ -88,13 +87,6 @@ public class UzytkownikRoslinaSeeder {
         UzytkownikRoslinaRequest roslinaRequest = roslinaMapper.toUzytkownikRoslinaRequest(roslina1);
 
         Roslina res = uzytkownikRoslinaService.save(roslinaRequest, uzyt);
-
-        DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
-		.numerDzialki(2).x(9).y(9)
-		.roslinaId("12345678")
-		.build();
-
-		dzialkaService.saveRoslinaToDzialka(req3, uzyt);
 
       //  System.out.println("ROSLINA1: " + roslina1);
 	}

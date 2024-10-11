@@ -98,15 +98,25 @@ public class YukkaApplication {
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
 
-	private final int MAX_POSTY = 30;
+	private final int MAX_POSTY = 5;
 	private final int MAX_KOMENTARZE = 4;
 	private final int MAX_ODPOWIEDZI_DEPTH = 2;
 	private final int MAX_ODPOWIEDZI = 2;
-	
 
+
+	String michalEmail = "michal@email.pl";
+	String piotrEmail = "piotr@email.pl";
+	String katarzynaEmail = "katarzyna@email.pl";
+
+	Uzytkownik usJan;
+	Uzytkownik usPrac;
+	Uzytkownik usPiotr;
+	Uzytkownik usKatarzyna;
+	Uzytkownik usMichal;
+
+	List<Uzytkownik> uzytkownicy;
 
 	public static void main(String[] args) {
-		
 		ApplicationContext context = SpringApplication.run(YukkaApplication.class, args);
        
 		// PythonPlantSeeder scriptRunner = context.getBean(PythonPlantSeeder.class);
@@ -125,89 +135,163 @@ public class YukkaApplication {
     public CommandLineRunner seedDatabase() {
         return args -> {
 		//	roslinaImporterService.seedRosliny();
-		//	unseed();
-        //	seed();
+			unseed();
+        	seed();
 		//roslinaSearchTest();
         };
     }
 	
-	void roslinaSearchTest() {
-		String roslinaNazwa = "a";
-		String roslinaNazwaLacinska = "";
-        String roslinaOpis = "";
-        Double wysokoscMin = 1.5;
-        Double wysokoscMax = 12.0;
-
-
-		WlasciwoscWithRelations kolorLisci = WlasciwoscWithRelations.builder()
-		.etykieta("Kolor").relacja("MA_KOLOR_LISCI").nazwa("ciemnozielone")
-		.build();
-		WlasciwoscWithRelations okresOwocowania = WlasciwoscWithRelations.builder()
-		.etykieta("Okres").relacja("MA_OKRES_OWOCOWANIA").nazwa("październik")
-		.build();
-
-		WlasciwoscWithRelations gleba1 = WlasciwoscWithRelations.builder()
-		.etykieta("Gleba").relacja("MA_GLEBE").nazwa("przeciętna ogrodowa")
-		.build();
-		WlasciwoscWithRelations gleba2 = WlasciwoscWithRelations.builder()
-		.etykieta("Gleba").relacja("MA_GLEBE").nazwa("próchniczna")
-		.build();
-		RoslinaRequest exampleRoslina = RoslinaRequest.builder()
-            //.id(12345678L)
-            .nazwa(roslinaNazwa)
-			//.nazwaLacinska(roslinaNazwaLacinska)
-           // .opis(roslinaOpis)
-            .wysokoscMin(wysokoscMin)
-            .wysokoscMax(wysokoscMax)
-			.wlasciwosci(Arrays.asList(kolorLisci, okresOwocowania, gleba1, gleba2))
-			.build();
-
-		System.out.println("Testowanie wyszukiwania rośliny z parametrami");
-		PageResponse<RoslinaResponse> res = roslinaService.findAllRoslinyWithParameters(0, 12, exampleRoslina);
-		if(res.getContent().isEmpty()) {
-			System.out.println("Nie znaleziono rośliny");
-		} else {
-			System.out.println("Znaleziono pierwszą roślinę: " + res.getContent().get(0).getNazwa());
-			System.out.println("Liczba znalezionych roślin: " + res.getContent().size());
-		}
-
-	}
-
 	void unseed() {
-		System.out.println("Czyszczenie bazy danych...");
+		log.info("Czyszczenie bazy danych(oprocz roslin)...");
 
-		System.out.println("Usuwanie obrazów użytkownika");
+		log.info("Usuwanie obrazow uzytkownika");
 		uzytkownikService.seedRemoveUzytkownicyObrazy();
 
-		System.out.println("Usuwanie rozmów prywatnych");
+		log.info("Usuwanie rozmow prywatnych");
 		rozmowaPrywatnaRepository.clearRozmowyPrywatne();
 
-		System.out.println("Usuwanie komentarzy");
+		log.info("Usuwanie komentarzy");
 		komentarzRepository.clearKomentarze();
 
-		System.out.println("Usuwanie postów");
+		log.info("Usuwanie postow");
 		postRepository.clearPosts();
 
-		System.out.println("Usuwanie powiadomień");
+		log.info("Usuwanie powiadomien");
 		uzytkownikRepository.clearPowiadomienia();
 
-		System.out.println("Usuwanie roślin użytkowników");
+		log.info("Usuwanie roslin uzytkownikow");
 		uzytkownikRepository.clearUzytkownikRoslina();
 
-		System.out.println("Usuwanie użytkowników");
+		log.info("Usuwanie uzytkownikow");
 		uzytkownikRepository.clearUzytkowicy();
-
-
-
-
-
-		
 
 	}
 
 	void seed() {
-		System.out.println("Seedowanie bazy danych...");
-		// Użytkownicy na razie bez relacji
+		log.info("Seedowanie bazy danych...");
+
+		uzytkownicy = seedUzytkownicy();
+
+		//addPostyWithKomentarze(uzytkownicy);
+		//System.out.println("Dodano posty testowe. Może lepiej dać je potem w batchu.");
+
+		// Path kotPath = Paths.get(obrazSeedPath, "kot.png");
+		// MockMultipartFile obraz1 = new MockMultipartFile("tempFileName", "kot.png", 
+		// "image/png", fileUtils.readFileFromLocation(kotPath));
+
+		//seedRozmowy();
+
+		//log.info("Dodawanie specjalnego powiadomienia...");
+		PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
+		.tytul("""
+				Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
+				Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
+				Ten komunikat został wygenerowany.
+				""").build();
+
+		//powiadomienieService.addSpecjalnePowiadomienie(pow1);
+
+		seedDzialka();
+
+	}
+
+	private void seedDzialka() {
+		log.info("Seedowanie dzialek...");
+
+		Path peppinoPath = Paths.get(obrazSeedPath, "peppino.png");
+		MockMultipartFile obraz2 = new MockMultipartFile("tempFileName", "peppino.png", 
+		"image/png", fileUtils.readFileFromLocation(peppinoPath));
+		
+		DzialkaRoslinaRequest req = DzialkaRoslinaRequest.builder()
+		.numerDzialki(1)
+		.x(1).y(1)
+		.tabX(new int[] {6, 6, 7})
+		.tabY(new int[] {6, 7, 6})
+		.nazwaLacinska("symphytum grandiflorum'goldsmith'")
+		.build();
+
+		DzialkaRoslinaRequest req2 = DzialkaRoslinaRequest.builder()
+		.numerDzialki(2)
+		.x(1).y(1)
+		.tabX(new int[] {12, 13, 14})
+		.tabY(new int[] {11, 11, 11})
+		.nazwaLacinska("taxus baccata'adpressa'")
+		.build();
+		
+		log.info("Dodawanie rosliny 1 do dzialek");
+		dzialkaService.saveRoslinaToDzialka(req, usPiotr);
+
+		log.info("Dodawanie rosliny 2 do dzialek");
+		dzialkaService.saveRoslinaToDzialka(req2, usPiotr);
+
+		Dzialka piotrDzialka2 = dzialkaRepository.getDzialkaByNumer(usPiotr.getEmail(), 2).get();
+
+		// Rosliny uzytkownika 
+		log.info("Seedowanie roslin uzytkownika[TESTOWE]...");
+		String lolId = "12345678";
+		
+		// Wiem wiem, okropieństwo
+		uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usPiotr, lolId);
+		
+        DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
+		.numerDzialki(2).x(9).y(9)
+        .tabX(new int[]{9, 9, 10, 10})
+        .tabY(new int[]{9, 10, 9, 10})
+		.roslinaId(lolId)
+		.build();
+
+		dzialkaService.saveRoslinaToDzialka(req3, usPiotr);
+
+		log.info("Aktualizacja obrazu rosliny w dzialce");
+		dzialkaService.updateRoslinaObrazInDzialka(req2, obraz2, usPiotr);
+
+		MoveRoslinaRequest moveRequest1 = MoveRoslinaRequest.builder()
+		.numerDzialkiStary(2)
+		.xStary(1).yStary(1)
+		.xNowy(3).yNowy(4)
+		.tabX(new int[] {3, 4, 5})
+		.tabY(new int[] {4, 4, 4})
+		.build();
+
+
+		// Na razie nie jest to kompatybilne z planowaną funkcjonalością
+		// MoveRoslinaRequest moveRequest2 = MoveRoslinaRequest.builder()
+		// .numerDzialkiStary(2)
+		// .numerDzialkiNowy(1)
+		// .xStary(3).yStary(4)
+		// .xNowy(7).yNowy(7)
+		// .build();
+
+		log.info("Zmienianie pozycji rosliny w dzialce");
+		dzialkaService.updateRoslinaPositionInDzialka(moveRequest1, usPiotr);
+
+		//System.out.println("Zmienianie pozycji rośliny w działce do nowej działki");
+		//dzialkaService.updateRoslinaPositionInDzialka(moveRequest2, usPiotr);
+	}
+
+	private void seedRozmowy() {
+		log.info("Seedowanie rozmow prywatnych...");
+		// Zaproszenie do rozmowy prywatnej
+		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaRepository
+		.inviteToRozmowaPrywatna(usKatarzyna.getUzytId(), usPiotr.getUzytId(), LocalDateTime.now());
+
+		// Akceptacja rozmowy prywatnej
+		RozmowaPrywatna meh = rozmowaPrywatnaRepository.acceptRozmowaPrywatna(usPiotr.getUzytId(), usKatarzyna.getUzytId());
+
+		log.info("Dodawanie komentarzy do rozmowy prywatnej");
+		for (int i = 0; i < 10; i++) {
+			komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Piotra " + i).targetId(usKatarzyna.getNazwa()).build(), usPiotr);
+			komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Katarzyny " + i).targetId(usPiotr.getNazwa()).build(), usKatarzyna);
+		}
+
+		// Dodanie paru zaproszeń
+		rozmowaPrywatnaService.inviteToRozmowaPrywatna(usKatarzyna.getNazwa(), usJan);
+		rozmowaPrywatnaService.inviteToRozmowaPrywatna(usMichal.getNazwa(), usKatarzyna);
+	}
+
+
+	private List<Uzytkownik> seedUzytkownicy() {
+		log.info("Seedowanie uzytkownikow...");
 
 		Uzytkownik usJan = Uzytkownik.builder()
 		.uzytId("jasiuId")
@@ -223,21 +307,21 @@ public class YukkaApplication {
 		.haslo(passwordEncoder.encode("anna12345678"))
 		.build();
 
-		String piotrEmail = "piotr@email.pl";
+
 		Uzytkownik usPiotr = Uzytkownik.builder()
 		.uzytId("piotrekId")
         .nazwa("Piotr Wiśniewski").email(piotrEmail)
         .haslo(passwordEncoder.encode("piotr12345678"))
         .build();
 
-		String katarzynaEmail = "katarzyna@email.pl";
+
 		Uzytkownik usKatarzyna = Uzytkownik.builder()
 		.uzytId("jakasKatarzynaId")
 		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
         .haslo(passwordEncoder.encode("katarzyna12345678"))
         .build();
 
-		String michalEmail = "michal@email.pl";
+
 		Uzytkownik usMichal = Uzytkownik.builder()
 		.uzytId("michalekId")
         .nazwa("Michał Zieliński").email(michalEmail)
@@ -250,7 +334,6 @@ public class YukkaApplication {
 		uzytkownikService.addUzytkownik(usKatarzyna);
 		uzytkownikService.addUzytkownik(usMichal);
 
-
 		Path adachiPath = Paths.get(obrazSeedPath, "adachi.jpg");
 		MockMultipartFile obrazAvatar1 = new MockMultipartFile("tempFileName", "adachi.jpg", 
 		"image/png", fileUtils.readFileFromLocation(adachiPath));
@@ -258,108 +341,19 @@ public class YukkaApplication {
 		uzytkownikService.updateUzytkownikAvatar(obrazAvatar1, usPiotr);
 		
 
-		usJan = uzytkownikRepository.findByEmail(usJan.getEmail()).get();
-		usPrac = uzytkownikRepository.findByEmail(usPrac.getEmail()).get();
-		usPiotr = uzytkownikRepository.findByEmail(piotrEmail).get();
-		usKatarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
-		usMichal = uzytkownikRepository.findByEmail(michalEmail).get();
+		this.usJan = uzytkownikRepository.findByEmail(usJan.getEmail()).get();
+		this.usPrac = uzytkownikRepository.findByEmail(usPrac.getEmail()).get();
+		this.usPiotr = uzytkownikRepository.findByEmail(piotrEmail).get();
+		this.usKatarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
+		this.usMichal = uzytkownikRepository.findByEmail(michalEmail).get();
 		
-		List<Uzytkownik> uzytkownicy = Arrays.asList(usPiotr, usKatarzyna, usMichal, usJan, usPrac);
-		
+		this.uzytkownicy = Arrays.asList(this.usJan, this.usPrac, this.usPiotr, this.usKatarzyna, this.usMichal);
 
-		// Dodawanie parę zwykłych postów do sprawdzania paginacji
-		System.out.println("Dodawanie postów testowych...");
-		addPostyWithKomentarze(uzytkownicy);
-		System.out.println("Dodano posty testowe. Może lepiej dać je potem w batchu.");
-
-
-		Path kotPath = Paths.get(obrazSeedPath, "kot.png");
-		MockMultipartFile obraz1 = new MockMultipartFile("tempFileName", "kot.png", 
-		"image/png", fileUtils.readFileFromLocation(kotPath));
-
-		Path peppinoPath = Paths.get(obrazSeedPath, "peppino.png");
-		MockMultipartFile obraz2 = new MockMultipartFile("tempFileName", "peppino.png", 
-		"image/png", fileUtils.readFileFromLocation(peppinoPath));
-
-		// Zaproszenie do rozmowy prywatnej
-		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaRepository
-		.inviteToRozmowaPrywatna(usKatarzyna.getUzytId(), usPiotr.getUzytId(), LocalDateTime.now());
-
-		// Akceptacja rozmowy prywatnej
-		RozmowaPrywatna meh = rozmowaPrywatnaRepository.acceptRozmowaPrywatna(usPiotr.getUzytId(), usKatarzyna.getUzytId());
-
-		System.out.println("Dodawanie komentarzy do rozmowy prywatnej");
-		for (int i = 0; i < 10; i++) {
-			komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Piotra " + i).targetId(usKatarzyna.getNazwa()).build(), usPiotr);
-			komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Katarzyny " + i).targetId(usPiotr.getNazwa()).build(), usKatarzyna);
-		}
-
-		// Dodanie paru zaproszeń
-		rozmowaPrywatnaService.inviteToRozmowaPrywatna(usKatarzyna.getNazwa(), usJan);
-		rozmowaPrywatnaService.inviteToRozmowaPrywatna(usMichal.getNazwa(), usKatarzyna);
-
-		PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
-		.tytul("""
-				Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
-				Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
-				Ten komunikat został wygenerowany.
-				""").build();
-
-		powiadomienieService.addSpecjalnePowiadomienie(pow1);
-
-		DzialkaRoslinaRequest req = DzialkaRoslinaRequest.builder()
-		.numerDzialki(1).x(1).y(1)
-		.nazwaLacinska("symphytum grandiflorum'goldsmith'")
-		.build();
-
-		DzialkaRoslinaRequest req2 = DzialkaRoslinaRequest.builder()
-		.numerDzialki(2).x(1).y(1)
-		.nazwaLacinska("taxus baccata'adpressa'")
-		.build();
-
-		
-		System.out.println("Dodawanie rośliny 1 do działek");
-		dzialkaService.saveRoslinaToDzialka(req, usPiotr);
-
-		System.out.println("Dodawanie rośliny 2 do działek");
-		dzialkaService.saveRoslinaToDzialka(req2, usPiotr);
-
-		// Wywala exception i słusznie
-		//dzialkaService.saveRoslinaToDzialka(req3, usPiotr);
-
-		Dzialka piotrDzialka2 = dzialkaRepository.getDzialkaByNumer(usPiotr.getEmail(), 2).get();
-
-		//System.out.println("Dzialka 2: " + piotrDzialka2.toString());
-
-		// Rosliny uzytkownika 
-		System.out.println("Seedowanie roślin użytkownika");
-		uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usPiotr);
-
-		System.out.println("Aktualizacja obrazu rośliny w działce");
-		dzialkaService.updateRoslinaObrazInDzialka(req2, obraz2, usPiotr);
-
-		MoveRoslinaRequest moveRequest1 = MoveRoslinaRequest.builder()
-		.numerDzialkiStary(2)
-		.xStary(1).yStary(1)
-		.xNowy(3).yNowy(4)
-		.build();
-
-		MoveRoslinaRequest moveRequest2 = MoveRoslinaRequest.builder()
-		.numerDzialkiStary(2)
-		.numerDzialkiNowy(1)
-		.xStary(3).yStary(4)
-		.xNowy(7).yNowy(7)
-		.build();
-
-		System.out.println("Zmienianie pozycji rośliny w działce");
-		dzialkaService.updateRoslinaPositionInDzialka(moveRequest1, usPiotr);
-
-		System.out.println("Zmienianie pozycji rośliny w działce do nowej działki");
-		dzialkaService.updateRoslinaPositionInDzialka(moveRequest2, usPiotr);
-
+		return this.uzytkownicy;
 	}
 
 	private void addPostyWithKomentarze(List<Uzytkownik> uzytkownicy) {
+		log.info("Dodawanie postów testowych...");
 		for(int i = 0; i < MAX_POSTY; i++) {
 			Post post = null;
 			PostRequest postReq = PostRequest.builder()
@@ -470,6 +464,48 @@ public class YukkaApplication {
 				komentarzService.addOcenaToKomentarz(ocenaReq, uzytkownicy.get(j));
 			} catch (IllegalArgumentException e) {}
 		}
+	}
+
+	private void roslinaSearchTest() {
+		String roslinaNazwa = "a";
+		String roslinaNazwaLacinska = "";
+        String roslinaOpis = "";
+        Double wysokoscMin = 1.5;
+        Double wysokoscMax = 12.0;
+
+
+		WlasciwoscWithRelations kolorLisci = WlasciwoscWithRelations.builder()
+		.etykieta("Kolor").relacja("MA_KOLOR_LISCI").nazwa("ciemnozielone")
+		.build();
+		WlasciwoscWithRelations okresOwocowania = WlasciwoscWithRelations.builder()
+		.etykieta("Okres").relacja("MA_OKRES_OWOCOWANIA").nazwa("październik")
+		.build();
+
+		WlasciwoscWithRelations gleba1 = WlasciwoscWithRelations.builder()
+		.etykieta("Gleba").relacja("MA_GLEBE").nazwa("przeciętna ogrodowa")
+		.build();
+		WlasciwoscWithRelations gleba2 = WlasciwoscWithRelations.builder()
+		.etykieta("Gleba").relacja("MA_GLEBE").nazwa("próchniczna")
+		.build();
+		RoslinaRequest exampleRoslina = RoslinaRequest.builder()
+            //.id(12345678L)
+            .nazwa(roslinaNazwa)
+			//.nazwaLacinska(roslinaNazwaLacinska)
+           // .opis(roslinaOpis)
+            .wysokoscMin(wysokoscMin)
+            .wysokoscMax(wysokoscMax)
+			.wlasciwosci(Arrays.asList(kolorLisci, okresOwocowania, gleba1, gleba2))
+			.build();
+
+		System.out.println("Testowanie wyszukiwania rośliny z parametrami");
+		PageResponse<RoslinaResponse> res = roslinaService.findAllRoslinyWithParameters(0, 12, exampleRoslina);
+		if(res.getContent().isEmpty()) {
+			System.out.println("Nie znaleziono rośliny");
+		} else {
+			System.out.println("Znaleziono pierwszą roślinę: " + res.getContent().get(0).getNazwa());
+			System.out.println("Liczba znalezionych roślin: " + res.getContent().size());
+		}
+
 	}
 
 	public static String timeAgo(LocalDateTime dateTime) {

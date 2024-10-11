@@ -19,7 +19,7 @@ export class LoginComponent {
   isServer = false;
 
 
-  authRequest: AuthRequest = {email: 'katarzyna@email.pl', haslo: 'katarzyna12345678'};
+  authRequest: AuthRequest = {email: 'piotr@email.pl', haslo: 'piotr12345678'};
   errorMsg: Array<string> = [];
 
   constructor(

@@ -5,6 +5,8 @@ export interface MoveRoslinaRequest {
   numerDzialkiNowy?: number;
   numerDzialkiStary: number;
   roslinaId?: string;
+  tabX: Array<number>;
+  tabY: Array<number>;
   xnowy?: number;
   xstary?: number;
   ynowy?: number;

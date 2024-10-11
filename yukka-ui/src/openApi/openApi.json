@@ -2767,20 +2767,8 @@
               "$ref": "#/components/schemas/Uzytkownik"
             }
           },
-          "password": {
-            "type": "string"
-          },
           "name": {
             "type": "string"
-          },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "admin": {
-            "type": "boolean"
-          },
-          "pracownik": {
-            "type": "boolean"
           },
           "username": {
             "type": "string"
@@ -2791,13 +2779,25 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
+          "admin": {
+            "type": "boolean"
+          },
+          "pracownik": {
+            "type": "boolean"
+          },
+          "password": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
           "credentialsNonExpired": {
             "type": "boolean"
           },
           "accountNonExpired": {
-            "type": "boolean"
-          },
-          "enabled": {
             "type": "boolean"
           },
           "accountNonLocked": {
@@ -3442,6 +3442,8 @@
       "DzialkaRoslinaRequest": {
         "required": [
           "numerDzialki",
+          "tabX",
+          "tabY",
           "x",
           "y"
         ],
@@ -3471,6 +3473,20 @@
             "type": "integer",
             "format": "int32"
           },
+          "tabX": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "tabY": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
           "obraz": {
             "type": "string"
           }
@@ -3482,6 +3498,9 @@
           "id": {
             "type": "integer",
             "format": "int64"
+          },
+          "nazwa": {
+            "type": "string"
           },
           "numer": {
             "type": "integer",
@@ -3499,6 +3518,13 @@
           "liczbaRoslin": {
             "type": "integer",
             "format": "int32"
+          },
+          "tekstury": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         }
       },
@@ -3515,6 +3541,20 @@
           "y": {
             "type": "integer",
             "format": "int32"
+          },
+          "tabX": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "tabY": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           },
           "obraz": {
             "type": "string",
@@ -3677,7 +3717,9 @@
       },
       "MoveRoslinaRequest": {
         "required": [
-          "numerDzialkiStary"
+          "numerDzialkiStary",
+          "tabX",
+          "tabY"
         ],
         "type": "object",
         "properties": {
@@ -3699,15 +3741,29 @@
             "type": "integer",
             "format": "int32"
           },
+          "tabX": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "tabY": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "xstary": {
+            "type": "integer",
+            "format": "int32"
+          },
           "ystary": {
             "type": "integer",
             "format": "int32"
           },
           "xnowy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "xstary": {
             "type": "integer",
             "format": "int32"
           },

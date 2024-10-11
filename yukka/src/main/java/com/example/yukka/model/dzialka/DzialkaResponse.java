@@ -21,6 +21,9 @@ public class DzialkaResponse {
     private List<ZasadzonaRoslinaResponse> zasadzoneRosliny;
     private int liczbaRoslin;
 
+    // Placeholder 
+    private List<Integer> tekstury;
+
 
     
 }

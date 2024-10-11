@@ -41,12 +41,24 @@ public class DzialkaRoslinaRequest {
     private int[] tabY;
 
 
-    @AssertTrue(message = "Ilość kafelków x i y musi być z przedziału [1, 20]")
+    @AssertTrue(message = "Ilość kafelków x i y musi być z przedziału [1, 20] i muszą mieć taką samą długość")
     private boolean tabsWithinRange() {
         boolean xLen = this.tabX.length >= 1 && this.tabX.length <= 20;
         boolean yLen = this.tabY.length >= 1 && this.tabY.length <= 20;
 
         return xLen && yLen && this.tabX.length == this.tabY.length;
+    }
+
+    @AssertTrue(message = "W kafelkach x i y nie mogą się powtarzać współrzędne")
+    private boolean noRepeatCombinations() {
+        for (int i = 0; i < this.tabX.length; i++) {
+            for (int j = i + 1; j < this.tabX.length; j++) {
+                if (this.tabX[i] == this.tabX[j] && this.tabY[i] == this.tabY[j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 

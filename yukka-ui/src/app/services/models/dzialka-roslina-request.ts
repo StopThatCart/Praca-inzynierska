@@ -5,6 +5,8 @@ export interface DzialkaRoslinaRequest {
   numerDzialki: number;
   obraz?: string;
   roslinaId?: string;
+  tabX: Array<number>;
+  tabY: Array<number>;
   x: number;
   y: number;
 }

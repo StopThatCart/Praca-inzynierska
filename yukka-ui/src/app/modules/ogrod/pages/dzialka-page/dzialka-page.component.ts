@@ -5,6 +5,9 @@ import {  } from 'rxjs';
 import { RoslinaResponse } from '../../../../services/models';
 import { PostCardComponent } from "../../../post/components/post-card/post-card.component";
 import { LulekComponent } from "../../components/lulek/lulek.component";
+import { DzialkaResponse } from '../../../../services/models/dzialka-response';
+import { ActivatedRoute } from '@angular/router';
+import { DzialkaService } from '../../../../services/services';
 
 @Component({
   selector: 'app-dzialka-page',
@@ -14,15 +17,49 @@ import { LulekComponent } from "../../components/lulek/lulek.component";
   styleUrl: './dzialka-page.component.css'
 })
 export class DzialkaPageComponent implements OnInit  {
+  dzialka: DzialkaResponse = {};
+  numer: number | undefined;
+
   @ViewChild('canvas', { static: true }) canvasElement!: ElementRef;
   tiles: { image: string, x: number, y: number, clickable: boolean, showRoslinaBox?: boolean, roslina?: RoslinaResponse }[] = [];
 
   scale : number = 1;
 
+  constructor(
+    private route: ActivatedRoute,
+    private dzialkaService: DzialkaService
+  ) {}
+
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.numer = Number(params['numer']);
+      if (this.numer) {
+        // Na razie dane są sztywne
+        this.getDzialkaByNumer(this.numer);
+        this.route.snapshot.data['numer'] = this.numer;
+      }
+    });
+
+
+
     this.generatePlaceholderTiles();
   }
+
+
+  getDzialkaByNumer(numer: number): void {
+    console.log('getDzialkaByNumer');
+    this.dzialkaService.getDzialkaOfUzytkownikByNumer( { numer: 2, 'uzytkownik-nazwa': "Piotr Wiśniewski" }).subscribe({
+      next: (dzialka) => {
+        this.dzialka = dzialka;
+        console.log(dzialka);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
 
   // Uwaga, to są placeholdery. W prawidłowej implementacji obrazy są już załadowane base64 oprócz dirt i grass
   // Samo dirt i grass zostaną przeniesione do backendu czy coś
@@ -34,15 +71,15 @@ export class DzialkaPageComponent implements OnInit  {
 
     for (let y = 0; y < 20; y++) {
       for (let x = 0; x < 20; x++) {
-        const isEdge = x < 2 || x >= 18 || y < 2 || y >= 18;
-        const isEveryTenthTile = !isEdge && (x + y * 20) % 12 === 0
+        //const isEdge = x < 2 || x >= 18 || y < 2 || y >= 18;
+        const isEveryXthTile = (x + y * 20) % 24 === 0
         this.tiles.push({
-          image: isEdge ? images.grass : images.dirt,
+          image: images.dirt,
           x,
           y,
-          clickable: !isEdge,
-          showRoslinaBox: isEveryTenthTile,
-          roslina: isEveryTenthTile ? { nazwa: 'Jakaś roślina', obraz: 'assets/tiles/plant.png' } : undefined
+          clickable: true,
+          showRoslinaBox: isEveryXthTile,
+          roslina: isEveryXthTile ? { nazwa: 'Jakaś roślina', obraz: 'assets/tiles/plant.png' } : undefined
         });
       }
     }
@@ -50,7 +87,7 @@ export class DzialkaPageComponent implements OnInit  {
 
   onTileClick(tile: { image: string, x: number, y: number, clickable: boolean }) {
     console.log(`Koordynaty kafelka: (${tile.x}, ${tile.y})`);
-    tile.image = 'assets/tiles/water.png';
+   // tile.image = 'assets/tiles/water.png';
   }
 
   onZoomChange(event: Event) {

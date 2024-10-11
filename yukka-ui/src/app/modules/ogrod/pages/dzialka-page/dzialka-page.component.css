@@ -22,9 +22,6 @@
 
 }
 
-
-
-
 .canvas ::before {
   margin-top: auto;
   margin-left: auto;
@@ -36,15 +33,19 @@ div::after {
   margin-bottom: auto;
 }
 
+
 .canvas {
   display: grid;
+  grid-gap: 0;
   grid-template-columns: repeat(20, 64px);
   grid-template-rows: repeat(20, 64px);
 
   width: calc(20 * 64px);
   height: calc(20 * 64px);
   background-color: #f0f0f0;
-  transform-origin: center center;
+  transform-origin: 0 0;
+  border-spacing: 0;
+  border-collapse: collapse;
 }
 
 .canvas:active {
@@ -52,8 +53,8 @@ div::after {
 }
 
 .tile {
-  width:  var(--grid-size);
-  height: var(--grid-size);
+  width: 64.5px;
+  height: 64.5px;
   background-size: cover;
 }
 
