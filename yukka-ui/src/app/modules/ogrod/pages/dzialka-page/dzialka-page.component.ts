@@ -190,7 +190,7 @@ export class DzialkaPageComponent implements OnInit  {
     document.documentElement.style.setProperty('--scale', this.scale.toString());
   }
 
-  // Uwaga: Nie będzie działać chyba że podaż base64 dla defaultowych kafelków
+  // Uwaga: Nie będzie działać chyba że podasz base64 dla defaultowych kafelków
   saveCanvasAsImage(): void {
     html2canvas(this.canvasElement.nativeElement).then(canvas => {
       const link = document.createElement('a');
