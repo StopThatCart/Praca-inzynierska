@@ -9,13 +9,34 @@
 
         <div>
           <h3 class="text-primary">Dawaj zooma kurde</h3>
-          <input id="zoomControl" min="0.2" max="1.6" value="1" step="0.2" (input)="onZoomChange($event)" type="range" />
+          <input id="zoomControl" min="0.2" max="2.0" value="1" step="0.2" (input)="onZoomChange($event)" type="range" />
           <p class="text-primary">Zoomen machen: {{ scale }}</p>
         </div>
         <button (click)="saveCanvasAsImage()">Zapisz jako obraz</button>
 
-        <div class="canvas-container border border-3 border-success-subtle ">
-          <div class="canvas" #canvas>
+
+
+        <div  #canvasContainer class="canvas-container border border-3 border-success-subtle ">
+          <canvas #canvasElement [width]="canvasWidth" [height]="canvasWidth"></canvas>
+          <div id="overlay" #overlayBoi>
+            <div *ngFor="let tile of tiles"
+            [ngStyle]="{
+              'left.px': tile.x * tileSize,
+              'top.px': tile.y * tileSize,
+              'background-color': getRgbaColor(tile.backgroundColor)
+            }"
+            [attr.data-x]="tile.x"
+            [attr.data-y]="tile.y"
+            (click)="tile.clickable ? onTileClick(tile) : null"
+            (mouseover)="onTileHover(tile, true)"
+            (mouseout)="onTileHover(tile, false)"
+            class="tile-overlay">
+              <app-lulek *ngIf="tile.roslina" [roslina]="tile.roslina ? tile.roslina : {}"></app-lulek>
+            </div>
+          </div>
+          <!--
+
+          <div class="tileSet" #tileSet>
             <div class="tile" *ngFor="let tile of tiles"
             [ngStyle]="{'background-image': 'url(' + tile.image + ')', 'background-color': tile.backgroundColor}"
             [class.clickable]="tile.clickable"
@@ -26,7 +47,7 @@
               >
               </app-lulek>
             </div>
-          </div>
+          </div>    -->
 
         </div>
     </div>

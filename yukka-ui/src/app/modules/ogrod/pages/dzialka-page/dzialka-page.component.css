@@ -1,16 +1,17 @@
 :root {
   --grid-size: 64px;
+  --row-number: 8px;
 }
 
 .canvas-container {
-  position: relative;
-  overflow-x: scroll;
-  overflow-y: scroll;
+
+  overflow:auto;
+
   padding-top: 20px;
   padding-bottom: 20px;
   box-sizing: border-box;
 
-  width: 100%;
+  width: 80%;
   height: 80vh;
   margin: 0 auto;
   display: flex;
@@ -20,10 +21,54 @@
   background-size: var(--grid-size) var(--grid-size);
   background-position: top left;
 
+  position: absolute;
+
+
+}
+
+canvas, #overlay {
+  position: absolute;
+  display: block;
+
+  width: calc(64px * 20);
+  height: calc(64px * 20);
+
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  transform-origin: 0 0;
+  top: 0;
+  left: 0;
+
+  border: 1px solid black;
+}
+
+#overlay {
+  pointer-events: none;
+  z-index: 9;
+}
+
+.tile-overlay {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+
+  background-color: transparent;
+  background-size: cover;
+  background-blend-mode: multiply;
+  transition: background-color 0.3s ease;
+
+  pointer-events: auto;
+}
+
+.tile-overlay:hover {
+  filter: brightness(1.2);
+  cursor: pointer;
 }
 
 
-.canvas {
+
+.tileSet {
   display: grid;
   grid-template-columns: repeat(22, 64px);
   grid-template-rows: repeat(22, 64px);
@@ -41,7 +86,7 @@
 
 }
 
-.canvas:active {
+.tileSet:active {
   cursor: grabbing;
 }
 
