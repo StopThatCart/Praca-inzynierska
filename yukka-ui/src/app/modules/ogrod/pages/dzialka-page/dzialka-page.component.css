@@ -5,7 +5,7 @@
 
 .canvas-container {
 
-  overflow:auto;
+  overflow:hidden;
 
   padding-top: 20px;
   padding-bottom: 20px;
@@ -41,6 +41,8 @@ canvas, #overlay {
   left: 0;
 
   border: 1px solid black;
+
+  transition: transform 100ms ease-in-out;
 }
 
 #overlay {
@@ -56,8 +58,9 @@ canvas, #overlay {
   background-color: transparent;
   background-size: cover;
   background-blend-mode: multiply;
+  /*
   transition: background-color 0.3s ease;
-
+*/
   pointer-events: auto;
 }
 
@@ -89,6 +92,33 @@ canvas, #overlay {
 .tileSet:active {
   cursor: grabbing;
 }
+
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.toolbar button {
+
+
+  cursor: pointer;
+  padding: 5px;
+}
+
+.toolbar button.active {
+  background-color: gray;
+}
+
 
 /*
   to dziwadło bez tego pokazuje siatkę przy skalowaniu

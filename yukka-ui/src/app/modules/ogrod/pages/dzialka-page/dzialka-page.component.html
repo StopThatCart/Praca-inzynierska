@@ -9,14 +9,29 @@
 
         <div>
           <h3 class="text-primary">Dawaj zooma kurde</h3>
-          <input id="zoomControl" min="0.2" max="2.0" value="1" step="0.2" (input)="onZoomChange($event)" type="range" />
-          <p class="text-primary">Zoomen machen: {{ scale }}</p>
+          <app-scale-slider
+          [(scale)]="scale"
+          [disabled]="isSaving"
+          (scaleChange)="onScaleChange($event)">
+          </app-scale-slider>
+
         </div>
-        <button (click)="saveCanvasAsImage()">Zapisz jako obraz</button>
+        <div class="toolbar">
+          <button (click)="setMode('pan')" [class.active]="mode === 'pan'">
+            <i class="fa-solid fa-lg fa-hand"></i>
+          </button>
+          <button (click)="setMode('select')" [class.active]="mode === 'select'">
+            <i class="fa-solid fa-lg fa-arrows"></i>
+          </button>
+          <button (click)="saveCanvasAsImage()">
+            <i class="fa-solid fa-lg fa-save"></i>
+          </button>
+        </div>
 
 
-
-        <div  #canvasContainer class="canvas-container border border-3 border-success-subtle ">
+        <div  #canvasContainer class="canvas-container border border-3 border-success-subtle "
+        (mousedown)="onMouseDown($event)"
+        >
           <canvas #canvasElement [width]="canvasWidth" [height]="canvasWidth"></canvas>
           <div id="overlay" #overlayBoi>
             <div *ngFor="let tile of tiles"

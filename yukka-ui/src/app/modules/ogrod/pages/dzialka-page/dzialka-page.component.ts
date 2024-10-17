@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
 import { RoslinaResponse } from '../../../../services/models';
@@ -8,11 +8,14 @@ import { DzialkaResponse } from '../../../../services/models/dzialka-response';
 import { ActivatedRoute } from '@angular/router';
 import { DzialkaService } from '../../../../services/services';
 import { Tile } from '../../models/Tile';
+import { FormsModule } from '@angular/forms';
+import { ScaleSliderComponent } from "../../components/scale-slider/scale-slider.component";
+import { CanvasService } from '../../services/canvas-service/canvas.service';
 
 @Component({
   selector: 'app-dzialka-page',
   standalone: true,
-  imports: [CommonModule, PostCardComponent, LulekComponent],
+  imports: [CommonModule, FormsModule, PostCardComponent, LulekComponent, ScaleSliderComponent],
   templateUrl: './dzialka-page.component.html',
   styleUrl: './dzialka-page.component.css'
 })
@@ -33,8 +36,21 @@ export class DzialkaPageComponent implements OnInit  {
   scale : number = 1;
   tileSize: number = 64;
   rowColls: number = 20;
-
   canvasWidth: number = this.tileSize * this.rowColls;
+
+  mode: 'pan' | 'select' = 'select';
+  isPanning: boolean = false;
+  isSaving: boolean = false;
+
+  startX: number = 0;
+  startY: number = 0;
+  scrollLeft: number = 0;
+  scrollTop: number = 0;
+
+
+  setMode(mode: 'pan' | 'select'): void {
+    this.mode = mode;
+  }
 
   private images = {
     grass: 'assets/tiles/grass.png',
@@ -45,7 +61,8 @@ export class DzialkaPageComponent implements OnInit  {
 
   constructor(
     private route: ActivatedRoute,
-    private dzialkaService: DzialkaService
+    private dzialkaService: DzialkaService,
+    private canvasService: CanvasService
   ) {}
 
 
@@ -62,14 +79,15 @@ export class DzialkaPageComponent implements OnInit  {
 
       if (this.numer && this.uzytNazwa) {
         // Na razie dane są sztywne
-        this.getDzialkaByNumer(this.numer, this.uzytNazwa);
+        this.getDzialkaByNumer( this.numer, this.uzytNazwa);
         this.route.snapshot.data['numer'] = this.numer;
         this.route.snapshot.data['uzytkownik-nazwa'] = this.uzytNazwa;
       }
     });
   }
 
-    // Uwaga, to są placeholdery. W prawidłowej implementacji obrazy są już załadowane base64 oprócz dirt i grass
+
+  // Uwaga, to są placeholdery. W prawidłowej implementacji obrazy są już załadowane base64 oprócz dirt i grass
   // Samo dirt i grass zostaną przeniesione do backendu czy coś
   initializeTiles(): void {
     const tiles: Tile[] = [];
@@ -91,16 +109,6 @@ export class DzialkaPageComponent implements OnInit  {
     }
     this.tiles = tiles;
   }
-
-  getRandomColor(): string {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-
 
   drawChessboard(): void {
     const canvas = this.canvas.nativeElement;
@@ -138,19 +146,6 @@ export class DzialkaPageComponent implements OnInit  {
    // canvas.addEventListener('click', this.onCanvasClick.bind(this));
   }
 
-  onCanvasClick(event: MouseEvent): void {
-    const canvas = this.canvas.nativeElement;
-    const rect = canvas.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / this.scale;
-    const y = (event.clientY - rect.top) / this.scale;
-    const col = Math.floor(x / this.tileSize);
-    const row = Math.floor(y / this.tileSize);
-    console.log(`Tile clicked: (${col}, ${row})`);
-    const tile = this.findTile(col, row);
-    if(tile) {
-      this.onTileClick(tile);
-    }
-  }
 
 
   getDzialkaByNumer(numer: number, uzytkownikNazwa: string): void {
@@ -196,39 +191,7 @@ export class DzialkaPageComponent implements OnInit  {
     });
   }
 
-  /*
-  Jak wywali dla tileów protokół 431 to tym można to objejść
-  */
-  /*
-  const imageBlob = this.base64ToBlob(zasadzonaRoslina.obraz ?? '', this.images.grass);
-  const imageUrl = URL.createObjectURL(imageBlob);
-  // I dla tile ustawiasz obraz taki:
-    image: imageUrl || this.images.grass,
-  */
 
-
-  base64ToBlob(base64: string, contentType: string): Blob {
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    return new Blob([byteArray], { type: contentType });
-  }
-
-  getRgbaColor(hex: string | undefined): string {
-
-    if (!hex) {
-      return `transparent`;
-    }
-    const bigint = parseInt(hex.slice(1), 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-
-    return `rgba(${r},${g},${b}, 0.5)`;
-  }
 
 
   findTile(x: number, y: number): Tile  {
@@ -242,7 +205,7 @@ export class DzialkaPageComponent implements OnInit  {
   onTileClick(tile: Tile) {
     console.log(`Koordynaty kafelka: (${tile.x}, ${tile.y})
       RoslinaId: ${tile.roslinaId}
-      Należy do rośliny: ${tile.roslina?.nazwa}
+      Leży na nim roślina: ${tile.roslina?.nazwa}
       Kolorek: ${tile.backgroundColor}`);
    // tile.image = 'assets/tiles/water.png';
   }
@@ -271,12 +234,37 @@ export class DzialkaPageComponent implements OnInit  {
 
   }
 
-  onZoomChange(event: Event) {
-    const zoomLevel = (event.target as HTMLInputElement).value;
-    this.scale = Number(zoomLevel);
-    this.applyScale(this.scale);
+  onMouseDown(event: MouseEvent): void {
+    if (this.mode !== 'pan') return;
+    this.isPanning = true;
+    this.startX = event.pageX - this.canvasContainer.nativeElement.offsetLeft;
+    this.startY = event.pageY - this.canvasContainer.nativeElement.offsetTop;
+    this.scrollLeft = this.canvasContainer.nativeElement.scrollLeft;
+    this.scrollTop = this.canvasContainer.nativeElement.scrollTop;
+  }
 
-    //this.canvas.nativeElement.style.transform = `scale(${this.scale})`;
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent): void {
+    if (!this.isPanning) return;
+    event.preventDefault();
+    const x = event.pageX - this.canvasContainer.nativeElement.offsetLeft;
+    const y = event.pageY - this.canvasContainer.nativeElement.offsetTop;
+    const walkX = x - this.startX;
+    const walkY = y - this.startY;
+    this.canvasContainer.nativeElement.scrollLeft = this.scrollLeft - walkX;
+    this.canvasContainer.nativeElement.scrollTop = this.scrollTop - walkY;
+    document.body.style.userSelect = 'none';
+  }
+
+  @HostListener('document:mouseup')
+  onMouseUp(): void {
+    this.isPanning = false;
+    document.body.style.userSelect = '';
+  }
+
+  onScaleChange(newScale: number) {
+    this.scale = newScale;
+    this.applyScale(this.scale);
   }
 
   applyScale( scale: number ): void {
@@ -289,32 +277,21 @@ export class DzialkaPageComponent implements OnInit  {
     }
   }
 
-  // Uwaga: Działa na Operze, ale na innych nie sprawdzałem
+
+  getRgbaColor(hex: string | undefined): string {
+    return this.canvasService.getRgbaColor(hex);
+  }
+
+  getRandomColor(): string {
+    return this.canvasService.getRandomColor();
+  }
+
   saveCanvasAsImage(): void {
-    this.applyScale(1);
-    const canvas = this.canvas.nativeElement;
-    const overlay = this.overlay.nativeElement;
-    //const natEl = this.tileSet.nativeElement;
-    //const natEl = this.canvasContainer.nativeElement;
-
-    html2canvas(canvas, { backgroundColor: null }).then(canvasImage => {
-      html2canvas(overlay, { backgroundColor: null }).then(overlayImage => {
-          const combinedCanvas = document.createElement('canvas');
-          combinedCanvas.width = canvasImage.width;
-          combinedCanvas.height = canvasImage.height;
-
-          const context = combinedCanvas.getContext('2d');
-          if (context) {
-              context.drawImage(canvasImage, 0, 0);
-              context.drawImage(overlayImage, 0, 0);
-
-              const link = document.createElement('a');
-              link.href = combinedCanvas.toDataURL('image/png');
-              link.download = 'canvas-image.png';
-              link.click();
-          }
-      });
-  });
+    if(confirm('Czy na pewno chcesz zapisać obraz działki?')) {
+      this.isSaving = true;
+      this.canvasService.saveCanvasAsImage(this.canvas, this.overlay, this.onScaleChange.bind(this));
+      this.isSaving = false;
+    }
   }
 
 
