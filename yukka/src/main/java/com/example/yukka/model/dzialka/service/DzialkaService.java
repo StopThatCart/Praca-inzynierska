@@ -15,6 +15,7 @@ import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.MoveRoslinaRequest;
+import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.roslina.RoslinaMapper;
@@ -144,7 +145,7 @@ public class DzialkaService {
 
         return dzialkaRepository.saveRoslinaToDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
         request.getX(), request.getY(), 
-        request.getTabX(), request.getTabY(),
+        request.getPozycjeX(), request.getPozycjeY(),
         request.getObraz(), nazwaLacinskaOrId);
     }
 
@@ -154,6 +155,7 @@ public class DzialkaService {
         return updateRoslinaPositionInDzialka(request, uzyt);
     }
 
+    // TODO: Sprawdzanie pozycji tabX tabY albo position
     public DzialkaResponse updateRoslinaPositionInDzialka(MoveRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialkiStary(), uzyt);
@@ -174,6 +176,7 @@ public class DzialkaService {
         Dzialka dzialka2 = getDzialkaByNumer(request.getNumerDzialkiNowy(), uzyt);
     
         if (dzialka2.getZasadzonaNaByCoordinates(request.getXNowy(), request.getYNowy()) != null) {
+            System.out.println("BOUIIIIIIIIIIIIIIIIIII");
             throw new IllegalArgumentException("Pozycja (" + request.getXNowy() + ", " + request.getYNowy() + ") jest zajęta");
         }
     
@@ -181,20 +184,43 @@ public class DzialkaService {
                 request.getNumerDzialkiStary(), request.getNumerDzialkiNowy(),
                 request.getXStary(), request.getYStary(),
                 request.getXNowy(), request.getYNowy(),
-                request.getTabX(), request.getTabY());
+                request.getPozycjeX(), request.getPozycjeY());
         return roslinaMapper.toDzialkaResponse(res);
     }
     
     private DzialkaResponse moveRoslinaWithinSameDzialka(MoveRoslinaRequest request, Uzytkownik uzyt, Dzialka dzialka) {
-        if (dzialka.getZasadzonaNaByCoordinates(request.getXNowy(), request.getYNowy()) != null) {
-            throw new IllegalArgumentException("Pozycja (" + request.getXNowy() + ", " + request.getYNowy() + ") jest zajęta");
+        ZasadzonaNaReverse zasadzonaRoslina = dzialka.getZasadzonaNaByCoordinates(request.getXStary(), request.getYStary());
+        ZasadzonaNaReverse zasadzonaRoslinaNowa = dzialka.getZasadzonaNaByCoordinates(request.getXNowy(), request.getYNowy());
+        if (zasadzonaRoslinaNowa != null) {
+            if(!zasadzonaRoslina.equalsRoslina(zasadzonaRoslinaNowa)) {
+                throw new IllegalArgumentException("Pozycja (" + request.getXNowy() + ", " + request.getYNowy() + ") jest zajęta");
+            }
         }
+
+        List<ZasadzonaNaReverse> zasadzoneRosliny = dzialka.getZasadzoneRosliny();
+        for (ZasadzonaNaReverse zasadzona : zasadzoneRosliny) {
+            if(zasadzona.equalsRoslina(request.getRoslinaId()) || zasadzona.equalsRoslina(request.getNazwaLacinska())) {
+                continue;
+            }
+
+            List<Pozycja> pozycje = zasadzona.getPozycje();
+            List<Pozycja> nowePozycje = request.getPozycje();
+
+            for (Pozycja pozycja : pozycje) {
+                if (nowePozycje.contains(pozycja)) {
+                    throw new IllegalArgumentException("Pozycja (" + pozycja.getX() + ", " + pozycja.getY() 
+                    + ") jest zajęta przez inną roślinę: " + zasadzona.getRoslina().getNazwa());
+                }
+            }
+        }
+
+        System.out.println("Pozycje: " + request.getPozycje().toString());
     
         Dzialka res = dzialkaRepository.changeRoslinaPozycjaInDzialka(uzyt.getEmail(),
                 request.getNumerDzialkiStary(),
                 request.getXStary(), request.getYStary(),
                 request.getXNowy(), request.getYNowy(),
-                request.getTabX(), request.getTabY());
+                request.getPozycjeX(), request.getPozycjeY());
         return roslinaMapper.toDzialkaResponse(res);
     }
 

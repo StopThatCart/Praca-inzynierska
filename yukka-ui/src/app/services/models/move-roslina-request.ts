@@ -1,12 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
+import { Pozycja } from '../models/pozycja';
 export interface MoveRoslinaRequest {
   nazwaLacinska?: string;
   numerDzialkiNowy?: number;
   numerDzialkiStary: number;
+  pozycje: Array<Pozycja>;
   roslinaId?: string;
-  tabX: Array<number>;
-  tabY: Array<number>;
   xnowy?: number;
   xstary?: number;
   ynowy?: number;

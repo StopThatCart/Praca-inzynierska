@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
-import { Pozycja, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
+import { MoveRoslinaRequest, Pozycja, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
 import { PostCardComponent } from "../../../post/components/post-card/post-card.component";
 import { LulekComponent } from "../../components/lulek/lulek.component";
 import { DzialkaResponse } from '../../../../services/models/dzialka-response';
@@ -14,6 +14,7 @@ import { CanvasService } from '../../services/canvas-service/canvas.service';
 import { Offcanvas } from 'bootstrap';
 import { OffcanvasRoslinaComponent } from "../../components/offcanvas-roslina/offcanvas-roslina.component";
 import { DzialkaModes } from '../../models/dzialka-modes';
+import { DzialkaRoslinaRequest } from '../../../../services/models/dzialka-roslina-request';
 
 @Component({
   selector: 'app-dzialka-page',
@@ -79,6 +80,9 @@ export class DzialkaPageComponent implements OnInit  {
     console.log('Zapisuję zmiany');
     // TODO
     //this.dzialkaBackup = this.dzialka;
+    //this.initializeTiles();
+    //this.processRosliny(this.dzialka);
+
     this.editMode = DzialkaModes.BrakEdycji;
   }
 
@@ -195,6 +199,20 @@ export class DzialkaPageComponent implements OnInit  {
 
 
 
+  changeRoslinaPozycjaInDzialka(numer: number, uzytkownikNazwa: string, request: MoveRoslinaRequest): void {
+    console.log('getDzialkaByNumer');
+    this.dzialkaService.updateRoslinaPositionInDzialka( { body: request }).subscribe({
+      next: (dzialka) => {
+        this.dzialka = dzialka;
+        console.log(dzialka);
+        this.processRosliny(dzialka);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
   getDzialkaByNumer(numer: number, uzytkownikNazwa: string): void {
     console.log('getDzialkaByNumer');
     this.dzialkaService.getDzialkaOfUzytkownikByNumer( { numer: 2, 'uzytkownik-nazwa': "Piotr Wiśniewski" }).subscribe({
@@ -246,11 +264,26 @@ export class DzialkaPageComponent implements OnInit  {
 
   // TODO: Poprawić to plus pozycje
   onTileClick(tile: Tile) {
-    if(this.editMode === DzialkaModes.EditRoslinaKafelki) {
-      this.changeRoslinaKafelek(tile);
-    }else if (this.editMode === DzialkaModes.EditRoslinaPozycja) {
-      this.changeRoslinaPozycja(tile);
-    } else {
+
+    if (this.editMode === DzialkaModes.EditRoslinaKafelki || this.editMode === DzialkaModes.EditRoslinaPozycja) {
+      if(tile.zasadzonaRoslina) {
+        console.log('Na tym kafelku znajduje się roślina.');
+        return;
+      }
+
+      if(tile.roslinaId !== this.selectedRoslina?.roslina?.id) {
+        console.log('Ten kafelek nie jest przypisany do tej rośliny.');
+        return;
+      }
+
+      if(this.editMode === DzialkaModes.EditRoslinaKafelki) {
+        this.changeRoslinaKafelek(tile);
+      }else if (this.editMode === DzialkaModes.EditRoslinaPozycja) {
+        this.changeRoslinaPozycja(tile);
+      }
+    }
+
+    else {
       console.log(`Koordynaty kafelka: (${tile.x}, ${tile.y})
         RoslinaId: ${tile.roslinaId}
         Leży na nim roślina: ${tile.roslina?.nazwa}
@@ -262,11 +295,6 @@ export class DzialkaPageComponent implements OnInit  {
 
 
   changeRoslinaKafelek(tile: Tile): void {
-    if(tile.zasadzonaRoslina) {
-      console.log('Na tym kafelku znajduje się roślina.');
-      return;
-    }
-
     if(!this.selectedRoslina) return;
     const index = this.selectedRoslina.pozycje?.findIndex(p => p.x === tile.x && p.y === tile.y);
 
@@ -288,24 +316,21 @@ export class DzialkaPageComponent implements OnInit  {
 
   changeRoslinaPozycja(tile: Tile): void {
     if(!this.selectedRoslina) return;
-    if (!tile.zasadzonaRoslina) {
-      const oldTile = TileUtils.findTile(this.tiles, this.selectedRoslina.x!, this.selectedRoslina.y!);
-      TileUtils.clearTile(oldTile);
+    const oldTile = TileUtils.findTile(this.tiles, this.selectedRoslina.x!, this.selectedRoslina.y!);
+    TileUtils.clearTile(oldTile);
 
-      // Przenieś roślinę na nowy kafelek
-      tile.roslinaId = this.selectedRoslina.roslina?.id;
-      tile.zasadzonaRoslina = this.selectedRoslina;
-      tile.roslina = this.selectedRoslina.roslina;
-      tile.backgroundColor = this.getRandomColor();
+    // Przenieś roślinę na nowy kafelek
+    tile.roslinaId = this.selectedRoslina.roslina?.id;
+    tile.zasadzonaRoslina = this.selectedRoslina;
+    tile.roslina = this.selectedRoslina.roslina;
+    tile.backgroundColor = this.getRandomColor();
 
-      this.selectedRoslina.pozycje?.push({ x: tile.x, y: tile.y });
-      this.selectedRoslina.x = tile.x;
-      this.selectedRoslina.y = tile.y;
+    this.selectedRoslina.pozycje?.push({ x: tile.x, y: tile.y });
+    this.selectedRoslina.x = tile.x;
+    this.selectedRoslina.y = tile.y;
 
-      this.updateTilesWithRoslina(this.selectedRoslina);
-    } else {
-      console.log('Na tym kafelku znajduje się już roślina.');
-    }
+    this.updateTilesWithRoslina(this.selectedRoslina);
+
   }
 
 

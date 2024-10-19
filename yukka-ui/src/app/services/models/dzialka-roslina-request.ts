@@ -1,12 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
+import { Pozycja } from '../models/pozycja';
 export interface DzialkaRoslinaRequest {
   nazwaLacinska?: string;
   numerDzialki: number;
   obraz?: string;
+  pozycje: Array<Pozycja>;
   roslinaId?: string;
-  tabX: Array<number>;
-  tabY: Array<number>;
   x: number;
   y: number;
 }

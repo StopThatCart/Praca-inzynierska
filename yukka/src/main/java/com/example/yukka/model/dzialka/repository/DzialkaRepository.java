@@ -1,6 +1,7 @@
 package com.example.yukka.model.dzialka.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -80,7 +81,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
                 
         MATCH (d)<-[existing:ZASADZONA_NA {x: $xStary, y: $yStary}]-(existingRoslina)
         SET existing.x = $xNowy, existing.y = $yNowy,
-            existing.tabX = $tabX, existing.tabY = $tabY        
+            existing.tabX = $tabX, existing.tabY = $tabY       
 
         WITH d
         MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)

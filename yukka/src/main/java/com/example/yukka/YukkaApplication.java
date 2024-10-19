@@ -28,6 +28,7 @@ import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.MoveRoslinaRequest;
+import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.roslina.RoslinaRequest;
@@ -135,8 +136,8 @@ public class YukkaApplication {
     public CommandLineRunner seedDatabase() {
         return args -> {
 		//	roslinaImporterService.seedRosliny();
-			// unseed();
-        	// seed();
+			 unseed();
+        	 seed();
 		//roslinaSearchTest();
         };
     }
@@ -205,16 +206,26 @@ public class YukkaApplication {
 		DzialkaRoslinaRequest req = DzialkaRoslinaRequest.builder()
 		.numerDzialki(1)
 		.x(1).y(1)
-		.tabX(new int[] {6, 6, 7})
-		.tabY(new int[] {6, 7, 6})
+		//.tabX(new int[] {6, 6, 7})
+		//.tabY(new int[] {6, 7, 6})
+		.pozycje(List.of(
+			Pozycja.builder().x(6).y(6).build(), 
+			Pozycja.builder().x(6).y(7).build(), 
+			Pozycja.builder().x(7).y(6).build()
+			))
 		.nazwaLacinska("symphytum grandiflorum'goldsmith'")
 		.build();
 
 		DzialkaRoslinaRequest req2 = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2)
 		.x(1).y(1)
-		.tabX(new int[] {12, 13, 14})
-		.tabY(new int[] {11, 11, 11})
+		//.tabX(new int[] {12, 13, 14})
+		//.tabY(new int[] {11, 11, 11})
+		.pozycje(List.of(
+			Pozycja.builder().x(12).y(11).build(), 
+			Pozycja.builder().x(13).y(11).build(), 
+			Pozycja.builder().x(14).y(11).build()
+			))
 		.nazwaLacinska("taxus baccata'adpressa'")
 		.build();
 		
@@ -235,8 +246,14 @@ public class YukkaApplication {
 		
         DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2).x(9).y(9)
-        .tabX(new int[]{9, 9, 10, 10})
-        .tabY(new int[]{9, 10, 9, 10})
+        //.tabX(new int[]{9, 9, 10, 10})
+        //.tabY(new int[]{9, 10, 9, 10})
+		.pozycje(List.of(
+			Pozycja.builder().x(9).y(9).build(), 
+			Pozycja.builder().x(9).y(10).build(), 
+			Pozycja.builder().x(10).y(9).build(),
+			Pozycja.builder().x(10).y(10).build()
+			))
 		.roslinaId(lolId)
 		.build();
 
@@ -249,8 +266,13 @@ public class YukkaApplication {
 		.numerDzialkiStary(2)
 		.xStary(1).yStary(1)
 		.xNowy(3).yNowy(4)
-		.tabX(new int[] {3, 4, 5})
-		.tabY(new int[] {4, 4, 4})
+		//.tabX(new int[] {3, 4, 5})
+		//.tabY(new int[] {4, 4, 4})
+		.pozycje(List.of(
+			Pozycja.builder().x(3).y(4).build(), 
+			Pozycja.builder().x(4).y(4).build(), 
+			Pozycja.builder().x(5).y(4).build()
+			))
 		.build();
 
 

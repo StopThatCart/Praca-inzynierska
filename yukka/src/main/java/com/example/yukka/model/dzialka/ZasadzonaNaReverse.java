@@ -61,4 +61,40 @@ public class ZasadzonaNaReverse {
         }
     }
 
+
+    @JsonIgnore
+    public boolean equalsRoslina(Roslina roslina) {
+        return this.roslina.getNazwaLacinska().equals(roslina.getNazwaLacinska()) 
+        || this.roslina.getRoslinaId().equals(roslina.getRoslinaId());
+    }
+
+    @JsonIgnore
+    public boolean equalsRoslina(String roslinaWhatever) {
+        Roslina roslina = this.roslina;
+        if(roslina == null) {
+            return false;
+        } 
+
+        if(this.roslina.getNazwaLacinska() == null) {
+            return this.roslina.getRoslinaId().equals(roslinaWhatever);
+        } else {
+            return this.roslina.getNazwaLacinska().equals(roslinaWhatever);
+        }
+    }
+
+    @JsonIgnore
+    public boolean equalsRoslina(ZasadzonaNaReverse zasadzinaNaReverse) {
+        Roslina roslina = this.roslina;
+        Roslina roslinaWhatever = zasadzinaNaReverse.getRoslina();
+        if(roslina == null || roslinaWhatever == null) {
+            return false;
+        } 
+
+        if(this.roslina.getNazwaLacinska() == null) {
+            return this.roslina.getRoslinaId().equals(roslinaWhatever.getRoslinaId());
+        } else {
+            return this.roslina.getNazwaLacinska().equals(roslinaWhatever.getNazwaLacinska());
+        }
+    }
+
 }

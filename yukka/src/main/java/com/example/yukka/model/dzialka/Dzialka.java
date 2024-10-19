@@ -9,6 +9,7 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.example.yukka.model.ogrod.Ogrod;
+import com.example.yukka.model.roslina.Roslina;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -61,6 +62,17 @@ public class Dzialka {
             }
         }
         return null;
+    }
+
+    public boolean isRoslinaInDzialka(Roslina roslina) {
+        for (ZasadzonaNaReverse zasadzonaNa : zasadzoneRosliny) {
+            Roslina roslinaZasadzona = zasadzonaNa.getRoslina();
+            if (roslinaZasadzona.getNazwaLacinska().equals(roslina.getNazwaLacinska()) 
+            || roslinaZasadzona.getRoslinaId().equals(roslina.getRoslinaId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

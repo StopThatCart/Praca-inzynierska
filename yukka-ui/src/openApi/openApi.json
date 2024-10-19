@@ -2770,10 +2770,16 @@
           "name": {
             "type": "string"
           },
-          "normalUzytkownik": {
-            "type": "boolean"
+          "authorities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedAuthority"
+            }
           },
           "pracownik": {
+            "type": "boolean"
+          },
+          "normalUzytkownik": {
             "type": "boolean"
           },
           "admin": {
@@ -2782,25 +2788,19 @@
           "username": {
             "type": "string"
           },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
-          },
           "password": {
             "type": "string"
           },
           "enabled": {
             "type": "boolean"
           },
+          "accountNonLocked": {
+            "type": "boolean"
+          },
           "accountNonExpired": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
-            "type": "boolean"
-          },
-          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -3442,8 +3442,7 @@
       "DzialkaRoslinaRequest": {
         "required": [
           "numerDzialki",
-          "tabX",
-          "tabY",
+          "pozycje",
           "x",
           "y"
         ],
@@ -3462,33 +3461,38 @@
             "format": "int32"
           },
           "x": {
-            "maximum": 20,
-            "minimum": 1,
+            "maximum": 19,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
           "y": {
-            "maximum": 20,
-            "minimum": 1,
+            "maximum": 19,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
-          "tabX": {
+          "pozycje": {
             "type": "array",
             "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          "tabY": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/components/schemas/Pozycja"
             }
           },
           "obraz": {
             "type": "string"
+          }
+        }
+      },
+      "Pozycja": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "y": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3525,19 +3529,6 @@
               "type": "integer",
               "format": "int32"
             }
-          }
-        }
-      },
-      "Pozycja": {
-        "type": "object",
-        "properties": {
-          "x": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "y": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -3737,8 +3728,7 @@
       "MoveRoslinaRequest": {
         "required": [
           "numerDzialkiStary",
-          "tabX",
-          "tabY"
+          "pozycje"
         ],
         "type": "object",
         "properties": {
@@ -3760,25 +3750,13 @@
             "type": "integer",
             "format": "int32"
           },
-          "tabX": {
+          "pozycje": {
             "type": "array",
             "items": {
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/components/schemas/Pozycja"
             }
           },
-          "tabY": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          "xstary": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ystary": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
@@ -3786,7 +3764,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ystary": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "xstary": {
             "type": "integer",
             "format": "int32"
           }

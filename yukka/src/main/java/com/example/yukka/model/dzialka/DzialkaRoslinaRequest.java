@@ -1,5 +1,8 @@
 package com.example.yukka.model.dzialka;
+import java.util.List;
+
 import com.example.yukka.validations.ValidRoslinaIdAlboNazwaLacinska;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;
@@ -25,35 +28,61 @@ public class DzialkaRoslinaRequest {
     private int numerDzialki;
 
     @NotEmpty(message = "Pozycja x jest wymagana")
-    @Min(value = 1, message = "Pozycja x musi być > 0")
-    @Max(value = 20, message = "Pozycja x musi być <= 20")
+    @Min(value = 0, message = "Pozycja x musi być >= 0")
+    @Max(value = 19, message = "Pozycja x musi być <= 19")
     private int x;
 
     @NotEmpty(message = "Pozycja y jest wymagana")
-    @Min(value = 1, message = "Pozycja y musi być > 0")
-    @Max(value = 20, message = "Pozycja y musi być <= 20")
+    @Min(value = 0, message = "Pozycja y musi być >= 0")
+    @Max(value = 19, message = "Pozycja y musi być <= 19")
     private int y;
 
-    @NotEmpty(message = "Kafelki x są wymagane")
-    private int[] tabX;
+    // @NotEmpty(message = "Kafelki x są wymagane")
+    // private int[] tabX;
 
-    @NotEmpty(message = "Kafelki y są wymagane")
-    private int[] tabY;
+    // @NotEmpty(message = "Kafelki y są wymagane")
+    // private int[] tabY;
+
+    @NotEmpty(message = "Pozycje są wymagane")
+    List<Pozycja> pozycje;
+
+    @JsonIgnore
+    public int[] getPozycjeX() {
+        int[] tabX = new int[pozycje.size()];
+
+        for (int i = 0; i < pozycje.size(); i++) {
+            Pozycja p = pozycje.get(i);
+            tabX[i] = p.getX();
+        }
+
+        return tabX;
+    }
+
+    @JsonIgnore
+    public int[] getPozycjeY() {
+        int[] tabY = new int[pozycje.size()];
+
+        for (int i = 0; i < pozycje.size(); i++) {
+            Pozycja p = pozycje.get(i);
+            tabY[i] = p.getY();
+        }
+
+        return tabY;
+    }
 
 
     @AssertTrue(message = "Ilość kafelków x i y musi być z przedziału [1, 20] i muszą mieć taką samą długość")
     private boolean tabsWithinRange() {
-        boolean xLen = this.tabX.length >= 1 && this.tabX.length <= 20;
-        boolean yLen = this.tabY.length >= 1 && this.tabY.length <= 20;
-
-        return xLen && yLen && this.tabX.length == this.tabY.length;
+        int size = this.pozycje.size();
+        return size >= 1 && size <= 20;
     }
 
     @AssertTrue(message = "W kafelkach x i y nie mogą się powtarzać współrzędne")
     private boolean noRepeatCombinations() {
-        for (int i = 0; i < this.tabX.length; i++) {
-            for (int j = i + 1; j < this.tabX.length; j++) {
-                if (this.tabX[i] == this.tabX[j] && this.tabY[i] == this.tabY[j]) {
+        for (int i = 0; i < this.pozycje.size(); i++) {
+            for (int j = i + 1; j < this.pozycje.size(); j++) {
+                if (this.pozycje.get(i).getX() == this.pozycje.get(j).getX() &&
+                    this.pozycje.get(i).getY() == this.pozycje.get(j).getY()) {
                     return false;
                 }
             }
