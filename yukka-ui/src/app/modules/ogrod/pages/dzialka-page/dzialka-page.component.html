@@ -3,12 +3,9 @@
   <!-- cdkDropList cdkScrollable -->
   <div class="row mb-5 pt-1">
     <div class="">
-        <h3 class="text-uppercase text-primary">Jakaś nazwa działki </h3>
-
-        <img src="assets/tiles/dirt.png" class="img-fluid" alt="Responsive image">
-
+        <h3 class="text-uppercase text-primary"> {{ dzialka.nazwa }} </h3>
         <div>
-          <h3 class="text-primary">Dawaj zooma kurde</h3>
+          <h3 class="text-primary">Aktualny stan: <span class="text-danger">{{ mode }}</span></h3>
           <app-scale-slider
           [(scale)]="scale"
           [disabled]="isSaving"
@@ -16,17 +13,50 @@
           </app-scale-slider>
 
         </div>
+
+        <div *ngIf="editMode !== DzialkaModes.BrakEdycji"
+        class="mb-2">
+          <h4 class="text-primary">Tryb edycji: <span class="text-danger">{{ editMode }}</span></h4>
+          <h4 class="text-primary">Wybrana roślina: <span class="text-danger">{{ selectedRoslina?.roslina?.nazwa }}</span></h4>
+          <p class="text-primary">Kliknij na kafelek, aby go dodać lub usunąć go z rośliny. </p>
+          <div class="btn-group">
+            <button (click)="changeEditMode(DzialkaModes.EditRoslinaPozycja)" class="btn btn-primary">Zmień pozycję rośliny</button>
+            <button (click)="changeEditMode(DzialkaModes.EditRoslinaKafelki)" class="btn btn-secondary">Zmień kafelki należące do rośliny</button>
+          </div>
+
+
+          <p class="text-primary my-2">PO zakończeniu działań, zapisz albo anuluj zmiany.</p>
+          <div class="btn-group ">
+            <button (click)="cancelChanges()" class="btn btn-warning">Anuluj</button>
+            <button class="btn btn-primary">Zapisz</button>
+          </div>
+
+
+
+        </div>
+
+
         <div class="toolbar">
-          <button (click)="setMode('pan')" [class.active]="mode === 'pan'">
+          <button (click)="setMode(DzialkaModes.Pan)" [class.active]="mode === DzialkaModes.Pan">
             <i class="fa-solid fa-lg fa-hand"></i>
           </button>
-          <button (click)="setMode('select')" [class.active]="mode === 'select'">
+          <button (click)="setMode(DzialkaModes.Select)" [class.active]="mode === DzialkaModes.Select">
             <i class="fa-solid fa-lg fa-arrows"></i>
           </button>
           <button (click)="saveCanvasAsImage()">
             <i class="fa-solid fa-lg fa-save"></i>
           </button>
         </div>
+
+        <app-offcanvas-roslina
+        [zasadzonaRoslina]="selectedRoslina"
+        [mode]="mode"
+        [editMode]="editMode || ''"
+        (roslinaPozycjaEdit)="onRoslinaPozycjaEdit($event)"
+        >
+
+        </app-offcanvas-roslina>
+
 
 
         <div  #canvasContainer class="canvas-container border border-3 border-success-subtle "
@@ -46,7 +76,12 @@
             (mouseover)="onTileHover(tile, true)"
             (mouseout)="onTileHover(tile, false)"
             class="tile-overlay">
-              <app-lulek *ngIf="tile.roslina" [roslina]="tile.roslina ? tile.roslina : {}"></app-lulek>
+              <app-lulek
+              *ngIf="tile.zasadzonaRoslina" [zasadzonaRoslina]="tile.zasadzonaRoslina ? tile.zasadzonaRoslina : {}"
+              (roslinaClick)="onRoslinaClick($event)"
+              [mode]="mode"
+              [editMode]="editMode"
+              ></app-lulek>
             </div>
           </div>
           <!--

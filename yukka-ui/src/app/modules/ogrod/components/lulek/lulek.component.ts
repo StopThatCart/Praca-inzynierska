@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { PostResponse, RoslinaResponse } from '../../../../services/models';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { PostResponse, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
+import bootstrap, { Offcanvas } from 'bootstrap';
+import { DzialkaModes } from '../../models/dzialka-modes';
 
 @Component({
   selector: 'app-lulek',
@@ -10,21 +12,35 @@ import { PostResponse, RoslinaResponse } from '../../../../services/models';
   styleUrl: './lulek.component.css'
 })
 export class LulekComponent {
-  @Input() roslina: RoslinaResponse = {};
+  @Input() zasadzonaRoslina: ZasadzonaRoslinaResponse = {};
+  @Input() offcanvasId: string = '';
+  @Input() mode: string = '';
+  @Input() editMode: DzialkaModes = DzialkaModes.BrakEdycji;
+  @Output() roslinaClick = new EventEmitter<RoslinaResponse>();
+
   private _roslinaObraz: string | undefined;
 
+  dzialkaModes = DzialkaModes;
+
   getRoslina(): RoslinaResponse {
-    return this.roslina;
+    return this.zasadzonaRoslina.roslina || {};
   }
 
   setRoslina(roslina: RoslinaResponse) {
-    this.roslina = roslina;
+    this.zasadzonaRoslina = roslina;
   }
 
   getRoslinaObraz(): string | undefined {
-    if(this.roslina.obraz) {
-      return 'data:image/jpeg;base64,' + this.roslina.obraz;
+    if(this.zasadzonaRoslina.roslina && this.zasadzonaRoslina.roslina.obraz) {
+      return 'data:image/jpeg;base64,' + this.zasadzonaRoslina.obraz;
     }
     return this._roslinaObraz;
+  }
+
+  onRoslinaClick() {
+    if(this.mode !== DzialkaModes.Pan && this.editMode === DzialkaModes.BrakEdycji) {
+      this.roslinaClick.emit(this.zasadzonaRoslina);
+    }
+
   }
 }

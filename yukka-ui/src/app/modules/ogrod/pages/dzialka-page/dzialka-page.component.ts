@@ -1,36 +1,43 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
-import { RoslinaResponse } from '../../../../services/models';
+import { Pozycja, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
 import { PostCardComponent } from "../../../post/components/post-card/post-card.component";
 import { LulekComponent } from "../../components/lulek/lulek.component";
 import { DzialkaResponse } from '../../../../services/models/dzialka-response';
 import { ActivatedRoute } from '@angular/router';
 import { DzialkaService } from '../../../../services/services';
-import { Tile } from '../../models/Tile';
+import { Tile, TileUtils } from '../../models/Tile';
 import { FormsModule } from '@angular/forms';
 import { ScaleSliderComponent } from "../../components/scale-slider/scale-slider.component";
 import { CanvasService } from '../../services/canvas-service/canvas.service';
+import { Offcanvas } from 'bootstrap';
+import { OffcanvasRoslinaComponent } from "../../components/offcanvas-roslina/offcanvas-roslina.component";
+import { DzialkaModes } from '../../models/dzialka-modes';
 
 @Component({
   selector: 'app-dzialka-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, PostCardComponent, LulekComponent, ScaleSliderComponent],
+  imports: [CommonModule, FormsModule, PostCardComponent, LulekComponent, ScaleSliderComponent, OffcanvasRoslinaComponent],
   templateUrl: './dzialka-page.component.html',
   styleUrl: './dzialka-page.component.css'
 })
 export class DzialkaPageComponent implements OnInit  {
   dzialka: DzialkaResponse = {};
+  dzialkaBackup: DzialkaResponse = {};
+
   numer: number | undefined;
   uzytNazwa: string | undefined;
+  selectedRoslina: ZasadzonaRoslinaResponse | undefined;
 
   @ViewChild('tileSet', { static: true }) tileSet!: ElementRef; // Do usunięcia
-
   @ViewChild('slider', { static: true }) zoomEl!: ElementRef;
 
   @ViewChild('canvasContainer', { static: true }) canvasContainer!: ElementRef;
   @ViewChild('canvasElement', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('overlayBoi', { static: true }) overlay!: ElementRef;
+
+  @ViewChild(OffcanvasRoslinaComponent) offcanvasBottom!: OffcanvasRoslinaComponent;
   tiles: Tile[] = [];
 
   scale : number = 1;
@@ -38,7 +45,8 @@ export class DzialkaPageComponent implements OnInit  {
   rowColls: number = 20;
   canvasWidth: number = this.tileSize * this.rowColls;
 
-  mode: 'pan' | 'select' = 'select';
+  mode: DzialkaModes = DzialkaModes.Select;
+  editMode: DzialkaModes = DzialkaModes.BrakEdycji;
   isPanning: boolean = false;
   isSaving: boolean = false;
 
@@ -48,8 +56,45 @@ export class DzialkaPageComponent implements OnInit  {
   scrollTop: number = 0;
 
 
-  setMode(mode: 'pan' | 'select'): void {
+  setMode(mode: DzialkaModes): void {
     this.mode = mode;
+  }
+
+  changeEditMode(mode: DzialkaModes): void {
+    this.editMode = mode;
+    console.log('pozycje:', this.selectedRoslina?.pozycje);
+  }
+
+  createBackup(): void {
+    console.log('Tworzę backup');
+
+    let copy = structuredClone(this.dzialka);
+    this.dzialkaBackup = copy;
+
+    //console.log('dzialkaBackup:', this.dzialkaBackup);
+
+  }
+
+  saveChanges(): void {
+    console.log('Zapisuję zmiany');
+    // TODO
+    //this.dzialkaBackup = this.dzialka;
+    this.editMode = DzialkaModes.BrakEdycji;
+  }
+
+  cancelChanges(): void {
+    console.log('Anuluję zmiany');
+    if (this.dzialkaBackup) {
+      console.log("dzialkaBackup:", this.dzialkaBackup);
+      console.log("dzialka:", this.dzialka);
+      this.dzialka = this.dzialkaBackup;
+      this.dzialkaBackup = {};
+
+      this.initializeTiles();
+
+      this.processRosliny(this.dzialka);
+    }
+    this.editMode = DzialkaModes.BrakEdycji;
   }
 
   private images = {
@@ -58,6 +103,8 @@ export class DzialkaPageComponent implements OnInit  {
   };
 
   private placeholderColors = ['#FFCCCC', '#CCFFCC', '#CCCCFF'];
+
+  DzialkaModes = DzialkaModes;
 
   constructor(
     private route: ActivatedRoute,
@@ -121,7 +168,7 @@ export class DzialkaPageComponent implements OnInit  {
       console.log(canvas.width, canvas.height);
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const tile = this.findTile(col, row);
+          const tile = TileUtils.findTile(this.tiles, col, row);
           const img = new Image();
           img.src = tile.image || this.images.grass;
           img.onload = () => {
@@ -163,25 +210,31 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   processRosliny(dzialka: DzialkaResponse): void {
+    console.log('processRosliny');
     if (dzialka.zasadzoneRosliny) {
       dzialka.zasadzoneRosliny.forEach(zasadzonaRoslina => {
-        if (zasadzonaRoslina.tabX && zasadzonaRoslina.tabY) {
+        if (zasadzonaRoslina.pozycje) {
           this.updateTilesWithRoslina(zasadzonaRoslina);
         }
       });
     }
+    this.createBackup();
   }
 
   updateTilesWithRoslina(zasadzonaRoslina: any): void {
-    zasadzonaRoslina.tabX.forEach((x: number, index: number) => {
-      const y = zasadzonaRoslina.tabY[index];
-      const tile = this.tiles.find(t => t.x === x && t.y === y);
+    zasadzonaRoslina.pozycje?.forEach((pozycja: Pozycja) => {
+      if (pozycja.x === undefined || pozycja.y === undefined) {
+        throw new Error('Nieprawidłowa pozycja rośliny');
+      }
+
+      const tile = TileUtils.findTile(this.tiles, pozycja.x, pozycja.y);
       if (tile) {
         if (zasadzonaRoslina.roslina && zasadzonaRoslina.roslina.id) {
           tile.roslinaId = zasadzonaRoslina.roslina.id;
           tile.backgroundColor = this.placeholderColors[zasadzonaRoslina.roslina.id % this.placeholderColors.length];
         }
         if (tile.x == zasadzonaRoslina.x && tile.y == zasadzonaRoslina.y) {
+          tile.zasadzonaRoslina = zasadzonaRoslina;
           tile.roslina = zasadzonaRoslina.roslina;
           if (tile.roslina && zasadzonaRoslina.obraz) {
             tile.roslina.obraz = zasadzonaRoslina.obraz;
@@ -191,24 +244,70 @@ export class DzialkaPageComponent implements OnInit  {
     });
   }
 
-
-
-
-  findTile(x: number, y: number): Tile  {
-    const tile = this.tiles.find(t => t.x === x && t.y === y);
-    if (!tile) {
-      throw new Error(`Nie znaleziono kafelka na koordynatach(${x}, ${y})`);
-    }
-    return tile;
-  }
-
+  // TODO: Poprawić to plus pozycje
   onTileClick(tile: Tile) {
-    console.log(`Koordynaty kafelka: (${tile.x}, ${tile.y})
-      RoslinaId: ${tile.roslinaId}
-      Leży na nim roślina: ${tile.roslina?.nazwa}
-      Kolorek: ${tile.backgroundColor}`);
+    if(this.editMode === DzialkaModes.EditRoslinaKafelki) {
+      this.changeRoslinaKafelek(tile);
+    }else if (this.editMode === DzialkaModes.EditRoslinaPozycja) {
+      this.changeRoslinaPozycja(tile);
+    } else {
+      console.log(`Koordynaty kafelka: (${tile.x}, ${tile.y})
+        RoslinaId: ${tile.roslinaId}
+        Leży na nim roślina: ${tile.roslina?.nazwa}
+        Kolorek: ${tile.backgroundColor}`);
+    }
    // tile.image = 'assets/tiles/water.png';
   }
+
+
+
+  changeRoslinaKafelek(tile: Tile): void {
+    if(tile.zasadzonaRoslina) {
+      console.log('Na tym kafelku znajduje się roślina.');
+      return;
+    }
+
+    if(!this.selectedRoslina) return;
+    const index = this.selectedRoslina.pozycje?.findIndex(p => p.x === tile.x && p.y === tile.y);
+
+      if (index !== undefined && index !== -1) {
+        console.log('Usuwam kafelek z tabX i tabY rośliny');
+        this.selectedRoslina.pozycje?.splice(index, 1);
+        TileUtils.clearTile(tile);
+      } else {
+        console.log('Dodaję kafelek do pozycji rośliny');
+        this.selectedRoslina.pozycje?.push({ x: tile.x, y: tile.y });
+        tile.roslinaId = this.selectedRoslina.roslina?.id;
+        tile.backgroundColor = this.getRandomColor();
+        console.log('pozycje:', this.selectedRoslina.pozycje);
+      }
+
+      this.updateTilesWithRoslina(this.selectedRoslina);
+  }
+
+
+  changeRoslinaPozycja(tile: Tile): void {
+    if(!this.selectedRoslina) return;
+    if (!tile.zasadzonaRoslina) {
+      const oldTile = TileUtils.findTile(this.tiles, this.selectedRoslina.x!, this.selectedRoslina.y!);
+      TileUtils.clearTile(oldTile);
+
+      // Przenieś roślinę na nowy kafelek
+      tile.roslinaId = this.selectedRoslina.roslina?.id;
+      tile.zasadzonaRoslina = this.selectedRoslina;
+      tile.roslina = this.selectedRoslina.roslina;
+      tile.backgroundColor = this.getRandomColor();
+
+      this.selectedRoslina.pozycje?.push({ x: tile.x, y: tile.y });
+      this.selectedRoslina.x = tile.x;
+      this.selectedRoslina.y = tile.y;
+
+      this.updateTilesWithRoslina(this.selectedRoslina);
+    } else {
+      console.log('Na tym kafelku znajduje się już roślina.');
+    }
+  }
+
 
   onTileHover(tile: any, isHovering: boolean) {
     //console.log(`Kafelkek (${tile.x}, ${tile.y}) ${isHovering ? 'najechano' : 'zjechano'}`);
@@ -234,8 +333,24 @@ export class DzialkaPageComponent implements OnInit  {
 
   }
 
+  onRoslinaClick(roslina: RoslinaResponse): void {
+    if (this.mode === DzialkaModes.Select) {
+      this.selectedRoslina = roslina;
+      const offcanvasElement = this.offcanvasBottom.offcanvasBottom.nativeElement;
+      if (offcanvasElement) {
+        const bsOffcanvas = new Offcanvas(offcanvasElement);
+        bsOffcanvas.show();
+      }
+    }
+  }
+
+  onRoslinaPozycjaEdit(roslina: RoslinaResponse): void {
+    if(this.editMode !== DzialkaModes.BrakEdycji) return;
+    this.editMode = DzialkaModes.EditRoslinaPozycja;
+  }
+
   onMouseDown(event: MouseEvent): void {
-    if (this.mode !== 'pan') return;
+    if (this.mode !== DzialkaModes.Pan) return;
     this.isPanning = true;
     this.startX = event.pageX - this.canvasContainer.nativeElement.offsetLeft;
     this.startY = event.pageY - this.canvasContainer.nativeElement.offsetTop;
@@ -253,13 +368,17 @@ export class DzialkaPageComponent implements OnInit  {
     const walkY = y - this.startY;
     this.canvasContainer.nativeElement.scrollLeft = this.scrollLeft - walkX;
     this.canvasContainer.nativeElement.scrollTop = this.scrollTop - walkY;
-    document.body.style.userSelect = 'none';
+    if (typeof document !== 'undefined') {
+      document.body.style.userSelect = 'none';
+    }
   }
 
   @HostListener('document:mouseup')
   onMouseUp(): void {
     this.isPanning = false;
-    document.body.style.userSelect = '';
+    if (typeof document !== 'undefined') {
+      document.body.style.userSelect = '';
+    }
   }
 
   onScaleChange(newScale: number) {

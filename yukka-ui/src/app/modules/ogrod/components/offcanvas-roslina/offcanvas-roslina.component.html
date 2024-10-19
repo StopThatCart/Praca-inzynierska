@@ -1,0 +1,50 @@
+<div #offcanvasBottom class="offcanvas offcanvas-bottom bg-info-subtle h-auto" tabindex="-1" id="offcanvasBottom"
+  aria-labelledby="offcanvasBottomLabel">
+  <div class="offcanvas-header">
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body small">
+    <div *ngIf="zasadzonaRoslina" class="container py-4">
+      <div class="row gy-4">
+        <div class="col-md-6">
+          <div><img [src]="getRoslinaObraz()" alt="..." class="rounded img-fluid w-100"></div>
+        </div>
+        <div class="col-md-6 d-md-flex align-items-md-center">
+          <div>
+            <h3 class="roslina-nazwa-color">{{zasadzonaRoslina.roslina?.nazwa}}</h3>
+            <h5 class="roslina-nazwa-lacinska-color">{{zasadzonaRoslina.roslina?.nazwaLacinska}}</h5>
+            <div *ngIf="true" class="btn-group">
+              <button (click)="sendRoslinaPozycjaEditEvent()"
+              class="btn btn-warning text-uppercase"
+              data-bs-dismiss="offcanvas" aria-label="Close"
+              >zmień pozycję</button>
+              <button class="btn btn-info text-uppercase">zmień obraz</button>
+              <button class="btn btn-info text-uppercase">zmień teksturę kafelków</button>
+              <button class="btn btn-danger text-uppercase">usuń z działki</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+        <div class="card mt-2" style="background: var(--bs-secondary);">
+          <div class="card-body">
+            <p class="my-3 roslina-opis">{{zasadzonaRoslina.roslina?.opis}}</p>
+          </div>
+        </div>
+
+          <div class="row justify-content-between py-2 my-2">
+            <div class="col property-item mx-2">
+              <span class="property-name"> adasdasd </span>
+              <span class="property-value">asdasdasd as</span>
+            </div>
+            <div  class="col property-item mx-2">
+              <span class="property-name">asdasdas asdas</span>
+              <span class="property-value">asdasdasd </span>
+            </div>
+          </div>
+
+
+    </div>
+  </div>
+</div>

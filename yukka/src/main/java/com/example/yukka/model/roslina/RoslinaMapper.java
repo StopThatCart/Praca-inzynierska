@@ -85,8 +85,9 @@ public class RoslinaMapper {
             .roslina(roslinaToRoslinaResponseWithWlasciwosci(zasadzonaNaReverse.getRoslina()))
             .x(zasadzonaNaReverse.getX())
             .y(zasadzonaNaReverse.getY())
-            .tabX(zasadzonaNaReverse.getTabx())
-            .tabY(zasadzonaNaReverse.getTaby())
+            .tabX(zasadzonaNaReverse.getTabX())
+            .tabY(zasadzonaNaReverse.getTabY())
+            .pozycje(zasadzonaNaReverse.getPozycje())
             .obraz(obraz)
             .build();
     }

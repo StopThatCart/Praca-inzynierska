@@ -38,4 +38,13 @@ Tutaj trafia nieużywany kod, którego nie na razie nie usuwam bo może się prz
       return new Blob([byteArray], { type: contentType });
     }
 
+
+          // Zaktualizuj roślinę w this.dzialka
+      //const index = this.dzialka.zasadzoneRosliny?.findIndex(r => r.roslina?.id === this.selectedRoslina?.roslina?.id);
+      //if (this.dzialka.zasadzoneRosliny && index !== undefined && index !== -1) {
+      //    console.log('Zaktualizowano pozycję rośliny w this.dzialka');
+        //  this.dzialka.zasadzoneRosliny[index].x = tile.x;
+        //  this.dzialka.zasadzoneRosliny[index].y = tile.y;
+        //  this.dzialka.zasadzoneRosliny[index].pozycje = this.selectedRoslina.pozycje;
+     // }
 */

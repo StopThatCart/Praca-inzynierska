@@ -2770,6 +2770,15 @@
           "name": {
             "type": "string"
           },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
+          "pracownik": {
+            "type": "boolean"
+          },
+          "admin": {
+            "type": "boolean"
+          },
           "username": {
             "type": "string"
           },
@@ -2779,25 +2788,16 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "admin": {
-            "type": "boolean"
-          },
-          "pracownik": {
-            "type": "boolean"
-          },
           "password": {
             "type": "string"
           },
           "enabled": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
           "accountNonLocked": {
@@ -3528,6 +3528,19 @@
           }
         }
       },
+      "Pozycja": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "y": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "ZasadzonaRoslinaResponse": {
         "type": "object",
         "properties": {
@@ -3554,6 +3567,12 @@
             "items": {
               "type": "integer",
               "format": "int32"
+            }
+          },
+          "pozycje": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pozycja"
             }
           },
           "obraz": {
@@ -3763,11 +3782,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           }

@@ -27,6 +27,7 @@ export type { PostRequest } from './models/post-request';
 export type { PostResponse } from './models/post-response';
 export type { PowiadomienieDto } from './models/powiadomienie-dto';
 export type { PowiadomienieResponse } from './models/powiadomienie-response';
+export type { Pozycja } from './models/pozycja';
 export type { RegistrationRequest } from './models/registration-request';
 export type { Roslina } from './models/roslina';
 export type { RoslinaRequest } from './models/roslina-request';

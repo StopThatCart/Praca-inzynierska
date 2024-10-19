@@ -1,6 +1,10 @@
 package com.example.yukka.model.dzialka;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.PostLoad;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.RelationshipId;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
@@ -35,13 +39,24 @@ public class ZasadzonaNa {
     private String obraz;
 
     @Property("tabX")
-    private int[] tabx;
+    private int[] tabX;
 
     @Property("tabY")
-    private int[] taby;
+    private int[] tabY;
     
     @JsonIgnore
     @TargetNode
     private Dzialka dzialka;
+
+    @JsonIgnore
+    private List<Pozycja> pozycje;
+
+    @PostLoad
+    private void initPozycje() {
+        pozycje = new ArrayList<>();
+        for (int i = 0; i < tabX.length; i++) {
+            pozycje.add(new Pozycja(tabX[i], tabY[i]));
+        }
+    }
 
 }

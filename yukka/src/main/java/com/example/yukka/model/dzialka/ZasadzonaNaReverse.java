@@ -1,12 +1,17 @@
 package com.example.yukka.model.dzialka;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.PostLoad;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.RelationshipId;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
 import com.example.yukka.model.roslina.Roslina;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,13 +40,25 @@ public class ZasadzonaNaReverse {
     private String obraz;
 
     @Property("tabX")
-    private int[] tabx;
+    private int[] tabX;
 
     @Property("tabY")
-    private int[] taby;
+    private int[] tabY;
 
     
     @TargetNode
     private Roslina roslina;
+
+
+    @JsonIgnore
+    private List<Pozycja> pozycje;
+
+    @PostLoad
+    private void initPozycje() {
+        pozycje = new ArrayList<>();
+        for (int i = 0; i < tabX.length; i++) {
+            pozycje.add(new Pozycja(tabX[i], tabY[i]));
+        }
+    }
 
 }
