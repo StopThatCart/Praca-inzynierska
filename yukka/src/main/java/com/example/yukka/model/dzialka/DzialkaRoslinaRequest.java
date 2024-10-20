@@ -22,17 +22,14 @@ public class DzialkaRoslinaRequest {
     private String roslinaId;
     private String nazwaLacinska;
 
-    @NotEmpty(message = "Co...?")
     @Min(value = 1, message = "Numer działki musi być > 0")
     @Max(value = 10, message = "Numer działki musi być <= 10")
     private int numerDzialki;
 
-    @NotEmpty(message = "Pozycja x jest wymagana")
     @Min(value = 0, message = "Pozycja x musi być >= 0")
     @Max(value = 19, message = "Pozycja x musi być <= 19")
     private int x;
 
-    @NotEmpty(message = "Pozycja y jest wymagana")
     @Min(value = 0, message = "Pozycja y musi być >= 0")
     @Max(value = 19, message = "Pozycja y musi być <= 19")
     private int y;

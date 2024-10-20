@@ -31,6 +31,12 @@ export class DzialkaPageComponent implements OnInit  {
   uzytNazwa: string | undefined;
   selectedRoslina: ZasadzonaRoslinaResponse | undefined;
 
+  moveRoslinaRequest: MoveRoslinaRequest = {
+    numerDzialkiStary: 0,
+    pozycje: []
+  };
+
+
   @ViewChild('tileSet', { static: true }) tileSet!: ElementRef; // Do usunięcia
   @ViewChild('slider', { static: true }) zoomEl!: ElementRef;
 
@@ -106,7 +112,7 @@ export class DzialkaPageComponent implements OnInit  {
     dirt: 'assets/tiles/dirt.png'
   };
 
-  private placeholderColors = ['#FFCCCC', '#CCFFCC', '#CCCCFF'];
+  private placeholderColors = ['#FFCCCC', '#CCFFCC', '#BCFFAC', '#CCCCFF'];
 
   DzialkaModes = DzialkaModes;
 
@@ -127,9 +133,9 @@ export class DzialkaPageComponent implements OnInit  {
     this.route.params.subscribe(params => {
       this.numer = Number(params['numer']);
       this.uzytNazwa = params['uzytkownik-nazwa'];
+      this.moveRoslinaRequest.numerDzialkiStary = this.numer;
 
       if (this.numer && this.uzytNazwa) {
-        // Na razie dane są sztywne
         this.getDzialkaByNumer( this.numer, this.uzytNazwa);
         this.route.snapshot.data['numer'] = this.numer;
         this.route.snapshot.data['uzytkownik-nazwa'] = this.uzytNazwa;
@@ -199,10 +205,30 @@ export class DzialkaPageComponent implements OnInit  {
 
 
 
-  changeRoslinaPozycjaInDzialka(numer: number, uzytkownikNazwa: string, request: MoveRoslinaRequest): void {
-    console.log('getDzialkaByNumer');
-    this.dzialkaService.updateRoslinaPositionInDzialka( { body: request }).subscribe({
+  changeRoslinaPozycjaInDzialka(): void {
+    console.log('changeRoslinaPozycjaInDzialka');
+    if(!this.selectedRoslina?.pozycje) return;
+    this.moveRoslinaRequest.pozycje = this.selectedRoslina?.pozycje;
+
+    if(this.numer === undefined) return;
+    this.moveRoslinaRequest.numerDzialkiStary = this.numer;
+
+    if(this.selectedRoslina.roslina?.nazwaLacinska) {
+      this.moveRoslinaRequest.nazwaLacinska = this.selectedRoslina.roslina?.nazwaLacinska;
+    } else if(this.selectedRoslina.roslina?.id) {
+      this.moveRoslinaRequest.roslinaId = this.selectedRoslina.roslina?.roslinaId;
+    } else {
+      console.error('Niepoprawne dane rośliny');
+      return;
+    }
+
+    this.moveRoslinaRequest.xnowy = this.selectedRoslina.x;
+    this.moveRoslinaRequest.ynowy = this.selectedRoslina.y;
+
+    this.dzialkaService.updateRoslinaPositionInDzialka( { body: this.moveRoslinaRequest }).subscribe({
       next: (dzialka) => {
+        this.editMode = DzialkaModes.BrakEdycji;
+        this.selectedRoslina = undefined;
         this.dzialka = dzialka;
         console.log(dzialka);
         this.processRosliny(dzialka);
@@ -215,7 +241,7 @@ export class DzialkaPageComponent implements OnInit  {
 
   getDzialkaByNumer(numer: number, uzytkownikNazwa: string): void {
     console.log('getDzialkaByNumer');
-    this.dzialkaService.getDzialkaOfUzytkownikByNumer( { numer: 2, 'uzytkownik-nazwa': "Piotr Wiśniewski" }).subscribe({
+    this.dzialkaService.getDzialkaOfUzytkownikByNumer( { numer: numer, 'uzytkownik-nazwa': uzytkownikNazwa }).subscribe({
       next: (dzialka) => {
         this.dzialka = dzialka;
         console.log(dzialka);
@@ -226,6 +252,32 @@ export class DzialkaPageComponent implements OnInit  {
       }
     });
   }
+
+  onRoslinaDelete() {
+    console.log('onRoslinaDelete');
+    this.initializeTiles();
+    this.getDzialkaByNumer(this.numer!, this.uzytNazwa!);
+  }
+  /*
+  removeRoslinaFromDzialka(numer: number, x: number, y: number): void {
+    console.log('getDzialkaByNumer');
+    let deletRequest : DzialkaRoslinaRequest = {
+      numerDzialki: this.numer!,
+      pozycje: [{ x: x, y: y }],
+      x: x,
+      y: y
+    };
+
+    this.dzialkaService.deleteRoslinaFromDzialka( { body: deletRequest }).subscribe({
+      next: (dzialka) => {
+        this.getDzialkaByNumer(this.numer!, this.uzytNazwa!);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+    */
 
   processRosliny(dzialka: DzialkaResponse): void {
     console.log('processRosliny');
@@ -264,14 +316,16 @@ export class DzialkaPageComponent implements OnInit  {
 
   // TODO: Poprawić to plus pozycje
   onTileClick(tile: Tile) {
-
+    if(this.mode === DzialkaModes.Pan) {
+      return;
+    }
     if (this.editMode === DzialkaModes.EditRoslinaKafelki || this.editMode === DzialkaModes.EditRoslinaPozycja) {
       if(tile.zasadzonaRoslina) {
         console.log('Na tym kafelku znajduje się roślina.');
         return;
       }
 
-      if(tile.roslinaId !== this.selectedRoslina?.roslina?.id) {
+      if(tile.roslinaId  && tile.roslinaId !== this.selectedRoslina?.roslina?.id) {
         console.log('Ten kafelek nie jest przypisany do tej rośliny.');
         return;
       }
@@ -358,9 +412,12 @@ export class DzialkaPageComponent implements OnInit  {
 
   }
 
-  onRoslinaClick(roslina: RoslinaResponse): void {
+  onRoslinaClick(roslina: ZasadzonaRoslinaResponse): void {
     if (this.mode === DzialkaModes.Select) {
       this.selectedRoslina = roslina;
+      this.moveRoslinaRequest.xstary = roslina.x;
+      this.moveRoslinaRequest.ystary = roslina.y;
+
       const offcanvasElement = this.offcanvasBottom.offcanvasBottom.nativeElement;
       if (offcanvasElement) {
         const bsOffcanvas = new Offcanvas(offcanvasElement);

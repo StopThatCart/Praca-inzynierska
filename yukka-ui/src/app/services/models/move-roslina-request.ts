@@ -4,7 +4,7 @@ import { Pozycja } from '../models/pozycja';
 export interface MoveRoslinaRequest {
   nazwaLacinska?: string;
   numerDzialkiNowy?: number;
-  numerDzialkiStary: number;
+  numerDzialkiStary?: number;
   pozycje: Array<Pozycja>;
   roslinaId?: string;
   xnowy?: number;

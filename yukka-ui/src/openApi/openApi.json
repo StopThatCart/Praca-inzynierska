@@ -1527,7 +1527,7 @@
         "operationId": "updateRoslinaPositionInDzialka",
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/MoveRoslinaRequest"
               }
@@ -2776,31 +2776,31 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "pracownik": {
+          "password": {
+            "type": "string"
+          },
+          "admin": {
             "type": "boolean"
           },
           "normalUzytkownik": {
             "type": "boolean"
           },
-          "admin": {
+          "pracownik": {
             "type": "boolean"
           },
           "username": {
             "type": "string"
           },
-          "password": {
-            "type": "string"
-          },
           "enabled": {
-            "type": "boolean"
-          },
-          "accountNonLocked": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
+            "type": "boolean"
+          },
+          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -3727,7 +3727,6 @@
       },
       "MoveRoslinaRequest": {
         "required": [
-          "numerDzialkiStary",
           "pozycje"
         ],
         "type": "object",
@@ -3756,19 +3755,19 @@
               "$ref": "#/components/schemas/Pozycja"
             }
           },
-          "xnowy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ynowy": {
-            "type": "integer",
-            "format": "int32"
-          },
           "ystary": {
             "type": "integer",
             "format": "int32"
           },
           "xstary": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "xnowy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           }

@@ -273,6 +273,7 @@ public class DzialkaService {
         }
     }
 
+    // TODO: Usuwanie tekstury jak już będzie
     public void deleteRoslinaFromDzialka(DzialkaRoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);

@@ -71,7 +71,7 @@ public class DzialkaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, connectedUser));
     }
 
-    @PatchMapping(value = "/rosliny/pozycja", consumes = "multipart/form-data", produces="application/json")
+    @PatchMapping(value = "/rosliny/pozycja", consumes="application/json", produces="application/json")
     public ResponseEntity<DzialkaResponse> updateRoslinaPositionInDzialka(@Valid @RequestBody MoveRoslinaRequest request, 
     Authentication connectedUser) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(dzialkaService.updateRoslinaPositionInDzialka(request, connectedUser));
@@ -84,7 +84,7 @@ public class DzialkaController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(dzialkaService.updateRoslinaObrazInDzialka(request, file, connectedUser));
     }
 
-    @DeleteMapping(value = "/rosliny")
+    @DeleteMapping(value = "/rosliny", consumes="application/json", produces="application/json")
     public ResponseEntity<String> deleteRoslinaFromDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, Authentication connectedUser) {
         dzialkaService.deleteRoslinaFromDzialka(request, connectedUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

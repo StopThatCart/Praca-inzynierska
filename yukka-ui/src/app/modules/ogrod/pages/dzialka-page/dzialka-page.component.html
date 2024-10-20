@@ -4,15 +4,6 @@
   <div class="row mb-5 pt-1">
     <div class="">
         <h3 class="text-uppercase text-primary"> {{ dzialka.nazwa }} </h3>
-        <div>
-          <h3 class="text-primary">Aktualny stan: <span class="text-danger">{{ mode }}</span></h3>
-          <app-scale-slider
-          [(scale)]="scale"
-          [disabled]="isSaving"
-          (scaleChange)="onScaleChange($event)">
-          </app-scale-slider>
-
-        </div>
 
         <div *ngIf="editMode !== DzialkaModes.BrakEdycji"
         class="mb-2">
@@ -28,12 +19,21 @@
           <p class="text-primary my-2">PO zakończeniu działań, zapisz albo anuluj zmiany.</p>
           <div class="btn-group ">
             <button (click)="cancelChanges()" class="btn btn-warning">Anuluj</button>
-            <button class="btn btn-primary">Zapisz</button>
+            <button (click)="changeRoslinaPozycjaInDzialka()" class="btn btn-primary">Zapisz</button>
           </div>
+        </div>
 
-
+        <div>
+          <h3 class="text-primary">Aktualny stan: <span class="text-danger">{{ mode }}</span></h3>
+          <app-scale-slider
+          [(scale)]="scale"
+          [disabled]="isSaving"
+          (scaleChange)="onScaleChange($event)">
+          </app-scale-slider>
 
         </div>
+
+
 
 
         <div class="toolbar">
@@ -50,9 +50,11 @@
 
         <app-offcanvas-roslina
         [zasadzonaRoslina]="selectedRoslina"
+        [numerDzialki]="numer"
         [mode]="mode"
         [editMode]="editMode || ''"
         (roslinaPozycjaEdit)="onRoslinaPozycjaEdit($event)"
+        (roslinaRemove)="onRoslinaDelete()"
         >
 
         </app-offcanvas-roslina>

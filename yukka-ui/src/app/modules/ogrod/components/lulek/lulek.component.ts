@@ -16,7 +16,7 @@ export class LulekComponent {
   @Input() offcanvasId: string = '';
   @Input() mode: string = '';
   @Input() editMode: DzialkaModes = DzialkaModes.BrakEdycji;
-  @Output() roslinaClick = new EventEmitter<RoslinaResponse>();
+  @Output() roslinaClick = new EventEmitter<ZasadzonaRoslinaResponse>();
 
   private _roslinaObraz: string | undefined;
 

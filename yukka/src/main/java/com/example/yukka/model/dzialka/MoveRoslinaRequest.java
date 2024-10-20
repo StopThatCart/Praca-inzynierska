@@ -1,8 +1,6 @@
 package com.example.yukka.model.dzialka;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.example.yukka.validations.ValidRoslinaIdAlboNazwaLacinska;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,32 +23,27 @@ public class MoveRoslinaRequest {
     private String roslinaId;
     private String nazwaLacinska;
 
-    @NotEmpty(message = "Co...?")
     @Min(value = 1, message = "Numer działki musi być > 0")
     @Max(value = 10, message = "Numer działki musi być <= 10")
     private int numerDzialkiStary;
 
     // Może być null jak nie zmienia się działki
-    @Min(value = 1, message = "Numer działki musi być > 0")
-    @Max(value = 10, message = "Numer działki musi być <= 10")
+   // @Min(value = 1, message = "Numer działki musi być > 0")
+   // @Max(value = 10, message = "Numer działki musi być <= 10")
     private int numerDzialkiNowy;
 
-    @NotEmpty(message = "Pozycja x jest wymagana")
     @Min(value = 0, message = "Pozycja starego x musi być >= 0")
     @Max(value = 19, message = "Pozycja starego x musi być <= 19")
     private int xStary;
 
-    @NotEmpty(message = "Pozycja y jest wymagana")
     @Min(value = 0, message = "Pozycja starego y musi być >= 0")
     @Max(value = 19, message = "Pozycja starego y musi być <= 19")
     private int yStary;
 
-    @NotEmpty(message = "Nowa pozycja x jest wymagana")
     @Min(value = 0, message = "Pozycja nowego x musi być >= 0")
     @Max(value = 19, message = "Pozycja nowego x musi być <= 19")
     private int xNowy;
 
-    @NotEmpty(message = "Nowa pozycja y jest wymagana")
     @Min(value = 0, message = "Pozycja nowego y musi być >= 0")
     @Max(value = 19, message = "Pozycja nowego y musi być <= 19")
     private int yNowy;

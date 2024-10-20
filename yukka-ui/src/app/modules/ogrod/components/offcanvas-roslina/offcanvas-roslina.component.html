@@ -20,7 +20,9 @@
               >zmień pozycję</button>
               <button class="btn btn-info text-uppercase">zmień obraz</button>
               <button class="btn btn-info text-uppercase">zmień teksturę kafelków</button>
-              <button class="btn btn-danger text-uppercase">usuń z działki</button>
+              <button (click)="removeRoslinaFromDzialka()"
+              class="btn btn-danger text-uppercase"
+              data-bs-dismiss="offcanvas" aria-label="Close">usuń z działki</button>
             </div>
           </div>
         </div>

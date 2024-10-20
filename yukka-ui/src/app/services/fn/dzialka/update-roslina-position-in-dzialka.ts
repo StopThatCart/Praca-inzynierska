@@ -16,7 +16,7 @@ export interface UpdateRoslinaPositionInDzialka$Params {
 export function updateRoslinaPositionInDzialka(http: HttpClient, rootUrl: string, params: UpdateRoslinaPositionInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
   const rb = new RequestBuilder(rootUrl, updateRoslinaPositionInDzialka.PATH, 'patch');
   if (params) {
-    rb.body(params.body, 'multipart/form-data');
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
