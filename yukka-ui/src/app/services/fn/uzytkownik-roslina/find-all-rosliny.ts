@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { PageResponseUzytkownikRoslinaResponse } from '../../models/page-response-uzytkownik-roslina-response';
+import { PageResponseRoslinaResponse } from '../../models/page-response-roslina-response';
 
 export interface FindAllRosliny$Params {
   page?: number;
   size?: number;
 }
 
-export function findAllRosliny(http: HttpClient, rootUrl: string, params?: FindAllRosliny$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseUzytkownikRoslinaResponse>> {
+export function findAllRosliny(http: HttpClient, rootUrl: string, params?: FindAllRosliny$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
   const rb = new RequestBuilder(rootUrl, findAllRosliny.PATH, 'get');
   if (params) {
     rb.query('page', params.page, {});
@@ -25,7 +25,7 @@ export function findAllRosliny(http: HttpClient, rootUrl: string, params?: FindA
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<PageResponseUzytkownikRoslinaResponse>;
+      return r as StrictHttpResponse<PageResponseRoslinaResponse>;
     })
   );
 }

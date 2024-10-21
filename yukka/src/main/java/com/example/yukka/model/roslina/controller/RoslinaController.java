@@ -77,10 +77,16 @@ public class RoslinaController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(value = "/{nazwa-lacinska}", produces="application/json")
+    @GetMapping(value = "/nazwa-lacinska/{nazwa-lacinska}", produces="application/json")
     public ResponseEntity<RoslinaResponse> findByNazwaLacinska(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
      //   String nazwaLacinska = URLDecoder.decode(encodedNazwaLacinska, StandardCharsets.UTF_8);
         return ResponseEntity.ok(roslinaService.findByNazwaLacinska(nazwaLacinska.toLowerCase()));
+    }
+
+    @GetMapping(value = "/id/{id}", produces="application/json")
+    public ResponseEntity<RoslinaResponse> findById(@PathVariable("id") Long id) {
+     //   String nazwaLacinska = URLDecoder.decode(encodedNazwaLacinska, StandardCharsets.UTF_8);
+        return ResponseEntity.ok(roslinaService.findById(id));
     }
 
     @PostMapping(consumes="application/json", produces="application/json")

@@ -74,7 +74,7 @@ export class NavbarComponent implements OnInit {
   toOgrod() {
     const nazwa = this.tokenService.nazwa;
     if (nazwa) {
-      this.router.navigate([`ogrod/${nazwa}/dzialka/2`]);
+      //this.router.navigate([`ogrod/${nazwa}/dzialka/2`]);
       //this.router.navigate([`ogrod/${nazwa}`]);
     }
     else {

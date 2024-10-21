@@ -1,7 +1,7 @@
 package com.example.yukka.model.dzialka;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.PostLoad;
@@ -49,11 +49,11 @@ public class ZasadzonaNa {
     private Dzialka dzialka;
 
     @JsonIgnore
-    private List<Pozycja> pozycje;
+    private Set<Pozycja> pozycje;
 
     @PostLoad
     private void initPozycje() {
-        pozycje = new ArrayList<>();
+        pozycje = new HashSet<>();
         for (int i = 0; i < tabX.length; i++) {
             pozycje.add(new Pozycja(tabX[i], tabY[i]));
         }

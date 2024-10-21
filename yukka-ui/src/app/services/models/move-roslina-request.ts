@@ -3,12 +3,13 @@
 import { Pozycja } from '../models/pozycja';
 export interface MoveRoslinaRequest {
   nazwaLacinska?: string;
+  numerDzialki: number;
   numerDzialkiNowy?: number;
-  numerDzialkiStary?: number;
+  obraz?: string;
   pozycje: Array<Pozycja>;
   roslinaId?: string;
+  x: number;
   xnowy?: number;
-  xstary?: number;
+  y: number;
   ynowy?: number;
-  ystary?: number;
 }

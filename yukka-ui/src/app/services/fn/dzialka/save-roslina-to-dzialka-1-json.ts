@@ -9,12 +9,12 @@ import { RequestBuilder } from '../../request-builder';
 import { DzialkaResponse } from '../../models/dzialka-response';
 import { DzialkaRoslinaRequest } from '../../models/dzialka-roslina-request';
 
-export interface SaveRoslinaToDzialka$Params {
+export interface SaveRoslinaToDzialka1$Json$Params {
       body: DzialkaRoslinaRequest
 }
 
-export function saveRoslinaToDzialka(http: HttpClient, rootUrl: string, params: SaveRoslinaToDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
-  const rb = new RequestBuilder(rootUrl, saveRoslinaToDzialka.PATH, 'post');
+export function saveRoslinaToDzialka1$Json(http: HttpClient, rootUrl: string, params: SaveRoslinaToDzialka1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+  const rb = new RequestBuilder(rootUrl, saveRoslinaToDzialka1$Json.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -29,4 +29,4 @@ export function saveRoslinaToDzialka(http: HttpClient, rootUrl: string, params: 
   );
 }
 
-saveRoslinaToDzialka.PATH = '/dzialki/rosliny';
+saveRoslinaToDzialka1$Json.PATH = '/dzialki/rosliny';

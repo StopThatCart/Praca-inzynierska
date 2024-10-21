@@ -21,7 +21,6 @@ export type { PageResponsePostResponse } from './models/page-response-post-respo
 export type { PageResponsePowiadomienieResponse } from './models/page-response-powiadomienie-response';
 export type { PageResponseRoslinaResponse } from './models/page-response-roslina-response';
 export type { PageResponseRozmowaPrywatnaResponse } from './models/page-response-rozmowa-prywatna-response';
-export type { PageResponseUzytkownikRoslinaResponse } from './models/page-response-uzytkownik-roslina-response';
 export type { Post } from './models/post';
 export type { PostRequest } from './models/post-request';
 export type { PostResponse } from './models/post-response';
@@ -38,9 +37,7 @@ export type { Ustawienia } from './models/ustawienia';
 export type { UstawieniaRequest } from './models/ustawienia-request';
 export type { Uzytkownik } from './models/uzytkownik';
 export type { UzytkownikResponse } from './models/uzytkownik-response';
-export type { UzytkownikRoslina } from './models/uzytkownik-roslina';
 export type { UzytkownikRoslinaRequest } from './models/uzytkownik-roslina-request';
-export type { UzytkownikRoslinaResponse } from './models/uzytkownik-roslina-response';
 export type { Wlasciwosc } from './models/wlasciwosc';
 export type { WlasciwoscResponse } from './models/wlasciwosc-response';
 export type { WlasciwoscWithRelations } from './models/wlasciwosc-with-relations';

@@ -6,16 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { DzialkaRoslinaRequest } from '../../models/dzialka-roslina-request';
+import { RoslinaResponse } from '../../models/roslina-response';
 
-export interface DeleteRoslinaFromDzialka$Params {
-      body: DzialkaRoslinaRequest
+export interface FindById$Params {
+  id: number;
 }
 
-export function deleteRoslinaFromDzialka(http: HttpClient, rootUrl: string, params: DeleteRoslinaFromDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, deleteRoslinaFromDzialka.PATH, 'delete');
+export function findById(http: HttpClient, rootUrl: string, params: FindById$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+  const rb = new RequestBuilder(rootUrl, findById.PATH, 'get');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.path('id', params.id, {});
   }
 
   return http.request(
@@ -23,9 +23,9 @@ export function deleteRoslinaFromDzialka(http: HttpClient, rootUrl: string, para
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<string>;
+      return r as StrictHttpResponse<RoslinaResponse>;
     })
   );
 }
 
-deleteRoslinaFromDzialka.PATH = '/dzialki/rosliny';
+findById.PATH = '/rosliny/id/{id}';

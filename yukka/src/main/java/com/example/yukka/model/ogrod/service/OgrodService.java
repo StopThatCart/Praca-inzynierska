@@ -10,7 +10,6 @@ import com.example.yukka.model.ogrod.Ogrod;
 import com.example.yukka.model.ogrod.OgrodResponse;
 import com.example.yukka.model.ogrod.repository.OgrodRepository;
 import com.example.yukka.model.roslina.RoslinaMapper;
-import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
@@ -22,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class OgrodService {
     private final OgrodRepository ogrodRepository;
     private final UzytkownikRepository uzytRepository;
-    private final CommonMapperService commonMapperService;
+   
     private final RoslinaMapper roslinaMapper;
 
     public OgrodResponse getOgrodOfUzytkownik(String uzytkownikNazwa, Authentication connectedUser) {

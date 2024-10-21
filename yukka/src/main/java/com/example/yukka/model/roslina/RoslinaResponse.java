@@ -18,13 +18,17 @@ public class RoslinaResponse {
     private String roslinaId;
     private String nazwa;
     private String nazwaLacinska;
+
+    
+
     private String opis;
     private double wysokoscMin;
     private double wysokoscMax;
     private byte[] obraz;
 
     private String autor;
-
+    private boolean roslinaUzytkownika;
+    
     private Set<String> grupy;
     private Set<String> formy;
     private Set<String> gleby;

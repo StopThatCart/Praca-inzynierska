@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,14 +39,12 @@ import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
-import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
-import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.social.service.KomentarzService;
 import com.example.yukka.model.social.service.PostService;
 import com.example.yukka.model.social.service.PowiadomienieService;
@@ -118,7 +116,7 @@ public class YukkaApplication {
 	List<Uzytkownik> uzytkownicy;
 
 	public static void main(String[] args) {
-		ApplicationContext context = SpringApplication.run(YukkaApplication.class, args);
+		SpringApplication.run(YukkaApplication.class, args);
        
 		// PythonPlantSeeder scriptRunner = context.getBean(PythonPlantSeeder.class);
        // String scriptOutput = scriptRunner.runPythonScript();
@@ -183,12 +181,12 @@ public class YukkaApplication {
 		//seedRozmowy();
 
 		//log.info("Dodawanie specjalnego powiadomienia...");
-		PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
-		.tytul("""
-				Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
-				Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
-				Ten komunikat został wygenerowany.
-				""").build();
+		// PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
+		// .tytul("""
+		// 		Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
+		// 		Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
+		// 		Ten komunikat został wygenerowany.
+		// 		""").build();
 
 		//powiadomienieService.addSpecjalnePowiadomienie(pow1);
 
@@ -205,10 +203,10 @@ public class YukkaApplication {
 		
 		DzialkaRoslinaRequest req = DzialkaRoslinaRequest.builder()
 		.numerDzialki(1)
-		.x(1).y(1)
+		.x(6).y(6)
 		//.tabX(new int[] {6, 6, 7})
 		//.tabY(new int[] {6, 7, 6})
-		.pozycje(List.of(
+		.pozycje(Set.of(
 			Pozycja.builder().x(6).y(6).build(), 
 			Pozycja.builder().x(6).y(7).build(), 
 			Pozycja.builder().x(7).y(6).build()
@@ -218,10 +216,10 @@ public class YukkaApplication {
 
 		DzialkaRoslinaRequest req2 = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2)
-		.x(1).y(1)
+		.x(12).y(11)
 		//.tabX(new int[] {12, 13, 14})
 		//.tabY(new int[] {11, 11, 11})
-		.pozycje(List.of(
+		.pozycje(Set.of(
 			Pozycja.builder().x(12).y(11).build(), 
 			Pozycja.builder().x(13).y(11).build(), 
 			Pozycja.builder().x(14).y(11).build()
@@ -230,10 +228,10 @@ public class YukkaApplication {
 		.build();
 		
 		log.info("Dodawanie rosliny 1 do dzialek");
-		dzialkaService.saveRoslinaToDzialka(req, usPiotr);
+		dzialkaService.saveRoslinaToDzialka(req, null, usPiotr);
 
 		log.info("Dodawanie rosliny 2 do dzialek");
-		dzialkaService.saveRoslinaToDzialka(req2, usPiotr);
+		dzialkaService.saveRoslinaToDzialka(req2, null, usPiotr);
 
 		Dzialka piotrDzialka2 = dzialkaRepository.getDzialkaByNumer(usPiotr.getEmail(), 2).get();
 
@@ -246,9 +244,7 @@ public class YukkaApplication {
 		
         DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2).x(9).y(9)
-        //.tabX(new int[]{9, 9, 10, 10})
-        //.tabY(new int[]{9, 10, 9, 10})
-		.pozycje(List.of(
+		.pozycje(Set.of(
 			Pozycja.builder().x(9).y(9).build(), 
 			Pozycja.builder().x(9).y(10).build(), 
 			Pozycja.builder().x(10).y(9).build(),
@@ -257,18 +253,18 @@ public class YukkaApplication {
 		.roslinaId(lolId)
 		.build();
 
-		dzialkaService.saveRoslinaToDzialka(req3, usPiotr);
+		dzialkaService.saveRoslinaToDzialka(req3, null, usPiotr);
 
 		log.info("Aktualizacja obrazu rosliny w dzialce");
 		dzialkaService.updateRoslinaObrazInDzialka(req2, obraz2, usPiotr);
 
 		MoveRoslinaRequest moveRequest1 = MoveRoslinaRequest.builder()
-		.numerDzialkiStary(2)
-		.xStary(1).yStary(1)
+		.numerDzialki(2)
+		.x(12).y(11)
 		.xNowy(3).yNowy(4)
 		//.tabX(new int[] {3, 4, 5})
 		//.tabY(new int[] {4, 4, 4})
-		.pozycje(List.of(
+		.pozycje(Set.of(
 			Pozycja.builder().x(3).y(4).build(), 
 			Pozycja.builder().x(4).y(4).build(), 
 			Pozycja.builder().x(5).y(4).build()
@@ -278,9 +274,9 @@ public class YukkaApplication {
 
 		// Na razie nie jest to kompatybilne z planowaną funkcjonalością
 		// MoveRoslinaRequest moveRequest2 = MoveRoslinaRequest.builder()
-		// .numerDzialkiStary(2)
+		// .numerDzialki(2)
 		// .numerDzialkiNowy(1)
-		// .xStary(3).yStary(4)
+		// .x(3).y(4)
 		// .xNowy(7).yNowy(7)
 		// .build();
 
@@ -294,11 +290,11 @@ public class YukkaApplication {
 	private void seedRozmowy() {
 		log.info("Seedowanie rozmow prywatnych...");
 		// Zaproszenie do rozmowy prywatnej
-		RozmowaPrywatna rozmowa1 = rozmowaPrywatnaRepository
+		rozmowaPrywatnaRepository
 		.inviteToRozmowaPrywatna(usKatarzyna.getUzytId(), usPiotr.getUzytId(), LocalDateTime.now());
 
 		// Akceptacja rozmowy prywatnej
-		RozmowaPrywatna meh = rozmowaPrywatnaRepository.acceptRozmowaPrywatna(usPiotr.getUzytId(), usKatarzyna.getUzytId());
+		rozmowaPrywatnaRepository.acceptRozmowaPrywatna(usPiotr.getUzytId(), usKatarzyna.getUzytId());
 
 		log.info("Dodawanie komentarzy do rozmowy prywatnej");
 		for (int i = 0; i < 10; i++) {

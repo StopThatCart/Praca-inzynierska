@@ -14,6 +14,7 @@ public enum Miesiac {
     LISTOPAD("listopad"),
     GRUDZIEŃ("grudzień");
 
+    @SuppressWarnings("unused")
     private final String nazwa;
 
     Miesiac(String nazwa) {

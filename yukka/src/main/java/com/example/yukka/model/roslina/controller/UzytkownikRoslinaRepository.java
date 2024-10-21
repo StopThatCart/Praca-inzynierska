@@ -10,23 +10,24 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.yukka.model.roslina.UzytkownikRoslina;
+import com.example.yukka.model.roslina.Roslina;
 
-public interface UzytkownikRoslinaRepository  extends Neo4jRepository<UzytkownikRoslina, Long> {
+
+public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, Long> {
     @Query("""
         MATCH (ros:UzytkownikRoslina{roslinaId: $roslinaId})
         OPTIONAL MATCH path = (ros)-[r]-(wlasciwosc)
         WHERE wlasciwosc:Wlasciwosc OR wlasciwosc:UzytkownikWlasciwosc
         RETURN ros, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relationships
     """)
-    Optional<UzytkownikRoslina> findByRoslinaIdWithRelations(@Param("roslinaId") String roslinaId);
+    Optional<Roslina> findByRoslinaIdWithRelations(@Param("roslinaId") String roslinaId);
 
 
     @Query("""
         MATCH (ros:UzytkownikRoslina{roslinaId: $roslinaId})
         RETURN ros
     """)
-    Optional<UzytkownikRoslina> findByRoslinaId(@Param("roslinaId") String roslinaId);
+    Optional<Roslina> findByRoslinaId(@Param("roslinaId") String roslinaId);
 
     @Query(value = """
         MATCH (roslina:UzytkownikRoslina)-[:STWORZONA_PRZEZ]->(uzytkownik:Uzytkownik{uzytId: $uzytId})
@@ -37,7 +38,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
         MATCH (roslina:UzytkownikRoslina)-[:STWORZONA_PRZEZ]->(uzytkownik:Uzytkownik{uzytId: $uzytId})
         RETURN count(roslina)
         """)
-    Page<UzytkownikRoslina> findAllRoslinyOfUzytkownik(@Param("uzytId") String uzytId, Pageable pageable);
+    Page<Roslina> findAllRoslinyOfUzytkownik(@Param("uzytId") String uzytId, Pageable pageable);
 
 
     @Query("""
@@ -55,7 +56,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
         WITH p OPTIONAL MATCH path=(p)-[r]->(w)
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
-    UzytkownikRoslina addRoslina(@Param("uzytId") String uzytId, @Param("roslina") UzytkownikRoslina roslina);
+    Roslina addRoslina(@Param("uzytId") String uzytId, @Param("roslina") Roslina roslina);
 
     @Query("""
         MATCH (uzytkownik:Uzytkownik{uzytId: $uzytId})
@@ -75,7 +76,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
         WITH p OPTIONAL MATCH path=(p)-[r]->(w)
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
-    UzytkownikRoslina addRoslina(@Param("uzytId") String uzytId,
+    Roslina addRoslina(@Param("uzytId") String uzytId,
         @Param("name") String name, @Param("roslinaId") String roslinaId, 
         @Param("description") String description, @Param("imageFilename") String imageFilename, 
         @Param("heightMin") Double heightMin, @Param("heightMax") Double heightMax, 
@@ -107,7 +108,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
            WITH p OPTIONAL MATCH path=(p)-[r]->(w)
            RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
-    UzytkownikRoslina updateRoslina(
+    Roslina updateRoslina(
         @Param("name") String name,
         @Param("roslinaId") String roslinaId,
         @Param("description") String description,
@@ -123,7 +124,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Uzytkownik
             p.obraz = COALESCE($imageFilename, 'default_plant.jpg'),
             p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
     """)
-    UzytkownikRoslina updateRoslina(
+    Roslina updateRoslina(
     @Param("name") String name,
     @Param("roslinaId") String roslinaId,
     @Param("description") String description,

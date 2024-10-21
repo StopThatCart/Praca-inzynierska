@@ -32,8 +32,10 @@ export class DzialkaPageComponent implements OnInit  {
   selectedRoslina: ZasadzonaRoslinaResponse | undefined;
 
   moveRoslinaRequest: MoveRoslinaRequest = {
-    numerDzialkiStary: 0,
-    pozycje: []
+    numerDzialki: 0,
+    pozycje: [],
+    x: -1,
+    y: -1
   };
 
 
@@ -133,7 +135,7 @@ export class DzialkaPageComponent implements OnInit  {
     this.route.params.subscribe(params => {
       this.numer = Number(params['numer']);
       this.uzytNazwa = params['uzytkownik-nazwa'];
-      this.moveRoslinaRequest.numerDzialkiStary = this.numer;
+      this.moveRoslinaRequest.numerDzialki = this.numer;
 
       if (this.numer && this.uzytNazwa) {
         this.getDzialkaByNumer( this.numer, this.uzytNazwa);
@@ -179,6 +181,11 @@ export class DzialkaPageComponent implements OnInit  {
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const tile = TileUtils.findTile(this.tiles, col, row);
+          if(!tile) {
+            console.error('Nie znaleziono kafelka podczas generowania planszy');
+            return;
+          }
+
           const img = new Image();
           img.src = tile.image || this.images.grass;
           img.onload = () => {
@@ -211,7 +218,7 @@ export class DzialkaPageComponent implements OnInit  {
     this.moveRoslinaRequest.pozycje = this.selectedRoslina?.pozycje;
 
     if(this.numer === undefined) return;
-    this.moveRoslinaRequest.numerDzialkiStary = this.numer;
+    this.moveRoslinaRequest.numerDzialki = this.numer;
 
     if(this.selectedRoslina.roslina?.nazwaLacinska) {
       this.moveRoslinaRequest.nazwaLacinska = this.selectedRoslina.roslina?.nazwaLacinska;
@@ -371,7 +378,10 @@ export class DzialkaPageComponent implements OnInit  {
   changeRoslinaPozycja(tile: Tile): void {
     if(!this.selectedRoslina) return;
     const oldTile = TileUtils.findTile(this.tiles, this.selectedRoslina.x!, this.selectedRoslina.y!);
-    TileUtils.clearTile(oldTile);
+    if(oldTile) {
+      TileUtils.clearTile(oldTile);
+    }
+
 
     // Przenieś roślinę na nowy kafelek
     tile.roslinaId = this.selectedRoslina.roslina?.id;
@@ -415,8 +425,10 @@ export class DzialkaPageComponent implements OnInit  {
   onRoslinaClick(roslina: ZasadzonaRoslinaResponse): void {
     if (this.mode === DzialkaModes.Select) {
       this.selectedRoslina = roslina;
-      this.moveRoslinaRequest.xstary = roslina.x;
-      this.moveRoslinaRequest.ystary = roslina.y;
+      if(roslina.x && roslina.y) {
+        this.moveRoslinaRequest.x = roslina.x;
+        this.moveRoslinaRequest.y = roslina.y;
+      }
 
       const offcanvasElement = this.offcanvasBottom.offcanvasBottom.nativeElement;
       if (offcanvasElement) {

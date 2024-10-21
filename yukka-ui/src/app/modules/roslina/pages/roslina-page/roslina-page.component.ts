@@ -24,6 +24,7 @@ export class RoslinaPageComponent implements OnInit {
 
 
   isAdminOrPracownik: boolean = false;
+  isLoggedIn: boolean = false;
 
   constructor(
     private router: Router,
@@ -47,6 +48,7 @@ export class RoslinaPageComponent implements OnInit {
 
   private checkRoles() {
     this.isAdminOrPracownik = this.tokenService.isAdmin() || this.tokenService.isPracownik();
+    this.isLoggedIn = this.tokenService.isTokenValid();
   }
 
 
@@ -59,6 +61,12 @@ export class RoslinaPageComponent implements OnInit {
   goToUploadRoslinaObraz() {
     if (this.isAdminOrPracownik && this.roslina?.nazwaLacinska) {
       this.router.navigate(['obraz'], { relativeTo: this.route });
+    }
+  }
+
+  goToAddRoslinaToDzialka() {
+    if (this.roslina?.nazwaLacinska) {
+      this.router.navigate(['ogrod', this.tokenService.nazwa, 'dzialka', 'dodawanie', this.roslina.id]);
     }
   }
 

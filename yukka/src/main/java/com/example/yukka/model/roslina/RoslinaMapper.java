@@ -2,10 +2,8 @@ package com.example.yukka.model.roslina;
 
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -92,7 +90,7 @@ public class RoslinaMapper {
             .build();
     }
 
-    public UzytkownikRoslinaRequest toUzytkownikRoslinaRequest(UzytkownikRoslina roslina) {
+    public UzytkownikRoslinaRequest toUzytkownikRoslinaRequest(Roslina roslina) {
         if (roslina == null) {
             return null;
         }
@@ -107,28 +105,12 @@ public class RoslinaMapper {
             .build();
     }
 
-    public UzytkownikRoslina toUzytkownikRoslina(@Valid UzytkownikRoslinaRequest request) {
-        if (request == null) {
-            return null;
-        }
-        UzytkownikRoslina roslina = UzytkownikRoslina.builder()
-            .roslinaId(request.getRoslinaId())
-            .nazwa(request.getNazwa())
-            .opis(request.getOpis())
-            .obraz(request.getObraz())
-            .wysokoscMin(request.getWysokoscMin())
-            .wysokoscMax(request.getWysokoscMax())
-            .build();
-        mapWlasciwosciToRoslina(roslina, request.getWlasciwosci());
-        
-        return roslina;
-    }
-
-    public UzytkownikRoslinaResponse toUzytkownikRoslinaResponseWithoutWlasciwosci(UzytkownikRoslina roslina) {
+    
+    public RoslinaResponse toRoslinaResponseWithoutWlasciwosci(Roslina roslina) {
         if (roslina == null) {
             return null;
         }
-        return UzytkownikRoslinaResponse.builder()
+        return RoslinaResponse.builder()
                 .id(roslina.getId())
                 .roslinaId(roslina.getRoslinaId())
                 .nazwa(roslina.getNazwa())
@@ -140,22 +122,7 @@ public class RoslinaMapper {
                 .build();
     }
 
-    public UzytkownikRoslinaResponse toUzytkownikRoslinaResponse(UzytkownikRoslina roslina) {
-        if (roslina == null) {
-            return null;
-        }
-        return UzytkownikRoslinaResponse.builder()
-                .id(roslina.getId())
-                .roslinaId(roslina.getRoslinaId())
-                .nazwa(roslina.getNazwa())
-                .opis(roslina.getOpis())
-                .wysokoscMin(roslina.getWysokoscMin())
-                .wysokoscMax(roslina.getWysokoscMax())
-                .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
-                .autor(roslina.getUzytkownik() != null ? roslina.getUzytkownik().getNazwa() : null)
-                .build();
-    }
-
+    
 
     public RoslinaRequest toRoslinaRequest(Roslina roslina) {
         if (roslina == null) {
@@ -172,6 +139,24 @@ public class RoslinaMapper {
             .wlasciwosci(mapWlasciwosciWithRelationsToMap(roslina))
             .build();
     }
+
+    public Roslina toRoslina(@Valid UzytkownikRoslinaRequest request) {
+        if (request == null) {
+            return null;
+        }
+        Roslina roslina = Roslina.builder()
+            .roslinaId(request.getRoslinaId())
+            .nazwa(request.getNazwa())
+            .opis(request.getOpis())
+            .obraz(request.getObraz())
+            .wysokoscMin(request.getWysokoscMin())
+            .wysokoscMax(request.getWysokoscMax())
+            .build();
+        mapWlasciwosciToRoslina(roslina, request.getWlasciwosci());
+        
+        return roslina;
+    }
+
 
     public Roslina toRoslina(@Valid RoslinaRequest request) {
         if (request == null) {
@@ -200,7 +185,6 @@ public class RoslinaMapper {
             return null;
         }
 
-        Uzytkownik uzytkownik = roslina.getUzytkownik();
         return RoslinaResponse.builder()
                 .id(roslina.getId())
                 .roslinaId(roslina.getRoslinaId())
@@ -210,7 +194,8 @@ public class RoslinaMapper {
                 .wysokoscMin(roslina.getWysokoscMin())
                 .wysokoscMax(roslina.getWysokoscMax())
                 .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
-                .autor(uzytkownik != null ? uzytkownik.getNazwa() : null)
+                .autor(roslina.getUzytkownik() != null ? roslina.getUzytkownik().getNazwa() : null)
+                .roslinaUzytkownika(roslina.getUzytkownik() != null)
                 .build();
     }
 
@@ -230,6 +215,7 @@ public class RoslinaMapper {
                 .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
 
                 .autor(roslina.getUzytkownik() != null ? roslina.getUzytkownik().getNazwa() : null)
+                .roslinaUzytkownika(roslina.getUzytkownik() != null)
 
                 .grupy(extractNazwy(roslina.getGrupy()))
                 .formy(extractNazwy(roslina.getFormy()))
@@ -252,38 +238,38 @@ public class RoslinaMapper {
                 .build();
     }
 
-    public RoslinaResponse toRoslinaResponse(RoslinaRequest request) {
-        if (request == null) {
-            return null;
-        }
-        return RoslinaResponse.builder()
-            .roslinaId(request.getRoslinaId())
-            .nazwa(request.getNazwa())
-            .nazwaLacinska(request.getNazwaLacinska())
-            .opis(request.getOpis())
-            .wysokoscMin(request.getWysokoscMin())
-            .wysokoscMax(request.getWysokoscMax())
-            .obraz(fileUtils.readRoslinaObrazFile(request.getObraz()))
-            .grupy(extractNazwy(request.getWlasciwosci(), "grupy"))
-            .formy(extractNazwy(request.getWlasciwosci(), "formy"))
-            .gleby(extractNazwy(request.getWlasciwosci(), "gleby"))
-            .koloryLisci(extractNazwy(request.getWlasciwosci(), "koloryLisci"))
-            .koloryKwiatow(extractNazwy(request.getWlasciwosci(), "koloryKwiatow"))
-            .kwiaty(extractNazwy(request.getWlasciwosci(), "kwiaty"))
-            .odczyny(extractNazwy(request.getWlasciwosci(), "odczyny"))
-            .okresyKwitnienia(extractNazwy(request.getWlasciwosci(), "okresyKwitnienia"))
-            .okresyOwocowania(extractNazwy(request.getWlasciwosci(), "okresyOwocowania"))
-            .owoce(extractNazwy(request.getWlasciwosci(), "owoce"))
-            .podgrupa(extractNazwy(request.getWlasciwosci(), "podgrupa"))
-            .pokroje(extractNazwy(request.getWlasciwosci(), "pokroje"))
-            .silyWzrostu(extractNazwy(request.getWlasciwosci(), "silyWzrostu"))
-            .stanowiska(extractNazwy(request.getWlasciwosci(), "stanowiska"))
-            .walory(extractNazwy(request.getWlasciwosci(), "walory"))
-            .wilgotnosci(extractNazwy(request.getWlasciwosci(), "wilgotnosci"))
-            .zastosowania(extractNazwy(request.getWlasciwosci(), "zastosowania"))
-            .zimozielonosci(extractNazwy(request.getWlasciwosci(), "zimozielonosci"))
-            .build();
-    }
+    // public RoslinaResponse toRoslinaResponse(RoslinaRequest request) {
+    //     if (request == null) {
+    //         return null;
+    //     }
+    //     return RoslinaResponse.builder()
+    //         .roslinaId(request.getRoslinaId())
+    //         .nazwa(request.getNazwa())
+    //         .nazwaLacinska(request.getNazwaLacinska())
+    //         .opis(request.getOpis())
+    //         .wysokoscMin(request.getWysokoscMin())
+    //         .wysokoscMax(request.getWysokoscMax())
+    //         .obraz(fileUtils.readRoslinaObrazFile(request.getObraz()))
+    //         .grupy(extractNazwy(request.getWlasciwosci(), "grupy"))
+    //         .formy(extractNazwy(request.getWlasciwosci(), "formy"))
+    //         .gleby(extractNazwy(request.getWlasciwosci(), "gleby"))
+    //         .koloryLisci(extractNazwy(request.getWlasciwosci(), "koloryLisci"))
+    //         .koloryKwiatow(extractNazwy(request.getWlasciwosci(), "koloryKwiatow"))
+    //         .kwiaty(extractNazwy(request.getWlasciwosci(), "kwiaty"))
+    //         .odczyny(extractNazwy(request.getWlasciwosci(), "odczyny"))
+    //         .okresyKwitnienia(extractNazwy(request.getWlasciwosci(), "okresyKwitnienia"))
+    //         .okresyOwocowania(extractNazwy(request.getWlasciwosci(), "okresyOwocowania"))
+    //         .owoce(extractNazwy(request.getWlasciwosci(), "owoce"))
+    //         .podgrupa(extractNazwy(request.getWlasciwosci(), "podgrupa"))
+    //         .pokroje(extractNazwy(request.getWlasciwosci(), "pokroje"))
+    //         .silyWzrostu(extractNazwy(request.getWlasciwosci(), "silyWzrostu"))
+    //         .stanowiska(extractNazwy(request.getWlasciwosci(), "stanowiska"))
+    //         .walory(extractNazwy(request.getWlasciwosci(), "walory"))
+    //         .wilgotnosci(extractNazwy(request.getWlasciwosci(), "wilgotnosci"))
+    //         .zastosowania(extractNazwy(request.getWlasciwosci(), "zastosowania"))
+    //         .zimozielonosci(extractNazwy(request.getWlasciwosci(), "zimozielonosci"))
+    //         .build();
+    // }
 
     private Set<String> extractNazwy(Set<Wlasciwosc> wlasciwosci) {
         return wlasciwosci.stream()
@@ -291,12 +277,12 @@ public class RoslinaMapper {
                           .collect(Collectors.toSet());
     }
 
-    private Set<String> extractNazwy(List<WlasciwoscWithRelations> wlasciwosci, String relacja) {
-        return wlasciwosci.stream()
-            .filter(w -> w.getRelacja().equalsIgnoreCase(relacja))
-            .map(WlasciwoscWithRelations::getNazwa)
-            .collect(Collectors.toSet());
-    }
+    // private Set<String> extractNazwy(List<WlasciwoscWithRelations> wlasciwosci, String relacja) {
+    //     return wlasciwosci.stream()
+    //         .filter(w -> w.getRelacja().equalsIgnoreCase(relacja))
+    //         .map(WlasciwoscWithRelations::getNazwa)
+    //         .collect(Collectors.toSet());
+    // }
 
     private List<WlasciwoscWithRelations> mapWlasciwosciWithRelationsToMap(Roslina roslina) {
         return Arrays.stream(RoslinaRelacje.values())
@@ -316,39 +302,39 @@ public class RoslinaMapper {
 
     
 
-    private List<Map<String, String>> mapWlasciwosciToMap(Roslina roslina) {
-        return Arrays.stream(RoslinaRelacje.values())
-            .map(relacja -> mapRelationToMap(relacja.getWlasciwosci(roslina), relacja))
-            .flatMap(List::stream)
-            .collect(Collectors.toList());
-    }
+    // private List<Map<String, String>> mapWlasciwosciToMap(Roslina roslina) {
+    //     return Arrays.stream(RoslinaRelacje.values())
+    //         .map(relacja -> mapRelationToMap(relacja.getWlasciwosci(roslina), relacja))
+    //         .flatMap(List::stream)
+    //         .collect(Collectors.toList());
+    // }
     
-    private List<Map<String, String>> mapRelationToMap(Set<Wlasciwosc> wlasciwosci, RoslinaRelacje relacja) {
-        return wlasciwosci.stream()
-            .map(w -> {
-                Map<String, String> map = new HashMap<>();
-                map.put("labels", w.getLabels());
-                map.put("nazwa", w.getNazwa());
-                map.put("relacja", relacja.name());
-                return map;
-            })
-            .collect(Collectors.toList());
-    }
+    // private List<Map<String, String>> mapRelationToMap(Set<Wlasciwosc> wlasciwosci, RoslinaRelacje relacja) {
+    //     return wlasciwosci.stream()
+    //         .map(w -> {
+    //             Map<String, String> map = new HashMap<>();
+    //             map.put("labels", w.getLabels());
+    //             map.put("nazwa", w.getNazwa());
+    //             map.put("relacja", relacja.name());
+    //             return map;
+    //         })
+    //         .collect(Collectors.toList());
+    // }
 
-    private void mapMapToRoslina(Roslina roslina, List<Map<String, String>> wlasciwosci) {
-        for (Map<String, String> w : wlasciwosci) {
-            Wlasciwosc wlasciwosc = new Wlasciwosc();
-            wlasciwosc.setNazwa(w.get("nazwa"));
+    // private void mapMapToRoslina(Roslina roslina, List<Map<String, String>> wlasciwosci) {
+    //     for (Map<String, String> w : wlasciwosci) {
+    //         Wlasciwosc wlasciwosc = new Wlasciwosc();
+    //         wlasciwosc.setNazwa(w.get("nazwa"));
 
-            RoslinaRelacje relacja = RoslinaRelacje.valueOf(w.get("relacja"));
-            Set<Wlasciwosc> existingSet = relacja.getWlasciwosci(roslina);
-            if (existingSet == null) {
-                existingSet = new HashSet<>();
-            }
-            existingSet.add(wlasciwosc);
-            relacja.setWlasciwosci(roslina, existingSet);
-        }
-    }
+    //         RoslinaRelacje relacja = RoslinaRelacje.valueOf(w.get("relacja"));
+    //         Set<Wlasciwosc> existingSet = relacja.getWlasciwosci(roslina);
+    //         if (existingSet == null) {
+    //             existingSet = new HashSet<>();
+    //         }
+    //         existingSet.add(wlasciwosc);
+    //         relacja.setWlasciwosci(roslina, existingSet);
+    //     }
+    // }
 
 
     private void mapWlasciwosciToRoslina(Roslina roslina, List<WlasciwoscWithRelations> wlasciwosci) {

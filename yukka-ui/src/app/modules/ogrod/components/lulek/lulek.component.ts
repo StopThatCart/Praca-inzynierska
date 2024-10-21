@@ -31,8 +31,14 @@ export class LulekComponent {
   }
 
   getRoslinaObraz(): string | undefined {
-    if(this.zasadzonaRoslina.roslina && this.zasadzonaRoslina.roslina.obraz) {
-      return 'data:image/jpeg;base64,' + this.zasadzonaRoslina.obraz;
+    let baza = 'data:image/jpeg;base64,';
+    if(this.zasadzonaRoslina) {
+      if(this.zasadzonaRoslina.obraz) {
+        return baza + this.zasadzonaRoslina.obraz
+      }else if(this.zasadzonaRoslina.roslina && this.zasadzonaRoslina.roslina.obraz) {
+        return baza + this.zasadzonaRoslina.roslina.obraz
+      }
+
     }
     return this._roslinaObraz;
   }
@@ -40,6 +46,8 @@ export class LulekComponent {
   onRoslinaClick() {
     if(this.mode !== DzialkaModes.Pan && this.editMode === DzialkaModes.BrakEdycji) {
       this.roslinaClick.emit(this.zasadzonaRoslina);
+      console.log('Roslina clicked');
+      console.log(this.zasadzonaRoslina);
     }
 
   }

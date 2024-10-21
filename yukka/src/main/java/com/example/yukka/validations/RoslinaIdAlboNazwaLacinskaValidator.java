@@ -8,8 +8,6 @@ import jakarta.validation.ConstraintValidatorContext;
 
 // Trochę to skomplikowane, ale nie chciałem robić osobnego walidatora dla każdego requesta
 public class RoslinaIdAlboNazwaLacinskaValidator implements ConstraintValidator<ValidRoslinaIdAlboNazwaLacinska, Object> {
-
-    
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         if(value == null) {

@@ -15,7 +15,8 @@ import { findAllRosliny } from '../fn/uzytkownik-roslina/find-all-rosliny';
 import { FindAllRosliny$Params } from '../fn/uzytkownik-roslina/find-all-rosliny';
 import { findUzytkownikRoslinaByRoslinaId } from '../fn/uzytkownik-roslina/find-uzytkownik-roslina-by-roslina-id';
 import { FindUzytkownikRoslinaByRoslinaId$Params } from '../fn/uzytkownik-roslina/find-uzytkownik-roslina-by-roslina-id';
-import { PageResponseUzytkownikRoslinaResponse } from '../models/page-response-uzytkownik-roslina-response';
+import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
+import { Roslina } from '../models/roslina';
 import { saveRoslina1$FormData } from '../fn/uzytkownik-roslina/save-roslina-1-form-data';
 import { SaveRoslina1$FormData$Params } from '../fn/uzytkownik-roslina/save-roslina-1-form-data';
 import { saveRoslina1$Json } from '../fn/uzytkownik-roslina/save-roslina-1-json';
@@ -24,7 +25,6 @@ import { updateRoslina1 } from '../fn/uzytkownik-roslina/update-roslina-1';
 import { UpdateRoslina1$Params } from '../fn/uzytkownik-roslina/update-roslina-1';
 import { updateRoslinaObraz1 } from '../fn/uzytkownik-roslina/update-roslina-obraz-1';
 import { UpdateRoslinaObraz1$Params } from '../fn/uzytkownik-roslina/update-roslina-obraz-1';
-import { UzytkownikRoslina } from '../models/uzytkownik-roslina';
 
 @Injectable({ providedIn: 'root' })
 export class UzytkownikRoslinaService extends BaseService {
@@ -41,7 +41,7 @@ export class UzytkownikRoslinaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findAllRosliny$Response(params?: FindAllRosliny$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseUzytkownikRoslinaResponse>> {
+  findAllRosliny$Response(params?: FindAllRosliny$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
     return findAllRosliny(this.http, this.rootUrl, params, context);
   }
 
@@ -51,9 +51,9 @@ export class UzytkownikRoslinaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findAllRosliny(params?: FindAllRosliny$Params, context?: HttpContext): Observable<PageResponseUzytkownikRoslinaResponse> {
+  findAllRosliny(params?: FindAllRosliny$Params, context?: HttpContext): Observable<PageResponseRoslinaResponse> {
     return this.findAllRosliny$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PageResponseUzytkownikRoslinaResponse>): PageResponseUzytkownikRoslinaResponse => r.body)
+      map((r: StrictHttpResponse<PageResponseRoslinaResponse>): PageResponseRoslinaResponse => r.body)
     );
   }
 
@@ -138,7 +138,7 @@ export class UzytkownikRoslinaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findUzytkownikRoslinaByRoslinaId$Response(params: FindUzytkownikRoslinaByRoslinaId$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikRoslina>> {
+  findUzytkownikRoslinaByRoslinaId$Response(params: FindUzytkownikRoslinaByRoslinaId$Params, context?: HttpContext): Observable<StrictHttpResponse<Roslina>> {
     return findUzytkownikRoslinaByRoslinaId(this.http, this.rootUrl, params, context);
   }
 
@@ -148,9 +148,9 @@ export class UzytkownikRoslinaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findUzytkownikRoslinaByRoslinaId(params: FindUzytkownikRoslinaByRoslinaId$Params, context?: HttpContext): Observable<UzytkownikRoslina> {
+  findUzytkownikRoslinaByRoslinaId(params: FindUzytkownikRoslinaByRoslinaId$Params, context?: HttpContext): Observable<Roslina> {
     return this.findUzytkownikRoslinaByRoslinaId$Response(params, context).pipe(
-      map((r: StrictHttpResponse<UzytkownikRoslina>): UzytkownikRoslina => r.body)
+      map((r: StrictHttpResponse<Roslina>): Roslina => r.body)
     );
   }
 

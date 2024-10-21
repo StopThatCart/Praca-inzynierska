@@ -28,4 +28,4 @@ export function findByNazwaLacinska(http: HttpClient, rootUrl: string, params: F
   );
 }
 
-findByNazwaLacinska.PATH = '/rosliny/{nazwa-lacinska}';
+findByNazwaLacinska.PATH = '/rosliny/nazwa-lacinska/{nazwa-lacinska}';

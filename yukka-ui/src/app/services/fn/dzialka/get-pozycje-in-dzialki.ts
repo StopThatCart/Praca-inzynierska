@@ -6,16 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { DzialkaRoslinaRequest } from '../../models/dzialka-roslina-request';
+import { DzialkaResponse } from '../../models/dzialka-response';
 
-export interface DeleteRoslinaFromDzialka$Params {
-      body: DzialkaRoslinaRequest
+export interface GetPozycjeInDzialki$Params {
 }
 
-export function deleteRoslinaFromDzialka(http: HttpClient, rootUrl: string, params: DeleteRoslinaFromDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, deleteRoslinaFromDzialka.PATH, 'delete');
+export function getPozycjeInDzialki(http: HttpClient, rootUrl: string, params?: GetPozycjeInDzialki$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<DzialkaResponse>>> {
+  const rb = new RequestBuilder(rootUrl, getPozycjeInDzialki.PATH, 'get');
   if (params) {
-    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -23,9 +21,9 @@ export function deleteRoslinaFromDzialka(http: HttpClient, rootUrl: string, para
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<string>;
+      return r as StrictHttpResponse<Array<DzialkaResponse>>;
     })
   );
 }
 
-deleteRoslinaFromDzialka.PATH = '/dzialki/rosliny';
+getPozycjeInDzialki.PATH = '/dzialki/pozycje';

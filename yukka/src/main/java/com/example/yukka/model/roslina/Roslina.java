@@ -28,7 +28,7 @@ import lombok.Builder;
 @AllArgsConstructor
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @ToString
 @SuppressWarnings("all")
 public class Roslina {

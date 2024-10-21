@@ -20,6 +20,7 @@ export interface RoslinaResponse {
   podgrupa?: Array<string>;
   pokroje?: Array<string>;
   roslinaId?: string;
+  roslinaUzytkownika?: boolean;
   silyWzrostu?: Array<string>;
   stanowiska?: Array<string>;
   walory?: Array<string>;

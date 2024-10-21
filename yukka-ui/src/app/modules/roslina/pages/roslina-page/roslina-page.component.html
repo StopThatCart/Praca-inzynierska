@@ -17,6 +17,11 @@
                       <button (click)="removeRoslina()" class="btn btn-danger text-uppercase">usuń</button>
                   </div>
 
+                  <div *ngIf="isLoggedIn" class="mt-2">
+                    <button (click)="goToAddRoslinaToDzialka()"
+                    class="btn btn-primary text-uppercase">Dodaj do działki</button>
+                  </div>
+
 
               </div>
           </div>

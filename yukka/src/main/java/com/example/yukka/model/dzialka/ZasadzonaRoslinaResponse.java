@@ -1,7 +1,8 @@
 package com.example.yukka.model.dzialka;
 
+import java.util.Set;
+
 import com.example.yukka.model.roslina.RoslinaResponse;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,7 @@ public class ZasadzonaRoslinaResponse {
     private int[] tabX;
     private int[] tabY;
 
-    private List<Pozycja> pozycje; 
+    private Set<Pozycja> pozycje; 
 
     private byte[] obraz;
 

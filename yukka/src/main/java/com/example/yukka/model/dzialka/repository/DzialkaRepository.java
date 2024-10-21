@@ -1,7 +1,6 @@
 package com.example.yukka.model.dzialka.repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -41,8 +40,19 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Query("""
         MATCH path = (u:Uzytkownik{nazwa: $nazwa})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka) 
         RETURN d, collect(nodes(path)), collect(relationships(path))
+        ORDER BY d.numer
             """)
         List<Dzialka> getDzialkiOfUzytkownikByNazwa(@Param("nazwa") String nazwa);
+
+        @Query("""
+        MATCH path = (u:Uzytkownik{nazwa: $nazwa})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka) 
+        OPTIONAL MATCH path2 = (d)<-[r:ZASADZONA_NA]-(ros:Roslina)
+        
+        RETURN d, collect(nodes(path)), collect(relationships(path)), 
+                collect(nodes(path2)),collect(relationships(path2))
+        ORDER BY d.numer
+            """)
+        List<Dzialka> getPozycjeInDzialki(@Param("nazwa") String nazwa);
 
         @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
@@ -74,7 +84,6 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Param("obraz") String obraz,
         @Param("nazwaLacinska") String nazwaLacinska);
 
-// TODO: Zmień wszystko aby działało z koordynatami nowymi
         @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
                 (:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})

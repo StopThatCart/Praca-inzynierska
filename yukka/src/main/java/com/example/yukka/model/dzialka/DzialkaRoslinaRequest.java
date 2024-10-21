@@ -1,90 +1,77 @@
 package com.example.yukka.model.dzialka;
 import java.util.List;
+import java.util.Set;
 
 import com.example.yukka.validations.ValidRoslinaIdAlboNazwaLacinska;
+import com.example.yukka.validations.pozycje.ValidPozycje;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@SuperBuilder
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
-@ValidRoslinaIdAlboNazwaLacinska
+
+//@ValidRoslinaIdAlboNazwaLacinska
+@ValidPozycje
 public class DzialkaRoslinaRequest {
     private String roslinaId;
     private String nazwaLacinska;
 
     @Min(value = 1, message = "Numer działki musi być > 0")
     @Max(value = 10, message = "Numer działki musi być <= 10")
-    private int numerDzialki;
+    @NotNull(message = "Numer działki jest wymagany")
+    private Integer numerDzialki;
 
     @Min(value = 0, message = "Pozycja x musi być >= 0")
     @Max(value = 19, message = "Pozycja x musi być <= 19")
-    private int x;
+    @NotNull(message = "Pozycja x jest wymagana")
+    private Integer x;
 
     @Min(value = 0, message = "Pozycja y musi być >= 0")
     @Max(value = 19, message = "Pozycja y musi być <= 19")
-    private int y;
+    @NotNull(message = "Pozycja y jest wymagana")
+    private Integer y;
 
-    // @NotEmpty(message = "Kafelki x są wymagane")
-    // private int[] tabX;
-
-    // @NotEmpty(message = "Kafelki y są wymagane")
-    // private int[] tabY;
 
     @NotEmpty(message = "Pozycje są wymagane")
-    List<Pozycja> pozycje;
+    @Size(min = 1, max = 400, message = "Ilość kafelków dla rośliny powinna wynosić od 1 do 400")
+    Set<Pozycja> pozycje;
 
     @JsonIgnore
     public int[] getPozycjeX() {
         int[] tabX = new int[pozycje.size()];
-
-        for (int i = 0; i < pozycje.size(); i++) {
-            Pozycja p = pozycje.get(i);
-            tabX[i] = p.getX();
+        int i = 0;
+        for (Pozycja p : pozycje) {
+            tabX[i++] = p.getX();
         }
-
         return tabX;
     }
 
     @JsonIgnore
     public int[] getPozycjeY() {
         int[] tabY = new int[pozycje.size()];
-
-        for (int i = 0; i < pozycje.size(); i++) {
-            Pozycja p = pozycje.get(i);
-            tabY[i] = p.getY();
+        int i = 0;
+        for (Pozycja p : pozycje) {
+            tabY[i++] = p.getY();
         }
-
         return tabY;
-    }
-
-
-    @AssertTrue(message = "Ilość kafelków x i y musi być z przedziału [1, 20] i muszą mieć taką samą długość")
-    private boolean tabsWithinRange() {
-        int size = this.pozycje.size();
-        return size >= 1 && size <= 20;
-    }
-
-    @AssertTrue(message = "W kafelkach x i y nie mogą się powtarzać współrzędne")
-    private boolean noRepeatCombinations() {
-        for (int i = 0; i < this.pozycje.size(); i++) {
-            for (int j = i + 1; j < this.pozycje.size(); j++) {
-                if (this.pozycje.get(i).getX() == this.pozycje.get(j).getX() &&
-                    this.pozycje.get(i).getY() == this.pozycje.get(j).getY()) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
 

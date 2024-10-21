@@ -21,7 +21,6 @@ import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.service.DzialkaService;
-import com.example.yukka.model.dzialka.service.ZasadzonaNaService;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,10 +33,6 @@ public class DzialkaController {
 @Autowired
     private DzialkaService dzialkaService;
 
-    @Autowired
-    private ZasadzonaNaService zasadzonaNaService;
-
-
     @GetMapping(produces="application/json")
     public ResponseEntity<List<DzialkaResponse>> getDzialki(Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getDzialki(connectedUser));
@@ -47,6 +42,11 @@ public class DzialkaController {
     public ResponseEntity<List<DzialkaResponse>> getDzialkiOfUzytkownik(@PathVariable("uzytkownik-nazwa") String nazwa, 
     Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getDzialkiOfUzytkownik(nazwa, connectedUser));
+    }
+
+    @GetMapping(value = "/pozycje", produces="application/json")
+    public ResponseEntity<List<DzialkaResponse>> getPozycjeInDzialki(Authentication connectedUser) {
+        return ResponseEntity.ok(dzialkaService.getPozycjeInDzialki(connectedUser));
     }
 
     @GetMapping(value = "/{numer}", produces="application/json")
@@ -66,10 +66,18 @@ public class DzialkaController {
         dzialkaService.deleteDzialka(id);
     }
 */
-    @PostMapping(value = "/rosliny", produces="application/json")
-    public ResponseEntity<DzialkaResponse> saveRoslinaToDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, Authentication connectedUser) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, connectedUser));
+    @PostMapping(value = "/rosliny", consumes="application/json", produces="application/json")
+    public ResponseEntity<DzialkaResponse> saveRoslinaToDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, 
+    Authentication connectedUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, null, connectedUser));
     }
+
+    @PostMapping(value = "/rosliny", consumes = "multipart/form-data", produces="application/json")
+    public ResponseEntity<DzialkaResponse> saveRoslinaToDzialka(@Valid @RequestPart("request") DzialkaRoslinaRequest request, 
+    @Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, file, connectedUser));
+    }
+
 
     @PatchMapping(value = "/rosliny/pozycja", consumes="application/json", produces="application/json")
     public ResponseEntity<DzialkaResponse> updateRoslinaPositionInDzialka(@Valid @RequestBody MoveRoslinaRequest request, 

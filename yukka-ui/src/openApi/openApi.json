@@ -91,34 +91,6 @@
       }
     },
     "/rosliny/{nazwa-lacinska}": {
-      "get": {
-        "tags": [
-          "Roslina"
-        ],
-        "operationId": "findByNazwaLacinska",
-        "parameters": [
-          {
-            "name": "nazwa-lacinska",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
-                }
-              }
-            }
-          }
-        }
-      },
       "put": {
         "tags": [
           "Roslina"
@@ -384,7 +356,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageResponseUzytkownikRoslinaResponse"
+                  "$ref": "#/components/schemas/PageResponseRoslinaResponse"
                 }
               }
             }
@@ -487,7 +459,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UzytkownikRoslina"
+                  "$ref": "#/components/schemas/Roslina"
                 }
               }
             }
@@ -1032,9 +1004,27 @@
         "tags": [
           "Dzialka"
         ],
-        "operationId": "saveRoslinaToDzialka",
+        "operationId": "saveRoslinaToDzialka_1",
         "requestBody": {
           "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file",
+                  "request"
+                ],
+                "type": "object",
+                "properties": {
+                  "request": {
+                    "$ref": "#/components/schemas/DzialkaRoslinaRequest"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DzialkaRoslinaRequest"
@@ -1075,7 +1065,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "string"
                 }
@@ -1830,6 +1820,67 @@
         }
       }
     },
+    "/rosliny/nazwa-lacinska/{nazwa-lacinska}": {
+      "get": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "findByNazwaLacinska",
+        "parameters": [
+          {
+            "name": "nazwa-lacinska",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rosliny/id/{id}": {
+      "get": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "findById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rest/neo4j/gleba": {
       "get": {
         "tags": [
@@ -2278,6 +2329,29 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DzialkaResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dzialki/pozycje": {
+      "get": {
+        "tags": [
+          "Dzialka"
+        ],
+        "operationId": "getPozycjeInDzialki",
         "responses": {
           "200": {
             "description": "OK",
@@ -2770,25 +2844,25 @@
           "name": {
             "type": "string"
           },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string"
+          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "password": {
-            "type": "string"
+          "pracownik": {
+            "type": "boolean"
           },
           "admin": {
             "type": "boolean"
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "pracownik": {
-            "type": "boolean"
-          },
-          "username": {
+          "password": {
             "type": "string"
           },
           "enabled": {
@@ -2896,6 +2970,9 @@
           },
           "autor": {
             "type": "string"
+          },
+          "roslinaUzytkownika": {
+            "type": "boolean"
           },
           "grupy": {
             "uniqueItems": true,
@@ -3473,6 +3550,9 @@
             "format": "int32"
           },
           "pozycje": {
+            "maxItems": 20,
+            "minItems": 1,
+            "uniqueItems": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Pozycja"
@@ -3561,6 +3641,7 @@
             }
           },
           "pozycje": {
+            "uniqueItems": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Pozycja"
@@ -3727,7 +3808,10 @@
       },
       "MoveRoslinaRequest": {
         "required": [
-          "pozycje"
+          "numerDzialki",
+          "pozycje",
+          "x",
+          "y"
         ],
         "type": "object",
         "properties": {
@@ -3737,29 +3821,37 @@
           "nazwaLacinska": {
             "type": "string"
           },
-          "numerDzialkiStary": {
+          "numerDzialki": {
             "maximum": 10,
             "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
-          "numerDzialkiNowy": {
-            "maximum": 10,
-            "minimum": 1,
+          "x": {
+            "maximum": 19,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "y": {
+            "maximum": 19,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
           "pozycje": {
+            "maxItems": 20,
+            "minItems": 1,
+            "uniqueItems": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Pozycja"
             }
           },
-          "ystary": {
-            "type": "integer",
-            "format": "int32"
+          "obraz": {
+            "type": "string"
           },
-          "xstary": {
+          "numerDzialkiNowy": {
             "type": "integer",
             "format": "int32"
           },
@@ -3773,199 +3865,7 @@
           }
         }
       },
-      "PageResponseUzytkownikRoslinaResponse": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UzytkownikRoslinaResponse"
-            }
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
-        }
-      },
-      "UzytkownikRoslinaResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "roslinaId": {
-            "type": "string"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "wysokoscMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "wysokoscMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "autor": {
-            "type": "string"
-          },
-          "grupy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "formy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "gleby": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "koloryLisci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "koloryKwiatow": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "kwiaty": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "odczyny": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "okresyKwitnienia": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "okresyOwocowania": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "owoce": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "podgrupa": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "pokroje": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "silyWzrostu": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "stanowiska": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "walory": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "wilgotnosci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "zastosowania": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "zimozielonosci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "UzytkownikRoslina": {
+      "Roslina": {
         "type": "object",
         "properties": {
           "id": {
@@ -4196,164 +4096,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Roslina"
-            }
-          }
-        }
-      },
-      "Roslina": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "roslinaId": {
-            "type": "string"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "nazwaLacinska": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "wysokoscMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "wysokoscMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "obraz": {
-            "type": "string"
-          },
-          "formy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "gleby": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "grupy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "koloryLisci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "koloryKwiatow": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "kwiaty": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "odczyny": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "okresyKwitnienia": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "okresyOwocowania": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "owoce": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "podgrupa": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "pokroje": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "silyWzrostu": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "stanowiska": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "walory": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "wilgotnosci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "zastosowania": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "zimozielonosci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
             }
           }
         }

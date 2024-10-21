@@ -12,10 +12,10 @@ export interface Tile {
   hovered: boolean
 }
 export class TileUtils {
-  static findTile(tiles: Tile[], x: number, y: number): Tile {
+  static findTile(tiles: Tile[], x: number, y: number): Tile | undefined {
     const tile = tiles.find(t => t.x === x && t.y === y);
     if (!tile) {
-      throw new Error(`Nie znaleziono kafelka na koordynatach(${x}, ${y})`);
+      return undefined;
     }
     return tile;
   }
