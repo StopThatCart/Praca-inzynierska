@@ -1,11 +1,13 @@
 package com.example.yukka.model.ogrod.service;
 
+import java.util.Comparator;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.ogrod.Ogrod;
 import com.example.yukka.model.ogrod.OgrodResponse;
 import com.example.yukka.model.ogrod.repository.OgrodRepository;
@@ -35,6 +37,8 @@ public class OgrodService {
             
         Ogrod ogrod = ogrodRepository.getOgrodOfUzytkownikByNazwa(uzytkownikNazwa)
         .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono ogrodu użytkownika " + uzytkownikNazwa));
+
+        ogrod.getDzialki().sort(Comparator.comparingInt(Dzialka::getNumer));
         
         return roslinaMapper.toOgrodResponse(ogrod);
     }

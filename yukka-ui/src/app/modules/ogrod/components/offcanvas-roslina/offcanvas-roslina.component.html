@@ -35,16 +35,19 @@
           </div>
         </div>
 
-          <div class="row justify-content-between py-2 my-2">
+        <div class="container properties-container p-4 my-5" id="properties">
+          <div *ngFor="let pair of getRoslinaWlasciwoscPary(); let index = index; trackBy: trackByIndex" class="row justify-content-between py-2 my-2">
             <div class="col property-item mx-2">
-              <span class="property-name"> adasdasd </span>
-              <span class="property-value">asdasdasd as</span>
+              <span class="property-name">{{ pair[0].name }}:</span>
+              <span class="property-value">{{ pair[0].value }}</span>
             </div>
-            <div  class="col property-item mx-2">
-              <span class="property-name">asdasdas asdas</span>
-              <span class="property-value">asdasdasd </span>
+            <div *ngIf="pair[1]" class="col property-item mx-2">
+              <span class="property-name">{{ pair[1].name }}:</span>
+              <span class="property-value">{{ pair[1].value }}</span>
             </div>
           </div>
+        </div>
+
 
 
     </div>

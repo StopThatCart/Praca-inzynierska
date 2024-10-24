@@ -1,64 +1,15 @@
 <div class="container mt-5">
-  <h1 class="text-center">Nazwa Ogrodu</h1>
+  <h1 class="text-center text-primary">Nazwa Ogrodu</h1>
   <div class="d-flex overflow-auto mt-4">
-    <div class="card">
+    <div
+    *ngFor="let dzialka of ogrodResponse?.dzialki"
+
+    class="card bg-secondary">
       <div class="card-body">
-        <h5 class="card-title">Działka 1</h5>
-        <p class="card-text">Liczba roślin: 15</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Działka 2</h5>
-        <p class="card-text">Liczba roślin: 10</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Działka 3</h5>
-        <p class="card-text">Liczba roślin: 8</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Działka 4</h5>
-        <p class="card-text">Liczba roślin: 12</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Działka 5</h5>
-        <p class="card-text">Liczba roślin: 20</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Działka 6</h5>
-        <p class="card-text">Liczba roślin: 5</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Działka 7</h5>
-        <p class="card-text">Liczba roślin: 18</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Działka 8</h5>
-        <p class="card-text">Liczba roślin: 7</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Działka 9</h5>
-        <p class="card-text">Liczba roślin: 14</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Działka 10</h5>
-        <p class="card-text">Liczba roślin: 9</p>
+        <h5 class="card-title">{{ dzialka.nazwa }}</h5>
+        <h5 class="card-title">Nr: {{ dzialka.numer }}</h5>
+        <p class="card-text">Liczba roślin: {{ dzialka.liczbaRoslin }}</p>
+        <button (click)="goToDzialkaPage(dzialka?.numer)" class="btn btn-primary">Zobacz</button>
       </div>
     </div>
   </div>

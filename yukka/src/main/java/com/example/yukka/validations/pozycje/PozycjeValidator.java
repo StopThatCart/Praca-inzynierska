@@ -5,11 +5,16 @@ package com.example.yukka.validations.pozycje;
 import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.Pozycja;
+import com.example.yukka.validations.ValidWysokosc;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class PozycjeValidator implements ConstraintValidator<ValidPozycje, DzialkaRoslinaRequest> {
+
+    @Override
+    public void initialize(ValidPozycje constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(DzialkaRoslinaRequest request, ConstraintValidatorContext context) {

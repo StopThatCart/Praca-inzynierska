@@ -34,7 +34,7 @@ export class DzialkiListComponent implements OnInit {
     });
 
     this.getOgrod();
-    console.log(this.ogrodResponse);
+
   }
 
 
@@ -51,11 +51,17 @@ export class DzialkiListComponent implements OnInit {
     .subscribe({
         next: (ogrod) => {
           this.ogrodResponse = ogrod;
+          console.log(this.ogrodResponse);
         },
         error: (error) => {
           console.error('Error fetching ogrod:', error);
         }
       });
+  }
+
+  goToDzialkaPage(numer: number | undefined) {
+    if(!numer) return;
+    this.router.navigate(['dzialka', numer], { relativeTo: this.route });
   }
 
 }

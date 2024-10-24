@@ -175,4 +175,49 @@ export class WlasciwoscProcessService {
     return wlasciwosci;
   }
 
+
+  setRoslinaWlasciwosci(roslina: RoslinaResponse): { name: string, value: string }[] {
+    const createWlasciwosc = (name: string, value: string | string[] | number | undefined): { name: string, value: string } | null => {
+      if (Array.isArray(value)) {
+        value = value.join(', ');
+      }
+      if (value) {
+        return { name, value: value.toString() };
+      }
+      return null;
+    };
+
+    const wlasciwosci = [
+      createWlasciwosc(WlasciwoscEtykiety.GRUPA, roslina.grupy),
+      createWlasciwosc(WlasciwoscEtykiety.PODGRUPA, roslina.podgrupa),
+      createWlasciwosc(WlasciwoscEtykiety.FORMA, roslina.formy),
+      createWlasciwosc(WlasciwoscEtykiety.GLEBA, roslina.gleby),
+      createWlasciwosc(WlasciwoscEtykiety.KOLOR_KWIATOW, roslina.koloryKwiatow),
+      createWlasciwosc(WlasciwoscEtykiety.KOLOR_LISCI, roslina.koloryLisci),
+      createWlasciwosc(WlasciwoscEtykiety.KWIAT, roslina.kwiaty),
+      createWlasciwosc(WlasciwoscEtykiety.ODCZYN, roslina.odczyny),
+      createWlasciwosc(WlasciwoscEtykiety.OKRES_KWITNIENIA, roslina.okresyKwitnienia),
+      createWlasciwosc(WlasciwoscEtykiety.OKRES_OWOCOWANIA, roslina.okresyOwocowania),
+      createWlasciwosc(WlasciwoscEtykiety.OWOC, roslina.owoce),
+      createWlasciwosc(WlasciwoscEtykiety.POKROJ, roslina.pokroje),
+      createWlasciwosc(WlasciwoscEtykiety.SILA_WZROSTU, roslina.silyWzrostu),
+      createWlasciwosc(WlasciwoscEtykiety.STANOWISKO, roslina.stanowiska),
+      createWlasciwosc(WlasciwoscEtykiety.WALOR, roslina.walory),
+      createWlasciwosc(WlasciwoscEtykiety.WILGOTNOSC, roslina.wilgotnosci),
+      createWlasciwosc('Wysokość', roslina.wysokoscMin && roslina.wysokoscMax ? `Od ${roslina.wysokoscMin} m do ${roslina.wysokoscMax} m` : ''),
+      createWlasciwosc(WlasciwoscEtykiety.ZASTOSOWANIE, roslina.zastosowania),
+      createWlasciwosc(WlasciwoscEtykiety.ZIMOZIELONOSC, roslina.zimozielonosci),
+    ].filter(w => w !== null);
+
+    return wlasciwosci as { name: string, value: string }[];
+  }
+
+  getRoslinaWlasciwoscPary(wlasciwosci: { name: string, value: string }[]): { name: string, value: string }[][] {
+    const pary = [];
+    for (let i = 0; i < wlasciwosci.length; i += 2) {
+      pary.push(wlasciwosci.slice(i, i + 2));
+    }
+    return pary;
+  }
+
 }

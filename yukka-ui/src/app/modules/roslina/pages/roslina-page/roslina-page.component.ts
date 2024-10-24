@@ -6,6 +6,7 @@ import { RoslinaService } from '../../../../services/services';
 import { switchMap } from 'rxjs/operators';
 import { BreadcrumbComponent } from "../../../../pages/breadcrumb/breadcrumb.component";
 import { TokenService } from '../../../../services/token/token.service';
+import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class RoslinaPageComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private roslinaService: RoslinaService,
+    private wlasciwoscProcessService: WlasciwoscProcessService,
     private tokenService: TokenService
   ) {}
 
@@ -91,7 +93,7 @@ export class RoslinaPageComponent implements OnInit {
     this.roslinaService.findByNazwaLacinska({ 'nazwa-lacinska': nazwaLacinska }).subscribe({
       next: (roslina) => {
         this.roslina = roslina;
-        this.setRoslinaWlasciwosci();
+        this.roslinaWlasciwosci = this.wlasciwoscProcessService.setRoslinaWlasciwosci(roslina);
         this.errorMessage = null;
       },
       error: (err) => {
@@ -108,50 +110,8 @@ export class RoslinaPageComponent implements OnInit {
     return this._roslinaObraz;
   }
 
-  setRoslinaWlasciwosci(): void {
-    if (this.roslina) {
-      const createWlasciwosc = (name: string, value: string | string[] | number | undefined): { name: string, value: string } | null => {
-        if (Array.isArray(value)) {
-          value = value.join(', ');
-        }
-        if (value) {
-          return { name, value: value.toString() };
-        }
-        return null;
-      };
-
-      const wlasciwosci = [
-        createWlasciwosc('Grupa', this.roslina.grupy),
-        createWlasciwosc('Podgrupa', this.roslina.podgrupa),
-        createWlasciwosc('Forma', this.roslina.formy),
-        createWlasciwosc('Gleba', this.roslina.gleby),
-        createWlasciwosc('Kolor Kwiatów', this.roslina.koloryKwiatow),
-        createWlasciwosc('Kolor Liści', this.roslina.koloryLisci),
-        createWlasciwosc('Kwiat', this.roslina.kwiaty),
-        createWlasciwosc('Odczyn', this.roslina.odczyny),
-        createWlasciwosc('Okres Kwitnienia', this.roslina.okresyKwitnienia),
-        createWlasciwosc('Okres Owocowania', this.roslina.okresyOwocowania),
-        createWlasciwosc('Owoc', this.roslina.owoce),
-        createWlasciwosc('Pokrój', this.roslina.pokroje),
-        createWlasciwosc('Siła Wzrostu', this.roslina.silyWzrostu),
-        createWlasciwosc('Stanowisko', this.roslina.stanowiska),
-        createWlasciwosc('Walory', this.roslina.walory),
-        createWlasciwosc('Wilgotność', this.roslina.wilgotnosci),
-        createWlasciwosc('Wysokość', this.roslina.wysokoscMin && this.roslina.wysokoscMax ? `Od ${this.roslina.wysokoscMin} m do ${this.roslina.wysokoscMax} m` : ''),
-        createWlasciwosc('Zastosowanie', this.roslina.zastosowania),
-        createWlasciwosc('Zimozieloność liści/igieł', this.roslina.zimozielonosci),
-      ].filter(w => w !== null);
-
-      this.roslinaWlasciwosci = wlasciwosci as { name: string, value: string }[];
-    }
-  }
-
   getRoslinaWlasciwoscPary(): { name: string, value: string }[][] {
-    const pary = [];
-    for (let i = 0; i < this.roslinaWlasciwosci.length; i += 2) {
-      pary.push(this.roslinaWlasciwosci.slice(i, i + 2));
-    }
-    return pary;
+    return this.wlasciwoscProcessService.getRoslinaWlasciwoscPary(this.roslinaWlasciwosci);
   }
 
   trackByIndex(index: number, item: any): number {

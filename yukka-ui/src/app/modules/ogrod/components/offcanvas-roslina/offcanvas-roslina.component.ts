@@ -3,6 +3,7 @@ import { DzialkaRoslinaRequest, RoslinaResponse, ZasadzonaRoslinaResponse } from
 import { CommonModule } from '@angular/common';
 import { DzialkaModes } from '../../models/dzialka-modes';
 import { DzialkaService } from '../../../../services/services';
+import { WlasciwoscProcessService } from '../../../roslina/services/wlasciwosc-service/wlasciwosc.service';
 
 @Component({
   selector: 'app-offcanvas-roslina',
@@ -12,7 +13,6 @@ import { DzialkaService } from '../../../../services/services';
   styleUrl: './offcanvas-roslina.component.css'
 })
 export class OffcanvasRoslinaComponent {
-  @Input() zasadzonaRoslina: ZasadzonaRoslinaResponse | undefined;
 
   @Input() numerDzialki: number | undefined;
   @Input() mode: string = '';
@@ -25,18 +25,28 @@ export class OffcanvasRoslinaComponent {
   @ViewChild('offcanvasBottom', { static: true }) offcanvasBottom!: ElementRef;
 
 
+  roslinaWlasciwosci: { name: string, value: string }[] = [];
   private _roslinaObraz: string | undefined;
 
   constructor(
-    private dzialkaService: DzialkaService
+    private dzialkaService: DzialkaService,
+    private wlasciwoscProcessService: WlasciwoscProcessService
   ) { }
 
-  getRoslina(): RoslinaResponse | undefined {
-    return this.zasadzonaRoslina;
-  }
+  private _zasadzonaRoslina: ZasadzonaRoslinaResponse | undefined;
+  // @Input() zasadzonaRoslina: ZasadzonaRoslinaResponse | undefined;
+   @Input()
+   set zasadzonaRoslina(roslina: ZasadzonaRoslinaResponse | undefined) {
+     this._zasadzonaRoslina = roslina;
+     if (roslina && roslina.roslina) {
+       this.roslinaWlasciwosci = this.wlasciwoscProcessService.setRoslinaWlasciwosci(roslina.roslina);
+     } else {
+       this.roslinaWlasciwosci = [];
+     }
+   }
 
-  setRoslina(roslina: RoslinaResponse) {
-    this.zasadzonaRoslina = roslina;
+  get zasadzonaRoslina(): ZasadzonaRoslinaResponse | undefined {
+    return this._zasadzonaRoslina;
   }
 
   getRoslinaObraz(): string | undefined {
@@ -44,6 +54,17 @@ export class OffcanvasRoslinaComponent {
       return 'data:image/jpeg;base64,' + this.zasadzonaRoslina.roslina.obraz;
     }
     return this._roslinaObraz;
+  }
+
+  getRoslinaWlasciwoscPary(): { name: string, value: string }[][] {
+    if(!this.roslinaWlasciwosci && this.zasadzonaRoslina?.roslina) {
+      this.roslinaWlasciwosci = this.wlasciwoscProcessService.setRoslinaWlasciwosci(this.zasadzonaRoslina?.roslina);
+    }
+    return this.wlasciwoscProcessService.getRoslinaWlasciwoscPary(this.roslinaWlasciwosci);
+  }
+
+  trackByIndex(index: number, item: any): number {
+    return index;
   }
 
 
