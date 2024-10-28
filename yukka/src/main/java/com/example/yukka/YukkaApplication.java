@@ -71,7 +71,9 @@ public class YukkaApplication {
 	private final UzytkownikRepository uzytkownikRepository;
 	private final UzytkownikService uzytkownikService;
 
-	private final UzytkownikRoslinaService uzytkownikRoslinaService;
+	@SuppressWarnings("unused")
+    private final UzytkownikRoslinaService uzytkownikRoslinaService;
+	@SuppressWarnings("unused")
 	private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
 
 	private final PostRepository postRepository;
@@ -85,13 +87,16 @@ public class YukkaApplication {
 	private final DzialkaRepository dzialkaRepository;
 
 	private final RoslinaService roslinaService;
+	@SuppressWarnings("unused")
 	private final RoslinaImporterService roslinaImporterService;
 
 	private final FileUtils fileUtils;
+	@SuppressWarnings("unused")
 	private final FileStoreService fileStoreService;
 
 	private final UzytkownikRoslinaSeeder uzytkownikRoslinaSeeder;
 
+	@SuppressWarnings("unused")
 	private final PowiadomienieService powiadomienieService;
 
 

@@ -127,6 +127,9 @@ public class UzytkownikService implements  UserDetailsService {
 
     public Uzytkownik updateUzytkownikAvatar(MultipartFile file, Uzytkownik currentUser) {
         Uzytkownik uzyt = currentUser;
+        if(file == null) {
+            throw new IllegalArgumentException("Nie podano pliku");
+        }
 
         String leObraz = fileStoreService.saveAvatar(file, uzyt.getUzytId());
         System.out.println("Zapisano avatar: " + leObraz);

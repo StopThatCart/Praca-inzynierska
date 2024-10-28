@@ -1,0 +1,49 @@
+
+<section class="mx-1" style="--bs-body-bg: rgba(255,255,255,0);">
+  <!-- Start: 1 Row 2 Columns -->
+  <div class="container" style="max-width: 800px;">
+    <div class="row gx-3 gy-3 justify-content-center align-items-start">
+      <div class="col-lg-3 d-flex justify-content-center flex-column">
+        <app-edycja-nav></app-edycja-nav>
+      </div>
+      <div class="col-auto col-lg-8">
+        <div class="card mb-5" style="background: var(--bs-secondary);">
+          <div class="card-body p-sm-5">
+            <h3 class="text-center mb-4">Informacje profilowe</h3>
+            <form onsubmit="editProfil()">
+              <div class="mb-3">
+                <input class="bg-light form-control" type="text"
+                  id="imie" name="Imie" placeholder="Imię"
+                  maxlength="30">
+              </div>
+              <div class="mb-3"><input class="bg-light form-control" type="text"
+                  id="nazwisko" name="Nazwisko" placeholder="Nazwisko"
+                  maxlength="30">
+                </div>
+              <div class="mb-3"><input class="bg-light form-control" type="text"
+                  id="miejsce-zamieszkania" name="miejsce-zamieszkania"
+                  placeholder="Miejsce zamieszkania"
+                  maxlength="30">
+                </div>
+              <div class="mb-3"><input class="bg-light form-control"
+                  type="email" id="email-2" name="email"
+                  placeholder="Email">
+                </div>
+              <div class="mb-3">
+                <textarea class="bg-light form-control"
+                  id="opis" name="opis" rows="6"
+                  placeholder="Kilka słów o sobie">
+                </textarea>
+              </div>
+              <div>
+                <button class="btn btn-primary d-block w-100"
+                  type="submit">Zapisz
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- End: 1 Row 2 Columns -->
+</section>

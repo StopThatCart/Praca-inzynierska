@@ -1,12 +1,9 @@
 package com.example.yukka.model.dzialka;
-import java.util.List;
 import java.util.Set;
 
-import com.example.yukka.validations.ValidRoslinaIdAlboNazwaLacinska;
 import com.example.yukka.validations.pozycje.ValidPozycje;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -14,16 +11,18 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+@Data
 @Getter
 @Setter
-@SuperBuilder
-@Builder
+@SuperBuilder(toBuilder = true)
+
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

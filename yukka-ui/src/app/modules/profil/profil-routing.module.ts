@@ -10,6 +10,8 @@ import { RozmowyListComponent } from './pages/rozmowy-list/rozmowy-list.componen
 import { RozmowaPageComponent } from './pages/rozmowa-page/rozmowa-page.component';
 import { RozmowaResolverService } from './services/rozmowa-resolver-service/rozmowa-resolver.service';
 import { UstawieniaPageComponent } from './pages/ustawienia-page/ustawienia-page.component';
+import { EdycjaProfilPageComponent } from './pages/edycja-profil-page/edycja-profil-page.component';
+import { EdycjaAvatarPageComponent } from './pages/edycja-avatar-page/edycja-avatar-page.component';
 
 const routes: Routes = [
   {
@@ -38,6 +40,23 @@ const routes: Routes = [
             component: UstawieniaPageComponent,
             canActivate: [authGuard],
             data: { breadcrumb: 'Ustawienia' }
+          },
+          {
+            path: 'edycja',
+            //component: UstawieniaPageComponent,
+            canActivate: [authGuard],
+            data: { breadcrumb: 'Edycja' },
+            children: [
+              {
+                path: '',
+                component: EdycjaProfilPageComponent,
+              },
+              {
+                path: 'avatar',
+                component: EdycjaAvatarPageComponent,
+                data: { breadcrumb: `Edycja avataru` }
+              }
+            ]
           },
           {
             path: 'rozmowy',

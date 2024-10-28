@@ -3,10 +3,10 @@ package com.example.yukka.handler;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.TOO_EARLY;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -29,7 +29,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorDescription(ex.getMessage())
+                                .build()
+                );
     }
 
     @ExceptionHandler(LockedException.class)
@@ -128,6 +134,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleException(HttpMessageNotReadableException exp) {
         return ResponseEntity
                 .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorDescription(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ExceptionResponse> handleException(IllegalStateException exp) {
+        return ResponseEntity
+                .status(TOO_EARLY)
                 .body(
                         ExceptionResponse.builder()
                                 .businessErrorDescription(exp.getMessage())

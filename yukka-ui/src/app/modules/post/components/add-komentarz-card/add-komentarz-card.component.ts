@@ -5,11 +5,14 @@ import { KomentarzRequest } from '../../../../services/models/komentarz-request'
 import { KomentarzService } from '../../../../services/services';
 import { Router } from '@angular/router';
 import { TypKomentarza } from '../../enums/TypKomentarza';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
+import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
+import { cp } from 'fs';
 
 @Component({
   selector: 'app-add-komentarz-card',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ErrorMsgComponent],
   templateUrl: './add-komentarz-card.component.html',
   styleUrls: ['./add-komentarz-card.component.css']
 })
@@ -29,11 +32,13 @@ export class AddKomentarzCardComponent implements OnInit {
   wybranyObraz: any;
   wybranyPlik: any;
 
-  errorMsg: Array<string> = [];
+  errorMsg: string[] = [];
 
   public TypKomentarza = TypKomentarza;
 
-  constructor(private komentarzService : KomentarzService, private router : Router) { }
+  constructor(private komentarzService : KomentarzService, private router : Router,
+    private errorHandlingService: ErrorHandlingService
+  ) { }
 
   ngOnInit() {
     if(this.targetId) {
@@ -101,7 +106,9 @@ export class AddKomentarzCardComponent implements OnInit {
           next: (res) => {
             window.location.reload();
           },
-          error: (err) => { this.handleErrors(err); }
+          error: (err) => {
+            this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
+          }
       });
     }else {
       this.komentarzService.addKomentarzToPost1$FormData({
@@ -110,7 +117,7 @@ export class AddKomentarzCardComponent implements OnInit {
           next: (res) => {
             window.location.reload();
           },
-          error: (err) => { this.handleErrors(err); }
+          error: (err) => {  this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg); }
       });
     }
   }
@@ -121,14 +128,14 @@ export class AddKomentarzCardComponent implements OnInit {
         body: this.request
       }).subscribe( {
           next: (res) => { window.location.reload(); },
-          error: (err) => { this.handleErrors(err); }
+          error: (err) => {  this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg); }
       });
     }else {
       this.komentarzService.addOdpowiedzToKomentarz1$FormData({
         body: { request: this.request, file: this.wybranyPlik }
       }).subscribe( {
           next: (res) => { window.location.reload(); },
-          error: (err) => { this.handleErrors(err); }
+          error: (err) => {  this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg); }
       });
     }
   }
@@ -140,14 +147,14 @@ export class AddKomentarzCardComponent implements OnInit {
         body: this.request
       }).subscribe( {
           next: (res) => { this.updateRozmowa(res); },
-          error: (err) => { this.handleErrors(err); }
+          error: (err) => { this.errorHandlingService.handleErrors(err, this.errorMsg); }
       });
     } else {
       this.komentarzService.addKomentarzToWiadomoscPrywatna1$FormData({
         body: { request: this.request, file: this.wybranyPlik }
       }).subscribe( {
           next: (res) => { this.updateRozmowa(res); },
-          error: (err) => { this.handleErrors(err); }
+          error: (err) => { this.errorHandlingService.handleErrors(err, this.errorMsg); }
       });
     }
   }
@@ -160,17 +167,5 @@ export class AddKomentarzCardComponent implements OnInit {
     this.onCancelOdpowiedz.emit();
   }
 
-
-
-  private handleErrors(err: any) {
-    console.log(err);
-    if(err.error.validationErrors) {
-      this.errorMsg = err.error.validationErrors
-    } else if (err.error.error) {
-      this.errorMsg.push(err.error.error);
-    } else {
-      this.errorMsg.push(err.message);
-    }
-  }
 
 }

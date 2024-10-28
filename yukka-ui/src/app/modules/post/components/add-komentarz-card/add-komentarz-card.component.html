@@ -1,9 +1,7 @@
 <div class="card" style="background: var(--bs-secondary);">
   <div class="card-body">
       <h4 class="card-title">Dodaj komentarz</h4>
-      <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
-        <p *ngFor="let msg of errorMsg">{{ msg }}</p>
-      </div>
+      <app-error-msg [errorMsg]="errorMsg"></app-error-msg>
       <form method="post">
           <div class="mb-3">
             <textarea [(ngModel)]="request.opis" class="form-control bg-white text-black" id="message-2" name="message" rows="6" placeholder="Komentarz"></textarea>
