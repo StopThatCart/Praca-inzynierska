@@ -171,7 +171,7 @@ public class DzialkaService {
         }
 
         if(file != null) {
-            String leObraz = fileStoreService.saveRoslinaObrazInDzialka(file, request.getNazwaLacinska());
+            String leObraz = fileStoreService.saveRoslinaObrazInDzialka(file, uzyt.getUzytId());
             request.setObraz(leObraz);    
         }
 

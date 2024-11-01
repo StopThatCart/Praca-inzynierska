@@ -127,13 +127,18 @@ public class UzytkownikService implements  UserDetailsService {
 
     public Uzytkownik updateUzytkownikAvatar(MultipartFile file, Uzytkownik currentUser) {
         Uzytkownik uzyt = currentUser;
+        Uzytkownik uzytkownik = uzytkownikRepository.findByEmail(uzyt.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + uzyt.getEmail()));
+
         if(file == null) {
             throw new IllegalArgumentException("Nie podano pliku");
         }
+        fileUtils.deleteObraz(uzytkownik.getAvatar());
 
         String leObraz = fileStoreService.saveAvatar(file, uzyt.getUzytId());
         System.out.println("Zapisano avatar: " + leObraz);
-        Uzytkownik uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
+
+        uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
         return uzytkownik;
     }
 
