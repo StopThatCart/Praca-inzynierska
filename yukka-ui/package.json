@@ -31,6 +31,7 @@
     "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",
     "ng-openapi-gen": "^0.51.0",
+    "ngx-color-picker": "^17.0.0",
     "ngx-drag-scroll": "^18.0.0",
     "ngx-infinite-scroll": "^18.0.0",
     "ngx-timeago": "^3.0.0",

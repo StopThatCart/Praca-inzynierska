@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ColorPickerModule } from 'ngx-color-picker';
 import { DzialkaResponse, DzialkaRoslinaRequest, Pozycja, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
 import { DzialkaService, RoslinaService } from '../../../../services/services';
 import { CommonModule } from '@angular/common';
@@ -7,11 +8,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Tile, TileUtils } from '../../models/Tile';
 import { DzialkaModes } from '../../models/dzialka-modes';
 import { TokenService } from '../../../../services/token/token.service';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
+import { ErrorMsgComponent } from '../../../../components/error-msg/error-msg.component';
 
 @Component({
   selector: 'app-add-roslina-to-dzialka',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ColorPickerModule, ErrorMsgComponent],
   templateUrl: './add-roslina-to-dzialka.component.html',
   styleUrl: './add-roslina-to-dzialka.component.css'
 })
@@ -30,6 +33,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     pozycje: [],
     x: -1,
     y: -1,
+    kolor: '#ffffff',
     obraz: ''
   };
 
@@ -74,7 +78,8 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     private roslinaService: RoslinaService,
     private tokenService: TokenService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private errorHandlingService: ErrorHandlingService
   ) { }
 
   ngOnInit(): void {
@@ -226,7 +231,8 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
           this.goToDzialka();
         },
         error: (error) => {
-          this.message = 'Błąd podczas dodawania rośliny';
+          //this.message = 'Błąd podczas dodawania rośliny';
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
           console.log(error);
         }
       });
@@ -236,7 +242,8 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
           this.goToDzialka();
         },
         error: (error) => {
-          this.message = 'Błąd podczas dodawania rośliny';
+          //this.message = 'Błąd podczas dodawania rośliny';
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
           console.log(error);
         }
       });

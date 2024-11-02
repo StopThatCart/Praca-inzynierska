@@ -26,6 +26,7 @@ public class ZasadzonaRoslinaResponse {
 
     private Set<Pozycja> pozycje; 
 
+    private String kolor;
     private byte[] obraz;
 
 

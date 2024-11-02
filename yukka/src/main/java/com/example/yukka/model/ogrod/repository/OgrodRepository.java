@@ -11,8 +11,11 @@ import com.example.yukka.model.ogrod.Ogrod;
 public interface OgrodRepository  extends Neo4jRepository<Ogrod, Long> {
 
     @Query("""
-        MATCH path = (u:Uzytkownik{nazwa: $nazwa})-[:MA_OGROD]->(ogrod:Ogrod)-[:MA_DZIALKE]->(d:Dzialka) 
-        RETURN ogrod, collect(nodes(path)), collect(relationships(path))
+        MATCH path = (u:Uzytkownik{nazwa: $nazwa})-[:MA_OGROD]->(ogrod:Ogrod)-[r1:MA_DZIALKE]->(d:Dzialka) 
+        OPTIONAL MATCH path2 = (ogrod)-[r1]->(d)<-[r2:ZASADZONA_NA]-(rosliny)
+        
+        RETURN ogrod, collect(nodes(path)), collect(relationships(path)),
+               collect(nodes(path2)), collect(relationships(path2))
         """)
     Optional<Ogrod> getOgrodOfUzytkownikByNazwa(@Param("nazwa") String nazwa);
 

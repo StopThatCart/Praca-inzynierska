@@ -4,11 +4,13 @@ import { DzialkaService, OgrodService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OgrodResponse } from '../../../../services/models';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
+import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
 
 @Component({
   selector: 'app-dzialki-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ErrorMsgComponent],
   templateUrl: './dzialki-list.component.html',
   styleUrl: './dzialki-list.component.css'
 })
@@ -16,12 +18,13 @@ export class DzialkiListComponent implements OnInit {
   ogrodResponse : OgrodResponse = {};
   uzytNazwa: string | undefined;
 
-
+  errorMsg: Array<string> = [];
   constructor(private ogrodService : OgrodService,
     private dzialkaService: DzialkaService,
     private router: Router,
     private route: ActivatedRoute,
-    private tokenService : TokenService
+    private tokenService : TokenService,
+    private errorHandlingService: ErrorHandlingService
   ) {}
 
 
@@ -55,6 +58,7 @@ export class DzialkiListComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error fetching ogrod:', error);
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
         }
       });
   }

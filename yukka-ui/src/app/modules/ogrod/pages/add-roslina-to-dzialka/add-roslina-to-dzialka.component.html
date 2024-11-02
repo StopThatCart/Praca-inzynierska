@@ -2,12 +2,7 @@
   <div class="card bg-secondary" >
     <div class="card-header">
       <h4 class="card-title">Dodaj roślinę do działki</h4>
-      <div class="alert alert-success" role="alert" *ngIf="message && !errorMsg.length">
-        {{ message }}
-      </div>
-      <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
-        <p *ngFor="let msg of errorMsg">{{ msg }}</p>
-      </div>
+      <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
     </div>
     <div class="card-body">
       <form class="my-2 d-flex flex-column">
@@ -54,6 +49,18 @@
             <button (click)="changeEditMode(DzialkaModes.EditRoslinaPozycja)" class="btn btn-info">Zmień pozycję rośliny</button>
             <button (click)="changeEditMode(DzialkaModes.EditRoslinaKafelki)" class="btn btn-primary">Zmień kafelki należące do rośliny</button>
           </div>
+        </div>
+
+        <div class="mb-2">
+          <label for="exampleColorInput" class="form-label">Wybierz kolor kafelków rośliny(Wymagane)</label>
+          <input
+          [(colorPicker)]="request.kolor"
+          [style.background]="request.kolor"
+          [cpOutputFormat]="'hex'"
+          [value]="request.kolor"
+          class="form-control form-control-color text-black"
+          />
+
         </div>
 
         <div class="le-kontener mb-2">

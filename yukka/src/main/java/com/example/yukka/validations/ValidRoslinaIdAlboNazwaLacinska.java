@@ -11,7 +11,7 @@ import jakarta.validation.Payload;
 
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = RoslinaIdAlboNazwaLacinskaValidator.class)
+@Constraint(validatedBy = { RoslinaIdAlboNazwaLacinskaValidator.class })
 public @interface ValidRoslinaIdAlboNazwaLacinska {
     String message() default "Przynajmniej jedno z pól roślinaId i nazwaLacinska musi być wypełnione";
     Class<?>[] groups() default {};

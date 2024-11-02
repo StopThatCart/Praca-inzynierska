@@ -220,14 +220,14 @@ export class DzialkaPageComponent implements OnInit  {
     if(this.numer === undefined) return;
     this.moveRoslinaRequest.numerDzialki = this.numer;
 
-    if(this.selectedRoslina.roslina?.nazwaLacinska) {
-      this.moveRoslinaRequest.nazwaLacinska = this.selectedRoslina.roslina?.nazwaLacinska;
-    } else if(this.selectedRoslina.roslina?.id) {
-      this.moveRoslinaRequest.roslinaId = this.selectedRoslina.roslina?.roslinaId;
-    } else {
-      console.error('Niepoprawne dane rośliny');
-      return;
-    }
+    // if(this.selectedRoslina.roslina?.nazwaLacinska) {
+    //   this.moveRoslinaRequest.nazwaLacinska = this.selectedRoslina.roslina?.nazwaLacinska;
+    // } else if(this.selectedRoslina.roslina?.id) {
+    //   this.moveRoslinaRequest.roslinaId = this.selectedRoslina.roslina?.roslinaId;
+    // } else {
+    //   console.error('Niepoprawne dane rośliny');
+    //   return;
+    // }
 
     this.moveRoslinaRequest.xnowy = this.selectedRoslina.x;
     this.moveRoslinaRequest.ynowy = this.selectedRoslina.y;
@@ -308,7 +308,8 @@ export class DzialkaPageComponent implements OnInit  {
       if (tile) {
         if (zasadzonaRoslina.roslina && zasadzonaRoslina.roslina.id) {
           tile.roslinaId = zasadzonaRoslina.roslina.id;
-          tile.backgroundColor = this.placeholderColors[zasadzonaRoslina.roslina.id % this.placeholderColors.length];
+          tile.backgroundColor = zasadzonaRoslina.kolor;
+          //tile.backgroundColor = this.placeholderColors[zasadzonaRoslina.roslina.id % this.placeholderColors.length];
         }
         if (tile.x == zasadzonaRoslina.x && tile.y == zasadzonaRoslina.y) {
           tile.zasadzonaRoslina = zasadzonaRoslina;

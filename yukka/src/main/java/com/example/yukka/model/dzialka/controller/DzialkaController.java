@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.model.dzialka.DzialkaResponse;
-import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
-import com.example.yukka.model.dzialka.MoveRoslinaRequest;
+import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
+import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
+import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.service.DzialkaService;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -56,8 +57,8 @@ public class DzialkaController {
 
     @GetMapping(value = "/{numer}/uzytkownicy/{uzytkownik-nazwa}", produces="application/json")
     public ResponseEntity<DzialkaResponse> getDzialkaOfUzytkownikByNumer(@PathVariable("numer") int numer, 
-    @PathVariable("uzytkownik-nazwa") String nazwa) {
-        return ResponseEntity.ok(dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa));
+    @PathVariable("uzytkownik-nazwa") String nazwa, Authentication connectedUser) {
+        return ResponseEntity.ok(dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa, connectedUser));
     }
 
     /* 
@@ -93,13 +94,13 @@ public class DzialkaController {
     }
 
     @DeleteMapping(value = "/rosliny", consumes="application/json", produces="application/json")
-    public ResponseEntity<String> deleteRoslinaFromDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, Authentication connectedUser) {
+    public ResponseEntity<String> deleteRoslinaFromDzialka(@Valid @RequestBody BaseDzialkaRequest request, Authentication connectedUser) {
         dzialkaService.deleteRoslinaFromDzialka(request, connectedUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/rosliny/obraz")
-    public ResponseEntity<String> deleteRoslinaObrazFromDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, Authentication connectedUser) {
+    public ResponseEntity<String> deleteRoslinaObrazFromDzialka(@Valid @RequestBody BaseDzialkaRequest request, Authentication connectedUser) {
         dzialkaService.deleteRoslinaObrazInDzialka(request, connectedUser);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

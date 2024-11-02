@@ -35,6 +35,9 @@ public class ZasadzonaNa {
     @Property("y")
     private int y;
 
+    @Property("kolor")
+    private String kolor;
+    
     @Property("obraz")
     private String obraz;
 

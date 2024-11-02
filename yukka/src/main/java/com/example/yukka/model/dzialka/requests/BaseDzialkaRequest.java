@@ -1,6 +1,8 @@
-package com.example.yukka.model.dzialka;
+package com.example.yukka.model.dzialka.requests;
+
 import java.util.Set;
 
+import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.validations.pozycje.ValidPozycje;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,7 +12,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,20 +19,16 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+
 @Data
 @Getter
 @Setter
 @SuperBuilder(toBuilder = true)
-
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
-//@ValidRoslinaIdAlboNazwaLacinska
 @ValidPozycje
-public class DzialkaRoslinaRequest {
-    private String roslinaId;
-    private String nazwaLacinska;
+public class BaseDzialkaRequest {
 
     @Min(value = 1, message = "Numer działki musi być > 0")
     @Max(value = 10, message = "Numer działki musi być <= 10")
@@ -47,7 +44,6 @@ public class DzialkaRoslinaRequest {
     @Max(value = 19, message = "Pozycja y musi być <= 19")
     @NotNull(message = "Pozycja y jest wymagana")
     private Integer y;
-
 
     @NotEmpty(message = "Pozycje są wymagane")
     @Size(min = 1, max = 400, message = "Ilość kafelków dla rośliny powinna wynosić od 1 do 400")
@@ -72,9 +68,4 @@ public class DzialkaRoslinaRequest {
         }
         return tabY;
     }
-
-
-    // Null jak nie dopina się żadnego obrazu
-    private String obraz;
-
 }

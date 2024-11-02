@@ -1,4 +1,4 @@
-package com.example.yukka.model.dzialka;
+package com.example.yukka.model.dzialka.requests;
 
 import com.example.yukka.validations.pozycje.ValidPozycje;
 
@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @ToString
 @ValidPozycje
-public class MoveRoslinaRequest extends DzialkaRoslinaRequest {
+public class MoveRoslinaRequest extends BaseDzialkaRequest {
 
 
     // Może być null jak nie zmienia się działki

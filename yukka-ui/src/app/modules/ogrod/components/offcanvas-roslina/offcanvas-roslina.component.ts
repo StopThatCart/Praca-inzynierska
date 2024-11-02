@@ -1,14 +1,15 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { DzialkaRoslinaRequest, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
+import { BaseDzialkaRequest, DzialkaRoslinaRequest, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
 import { CommonModule } from '@angular/common';
 import { DzialkaModes } from '../../models/dzialka-modes';
 import { DzialkaService } from '../../../../services/services';
 import { WlasciwoscProcessService } from '../../../roslina/services/wlasciwosc-service/wlasciwosc.service';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @Component({
   selector: 'app-offcanvas-roslina',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ColorPickerModule],
   templateUrl: './offcanvas-roslina.component.html',
   styleUrl: './offcanvas-roslina.component.css'
 })
@@ -76,9 +77,7 @@ export class OffcanvasRoslinaComponent {
     if(!this.zasadzonaRoslina || !this.zasadzonaRoslina.x || !this.zasadzonaRoslina.y) {
       return;
     }
-    let deletRequest : DzialkaRoslinaRequest = {
-      roslinaId: this.zasadzonaRoslina.roslina?.roslinaId,
-      nazwaLacinska: this.zasadzonaRoslina.roslina?.nazwaLacinska,
+    let deletRequest : BaseDzialkaRequest = {
       numerDzialki: this.numerDzialki!,
       pozycje: [{ x: this.zasadzonaRoslina.x, y: this.zasadzonaRoslina.y }],
       x: this.zasadzonaRoslina.x,

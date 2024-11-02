@@ -26,10 +26,10 @@ import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.dzialka.Dzialka;
-import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
-import com.example.yukka.model.dzialka.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
+import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
+import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
@@ -216,6 +216,7 @@ public class YukkaApplication {
 			Pozycja.builder().x(6).y(7).build(), 
 			Pozycja.builder().x(7).y(6).build()
 			))
+		.kolor("#6c6ef0")
 		.nazwaLacinska("symphytum grandiflorum'goldsmith'")
 		.build();
 
@@ -229,6 +230,7 @@ public class YukkaApplication {
 			Pozycja.builder().x(13).y(11).build(), 
 			Pozycja.builder().x(14).y(11).build()
 			))
+		.kolor("#f06ce7")
 		.nazwaLacinska("taxus baccata'adpressa'")
 		.build();
 		
@@ -255,6 +257,7 @@ public class YukkaApplication {
 			Pozycja.builder().x(10).y(9).build(),
 			Pozycja.builder().x(10).y(10).build()
 			))
+		.kolor("#ebf06c")
 		.roslinaId(lolId)
 		.build();
 

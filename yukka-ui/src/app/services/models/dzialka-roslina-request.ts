@@ -2,6 +2,7 @@
 /* eslint-disable */
 import { Pozycja } from '../models/pozycja';
 export interface DzialkaRoslinaRequest {
+  kolor: string;
   nazwaLacinska?: string;
   numerDzialki: number;
   obraz?: string;

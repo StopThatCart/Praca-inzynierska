@@ -2,6 +2,7 @@
 /* eslint-disable */
 export type { AuthenticationResponse } from './models/authentication-response';
 export type { AuthRequest } from './models/auth-request';
+export type { BaseDzialkaRequest } from './models/base-dzialka-request';
 export type { DzialkaResponse } from './models/dzialka-response';
 export type { DzialkaRoslinaRequest } from './models/dzialka-roslina-request';
 export type { Gleba } from './models/gleba';

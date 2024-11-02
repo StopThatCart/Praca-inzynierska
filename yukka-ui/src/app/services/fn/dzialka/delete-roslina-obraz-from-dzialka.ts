@@ -6,10 +6,10 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { DzialkaRoslinaRequest } from '../../models/dzialka-roslina-request';
+import { BaseDzialkaRequest } from '../../models/base-dzialka-request';
 
 export interface DeleteRoslinaObrazFromDzialka$Params {
-      body: DzialkaRoslinaRequest
+      body: BaseDzialkaRequest
 }
 
 export function deleteRoslinaObrazFromDzialka(http: HttpClient, rootUrl: string, params: DeleteRoslinaObrazFromDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {

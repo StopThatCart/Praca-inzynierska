@@ -13,6 +13,13 @@
           <div>
             <h3 class="roslina-nazwa-color">{{zasadzonaRoslina.roslina?.nazwa}}</h3>
             <h5 class="roslina-nazwa-lacinska-color">{{zasadzonaRoslina.roslina?.nazwaLacinska}}</h5>
+
+            <div class="d-flex mb-2">
+              <span class="roslina-nazwa-lacinska-color me-2">Kolor kafelków:</span>
+
+              <input [value]="zasadzonaRoslina.kolor" type="color" class="form-control form-control-color" value="#CCCCCC" disabled>
+            </div>
+
             <div *ngIf="true" class="btn-group">
               <button (click)="sendRoslinaPozycjaEditEvent()"
               class="btn btn-warning text-uppercase"
@@ -20,6 +27,7 @@
               >zmień pozycję</button>
               <button class="btn btn-info text-uppercase">zmień obraz</button>
               <button class="btn btn-info text-uppercase">zmień teksturę kafelków</button>
+              <button class="btn btn-info text-uppercase">zmień kolor kafelków</button>
               <button (click)="removeRoslinaFromDzialka()"
               class="btn btn-danger text-uppercase"
               data-bs-dismiss="offcanvas" aria-label="Close">usuń z działki</button>

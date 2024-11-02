@@ -2,37 +2,38 @@ package com.example.yukka.validations.pozycje;
 
 
 
-import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
-import com.example.yukka.model.dzialka.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.Pozycja;
+import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
+import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
+import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
 import com.example.yukka.validations.ValidWysokosc;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class PozycjeValidator implements ConstraintValidator<ValidPozycje, DzialkaRoslinaRequest> {
+public class PozycjeValidator implements ConstraintValidator<ValidPozycje, Object> {
 
     @Override
     public void initialize(ValidPozycje constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(DzialkaRoslinaRequest request, ConstraintValidatorContext context) {
+    public boolean isValid(Object request, ConstraintValidatorContext context) {
         if (request == null) {
             return false;
         }
         System.out.println("Sprawdzam pozycje");
         if (request instanceof MoveRoslinaRequest) {
             return isValidMoveRoslinaRequest((MoveRoslinaRequest) request);
-        } else if (request instanceof DzialkaRoslinaRequest) {
-            return isValidDzialkaRoslinaRequest((DzialkaRoslinaRequest) request);
+        } else if (request instanceof BaseDzialkaRequest) {
+            return isValidDzialkaRoslinaRequest((BaseDzialkaRequest) request);
         }
 
         return false;
     
     }
 
-    private boolean isValidDzialkaRoslinaRequest(DzialkaRoslinaRequest request) {
+    private boolean isValidDzialkaRoslinaRequest(BaseDzialkaRequest request) {
         if (request.getX() == null || request.getY() == null) {
             System.out.println("Pozycja x i y nie może być null");
             return false;

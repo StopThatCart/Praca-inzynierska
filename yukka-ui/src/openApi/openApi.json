@@ -1055,7 +1055,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DzialkaRoslinaRequest"
+                "$ref": "#/components/schemas/BaseDzialkaRequest"
               }
             }
           },
@@ -1549,7 +1549,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DzialkaRoslinaRequest"
+                "$ref": "#/components/schemas/BaseDzialkaRequest"
               }
             }
           },
@@ -2844,23 +2844,23 @@
           "name": {
             "type": "string"
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "username": {
-            "type": "string"
-          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
+          "admin": {
+            "type": "boolean"
+          },
           "pracownik": {
             "type": "boolean"
           },
-          "admin": {
+          "normalUzytkownik": {
             "type": "boolean"
+          },
+          "username": {
+            "type": "string"
           },
           "password": {
             "type": "string"
@@ -3518,6 +3518,7 @@
       },
       "DzialkaRoslinaRequest": {
         "required": [
+          "kolor",
           "numerDzialki",
           "pozycje",
           "x",
@@ -3525,12 +3526,6 @@
         ],
         "type": "object",
         "properties": {
-          "roslinaId": {
-            "type": "string"
-          },
-          "nazwaLacinska": {
-            "type": "string"
-          },
           "numerDzialki": {
             "maximum": 10,
             "minimum": 1,
@@ -3550,13 +3545,23 @@
             "format": "int32"
           },
           "pozycje": {
-            "maxItems": 20,
+            "maxItems": 400,
             "minItems": 1,
             "uniqueItems": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Pozycja"
             }
+          },
+          "roslinaId": {
+            "type": "string"
+          },
+          "nazwaLacinska": {
+            "type": "string"
+          },
+          "kolor": {
+            "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+            "type": "string"
           },
           "obraz": {
             "type": "string"
@@ -3646,6 +3651,9 @@
             "items": {
               "$ref": "#/components/schemas/Pozycja"
             }
+          },
+          "kolor": {
+            "type": "string"
           },
           "obraz": {
             "type": "string",
@@ -3815,12 +3823,6 @@
         ],
         "type": "object",
         "properties": {
-          "roslinaId": {
-            "type": "string"
-          },
-          "nazwaLacinska": {
-            "type": "string"
-          },
           "numerDzialki": {
             "maximum": 10,
             "minimum": 1,
@@ -3840,16 +3842,13 @@
             "format": "int32"
           },
           "pozycje": {
-            "maxItems": 20,
+            "maxItems": 400,
             "minItems": 1,
             "uniqueItems": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Pozycja"
             }
-          },
-          "obraz": {
-            "type": "string"
           },
           "numerDzialkiNowy": {
             "type": "integer",
@@ -4217,6 +4216,44 @@
           },
           "last": {
             "type": "boolean"
+          }
+        }
+      },
+      "BaseDzialkaRequest": {
+        "required": [
+          "numerDzialki",
+          "pozycje",
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "numerDzialki": {
+            "maximum": 10,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "x": {
+            "maximum": 19,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "y": {
+            "maximum": 19,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "pozycje": {
+            "maxItems": 400,
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pozycja"
+            }
           }
         }
       }
