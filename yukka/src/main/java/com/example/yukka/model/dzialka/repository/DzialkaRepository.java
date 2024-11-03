@@ -92,10 +92,13 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         SET existing.x = $xNowy, existing.y = $yNowy,
             existing.tabX = $tabX, existing.tabY = $tabY       
 
-        WITH d
-        MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
-        
-        RETURN d, collect(nodes(path)), collect(relationships(path))
+        WITH existing
+
+        MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki}) 
+        OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(rosliny)-[r]-(w)
+        WHERE w:Wlasciwosc OR w:UzytkownikWlasciwosc
+        RETURN d, collect(r1), collect(rosliny), collect(r), collect(w), collect(nodes(path)), collect(relationships(path))
+
         """)
         Dzialka changeRoslinaPozycjaInDzialka(@Param("email") String email, 
         @Param("numerDzialki") int numerDzialki,

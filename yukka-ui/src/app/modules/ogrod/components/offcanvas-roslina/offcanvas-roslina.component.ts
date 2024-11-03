@@ -74,7 +74,12 @@ export class OffcanvasRoslinaComponent {
       return;
     }
     console.log('getDzialkaByNumer');
-    if(!this.zasadzonaRoslina || !this.zasadzonaRoslina.x || !this.zasadzonaRoslina.y) {
+    if(!this.zasadzonaRoslina || this.zasadzonaRoslina.x == undefined || this.zasadzonaRoslina.y == undefined) {
+      console.error('Nie można usunąć rośliny z działki, brak pozycji');
+      console.log("sprawdzanie")
+      console.log(this.zasadzonaRoslina)
+      console.log(this.zasadzonaRoslina?.x)
+      console.log(this.zasadzonaRoslina?.y)
       return;
     }
     let deletRequest : BaseDzialkaRequest = {

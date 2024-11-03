@@ -70,20 +70,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     this.wybranaTekstura = null;
   }
 
-  // clearImage() {
-  //   this.wybranyObraz = null;
-  //   this.wybranyPlik = null;
-  //   this.request.obraz = '';
-  //   this.fileInput.nativeElement.value = '';
-  // }
-
-  // clearTekstura() {
-  //   this.wybranaTekstura = null;
-  //   this.wybranyPlikTekstura = null;
-  //   this.request.tekstura = '';
-  //   this.fileInput.nativeElement.value = '';
-  // }
-
   tiles: Tile[] = [];
   rowColls = 20;
 
@@ -199,7 +185,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
         tiles.push({
           x,
           y,
-          roslina: undefined,
           clickable: true,
           hovered: false,
           backgroundColor: undefined
@@ -245,34 +230,17 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
 
     this.message = '';
     this.errorMsg = [];
-    if(this.wybranyPlik === null) {
-      console.log('BEZ OBRAZU');
-      return;
-      this.dzialkaService.saveRoslinaToDzialka1$Json({ body: this.request }).subscribe({
-        next: () => {
-          console.log('AAAAAAAAAAAAAA');
-         // this.goToDzialka();
-        },
-        error: (error) => {
-          //this.message = 'Błąd podczas dodawania rośliny';
-          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
-          console.log(error);
-        }
-      });
-    } else {
-      console.log('Z OBRAZEM');
-      this.dzialkaService.saveRoslinaToDzialka1$FormData({ body: { request: this.request, obraz: this.wybranyPlik, tekstura: this.wybranaTekstura } }).subscribe({
-        next: () => {
-          console.log('FORMDATA');
-          //this.goToDzialka();
-        },
-        error: (error) => {
-          //this.message = 'Błąd podczas dodawania rośliny';
-          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
-          console.log(error);
-        }
-      });
-    }
+
+    this.dzialkaService.saveRoslinaToDzialka1$FormData({ body: { request: this.request, obraz: this.wybranyPlik, tekstura: this.wybranaTekstura } }).subscribe({
+      next: () => {
+        this.goToDzialka();
+      },
+      error: (error) => {
+        //this.message = 'Błąd podczas dodawania rośliny';
+        this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
+        console.log(error);
+      }
+    });
 
   }
 
@@ -313,14 +281,14 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
   addRoslinaPozycja(tile: Tile) {
     if (!this.roslina) return;
     this.tiles.forEach(t => {
-      if (t.roslina === this.roslina) {
+      if (t.zasadzonaRoslina === this.roslina) {
         TileUtils.clearTile(t);
         this.request.pozycje = this.request.pozycje.filter(p => p.x !== t.x || p.y !== t.y);
       }
     });
 
       tile.roslinaId = this.roslina.id;
-      tile.roslina = this.roslina;
+      tile.zasadzonaRoslina = this.roslina;
       tile.backgroundColor = this.roslinaPosColor;
 
       if (!this.request.pozycje.some(p => p.x === tile.x && p.y === tile.y)) {

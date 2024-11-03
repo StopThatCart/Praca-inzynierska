@@ -6,7 +6,6 @@ export interface Tile {
   y: number,
   clickable: boolean,
   zasadzonaRoslina?: ZasadzonaRoslinaResponse,
-  roslina?: RoslinaResponse,
   roslinaId?: number,
   backgroundColor?: string,
   hovered: boolean
@@ -36,8 +35,13 @@ export class TileUtils {
   static clearTile(tile: Tile) {
     tile.roslinaId = undefined;
     tile.zasadzonaRoslina = undefined;
-    tile.roslina = undefined;
     tile.backgroundColor = undefined;
+    tile.image = this.images.dirt;
+  }
+
+  static removeRoslina(tile: Tile) {
+    tile.roslinaId = undefined;
+    tile.zasadzonaRoslina = undefined;
     tile.image = this.images.dirt;
   }
 
