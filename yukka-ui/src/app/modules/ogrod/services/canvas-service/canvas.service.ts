@@ -1,9 +1,15 @@
 import { Injectable, ElementRef } from '@angular/core';
 import html2canvas from 'html2canvas';
+import { DzialkaModes } from '../../models/dzialka-modes';
 @Injectable({
   providedIn: 'root'
 })
 export class CanvasService {
+  private isPanning: boolean = false;
+  private startX: number = 0;
+  private startY: number = 0;
+  private scrollLeft: number = 0;
+  private scrollTop: number = 0;
 
   saveCanvasAsImage(canvas: ElementRef, overlay: ElementRef, onScaleChange: (scale: number) => void): void {
     onScaleChange(1);
@@ -62,4 +68,36 @@ export class CanvasService {
     }
     return color;
   }
+
+  onMouseDown(event: MouseEvent, canvasContainer: ElementRef, mode: string): void {
+    if (mode !== DzialkaModes.Pan) return;
+    this.isPanning = true;
+    this.startX = event.pageX - canvasContainer.nativeElement.offsetLeft;
+    this.startY = event.pageY - canvasContainer.nativeElement.offsetTop;
+    this.scrollLeft = canvasContainer.nativeElement.scrollLeft;
+    this.scrollTop = canvasContainer.nativeElement.scrollTop;
+  }
+
+  onMouseMove(event: MouseEvent, canvasContainer: ElementRef): void {
+    if (!this.isPanning) return;
+    event.preventDefault();
+    const x = event.pageX - canvasContainer.nativeElement.offsetLeft;
+    const y = event.pageY - canvasContainer.nativeElement.offsetTop;
+    const walkX = x - this.startX;
+    const walkY = y - this.startY;
+    canvasContainer.nativeElement.scrollLeft = this.scrollLeft - walkX;
+    canvasContainer.nativeElement.scrollTop = this.scrollTop - walkY;
+    if (typeof document !== 'undefined') {
+      document.body.style.userSelect = 'none';
+    }
+  }
+
+  onMouseUp(): void {
+    this.isPanning = false;
+    if (typeof document !== 'undefined') {
+      document.body.style.userSelect = '';
+    }
+  }
+
+
 }

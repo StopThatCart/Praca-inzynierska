@@ -56,14 +56,7 @@ export class DzialkaPageComponent implements OnInit  {
 
   mode: DzialkaModes = DzialkaModes.Select;
   editMode: DzialkaModes = DzialkaModes.BrakEdycji;
-  isPanning: boolean = false;
   isSaving: boolean = false;
-
-  startX: number = 0;
-  startY: number = 0;
-  scrollLeft: number = 0;
-  scrollTop: number = 0;
-
 
   setMode(mode: DzialkaModes): void {
     this.mode = mode;
@@ -299,15 +292,9 @@ export class DzialkaPageComponent implements OnInit  {
         if (zasadzonaRoslina.roslina && zasadzonaRoslina.roslina.id) {
           tile.roslinaId = zasadzonaRoslina.roslina.id;
           tile.backgroundColor = zasadzonaRoslina.kolor;
-          if(tile.image === this.images.dirt) {
+          if (tile.image === this.images.dirt || tile.image === zasadzonaRoslina.tekstura) {
             tile.image = zasadzonaRoslina.tekstura || this.images.dirt;
-            if(drawTekstury) {
-
-              this.drawTileTexture(tile);
-            }
-
-          } else if(tile.image === zasadzonaRoslina.tekstura) {
-            if(drawTekstury) {
+            if (drawTekstury) {
               this.drawTileTexture(tile);
             }
           }
@@ -367,9 +354,7 @@ export class DzialkaPageComponent implements OnInit  {
     const index = this.selectedRoslina.pozycje?.findIndex(p => p.x === tile.x && p.y === tile.y);
       if (index !== undefined && index !== -1) {
         console.log('Usuwam kafelek z tabX i tabY rośliny');
-        console.log('pozycje przed:', this.selectedRoslina.pozycje);
         this.selectedRoslina.pozycje?.splice(index, 1);
-        console.log('pozycje po:', this.selectedRoslina.pozycje);
         TileUtils.clearTile(tile);
         this.drawTileTexture(tile);
       } else {
@@ -460,35 +445,17 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   onMouseDown(event: MouseEvent): void {
-    if (this.mode !== DzialkaModes.Pan) return;
-    this.isPanning = true;
-    this.startX = event.pageX - this.canvasContainer.nativeElement.offsetLeft;
-    this.startY = event.pageY - this.canvasContainer.nativeElement.offsetTop;
-    this.scrollLeft = this.canvasContainer.nativeElement.scrollLeft;
-    this.scrollTop = this.canvasContainer.nativeElement.scrollTop;
+    this.canvasService.onMouseDown(event, this.canvasContainer, this.mode);
   }
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent): void {
-    if (!this.isPanning) return;
-    event.preventDefault();
-    const x = event.pageX - this.canvasContainer.nativeElement.offsetLeft;
-    const y = event.pageY - this.canvasContainer.nativeElement.offsetTop;
-    const walkX = x - this.startX;
-    const walkY = y - this.startY;
-    this.canvasContainer.nativeElement.scrollLeft = this.scrollLeft - walkX;
-    this.canvasContainer.nativeElement.scrollTop = this.scrollTop - walkY;
-    if (typeof document !== 'undefined') {
-      document.body.style.userSelect = 'none';
-    }
+    this.canvasService.onMouseMove(event, this.canvasContainer);
   }
 
   @HostListener('document:mouseup')
   onMouseUp(): void {
-    this.isPanning = false;
-    if (typeof document !== 'undefined') {
-      document.body.style.userSelect = '';
-    }
+    this.canvasService.onMouseUp();
   }
 
   onScaleChange(newScale: number) {
