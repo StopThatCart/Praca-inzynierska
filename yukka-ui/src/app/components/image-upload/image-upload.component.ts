@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-image-upload',
@@ -14,8 +14,7 @@ export class ImageUploadComponent {
 
   wybranyObraz: any;
   wybranyPlik: any;
-
-  @ViewChild('fileInput') fileInput!: ElementRef;
+  fileInputValue: string = '';
 
   onFileSelected(event: any) {
     this.wybranyPlik = event.target.files[0];
@@ -32,7 +31,7 @@ export class ImageUploadComponent {
   clearImage() {
     this.wybranyObraz = null;
     this.wybranyPlik = null;
-    this.fileInput.nativeElement.value = '';
+    this.fileInputValue = '';
     this.clearImageEvent.emit();
   }
 }

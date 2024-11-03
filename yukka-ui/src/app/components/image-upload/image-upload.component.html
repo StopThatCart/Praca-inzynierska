@@ -1,15 +1,16 @@
 <div class="mb-3">
   <div class="mb-3" data-mdb-ripple-init>
-    <label class="form-label text-white m-1" for="inputObraz">
+    <label class="form-label text-white m-1" >
       <i class="fas fa-camera"></i>
       <span>&nbsp;Dołącz obraz</span>
-    </label>
-    <input #fileInput (change)="onFileSelected($event)"
+      <input (change)="onFileSelected($event)"
       class="form-control d-none"
-      id="inputObraz"
       type="file"
       accept="image/*"
+      [(ngModel)]="fileInputValue"
     />
+    </label>
+
   </div>
   <div class="position-relative d-inline-block" *ngIf="wybranyObraz">
     <img class="rounded-1 img-fluid" [src]="wybranyObraz"

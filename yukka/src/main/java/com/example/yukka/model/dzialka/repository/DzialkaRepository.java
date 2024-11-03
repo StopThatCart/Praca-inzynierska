@@ -68,7 +68,8 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         DELETE existing
 
         WITH d, roslina
-        CREATE (d)<-[r:ZASADZONA_NA {x: $x, y: $y, tabX: $tabX, tabY: $tabY, kolor: $kolor, obraz: $obraz}]-(roslina)
+        CREATE (d)<-[r:ZASADZONA_NA {x: $x, y: $y, tabX: $tabX, tabY: $tabY, 
+                kolor: $kolor, tekstura: $tekstura, obraz: $obraz}]-(roslina)
 
         WITH d
         MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
@@ -79,7 +80,8 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Param("numerDzialki") int numerDzialki, 
         @Param("x") int x, @Param("y") int y, 
         @Param("tabX") int[] tabX, @Param("tabY") int[] tabY,
-        @Param("kolor") String kolor, @Param("obraz") String obraz,
+        @Param("kolor") String kolor, 
+        @Param("tekstura") String tekstura, @Param("obraz") String obraz,
         @Param("nazwaLacinska") String nazwaLacinska);
 
         @Query("""
@@ -108,13 +110,13 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         MATCH (u)-[maOgrod]->(ogrod)-[:MA_DZIALKE]->(d2:Dzialka{numer: $numerDzialkiNowy})
         MATCH (d1)<-[existing:ZASADZONA_NA {x: $xStary, y: $yStary}]-(existingRoslina)
 
-        WITH existing, d1, d2, existingRoslina, existing.obraz AS obrazek
+        WITH existing, d1, d2, existingRoslina, existing.obraz AS obrazek, existing.tekstura AS tex, existing.kolor AS klr
         DELETE existing
-        
+  
         MERGE (d2)<-[existing2:ZASADZONA_NA {
                                 x: $xNowy, y: $yNowy, 
                                 tabX = $tabX, tabY = $tabY, 
-                                obraz: obrazek 
+                                obraz: obrazek, tekstura: tex, kolor: klr
                                 }]-(existingRoslina)
                 
         WITH d2
@@ -123,8 +125,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         RETURN d2, collect(nodes(path)), collect(relationships(path))
         """)
         Dzialka changeRoslinaPozycjaInDzialka(@Param("email") String email, 
-        @Param("numerDzialkiStary") int numerDzialki,
-        @Param("numerDzialkiNowy") int numerDzialkiNowy, 
+        @Param("numerDzialkiStary") int numerDzialki, @Param("numerDzialkiNowy") int numerDzialkiNowy, 
         @Param("xStary") int xStary, @Param("yStary") int yStary,
         @Param("nowyX") int nowyX, @Param("nowyY") int nowyY,
         @Param("tabX") int[] tabX, @Param("tabY") int[] tabY);
@@ -145,6 +146,22 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
                 @Param("numerDzialki") int numerDzialki, 
                 @Param("x") int x, @Param("y") int y, 
                 @Param("kolor") String kolor);
+
+        @Query("""
+                MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})
+                        
+                MATCH (d)<-[existing:ZASADZONA_NA {x: $x, y: $y}]-(existingRoslina)
+                SET existing.tekstura = $tekstura
+        
+                WITH d
+                MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
+                        
+                RETURN d, collect(nodes(path)), collect(relationships(path))
+                        """)
+        Dzialka updateRoslinaTeksturaInDzialka(@Param("email") String email,
+                @Param("numerDzialki") int numerDzialki, 
+                @Param("x") int x, @Param("y") int y, 
+                @Param("tekstura") String tekstura);
                 
         @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})
@@ -176,6 +193,23 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         Dzialka deleteRoslinaObrazInDzialka(@Param("email") String email,
         @Param("numerDzialki") int numerDzialki, 
         @Param("x") int x, @Param("y") int y);
+
+
+        @Query("""
+        MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})
+                
+        MATCH (d)<-[existing:ZASADZONA_NA {x: $x, y: $y}]-(existingRoslina)
+        SET existing.tekstura = null
+
+        WITH d
+        MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
+                
+        RETURN d, collect(nodes(path)), collect(relationships(path))
+        """)
+        Dzialka deleteRoslinaTeksturaInDzialka(@Param("email") String email,
+        @Param("numerDzialki") int numerDzialki, 
+        @Param("x") int x, @Param("y") int y);
+        
 
         
 

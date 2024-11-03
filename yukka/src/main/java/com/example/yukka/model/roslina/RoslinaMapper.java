@@ -78,6 +78,14 @@ public class RoslinaMapper {
         } else if (zasadzonaNaReverse.getRoslina().getObraz() != null) {
             obraz = fileUtils.readRoslinaObrazFile(zasadzonaNaReverse.getRoslina().getObraz());
         }
+
+        // TODO: zrobić to lepiej
+        byte[] tekstura = null;
+        if (zasadzonaNaReverse.getTekstura() != null) {
+            tekstura = fileUtils.readRoslinaObrazFile(zasadzonaNaReverse.getTekstura());
+        } else  {
+          
+        }
     
         return ZasadzonaRoslinaResponse.builder()
             .roslina(roslinaToRoslinaResponseWithWlasciwosci(zasadzonaNaReverse.getRoslina()))
@@ -87,6 +95,7 @@ public class RoslinaMapper {
             .tabY(zasadzonaNaReverse.getTabY())
             .pozycje(zasadzonaNaReverse.getPozycje())
             .kolor(zasadzonaNaReverse.getKolor())
+            .tekstura(tekstura)
             .obraz(obraz)
             .build();
     }

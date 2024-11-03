@@ -1010,7 +1010,6 @@
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file",
                   "request"
                 ],
                 "type": "object",
@@ -1018,7 +1017,11 @@
                   "request": {
                     "$ref": "#/components/schemas/DzialkaRoslinaRequest"
                   },
-                  "file": {
+                  "obraz": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "tekstura": {
                     "type": "string",
                     "format": "binary"
                   }
@@ -2844,11 +2847,8 @@
           "name": {
             "type": "string"
           },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
+          "normalUzytkownik": {
+            "type": "boolean"
           },
           "admin": {
             "type": "boolean"
@@ -2856,11 +2856,14 @@
           "pracownik": {
             "type": "boolean"
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
           "username": {
             "type": "string"
+          },
+          "authorities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedAuthority"
+            }
           },
           "password": {
             "type": "string"
@@ -2868,13 +2871,13 @@
           "enabled": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "accountNonLocked": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
             "type": "boolean"
           },
-          "accountNonLocked": {
+          "accountNonExpired": {
             "type": "boolean"
           }
         }
@@ -3563,6 +3566,9 @@
             "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
             "type": "string"
           },
+          "tekstura": {
+            "type": "string"
+          },
           "obraz": {
             "type": "string"
           }
@@ -3654,6 +3660,10 @@
           },
           "kolor": {
             "type": "string"
+          },
+          "tekstura": {
+            "type": "string",
+            "format": "byte"
           },
           "obraz": {
             "type": "string",

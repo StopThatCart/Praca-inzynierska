@@ -12,7 +12,8 @@ import { DzialkaRoslinaRequest } from '../../models/dzialka-roslina-request';
 export interface SaveRoslinaToDzialka1$FormData$Params {
       body: {
 'request': DzialkaRoslinaRequest;
-'file': Blob;
+'obraz'?: Blob;
+'tekstura'?: Blob;
 }
 }
 

@@ -235,10 +235,10 @@ public class YukkaApplication {
 		.build();
 		
 		log.info("Dodawanie rosliny 1 do dzialek");
-		dzialkaService.saveRoslinaToDzialka(req, null, usPiotr);
+		dzialkaService.saveRoslinaToDzialka(req, null, null, usPiotr);
 
 		log.info("Dodawanie rosliny 2 do dzialek");
-		dzialkaService.saveRoslinaToDzialka(req2, null, usPiotr);
+		dzialkaService.saveRoslinaToDzialka(req2, null, null, usPiotr);
 
 		Dzialka piotrDzialka2 = dzialkaRepository.getDzialkaByNumer(usPiotr.getEmail(), 2).get();
 
@@ -261,7 +261,7 @@ public class YukkaApplication {
 		.roslinaId(lolId)
 		.build();
 
-		dzialkaService.saveRoslinaToDzialka(req3, null, usPiotr);
+		dzialkaService.saveRoslinaToDzialka(req3, null, null, usPiotr);
 
 		log.info("Aktualizacja obrazu rosliny w dzialce");
 		dzialkaService.updateRoslinaObrazInDzialka(req2, obraz2, usPiotr);

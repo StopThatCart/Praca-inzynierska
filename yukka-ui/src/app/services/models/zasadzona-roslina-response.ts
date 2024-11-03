@@ -9,6 +9,7 @@ export interface ZasadzonaRoslinaResponse {
   roslina?: RoslinaResponse;
   tabX?: Array<number>;
   tabY?: Array<number>;
+  tekstura?: string;
   x?: number;
   y?: number;
 }

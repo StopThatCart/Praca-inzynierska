@@ -10,11 +10,12 @@ import { DzialkaModes } from '../../models/dzialka-modes';
 import { TokenService } from '../../../../services/token/token.service';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { ErrorMsgComponent } from '../../../../components/error-msg/error-msg.component';
+import { ImageUploadComponent } from "../../../../components/image-upload/image-upload.component";
 
 @Component({
   selector: 'app-add-roslina-to-dzialka',
   standalone: true,
-  imports: [CommonModule, FormsModule, ColorPickerModule, ErrorMsgComponent],
+  imports: [CommonModule, FormsModule, ColorPickerModule, ErrorMsgComponent, ImageUploadComponent],
   templateUrl: './add-roslina-to-dzialka.component.html',
   styleUrl: './add-roslina-to-dzialka.component.css'
 })
@@ -37,31 +38,51 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     obraz: ''
   };
 
-  // Potem się zrobi z tego osobny komponent
-  @ViewChild('fileInput') fileInput!: ElementRef;
-  wybranyObraz: any;
-  wybranyPlik: any;
+  wybranyPlik: any = null;
+  wybranaTekstura: any = null;
 
-  onFileSelected(event: any) {
-    this.wybranyPlik = event.target.files[0];
+  // onFileSelected(event: any) {
+  //   this.wybranyPlik = event.target.files[0];
 
-     if (this.wybranyPlik) {
-       this.request.obraz = this.wybranyPlik.name;
+  //    if (this.wybranyPlik) {
+  //      this.request.obraz = this.wybranyPlik.name;
 
-       const reader = new FileReader();
-       reader.onload = () => {
-         this.wybranyObraz = reader.result as string;
-       };
-       reader.readAsDataURL(this.wybranyPlik);
-     }
+  //      const reader = new FileReader();
+  //      reader.onload = () => {
+  //        this.wybranyObraz = reader.result as string;
+  //      };
+  //      reader.readAsDataURL(this.wybranyPlik);
+  //    }
+  // }
+  onFileSelected(file: File) {
+    this.wybranyPlik = file;
   }
 
   clearImage() {
-    this.wybranyObraz = null;
     this.wybranyPlik = null;
-    this.request.obraz = '';
-    this.fileInput.nativeElement.value = '';
   }
+
+  onTeksturaSelected(file: File) {
+    this.wybranaTekstura = file;
+  }
+
+  clearTekstura() {
+    this.wybranaTekstura = null;
+  }
+
+  // clearImage() {
+  //   this.wybranyObraz = null;
+  //   this.wybranyPlik = null;
+  //   this.request.obraz = '';
+  //   this.fileInput.nativeElement.value = '';
+  // }
+
+  // clearTekstura() {
+  //   this.wybranaTekstura = null;
+  //   this.wybranyPlikTekstura = null;
+  //   this.request.tekstura = '';
+  //   this.fileInput.nativeElement.value = '';
+  // }
 
   tiles: Tile[] = [];
   rowColls = 20;
@@ -224,11 +245,13 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
 
     this.message = '';
     this.errorMsg = [];
-    if(this.request.obraz === '') {
-
+    if(this.wybranyPlik === null) {
+      console.log('BEZ OBRAZU');
+      return;
       this.dzialkaService.saveRoslinaToDzialka1$Json({ body: this.request }).subscribe({
         next: () => {
-          this.goToDzialka();
+          console.log('AAAAAAAAAAAAAA');
+         // this.goToDzialka();
         },
         error: (error) => {
           //this.message = 'Błąd podczas dodawania rośliny';
@@ -237,9 +260,11 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
         }
       });
     } else {
-      this.dzialkaService.saveRoslinaToDzialka1$FormData({ body: { request: this.request, file: this.wybranyPlik } }).subscribe({
+      console.log('Z OBRAZEM');
+      this.dzialkaService.saveRoslinaToDzialka1$FormData({ body: { request: this.request, obraz: this.wybranyPlik, tekstura: this.wybranaTekstura } }).subscribe({
         next: () => {
-          this.goToDzialka();
+          console.log('FORMDATA');
+          //this.goToDzialka();
         },
         error: (error) => {
           //this.message = 'Błąd podczas dodawania rośliny';

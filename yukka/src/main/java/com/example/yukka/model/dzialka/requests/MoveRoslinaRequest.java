@@ -1,12 +1,11 @@
 package com.example.yukka.model.dzialka.requests;
 
-import com.example.yukka.validations.pozycje.ValidPozycje;
+import com.example.yukka.validations.pain.YetAnotherConstraint;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +19,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@ValidPozycje
+//@ValidPozycje
+@YetAnotherConstraint
 public class MoveRoslinaRequest extends BaseDzialkaRequest {
 
 

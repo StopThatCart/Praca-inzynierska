@@ -47,4 +47,37 @@ Tutaj trafia nieużywany kod, którego nie na razie nie usuwam bo może się prz
         //  this.dzialka.zasadzoneRosliny[index].y = tile.y;
         //  this.dzialka.zasadzoneRosliny[index].pozycje = this.selectedRoslina.pozycje;
      // }
-*/
+
+
+     // Stare rysowanie tekstur w canvas
+
+               // const img = new Image();
+
+          // if(tile.image && tile.image !== this.images.dirt && tile.image !== this.images.grass) {
+          //   img.src = 'data:image/jpeg;base64,' + tile.image;
+          // } else if(tile.image === this.images.dirt) {
+          //   img.src = this.images.dirt;
+          // } else {
+          //   img.src = this.images.grass;
+          // }
+
+          // img.onload = () => {
+          //   ctx.drawImage(img, col * this.tileSize, row * this.tileSize, this.tileSize, this.tileSize);
+          //   // if (tile.roslina) {
+          //   //   console.log('Roslina:', tile.roslina);
+          //   //   //tile.roslina.obraz = this.images.grass;  // TODO
+
+          //   //   const roslinaImg = new Image();
+          //   //   roslinaImg.src = 'data:image/jpeg;base64,' + tile.roslina.obraz || '';
+
+          //   //   roslinaImg.onload = () => {
+          //   //     ctx.drawImage(roslinaImg, col * this.tileSize, row * this.tileSize, this.tileSize, this.tileSize);
+          //   //   };
+          //   // }
+
+          // };
+
+
+
+
+     */

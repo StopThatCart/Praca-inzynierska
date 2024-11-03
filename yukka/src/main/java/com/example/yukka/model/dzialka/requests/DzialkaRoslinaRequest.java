@@ -1,12 +1,11 @@
 package com.example.yukka.model.dzialka.requests;
 
 
-import com.example.yukka.validations.pozycje.ValidPozycje;
+import com.example.yukka.validations.pain.YetAnotherConstraint;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,7 +22,8 @@ import lombok.experimental.SuperBuilder;
 @ToString
 
 //@ValidRoslinaIdAlboNazwaLacinska
-@ValidPozycje
+//@ValidPozycje
+@YetAnotherConstraint
 public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
     private String roslinaId;
     private String nazwaLacinska;
@@ -33,6 +33,7 @@ public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
     private String kolor;
 
 
+    private String tekstura;
     // Null jak nie dopina się żadnego obrazu
     private String obraz;
 

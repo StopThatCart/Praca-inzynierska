@@ -61,22 +61,18 @@ public class DzialkaController {
         return ResponseEntity.ok(dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa, connectedUser));
     }
 
-    /* 
-    @DeleteMapping("/{id}")
-    public void deleteDzialka(@PathVariable Long id) {
-        dzialkaService.deleteDzialka(id);
-    }
-*/
     @PostMapping(value = "/rosliny", consumes="application/json", produces="application/json")
     public ResponseEntity<DzialkaResponse> saveRoslinaToDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, 
     Authentication connectedUser) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, null, connectedUser));
+        return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, null, null, connectedUser));
     }
 
     @PostMapping(value = "/rosliny", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<DzialkaResponse> saveRoslinaToDzialka(@Valid @RequestPart("request") DzialkaRoslinaRequest request, 
-    @Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, file, connectedUser));
+    @Parameter() @RequestPart(value = "obraz", required = false) MultipartFile obraz,
+    @Parameter() @RequestPart(value = "tekstura", required = false)  MultipartFile tekstura,
+     Authentication connectedUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, obraz, tekstura, connectedUser));
     }
 
 

@@ -48,7 +48,7 @@ public class UzytkownikService implements  UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String nazwa) {
         return uzytkownikRepository.findByNazwa(nazwa)
-                .orElseThrow(() -> new UsernameNotFoundException("Użytkownika nie znaleziono"));
+                .orElseThrow(() -> new UsernameNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
     }
 
     @Transactional(readOnly = true)

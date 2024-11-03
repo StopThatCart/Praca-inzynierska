@@ -39,6 +39,9 @@ public class ZasadzonaNaReverse {
     @Property("kolor")
     private String kolor;
 
+    @Property("tekstura")
+    private String tekstura;
+
     @Property("obraz")
     private String obraz;
 

@@ -23,10 +23,10 @@ public class ZasadzonaRoslinaResponse {
 
     private int[] tabX;
     private int[] tabY;
-
     private Set<Pozycja> pozycje; 
 
     private String kolor;
+    private byte[] tekstura;
     private byte[] obraz;
 
 

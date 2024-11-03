@@ -8,6 +8,7 @@ export interface DzialkaRoslinaRequest {
   obraz?: string;
   pozycje: Array<Pozycja>;
   roslinaId?: string;
+  tekstura?: string;
   x: number;
   y: number;
 }
