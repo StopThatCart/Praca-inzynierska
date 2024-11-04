@@ -46,6 +46,9 @@ export class DzialkaPageComponent implements OnInit  {
   @ViewChild('canvasElement', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('overlayBoi', { static: true }) overlay!: ElementRef;
 
+  @ViewChild('backgroundCanvas', { static: true }) backgroundCanvas!: ElementRef<HTMLCanvasElement>;
+
+
   @ViewChild(OffcanvasRoslinaComponent) offcanvasBottom!: OffcanvasRoslinaComponent;
   tiles: Tile[] = [];
 
@@ -72,19 +75,6 @@ export class DzialkaPageComponent implements OnInit  {
 
     let copy = structuredClone(this.dzialka);
     this.dzialkaBackup = copy;
-
-    //console.log('dzialkaBackup:', this.dzialkaBackup);
-
-  }
-
-  saveChanges(): void {
-    console.log('Zapisuję zmiany');
-    // TODO
-    //this.dzialkaBackup = this.dzialka;
-    //this.initializeTiles();
-    //this.processRosliny(this.dzialka);
-
-    this.editMode = DzialkaModes.BrakEdycji;
   }
 
   cancelChanges(): void {
@@ -96,7 +86,6 @@ export class DzialkaPageComponent implements OnInit  {
       this.dzialkaBackup = {};
 
       this.initializeTiles();
-
       this.processRosliny(this.dzialka);
     }
     this.editMode = DzialkaModes.BrakEdycji;
@@ -106,8 +95,6 @@ export class DzialkaPageComponent implements OnInit  {
     grass: 'assets/tiles/grass.png',
     dirt: 'assets/tiles/dirt.png'
   };
-
-  private placeholderColors = ['#FFCCCC', '#CCFFCC', '#BCFFAC', '#CCCCFF'];
 
   DzialkaModes = DzialkaModes;
 
@@ -122,8 +109,6 @@ export class DzialkaPageComponent implements OnInit  {
     // TODO: Dodawanie ładowania
     this.initializeTiles();
     this.drawChessboard();
-    console.log(this.tiles.length);
-    //this.generateInitialTiles();
 
     this.route.params.subscribe(params => {
       this.numer = Number(params['numer']);
@@ -164,12 +149,13 @@ export class DzialkaPageComponent implements OnInit  {
 
   drawChessboard(): void {
     const canvas = this.canvas.nativeElement;
-    const overlay = this.overlay.nativeElement;
+    const backgroundCanvas = this.backgroundCanvas.nativeElement;
     const rows = this.rowColls;
     const cols = rows;
 
     const ctx = canvas.getContext('2d');
-    if (ctx) {
+    const bgCtx = backgroundCanvas.getContext('2d');
+    if (ctx && bgCtx) {
       console.log(canvas.width, canvas.height);
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
@@ -179,20 +165,16 @@ export class DzialkaPageComponent implements OnInit  {
             return;
           }
 
-          this.drawTileTexture(tile);
+          this.drawTileTexture(tile, ctx);
+          this.drawTileBackground(tile, bgCtx);
 
         }
       }
     }
-    //console.log(canvas.width, canvas.height);
-    // Już jest to zrobione w overlay.
-   // canvas.addEventListener('click', this.onCanvasClick.bind(this));
   }
 
-  private drawTileTexture(tile: Tile): void {
+  private drawTileTexture(tile: Tile, ctx : CanvasRenderingContext2D): void {
     console.log('drawTileTexture');
-    const canvas = this.canvas.nativeElement;
-    const ctx = canvas.getContext('2d');
     const img = new Image();
 
     if(ctx) {
@@ -210,25 +192,22 @@ export class DzialkaPageComponent implements OnInit  {
     }
   }
 
+  private drawTileBackground(tile: Tile, ctx: CanvasRenderingContext2D): void {
+    console.log('drawTileBackground');
+    ctx.fillStyle = this.getRgbaColor(tile.backgroundColor);
+    ctx.fillRect(tile.x * this.tileSize, tile.y * this.tileSize, this.tileSize, this.tileSize);
+  }
+
+
 
 
   changeRoslinaPozycjaInDzialka(): void {
     console.log('changeRoslinaPozycjaInDzialka');
-    if(!this.selectedRoslina?.pozycje) return;
+    if(!this.selectedRoslina?.pozycje || this.numer === undefined) return;
+
     this.moveRoslinaRequest.pozycje = this.selectedRoslina?.pozycje;
 
-    if(this.numer === undefined) return;
     this.moveRoslinaRequest.numerDzialki = this.numer;
-
-    // if(this.selectedRoslina.roslina?.nazwaLacinska) {
-    //   this.moveRoslinaRequest.nazwaLacinska = this.selectedRoslina.roslina?.nazwaLacinska;
-    // } else if(this.selectedRoslina.roslina?.id) {
-    //   this.moveRoslinaRequest.roslinaId = this.selectedRoslina.roslina?.roslinaId;
-    // } else {
-    //   console.error('Niepoprawne dane rośliny');
-    //   return;
-    // }
-
     this.moveRoslinaRequest.xnowy = this.selectedRoslina.x;
     this.moveRoslinaRequest.ynowy = this.selectedRoslina.y;
 
@@ -254,7 +233,6 @@ export class DzialkaPageComponent implements OnInit  {
         this.dzialka = dzialka;
         console.log(dzialka);
         this.processRosliny(dzialka);
-        //this.drawChessboard();
       },
       error: (err) => {
         console.error(err);
@@ -262,11 +240,21 @@ export class DzialkaPageComponent implements OnInit  {
     });
   }
 
+
+
   onRoslinaDelete() {
     console.log('onRoslinaDelete');
     this.initializeTiles();
     this.drawChessboard();
     this.getDzialkaByNumer(this.numer!, this.uzytNazwa!);
+  }
+
+  onRoslinaKolorChange(kolor: string) {
+    console.log('onRoslinaKolorChange');
+    if(this.selectedRoslina) {
+      this.selectedRoslina.kolor = kolor;
+      this.updateTilesWithRoslina(this.selectedRoslina, false);
+    }
   }
 
   processRosliny(dzialka: DzialkaResponse): void {
@@ -282,6 +270,9 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   updateTilesWithRoslina(zasadzonaRoslina: ZasadzonaRoslinaResponse, drawTekstury : boolean): void {
+    const bgCtx = this.backgroundCanvas.nativeElement.getContext('2d');
+    if (!bgCtx) return;
+
     zasadzonaRoslina.pozycje?.forEach((pozycja: Pozycja) => {
       if (pozycja.x === undefined || pozycja.y === undefined) {
         throw new Error('Nieprawidłowa pozycja rośliny');
@@ -295,8 +286,8 @@ export class DzialkaPageComponent implements OnInit  {
           if (tile.image === this.images.dirt || tile.image === zasadzonaRoslina.tekstura) {
             tile.image = zasadzonaRoslina.tekstura || this.images.dirt;
             if (drawTekstury) {
-              this.drawTileTexture(tile);
-            }
+            this.drawTileTexture(tile, this.canvas.nativeElement.getContext('2d')!);
+          }
           }
 
           //tile.backgroundColor = this.placeholderColors[zasadzonaRoslina.roslina.id % this.placeholderColors.length];
@@ -309,8 +300,10 @@ export class DzialkaPageComponent implements OnInit  {
             }
           }
         }
+        this.drawTileBackground(tile, bgCtx);
       }
     });
+    this.redrawBackgroundCanvas();
   }
 
   onTileClick(tile: Tile) {
@@ -353,17 +346,14 @@ export class DzialkaPageComponent implements OnInit  {
     if(!this.selectedRoslina) return;
     const index = this.selectedRoslina.pozycje?.findIndex(p => p.x === tile.x && p.y === tile.y);
       if (index !== undefined && index !== -1) {
-        console.log('Usuwam kafelek z tabX i tabY rośliny');
         this.selectedRoslina.pozycje?.splice(index, 1);
         TileUtils.clearTile(tile);
-        this.drawTileTexture(tile);
+        this.drawTileTexture(tile, this.canvas.nativeElement.getContext('2d')!);
       } else {
-        console.log('Dodaję kafelek do pozycji rośliny');
         this.selectedRoslina.pozycje?.push({ x: tile.x, y: tile.y });
         tile.roslinaId = this.selectedRoslina.roslina?.id;
         tile.backgroundColor = this.getRandomColor();
         tile.image = this.selectedRoslina.tekstura || this.images.dirt;
-        console.log('pozycje:', this.selectedRoslina.pozycje);
       }
 
       this.updateTilesWithRoslina(this.selectedRoslina, false);
@@ -379,7 +369,6 @@ export class DzialkaPageComponent implements OnInit  {
 
     }
 
-    // Przenieś roślinę na nowy kafelek
     tile.roslinaId = this.selectedRoslina.roslina?.id;
     tile.zasadzonaRoslina = this.selectedRoslina;
     tile.backgroundColor = this.selectedRoslina.kolor;
@@ -397,30 +386,32 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
 
+  private redrawBackgroundCanvas(): void {
+    const bgCtx = this.backgroundCanvas.nativeElement.getContext('2d');
+    if (!bgCtx) return;
 
+    bgCtx.clearRect(0, 0, this.backgroundCanvas.nativeElement.width, this.backgroundCanvas.nativeElement.height);
+
+    for (const tile of this.tiles) {
+      this.drawTileBackground(tile, bgCtx);
+    }
+  }
 
   onTileHover(tile: any, isHovering: boolean) {
-    //console.log(`Kafelkek (${tile.x}, ${tile.y}) ${isHovering ? 'najechano' : 'zjechano'}`);
     tile.hovered = isHovering;
-    // TODO: Przerób Tile[] na Tile[][] potem
-    const tileElement = document.querySelector(`.tile-overlay[data-x="${tile.x}"][data-y="${tile.y}"]`) as HTMLElement;
-    if (!tileElement) return;
+
+    const bgCtx = this.backgroundCanvas.nativeElement.getContext('2d');
+    if (!bgCtx) return;
+
     if (isHovering) {
-      if(!tile.backgroundColor) {
-        tileElement.style.backgroundColor = this.getRandomColor();
-      } else {
-        tileElement.style.backgroundColor = this.getRgbaColor(tile.backgroundColor);
-
-      }
-
-      tileElement.style.filter = 'brightness(1.2)';
+      bgCtx.save();
+      bgCtx.globalAlpha = 0.5;
+      bgCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      bgCtx.fillRect(tile.x * this.tileSize, tile.y * this.tileSize, this.tileSize, this.tileSize);
+      bgCtx.restore();
     } else {
-      if(!tile.backgroundColor) {
-        tileElement.style.backgroundColor = 'transparent';
-      }
-      tileElement.style.filter = 'none';
+      this.redrawBackgroundCanvas();
     }
-
   }
 
   onRoslinaClick(roslina: ZasadzonaRoslinaResponse): void {
@@ -467,9 +458,11 @@ export class DzialkaPageComponent implements OnInit  {
     if(scale >= 0.1 && scale <= 2.0) {
       const canvas = this.canvas.nativeElement;
       const overlay = this.overlay.nativeElement;
+      const backgroundCanvas = this.backgroundCanvas.nativeElement;
 
       canvas.style.transform = `scale(${scale})`;
       overlay.style.transform = `scale(${scale})`;
+      backgroundCanvas.style.transform = `scale(${scale})`;
     }
   }
 
@@ -485,7 +478,7 @@ export class DzialkaPageComponent implements OnInit  {
   saveCanvasAsImage(): void {
     if(confirm('Czy na pewno chcesz zapisać obraz działki?')) {
       this.isSaving = true;
-      this.canvasService.saveCanvasAsImage(this.canvas, this.overlay, this.onScaleChange.bind(this));
+      this.canvasService.saveCanvasAsImage(this.canvas, this.overlay, this.backgroundCanvas, this.onScaleChange.bind(this));
       this.isSaving = false;
     }
   }

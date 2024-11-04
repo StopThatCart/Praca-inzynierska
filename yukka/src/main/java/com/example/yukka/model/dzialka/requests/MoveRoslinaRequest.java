@@ -1,7 +1,5 @@
 package com.example.yukka.model.dzialka.requests;
 
-import com.example.yukka.validations.pain.YetAnotherConstraint;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @ToString
 //@ValidPozycje
-@YetAnotherConstraint
+//@YetAnotherConstraint
 public class MoveRoslinaRequest extends BaseDzialkaRequest {
 
 

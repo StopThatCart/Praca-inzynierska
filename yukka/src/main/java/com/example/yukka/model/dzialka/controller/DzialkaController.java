@@ -82,6 +82,20 @@ public class DzialkaController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(dzialkaService.updateRoslinaPositionInDzialka(request, connectedUser));
     }
 
+    // TODO: Lepsze endpointy, np. /{dzialka}/{x}/{y}/{kolor}
+    @PatchMapping(value = "/rosliny/kolor", consumes = "multipart/form-data", produces="application/json")
+    public ResponseEntity<DzialkaResponse> updateRoslinaKolorInDzialka(@Valid @RequestBody DzialkaRoslinaRequest request,
+        Authentication connectedUser) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(dzialkaService.updateRoslinaKolorInDzialka(request, connectedUser));
+    }
+
+    // @PatchMapping(value = "/rosliny/tekstura", consumes = "multipart/form-data", produces="application/json")
+    // public ResponseEntity<DzialkaResponse> updateRoslinaTeksturaInDzialka(@Valid @RequestBody DzialkaRoslinaRequest request,
+    //     @Parameter() @RequestPart("file") MultipartFile file,
+    //     Authentication connectedUser) {
+    //     return ResponseEntity.status(HttpStatus.ACCEPTED).body(dzialkaService.updateRoslinaTeksturaInDzialka(request, file, connectedUser));
+    // }
+
     @PatchMapping(value = "/rosliny/obraz", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<DzialkaResponse> updateRoslinaObrazInDzialka(@Valid @RequestBody DzialkaRoslinaRequest request,
         @Parameter() @RequestPart("file") MultipartFile file,

@@ -3,7 +3,6 @@ package com.example.yukka.model.dzialka.requests;
 import java.util.Set;
 
 import com.example.yukka.model.dzialka.Pozycja;
-import com.example.yukka.validations.pain.YetAnotherConstraint;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.Max;
@@ -28,7 +27,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @ToString
 //@ValidPozycje
-@YetAnotherConstraint
+//@YetAnotherConstraint
 public class BaseDzialkaRequest {
 
     @Min(value = 1, message = "Numer działki musi być > 0")

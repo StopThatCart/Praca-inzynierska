@@ -5,11 +5,12 @@ import { DzialkaModes } from '../../models/dzialka-modes';
 import { DzialkaService } from '../../../../services/services';
 import { WlasciwoscProcessService } from '../../../roslina/services/wlasciwosc-service/wlasciwosc.service';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { ModalColorPickComponent } from '../modal-color-pick/modal-color-pick.component';
 
 @Component({
   selector: 'app-offcanvas-roslina',
   standalone: true,
-  imports: [CommonModule, ColorPickerModule],
+  imports: [CommonModule, ColorPickerModule, ModalColorPickComponent],
   templateUrl: './offcanvas-roslina.component.html',
   styleUrl: './offcanvas-roslina.component.css'
 })
@@ -18,13 +19,15 @@ export class OffcanvasRoslinaComponent {
   @Input() numerDzialki: number | undefined;
   @Input() mode: string = '';
   @Input() editMode: string = '';
+
   @Output() roslinaPozycjaEdit = new EventEmitter<ZasadzonaRoslinaResponse>();
   @Output() roslinaKafelkiEdit = new EventEmitter<ZasadzonaRoslinaResponse>();
+  @Output() roslinaKolorChange = new EventEmitter<string>();
 
   @Output() roslinaRemove = new EventEmitter<ZasadzonaRoslinaResponse>();
 
   @ViewChild('offcanvasBottom', { static: true }) offcanvasBottom!: ElementRef;
-
+  @ViewChild('colorPickerModal') colorPickerModal!: ModalColorPickComponent;
 
   roslinaWlasciwosci: { name: string, value: string }[] = [];
   private _roslinaObraz: string | undefined;
@@ -35,7 +38,6 @@ export class OffcanvasRoslinaComponent {
   ) { }
 
   private _zasadzonaRoslina: ZasadzonaRoslinaResponse | undefined;
-  // @Input() zasadzonaRoslina: ZasadzonaRoslinaResponse | undefined;
    @Input()
    set zasadzonaRoslina(roslina: ZasadzonaRoslinaResponse | undefined) {
      this._zasadzonaRoslina = roslina;
@@ -112,6 +114,17 @@ export class OffcanvasRoslinaComponent {
       this.roslinaKafelkiEdit.emit(this.zasadzonaRoslina);
     }
   }
+
+  openColorPickerModal() {
+    this.colorPickerModal.openColorPickerModal();
+  }
+
+  confirmColorChange(newColor: string) {
+    console.log('confirmColorChange', newColor);
+    this.zasadzonaRoslina!.kolor = newColor;
+    this.roslinaKolorChange.emit(newColor);
+  }
+
 
 
 

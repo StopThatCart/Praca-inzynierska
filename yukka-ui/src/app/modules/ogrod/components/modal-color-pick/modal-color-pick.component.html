@@ -1,0 +1,22 @@
+<div class="modal fade" #colorPickerModal tabindex="-1" aria-labelledby="colorPickerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-primary">
+      <div class="modal-header">
+        <h5 class="modal-title" id="colorPickerModalLabel">Wybierz kolor</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeColorPickerModal()"></button>
+      </div>
+      <div class="modal-body">
+        <input
+        [(colorPicker)]="selectedColor"
+        [(ngModel)]="selectedColor"
+        [cpOutputFormat]="'hex'"
+        [value]="selectedColor"
+        type="color" class="form-control form-control-color">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeColorPickerModal()">Anuluj</button>
+        <button type="button" class="btn btn-primary" (click)="confirm()">Zapisz</button>
+      </div>
+    </div>
+  </div>
+</div>

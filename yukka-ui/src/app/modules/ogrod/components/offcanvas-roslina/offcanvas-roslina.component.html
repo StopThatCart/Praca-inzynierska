@@ -17,7 +17,10 @@
             <div class="d-flex mb-2">
               <span class="roslina-nazwa-lacinska-color me-2">Kolor kafelków:</span>
 
-              <input [value]="zasadzonaRoslina.kolor" type="color" class="form-control form-control-color" value="#CCCCCC" disabled>
+              <input [value]="zasadzonaRoslina.kolor"
+              type="color"
+              class="form-control form-control-color"
+              value="#CCCCCC" disabled>
             </div>
 
             <div *ngIf="true" class="btn-group">
@@ -27,7 +30,7 @@
               >zmień pozycję</button>
               <button class="btn btn-info text-uppercase">zmień obraz</button>
               <button class="btn btn-info text-uppercase">zmień teksturę kafelków</button>
-              <button class="btn btn-info text-uppercase">zmień kolor kafelków</button>
+              <button class="btn btn-info text-uppercase" (click)="openColorPickerModal()">zmień kolor kafelków</button>
               <button (click)="removeRoslinaFromDzialka()"
               class="btn btn-danger text-uppercase"
               data-bs-dismiss="offcanvas" aria-label="Close">usuń z działki</button>
@@ -61,3 +64,7 @@
     </div>
   </div>
 </div>
+
+<app-modal-color-pick #colorPickerModal
+[selectedColor]="zasadzonaRoslina?.kolor!"
+(confirmColorChange)="confirmColorChange($event)"></app-modal-color-pick>

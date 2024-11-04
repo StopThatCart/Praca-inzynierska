@@ -1,8 +1,6 @@
 package com.example.yukka.model.dzialka.requests;
 
 
-import com.example.yukka.validations.pain.YetAnotherConstraint;
-
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -23,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 
 //@ValidRoslinaIdAlboNazwaLacinska
 //@ValidPozycje
-@YetAnotherConstraint
+//@YetAnotherConstraint
 public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
     private String roslinaId;
     private String nazwaLacinska;

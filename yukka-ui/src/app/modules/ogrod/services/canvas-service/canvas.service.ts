@@ -11,23 +11,28 @@ export class CanvasService {
   private scrollLeft: number = 0;
   private scrollTop: number = 0;
 
-  saveCanvasAsImage(canvas: ElementRef, overlay: ElementRef, onScaleChange: (scale: number) => void): void {
+  saveCanvasAsImage(canvas: ElementRef, overlay: ElementRef, backgroundCanvas: ElementRef , onScaleChange: (scale: number) => void): void {
     onScaleChange(1);
     let canvasElement = canvas.nativeElement;
     let overlayElement = overlay.nativeElement;
+    let highlightCanvasElement = backgroundCanvas.nativeElement;
 
     const originalCanvasTransition = canvasElement.style.transition;
     const originalOverlayTransition = overlayElement.style.transition;
+    const originalHighlightCanvasTransition = highlightCanvasElement.style.transition;
 
     canvasElement.style.transition = 'none';
     overlayElement.style.transition = 'none';
+    highlightCanvasElement.style.transition = 'none';
 
     onScaleChange(1);
     canvasElement = canvas.nativeElement;
     overlayElement = overlay.nativeElement;
+    highlightCanvasElement = backgroundCanvas.nativeElement;
 
     html2canvas(canvasElement, { backgroundColor: null }).then(canvasImage => {
       html2canvas(overlayElement, { backgroundColor: null }).then(overlayImage => {
+        html2canvas(highlightCanvasElement, { backgroundColor: null }).then(highlightCanvasImage => {
           const combinedCanvas = document.createElement('canvas');
           combinedCanvas.width = canvasImage.width;
           combinedCanvas.height = canvasImage.height;
@@ -35,6 +40,7 @@ export class CanvasService {
           const context = combinedCanvas.getContext('2d');
           if (context) {
               context.drawImage(canvasImage, 0, 0);
+              context.drawImage(highlightCanvasImage, 0, 0);
               context.drawImage(overlayImage, 0, 0);
 
               const link = document.createElement('a');
@@ -45,6 +51,8 @@ export class CanvasService {
 
           canvas.nativeElement.style.transition = originalCanvasTransition;
           overlay.nativeElement.style.transition = originalOverlayTransition;
+          backgroundCanvas.nativeElement.style.transition = originalHighlightCanvasTransition;
+        });
       });
     });
   }

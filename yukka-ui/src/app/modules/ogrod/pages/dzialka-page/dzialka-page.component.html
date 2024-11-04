@@ -55,6 +55,7 @@
         [editMode]="editMode || ''"
         (roslinaPozycjaEdit)="onRoslinaPozycjaEdit($event)"
         (roslinaRemove)="onRoslinaDelete()"
+        (roslinaKolorChange)="onRoslinaKolorChange($event)"
         >
 
         </app-offcanvas-roslina>
@@ -65,12 +66,12 @@
         (mousedown)="onMouseDown($event)"
         >
           <canvas #canvasElement [width]="canvasWidth" [height]="canvasWidth"></canvas>
+          <canvas #backgroundCanvas [width]="canvasWidth" [height]="canvasWidth"></canvas>
           <div id="overlay" #overlayBoi>
             <div *ngFor="let tile of tiles"
             [ngStyle]="{
               'left.px': tile.x * tileSize,
-              'top.px': tile.y * tileSize,
-              'background-color': getRgbaColor(tile.backgroundColor)
+              'top.px': tile.y * tileSize
             }"
             [attr.data-x]="tile.x"
             [attr.data-y]="tile.y"
