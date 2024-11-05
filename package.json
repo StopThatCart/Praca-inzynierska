@@ -1,5 +1,10 @@
 {
   "dependencies": {
-    "ng-drag-drop": "^5.0.0"
+    "html2canvas": "^1.4.1",
+    "ng-drag-drop": "^5.0.0",
+    "ngx-color-picker": "^17.0.0"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^5.2.10"
   }
 }
