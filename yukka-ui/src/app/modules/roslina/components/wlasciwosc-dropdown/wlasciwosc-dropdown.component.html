@@ -7,7 +7,7 @@
         data-bs-auto-close="false" type="button"
         data-bs-display="static">{{ wlasciwosc.etykieta }}</button>
       <div class="dropdown-menu">
-        <a *ngFor="let nazwa of wlasciwosc.nazwy" class="dropdown-item link-white">
+        <a *ngFor="let nazwa of wlasciwosc.nazwy" class="dropdown-item link-body-emphasis">
           <input [checked]="isSelected(wlasciwosc, nazwa)"
            type="checkbox" class="form-check-input mx-1"
            (change)="toggleWlasciwosc(wlasciwosc, nazwa)">{{ nazwa }}</a>
