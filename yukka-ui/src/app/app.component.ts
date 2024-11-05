@@ -12,13 +12,13 @@ import { DOCUMENT } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  // constructor(@Inject(DOCUMENT) private document: Document) {}
 
-  ngOnInit(): void {
-    this.document.documentElement.lang = 'pl';
-  }
+  // ngOnInit(): void {
+  //   this.document.documentElement.lang = 'pl';
+  // }
 
   title = 'yukka-ui';
 }

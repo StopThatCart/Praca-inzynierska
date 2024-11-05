@@ -398,10 +398,12 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   onTileHover(tile: any, isHovering: boolean) {
-    tile.hovered = isHovering;
+    if(this.isSaving) return;
 
     const bgCtx = this.backgroundCanvas.nativeElement.getContext('2d');
     if (!bgCtx) return;
+
+    tile.hovered = isHovering;
 
     if (isHovering) {
       bgCtx.save();
@@ -476,10 +478,13 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   saveCanvasAsImage(): void {
+    if(this.editMode !== DzialkaModes.BrakEdycji) return;
     if(confirm('Czy na pewno chcesz zapisać obraz działki?')) {
       this.isSaving = true;
-      this.canvasService.saveCanvasAsImage(this.canvas, this.overlay, this.backgroundCanvas, this.onScaleChange.bind(this));
-      this.isSaving = false;
+      this.canvasService.saveCanvasAsImage(this.canvas, this.overlay, this.backgroundCanvas, this.onScaleChange.bind(this))
+      .then(() => {
+        this.isSaving = false;
+      });
     }
   }
 

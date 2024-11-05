@@ -11,7 +11,12 @@ export class CanvasService {
   private scrollLeft: number = 0;
   private scrollTop: number = 0;
 
-  saveCanvasAsImage(canvas: ElementRef, overlay: ElementRef, backgroundCanvas: ElementRef , onScaleChange: (scale: number) => void): void {
+  saveCanvasAsImage(canvas: ElementRef, 
+    overlay: ElementRef, 
+    backgroundCanvas: ElementRef , 
+    onScaleChange: (scale: number) => void): Promise<void> {
+    return new Promise((resolve) => {
+
     onScaleChange(1);
     let canvasElement = canvas.nativeElement;
     let overlayElement = overlay.nativeElement;
@@ -52,9 +57,12 @@ export class CanvasService {
           canvas.nativeElement.style.transition = originalCanvasTransition;
           overlay.nativeElement.style.transition = originalOverlayTransition;
           backgroundCanvas.nativeElement.style.transition = originalHighlightCanvasTransition;
+          
+          resolve();
         });
       });
     });
+  });
   }
 
   getRgbaColor(hex: string | undefined): string {
