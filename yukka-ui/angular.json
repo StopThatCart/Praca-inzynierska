@@ -28,10 +28,11 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
             "scripts": [
-              "../Projekt bootstrap/assets/bootstrap/js/bootstrap.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "../Projekt bootstrap/assets/js/freelancer.js",
               "../Projekt bootstrap/assets/js/Lightbox-Gallery-baguetteBox.min.js",
               "../Projekt bootstrap/assets/js/Lightbox-Gallery.js"
