@@ -44,7 +44,7 @@ public class FileStoreService {
 
     // Jako iż seedowane rośliny już mają swoje ścieżki, to zwraca się tylko wygenerowane nazwy zamiast ścieżki do pliku
     public String saveSeededRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String obraz) {
-        validateImage(sourceFile, false);
+        //validateImage(sourceFile, false);
         String fileUploadSubPath = "defaults";
         if(!obraz.equals(defaultRoslinaObrazName)) {
             fileUploadSubPath = fileUploadSubPath + separator + "rosliny" + separator + "seed";

@@ -1,18 +1,24 @@
-<ul class="nav nav-pills flex-column text-truncate mb-auto">
-  <li *ngFor="let wlasciwosc of wlasciwosciResponse" class="nav-item my-1 w-100">
-    <div class="nav-item dropdown">
-      <button
-        class="btn dropdown-toggle text-uppercase link-white w-100"
-        aria-expanded="false" data-bs-toggle="dropdown"
-        data-bs-auto-close="false" type="button"
-        data-bs-display="static">{{ wlasciwosc.etykieta }}</button>
-      <div class="dropdown-menu">
-        <a *ngFor="let nazwa of wlasciwosc.nazwy" class="dropdown-item link-body-emphasis">
-          <input [checked]="isSelected(wlasciwosc, nazwa)"
-           type="checkbox" class="form-check-input mx-1"
-           (change)="toggleWlasciwosc(wlasciwosc, nazwa)">{{ nazwa }}</a>
-      </div>
-    </div>
-  </li>
-</ul>
+
+<nav class="navbar navbar-expand-md navbar-light">
+  <div class="container-fluid">
+    <ul class="navbar-nav nav-pills flex-column text-truncate mb-auto">
+      <li *ngFor="let wlasciwosc of wlasciwosciResponse" class="nav-item my-1 w-100">
+        <div class="nav-item" ngbDropdown>
+          <a  ngbDropdownToggle
+            class="nav-link text-uppercase link-white w-100"
+            type="button">{{ wlasciwosc.etykieta }}</a>
+          <div ngbDropdownMenu class="dropdown-menu">
+            <div *ngFor="let nazwa of wlasciwosc.nazwy"
+              class="link-body-emphasis mb-1">
+                <input [checked]="isSelected(wlasciwosc, nazwa)"
+                  type="checkbox" class="form-check-input mx-1 link-body-emphasis"
+                  (change)="toggleWlasciwosc(wlasciwosc, nazwa)"/>
+                <label class="form-check-label" style="white-space: normal;" >{{ nazwa }}</label>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
 

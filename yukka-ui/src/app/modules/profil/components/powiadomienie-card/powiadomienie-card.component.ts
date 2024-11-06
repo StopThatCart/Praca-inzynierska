@@ -6,11 +6,13 @@ import { Router, RouterModule } from '@angular/router';
 import { PowiadomieniaDropdownComponent } from '../powiadomienia-dropdown/powiadomienia-dropdown.component';
 import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
 import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powiadomienia-sync.service';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { TokenService } from '../../../../services/token/token.service';
 
 @Component({
   selector: 'app-powiadomienie-card',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NgbDropdownModule],
   templateUrl: './powiadomienie-card.component.html',
   styleUrl: './powiadomienie-card.component.css'
 })
@@ -25,6 +27,7 @@ export class PowiadomienieCardComponent {
   constructor(
     private powiadomienieService : PowiadomienieService,
     private powiadomieniaSyncService: PowiadomieniaSyncService,
+    private tokenService: TokenService,
     private router: Router
   ) {}
 
@@ -64,7 +67,7 @@ export class PowiadomienieCardComponent {
           break;
         case TypPowiadomienia.ZAPROSZENIE_ZAAKCEPTOWANE:
         case TypPowiadomienia.WIADOMOSC_PRYWATNA:
-          this.router.navigate(['profil/rozmowy', this.pow.odnosnik]);
+          this.router.navigate(['profil', this.tokenService.nazwa ,'rozmowy', this.pow.odnosnik]);
           break;
 
         case TypPowiadomienia.OWOCOWANIE_ROSLIN:

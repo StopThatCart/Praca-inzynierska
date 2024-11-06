@@ -10,7 +10,9 @@ Requests==2.32.3
 selenium==4.21.0
 ```
 
-// Odpalanie excalibura
+// Odpal to w yukka-ui przed uruchomieniem frontendu
 ```
-npx parcel ogrodEx/ogrod.html
+npm install
+
+ng serve  // albo npm run start
 ```

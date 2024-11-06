@@ -8,10 +8,11 @@ import { PowiadomieniaDropdownComponent } from "../../modules/profil/components/
 import { UzytkownikService } from '../../services/services';
 import { UzytkownikResponse } from '../../services/models';
 
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, PowiadomienieCardComponent, PowiadomieniaDropdownComponent],
+  imports: [CommonModule, RouterModule, NgbDropdownModule, PowiadomienieCardComponent, PowiadomieniaDropdownComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

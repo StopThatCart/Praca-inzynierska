@@ -175,7 +175,7 @@ public class YukkaApplication {
 		log.info("Seedowanie bazy danych...");
 
 		uzytkownicy = seedUzytkownicy();
-
+		
 		//addPostyWithKomentarze(uzytkownicy);
 		//System.out.println("Dodano posty testowe. Może lepiej dać je potem w batchu.");
 
