@@ -6,21 +6,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { DzialkaResponse } from '../../models/dzialka-response';
 import { DzialkaRoslinaRequest } from '../../models/dzialka-roslina-request';
-import { FileResponse } from '../../models/file-response';
 
-export interface UpdateRoslinaObrazInDzialka$Params {
-      body?: {
-'request': DzialkaRoslinaRequest;
-'obraz'?: Blob;
-'tekstura'?: Blob;
-}
+export interface UpdateRoslinaWyswietlanieInDzialka$Params {
+      body: DzialkaRoslinaRequest
 }
 
-export function updateRoslinaObrazInDzialka(http: HttpClient, rootUrl: string, params?: UpdateRoslinaObrazInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<FileResponse>> {
-  const rb = new RequestBuilder(rootUrl, updateRoslinaObrazInDzialka.PATH, 'patch');
+export function updateRoslinaWyswietlanieInDzialka(http: HttpClient, rootUrl: string, params: UpdateRoslinaWyswietlanieInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+  const rb = new RequestBuilder(rootUrl, updateRoslinaWyswietlanieInDzialka.PATH, 'patch');
   if (params) {
-    rb.body(params.body, 'multipart/form-data');
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -28,9 +24,9 @@ export function updateRoslinaObrazInDzialka(http: HttpClient, rootUrl: string, p
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<FileResponse>;
+      return r as StrictHttpResponse<DzialkaResponse>;
     })
   );
 }
 
-updateRoslinaObrazInDzialka.PATH = '/dzialki/rosliny/obraz';
+updateRoslinaWyswietlanieInDzialka.PATH = '/dzialki/rosliny/wyswietlanie';

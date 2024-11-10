@@ -6,11 +6,18 @@ import { DzialkaService } from '../../../../services/services';
 import { WlasciwoscProcessService } from '../../../roslina/services/wlasciwosc-service/wlasciwosc.service';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ModalColorPickComponent } from '../modal-color-pick/modal-color-pick.component';
+import { ModalObrazPickComponent } from "../modal-obraz-pick/modal-obraz-pick.component";
+import { WyswietlanieRoslinyOpcjeComponent } from "../wyswietlanie-rosliny-opcje/wyswietlanie-rosliny-opcje.component";
+import { ModalWyswietlanieRoslinyPickComponent } from "../modal-wyswietlanie-rosliny-pick/modal-wyswietlanie-rosliny-pick.component";
 
 @Component({
   selector: 'app-offcanvas-roslina',
   standalone: true,
-  imports: [CommonModule, ColorPickerModule, ModalColorPickComponent],
+  imports: [CommonModule,
+    ColorPickerModule,
+    ModalColorPickComponent,
+    ModalObrazPickComponent,
+    WyswietlanieRoslinyOpcjeComponent, ModalWyswietlanieRoslinyPickComponent],
   templateUrl: './offcanvas-roslina.component.html',
   styleUrl: './offcanvas-roslina.component.css'
 })
@@ -23,11 +30,20 @@ export class OffcanvasRoslinaComponent {
   @Output() roslinaPozycjaEdit = new EventEmitter<ZasadzonaRoslinaResponse>();
   @Output() roslinaKafelkiEdit = new EventEmitter<ZasadzonaRoslinaResponse>();
   @Output() roslinaKolorChange = new EventEmitter<string>();
+  @Output() roslinaSmolChange = new EventEmitter<ZasadzonaRoslinaResponse>();
+  @Output() roslinaBaseChange = new EventEmitter<ZasadzonaRoslinaResponse>();
 
   @Output() roslinaRemove = new EventEmitter<ZasadzonaRoslinaResponse>();
 
   @ViewChild('offcanvasBottom', { static: true }) offcanvasBottom!: ElementRef;
-  @ViewChild('colorPickerModal') colorPickerModal!: ModalColorPickComponent;
+
+  @ViewChild(ModalColorPickComponent) colorPickerModal!: ModalColorPickComponent;
+  @ViewChild(ModalWyswietlanieRoslinyPickComponent) wyswietlaniePickerModal!: ModalWyswietlanieRoslinyPickComponent;
+  @ViewChild(ModalObrazPickComponent) obrazPickerModal!: ModalObrazPickComponent;
+
+  isTextureMode = false;
+
+
 
   roslinaWlasciwosci: { name: string, value: string }[] = [];
   private _roslinaObraz: string | undefined;
@@ -53,8 +69,13 @@ export class OffcanvasRoslinaComponent {
   }
 
   getRoslinaObraz(): string | undefined {
-    if(this.zasadzonaRoslina?.roslina?.obraz) {
-      return 'data:image/jpeg;base64,' + this.zasadzonaRoslina.roslina.obraz;
+    let baza = 'data:image/jpeg;base64,';
+    if(this.zasadzonaRoslina) {
+      if(this.zasadzonaRoslina.obraz) {
+        return baza + this.zasadzonaRoslina.obraz
+      }else if(this.zasadzonaRoslina.roslina && this.zasadzonaRoslina.roslina.obraz) {
+        return baza + this.zasadzonaRoslina.roslina.obraz
+      }
     }
     return this._roslinaObraz;
   }
@@ -84,12 +105,7 @@ export class OffcanvasRoslinaComponent {
       console.log(this.zasadzonaRoslina?.y)
       return;
     }
-    let deletRequest : BaseDzialkaRequest = {
-      numerDzialki: this.numerDzialki!,
-      pozycje: [{ x: this.zasadzonaRoslina.x, y: this.zasadzonaRoslina.y }],
-      x: this.zasadzonaRoslina.x,
-      y: this.zasadzonaRoslina.y
-    };
+    let deletRequest = this.makeBaseDzialkaRequest();
 
     this.dzialkaService.deleteRoslinaFromDzialka( { body: deletRequest }).subscribe({
       next: () => {
@@ -115,14 +131,133 @@ export class OffcanvasRoslinaComponent {
     }
   }
 
-  openColorPickerModal() {
-    this.colorPickerModal.openColorPickerModal();
+  openObrazPickerModal(isTextureMode: boolean = false) {
+    this.isTextureMode = isTextureMode;
+    this.obrazPickerModal.openPickerModal();
+
   }
+
+  openColorPickerModal() {
+    this.colorPickerModal.openPickerModal();
+  }
+
 
   confirmColorChange(newColor: string) {
     console.log('confirmColorChange', newColor);
+    if(!this.zasadzonaRoslina) return;
     this.zasadzonaRoslina!.kolor = newColor;
-    this.roslinaKolorChange.emit(newColor);
+
+    let request: DzialkaRoslinaRequest = this.makeDzialkaRoslinaRequest();
+    request.kolor = newColor;
+
+    this.dzialkaService .updateRoslinaKolorInDzialka( { body: request }).subscribe({
+      next: () => {
+        console.log('kolorowanie yeeeeeey');
+        this.roslinaKolorChange.emit(newColor);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  openWyswietlaniePickerModal() {
+    this.wyswietlaniePickerModal.openPickerModal();
+  }
+
+  confirmWyswietlanieChange(newWyswietlanie: string) {
+    console.log('confirmWyswietlanieChange', newWyswietlanie);
+    if(!this.zasadzonaRoslina) return;
+
+    let request: DzialkaRoslinaRequest = this.makeDzialkaRoslinaRequest();
+    request.wyswietlanie = newWyswietlanie;
+
+    this.dzialkaService .updateRoslinaWyswietlanieInDzialka( { body: request }).subscribe({
+      next: () => {
+        console.log('wyswietlanie yeeeeeey');
+        this.zasadzonaRoslina!.wyswietlanie = newWyswietlanie;
+        this.roslinaSmolChange.emit(this.zasadzonaRoslina);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  confirmObrazChange(obraz: any) {
+    console.log('confirmObrazChange', obraz);
+    if(!this.zasadzonaRoslina) return;
+    if(obraz === null) {
+      let deletRequest = this.makeBaseDzialkaRequest();
+      if(this.isTextureMode) {
+        this.dzialkaService.deleteRoslinaTeksturaFromDzialka( { body: deletRequest }).subscribe({
+          next: () => {
+            console.log('usunięto teksturę');
+            this.roslinaSmolChange.emit(this.zasadzonaRoslina);
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+      } else {
+        this.dzialkaService.deleteRoslinaObrazFromDzialka( { body: deletRequest }).subscribe({
+          next: () => {
+            console.log('usunięto obraz');
+            this.zasadzonaRoslina!.obraz = this.zasadzonaRoslina?.roslina?.obraz;
+            console.log(this.zasadzonaRoslina);
+
+            this.roslinaSmolChange.emit(this.zasadzonaRoslina);
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+      }
+    } else {
+      let request = this.makeDzialkaRoslinaRequest();
+
+      let teksturka : any = null;
+      let obrazek : any = null;
+      this.isTextureMode ? (teksturka = obraz) : (obrazek = obraz);
+
+      console.log('W trybie tekstury: ' + this.isTextureMode);
+      console.log(teksturka == null ? 'null' : 'nie null');
+      console.log(obrazek == null ? 'null' : 'nie null');
+
+      this.dzialkaService.updateRoslinaObrazInDzialka( { body: {request : request, obraz: obrazek, tekstura: teksturka } }).subscribe({
+        next: (obrazek) => {
+          console.log('zaktualizowano obraz');
+          console.log('W trybie tekstury: ' + this.isTextureMode);
+          console.log(obrazek);
+          //if(!this.isTextureMode) this.zasadzonaRoslina!.obraz = obrazek.content;
+          this.roslinaSmolChange.emit(this.zasadzonaRoslina);
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
+  }
+
+
+  private makeDzialkaRoslinaRequest(): DzialkaRoslinaRequest {
+    return {
+      numerDzialki: this.numerDzialki!,
+      x: this.zasadzonaRoslina!.x!,
+      y: this.zasadzonaRoslina!.y!,
+      pozycje: [{ x: this.zasadzonaRoslina!.x!, y: this.zasadzonaRoslina!.y! }],
+      wyswietlanie: this.zasadzonaRoslina!.wyswietlanie!,
+      kolor: this.zasadzonaRoslina!.kolor!
+    };
+  }
+
+  private makeBaseDzialkaRequest(): BaseDzialkaRequest {
+    return {
+      numerDzialki: this.numerDzialki!,
+      pozycje: [{ x: this.zasadzonaRoslina!.x!, y: this.zasadzonaRoslina!.y! }],
+      x: this.zasadzonaRoslina!.x!,
+      y: this.zasadzonaRoslina!.y!
+    };
   }
 
 

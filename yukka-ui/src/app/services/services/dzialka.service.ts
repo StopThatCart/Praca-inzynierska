@@ -13,7 +13,10 @@ import { deleteRoslinaFromDzialka } from '../fn/dzialka/delete-roslina-from-dzia
 import { DeleteRoslinaFromDzialka$Params } from '../fn/dzialka/delete-roslina-from-dzialka';
 import { deleteRoslinaObrazFromDzialka } from '../fn/dzialka/delete-roslina-obraz-from-dzialka';
 import { DeleteRoslinaObrazFromDzialka$Params } from '../fn/dzialka/delete-roslina-obraz-from-dzialka';
+import { deleteRoslinaTeksturaFromDzialka } from '../fn/dzialka/delete-roslina-tekstura-from-dzialka';
+import { DeleteRoslinaTeksturaFromDzialka$Params } from '../fn/dzialka/delete-roslina-tekstura-from-dzialka';
 import { DzialkaResponse } from '../models/dzialka-response';
+import { FileResponse } from '../models/file-response';
 import { getDzialkaByNumer } from '../fn/dzialka/get-dzialka-by-numer';
 import { GetDzialkaByNumer$Params } from '../fn/dzialka/get-dzialka-by-numer';
 import { getDzialkaOfUzytkownikByNumer } from '../fn/dzialka/get-dzialka-of-uzytkownik-by-numer';
@@ -28,10 +31,14 @@ import { saveRoslinaToDzialka1$FormData } from '../fn/dzialka/save-roslina-to-dz
 import { SaveRoslinaToDzialka1$FormData$Params } from '../fn/dzialka/save-roslina-to-dzialka-1-form-data';
 import { saveRoslinaToDzialka1$Json } from '../fn/dzialka/save-roslina-to-dzialka-1-json';
 import { SaveRoslinaToDzialka1$Json$Params } from '../fn/dzialka/save-roslina-to-dzialka-1-json';
+import { updateRoslinaKolorInDzialka } from '../fn/dzialka/update-roslina-kolor-in-dzialka';
+import { UpdateRoslinaKolorInDzialka$Params } from '../fn/dzialka/update-roslina-kolor-in-dzialka';
 import { updateRoslinaObrazInDzialka } from '../fn/dzialka/update-roslina-obraz-in-dzialka';
 import { UpdateRoslinaObrazInDzialka$Params } from '../fn/dzialka/update-roslina-obraz-in-dzialka';
-import { updateRoslinaPositionInDzialka } from '../fn/dzialka/update-roslina-position-in-dzialka';
-import { UpdateRoslinaPositionInDzialka$Params } from '../fn/dzialka/update-roslina-position-in-dzialka';
+import { updateRoslinaPozycjaInDzialka } from '../fn/dzialka/update-roslina-pozycja-in-dzialka';
+import { UpdateRoslinaPozycjaInDzialka$Params } from '../fn/dzialka/update-roslina-pozycja-in-dzialka';
+import { updateRoslinaWyswietlanieInDzialka } from '../fn/dzialka/update-roslina-wyswietlanie-in-dzialka';
+import { UpdateRoslinaWyswietlanieInDzialka$Params } from '../fn/dzialka/update-roslina-wyswietlanie-in-dzialka';
 
 @Injectable({ providedIn: 'root' })
 export class DzialkaService extends BaseService {
@@ -111,27 +118,52 @@ export class DzialkaService extends BaseService {
     );
   }
 
-  /** Path part for operation `updateRoslinaPositionInDzialka()` */
-  static readonly UpdateRoslinaPositionInDzialkaPath = '/dzialki/rosliny/pozycja';
+  /** Path part for operation `updateRoslinaWyswietlanieInDzialka()` */
+  static readonly UpdateRoslinaWyswietlanieInDzialkaPath = '/dzialki/rosliny/wyswietlanie';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateRoslinaPositionInDzialka()` instead.
+   * To access only the response body, use `updateRoslinaWyswietlanieInDzialka()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateRoslinaPositionInDzialka$Response(params: UpdateRoslinaPositionInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
-    return updateRoslinaPositionInDzialka(this.http, this.rootUrl, params, context);
+  updateRoslinaWyswietlanieInDzialka$Response(params: UpdateRoslinaWyswietlanieInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+    return updateRoslinaWyswietlanieInDzialka(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateRoslinaPositionInDzialka$Response()` instead.
+   * To access the full response (for headers, for example), `updateRoslinaWyswietlanieInDzialka$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateRoslinaPositionInDzialka(params: UpdateRoslinaPositionInDzialka$Params, context?: HttpContext): Observable<DzialkaResponse> {
-    return this.updateRoslinaPositionInDzialka$Response(params, context).pipe(
+  updateRoslinaWyswietlanieInDzialka(params: UpdateRoslinaWyswietlanieInDzialka$Params, context?: HttpContext): Observable<DzialkaResponse> {
+    return this.updateRoslinaWyswietlanieInDzialka$Response(params, context).pipe(
+      map((r: StrictHttpResponse<DzialkaResponse>): DzialkaResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `updateRoslinaPozycjaInDzialka()` */
+  static readonly UpdateRoslinaPozycjaInDzialkaPath = '/dzialki/rosliny/pozycja';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateRoslinaPozycjaInDzialka()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateRoslinaPozycjaInDzialka$Response(params: UpdateRoslinaPozycjaInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+    return updateRoslinaPozycjaInDzialka(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateRoslinaPozycjaInDzialka$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateRoslinaPozycjaInDzialka(params: UpdateRoslinaPozycjaInDzialka$Params, context?: HttpContext): Observable<DzialkaResponse> {
+    return this.updateRoslinaPozycjaInDzialka$Response(params, context).pipe(
       map((r: StrictHttpResponse<DzialkaResponse>): DzialkaResponse => r.body)
     );
   }
@@ -170,7 +202,7 @@ export class DzialkaService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  updateRoslinaObrazInDzialka$Response(params: UpdateRoslinaObrazInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+  updateRoslinaObrazInDzialka$Response(params?: UpdateRoslinaObrazInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<FileResponse>> {
     return updateRoslinaObrazInDzialka(this.http, this.rootUrl, params, context);
   }
 
@@ -180,8 +212,33 @@ export class DzialkaService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  updateRoslinaObrazInDzialka(params: UpdateRoslinaObrazInDzialka$Params, context?: HttpContext): Observable<DzialkaResponse> {
+  updateRoslinaObrazInDzialka(params?: UpdateRoslinaObrazInDzialka$Params, context?: HttpContext): Observable<FileResponse> {
     return this.updateRoslinaObrazInDzialka$Response(params, context).pipe(
+      map((r: StrictHttpResponse<FileResponse>): FileResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `updateRoslinaKolorInDzialka()` */
+  static readonly UpdateRoslinaKolorInDzialkaPath = '/dzialki/rosliny/kolor';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateRoslinaKolorInDzialka()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateRoslinaKolorInDzialka$Response(params: UpdateRoslinaKolorInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+    return updateRoslinaKolorInDzialka(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateRoslinaKolorInDzialka$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateRoslinaKolorInDzialka(params: UpdateRoslinaKolorInDzialka$Params, context?: HttpContext): Observable<DzialkaResponse> {
+    return this.updateRoslinaKolorInDzialka$Response(params, context).pipe(
       map((r: StrictHttpResponse<DzialkaResponse>): DzialkaResponse => r.body)
     );
   }
@@ -308,6 +365,31 @@ export class DzialkaService extends BaseService {
   getPozycjeInDzialki(params?: GetPozycjeInDzialki$Params, context?: HttpContext): Observable<Array<DzialkaResponse>> {
     return this.getPozycjeInDzialki$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<DzialkaResponse>>): Array<DzialkaResponse> => r.body)
+    );
+  }
+
+  /** Path part for operation `deleteRoslinaTeksturaFromDzialka()` */
+  static readonly DeleteRoslinaTeksturaFromDzialkaPath = '/dzialki/rosliny/tekstura';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteRoslinaTeksturaFromDzialka()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  deleteRoslinaTeksturaFromDzialka$Response(params: DeleteRoslinaTeksturaFromDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+    return deleteRoslinaTeksturaFromDzialka(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteRoslinaTeksturaFromDzialka$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  deleteRoslinaTeksturaFromDzialka(params: DeleteRoslinaTeksturaFromDzialka$Params, context?: HttpContext): Observable<string> {
+    return this.deleteRoslinaTeksturaFromDzialka$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 

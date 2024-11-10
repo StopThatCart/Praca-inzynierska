@@ -25,7 +25,7 @@
           <select
           [(ngModel)]="request.numerDzialki"
           (ngModelChange)="onDzialkaChange($event)"
-          name="customWlasciwoscType" class="form-select text-black mb-2">
+          name="wybranaDzialka" class="form-select text-black mb-2">
             <option value="" selected disabled>Wybierz działkę...</option>
             <option *ngFor="let d of dzialki" [ngValue]="d.numer" class="text-black">
               [{{ d.numer }}] - {{ d.nazwa }}
@@ -33,7 +33,6 @@
           </select>
 
         </div>
-
 
         <label class="form-label">Pozycja na działce:</label>
         <div *ngIf="mode !== DzialkaModes.BrakEdycji" class="mb-2">
@@ -49,6 +48,22 @@
             <button (click)="changeEditMode(DzialkaModes.EditRoslinaPozycja)" class="btn btn-info">Zmień pozycję rośliny</button>
             <button (click)="changeEditMode(DzialkaModes.EditRoslinaKafelki)" class="btn btn-primary">Zmień kafelki należące do rośliny</button>
           </div>
+        </div>
+
+
+        <div>
+          <label class="form-label mb-2">Tryb wyświetlania kafelków:</label>
+          <select
+          [(ngModel)]="request.wyswietlanie"
+          name="trybWyswietlania"
+          class="form-select text-black mb-2">
+            <option value="" disabled>Wybierz tryb...</option>
+            <option [ngValue]="wyswietlanieOpcje.KOLOR" class="text-black">Wyświetlaj tylko kolor</option>
+            <option [ngValue]="wyswietlanieOpcje.TEKSTURA" class="text-black">Wyświetlaj tylko teksturę</option>
+            <option [ngValue]="wyswietlanieOpcje.TEKSTURA_KOLOR" class="text-black"  selected>Wyświetlaj teksturę z kolorem</option>
+            <option [ngValue]="'ser'" class="text-black">Ser.</option>
+
+          </select>
         </div>
 
         <div class="mb-2">

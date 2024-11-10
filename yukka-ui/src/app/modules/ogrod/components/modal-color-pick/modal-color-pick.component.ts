@@ -19,21 +19,18 @@ export class ModalColorPickComponent {
   @Output() confirmColorChange = new EventEmitter<string>();
 
 
-  @ViewChild('colorPickerModal') colorPickerModal!: ElementRef;
+  @ViewChild('pickerModal') pickerModal!: ElementRef;
 
-  constructor(
-    private dzialkaService: DzialkaService,
-    private tokenService: TokenService
-  ) { }
+  constructor() { }
 
-  openColorPickerModal() {
-    const modalElement = this.colorPickerModal.nativeElement;
+  openPickerModal() {
+    const modalElement = this.pickerModal.nativeElement;
     const modal = new Modal(modalElement);
     modal.show();
   }
 
-  closeColorPickerModal() {
-    const modalElement = this.colorPickerModal.nativeElement;
+  closePickerModal() {
+    const modalElement = this.pickerModal.nativeElement;
     const modal = Modal.getInstance(modalElement);
     modal?.hide();
   }
@@ -41,13 +38,7 @@ export class ModalColorPickComponent {
   confirm() {
     console.log('confirmColorChange', this.selectedColor);
     this.confirmColorChange.emit(this.selectedColor);
-    this.closeColorPickerModal();
-  }
-
-  changeRoslinaKafelekKolor(color: string) {
-    // TODO
-   // this.dzialkaService.
-    this.selectedColor = color;
+    this.closePickerModal();
   }
 
 }

@@ -27,6 +27,8 @@ public class ZasadzonaRoslinaResponse {
 
     private String kolor;
     private byte[] tekstura;
+    private String wyswietlanie;
+    
     private byte[] obraz;
 
 

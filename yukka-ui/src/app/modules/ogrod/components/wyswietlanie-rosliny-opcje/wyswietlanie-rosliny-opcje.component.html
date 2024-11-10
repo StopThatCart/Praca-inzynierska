@@ -1,0 +1,14 @@
+<div>
+  <label class="form-label mb-2">Tryb wyświetlania kafelków:</label>
+  <select
+  [(ngModel)]="wyswietlanie"
+  name="trybWyswietlania"
+  class="form-select text-black mb-2">
+    <option value="" disabled>Wybierz tryb...</option>
+    <option [ngValue]="wyswietlanieOpcje.KOLOR" class="text-black">Wyświetlaj tylko kolor</option>
+    <option [ngValue]="wyswietlanieOpcje.TEKSTURA" class="text-black">Wyświetlaj tylko teksturę</option>
+    <option [ngValue]="wyswietlanieOpcje.TEKSTURA_KOLOR" class="text-black"  selected>Wyświetlaj teksturę z kolorem</option>
+    <option [ngValue]="'ser'" class="text-black">Ser.</option>
+
+  </select>
+</div>

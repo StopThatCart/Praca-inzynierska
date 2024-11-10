@@ -69,7 +69,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
 
         WITH d, roslina
         CREATE (d)<-[r:ZASADZONA_NA {x: $x, y: $y, tabX: $tabX, tabY: $tabY, 
-                kolor: $kolor, tekstura: $tekstura, obraz: $obraz}]-(roslina)
+                kolor: $kolor, tekstura: $tekstura, obraz: $obraz, wyswietlanie: $wyswietlanie}]-(roslina)
 
         WITH d
         MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
@@ -81,7 +81,9 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Param("x") int x, @Param("y") int y, 
         @Param("tabX") int[] tabX, @Param("tabY") int[] tabY,
         @Param("kolor") String kolor, 
-        @Param("tekstura") String tekstura, @Param("obraz") String obraz,
+        @Param("tekstura") String tekstura, 
+        @Param("wyswietlanie") String wyswietlanie,
+        @Param("obraz") String obraz,
         @Param("nazwaLacinska") String nazwaLacinska);
 
         @Query("""
@@ -113,13 +115,14 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         MATCH (u)-[maOgrod]->(ogrod)-[:MA_DZIALKE]->(d2:Dzialka{numer: $numerDzialkiNowy})
         MATCH (d1)<-[existing:ZASADZONA_NA {x: $xStary, y: $yStary}]-(existingRoslina)
 
-        WITH existing, d1, d2, existingRoslina, existing.obraz AS obrazek, existing.tekstura AS tex, existing.kolor AS klr
+        WITH existing, d1, d2, existingRoslina, existing.obraz AS obrazek, existing.tekstura AS tex, existing.kolor AS klr, existing.wyswietlanie AS wyswietlanie
         DELETE existing
   
         MERGE (d2)<-[existing2:ZASADZONA_NA {
                                 x: $xNowy, y: $yNowy, 
                                 tabX = $tabX, tabY = $tabY, 
-                                obraz: obrazek, tekstura: tex, kolor: klr
+                                obraz: obrazek, tekstura: tex, kolor: klr,
+                                wyswietlanie: wyswietlanie
                                 }]-(existingRoslina)
                 
         WITH d2
@@ -166,6 +169,24 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
                 @Param("x") int x, @Param("y") int y, 
                 @Param("tekstura") String tekstura);
                 
+
+        @Query("""
+                MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})
+                        
+                MATCH (d)<-[existing:ZASADZONA_NA {x: $x, y: $y}]-(existingRoslina)
+                SET existing.wyswietlanie = $wyswietlanie
+        
+                WITH d
+                MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
+                        
+                RETURN d, collect(nodes(path)), collect(relationships(path))
+                        """)
+        Dzialka updateRoslinaWyswietlanieInDzialka(@Param("email") String email,
+                @Param("numerDzialki") int numerDzialki, 
+                @Param("x") int x, @Param("y") int y, 
+                @Param("wyswietlanie") String wyswietlanie);
+
+
         @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})
         

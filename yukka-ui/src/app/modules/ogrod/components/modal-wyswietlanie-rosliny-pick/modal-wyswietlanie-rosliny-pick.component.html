@@ -1,0 +1,32 @@
+<div class="modal fade" #pickerModal tabindex="-1" aria-labelledby="colorPickerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-primary">
+      <div class="modal-header">
+        <h5 class="modal-title" id="colorPickerModalLabel">Wybierz obraz</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closePickerModal()"></button>
+      </div>
+      <div class="modal-body">
+
+        <div>
+          <label class="form-label mb-2">Tryb wyświetlania kafelków:</label>
+          <select
+          [(ngModel)]="selectedWyswietlanie"
+          name="trybWyswietlania"
+          class="form-select text-black mb-2">
+            <option value="" disabled>Wybierz tryb...</option>
+            <option [ngValue]="wyswietlanieOpcje.KOLOR" class="text-black">Wyświetlaj tylko kolor</option>
+            <option [ngValue]="wyswietlanieOpcje.TEKSTURA" class="text-black">Wyświetlaj tylko teksturę</option>
+            <option [ngValue]="wyswietlanieOpcje.TEKSTURA_KOLOR" class="text-black"  selected>Wyświetlaj teksturę z kolorem</option>
+            <option [ngValue]="'ser'" class="text-black">Ser.</option>
+
+          </select>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" (click)="closePickerModal()">Anuluj</button>
+        <button type="button" class="btn btn-secondary" (click)="confirm()">Zapisz</button>
+      </div>
+    </div>
+  </div>
+</div>

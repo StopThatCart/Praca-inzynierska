@@ -10,6 +10,7 @@ export interface ZasadzonaRoslinaResponse {
   tabX?: Array<number>;
   tabY?: Array<number>;
   tekstura?: string;
+  wyswietlanie?: string;
   x?: number;
   y?: number;
 }

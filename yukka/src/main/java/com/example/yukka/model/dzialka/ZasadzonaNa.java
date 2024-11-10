@@ -40,6 +40,9 @@ public class ZasadzonaNa {
 
     @Property("tekstura")
     private String tekstura;
+
+    @Property("wyswietlanie")
+    private String wyswietlanie;
     
     @Property("obraz")
     private String obraz;

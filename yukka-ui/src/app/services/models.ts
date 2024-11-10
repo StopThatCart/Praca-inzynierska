@@ -5,6 +5,7 @@ export type { AuthRequest } from './models/auth-request';
 export type { BaseDzialkaRequest } from './models/base-dzialka-request';
 export type { DzialkaResponse } from './models/dzialka-response';
 export type { DzialkaRoslinaRequest } from './models/dzialka-roslina-request';
+export type { FileResponse } from './models/file-response';
 export type { Gleba } from './models/gleba';
 export type { GrantedAuthority } from './models/granted-authority';
 export type { Komentarz } from './models/komentarz';

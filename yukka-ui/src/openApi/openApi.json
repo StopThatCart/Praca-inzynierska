@@ -1512,12 +1512,42 @@
         }
       }
     },
+    "/dzialki/rosliny/wyswietlanie": {
+      "patch": {
+        "tags": [
+          "Dzialka"
+        ],
+        "operationId": "updateRoslinaWyswietlanieInDzialka",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DzialkaRoslinaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DzialkaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/dzialki/rosliny/pozycja": {
       "patch": {
         "tags": [
           "Dzialka"
         ],
-        "operationId": "updateRoslinaPositionInDzialka",
+        "operationId": "updateRoslinaPozycjaInDzialka",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1562,7 +1592,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "string"
                 }
@@ -1581,18 +1611,51 @@
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file"
+                  "request"
                 ],
                 "type": "object",
                 "properties": {
                   "request": {
                     "$ref": "#/components/schemas/DzialkaRoslinaRequest"
                   },
-                  "file": {
+                  "obraz": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "tekstura": {
                     "type": "string",
                     "format": "binary"
                   }
                 }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dzialki/rosliny/kolor": {
+      "patch": {
+        "tags": [
+          "Dzialka"
+        ],
+        "operationId": "updateRoslinaKolorInDzialka",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DzialkaRoslinaRequest"
               }
             }
           },
@@ -2503,6 +2566,36 @@
           }
         }
       }
+    },
+    "/dzialki/rosliny/tekstura": {
+      "delete": {
+        "tags": [
+          "Dzialka"
+        ],
+        "operationId": "deleteRoslinaTeksturaFromDzialka",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BaseDzialkaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2847,15 +2940,6 @@
           "name": {
             "type": "string"
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "admin": {
-            "type": "boolean"
-          },
-          "pracownik": {
-            "type": "boolean"
-          },
           "username": {
             "type": "string"
           },
@@ -2864,6 +2948,15 @@
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
+          },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
+          "pracownik": {
+            "type": "boolean"
+          },
+          "admin": {
+            "type": "boolean"
           },
           "password": {
             "type": "string"
@@ -3524,6 +3617,7 @@
           "kolor",
           "numerDzialki",
           "pozycje",
+          "wyswietlanie",
           "x",
           "y"
         ],
@@ -3564,6 +3658,9 @@
           },
           "kolor": {
             "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+            "type": "string"
+          },
+          "wyswietlanie": {
             "type": "string"
           },
           "tekstura": {
@@ -3664,6 +3761,9 @@
           "tekstura": {
             "type": "string",
             "format": "byte"
+          },
+          "wyswietlanie": {
+            "type": "string"
           },
           "obraz": {
             "type": "string",
@@ -3864,13 +3964,22 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
-            "type": "integer",
-            "format": "int32"
-          },
           "ynowy": {
             "type": "integer",
             "format": "int32"
+          },
+          "xnowy": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FileResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "format": "byte"
           }
         }
       },

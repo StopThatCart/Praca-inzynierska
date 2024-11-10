@@ -7,14 +7,14 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { DzialkaResponse } from '../../models/dzialka-response';
-import { MoveRoslinaRequest } from '../../models/move-roslina-request';
+import { DzialkaRoslinaRequest } from '../../models/dzialka-roslina-request';
 
-export interface UpdateRoslinaPositionInDzialka$Params {
-      body: MoveRoslinaRequest
+export interface UpdateRoslinaKolorInDzialka$Params {
+      body: DzialkaRoslinaRequest
 }
 
-export function updateRoslinaPositionInDzialka(http: HttpClient, rootUrl: string, params: UpdateRoslinaPositionInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
-  const rb = new RequestBuilder(rootUrl, updateRoslinaPositionInDzialka.PATH, 'patch');
+export function updateRoslinaKolorInDzialka(http: HttpClient, rootUrl: string, params: UpdateRoslinaKolorInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+  const rb = new RequestBuilder(rootUrl, updateRoslinaKolorInDzialka.PATH, 'patch');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -29,4 +29,4 @@ export function updateRoslinaPositionInDzialka(http: HttpClient, rootUrl: string
   );
 }
 
-updateRoslinaPositionInDzialka.PATH = '/dzialki/rosliny/pozycja';
+updateRoslinaKolorInDzialka.PATH = '/dzialki/rosliny/kolor';

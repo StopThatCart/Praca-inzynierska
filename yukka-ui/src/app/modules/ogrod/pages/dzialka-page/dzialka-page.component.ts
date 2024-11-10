@@ -15,6 +15,7 @@ import { Offcanvas } from 'bootstrap';
 import { OffcanvasRoslinaComponent } from "../../components/offcanvas-roslina/offcanvas-roslina.component";
 import { DzialkaModes } from '../../models/dzialka-modes';
 import { DzialkaRoslinaRequest } from '../../../../services/models/dzialka-roslina-request';
+import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
 
 @Component({
   selector: 'app-dzialka-page',
@@ -193,7 +194,7 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   private drawTileBackground(tile: Tile, ctx: CanvasRenderingContext2D): void {
-    console.log('drawTileBackground');
+    //console.log('drawTileBackground');
     ctx.fillStyle = this.getRgbaColor(tile.backgroundColor);
     ctx.fillRect(tile.x * this.tileSize, tile.y * this.tileSize, this.tileSize, this.tileSize);
   }
@@ -211,13 +212,14 @@ export class DzialkaPageComponent implements OnInit  {
     this.moveRoslinaRequest.xnowy = this.selectedRoslina.x;
     this.moveRoslinaRequest.ynowy = this.selectedRoslina.y;
 
-    this.dzialkaService.updateRoslinaPositionInDzialka( { body: this.moveRoslinaRequest }).subscribe({
+    this.dzialkaService.updateRoslinaPozycjaInDzialka( { body: this.moveRoslinaRequest }).subscribe({
       next: (dzialka) => {
         this.editMode = DzialkaModes.BrakEdycji;
         this.selectedRoslina = undefined;
         this.dzialka = dzialka;
         console.log(dzialka);
 
+        this.initializeTiles();
         this.processRosliny(dzialka);
       },
       error: (err) => {
@@ -226,17 +228,23 @@ export class DzialkaPageComponent implements OnInit  {
     });
   }
 
-  getDzialkaByNumer(numer: number, uzytkownikNazwa: string): void {
-    console.log('getDzialkaByNumer');
-    this.dzialkaService.getDzialkaOfUzytkownikByNumer( { numer: numer, 'uzytkownik-nazwa': uzytkownikNazwa }).subscribe({
-      next: (dzialka) => {
-        this.dzialka = dzialka;
-        console.log(dzialka);
-        this.processRosliny(dzialka);
-      },
-      error: (err) => {
-        console.error(err);
-      }
+  getDzialkaByNumer(numer: number, uzytkownikNazwa: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      console.log('getDzialkaByNumer');
+      this.dzialkaService.getDzialkaOfUzytkownikByNumer({ numer: numer, 'uzytkownik-nazwa': uzytkownikNazwa }).subscribe({
+        next: (dzialka) => {
+          this.dzialka = dzialka;
+          console.log(dzialka);
+          this.processRosliny(dzialka);
+
+
+          resolve();
+        },
+        error: (err) => {
+          console.error(err);
+          reject(err);
+        }
+      });
     });
   }
 
@@ -247,6 +255,24 @@ export class DzialkaPageComponent implements OnInit  {
     this.initializeTiles();
     this.drawChessboard();
     this.getDzialkaByNumer(this.numer!, this.uzytNazwa!);
+  }
+
+  async onRoslinaUpdate(selectedRoslina : ZasadzonaRoslinaResponse) {
+    console.log('onRoslinaUpdate');
+    this.initializeTiles();
+    this.drawChessboard();
+    await this.getDzialkaByNumer(this.numer!, this.uzytNazwa!);
+
+    if (this.selectedRoslina) {
+        let ros = this.dzialka.zasadzoneRosliny?.find(roslina => roslina.x === this.selectedRoslina!.x && roslina.y === this.selectedRoslina!.y);
+        if (ros) {
+          console.log('Znaleziono roślinę');
+          console.log(ros);
+          console.log(this.selectedRoslina);
+          this.selectedRoslina = ros;
+        }
+      }
+
   }
 
   onRoslinaKolorChange(kolor: string) {
@@ -282,23 +308,18 @@ export class DzialkaPageComponent implements OnInit  {
       if (tile) {
         if (zasadzonaRoslina.roslina && zasadzonaRoslina.roslina.id) {
           tile.roslinaId = zasadzonaRoslina.roslina.id;
-          tile.backgroundColor = zasadzonaRoslina.kolor;
+          if(zasadzonaRoslina.wyswietlanie !== WyswietlanieRosliny.TEKSTURA) {
+            tile.backgroundColor = zasadzonaRoslina.kolor;
+          }
           if (tile.image === this.images.dirt || tile.image === zasadzonaRoslina.tekstura) {
             tile.image = zasadzonaRoslina.tekstura || this.images.dirt;
-            if (drawTekstury) {
-            this.drawTileTexture(tile, this.canvas.nativeElement.getContext('2d')!);
+            if (drawTekstury && zasadzonaRoslina.wyswietlanie !== WyswietlanieRosliny.KOLOR) {
+              this.drawTileTexture(tile, this.canvas.nativeElement.getContext('2d')!);
+            }
           }
-          }
-
-          //tile.backgroundColor = this.placeholderColors[zasadzonaRoslina.roslina.id % this.placeholderColors.length];
         }
         if (tile.x == zasadzonaRoslina.x && tile.y == zasadzonaRoslina.y) {
           tile.zasadzonaRoslina = zasadzonaRoslina;
-          if (tile.zasadzonaRoslina && zasadzonaRoslina.obraz) {
-            if (tile.zasadzonaRoslina.roslina) {
-                tile.zasadzonaRoslina.roslina.obraz = zasadzonaRoslina.obraz;
-            }
-          }
         }
         this.drawTileBackground(tile, bgCtx);
       }
@@ -352,7 +373,7 @@ export class DzialkaPageComponent implements OnInit  {
       } else {
         this.selectedRoslina.pozycje?.push({ x: tile.x, y: tile.y });
         tile.roslinaId = this.selectedRoslina.roslina?.id;
-        tile.backgroundColor = this.getRandomColor();
+        tile.backgroundColor = this.selectedRoslina.kolor;
         tile.image = this.selectedRoslina.tekstura || this.images.dirt;
       }
 

@@ -31,6 +31,7 @@ import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.service.DzialkaService;
+import com.example.yukka.model.enums.Wyswietlanie;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.controller.RoslinaService;
@@ -192,7 +193,6 @@ public class YukkaApplication {
 		// 		Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
 		// 		Ten komunikat został wygenerowany.
 		// 		""").build();
-
 		//powiadomienieService.addSpecjalnePowiadomienie(pow1);
 
 		seedDzialka();
@@ -217,6 +217,7 @@ public class YukkaApplication {
 			Pozycja.builder().x(7).y(6).build()
 			))
 		.kolor("#6c6ef0")
+		.wyswietlanie(Wyswietlanie.TEKSTURA_KOLOR.toString())
 		.nazwaLacinska("symphytum grandiflorum'goldsmith'")
 		.build();
 
@@ -231,6 +232,7 @@ public class YukkaApplication {
 			Pozycja.builder().x(14).y(11).build()
 			))
 		.kolor("#f06ce7")
+		.wyswietlanie(Wyswietlanie.KOLOR.toString())
 		.nazwaLacinska("taxus baccata'adpressa'")
 		.build();
 		
@@ -258,13 +260,14 @@ public class YukkaApplication {
 			Pozycja.builder().x(10).y(10).build()
 			))
 		.kolor("#ebf06c")
+		.wyswietlanie(Wyswietlanie.TEKSTURA_KOLOR.toString())
 		.roslinaId(lolId)
 		.build();
 
 		dzialkaService.saveRoslinaToDzialka(req3, null, null, usPiotr);
 
 		log.info("Aktualizacja obrazu rosliny w dzialce");
-		dzialkaService.updateRoslinaObrazInDzialka(req2, obraz2, usPiotr);
+		dzialkaService.updateRoslinaObrazInDzialka(req2, obraz2, null, usPiotr);
 
 		MoveRoslinaRequest moveRequest1 = MoveRoslinaRequest.builder()
 		.numerDzialki(2)
@@ -289,7 +292,7 @@ public class YukkaApplication {
 		// .build();
 
 		log.info("Zmienianie pozycji rosliny w dzialce");
-		dzialkaService.updateRoslinaPositionInDzialka(moveRequest1, usPiotr);
+		dzialkaService.updateRoslinaPozycjaInDzialka(moveRequest1, usPiotr);
 
 		//System.out.println("Zmienianie pozycji rośliny w działce do nowej działki");
 		//dzialkaService.updateRoslinaPositionInDzialka(moveRequest2, usPiotr);

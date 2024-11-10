@@ -11,11 +11,13 @@ import { TokenService } from '../../../../services/token/token.service';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { ErrorMsgComponent } from '../../../../components/error-msg/error-msg.component';
 import { ImageUploadComponent } from "../../../../components/image-upload/image-upload.component";
+import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { WyswietlanieRoslinyOpcjeComponent } from "../../components/wyswietlanie-rosliny-opcje/wyswietlanie-rosliny-opcje.component";
 
 @Component({
   selector: 'app-add-roslina-to-dzialka',
   standalone: true,
-  imports: [CommonModule, FormsModule, ColorPickerModule, ErrorMsgComponent, ImageUploadComponent],
+  imports: [CommonModule, FormsModule, ColorPickerModule, ErrorMsgComponent, ImageUploadComponent, WyswietlanieRoslinyOpcjeComponent],
   templateUrl: './add-roslina-to-dzialka.component.html',
   styleUrl: './add-roslina-to-dzialka.component.css'
 })
@@ -29,12 +31,14 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
   message = '';
   errorMsg: Array<string> = [];
 
+  wyswietlanieOpcje = WyswietlanieRosliny;
   request : DzialkaRoslinaRequest = {
     numerDzialki: 1,
     pozycje: [],
     x: -1,
     y: -1,
     kolor: '#ffffff',
+    wyswietlanie: WyswietlanieRosliny.TEKSTURA_KOLOR,
     obraz: ''
   };
 
@@ -98,6 +102,8 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
         this.route.snapshot.data['id'] = id;
 
         this.getPozycjeInDzialki();
+
+
       }
     });
   }

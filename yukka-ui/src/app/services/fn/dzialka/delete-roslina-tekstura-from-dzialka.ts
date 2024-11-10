@@ -8,12 +8,12 @@ import { RequestBuilder } from '../../request-builder';
 
 import { BaseDzialkaRequest } from '../../models/base-dzialka-request';
 
-export interface DeleteRoslinaObrazFromDzialka$Params {
+export interface DeleteRoslinaTeksturaFromDzialka$Params {
       body: BaseDzialkaRequest
 }
 
-export function deleteRoslinaObrazFromDzialka(http: HttpClient, rootUrl: string, params: DeleteRoslinaObrazFromDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, deleteRoslinaObrazFromDzialka.PATH, 'delete');
+export function deleteRoslinaTeksturaFromDzialka(http: HttpClient, rootUrl: string, params: DeleteRoslinaTeksturaFromDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  const rb = new RequestBuilder(rootUrl, deleteRoslinaTeksturaFromDzialka.PATH, 'delete');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -28,4 +28,4 @@ export function deleteRoslinaObrazFromDzialka(http: HttpClient, rootUrl: string,
   );
 }
 
-deleteRoslinaObrazFromDzialka.PATH = '/dzialki/rosliny/obraz';
+deleteRoslinaTeksturaFromDzialka.PATH = '/dzialki/rosliny/tekstura';
