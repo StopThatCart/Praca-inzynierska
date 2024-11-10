@@ -328,10 +328,13 @@ public class DzialkaService {
 
         if (request.getWyswietlanie() == null) throw new IllegalArgumentException("Nie podano sposobu wyświetlania");
 
-
+        ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
         System.out.println("Le aktualizacja wyświetlania rośliny na działce");
-        if (dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()) != null) {
-
+        if (pozycja != null) {
+            if(pozycja.getTekstura() == null && request.getWyswietlanie().equals(Wyswietlanie.TEKSTURA.toString())) {
+                throw new IllegalArgumentException("Nie można wybrać wyświetlania samej tekstury bez podania obrazu");
+            }
+            
             Dzialka dzialkaZRoslina = dzialkaRepository.updateRoslinaWyswietlanieInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
             request.getX(), request.getY(), request.getWyswietlanie().toString());
             // TODO: O nie.
