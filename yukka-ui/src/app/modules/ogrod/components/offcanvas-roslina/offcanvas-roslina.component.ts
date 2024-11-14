@@ -9,27 +9,33 @@ import { ModalColorPickComponent } from '../modal-color-pick/modal-color-pick.co
 import { ModalObrazPickComponent } from "../modal-obraz-pick/modal-obraz-pick.component";
 import { WyswietlanieRoslinyOpcjeComponent } from "../wyswietlanie-rosliny-opcje/wyswietlanie-rosliny-opcje.component";
 import { ModalWyswietlanieRoslinyPickComponent } from "../modal-wyswietlanie-rosliny-pick/modal-wyswietlanie-rosliny-pick.component";
+import { ModalNotatkaPickComponent } from "../modal-notatka-pick/modal-notatka-pick.component";
+import { NgbCollapseModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-offcanvas-roslina',
   standalone: true,
   imports: [CommonModule,
     ColorPickerModule,
+    NgbCollapseModule,
+    NgbTooltipModule,
     ModalColorPickComponent,
     ModalObrazPickComponent,
-    WyswietlanieRoslinyOpcjeComponent, ModalWyswietlanieRoslinyPickComponent],
+    WyswietlanieRoslinyOpcjeComponent,
+    ModalWyswietlanieRoslinyPickComponent,
+    ModalNotatkaPickComponent],
   templateUrl: './offcanvas-roslina.component.html',
   styleUrl: './offcanvas-roslina.component.css'
 })
 export class OffcanvasRoslinaComponent {
-
+  isCollapsed = true;
   @Input() numerDzialki: number | undefined;
   @Input() mode: string = '';
   @Input() editMode: string = '';
 
   @Output() roslinaPozycjaEdit = new EventEmitter<ZasadzonaRoslinaResponse>();
   @Output() roslinaKafelkiEdit = new EventEmitter<ZasadzonaRoslinaResponse>();
-  @Output() roslinaKolorChange = new EventEmitter<string>();
+ // @Output() roslinaKolorChange = new EventEmitter<string>();
   @Output() roslinaSmolChange = new EventEmitter<ZasadzonaRoslinaResponse>();
   @Output() roslinaBaseChange = new EventEmitter<ZasadzonaRoslinaResponse>();
 
@@ -38,6 +44,7 @@ export class OffcanvasRoslinaComponent {
   @ViewChild('offcanvasBottom', { static: true }) offcanvasBottom!: ElementRef;
 
   @ViewChild(ModalColorPickComponent) colorPickerModal!: ModalColorPickComponent;
+  @ViewChild(ModalNotatkaPickComponent) notatkaPickerModal!: ModalNotatkaPickComponent;
   @ViewChild(ModalWyswietlanieRoslinyPickComponent) wyswietlaniePickerModal!: ModalWyswietlanieRoslinyPickComponent;
   @ViewChild(ModalObrazPickComponent) obrazPickerModal!: ModalObrazPickComponent;
 
@@ -153,13 +160,40 @@ export class OffcanvasRoslinaComponent {
     this.dzialkaService .updateRoslinaKolorInDzialka( { body: request }).subscribe({
       next: () => {
         console.log('kolorowanie yeeeeeey');
-        this.roslinaKolorChange.emit(newColor);
+        this.zasadzonaRoslina!.kolor = newColor;
+        this.roslinaBaseChange.emit(this.zasadzonaRoslina);
       },
       error: (err) => {
         console.error(err);
       }
     });
   }
+
+  openNotatkaPickerModal() {
+    this.notatkaPickerModal.openPickerModal();
+  }
+
+  confirmNotatkaPickerChange(newNotatka: string) {
+    console.log('confirmNotatkaChange', newNotatka);
+    if(!this.zasadzonaRoslina) return;
+    this.zasadzonaRoslina!.notatka = newNotatka;
+
+    let request: DzialkaRoslinaRequest = this.makeDzialkaRoslinaRequest();
+    request.notatka = newNotatka;
+
+    this.dzialkaService .updateRoslinaNotatkaInDzialka( { body: request }).subscribe({
+      next: () => {
+        console.log('notatkowanie yeeeeeey');
+        this.zasadzonaRoslina!.notatka = newNotatka;
+        this.roslinaBaseChange.emit(this.zasadzonaRoslina);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+
 
   openWyswietlaniePickerModal() {
     this.wyswietlaniePickerModal.openPickerModal();

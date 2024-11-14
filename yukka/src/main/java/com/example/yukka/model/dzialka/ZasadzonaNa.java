@@ -44,6 +44,9 @@ public class ZasadzonaNa {
     @Property("wyswietlanie")
     private String wyswietlanie;
     
+    @Property("notatka")
+    private String notatka;
+    
     @Property("obraz")
     private String obraz;
 

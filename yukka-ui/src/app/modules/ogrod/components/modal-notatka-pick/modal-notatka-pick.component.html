@@ -1,0 +1,20 @@
+<div class="modal fade" #pickerModal tabindex="-1" aria-labelledby="notatkaPickerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-primary">
+      <div class="modal-header">
+        <h5 class="modal-title" id="notatkaPickerModalLabel">Napisz notatkę</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closePickerModal()"></button>
+      </div>
+      <div class="modal-body">
+        <textarea
+        [(ngModel)]="notatka"
+        [value]="notatka"
+        class="form-control text-black" rows="3"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" (click)="closePickerModal()">Anuluj</button>
+        <button type="button" class="btn btn-secondary" (click)="confirm()">Zapisz</button>
+      </div>
+    </div>
+  </div>
+</div>

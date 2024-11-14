@@ -105,6 +105,12 @@ public class DzialkaController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(dzialkaService.updateRoslinaWyswietlanieInDzialka(request, connectedUser));
     }
 
+    @PatchMapping(value = "/rosliny/notatka", consumes = "application/json", produces="application/json")
+    public ResponseEntity<DzialkaResponse> updateRoslinaNotatkaInDzialka(@Valid @RequestBody DzialkaRoslinaRequest request,
+        Authentication connectedUser) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(dzialkaService.updateRoslinaNotatkaInDzialka(request, connectedUser));
+    }
+
     @DeleteMapping(value = "/rosliny", consumes="application/json", produces="application/json")
     public ResponseEntity<String> deleteRoslinaFromDzialka(@Valid @RequestBody BaseDzialkaRequest request, Authentication connectedUser) {
         dzialkaService.deleteRoslinaFromDzialka(request, connectedUser);

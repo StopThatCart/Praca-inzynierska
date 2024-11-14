@@ -1645,6 +1645,36 @@
         }
       }
     },
+    "/dzialki/rosliny/notatka": {
+      "patch": {
+        "tags": [
+          "Dzialka"
+        ],
+        "operationId": "updateRoslinaNotatkaInDzialka",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DzialkaRoslinaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DzialkaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/dzialki/rosliny/kolor": {
       "patch": {
         "tags": [
@@ -2940,6 +2970,15 @@
           "name": {
             "type": "string"
           },
+          "pracownik": {
+            "type": "boolean"
+          },
+          "admin": {
+            "type": "boolean"
+          },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
           "username": {
             "type": "string"
           },
@@ -2948,15 +2987,6 @@
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
-          },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "pracownik": {
-            "type": "boolean"
-          },
-          "admin": {
-            "type": "boolean"
           },
           "password": {
             "type": "string"
@@ -3663,6 +3693,9 @@
           "wyswietlanie": {
             "type": "string"
           },
+          "notatka": {
+            "type": "string"
+          },
           "tekstura": {
             "type": "string"
           },
@@ -3763,6 +3796,9 @@
             "format": "byte"
           },
           "wyswietlanie": {
+            "type": "string"
+          },
+          "notatka": {
             "type": "string"
           },
           "obraz": {

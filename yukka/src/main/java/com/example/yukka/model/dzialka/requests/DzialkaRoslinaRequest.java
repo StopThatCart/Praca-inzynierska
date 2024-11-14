@@ -40,6 +40,8 @@ public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
     @ValueOfEnum(enumClass = Wyswietlanie.class, message = "Niepoprawny sposób wyświetlania")
     private String wyswietlanie;
 
+    private String notatka;
+
     private String tekstura;
     // Null jak nie dopina się żadnego obrazu
     private String obraz;

@@ -33,6 +33,8 @@ import { saveRoslinaToDzialka1$Json } from '../fn/dzialka/save-roslina-to-dzialk
 import { SaveRoslinaToDzialka1$Json$Params } from '../fn/dzialka/save-roslina-to-dzialka-1-json';
 import { updateRoslinaKolorInDzialka } from '../fn/dzialka/update-roslina-kolor-in-dzialka';
 import { UpdateRoslinaKolorInDzialka$Params } from '../fn/dzialka/update-roslina-kolor-in-dzialka';
+import { updateRoslinaNotatkaInDzialka } from '../fn/dzialka/update-roslina-notatka-in-dzialka';
+import { UpdateRoslinaNotatkaInDzialka$Params } from '../fn/dzialka/update-roslina-notatka-in-dzialka';
 import { updateRoslinaObrazInDzialka } from '../fn/dzialka/update-roslina-obraz-in-dzialka';
 import { UpdateRoslinaObrazInDzialka$Params } from '../fn/dzialka/update-roslina-obraz-in-dzialka';
 import { updateRoslinaPozycjaInDzialka } from '../fn/dzialka/update-roslina-pozycja-in-dzialka';
@@ -215,6 +217,31 @@ export class DzialkaService extends BaseService {
   updateRoslinaObrazInDzialka(params?: UpdateRoslinaObrazInDzialka$Params, context?: HttpContext): Observable<FileResponse> {
     return this.updateRoslinaObrazInDzialka$Response(params, context).pipe(
       map((r: StrictHttpResponse<FileResponse>): FileResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `updateRoslinaNotatkaInDzialka()` */
+  static readonly UpdateRoslinaNotatkaInDzialkaPath = '/dzialki/rosliny/notatka';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateRoslinaNotatkaInDzialka()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateRoslinaNotatkaInDzialka$Response(params: UpdateRoslinaNotatkaInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+    return updateRoslinaNotatkaInDzialka(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateRoslinaNotatkaInDzialka$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateRoslinaNotatkaInDzialka(params: UpdateRoslinaNotatkaInDzialka$Params, context?: HttpContext): Observable<DzialkaResponse> {
+    return this.updateRoslinaNotatkaInDzialka$Response(params, context).pipe(
+      map((r: StrictHttpResponse<DzialkaResponse>): DzialkaResponse => r.body)
     );
   }
 

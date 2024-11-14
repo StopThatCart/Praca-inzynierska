@@ -337,7 +337,29 @@ public class DzialkaService {
             
             Dzialka dzialkaZRoslina = dzialkaRepository.updateRoslinaWyswietlanieInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
             request.getX(), request.getY(), request.getWyswietlanie().toString());
-            // TODO: O nie.
+            return roslinaMapper.toDzialkaResponse(dzialkaZRoslina);
+        } else return null;
+    }
+
+    public DzialkaResponse updateRoslinaNotatkaInDzialka(DzialkaRoslinaRequest request, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        return updateRoslinaNotatkaInDzialka(request, uzyt);
+    }
+
+    public DzialkaResponse updateRoslinaNotatkaInDzialka(DzialkaRoslinaRequest request, Uzytkownik connectedUser) {
+        Uzytkownik uzyt = connectedUser;
+        Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
+
+        if (request.getNotatka() == null){
+            System.out.println("Hehe notatka jest nullem.");
+        }
+
+        ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
+        System.out.println("Le aktualizacja notatki rośliny na działce");
+        if (pozycja != null) {
+            Dzialka dzialkaZRoslina = dzialkaRepository.updateRoslinaNotatkaInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
+            request.getX(), request.getY(), request.getNotatka().toString());
+
             return roslinaMapper.toDzialkaResponse(dzialkaZRoslina);
         } else return null;
     }

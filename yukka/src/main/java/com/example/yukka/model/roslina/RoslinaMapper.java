@@ -98,6 +98,7 @@ public class RoslinaMapper {
             .kolor(zasadzonaNaReverse.getKolor())
             .tekstura(tekstura)
             .wyswietlanie(zasadzonaNaReverse.getWyswietlanie())
+            .notatka(zasadzonaNaReverse.getNotatka())
             .obraz(obraz)
             .build();
     }

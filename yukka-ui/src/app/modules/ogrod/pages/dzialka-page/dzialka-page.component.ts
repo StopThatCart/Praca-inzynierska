@@ -272,13 +272,12 @@ export class DzialkaPageComponent implements OnInit  {
           this.selectedRoslina = ros;
         }
       }
-
   }
 
-  onRoslinaKolorChange(kolor: string) {
+  onRoslinaBaseChange(roslina: ZasadzonaRoslinaResponse) {
     console.log('onRoslinaKolorChange');
     if(this.selectedRoslina) {
-      this.selectedRoslina.kolor = kolor;
+      this.selectedRoslina = roslina;
       this.updateTilesWithRoslina(this.selectedRoslina, false);
     }
   }

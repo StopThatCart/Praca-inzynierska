@@ -45,3 +45,23 @@
   border: 1px solid var(--bs-primary-text-emphasis);
   border-radius: 5px;
 }
+
+
+.position-relative {
+  position: relative;
+}
+
+.image-funni-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--bs-primary);
+  font-size: 24px;
+
+}
+
+.image-funni-button:hover {
+  color: var(--bs-primary-hover);
+}
