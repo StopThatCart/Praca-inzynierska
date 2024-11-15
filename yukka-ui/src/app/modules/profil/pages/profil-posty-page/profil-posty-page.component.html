@@ -1,0 +1,27 @@
+
+
+  <div class="container w-100 search-results" style="background: transparent;border-radius: 5px;max-width: 800px;"
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="500"
+    (scrolled)="onScroll()"
+    *ngIf="postResponse"
+    >
+    <app-post-card
+      *ngFor="let post of postResponse?.content"
+      [post]="post">
+    </app-post-card>
+
+    <app-error-msg [errorMsg]="errorMsg"></app-error-msg>
+
+    <div class="d-flex justify-content-center" *ngIf="isLoading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!postResponse?.content?.length">
+      <h3 class="text-primary text-center">Brak postów.</h3>
+    </div>
+
+  </div>

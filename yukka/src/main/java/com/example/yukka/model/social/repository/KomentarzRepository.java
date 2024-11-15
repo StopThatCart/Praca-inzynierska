@@ -57,19 +57,19 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
 
     @Query(value = """
-        MATCH path=(komentarz:Komentarz)<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik{email: $email})
+        MATCH path=(komentarz:Komentarz)<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik{nazwa: $nazwa})
         WHERE NOT (komentarz)<-[:MA_WIADOMOSC]-(:RozmowaPrywatna)
-        OPTIONAL MATCH (post:Post)-[r2:MA_KOMENTARZ]->(komentarz)
+        OPTIONAL MATCH (post:Post)<-[r2:JEST_W_POSCIE]-(komentarz)
 
         RETURN  komentarz, r1, post, r2, collect(nodes(path)), collect(relationships(path))
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
         """,
         countQuery = """
-        MATCH (komentarz:Komentarz)<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik{email: $email})
+        MATCH (komentarz:Komentarz)<-[r1:SKOMENTOWAL]-(uzyt:Uzytkownik{nazwa: $nazwa})
         WHERE NOT (komentarz)<-[:MA_WIADOMOSC]-(:RozmowaPrywatna)
         RETURN count(komentarz)
     """)
-    Page<Komentarz> findKomentarzeOfUzytkownik(@Param("email") String email, Pageable pageable);
+    Page<Komentarz> findKomentarzeOfUzytkownik(@Param("nazwa") String nazwa, Pageable pageable);
 
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})

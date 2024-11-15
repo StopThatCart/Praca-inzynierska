@@ -2324,7 +2324,7 @@
         }
       }
     },
-    "/komentarze/uzytkownicy": {
+    "/komentarze/uzytkownicy/{nazwa}": {
       "get": {
         "tags": [
           "Komentarz"
@@ -2349,6 +2349,14 @@
               "type": "integer",
               "format": "int32",
               "default": 10
+            }
+          },
+          {
+            "name": "nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -3020,8 +3028,11 @@
           "name": {
             "type": "string"
           },
-          "password": {
-            "type": "string"
+          "authorities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedAuthority"
+            }
           },
           "normalUzytkownik": {
             "type": "boolean"
@@ -3035,11 +3046,8 @@
           "username": {
             "type": "string"
           },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
+          "password": {
+            "type": "string"
           },
           "enabled": {
             "type": "boolean"
@@ -3047,10 +3055,10 @@
           "accountNonLocked": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           }
         }

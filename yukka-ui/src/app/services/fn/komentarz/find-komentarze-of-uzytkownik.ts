@@ -11,13 +11,15 @@ import { PageResponseKomentarzResponse } from '../../models/page-response-koment
 export interface FindKomentarzeOfUzytkownik$Params {
   page?: number;
   size?: number;
+  nazwa: string;
 }
 
-export function findKomentarzeOfUzytkownik(http: HttpClient, rootUrl: string, params?: FindKomentarzeOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseKomentarzResponse>> {
+export function findKomentarzeOfUzytkownik(http: HttpClient, rootUrl: string, params: FindKomentarzeOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseKomentarzResponse>> {
   const rb = new RequestBuilder(rootUrl, findKomentarzeOfUzytkownik.PATH, 'get');
   if (params) {
     rb.query('page', params.page, {});
     rb.query('size', params.size, {});
+    rb.path('nazwa', params.nazwa, {});
   }
 
   return http.request(
@@ -30,4 +32,4 @@ export function findKomentarzeOfUzytkownik(http: HttpClient, rootUrl: string, pa
   );
 }
 
-findKomentarzeOfUzytkownik.PATH = '/komentarze/uzytkownicy';
+findKomentarzeOfUzytkownik.PATH = '/komentarze/uzytkownicy/{nazwa}';

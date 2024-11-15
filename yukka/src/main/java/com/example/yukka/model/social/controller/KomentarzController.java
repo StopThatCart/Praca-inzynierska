@@ -42,12 +42,12 @@ public class KomentarzController {
        // return ResponseEntity.ok(komentarzService.findByKomentarzId(komentarzId));
     }
 
-    @GetMapping(value = "/uzytkownicy", produces="application/json")
+    @GetMapping(value = "/uzytkownicy/{nazwa}", produces="application/json")
     public ResponseEntity<PageResponse<KomentarzResponse>> findKomentarzeOfUzytkownik(
         @RequestParam(name = "page", defaultValue = "0", required = false) int page,
         @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-        @PathVariable("email") String email, Authentication connectedUser) {
-        return ResponseEntity.ok(komentarzService.findKomentarzeOfUzytkownik(page, size, email, connectedUser));
+        @PathVariable("nazwa") String nazwa, Authentication connectedUser) {
+        return ResponseEntity.ok(komentarzService.findKomentarzeOfUzytkownik(page, size, nazwa, connectedUser));
     }
 
     @PostMapping(value = "/odpowiedzi", consumes="application/json", produces="application/json")

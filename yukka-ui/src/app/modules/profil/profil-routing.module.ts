@@ -12,6 +12,8 @@ import { RozmowaResolverService } from './services/rozmowa-resolver-service/rozm
 import { UstawieniaPageComponent } from './pages/ustawienia-page/ustawienia-page.component';
 import { EdycjaProfilPageComponent } from './pages/edycja-profil-page/edycja-profil-page.component';
 import { EdycjaAvatarPageComponent } from './pages/edycja-avatar-page/edycja-avatar-page.component';
+import { ProfilPostyPageComponent } from './pages/profil-posty-page/profil-posty-page.component';
+import { ProfilKomentarzePageComponent } from './pages/profil-komentarze-page/profil-komentarze-page.component';
 
 const routes: Routes = [
   {
@@ -40,6 +42,18 @@ const routes: Routes = [
             component: UstawieniaPageComponent,
             canActivate: [authGuard],
             data: { breadcrumb: 'Ustawienia' }
+          },
+          {
+            path: 'posty',
+            component: ProfilPostyPageComponent,
+            canActivate: [authGuard],
+            data: { breadcrumb: 'Posty' }
+          },
+          {
+            path: 'komentarze',
+            component: ProfilKomentarzePageComponent,
+            canActivate: [authGuard],
+            data: { breadcrumb: 'Komentarze' }
           },
           {
             path: 'edycja',

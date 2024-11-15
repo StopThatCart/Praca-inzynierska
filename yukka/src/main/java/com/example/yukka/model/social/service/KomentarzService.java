@@ -70,15 +70,15 @@ public class KomentarzService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<KomentarzResponse> findKomentarzeOfUzytkownik(int page, int size, String email, Authentication connectedUser) {
+    public PageResponse<KomentarzResponse> findKomentarzeOfUzytkownik(int page, int size, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByEmail(email);
+        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
         if (targetUzyt.isEmpty() || !uzyt.hasAuthenticationRights(targetUzyt.get(), connectedUser)) {
             return new PageResponse<>();
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("komentarz.dataUtworzenia").descending());
 
-        Page<Komentarz> komentarze = komentarzRepository.findKomentarzeOfUzytkownik(uzyt.getEmail(), pageable);
+        Page<Komentarz> komentarze = komentarzRepository.findKomentarzeOfUzytkownik(uzyt.getNazwa(), pageable);
         return komentarzMapper.komentarzResponsetoPageResponse(komentarze);
     }
 

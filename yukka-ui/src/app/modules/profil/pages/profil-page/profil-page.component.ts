@@ -188,7 +188,18 @@ export class ProfilPageComponent implements OnInit {
     if (this.uzyt.nazwa) {
       this.router.navigate(['ogrod', this.uzyt.nazwa]);
     }
-    //this.router.navigate(['profil/rozmowy']);
+  }
+
+  goToPosty() {
+    if (this.uzyt.nazwa) {
+      this.router.navigate(['posty'], { relativeTo: this.route });
+    }
+  }
+
+  goToKomentarze() {
+    if (this.uzyt.nazwa) {
+      this.router.navigate(['komentarze'], { relativeTo: this.route });
+    }
   }
 
 }

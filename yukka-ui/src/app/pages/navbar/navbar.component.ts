@@ -129,6 +129,20 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  goToPosty() {
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      this.router.navigate([`profil/${nazwa}/posty`]);
+    }
+  }
+
+  goToKomentarze() {
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      this.router.navigate([`profil/${nazwa}/komentarze`]);
+    }
+  }
+
 
 
 

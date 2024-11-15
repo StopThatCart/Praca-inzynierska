@@ -74,7 +74,6 @@ export class EdycjaNavComponent implements OnInit {
     }
   }
 
-
   goToAvatarEdycja() {
     const nazwa = this.tokenService.nazwa;
     if (nazwa) {

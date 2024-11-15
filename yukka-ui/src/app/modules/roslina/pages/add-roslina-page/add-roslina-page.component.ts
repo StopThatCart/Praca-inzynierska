@@ -11,6 +11,7 @@ import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlas
 import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
 import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";
 import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasciwosc/add-custom-wlasciwosc.component';
+import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
 
 @Component({
   selector: 'app-add-roslina-page',
@@ -18,7 +19,7 @@ import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasci
   imports: [CommonModule, FormsModule, WlasciwoscDropdownComponent,
     WysokoscInputComponent,
     AddCustomWlasciwoscComponent,
-    WlasciwoscTagComponent],
+    WlasciwoscTagComponent, ErrorMsgComponent],
   templateUrl: './add-roslina-page.component.html',
   styleUrl: './add-roslina-page.component.css'
 })

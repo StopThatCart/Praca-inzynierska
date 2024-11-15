@@ -311,7 +311,7 @@ export class KomentarzService extends BaseService {
   }
 
   /** Path part for operation `findKomentarzeOfUzytkownik()` */
-  static readonly FindKomentarzeOfUzytkownikPath = '/komentarze/uzytkownicy';
+  static readonly FindKomentarzeOfUzytkownikPath = '/komentarze/uzytkownicy/{nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -319,7 +319,7 @@ export class KomentarzService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findKomentarzeOfUzytkownik$Response(params?: FindKomentarzeOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseKomentarzResponse>> {
+  findKomentarzeOfUzytkownik$Response(params: FindKomentarzeOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseKomentarzResponse>> {
     return findKomentarzeOfUzytkownik(this.http, this.rootUrl, params, context);
   }
 
@@ -329,7 +329,7 @@ export class KomentarzService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findKomentarzeOfUzytkownik(params?: FindKomentarzeOfUzytkownik$Params, context?: HttpContext): Observable<PageResponseKomentarzResponse> {
+  findKomentarzeOfUzytkownik(params: FindKomentarzeOfUzytkownik$Params, context?: HttpContext): Observable<PageResponseKomentarzResponse> {
     return this.findKomentarzeOfUzytkownik$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageResponseKomentarzResponse>): PageResponseKomentarzResponse => r.body)
     );
