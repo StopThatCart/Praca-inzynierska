@@ -9,7 +9,7 @@
         <div class="col-md-6 position-relative">
           <div>
             <img [src]="getRoslinaObraz()" alt="..." class="rounded img-fluid w-100">
-            <button *ngIf="true "
+            <button *ngIf="isCurrentUzytkownik()"
             (click)="openObrazPickerModal(false)"
             placement="bottom" ngbTooltip="Zmień obraz rośliny"
             class="image-funni-button btn"><i class="fa-solid fa-lg fa-image"></i></button>
