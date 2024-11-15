@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <div class="btn-toolbar " role="toolbar" aria-label="Toolbar with button groups">
+      <div *ngIf="isCurrentUzytkownik()" class="btn-toolbar " role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group me-2" role="group" aria-label="First group">
           <button
           type="button" class="btn btn-primary"
@@ -122,5 +122,5 @@
 (obrazChange)="confirmObrazChange($event)"></app-modal-obraz-pick>
 
 <app-modal-wyswietlanie-rosliny-pick
-[selectedWyswietlanie]="zasadzonaRoslina?.wyswietlanie!"
+[selectedRoslina]="zasadzonaRoslina"
 (obrazChange)="confirmWyswietlanieChange($event)"></app-modal-wyswietlanie-rosliny-pick>

@@ -1,8 +1,10 @@
 package com.example.yukka.model.dzialka.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -46,9 +48,6 @@ public class DzialkaService {
     private final FileUtils fileUtils;
 
     private final RoslinaMapper roslinaMapper;
-
-
-
 
     @Transactional(readOnly = true)
     public List<DzialkaResponse> getDzialki(Authentication connectedUser) {
@@ -338,7 +337,9 @@ public class DzialkaService {
             Dzialka dzialkaZRoslina = dzialkaRepository.updateRoslinaWyswietlanieInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
             request.getX(), request.getY(), request.getWyswietlanie().toString());
             return roslinaMapper.toDzialkaResponse(dzialkaZRoslina);
-        } else return null;
+        } else {
+            throw new IllegalArgumentException("Nie znaleziono rośliny na pozycji (" + request.getX() + ", " + request.getY() + ")");
+        }
     }
 
     public DzialkaResponse updateRoslinaNotatkaInDzialka(DzialkaRoslinaRequest request, Authentication connectedUser) {
@@ -361,7 +362,9 @@ public class DzialkaService {
             request.getX(), request.getY(), request.getNotatka().toString());
 
             return roslinaMapper.toDzialkaResponse(dzialkaZRoslina);
-        } else return null;
+        } else {
+            throw new IllegalArgumentException("Nie znaleziono rośliny na pozycji (" + request.getX() + ", " + request.getY() + ")");
+        }
     }
 
 

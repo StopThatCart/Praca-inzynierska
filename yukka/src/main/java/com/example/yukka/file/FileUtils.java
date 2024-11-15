@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 public class FileUtils {
     @Value("${roslina.obraz.default.jpg-file-path}")
     private  String defaultRoslinaObrazPath;
-
     @Value("${roslina.obraz.default.name}")
     private  String defaultRoslinaObrazName;
 
@@ -28,16 +28,15 @@ public class FileUtils {
     private  String seedRoslinaObrazyPath;
 
     @Value("${uzytkownik.obraz.default.png-file-path}")
-    private  String avatarDefaultObrazPath;
+    private  String defaultAvatarObrazPath;
     @Value("${uzytkownik.obraz.default.name}")
     private  String defaultAvatarObrazName;
 
     @Value("${powiadomienia.obraz.default.png-file-path}")
     private String powiadomieniaAvatarObrazPath;
-
     @Value("${powiadomienia.obraz.default.name}")
     private String powiadomieniaAvatarObrazName;
-    
+
 
     public  byte[] readRoslinaObrazFile(String fileUrl) {
         if (StringUtils.isBlank(fileUrl)) {
@@ -60,27 +59,24 @@ public class FileUtils {
         return readFileFromLocation(imagePath);
     }
 
-    public byte[] readKomentarzObrazFile(String fileUrl) {
-        //System.out.println("Komentarz: " + fileUrl);
-        return readPostObrazFile(fileUrl);
-    }
-
-    public  byte[] readAvatarFile(String fileUrl) {
+    public byte[] readFile(String fileUrl) {
         if (StringUtils.isBlank(fileUrl)) {
             return null;
         }
+        Path imagePath = null;
 
-        if (fileUrl.equals(defaultAvatarObrazName)) {
-            Path imagePath = new File(avatarDefaultObrazPath).toPath();
-            return readFileFromLocation(imagePath);
+        Map<String, String> fileMap = Map.of(
+        defaultRoslinaObrazName, defaultRoslinaObrazPath,
+        defaultAvatarObrazName, defaultAvatarObrazPath,
+        powiadomieniaAvatarObrazName, powiadomieniaAvatarObrazPath
+        );
+
+        if (fileMap.containsKey(fileUrl)) {
+            imagePath = new File(fileMap.get(fileUrl)).toPath();
+        } else {
+            imagePath = Paths.get(fileUrl);
         }
 
-        if (fileUrl.equals(powiadomieniaAvatarObrazName)) {
-            Path imagePath = new File(powiadomieniaAvatarObrazPath).toPath();
-            return readFileFromLocation(imagePath);
-        }
-
-        Path imagePath = Paths.get(fileUrl);
         return readFileFromLocation(imagePath);
     }
 
@@ -164,9 +160,9 @@ public class FileUtils {
         if (StringUtils.isBlank(fileUrl)) {
             return false;
         }
-        if (fileUrl.equals(defaultAvatarObrazName) 
-            || fileUrl.equals(defaultRoslinaObrazName) 
-            || fileUrl.equals(powiadomieniaAvatarObrazName)) {
+        if (fileUrl.equals(defaultAvatarObrazPath) 
+            || fileUrl.equals(defaultRoslinaObrazPath) 
+            || fileUrl.equals(powiadomieniaAvatarObrazPath)) {
             System.out.println("Nie można usunąć domyślnego obrazu");
             return false;
         }

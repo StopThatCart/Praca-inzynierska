@@ -6,7 +6,6 @@ export interface DzialkaResponse {
   liczbaRoslin?: number;
   nazwa?: string;
   numer?: number;
-  tekstury?: Array<number>;
   wlascicielNazwa?: string;
   zasadzoneRosliny?: Array<ZasadzonaRoslinaResponse>;
 }

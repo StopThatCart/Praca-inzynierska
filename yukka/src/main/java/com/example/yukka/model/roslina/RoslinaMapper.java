@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaResponse;
@@ -19,6 +21,8 @@ import com.example.yukka.model.ogrod.OgrodResponse;
 import com.example.yukka.model.roslina.enums.RoslinaRelacje;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
+import com.example.yukka.model.social.post.Post;
+import com.example.yukka.model.social.post.PostResponse;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import jakarta.validation.Valid;
@@ -29,6 +33,22 @@ import lombok.RequiredArgsConstructor;
 public class RoslinaMapper {
     private final FileUtils fileUtils;
 
+
+    // TODO: PRzerobić na simple response jak trzeba.
+    public PageResponse<OgrodResponse> ogrodResponsetoPageResponse(Page<Ogrod> ogrody) {
+        List<OgrodResponse> postyResponse = ogrody.stream()
+                .map(this::toOgrodResponse)
+                .toList();
+        return new PageResponse<>(
+            postyResponse,
+            ogrody.getNumber(),
+            ogrody.getSize(),
+            ogrody.getTotalElements(),
+            ogrody.getTotalPages(),
+            ogrody.isFirst(),
+            ogrody.isLast()
+        );
+    }
 
     public OgrodResponse toOgrodResponse(Ogrod ogrod) {
         if (ogrod == null) {
@@ -220,6 +240,9 @@ public class RoslinaMapper {
         return RoslinaResponse.builder()
                 .id(roslina.getId())
                 .roslinaId(roslina.getRoslinaId())
+
+                .labels(roslina.getLabels())
+
                 .nazwa(roslina.getNazwa())
                 .nazwaLacinska(roslina.getNazwaLacinska())
                 .opis(roslina.getOpis())
@@ -228,7 +251,7 @@ public class RoslinaMapper {
                 .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
 
                 .autor(roslina.getUzytkownik() != null ? roslina.getUzytkownik().getNazwa() : null)
-                .roslinaUzytkownika(roslina.getUzytkownik() != null)
+                .roslinaUzytkownika(roslina.isUzytkownikRoslina())
 
                 .grupy(extractNazwy(roslina.getGrupy()))
                 .formy(extractNazwy(roslina.getFormy()))

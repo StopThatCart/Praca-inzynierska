@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { BaseDzialkaRequest, DzialkaRoslinaRequest, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
+import { BaseDzialkaRequest, DzialkaRoslinaRequest, RoslinaResponse, UzytkownikResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
 import { CommonModule } from '@angular/common';
 import { DzialkaModes } from '../../models/dzialka-modes';
 import { DzialkaService } from '../../../../services/services';
@@ -11,6 +11,7 @@ import { WyswietlanieRoslinyOpcjeComponent } from "../wyswietlanie-rosliny-opcje
 import { ModalWyswietlanieRoslinyPickComponent } from "../modal-wyswietlanie-rosliny-pick/modal-wyswietlanie-rosliny-pick.component";
 import { ModalNotatkaPickComponent } from "../modal-notatka-pick/modal-notatka-pick.component";
 import { NgbCollapseModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { TokenService } from '../../../../services/token/token.service';
 
 @Component({
   selector: 'app-offcanvas-roslina',
@@ -30,6 +31,7 @@ import { NgbCollapseModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap'
 export class OffcanvasRoslinaComponent {
   isCollapsed = true;
   @Input() numerDzialki: number | undefined;
+  @Input() uzyt: UzytkownikResponse | undefined;
   @Input() mode: string = '';
   @Input() editMode: string = '';
 
@@ -57,7 +59,8 @@ export class OffcanvasRoslinaComponent {
 
   constructor(
     private dzialkaService: DzialkaService,
-    private wlasciwoscProcessService: WlasciwoscProcessService
+    private wlasciwoscProcessService: WlasciwoscProcessService,
+    private tokenService: TokenService
   ) { }
 
   private _zasadzonaRoslina: ZasadzonaRoslinaResponse | undefined;
@@ -96,6 +99,13 @@ export class OffcanvasRoslinaComponent {
 
   trackByIndex(index: number, item: any): number {
     return index;
+  }
+
+  isCurrentUzytkownik(): boolean {
+    if(this.tokenService && this.uzyt) {
+      return this.tokenService.isCurrentUzytkownik(this.uzyt);
+    }
+    return false;
   }
 
 

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { ZasadzonaRoslinaResponse } from '../../../../services/models';
 
 @Component({
   selector: 'app-modal-wyswietlanie-rosliny-pick',
@@ -15,7 +16,10 @@ import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
 })
 export class ModalWyswietlanieRoslinyPickComponent {
 
-  @Input() selectedWyswietlanie: string = '';
+  @Input() selectedRoslina: ZasadzonaRoslinaResponse | undefined;
+
+  selectedWyswietlanie: string = '';
+
   @Output() obrazChange = new EventEmitter<string>();
 
   @ViewChild('pickerModal') pickerModal!: ElementRef;
@@ -38,9 +42,12 @@ export class ModalWyswietlanieRoslinyPickComponent {
 
   confirm() {
     console.log('confirmWyswietlanieZmiana');
-    console.log(this.selectedWyswietlanie);
-    this.obrazChange.emit(this.selectedWyswietlanie);
-    this.closePickerModal();
+    if(this.selectedRoslina) {
+      console.log(this.selectedWyswietlanie);
+      this.selectedRoslina.wyswietlanie = this.selectedWyswietlanie;
+      this.obrazChange.emit(this.selectedWyswietlanie);
+      this.closePickerModal();
+    }
   }
 
 

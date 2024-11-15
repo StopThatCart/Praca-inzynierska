@@ -19,6 +19,7 @@ export type { Ocenil } from './models/ocenil';
 export type { Ogrod } from './models/ogrod';
 export type { OgrodResponse } from './models/ogrod-response';
 export type { PageResponseKomentarzResponse } from './models/page-response-komentarz-response';
+export type { PageResponseOgrodResponse } from './models/page-response-ogrod-response';
 export type { PageResponsePostResponse } from './models/page-response-post-response';
 export type { PageResponsePowiadomienieResponse } from './models/page-response-powiadomienie-response';
 export type { PageResponseRoslinaResponse } from './models/page-response-roslina-response';

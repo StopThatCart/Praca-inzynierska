@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Uzytkownik, UzytkownikResponse } from '../../../../services/models';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PostService, UzytkownikService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import { RozmowaPrywatnaService } from '../../../../services/services/rozmowa-pr
 @Component({
   selector: 'app-profil-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './profil-page.component.html',
   styleUrl: './profil-page.component.css'
 })
@@ -141,10 +141,12 @@ export class ProfilPageComponent implements OnInit {
             return this.zaproszony;
           },
           error: (err) => {
-            if (err.status === 404) {
+            if (err.status === 404 || err.error.businessErrorCode === 305) {
               this.isZaproszonyChecked = true;
               return null;
             }
+
+
             this.isZaproszonyChecked = true;
             return false;
           }
@@ -179,6 +181,13 @@ export class ProfilPageComponent implements OnInit {
 
   goToRozmowy() {
     this.router.navigate(['rozmowy'], { relativeTo: this.route });
+    //this.router.navigate(['profil/rozmowy']);
+  }
+
+  goToOgrod() {
+    if (this.uzyt.nazwa) {
+      this.router.navigate(['ogrod', this.uzyt.nazwa]);
+    }
     //this.router.navigate(['profil/rozmowy']);
   }
 

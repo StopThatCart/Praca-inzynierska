@@ -2244,6 +2244,56 @@
         }
       }
     },
+    "/ogrody": {
+      "get": {
+        "tags": [
+          "Ogród"
+        ],
+        "operationId": "findAllOgrody",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "szukaj",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseOgrodResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/ogrody/{uzytkownik-nazwa}": {
       "get": {
         "tags": [
@@ -2970,13 +3020,16 @@
           "name": {
             "type": "string"
           },
-          "pracownik": {
+          "password": {
+            "type": "string"
+          },
+          "normalUzytkownik": {
             "type": "boolean"
           },
           "admin": {
             "type": "boolean"
           },
-          "normalUzytkownik": {
+          "pracownik": {
             "type": "boolean"
           },
           "username": {
@@ -2987,9 +3040,6 @@
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
-          },
-          "password": {
-            "type": "string"
           },
           "enabled": {
             "type": "boolean"
@@ -3072,6 +3122,12 @@
           },
           "roslinaId": {
             "type": "string"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "nazwa": {
             "type": "string"
@@ -3743,13 +3799,6 @@
           "liczbaRoslin": {
             "type": "integer",
             "format": "int32"
-          },
-          "tekstury": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
           }
         }
       },
@@ -4000,11 +4049,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           }
@@ -4022,6 +4071,12 @@
       "Roslina": {
         "type": "object",
         "properties": {
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "id": {
             "type": "integer",
             "format": "int64"
@@ -4174,6 +4229,9 @@
             "items": {
               "$ref": "#/components/schemas/Wlasciwosc"
             }
+          },
+          "uzytkownikRoslina": {
+            "type": "boolean"
           }
         }
       },
@@ -4338,6 +4396,39 @@
             "items": {
               "$ref": "#/components/schemas/DzialkaResponse"
             }
+          }
+        }
+      },
+      "PageResponseOgrodResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OgrodResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           }
         }
       },

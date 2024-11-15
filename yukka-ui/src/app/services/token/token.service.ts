@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Uzytkownik } from '../models';
+import { Uzytkownik, UzytkownikResponse } from '../models';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -112,6 +112,27 @@ export class TokenService {
   isNormalUzytkownik() {
     return !this.isAdmin() && !this.isPracownik();
   }
+
+  // isCurrentUser(nazwa : string): boolean {
+  //   if(this.tokenService) {
+  //     if(this.tokenService.nazwa === nazwa) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
+
+  isCurrentUzytkownik(targetUzyt: UzytkownikResponse): boolean {
+    let hasRights = false;
+    if(this.isAdmin()) {
+      hasRights = true;
+    } else if (this.isPracownik() && !targetUzyt.labels?.includes('Pracownik')) {
+      hasRights = true;
+    } else {
+      hasRights = this.nazwa === targetUzyt.nazwa;
+    }
+    return hasRights;
+}
 
   hasAuthenticationRights(targetUzytNazwa: string): boolean {
     if(this.isAdmin()) {

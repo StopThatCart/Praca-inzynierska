@@ -177,14 +177,14 @@ public class YukkaApplication {
 
 		uzytkownicy = seedUzytkownicy();
 		
-		//addPostyWithKomentarze(uzytkownicy);
+		addPostyWithKomentarze(uzytkownicy);
 		//System.out.println("Dodano posty testowe. Może lepiej dać je potem w batchu.");
 
 		// Path kotPath = Paths.get(obrazSeedPath, "kot.png");
 		// MockMultipartFile obraz1 = new MockMultipartFile("tempFileName", "kot.png", 
 		// "image/png", fileUtils.readFileFromLocation(kotPath));
 
-		//seedRozmowy();
+		seedRozmowy();
 
 		//log.info("Dodawanie specjalnego powiadomienia...");
 		// PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
@@ -296,6 +296,28 @@ public class YukkaApplication {
 
 		//System.out.println("Zmienianie pozycji rośliny w działce do nowej działki");
 		//dzialkaService.updateRoslinaPositionInDzialka(moveRequest2, usPiotr);
+
+
+
+		// To samo ale dla anny
+
+		DzialkaRoslinaRequest reqAna = DzialkaRoslinaRequest.builder()
+		.numerDzialki(2)
+		.x(1).y(4)
+		//.tabX(new int[] {12, 13, 14})
+		//.tabY(new int[] {11, 11, 11})
+		.pozycje(Set.of(
+			Pozycja.builder().x(1).y(4).build(), 
+			Pozycja.builder().x(2).y(4).build(), 
+			Pozycja.builder().x(1).y(3).build()
+			))
+		.kolor("#1ba626")
+		.wyswietlanie(Wyswietlanie.KOLOR.toString())
+		.nazwaLacinska("vaccinium corymbosum'alvar'")
+		.build();
+		
+		log.info("Dodawanie rosliny dla anny do dzialek");
+		dzialkaService.saveRoslinaToDzialka(reqAna, null, null, usPrac);
 	}
 
 	private void seedRozmowy() {

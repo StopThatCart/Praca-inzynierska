@@ -1,12 +1,12 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
-import { MoveRoslinaRequest, Pozycja, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
+import { MoveRoslinaRequest, Pozycja, RoslinaResponse, UzytkownikResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
 import { PostCardComponent } from "../../../post/components/post-card/post-card.component";
 import { LulekComponent } from "../../components/lulek/lulek.component";
 import { DzialkaResponse } from '../../../../services/models/dzialka-response';
 import { ActivatedRoute } from '@angular/router';
-import { DzialkaService } from '../../../../services/services';
+import { DzialkaService, UzytkownikService } from '../../../../services/services';
 import { Tile, TileUtils } from '../../models/Tile';
 import { FormsModule } from '@angular/forms';
 import { ScaleSliderComponent } from "../../components/scale-slider/scale-slider.component";
@@ -27,6 +27,8 @@ import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
 export class DzialkaPageComponent implements OnInit  {
   dzialka: DzialkaResponse = {};
   dzialkaBackup: DzialkaResponse = {};
+
+  uzyt: UzytkownikResponse = {};
 
   numer: number | undefined;
   uzytNazwa: string | undefined;
@@ -62,6 +64,48 @@ export class DzialkaPageComponent implements OnInit  {
   editMode: DzialkaModes = DzialkaModes.BrakEdycji;
   isSaving: boolean = false;
 
+
+  DzialkaModes = DzialkaModes;
+
+  constructor(
+    private route: ActivatedRoute,
+    private dzialkaService: DzialkaService,
+    private canvasService: CanvasService,
+    private uzytService: UzytkownikService
+  ) {}
+
+
+  ngOnInit() {
+    // TODO: Dodawanie ładowania
+    this.initializeTiles();
+    this.drawChessboard();
+
+    this.route.params.subscribe(params => {
+      this.numer = Number(params['numer']);
+      this.uzytNazwa = params['uzytkownik-nazwa'];
+      this.moveRoslinaRequest.numerDzialki = this.numer;
+
+      if (this.numer && this.uzytNazwa) {
+        this.getUzytkownikByNazwa(this.uzytNazwa);
+        this.getDzialkaByNumer( this.numer, this.uzytNazwa);
+        this.route.snapshot.data['numer'] = this.numer;
+        this.route.snapshot.data['uzytkownik-nazwa'] = this.uzytNazwa;
+      }
+    });
+  }
+
+  getUzytkownikByNazwa(nazwa: string): void {
+    this.uzytService.findByNazwa({ nazwa: nazwa }).subscribe({
+      next: (uzyt) => {
+        this.uzyt = uzyt;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+
   setMode(mode: DzialkaModes): void {
     this.mode = mode;
   }
@@ -92,38 +136,6 @@ export class DzialkaPageComponent implements OnInit  {
     this.editMode = DzialkaModes.BrakEdycji;
   }
 
-  private images = {
-    grass: 'assets/tiles/grass.png',
-    dirt: 'assets/tiles/dirt.png'
-  };
-
-  DzialkaModes = DzialkaModes;
-
-  constructor(
-    private route: ActivatedRoute,
-    private dzialkaService: DzialkaService,
-    private canvasService: CanvasService
-  ) {}
-
-
-  ngOnInit() {
-    // TODO: Dodawanie ładowania
-    this.initializeTiles();
-    this.drawChessboard();
-
-    this.route.params.subscribe(params => {
-      this.numer = Number(params['numer']);
-      this.uzytNazwa = params['uzytkownik-nazwa'];
-      this.moveRoslinaRequest.numerDzialki = this.numer;
-
-      if (this.numer && this.uzytNazwa) {
-        this.getDzialkaByNumer( this.numer, this.uzytNazwa);
-        this.route.snapshot.data['numer'] = this.numer;
-        this.route.snapshot.data['uzytkownik-nazwa'] = this.uzytNazwa;
-      }
-    });
-  }
-
 
   // Uwaga, to są placeholdery. W prawidłowej implementacji obrazy są już załadowane base64 oprócz dirt i grass
   // Samo dirt i grass zostaną przeniesione do backendu czy coś
@@ -131,14 +143,11 @@ export class DzialkaPageComponent implements OnInit  {
     const tiles: Tile[] = [];
     for (let y = 0; y < this.rowColls; y++) {
       for (let x = 0; x < this.rowColls; x++) {
-        //const isEdge = x < 2 || x >= 18 || y < 2 || y >= 18;
-        //const isEveryXthTile = (x + y * 20) % 44 === 0;
         tiles.push({
-          image: this.images.dirt,
+          image: TileUtils.images.dirt,
           x,
           y,
           zasadzonaRoslina: undefined,
-          //roslina: isEveryXthTile ? { nazwa: 'Jakaś roślina', obraz: 'assets/tiles/plant.png' } : undefined,
           clickable: true,
           hovered: false,
           backgroundColor: undefined
@@ -179,12 +188,12 @@ export class DzialkaPageComponent implements OnInit  {
     const img = new Image();
 
     if(ctx) {
-      if(tile.image && tile.image !== this.images.dirt && tile.image !== this.images.grass) {
+      if(tile.image && tile.image !== TileUtils.images.dirt && tile.image !== TileUtils.images.grass) {
         img.src = 'data:image/jpeg;base64,' + tile.image;
-      } else if(tile.image === this.images.dirt) {
-        img.src = this.images.dirt;
+      } else if(tile.image === TileUtils.images.dirt) {
+        img.src = TileUtils.images.dirt;
       } else {
-        img.src = this.images.grass;
+        img.src = TileUtils.images.grass;
       }
 
       img.onload = () => {
@@ -198,9 +207,6 @@ export class DzialkaPageComponent implements OnInit  {
     ctx.fillStyle = this.getRgbaColor(tile.backgroundColor);
     ctx.fillRect(tile.x * this.tileSize, tile.y * this.tileSize, this.tileSize, this.tileSize);
   }
-
-
-
 
   changeRoslinaPozycjaInDzialka(): void {
     console.log('changeRoslinaPozycjaInDzialka');
@@ -236,7 +242,6 @@ export class DzialkaPageComponent implements OnInit  {
           this.dzialka = dzialka;
           console.log(dzialka);
           this.processRosliny(dzialka);
-
 
           resolve();
         },
@@ -310,8 +315,8 @@ export class DzialkaPageComponent implements OnInit  {
           if(zasadzonaRoslina.wyswietlanie !== WyswietlanieRosliny.TEKSTURA) {
             tile.backgroundColor = zasadzonaRoslina.kolor;
           }
-          if (tile.image === this.images.dirt || tile.image === zasadzonaRoslina.tekstura) {
-            tile.image = zasadzonaRoslina.tekstura || this.images.dirt;
+          if (tile.image === TileUtils.images.dirt || tile.image === zasadzonaRoslina.tekstura) {
+            tile.image = zasadzonaRoslina.tekstura || TileUtils.images.dirt;
             if (drawTekstury && zasadzonaRoslina.wyswietlanie !== WyswietlanieRosliny.KOLOR) {
               this.drawTileTexture(tile, this.canvas.nativeElement.getContext('2d')!);
             }
@@ -354,7 +359,7 @@ export class DzialkaPageComponent implements OnInit  {
         Leży na nim roślina: ${tile.zasadzonaRoslina?.roslina?.nazwa}
         Kolorek: ${tile.backgroundColor}
         tekstura jest?: ${tile.image ? 'tak' : 'nie'}
-        czy to ziemia?: ${tile.image === this.images.dirt ? 'tak' : 'nie'}
+        czy to ziemia?: ${tile.image === TileUtils.images.dirt ? 'tak' : 'nie'}
         `);
     }
    // tile.image = 'assets/tiles/water.png';
@@ -373,7 +378,7 @@ export class DzialkaPageComponent implements OnInit  {
         this.selectedRoslina.pozycje?.push({ x: tile.x, y: tile.y });
         tile.roslinaId = this.selectedRoslina.roslina?.id;
         tile.backgroundColor = this.selectedRoslina.kolor;
-        tile.image = this.selectedRoslina.tekstura || this.images.dirt;
+        tile.image = this.selectedRoslina.tekstura || TileUtils.images.dirt;
       }
 
       this.updateTilesWithRoslina(this.selectedRoslina, false);
@@ -392,7 +397,7 @@ export class DzialkaPageComponent implements OnInit  {
     tile.roslinaId = this.selectedRoslina.roslina?.id;
     tile.zasadzonaRoslina = this.selectedRoslina;
     tile.backgroundColor = this.selectedRoslina.kolor;
-    tile.image = this.selectedRoslina.tekstura || this.images.dirt;
+    tile.image = this.selectedRoslina.tekstura || TileUtils.images.dirt;
 
     if(this.selectedRoslina.pozycje?.findIndex(p => p.x === tile.x && p.y === tile.y) === -1) {
       this.selectedRoslina.pozycje?.push({ x: tile.x, y: tile.y });

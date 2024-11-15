@@ -51,7 +51,7 @@ public class DzialkaController {
     public ResponseEntity<List<DzialkaResponse>> getPozycjeInDzialki(Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getPozycjeInDzialki(connectedUser));
     }
-
+    
     @GetMapping(value = "/{numer}", produces="application/json")
     public ResponseEntity<DzialkaResponse> getDzialkaByNumer(@PathVariable("numer") int numer, Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getDzialkaByNumer(numer, connectedUser));

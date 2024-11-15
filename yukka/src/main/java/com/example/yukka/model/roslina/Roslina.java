@@ -1,16 +1,19 @@
 package com.example.yukka.model.roslina;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.neo4j.core.schema.DynamicLabels;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import com.example.yukka.authorities.ROLE;
 import com.example.yukka.model.dzialka.ZasadzonaNa;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
@@ -32,11 +35,18 @@ import lombok.Builder;
 @ToString
 @SuppressWarnings("all")
 public class Roslina {
+    @DynamicLabels
+    @Builder.Default
+    private List<String> labels = new ArrayList<>();
+    
     @Id @GeneratedValue
     private long id;
 
     @Property("roslinaId")
     private String roslinaId;
+
+
+
     @Property("nazwa")
     private String nazwa;
     @Property("nazwaLacinska")
@@ -137,6 +147,10 @@ public class Roslina {
     @Relationship(type = "MA_ZIMOZIELONOSC_LISCI", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
     private Set<Wlasciwosc> zimozielonosci = new HashSet<>();
+
+    public boolean isUzytkownikRoslina() {
+        return labels.contains("UzytkownikRoslina");
+    }
 
     @JsonIgnore
     boolean areWlasciwosciEqual(Set<Wlasciwosc> set1, Set<Wlasciwosc> set2) {

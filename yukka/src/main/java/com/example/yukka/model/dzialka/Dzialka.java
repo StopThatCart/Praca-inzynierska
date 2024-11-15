@@ -39,14 +39,6 @@ public class Dzialka {
     @Property("numer")
     private int numer;
 
-
-
-  //  @Property("pola")
-  //  private int[][] pola;
-
-  //  @Property("uzytkownik")
- //   private Uzytkownik uzytkownik;
-
     @JsonIgnore
     @Relationship(type = "MA_DZIALKE", direction = Relationship.Direction.INCOMING)
     private Ogrod ogrod;

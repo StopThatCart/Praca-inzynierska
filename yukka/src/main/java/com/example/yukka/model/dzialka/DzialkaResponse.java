@@ -20,10 +20,4 @@ public class DzialkaResponse {
     private String wlascicielNazwa;
     private List<ZasadzonaRoslinaResponse> zasadzoneRosliny;
     private int liczbaRoslin;
-
-    // Placeholder 
-    private List<Integer> tekstury;
-
-
-    
 }
