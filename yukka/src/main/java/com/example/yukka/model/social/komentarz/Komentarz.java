@@ -94,16 +94,16 @@ public class Komentarz extends Oceniany {
                 '}';
     }
 
-    private boolean isInPost() {
-        return wPoscie != null;
-    }
+    // private boolean isInPost() {
+    //     return wPoscie != null;
+    // }
 
-    private String getPostId() {
-      if(isInPost()) {
-        return wPoscie.getPostId();
-      }
-      return null;
-  }
+    // private String getPostId() {
+    //   if(isInPost()) {
+    //     return wPoscie.getPostId();
+    //   }
+    //   return null;
+    // }
 
 
 

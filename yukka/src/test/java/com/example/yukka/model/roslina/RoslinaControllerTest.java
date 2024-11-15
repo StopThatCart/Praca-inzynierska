@@ -59,7 +59,7 @@ public class RoslinaControllerTest {
     private final String roslinaNazwa = "Na pewno takiej nazwy nie ma";
     private final String nazwaLacinska = "Nomen Latinum certe nullum est";
     private final String roslinaOpis = "To jest dramat.";
-    private final String roslinaObraz = "tilia_henryana.jpg";
+   // private final String roslinaObraz = "tilia_henryana.jpg";
     private final Double wysokoscMin = 0.5;
     private final Double wysokoscMax = 4.0;
 

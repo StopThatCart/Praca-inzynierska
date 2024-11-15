@@ -8,10 +8,11 @@ import { PowiadomieniaDropdownComponent } from "../../modules/profil/components/
 import { UzytkownikService } from '../../services/services';
 import { UzytkownikResponse } from '../../services/models';
 
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, PowiadomienieCardComponent, PowiadomieniaDropdownComponent],
+  imports: [CommonModule, RouterModule, NgbDropdownModule, PowiadomienieCardComponent, PowiadomieniaDropdownComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -74,10 +75,11 @@ export class NavbarComponent implements OnInit {
   toOgrod() {
     const nazwa = this.tokenService.nazwa;
     if (nazwa) {
-      this.router.navigate([`ogrod/${nazwa}`]);
+      //this.router.navigate([`ogrod/${nazwa}/dzialka/2`]);
+      //this.router.navigate([`ogrod/${nazwa}`]);
     }
     else {
-      this.router.navigate([`ogrod/test`]);
+     // this.router.navigate([`ogrod/test/2`]);
     }
   }
 

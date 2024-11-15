@@ -9,9 +9,12 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { findAllOgrody } from '../fn/ogrod/find-all-ogrody';
+import { FindAllOgrody$Params } from '../fn/ogrod/find-all-ogrody';
 import { getDzialki } from '../fn/ogrod/get-dzialki';
 import { GetDzialki$Params } from '../fn/ogrod/get-dzialki';
 import { OgrodResponse } from '../models/ogrod-response';
+import { PageResponseOgrodResponse } from '../models/page-response-ogrod-response';
 import { setOgrodNazwa } from '../fn/ogrod/set-ogrod-nazwa';
 import { SetOgrodNazwa$Params } from '../fn/ogrod/set-ogrod-nazwa';
 
@@ -43,6 +46,31 @@ export class OgrodService extends BaseService {
   setOgrodNazwa(params: SetOgrodNazwa$Params, context?: HttpContext): Observable<string> {
     return this.setOgrodNazwa$Response(params, context).pipe(
       map((r: StrictHttpResponse<string>): string => r.body)
+    );
+  }
+
+  /** Path part for operation `findAllOgrody()` */
+  static readonly FindAllOgrodyPath = '/ogrody';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `findAllOgrody()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findAllOgrody$Response(params?: FindAllOgrody$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseOgrodResponse>> {
+    return findAllOgrody(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `findAllOgrody$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findAllOgrody(params?: FindAllOgrody$Params, context?: HttpContext): Observable<PageResponseOgrodResponse> {
+    return this.findAllOgrody$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PageResponseOgrodResponse>): PageResponseOgrodResponse => r.body)
     );
   }
 

@@ -28,6 +28,8 @@ import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwosciRodzaje;
 
+import io.micrometer.common.lang.NonNull;
+
 @Service
 @Transactional
 public class RoslinaService {
@@ -116,7 +118,7 @@ public class RoslinaService {
     public RoslinaResponse findById(Long id) {
         Roslina ros = roslinaRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id: " + id));
-        return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
+        return roslinaMapper.toRoslinaResponse(ros);
     }
 
     @Transactional(readOnly = true)
@@ -205,7 +207,7 @@ public class RoslinaService {
 
     public RoslinaResponse update(String staraNazwaLacinska, RoslinaRequest request) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
-        Roslina roslina = roslinaRepository.findByNazwaLacinska(staraNazwaLacinska)
+        roslinaRepository.findByNazwaLacinska(staraNazwaLacinska)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + request.getNazwaLacinska()));
 
         if(!staraNazwaLacinska.equals(request.getNazwaLacinska())) {

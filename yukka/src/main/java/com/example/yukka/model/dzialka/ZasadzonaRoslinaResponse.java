@@ -1,5 +1,7 @@
 package com.example.yukka.model.dzialka;
 
+import java.util.Set;
+
 import com.example.yukka.model.roslina.RoslinaResponse;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +20,17 @@ public class ZasadzonaRoslinaResponse {
     private RoslinaResponse roslina;
     private int x;
     private int y;
+
+    private int[] tabX;
+    private int[] tabY;
+    private Set<Pozycja> pozycje; 
+
+    private String kolor;
+    private byte[] tekstura;
+    private String wyswietlanie;
+
+    private String notatka;
+    
     private byte[] obraz;
 
 

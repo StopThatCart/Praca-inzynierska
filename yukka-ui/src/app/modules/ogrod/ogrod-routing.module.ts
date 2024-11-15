@@ -8,6 +8,8 @@ import { pracownikGuard } from '../../services/guard/pracownik/pracownik.guard';
 import { OgrodResolverService } from './services/ogrod-resolver.service';
 import { DzialkiListComponent } from './pages/dzialki-list/dzialki-list.component';
 import { DzialkaPageComponent } from './pages/dzialka-page/dzialka-page.component';
+import { DzialkaResolverService } from './services/dzialka-resolver/dzialka-resolver.service';
+import { AddRoslinaToDzialkaComponent } from './pages/add-roslina-to-dzialka/add-roslina-to-dzialka.component';
 
 const routes: Routes = [
   {
@@ -16,17 +18,35 @@ const routes: Routes = [
    // component: RoslinaComponent,
     children: [
       {
-        path: 'test',
-        component: DzialkaPageComponent,
-       // canActivate: [pracownikGuard],
-        data: { breadcrumb: 'Testowanie działki' }
-      },
-      {
         path: ':uzytkownik-nazwa',
-        component: DzialkiListComponent,
-        pathMatch: 'full',
+        canActivate: [authGuard],
         data: { breadcrumb: (data: any) =>`${data.ogrod.nazwa}` },
-        resolve: { ogrod: OgrodResolverService }
+        resolve: { ogrod: OgrodResolverService },
+        children: [
+          {
+            path: '',
+            component: DzialkiListComponent,
+          },
+          {
+            path: 'dzialka',
+           // canActivate: [pracownikGuard],
+            data: { breadcrumb: (data: any) =>`Działka` },
+            children: [
+              {
+                path: 'dodawanie/:id',
+                component: AddRoslinaToDzialkaComponent,
+                data: { breadcrumb: 'Dodawanie rośliny' }
+              },
+              {
+                path: ':numer',
+                component: DzialkaPageComponent,
+              // canActivate: [pracownikGuard],
+                data: { breadcrumb: (data: any) =>`nr. ${data.dzialka.numer}` },
+                resolve: { dzialka: DzialkaResolverService },
+              }
+            ]
+          }
+        ]
       }//,
       /*
       {

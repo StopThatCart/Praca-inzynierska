@@ -6,10 +6,10 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { DzialkaRoslinaRequest } from '../../models/dzialka-roslina-request';
+import { BaseDzialkaRequest } from '../../models/base-dzialka-request';
 
 export interface DeleteRoslinaFromDzialka$Params {
-      body: DzialkaRoslinaRequest
+      body: BaseDzialkaRequest
 }
 
 export function deleteRoslinaFromDzialka(http: HttpClient, rootUrl: string, params: DeleteRoslinaFromDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
@@ -19,7 +19,7 @@ export function deleteRoslinaFromDzialka(http: HttpClient, rootUrl: string, para
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {

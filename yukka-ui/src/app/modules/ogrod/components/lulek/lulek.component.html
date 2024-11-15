@@ -1,0 +1,13 @@
+<div class="fuu"  >
+  <img
+  (click)="onRoslinaClick()"
+  [ariaDisabled]="mode !== dzialkaModes.Select"
+
+  [src]="getRoslinaObraz()"
+  draggable="false" class="rounded-circle border border-3 border-success-subtle"
+  width="64" height="64"
+  alt="{{ zasadzonaRoslina.roslina?.obraz}}">
+    <div class="overflow-text">
+      {{ zasadzonaRoslina.roslina?.nazwa }}
+    </div>
+</div>

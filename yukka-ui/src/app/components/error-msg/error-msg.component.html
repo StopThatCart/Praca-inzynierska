@@ -1,0 +1,9 @@
+<div class="m-2">
+  <div class="alert alert-success" role="alert" *ngIf="message && !errorMsg.length">
+    {{ message }}
+  </div>
+  <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
+    <p *ngFor="let msg of errorMsg">{{ msg }}</p>
+  </div>
+</div>
+

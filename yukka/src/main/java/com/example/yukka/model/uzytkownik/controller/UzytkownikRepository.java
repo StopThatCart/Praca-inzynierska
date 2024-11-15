@@ -142,7 +142,10 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         CREATE(u)-[:MA_OGROD]->(o:Ogrod{nazwa: "Ogród użytkownika " + u.nazwa})
         WITH u, o
         FOREACH (i IN RANGE(1, 10) |
-            CREATE (o)-[:MA_DZIALKE]->(d:Dzialka {numer: i})
+            CREATE (o)-[:MA_DZIALKE]->(d:Dzialka {
+                numer: i, 
+                nazwa: "Działka użytkownika " + u.nazwa + " nr. " + i
+                })
         )
         RETURN u
             """
@@ -159,7 +162,10 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         CREATE(u)-[:MA_OGROD]->(o:Ogrod{nazwa: "Ogród użytkownika " + u.nazwa})
         WITH u, o
         FOREACH (i IN RANGE(1, 10) |
-            CREATE (o)-[:MA_DZIALKE]->(d:Dzialka {numer: i})
+            CREATE (o)-[:MA_DZIALKE]->(d:Dzialka {
+                numer: i, 
+                nazwa: "Działka użytkownika " + u.nazwa + " nr. " + i
+                })
         )
         RETURN u
             """

@@ -42,7 +42,7 @@ public class PowiadomienieMapper {
             .odnosnik(powiadomienie.getOdnosnik())
             .opis(powiadomienie.getOpis())
             .nazwyRoslin(powiadomienie.getNazwyRoslin())
-            .avatar(fileUtils.readAvatarFile(powiadomienie.getAvatar()))
+            .avatar(fileUtils.readFile(powiadomienie.getAvatar()))
             .uzytkownikNazwa(powiadomienie.getUzytkownikNazwa())
             .iloscPolubien(powiadomienie.getIloscPolubien())
             .data(powiadomienie.getData())

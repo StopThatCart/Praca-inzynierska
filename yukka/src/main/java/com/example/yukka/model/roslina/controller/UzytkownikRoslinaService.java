@@ -17,12 +17,10 @@ import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
-import com.example.yukka.model.roslina.UzytkownikRoslina;
+import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
-import com.example.yukka.model.roslina.UzytkownikRoslinaResponse;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
-import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,26 +29,25 @@ import lombok.RequiredArgsConstructor;
 public class UzytkownikRoslinaService {
     private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
 
-    private final UzytkownikRepository uzytkownikRepository;
-
-
+    @SuppressWarnings("unused")
     private final FileUtils fileUtils;
     private final FileStoreService fileStoreService;
 
     private final RoslinaMapper roslinaMapper;
+    @SuppressWarnings("unused")
     private final CommonMapperService commonMapperService;
 
-    public Optional<UzytkownikRoslina> findByRoslinaId(String roslinaId) {
+    public Optional<Roslina> findByRoslinaId(String roslinaId) {
         return uzytkownikRoslinaRepository.findByRoslinaIdWithRelations(roslinaId);
     }
 
 
-    public PageResponse<UzytkownikRoslinaResponse> findAllRoslinyOfUzytkownik(int page, int size, Authentication connectedUser) {
+    public PageResponse<RoslinaResponse> findAllRoslinyOfUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").descending());
-        Page<UzytkownikRoslina> rosliny = uzytkownikRoslinaRepository.findAllRoslinyOfUzytkownik(uzyt.getUzytId(), pageable);
-        List<UzytkownikRoslinaResponse> roslinyResponse = rosliny.stream()
-                .map(roslinaMapper::toUzytkownikRoslinaResponse)
+        Page<Roslina> rosliny = uzytkownikRoslinaRepository.findAllRoslinyOfUzytkownik(uzyt.getUzytId(), pageable);
+        List<RoslinaResponse> roslinyResponse = rosliny.stream()
+                .map(roslinaMapper::toRoslinaResponse)
                 .toList();
         return new PageResponse<>(
                 roslinyResponse,
@@ -64,18 +61,17 @@ public class UzytkownikRoslinaService {
     }
 
 
-
     public Roslina save(UzytkownikRoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
-        Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
+        Optional<Roslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
             System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
         }
         
         if(request.areWlasciwosciEmpty()) {
-            UzytkownikRoslina pl = roslinaMapper.toUzytkownikRoslina(request);
+            Roslina pl = roslinaMapper.toRoslina(request);
             return uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(), pl);
         }
 
@@ -91,14 +87,14 @@ public class UzytkownikRoslinaService {
     public Roslina save(UzytkownikRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
 
-        Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
+        Optional<Roslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
             System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
         }
         
         if(request.areWlasciwosciEmpty()) {
-            UzytkownikRoslina pl = roslinaMapper.toUzytkownikRoslina(request);
+            Roslina pl = roslinaMapper.toRoslina(request);
             return uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(), pl);
         }
 
@@ -112,7 +108,7 @@ public class UzytkownikRoslinaService {
 
     public Roslina save(UzytkownikRoslinaRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
+        Optional<Roslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
             System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
@@ -121,8 +117,8 @@ public class UzytkownikRoslinaService {
         String leObraz = fileStoreService.saveUzytkownikRoslinaObraz(file, request.getRoslinaId(), uzyt.getUzytId());
         request.setObraz(leObraz);
         if(request.areWlasciwosciEmpty()) {
-            UzytkownikRoslina pl = roslinaMapper.toUzytkownikRoslina(request);
-            UzytkownikRoslina ros = uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(), pl);
+            Roslina pl = roslinaMapper.toRoslina(request);
+            Roslina ros = uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(), pl);
             return ros;
         }
         Roslina ros = uzytkownikRoslinaRepository.addRoslina(
@@ -137,7 +133,7 @@ public class UzytkownikRoslinaService {
 
 
     // Niechronione. Potem sie poprawi
-    public UzytkownikRoslina update(UzytkownikRoslinaRequest request) {
+    public Roslina update(UzytkownikRoslinaRequest request) {
         if(request.areWlasciwosciEmpty()) {
             return uzytkownikRoslinaRepository.updateRoslina(
             request.getNazwa(), request.getRoslinaId(),
@@ -154,7 +150,7 @@ public class UzytkownikRoslinaService {
 
 
     public void uploadUzytkownikRoslinaObraz(MultipartFile file, Authentication connectedUser, String roslinaId) {
-        UzytkownikRoslina roslina = uzytkownikRoslinaRepository.findByRoslinaId(roslinaId).orElse(null);
+        Roslina roslina = uzytkownikRoslinaRepository.findByRoslinaId(roslinaId).orElse(null);
         if (roslina == null) {
             return;
         }
@@ -175,7 +171,7 @@ public class UzytkownikRoslinaService {
 
 
     public void deleteByRoslinaId(String roslinaId) {
-        UzytkownikRoslina roslina = uzytkownikRoslinaRepository.findByRoslinaId(roslinaId).orElse(null);
+        Roslina roslina = uzytkownikRoslinaRepository.findByRoslinaId(roslinaId).orElse(null);
         if (roslina == null) {
             return;
         }
@@ -187,7 +183,7 @@ public class UzytkownikRoslinaService {
     public String createRoslinaId() {
         String resultId = UUID.randomUUID().toString();
         do { 
-            Optional<UzytkownikRoslina> kom =uzytkownikRoslinaRepository.findByRoslinaId(resultId);
+            Optional<Roslina> kom =uzytkownikRoslinaRepository.findByRoslinaId(resultId);
             if(kom.isEmpty()){
                 break;
             }

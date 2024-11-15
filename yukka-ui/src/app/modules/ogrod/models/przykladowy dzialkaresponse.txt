@@ -1,0 +1,86 @@
+{
+    "id": 1120,
+    "nazwa": "Działka użytkownika Piotr Wiśniewski nr. 2",
+    "numer": 2,
+    "wlascicielNazwa": "Piotr Wiśniewski",
+    "zasadzoneRosliny": [
+        {
+            "roslina": {
+                "id": 1157,
+                "roslinaId": "12345678",
+                "nazwa": "pierwsza roślina użytkownika",
+                "nazwaLacinska": null,
+                "opis": "To jest dramat.",
+                "wysokoscMin": 0.5,
+                "wysokoscMax": 4.0,
+                "obraz": "dasdas"
+                "autor": null,
+                "grupy": [
+                    "liściaste"
+                ],
+                "formy": [
+                    "TAKA TESTOWA"
+                ],
+                "gleby": [
+                    "próchniczna",
+                    "gliniasta",
+                    "TEŻ TESTOWA"
+                ],
+                "zimozielonosci": []
+            },
+            "x": 9,
+            "y": 9,
+            "tabX": [
+                9,
+                9,
+                10,
+                10
+            ],
+            "tabY": [
+                9,
+                10,
+                9,
+                10
+            ],
+            "obraz": "dasdas"
+            },
+        {
+            "roslina": {
+                "id": 184,
+                "roslinaId": null,
+                "nazwa": "cis pospolity 'adpressa'",
+                "nazwaLacinska": "taxus baccata'adpressa'",
+                "opis": "Szeroki i wysoki krzew o nieregularnym, dość luźnym pokroju i powolnym wzroście.",
+                "wysokoscMin": 2.0,
+                "wysokoscMax": 3.0,
+                "obraz": "dasdasdas"
+                "autor": null,
+                "grupy": [
+                    "iglaste"
+                ],
+                "formy": [],
+                "gleby": [
+                    "przeciętna ogrodowa",
+                    "gliniasta"
+                ],
+                "zimozielonosci": [
+                    "igły zimozielone"
+                ]
+            },
+            "x": 3,
+            "y": 4,
+            "tabX": [
+                3,
+                4,
+                5
+            ],
+            "tabY": [
+                4,
+                4,
+                4
+            ],
+            "obraz": "dasdasdasdas"}
+    ],
+    "liczbaRoslin": 2,
+    "tekstury": null
+}

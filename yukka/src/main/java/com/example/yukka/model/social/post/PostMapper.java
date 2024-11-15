@@ -3,7 +3,6 @@ package com.example.yukka.model.social.post;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -21,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class PostMapper {
 
 
+    @SuppressWarnings("unused")
     private final FileUtils fileUtils;
     private final CommonMapperService commonMapperService;
 

@@ -6,11 +6,9 @@ import java.util.HashSet;
 
 import org.springframework.stereotype.Service;
 
-import com.example.yukka.model.dzialka.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
-import com.example.yukka.model.roslina.UzytkownikRoslina;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
@@ -27,12 +25,12 @@ public class UzytkownikRoslinaSeeder {
     private final DzialkaService dzialkaService;
     
 
-    UzytkownikRoslina roslina1;
+    Roslina roslina1;
 
-	void seedUzytkownikRosliny(Uzytkownik uzyt) {
+	void seedUzytkownikRosliny(Uzytkownik uzyt, String lolId) {
         String roslinaNazwa = "pierwsza roślina użytkownika";
         String roslinaOpis = "To jest dramat.";
-        String roslinaObraz = "tilia_henryana.jpg";
+       // String roslinaObraz = "tilia_henryana.jpg";
         Double wysokoscMin = 0.5;
         Double wysokoscMax = 4.0;
 
@@ -59,9 +57,9 @@ public class UzytkownikRoslinaSeeder {
         Wlasciwosc walorRoslinaMiododajna = new Wlasciwosc(Collections.singletonList("Walor"),"roślina miododajna");
         // Resztę właściwości zostawia się pustą.
 
-        UzytkownikRoslina lipaHenryego = UzytkownikRoslina.builder()
+        Roslina lipaHenryego = Roslina.builder()
             //.id(12345678L)
-            .roslinaId("12345678")
+            .roslinaId(lolId)
             .nazwa(roslinaNazwa)
             .opis(roslinaOpis)
             .wysokoscMin(wysokoscMin)
@@ -87,14 +85,7 @@ public class UzytkownikRoslinaSeeder {
 
         UzytkownikRoslinaRequest roslinaRequest = roslinaMapper.toUzytkownikRoslinaRequest(roslina1);
 
-        Roslina res = uzytkownikRoslinaService.save(roslinaRequest, uzyt);
-
-        DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
-		.numerDzialki(2).x(9).y(9)
-		.roslinaId("12345678")
-		.build();
-
-		dzialkaService.saveRoslinaToDzialka(req3, uzyt);
+        uzytkownikRoslinaService.save(roslinaRequest, uzyt);
 
       //  System.out.println("ROSLINA1: " + roslina1);
 	}

@@ -1,6 +1,8 @@
 package com.example.yukka.model.roslina;
 
 import java.util.Set;
+import java.util.List;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,15 +18,22 @@ import lombok.Setter;
 public class RoslinaResponse {
     private Long id;
     private String roslinaId;
+
+    private List<String> labels;
+
     private String nazwa;
     private String nazwaLacinska;
+
+    
+
     private String opis;
     private double wysokoscMin;
     private double wysokoscMax;
     private byte[] obraz;
 
     private String autor;
-
+    private boolean roslinaUzytkownika;
+    
     private Set<String> grupy;
     private Set<String> formy;
     private Set<String> gleby;

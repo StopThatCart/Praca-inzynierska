@@ -12,46 +12,49 @@
         <div class="collapse navbar-collapse" id="navcol-3">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item"><a [routerLink]="'rosliny'" routerLinkActive="active" class="nav-link">Przeglądaj katalog</a></li>
-                <li class="nav-item"><a (click)="toOgrod()" routerLinkActive="active" class="nav-link" >Mój ogród</a></li>
+                <li class="nav-item"><a [routerLink]="['ogrod', getUzytkownikNazwa()]" routerLinkActive="active" class="nav-link" >Mój ogród</a></li>
                 <li class="nav-item"><a [routerLink]="'posty'" routerLinkActive="active" class="nav-link" >Społeczność</a></li>
               </ul>
+
             <ng-template #loggedOut>
               <button  (click)="toLogin()" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</button>
             </ng-template>
 
             <ng-container *ngIf="isLogged(); else loggedOut">
-              <div class="dropdown nav-item hstack gap-3">
+              <div class="hstack nav-item" ngbDropdown>
                 <app-powiadomienia-dropdown></app-powiadomienia-dropdown>
 
-                <button class="btn btn-secondary dropdown-toggle d-flex align-items-center" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);"
-                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-primary dropdown-toggle d-flex align-items-center" ngbDropdownToggle
+                type="button"
+
+                id="navbarLeDropdown">
                   <img [src]="getUzytAvatar()" class="me-2 filter" alt="ico.svg" width="30" height="30">
                   <span>{{ getUzytkownikNazwa()}}</span>
                 </button>
 
-                <ul class="dropdown-menu bg-secondary" aria-labelledby="dropdownMenuButton1">
-                  <li><a (click)="goToProfil()" class="dropdown-item">
+                <div class="bg-secondary" ngbDropdownMenu aria-labelledby="navbarLeDropdown">
+                  <button ngbDropdownItem (click)="goToProfil()">
                     <span><i class="fas fa-house"></i>&nbsp;Profil</span>
-                  </a></li>
-                  <li><a (click)="goToRozmowy()" class="dropdown-item">
+                  </button>
+                  <button ngbDropdownItem (click)="goToRozmowy()">
                     <span><i class="fa-solid fa-envelope"></i>&nbsp;Wiadomości prywatne</span>
-                  </a></li>
-                  <li><a (click)="goToUstawienia()" class="dropdown-item">
+                  </button>
+                  <button ngbDropdownItem (click)="goToUstawienia()">
                     <span><i class="fa-solid fa-gear"></i>&nbsp;Ustawienia</span>
-                  </a></li>
-                  <li><a class="dropdown-item">
+                  </button>
+                  <button ngbDropdownItem (click)="goToUstawienia()">
                     <span><i class="fa-solid fa-images"></i>&nbsp;Moja galeria</span>
-                  </a></li>
-                  <li><a class="dropdown-item">
+                  </button>
+                  <button ngbDropdownItem (click)="goToUstawienia()">
                     <span><i class="fa-solid fa-signs-post"></i>&nbsp;Moje posty</span>
-                  </a></li>
-                  <li><a class="dropdown-item">
+                  </button>
+                  <button ngbDropdownItem (click)="goToUstawienia()">
                     <span><i class="fa-solid fa-comment"></i>&nbsp;Moje komentarze</span>
-                  </a></li>
-                  <li><a (click)="logout()" class="dropdown-item">
+                  </button>
+                  <button ngbDropdownItem (click)="logout()">
                     <span><i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;Wyloguj się</span>
-                  </a></li>
-                </ul>
+                  </button>
+                </div>
               </div>
             </ng-container>
 

@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.roslina.UzytkownikRoslina;
+import com.example.yukka.model.roslina.Roslina;
+import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
-import com.example.yukka.model.roslina.UzytkownikRoslinaResponse;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,16 +39,15 @@ public class UzytkownikRoslinaController {
     private final UzytkownikRoslinaService uzytkownikRoslinaService;
   //  private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
 
-
     @GetMapping(value = "/{roslinaId}", produces="application/json")
-    public ResponseEntity<UzytkownikRoslina> findUzytkownikRoslinaByRoslinaId(
+    public ResponseEntity<Roslina> findUzytkownikRoslinaByRoslinaId(
         @PathVariable("roslinaId") String roslinaId, 
             Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikRoslinaService.findByRoslinaId(roslinaId).orElse(null));
     }
 
     @GetMapping(produces="application/json")
-    public ResponseEntity<PageResponse<UzytkownikRoslinaResponse>> findAllRosliny(
+    public ResponseEntity<PageResponse<RoslinaResponse>> findAllRosliny(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser) {
@@ -72,7 +71,7 @@ public class UzytkownikRoslinaController {
 
     @PatchMapping
     public ResponseEntity<String> updateRoslina(@Valid @RequestBody UzytkownikRoslinaRequest request) {
-        Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaService.findByRoslinaId(request.getRoslinaId());
+        Optional<Roslina> roslina = uzytkownikRoslinaService.findByRoslinaId(request.getRoslinaId());
         if (roslina.isEmpty()) {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body("Roślina o takiej nazwie łacińskiej już istnieje.");
         }
@@ -92,7 +91,7 @@ public class UzytkownikRoslinaController {
     
     @DeleteMapping("/{roslinaId}")
     public ResponseEntity<String> deleteRoslina(@PathVariable String roslinaId) {
-        Optional<UzytkownikRoslina> roslina = uzytkownikRoslinaService.findByRoslinaId(roslinaId);
+        Optional<Roslina> roslina = uzytkownikRoslinaService.findByRoslinaId(roslinaId);
 
         if (roslina.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nie znaleziono rośliny o nazwie łacińskiej - " + roslinaId);

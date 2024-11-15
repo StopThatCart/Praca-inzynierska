@@ -75,5 +75,13 @@ export class EdycjaNavComponent implements OnInit {
   }
 
 
+  goToAvatarEdycja() {
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      this.router.navigate([`profil/${nazwa}/edycja/avatar`]);
+    }
+  }
+
+
 
 }

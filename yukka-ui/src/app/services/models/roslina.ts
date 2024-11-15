@@ -9,6 +9,7 @@ export interface Roslina {
   koloryKwiatow?: Array<Wlasciwosc>;
   koloryLisci?: Array<Wlasciwosc>;
   kwiaty?: Array<Wlasciwosc>;
+  labels?: Array<string>;
   nazwa?: string;
   nazwaLacinska?: string;
   obraz?: string;
@@ -22,6 +23,7 @@ export interface Roslina {
   roslinaId?: string;
   silyWzrostu?: Array<Wlasciwosc>;
   stanowiska?: Array<Wlasciwosc>;
+  uzytkownikRoslina?: boolean;
   walory?: Array<Wlasciwosc>;
   wilgotnosci?: Array<Wlasciwosc>;
   wysokoscMax?: number;

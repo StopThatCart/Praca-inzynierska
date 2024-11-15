@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
@@ -229,18 +231,28 @@ public class RoslinaImporterService {
                 label = "Kolor";
             }
 
-            String[] parts = value.split(",");
-            for (String part : parts) {
-                part = part.trim();
-                if (!part.isEmpty()) {
-                    WlasciwoscWithRelations wlasciwosc = new WlasciwoscWithRelations(label, part, determineRelacja(meh));
+            // Regex to match values with commas inside parentheses
+            Pattern pattern = Pattern.compile("([^,]+\\([^\\)]+\\))|([^,]+)");
+            Matcher matcher = pattern.matcher(value);
 
-               //     wlasciwosc.put("labels", label);
-               //     wlasciwosc.put("nazwa",  part);
-               //     wlasciwosc.put("relacja", determineRelacja(meh));
-                    wlasciwosci.add(wlasciwosc);
-                   }
+            while (matcher.find()) {
+                String matchedValue = matcher.group();
+                // Add the matched value to the list
+                wlasciwosci.add(new WlasciwoscWithRelations(label, matchedValue.trim(), determineRelacja(meh)));
             }
+
+            // String[] parts = value.split(",");
+            // for (String part : parts) {
+            //     part = part.trim();
+            //     if (!part.isEmpty()) {
+            //         WlasciwoscWithRelations wlasciwosc = new WlasciwoscWithRelations(label, part, determineRelacja(meh));
+
+            //    //     wlasciwosc.put("labels", label);
+            //    //     wlasciwosc.put("nazwa",  part);
+            //    //     wlasciwosc.put("relacja", determineRelacja(meh));
+            //         wlasciwosci.add(wlasciwosc);
+            //        }
+            // }
 
         }
     }

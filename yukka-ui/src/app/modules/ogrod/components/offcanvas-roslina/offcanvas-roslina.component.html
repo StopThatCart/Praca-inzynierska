@@ -1,0 +1,126 @@
+<div #offcanvasBottom class="offcanvas offcanvas-bottom bg-info-subtle h-auto" tabindex="-1" id="offcanvasBottom"
+  aria-labelledby="offcanvasBottomLabel">
+  <div class="offcanvas-header">
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body small">
+    <div *ngIf="zasadzonaRoslina" class="container py-4">
+      <div class="row gy-4 mb-2">
+        <div class="col-md-6 position-relative">
+          <div>
+            <img [src]="getRoslinaObraz()" alt="..." class="rounded img-fluid w-100">
+            <button *ngIf="isCurrentUzytkownik()"
+            (click)="openObrazPickerModal(false)"
+            placement="bottom" ngbTooltip="Zmień obraz rośliny"
+            class="image-funni-button btn"><i class="fa-solid fa-lg fa-image"></i></button>
+          </div>
+        </div>
+        <div class="col-md-6 d-md-flex align-items-md-center">
+          <div>
+            <h3 class="roslina-nazwa-color">{{zasadzonaRoslina.roslina?.nazwa}}</h3>
+            <h5 class="roslina-nazwa-lacinska-color">{{zasadzonaRoslina.roslina?.nazwaLacinska}}</h5>
+
+            <div class="d-flex mb-2">
+              <span class="roslina-nazwa-lacinska-color me-2">Kolor kafelków:</span>
+
+              <input [value]="zasadzonaRoslina.kolor"
+              type="color"
+              class="form-control form-control-color"
+              value="#CCCCCC" disabled>
+            </div>
+
+            <div class="d-flex mb-2">
+              <span class="roslina-nazwa-lacinska-color me-2">Tryb wyświetlania: {{ zasadzonaRoslina.wyswietlanie }}</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isCurrentUzytkownik()" class="btn-toolbar " role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group me-2" role="group" aria-label="First group">
+          <button
+          type="button" class="btn btn-primary"
+          (click)="collapse.toggle()"
+          [attr.aria-expanded]="!isCollapsed"
+          aria-controls="collapseExample"
+          placement="bottom" ngbTooltip="Zobacz notatkę"
+        ><i class="fa-solid fa-clipboard"></i></button>
+
+          <button (click)="sendRoslinaPozycjaEditEvent()"
+          type="button" class="btn btn-warning"
+          placement="bottom" ngbTooltip="Zmień pozycję rośliny"
+          data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+
+          <button (click)="openColorPickerModal()"
+          placement="bottom" ngbTooltip="Zmień kolor kafelków"
+          type="button" class="btn btn-warning"><i class="fa-solid fa-paintbrush"></i></button>
+
+          <button (click)="openObrazPickerModal(true)"
+          placement="bottom" ngbTooltip="Zmień teksturę kafelków"
+          type="button" class="btn btn-warning"><i class="fa-solid fa-table-cells-large"></i></button>
+
+          <button (click)="openWyswietlaniePickerModal()"
+          placement="bottom" ngbTooltip="Zmień tryb wyświetlania"
+          type="button" class="btn btn-warning"><i class="fa-solid fa-display"></i></button>
+
+          <button (click)="removeRoslinaFromDzialka()"
+          placement="bottom" ngbTooltip="Usuń roślinę z działki"
+          type="button" class="btn btn-danger"
+          data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa-solid fa-trash"></i></button>
+
+        </div>
+      </div>
+
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+        <div class="card mt-2 border-5 border-primary-subtle"  style="background: var(--bs-secondary);">
+          <div class="card-body roslina-opis">
+            <pre *ngIf="zasadzonaRoslina.notatka; else noText">{{ zasadzonaRoslina.notatka }}</pre>
+            <ng-template #noText>brak tekstu</ng-template>
+          </div>
+
+          <button (click)="openNotatkaPickerModal()"
+          type="button" class="btn btn-warning"
+          placement="bottom" ngbTooltip="Zmień notatkę"
+          >Edytuj</button>
+
+        </div>
+      </div>
+
+      <div class="card border-5 border-primary-subtle mt-2" style="background: var(--bs-secondary);">
+        <div class="card-body">
+          <p class="my-3 roslina-opis">{{zasadzonaRoslina.roslina?.opis}}</p>
+        </div>
+      </div>
+
+      <div class="container properties-container p-4 my-5" id="properties">
+        <div *ngFor="let pair of getRoslinaWlasciwoscPary(); let index = index; trackBy: trackByIndex" class="row justify-content-between py-2 my-2">
+          <div class="col property-item mx-2">
+            <span class="property-name">{{ pair[0].name }}:</span>
+            <span class="property-value">{{ pair[0].value }}</span>
+          </div>
+          <div *ngIf="pair[1]" class="col property-item mx-2">
+            <span class="property-name">{{ pair[1].name }}:</span>
+            <span class="property-value">{{ pair[1].value }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<app-modal-color-pick
+[selectedColor]="zasadzonaRoslina?.kolor!"
+(confirmColorChange)="confirmColorChange($event)"></app-modal-color-pick>
+
+<app-modal-notatka-pick
+[notatka]="zasadzonaRoslina?.notatka!"
+(confirmChange)="confirmNotatkaPickerChange($event)"></app-modal-notatka-pick>
+
+<app-modal-obraz-pick
+(obrazChange)="confirmObrazChange($event)"></app-modal-obraz-pick>
+
+<app-modal-wyswietlanie-rosliny-pick
+[selectedRoslina]="zasadzonaRoslina"
+(obrazChange)="confirmWyswietlanieChange($event)"></app-modal-wyswietlanie-rosliny-pick>

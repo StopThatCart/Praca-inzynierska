@@ -1,0 +1,67 @@
+.property-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0.5rem;
+  border-bottom: 1px dashed rgb(0, 0, 0);
+}
+
+.property-name {
+  color: var(--bs-secondary);
+  font-size: 20px;
+  text-transform: uppercase;
+  text-align: left;
+  margin-right: 2rem;
+}
+
+.property-value {
+  color: var(--bs-primary-border-subtle);
+  font-size: 16px;
+  text-align: right;
+}
+
+
+
+.roslina-nazwa-color {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: var(--bs-link-color);
+}
+
+.roslina-nazwa-lacinska-color {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: var(--bs-primary-border-subtle);
+}
+
+
+.roslina-opis {
+  color: inherit;
+  --bs-body-bg: #fff;
+  font-size: 22px;
+}
+
+.properties-container {
+  border: 1px solid var(--bs-primary-text-emphasis);
+  border-radius: 5px;
+}
+
+
+.position-relative {
+  position: relative;
+}
+
+.image-funni-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--bs-primary);
+  font-size: 24px;
+
+}
+
+.image-funni-button:hover {
+  color: var(--bs-primary-hover);
+}

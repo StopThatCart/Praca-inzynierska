@@ -42,8 +42,7 @@ public class RozmowaPrywatnaControllerTest {
    // @InjectMocks
   //  @InjectMocks
     private RozmowaPrywatnaController rozmowaPrywatnaController;
-  //  @MockBean
-    private KomentarzRepository komentarzRepository;
+
   //  @MockBean
     private UzytkownikRepository uzytkownikRepository;
  //   @MockBean

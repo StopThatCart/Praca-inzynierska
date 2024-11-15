@@ -30,15 +30,22 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     """)
     Optional<Roslina> findByNazwaLacinskaWithWlasciwosci(@Param("latinName") String latinName);
 
+    /**
+     *  No elo
+     */
+    @Query("""
+        MATCH (roslina:Roslina) WHERE id(roslina) = $id
+        OPTIONAL MATCH (roslina)-[r:STWORZONA_PRZEZ]->(u:Uzytkownik)
+        RETURN roslina, r, u
+    """)
+    @Override
+    Optional<Roslina> findById(@Param("id") Long id);
+
     @Query("""
         MATCH (roslina:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT roslina:UzytkownikRoslina
         RETURN roslina
     """)
     Optional<Roslina> findByNazwaLacinska(@Param("latinName") String latinName);
-
-    // path na razie został dodany dla testów.
-    // TODO: Wyszukiwanie albo na backendzie albo na frontendzie
-    // Jednak backend.
 
     @Query(value = """
         MATCH (roslina:Roslina) WHERE NOT roslina:UzytkownikRoslina

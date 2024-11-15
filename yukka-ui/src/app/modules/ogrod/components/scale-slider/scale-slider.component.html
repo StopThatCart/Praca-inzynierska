@@ -1,0 +1,17 @@
+<div>
+  <i class="fa-solid fa-lg fa-search-plus text-primary me-2"
+  (click)="changeZoom(0.2)"
+  [class.disabled]="disabled"></i>
+
+  <input id="zoomControl" min="0.2" max="2.0"
+  [(ngModel)]="scale" step="0.2"
+  (input)="onZoomChange($event)"
+  [disabled]="disabled"
+
+  type="range" />
+
+  <i class="fa-solid fa-lg fa-search-minus text-primary ms-2"
+  (click)="changeZoom(-0.2)"
+  [class.disabled]="disabled"></i>
+  <p class="text-primary">Zoomen machen: {{ scale }}</p>
+</div>

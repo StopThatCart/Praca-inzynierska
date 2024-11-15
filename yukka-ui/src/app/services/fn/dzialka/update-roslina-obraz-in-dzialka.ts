@@ -6,17 +6,18 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { DzialkaResponse } from '../../models/dzialka-response';
 import { DzialkaRoslinaRequest } from '../../models/dzialka-roslina-request';
+import { FileResponse } from '../../models/file-response';
 
 export interface UpdateRoslinaObrazInDzialka$Params {
-      body: {
-'request'?: DzialkaRoslinaRequest;
-'file': Blob;
+      body?: {
+'request': DzialkaRoslinaRequest;
+'obraz'?: Blob;
+'tekstura'?: Blob;
 }
 }
 
-export function updateRoslinaObrazInDzialka(http: HttpClient, rootUrl: string, params: UpdateRoslinaObrazInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+export function updateRoslinaObrazInDzialka(http: HttpClient, rootUrl: string, params?: UpdateRoslinaObrazInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<FileResponse>> {
   const rb = new RequestBuilder(rootUrl, updateRoslinaObrazInDzialka.PATH, 'patch');
   if (params) {
     rb.body(params.body, 'multipart/form-data');
@@ -27,7 +28,7 @@ export function updateRoslinaObrazInDzialka(http: HttpClient, rootUrl: string, p
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<DzialkaResponse>;
+      return r as StrictHttpResponse<FileResponse>;
     })
   );
 }

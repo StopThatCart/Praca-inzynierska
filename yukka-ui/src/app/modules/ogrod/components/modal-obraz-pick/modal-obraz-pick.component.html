@@ -1,0 +1,21 @@
+<div class="modal fade" #pickerModal tabindex="-1" aria-labelledby="colorPickerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-primary">
+      <div class="modal-header">
+        <h5 class="modal-title" id="colorPickerModalLabel">Wybierz obraz</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closePickerModal()"></button>
+      </div>
+      <div class="modal-body">
+        <label class="form-label">Wybierz obraz:</label>
+        <app-image-upload
+        (fileSelected)="onFileSelected($event)"
+        (clearImageEvent)="clearImage()"></app-image-upload>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="delet()">Usuń</button>
+        <button type="button" class="btn btn-warning" (click)="closePickerModal()">Anuluj</button>
+        <button type="button" class="btn btn-secondary" (click)="confirm()">Zapisz</button>
+      </div>
+    </div>
+  </div>
+</div>

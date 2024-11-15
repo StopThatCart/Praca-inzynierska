@@ -3,25 +3,108 @@
   <!-- cdkDropList cdkScrollable -->
   <div class="row mb-5 pt-1">
     <div class="">
-        <h3 class="text-uppercase text-primary">Jakaś nazwa działki </h3>
-        <div class="example-boundary" #boundary>
-          <div class="inner-boundary"></div>
-          <app-roslina-box
-          [dragPosition]="{x: 0, y: 0}"
-          ></app-roslina-box>
-          <app-roslina-box
-          [dragPosition]="{x: 100, y: 200}"
-          ></app-roslina-box>
-          <app-roslina-box
-          [dragPosition]="{x: 800, y: 30}"
-          ></app-roslina-box>
-          <app-roslina-box
-          [dragPosition]="{x: 1200, y: 90}"
-          ></app-roslina-box>
+        <h3 class="text-uppercase text-primary"> {{ dzialka.nazwa }} </h3>
 
-          <app-roslina-box
-          [dragPosition]="{x: 80, y: 800}"
-          ></app-roslina-box>
+        <div *ngIf="editMode !== DzialkaModes.BrakEdycji"
+        class="mb-2">
+          <h4 class="text-primary">Tryb edycji: <span class="text-danger">{{ editMode }}</span></h4>
+          <h4 class="text-primary">Wybrana roślina: <span class="text-danger">{{ selectedRoslina?.roslina?.nazwa }}</span></h4>
+          <p class="text-primary">Kliknij na kafelek, aby go dodać lub usunąć go z rośliny. </p>
+          <div class="btn-group">
+            <button (click)="changeEditMode(DzialkaModes.EditRoslinaPozycja)" class="btn btn-primary">Zmień pozycję rośliny</button>
+            <button (click)="changeEditMode(DzialkaModes.EditRoslinaKafelki)" class="btn btn-secondary">Zmień kafelki należące do rośliny</button>
+        </div>
+
+
+          <p class="text-primary my-2">Po zakończeniu działań, zapisz albo anuluj zmiany.</p>
+          <div class="btn-group ">
+            <button (click)="cancelChanges()" class="btn btn-warning">Anuluj</button>
+            <button (click)="changeRoslinaPozycjaInDzialka()" class="btn btn-primary">Zapisz</button>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-primary">Aktualny stan: <span class="text-danger">{{ mode }}</span></h3>
+          <app-scale-slider
+          [(scale)]="scale"
+          [disabled]="isSaving"
+          (scaleChange)="onScaleChange($event)">
+          </app-scale-slider>
+
+        </div>
+
+
+
+
+        <div class="toolbar">
+          <button (click)="setMode(DzialkaModes.Pan)" [class.active]="mode === DzialkaModes.Pan">
+            <i class="fa-solid fa-lg fa-hand"></i>
+          </button>
+          <button (click)="setMode(DzialkaModes.Select)" [class.active]="mode === DzialkaModes.Select">
+            <i class="fa-solid fa-lg fa-arrows"></i>
+          </button>
+          <button (click)="saveCanvasAsImage()">
+            <i class="fa-solid fa-lg fa-save"></i>
+          </button>
+        </div>
+
+        <app-offcanvas-roslina
+        [zasadzonaRoslina]="selectedRoslina"
+        [numerDzialki]="numer"
+        [uzyt]="uzyt"
+        [mode]="mode"
+        [editMode]="editMode || ''"
+        (roslinaPozycjaEdit)="onRoslinaPozycjaEdit($event)"
+        (roslinaRemove)="onRoslinaDelete()"
+
+        (roslinaSmolChange)="onRoslinaUpdate($event)"
+        (roslinaBaseChange)=" onRoslinaBaseChange($event)"
+        >
+
+        </app-offcanvas-roslina>
+
+
+
+        <div  #canvasContainer class="canvas-container border border-3 border-success-subtle "
+        (mousedown)="onMouseDown($event)"
+        >
+          <canvas #canvasElement [width]="canvasWidth" [height]="canvasWidth"></canvas>
+          <canvas #backgroundCanvas [width]="canvasWidth" [height]="canvasWidth"></canvas>
+          <div id="overlay" #overlayBoi>
+            <div *ngFor="let tile of tiles"
+            [ngStyle]="{
+              'left.px': tile.x * tileSize,
+              'top.px': tile.y * tileSize
+            }"
+            [attr.data-x]="tile.x"
+            [attr.data-y]="tile.y"
+            (click)="tile.clickable ? onTileClick(tile) : null"
+            (mouseover)="onTileHover(tile, true)"
+            (mouseout)="onTileHover(tile, false)"
+            class="tile-overlay">
+              <app-lulek
+              *ngIf="tile.zasadzonaRoslina" [zasadzonaRoslina]="tile.zasadzonaRoslina ? tile.zasadzonaRoslina : {}"
+              (roslinaClick)="onRoslinaClick($event)"
+              [mode]="mode"
+              [editMode]="editMode"
+              ></app-lulek>
+            </div>
+          </div>
+          <!--
+
+          <div class="tileSet" #tileSet>
+            <div class="tile" *ngFor="let tile of tiles"
+            [ngStyle]="{'background-image': 'url(' + tile.image + ')', 'background-color': tile.backgroundColor}"
+            [class.clickable]="tile.clickable"
+            (click)="tile.clickable ? onTileClick(tile) : null"
+            >
+              <app-lulek *ngIf="tile.roslina"
+              [roslina]="tile.roslina ? tile.roslina : {}"
+              >
+              </app-lulek>
+            </div>
+          </div>    -->
+
         </div>
     </div>
   </div>

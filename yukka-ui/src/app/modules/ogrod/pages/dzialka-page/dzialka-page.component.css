@@ -1,30 +1,149 @@
-.example-boundary {
-  width: 2200px;
-
-  min-height: 600px;
-  max-height: 700px;
-  max-width: 100%;
-  border: dotted #ccc 2px;
-  background-color: purple;
-  position: relative;
-
-  overflow: scroll;
+:root {
+  --grid-size: 64px;
+  --row-number: 8px;
 }
 
+.canvas-container {
 
+  overflow:hidden;
 
-.example-boundary::before {
-  content: '';
-  display: block;
-  height: 1000px; /* Minimalna wysokość */
+  padding-top: 20px;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+
+  width: 80%;
+  height: 80vh;
+  margin: 0 auto;
+  display: flex;
+
+  background-image: url('/assets/tiles/grass.png');
+  background-repeat: repeat;
+  background-size: var(--grid-size) var(--grid-size);
+  background-position: top left;
+
   position: absolute;
+
+
+}
+
+canvas, #overlay, #backgroundCanvas {
+  position: absolute;
+  display: block;
+
+  width: calc(64px * 20);
+  height: calc(64px * 20);
+
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  transform-origin: 0 0;
   top: 0;
   left: 0;
-  width: 100%;
-  pointer-events: none; /* Zapobiega interakcji z pseudo-elementem */
+
+  border: 1px solid black;
+
+  transition: transform 100ms ease-in-out;
 }
 
-.inner-boundary {
-  width: 2200px;
-  height: 100%;
+#overlay {
+  pointer-events: none;
+  z-index: 9;
 }
+
+.tile-overlay {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+
+  background-color: transparent;
+  background-size: cover;
+  background-blend-mode: multiply;
+  /*
+  transition: background-color 0.3s ease;
+*/
+  pointer-events: auto;
+}
+
+.tile-overlay:hover {
+  filter: brightness(1.2);
+  cursor: pointer;
+}
+
+
+
+.tileSet {
+  display: grid;
+  grid-template-columns: repeat(22, 64px);
+  grid-template-rows: repeat(22, 64px);
+  width: calc(22 * 64px);
+  height: calc(22 * 64px);
+  background-color: #f0f0f0;
+
+  position: absolute;
+  transform-origin: 0 0;
+  top: 0;
+  left: 0;
+  margin: 0 auto;
+  text-align: center;
+
+
+}
+
+.tileSet:active {
+  cursor: grabbing;
+}
+
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.toolbar button {
+
+
+  cursor: pointer;
+  padding: 5px;
+}
+
+.toolbar button.active {
+  background-color: gray;
+}
+
+
+/*
+  to dziwadło bez tego pokazuje siatkę przy skalowaniu
+*/
+.tile {
+  width: 64.5px;
+  height: 64.5px;
+
+  background-size: cover;
+
+  background-blend-mode: multiply;
+  /*
+   background-position: center top;
+  place-self: center;
+
+  border: 1px solid;
+ */
+}
+
+.tile.clickable {
+  cursor: pointer;
+}
+
+.tile:hover {
+  filter: brightness(1.2);
+}
+
+

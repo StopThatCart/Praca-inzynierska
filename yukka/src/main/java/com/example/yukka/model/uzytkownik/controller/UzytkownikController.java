@@ -16,12 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.social.service.PowiadomienieService;
-import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
