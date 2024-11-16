@@ -1,0 +1,29 @@
+<div class="container d-flex justify-content-center align-items-center" *ngIf="submitted else codeForm" >
+  <div class="text-center" *ngIf="isOkay; else activationError">
+    <h2 class="text-primary mt-2">Aktywacja udana!</h2>
+    <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
+    <p class="text-primary">Twoje konto zostało aktywowane.</p>
+    <button class="btn btn-primary" (click)="redirectToLogin()">Przejdź do logowania</button>
+  </div>
+
+  <ng-template class="container d-flex justify-content-center align-items-center" #activationError>
+    <div class="text-center">
+      <h2 class="text-primary">Aktywacja nieudana!</h2>
+      <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
+      <button class="btn btn-primary" (click)="submitted = false">Spróbuj ponownie</button>
+    </div>
+  </ng-template>
+</div>
+<ng-template #codeForm>
+  <div class="container d-flex justify-content-center align-items-center">
+    <div class="text-center" style="width: 400px;">
+      <h2 class="text-primary mt-2">Wpisz swój kod aktywacyjny</h2>
+      <code-input [isCodeHidden]="false"
+                  [codeLength]="6"
+                  [code]="'number'"
+                  (codeCompleted)="onCodeCompleted($event)">
+      </code-input>
+      <button class="btn btn-primary mt-3" (click)="redirectToLogin()">Przejdź do logowania</button>
+    </div>
+  </div>
+</ng-template>

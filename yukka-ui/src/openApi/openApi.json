@@ -2528,7 +2528,7 @@
         "tags": [
           "Authentication"
         ],
-        "operationId": "confirm",
+        "operationId": "confirmus",
         "responses": {
           "200": {
             "description": "OK",
@@ -2548,7 +2548,7 @@
         "tags": [
           "Authentication"
         ],
-        "operationId": "confirm2",
+        "operationId": "confirmus2",
         "responses": {
           "200": {
             "description": "OK",
@@ -2559,6 +2559,29 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/auth/aktywacja-konta": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "confirm",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -2977,6 +3000,9 @@
             "type": "string",
             "format": "date-time"
           },
+          "aktywowany": {
+            "type": "boolean"
+          },
           "ban": {
             "type": "boolean"
           },
@@ -3028,23 +3054,23 @@
           "name": {
             "type": "string"
           },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
-          },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
           "admin": {
             "type": "boolean"
           },
           "pracownik": {
             "type": "boolean"
           },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
           "username": {
             "type": "string"
+          },
+          "authorities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedAuthority"
+            }
           },
           "password": {
             "type": "string"
@@ -3052,13 +3078,13 @@
           "enabled": {
             "type": "boolean"
           },
-          "accountNonLocked": {
-            "type": "boolean"
-          },
           "accountNonExpired": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
+            "type": "boolean"
+          },
+          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -4057,11 +4083,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           }

@@ -5,6 +5,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { Post } from './services/models/post';
 import { ProfilModule } from './modules/profil/profil.module';
 import { loggedInGuard } from './services/guard/loggedIn/logged-in.guard';
+import { AktywacjaKontaComponent } from './pages/aktywacja-konta/aktywacja-konta.component';
 
 export const routes: Routes = [
   { path: '', component: IndeksusComponent },
@@ -19,6 +20,12 @@ export const routes: Routes = [
     component: RegisterComponent,
     canActivate: [loggedInGuard],
     data: { breadcrumb: 'Rejestracja' }
+  },
+  {
+    path: 'aktywacja-konta',
+    component: AktywacjaKontaComponent,
+    canActivate: [loggedInGuard],
+    data: { breadcrumb: 'Aktywacja konta' }
   },
   {
     path: 'rosliny',

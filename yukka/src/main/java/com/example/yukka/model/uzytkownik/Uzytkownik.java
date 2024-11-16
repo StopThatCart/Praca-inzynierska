@@ -82,6 +82,10 @@ public class Uzytkownik implements UserDetails, Principal{
     @Builder.Default
     private LocalDateTime dataUtworzenia = LocalDateTime.now();
 
+    @Property("aktywowany")
+    @Builder.Default
+    private boolean aktywowany = false;
+
     @Property("ban")
     @Builder.Default
     private boolean ban = false;

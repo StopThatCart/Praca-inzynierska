@@ -6,27 +6,31 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/services/authentication.service';
 import { TokenService } from '../../services/token/token.service';
 import { register } from '../../services/fn/authentication/register';
+import { ErrorHandlingService } from '../../services/error-handler/error-handling.service';
+import { ErrorMsgComponent } from "../../components/error-msg/error-msg.component";
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ErrorMsgComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
   registerRequest: RegistrationRequest = {
     nazwa: 'TestowanyTestowiec24',
-    email: 'jan@email.pl',
+    email: 'beb@email.pl',
     haslo: 'testowiec12345678',
-    powtorzHaslo: 'testowiec123456789'
+    powtorzHaslo: 'testowiec12345678'
   };
   errorMsg: Array<string> = [];
 
   constructor(
     private router: Router,
     private authService: AuthenticationService,
-    private tokenService: TokenService) {
+    private tokenService: TokenService,
+    private errorHandlingService: ErrorHandlingService
+  ) {
 
   }
 
@@ -37,19 +41,21 @@ export class RegisterComponent {
     }).subscribe( {
         next: (res) => {
           console.log(res);
-          this.login();
+          this.router.navigate(['aktywacja-konta']);
+          //this.login();
         },
         error: (err) => {
           console.log(err);
-           if (err.error.validationErrors) {
-            this.errorMsg = err.error.validationErrors;
-          } else if (typeof err.error === 'string') {
-            this.errorMsg.push(err.error);
-          } else if (err.error.error) {
-            this.errorMsg.push(err.error.error);
-          } else {
-            this.errorMsg.push(err.message);
-          }
+          this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
+          //  if (err.error.validationErrors) {
+          //   this.errorMsg = err.error.validationErrors;
+          // } else if (typeof err.error === 'string') {
+          //   this.errorMsg.push(err.error);
+          // } else if (err.error.error) {
+          //   this.errorMsg.push(err.error.error);
+          // } else {
+          //   this.errorMsg.push(err.message);
+          // }
         }
     });
   }
@@ -61,7 +67,7 @@ export class RegisterComponent {
       next: (res) => {
         console.log(res);
         this.tokenService.token = res.token as string;
-        this.router.navigate(['']);
+        this.router.navigate(['aktywacja-konta']);
       },
       error: (err) => {
         console.log(err);

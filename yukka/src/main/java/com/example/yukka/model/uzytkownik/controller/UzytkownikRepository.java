@@ -188,6 +188,9 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     Uzytkownik updateAvatar(@Param("email") String email, @Param("avatar") String avatar);
 
 
+    @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.aktywowany = true RETURN u")
+    Uzytkownik activate(@Param("email") String email);
+
     @Query("""
         MATCH (blokowany:Uzytkownik{email: $blokowanyEmail})
         MATCH (blokujacy:Uzytkownik{email: $blokujacyEmail})
@@ -219,6 +222,10 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         DETACH DELETE ust
 
         WITH u
+        OPTIONAL MATCH (t:Token)-[:WALIDUJE]->(u) 
+        DETACH DELETE t
+
+        WITH u
         OPTIONAL MATCH (u)-[:JEST_W_ROZMOWIE]->(rozmowa:RozmowaPrywatna)
         OPTIONAL MATCH (rozmowa)-[:MA_WIADOMOSC]->(kom:Komentarz)
         DETACH DELETE kom, rozmowa
@@ -246,10 +253,13 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         MATCH (u:Uzytkownik) DETACH DELETE u 
         WITH u
 
-        MATCH(ust:Ustawienia) DETACH DELETE ust
-        WITH ust
+        OPTIONAL MATCH(ust:Ustawienia) DETACH DELETE ust
+        WITH u
 
-        MATCH (o:Ogrod)
+        OPTIONAL MATCH (t:Token) DETACH DELETE t
+        WITH t
+
+        OPTIONAL MATCH (o:Ogrod)
         OPTIONAL MATCH (o)-[:MA_DZIALKE]->(d:Dzialka)
         DETACH DELETE d, o
         WITH d

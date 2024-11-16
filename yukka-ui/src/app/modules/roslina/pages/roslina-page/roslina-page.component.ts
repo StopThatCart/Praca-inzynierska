@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RoslinaResponse } from '../../../../services/models';
 import { RoslinaService } from '../../../../services/services';
 import { switchMap } from 'rxjs/operators';
-import { BreadcrumbComponent } from "../../../../pages/breadcrumb/breadcrumb.component";
+import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
 import { TokenService } from '../../../../services/token/token.service';
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 

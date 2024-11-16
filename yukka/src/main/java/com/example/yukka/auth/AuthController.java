@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -26,10 +28,15 @@ public class AuthController {
     public ResponseEntity<?> register(
             @RequestBody 
              @Valid
-            RegistrationRequest request) {
+            RegistrationRequest request) throws MessagingException {
         //return ResponseEntity.ok().build();
         service.register(request);
         return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping(value = "/aktywacja-konta")
+    public void confirm(@RequestParam String token) throws MessagingException {
+        service.activateAccount(token);
     }
 
     @PostMapping(value = "/login", produces="application/json")
@@ -43,12 +50,12 @@ public class AuthController {
     }
 
     @GetMapping("/test")
-    public String confirm() {
+    public String confirmus() {
         return "No tutaj nie wejdziesz.";
     }
 
     @GetMapping("/testUnprotected")
-    public String confirm2() {
+    public String confirmus2() {
         return "No tutaj wejdziesz.";
     }
 }

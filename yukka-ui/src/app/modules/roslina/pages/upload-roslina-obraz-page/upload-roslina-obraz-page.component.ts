@@ -4,7 +4,7 @@ import { RoslinaService } from '../../../../services/services/roslina.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RoslinaResponse } from '../../../../services/models';
-import { BreadcrumbComponent } from "../../../../pages/breadcrumb/breadcrumb.component";
+import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-upload-roslina-obraz-page',

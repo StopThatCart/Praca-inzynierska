@@ -15,7 +15,9 @@ import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 //@Configuration
@@ -44,12 +46,17 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
         Uzytkownik uzyt = uzytOpt.get();
        // .orElseThrow(() -> new BadCredentialsException("Niepoprawny login lub hasło."));
 
+       if (!uzyt.isAktywowany()) {
+            log.info("login [" + nameOrEmail + "] nieudany: konto nieaktywowane");
+            throw new IllegalArgumentException("Konto nie zostało jeszcze aktywowane. Sprawdź swoje wiadomości w poczcie email albo zarejestruj się ponownie.");
+       }
+
         if(passwordEncoder.matches(haslo, uzyt.getHaslo())) {
-            System.out.println("Udalo sie zalogowac");
+            log.info("login [" + nameOrEmail + "] udany");
             final UserDetails principal = uzyt;
             return new UsernamePasswordAuthenticationToken(principal, haslo, uzyt.getAuthorities());
         } else {
-            System.out.println("Nie Udalo sie zalogowac");
+            log.info("login [" + nameOrEmail + "] nieudany: Niepoprawny login lub hasło");
             throw new BadCredentialsException("Niepoprawny login lub hasło.");
         }
 

@@ -5,9 +5,7 @@
               <h2 style="color: var(--bs-link-color);">Zarejestruj się</h2>
           </div>
           <hr>
-          <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
-              <p *ngFor="let msg of errorMsg">{{ msg }}</p>
-          </div>
+          <app-error-msg [errorMsg]="errorMsg"></app-error-msg>
       </div>
       <div class="row d-flex justify-content-center">
           <div class="col-md-6 col-xl-4">

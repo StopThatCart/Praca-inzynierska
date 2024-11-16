@@ -24,6 +24,8 @@ import static com.example.yukka.handler.YukkaErrorCodes.BAD_CREDENTIALS;
 import static com.example.yukka.handler.YukkaErrorCodes.BLOCKED_UZYTKOWNIK;
 import static com.example.yukka.handler.YukkaErrorCodes.ENTITY_NOT_FOUND;
 
+import jakarta.mail.MessagingException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -152,7 +154,7 @@ public class GlobalExceptionHandler {
                 );
     }
 
-    /*  
+     
     @ExceptionHandler(MessagingException.class)
     public ResponseEntity<ExceptionResponse> handleException(MessagingException exp) {
         return ResponseEntity
@@ -163,7 +165,7 @@ public class GlobalExceptionHandler {
                                 .build()
                 );
     }
-
+ /*
     @ExceptionHandler(ActivationTokenException.class)
     public ResponseEntity<ExceptionResponse> handleException(ActivationTokenException exp) {
         return ResponseEntity

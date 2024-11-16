@@ -11,6 +11,7 @@ export interface Uzytkownik {
   accountNonExpired?: boolean;
   accountNonLocked?: boolean;
   admin?: boolean;
+  aktywowany?: boolean;
   authorities?: Array<GrantedAuthority>;
   avatar?: string;
   ban?: boolean;

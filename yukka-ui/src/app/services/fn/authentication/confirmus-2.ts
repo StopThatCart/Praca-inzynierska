@@ -7,11 +7,11 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface Confirm2$Params {
+export interface Confirmus2$Params {
 }
 
-export function confirm2(http: HttpClient, rootUrl: string, params?: Confirm2$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, confirm2.PATH, 'get');
+export function confirmus2(http: HttpClient, rootUrl: string, params?: Confirmus2$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  const rb = new RequestBuilder(rootUrl, confirmus2.PATH, 'get');
   if (params) {
   }
 
@@ -25,4 +25,4 @@ export function confirm2(http: HttpClient, rootUrl: string, params?: Confirm2$Pa
   );
 }
 
-confirm2.PATH = '/api/auth/testUnprotected';
+confirmus2.PATH = '/api/auth/testUnprotected';

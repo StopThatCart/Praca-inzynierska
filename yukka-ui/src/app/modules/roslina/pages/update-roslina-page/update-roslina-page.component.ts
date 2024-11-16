@@ -8,8 +8,9 @@ import { RoslinaRequest, RoslinaResponse, WlasciwoscResponse, WlasciwoscWithRela
 import { RoslinaService } from '../../../../services/services';
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BreadcrumbComponent } from "../../../../pages/breadcrumb/breadcrumb.component";
+
 import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasciwosc/add-custom-wlasciwosc.component';
+import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-update-roslina-page',

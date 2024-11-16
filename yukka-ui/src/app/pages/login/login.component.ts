@@ -5,12 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { AuthenticationService } from '../../services/services';
 import { Router } from '@angular/router';
 import { TokenService } from '../../services/token/token.service';
+import { ErrorHandlingService } from '../../services/error-handler/error-handling.service';
+import { ErrorMsgComponent } from "../../components/error-msg/error-msg.component";
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ErrorMsgComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -26,6 +28,7 @@ export class LoginComponent {
     private router: Router,
     private authService: AuthenticationService,
     private tokenService: TokenService,
+    private errorHandlingService: ErrorHandlingService,
     @Inject(PLATFORM_ID) platformId: Object) {
       this.isServer = isPlatformServer(platformId);
       console.log('aqui')
@@ -48,15 +51,7 @@ export class LoginComponent {
         },
         error: (err) => {
           console.log(err);
-           if (err.error.validationErrors) {
-            this.errorMsg = err.error.validationErrors;
-          } else if (typeof err.error === 'string') {
-            this.errorMsg.push(err.error);
-          } else if (err.error.error) {
-            this.errorMsg.push(err.error.error);
-          } else {
-            this.errorMsg.push(err.message);
-          }
+          this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
         }
     });
   }

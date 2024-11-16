@@ -12,8 +12,10 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { AuthenticationResponse } from '../models/authentication-response';
 import { confirm } from '../fn/authentication/confirm';
 import { Confirm$Params } from '../fn/authentication/confirm';
-import { confirm2 } from '../fn/authentication/confirm-2';
-import { Confirm2$Params } from '../fn/authentication/confirm-2';
+import { confirmus } from '../fn/authentication/confirmus';
+import { Confirmus$Params } from '../fn/authentication/confirmus';
+import { confirmus2 } from '../fn/authentication/confirmus-2';
+import { Confirmus2$Params } from '../fn/authentication/confirmus-2';
 import { login } from '../fn/authentication/login';
 import { Login$Params } from '../fn/authentication/login';
 import { refreshToken } from '../fn/authentication/refresh-token';
@@ -106,8 +108,58 @@ export class AuthenticationService extends BaseService {
     );
   }
 
+  /** Path part for operation `confirmus()` */
+  static readonly ConfirmusPath = '/api/auth/test';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `confirmus()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  confirmus$Response(params?: Confirmus$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+    return confirmus(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `confirmus$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  confirmus(params?: Confirmus$Params, context?: HttpContext): Observable<string> {
+    return this.confirmus$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
+    );
+  }
+
+  /** Path part for operation `confirmus2()` */
+  static readonly Confirmus2Path = '/api/auth/testUnprotected';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `confirmus2()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  confirmus2$Response(params?: Confirmus2$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+    return confirmus2(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `confirmus2$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  confirmus2(params?: Confirmus2$Params, context?: HttpContext): Observable<string> {
+    return this.confirmus2$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
+    );
+  }
+
   /** Path part for operation `confirm()` */
-  static readonly ConfirmPath = '/api/auth/test';
+  static readonly ConfirmPath = '/api/auth/aktywacja-konta';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -115,7 +167,7 @@ export class AuthenticationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  confirm$Response(params?: Confirm$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  confirm$Response(params: Confirm$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
     return confirm(this.http, this.rootUrl, params, context);
   }
 
@@ -125,34 +177,9 @@ export class AuthenticationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  confirm(params?: Confirm$Params, context?: HttpContext): Observable<string> {
+  confirm(params: Confirm$Params, context?: HttpContext): Observable<void> {
     return this.confirm$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
-  }
-
-  /** Path part for operation `confirm2()` */
-  static readonly Confirm2Path = '/api/auth/testUnprotected';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `confirm2()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  confirm2$Response(params?: Confirm2$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return confirm2(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `confirm2$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  confirm2(params?: Confirm2$Params, context?: HttpContext): Observable<string> {
-    return this.confirm2$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

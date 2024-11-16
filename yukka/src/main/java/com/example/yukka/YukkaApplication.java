@@ -20,6 +20,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.yukka.common.PageResponse;
@@ -58,6 +59,7 @@ import com.example.yukka.seeder.RoslinaImporterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@EnableAsync
 @SpringBootApplication
 @RequiredArgsConstructor
 @Slf4j
@@ -141,7 +143,7 @@ public class YukkaApplication {
         return args -> {
 		//	roslinaImporterService.seedRosliny();
 			 unseed();
-        	 seed();
+        	// seed();
 		//roslinaSearchTest();
         };
     }
@@ -349,6 +351,7 @@ public class YukkaApplication {
         .nazwa("Jan Kowalski").email("jan@email.pl")
         .haslo(passwordEncoder.encode("jan12345678"))
 		.labels(List.of("Admin"))
+		.aktywowany(true)
         .build();
 
 		Uzytkownik usPrac = Uzytkownik.builder()
@@ -356,6 +359,7 @@ public class YukkaApplication {
 		.labels(List.of("Pracownik")).nazwa("Anna Nowak")
 		.email("anna@email.pl")
 		.haslo(passwordEncoder.encode("anna12345678"))
+		.aktywowany(true)
 		.build();
 
 
@@ -363,6 +367,7 @@ public class YukkaApplication {
 		.uzytId("piotrekId")
         .nazwa("Piotr Wiśniewski").email(piotrEmail)
         .haslo(passwordEncoder.encode("piotr12345678"))
+		.aktywowany(true)
         .build();
 
 
@@ -370,6 +375,7 @@ public class YukkaApplication {
 		.uzytId("jakasKatarzynaId")
 		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
         .haslo(passwordEncoder.encode("katarzyna12345678"))
+		.aktywowany(true)
         .build();
 
 
@@ -377,6 +383,7 @@ public class YukkaApplication {
 		.uzytId("michalekId")
         .nazwa("Michał Zieliński").email(michalEmail)
         .haslo(passwordEncoder.encode("michal12345678"))
+		.aktywowany(true)
         .build();
 
 		uzytkownikService.addPracownik(usJan);
