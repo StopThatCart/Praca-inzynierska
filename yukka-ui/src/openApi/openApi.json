@@ -541,6 +541,36 @@
         }
       }
     },
+    "/uzytkownicy/send-zmiana-email": {
+      "post": {
+        "tags": [
+          "Uzytkownik"
+        ],
+        "operationId": "sendZmianaEmail",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rozmowy/{uzytkownik-nazwa}": {
       "get": {
         "tags": [
@@ -1071,6 +1101,96 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/zmiana-hasla": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "zmianaHasla",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HasloRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/zmiana-hasla-email/{email}": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "zmianaHaslaEmail",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/zmiana-email": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "zmianaEmail",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -2523,46 +2643,6 @@
         }
       }
     },
-    "/api/auth/test": {
-      "get": {
-        "tags": [
-          "Authentication"
-        ],
-        "operationId": "confirmus",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/auth/testUnprotected": {
-      "get": {
-        "tags": [
-          "Authentication"
-        ],
-        "operationId": "confirmus2",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/auth/aktywacja-konta": {
       "get": {
         "tags": [
@@ -3057,10 +3137,10 @@
           "admin": {
             "type": "boolean"
           },
-          "pracownik": {
+          "normalUzytkownik": {
             "type": "boolean"
           },
-          "normalUzytkownik": {
+          "pracownik": {
             "type": "boolean"
           },
           "username": {
@@ -3468,6 +3548,23 @@
             "items": {
               "$ref": "#/components/schemas/WlasciwoscWithRelations"
             }
+          }
+        }
+      },
+      "EmailRequest": {
+        "required": [
+          "haslo",
+          "nowyEmail"
+        ],
+        "type": "object",
+        "properties": {
+          "haslo": {
+            "maxLength": 2147483647,
+            "minLength": 8,
+            "type": "string"
+          },
+          "nowyEmail": {
+            "type": "string"
           }
         }
       },
@@ -3890,6 +3987,29 @@
           }
         }
       },
+      "HasloRequest": {
+        "required": [
+          "noweHaslo",
+          "nowePowtorzHaslo",
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "noweHaslo": {
+            "maxLength": 2147483647,
+            "minLength": 8,
+            "type": "string"
+          },
+          "nowePowtorzHaslo": {
+            "maxLength": 2147483647,
+            "minLength": 8,
+            "type": "string"
+          }
+        }
+      },
       "RegistrationRequest": {
         "required": [
           "email",
@@ -3914,6 +4034,8 @@
             "type": "string"
           },
           "powtorzHaslo": {
+            "maxLength": 2147483647,
+            "minLength": 8,
             "type": "string"
           }
         }
@@ -4083,11 +4205,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           }

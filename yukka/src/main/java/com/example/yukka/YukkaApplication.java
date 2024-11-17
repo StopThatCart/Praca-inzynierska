@@ -143,7 +143,7 @@ public class YukkaApplication {
         return args -> {
 		//	roslinaImporterService.seedRosliny();
 			 unseed();
-        	// seed();
+        	 seed();
 		//roslinaSearchTest();
         };
     }
@@ -179,14 +179,14 @@ public class YukkaApplication {
 
 		uzytkownicy = seedUzytkownicy();
 		
-		addPostyWithKomentarze(uzytkownicy);
+		//addPostyWithKomentarze(uzytkownicy);
 		//System.out.println("Dodano posty testowe. Może lepiej dać je potem w batchu.");
 
 		// Path kotPath = Paths.get(obrazSeedPath, "kot.png");
 		// MockMultipartFile obraz1 = new MockMultipartFile("tempFileName", "kot.png", 
 		// "image/png", fileUtils.readFileFromLocation(kotPath));
 
-		seedRozmowy();
+		//seedRozmowy();
 
 		//log.info("Dodawanie specjalnego powiadomienia...");
 		// PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
@@ -197,7 +197,7 @@ public class YukkaApplication {
 		// 		""").build();
 		//powiadomienieService.addSpecjalnePowiadomienie(pow1);
 
-		seedDzialka();
+		//seedDzialka();
 
 	}
 

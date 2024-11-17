@@ -39,7 +39,7 @@ export class AktywacjaKontaComponent {
         this.message = 'Twoje konto zostało aktywowane.\nMożesz się zalogować';
         this.submitted = true;
       },
-      error: () => {
+      error: (error) => {
         this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
         this.submitted = true;
         this.isOkay = false;

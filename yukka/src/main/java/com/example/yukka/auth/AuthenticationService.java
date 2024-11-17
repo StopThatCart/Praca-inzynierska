@@ -23,8 +23,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.yukka.auth.email.EmailService;
 import com.example.yukka.auth.email.EmailTemplateName;
+import com.example.yukka.auth.requests.AuthRequest;
+import com.example.yukka.auth.requests.EmailRequest;
+import com.example.yukka.auth.requests.HasloRequest;
+import com.example.yukka.auth.requests.RegistrationRequest;
+import com.example.yukka.handler.EntityAlreadyExistsException;
 import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 import com.example.yukka.model.uzytkownik.token.Token;
@@ -40,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Transactional
-class AuthenticationService {
+public class AuthenticationService {
     private final UzytkownikRepository uzytkownikRepository;
     private final UzytkownikService uzytkownikService;
     private final PasswordEncoder passwordEncoder;
@@ -49,9 +56,9 @@ class AuthenticationService {
     private final TokenRepository tokenRepository;
     //private final AuthenticationManager authenticationManager;
     private final Neo4JAuthenticationProvider neo4jAuthenticationProvider;
+    private final CommonMapperService commonMapperService;
 
-    @Value("${application.mailing.frontend.activation-url}")
-    private String activationUrl;
+
 
     @Value("${uzytkownik.obraz.default.name}")
     private  String defaultAvatarObrazName;
@@ -63,11 +70,10 @@ class AuthenticationService {
             if(targetUzyt.get().isAktywowany()) {
                 throw new IllegalArgumentException("Aktywny użytkownik o podanej nazwie lub adresie e-mail już istnieje.");
             } else {
-                sendValidationEmail(targetUzyt.get());
+                emailService.sendValidationEmail(targetUzyt.get(), EmailTemplateName.AKTYWACJA_KONTA);
                 return;
             }
         }
-        //var userRole = ROLE.Uzytkownik.toString();
         System.out.println("\n\n\n Request: " + request.toString() + "\n\n\n");
         Uzytkownik uzyt = Uzytkownik.builder()
                 .uzytId(createUzytkownikId())
@@ -75,15 +81,10 @@ class AuthenticationService {
                 .email(request.getEmail())
                 .haslo(passwordEncoder.encode(request.getHaslo()))
                 .avatar(defaultAvatarObrazName)
-                //.dataUtworzenia(LocalDateTime.now())
-                // .banned(false)
-                 //.labels(List.of(userRole))
                 .build();
-       // Ustawienia ust = Ustawienia.builder().build();
 
         uzytkownikService.addUzytkownik(uzyt);
-
-        sendValidationEmail(uzyt);
+        emailService.sendValidationEmail(uzyt, EmailTemplateName.AKTYWACJA_KONTA);
     }
 
     public AuthenticationResponse authenticate(AuthRequest request) {
@@ -121,6 +122,7 @@ class AuthenticationService {
             .build();
     }
 
+
     String createUzytkownikId() {
         String resultId = UUID.randomUUID().toString();
         do { 
@@ -140,8 +142,10 @@ class AuthenticationService {
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono tokenu aktywacyjnego"));
                 
         if (LocalDateTime.now().isAfter(savedToken.getDataWygasniecia())) {
-            sendValidationEmail(savedToken.getUzytkownik());
+            emailService.sendValidationEmail(savedToken.getUzytkownik(), EmailTemplateName.AKTYWACJA_KONTA);
             throw new IllegalArgumentException("Token aktywacyjny wygasł. Wysłano nowy token na ten adres email.");
+        }  else if (savedToken.getDataWalidacji() != null) {
+            throw new IllegalArgumentException("Token aktywacyjny został już użyty.");
         }
 
         var uzyt = uzytkownikRepository.findByEmail(savedToken.getUzytkownik().getEmail())
@@ -154,61 +158,63 @@ class AuthenticationService {
         uzytkownikRepository.activate(uzyt.getEmail());
 
         tokenRepository.validate(token, LocalDateTime.now());
-        //savedToken.setDataWalidacji(LocalDateTime.now());
-        //tokenRepository.save(savedToken);
     }
 
 
-    private String generateAndSaveActivationToken(Uzytkownik uzyt) {
-        log.info("Generowanie i zapis tokena aktywacyjnego dla użytkownika: " + uzyt.getEmail());
-        String generatedToken = generateActivationCode(6);
-        var token = Token.builder()
-                .token(generatedToken)
-                .dataUtworzenia(LocalDateTime.now())
-                .dataWygasniecia(LocalDateTime.now().plusMinutes(15))
-                .build();
-
-        Optional<Token> presentToken = tokenRepository.findByUzytkownikEmail(uzyt.getEmail());
-        if(presentToken.isPresent()) {
-            tokenRepository.removeToken(uzyt.getEmail(), presentToken.get().getToken());
-        }
-
-        tokenRepository.add(uzyt.getEmail(), token.getToken(), token.getDataUtworzenia(), token.getDataWygasniecia(),
-        token.getDataWalidacji());
-
-        return generatedToken;
+    public void sendResetHasloEmail(String email) throws MessagingException {
+        log.info("Wysyłanie e-maila resetowania hasła do: " + email);
+        var uzyt = uzytkownikRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika z podanym adresem email"));
+        emailService.sendValidationEmail(uzyt, EmailTemplateName.RESET_HASLO);
     }
 
-    private void sendValidationEmail(Uzytkownik uzyt) throws MessagingException {
-        log.info("Wysyłanie e-maila aktywacyjnego do: " + uzyt.getEmail());
-        var newToken = generateAndSaveActivationToken(uzyt);
+    @Transactional
+    public void changeHaslo(HasloRequest request) throws MessagingException {
+        log.info("Zmiana hasła tokenem: " + request.getToken());
+        Token savedToken = tokenRepository.findByToken(request.getToken())
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono tokenu aktywacyjnego"));
+                
+        if (LocalDateTime.now().isAfter(savedToken.getDataWygasniecia())) {
+            emailService.sendValidationEmail(savedToken.getUzytkownik(), EmailTemplateName.RESET_HASLO);
+            throw new IllegalArgumentException("Token aktywacyjny wygasł. Wysłano nowy token na ten adres email.");
+        } else if (savedToken.getDataWalidacji() != null) {
+            throw new IllegalArgumentException("Token aktywacyjny został już użyty.");
+        }
 
-        emailService.sendEmail(
-                uzyt.getEmail(),
-                uzyt.getNazwa(),
-                EmailTemplateName.ACTIVATE_ACCOUNT,
-                activationUrl,
-                newToken,
-                "Aktywacja konta"
-                );
+        var uzyt = uzytkownikRepository.findByEmail(savedToken.getUzytkownik().getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika związanego z tokenem aktywacyjnym"));
+
+        if(passwordEncoder.matches(request.getNoweHaslo(), uzyt.getHaslo())) {
+            throw new IllegalArgumentException("Nowe hasło nie może być takie samo jak stare hasło");
+        }
+
+        tokenRepository.validate(request.getToken(), LocalDateTime.now());
+        uzytkownikRepository.updateHaslo(uzyt.getEmail(), passwordEncoder.encode(request.getNoweHaslo()));
+
+        //tokenRepository.removeToken(uzyt.getEmail(), request.getToken());
     }
 
-    private String generateActivationCode(int length) {
-        String characters = "0123456789";
-        StringBuilder codeBuilder = new StringBuilder();
-
-        SecureRandom secureRandom = new SecureRandom();
-
-        for (int i = 0; i < length; i++) {
-            int randomIndex = secureRandom.nextInt(characters.length());
-            codeBuilder.append(characters.charAt(randomIndex));
+    public void changeEmail(String token) throws MessagingException {
+        log.info("Zmiana adresu e-mail tokenem: " + token);
+        Token savedToken = tokenRepository.findByToken(token, EmailTemplateName.ZMIANA_EMAIL.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono tokenu aktywacyjnego"));
+                
+        if (LocalDateTime.now().isAfter(savedToken.getDataWygasniecia())) {
+            emailService.sendValidationEmail(savedToken.getUzytkownik(), EmailTemplateName.ZMIANA_EMAIL);
+            throw new IllegalArgumentException("Token aktywacyjny wygasł. Wysłano nowy token na ten adres email.");
+        } else if (savedToken.getDataWalidacji() != null) {
+            throw new IllegalArgumentException("Token aktywacyjny został już użyty.");
         }
 
-        if (tokenRepository.findByToken(codeBuilder.toString()).isPresent()) {
-            return generateActivationCode(length);
+        var uzyt = uzytkownikRepository.findByEmail(savedToken.getUzytkownik().getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika związanego z tokenem aktywacyjnym"));
+
+        if(uzytkownikRepository.checkIfUzytkownikExists(null, savedToken.getNowyEmail()).isPresent()) {
+            throw new EntityAlreadyExistsException("Użytkownik o podanym adresie e-mail już istnieje.");
         }
 
-        return codeBuilder.toString();
+        tokenRepository.validate(token, LocalDateTime.now());
+        uzytkownikRepository.updateEmail(uzyt.getEmail(), savedToken.getNowyEmail());
     }
 
 }

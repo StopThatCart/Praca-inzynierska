@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { FooterComponent } from './pages/footer/footer.component';
-import { NavbarComponent } from './pages/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
+
 import { SpinnerComponent } from "./services/LoaderSpinner/spinner/spinner.component";
 import { DOCUMENT } from '@angular/common';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',

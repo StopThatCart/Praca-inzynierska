@@ -1,0 +1,45 @@
+<div class="container d-flex justify-content-center align-items-center mt-2">
+  <ng-template class="text-center" #formus>
+    <div class="card mb-5 bg-transparent border-0" style="background: var(--bs-secondary);">
+      <h2 class="text-primary mt-2">Operacja udana!</h2>
+      <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
+      <p class="text-primary">Twoje hasło zostało zmienione.</p>
+      <button class="btn btn-primary" (click)="redirectToLogin()">Przejdź do logowania</button>
+    </div>
+  </ng-template>
+
+  <div class="card mb-5" style="background: var(--bs-secondary);" *ngIf="!isDone; else formus">
+    <div class="card-body p-sm-5">
+        <h3 class="text-center mb-4">Zmień hasło</h3>
+        <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
+        <form method="post">
+          <div class="mb-3" style="max-width: 400px;">
+            <label class="form-label text-white fs-3" for="code">Kod aktywacyjny</label>
+            <code-input [isCodeHidden]="false"
+                        [codeLength]="6"
+                        [code]="'number'"
+                        (codeCompleted)="onCodeCompleted($event)">
+            </code-input>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-white fs-4">Nowe hasło</label>
+            <input [(ngModel)]="request.noweHaslo"
+            class="form-control bg-light text-black" type="password" name="nowe-haslo" placeholder="Obecne hasło" required minlength="8">
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-white fs-4">Powtórz nowe hasło</label>
+            <input [(ngModel)]="request.nowePowtorzHaslo"
+            class="form-control bg-light text-black" type="password" name="nowe-powtorz-haslo" placeholder="Powtórz nowe hasło" required minlength="8">
+          </div>
+          <div>
+            <button (click)="changePassword()"
+            class="btn btn-primary d-block w-100" type="submit">Zmień hasło</button>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+

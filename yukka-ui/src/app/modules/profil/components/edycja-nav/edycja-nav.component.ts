@@ -81,6 +81,12 @@ export class EdycjaNavComponent implements OnInit {
     }
   }
 
+  goToEmailEdycja() {
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      this.router.navigate([`profil/${nazwa}/edycja/email`]);
+    }
+  }
 
 
 }

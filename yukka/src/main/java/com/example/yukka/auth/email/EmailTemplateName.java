@@ -5,7 +5,9 @@ import lombok.Getter;
 @Getter
 public enum EmailTemplateName {
 
-    ACTIVATE_ACCOUNT("aktywacja_konta")
+    AKTYWACJA_KONTA("aktywacja_konta"),
+    RESET_HASLO("reset_haslo"),
+    ZMIANA_EMAIL("zmiana_email")
     ;
 
 

@@ -60,5 +60,9 @@ export class LoginComponent {
     this.router.navigate(['register']);
   }
 
+  redirectToZmianaHasla() {
+    this.router.navigate(['zmiana-hasla-email']);
+  }
+
 
 }

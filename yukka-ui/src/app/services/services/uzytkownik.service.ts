@@ -25,6 +25,8 @@ import { remove } from '../fn/uzytkownik/remove';
 import { Remove$Params } from '../fn/uzytkownik/remove';
 import { removeSelf } from '../fn/uzytkownik/remove-self';
 import { RemoveSelf$Params } from '../fn/uzytkownik/remove-self';
+import { sendZmianaEmail } from '../fn/uzytkownik/send-zmiana-email';
+import { SendZmianaEmail$Params } from '../fn/uzytkownik/send-zmiana-email';
 import { setBanUzytkownik } from '../fn/uzytkownik/set-ban-uzytkownik';
 import { SetBanUzytkownik$Params } from '../fn/uzytkownik/set-ban-uzytkownik';
 import { setBlokUzytkownik } from '../fn/uzytkownik/set-blok-uzytkownik';
@@ -40,6 +42,35 @@ import { UzytkownikResponse } from '../models/uzytkownik-response';
 export class UzytkownikService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `sendZmianaEmail()` */
+  static readonly SendZmianaEmailPath = '/uzytkownicy/send-zmiana-email';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `sendZmianaEmail()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  sendZmianaEmail$Response(params: SendZmianaEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return sendZmianaEmail(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `sendZmianaEmail$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  sendZmianaEmail(params: SendZmianaEmail$Params, context?: HttpContext): Observable<{
+}> {
+    return this.sendZmianaEmail$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
   }
 
   /** Path part for operation `getUstawienia()` */

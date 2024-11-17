@@ -73,7 +73,7 @@ public class SecurityConfig {
                     ).permitAll()
                     .requestMatchers( 
                                     //"/**",
-                                  "/auth/test",
+                                  "/api/auth/test",
                                   "/komentarze/oceny",
                                  // "/posty/oceny",
                                   "/rozmowy/**",

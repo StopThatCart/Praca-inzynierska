@@ -183,6 +183,12 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     Uzytkownik updateUstawienia(@Param("ustawienia") Ustawienia ustawienia, @Param("email") String email);
 
 
+    @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.email = $nowyEmail RETURN u")
+    Uzytkownik updateEmail(@Param("email") String email, @Param("nowyEmail") String nowyEmail);
+
+    @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.haslo = $noweHaslo RETURN u")
+    Uzytkownik updateHaslo(@Param("email") String email, @Param("noweHaslo") String noweHaslo);
+
 
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.avatar = $avatar RETURN u")
     Uzytkownik updateAvatar(@Param("email") String email, @Param("avatar") String avatar);

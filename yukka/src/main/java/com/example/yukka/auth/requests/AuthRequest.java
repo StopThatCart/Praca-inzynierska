@@ -1,4 +1,4 @@
-package com.example.yukka.auth;
+package com.example.yukka.auth.requests;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;

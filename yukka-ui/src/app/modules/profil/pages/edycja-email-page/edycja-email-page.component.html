@@ -1,0 +1,57 @@
+
+<section class="mx-1" style="--bs-body-bg: rgba(255,255,255,0);">
+  <!-- Start: 1 Row 2 Columns -->
+  <div class="container" style="max-width: 800px;">
+    <div class="row gx-3 gy-3 justify-content-center align-items-start">
+      <div class="col-lg-3 d-flex justify-content-center flex-column">
+        <app-edycja-nav></app-edycja-nav>
+      </div>
+      <div class="col-auto col-lg-8">
+        <div class="card mb-5" style="background: var(--bs-secondary);">
+          <div class="card-body p-sm-5">
+            <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
+            <h3 class="text-center mb-4">Zmiana adresu email</h3>
+
+            <form>
+              <div *ngIf="!emailSent; else inputCode">
+                <div class="mb-3">
+                  <label class="form-label text-white">Nowy adres email</label>
+                  <input [(ngModel)]="request.nowyEmail"
+                  class="form-control bg-light text-black" type="email" name="email" placeholder="imie@email.pl">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label text-white">Hasło</label>
+                  <input [(ngModel)]="request.haslo"
+                  class="form-control bg-light text-black" type="password" name="nowe-haslo" placeholder="Obecne hasło" required minlength="8">
+                </div>
+
+                <button
+                (click)="sendEmailCode()"
+                class="btn btn-primary text-uppercase" type="submit">Wyślij</button>
+              </div>
+
+              <ng-template    #inputCode>
+                <div class="mb-3" *ngIf="!isDone" >
+                  <div style="max-width: 400px;">
+                    <label class="form-label text-white fs-5" for="code">Kod aktywacyjny</label>
+                    <code-input [isCodeHidden]="false"
+                                [codeLength]="6"
+                                [code]="'number'"
+                                (codeCompleted)="onCodeCompleted($event)">
+                    </code-input>
+                  </div>
+                  <button (click)="changeEmail()" class="btn btn-primary text-uppercase" type="button">Zmień email</button>
+                  <button (click)="goBack()" class="btn btn-warning text-uppercase me-2" type="button">Powróć</button>
+                </div>
+
+              </ng-template>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

@@ -30,6 +30,12 @@ public class Token {
     @Property("token")
     private String token;
 
+    @Property("typ")
+    private String typ;
+
+    @Property("nowyEmail")
+    private String nowyEmail;
+
     @CreatedDate
     @Property("dataUtworzenia")
     @Builder.Default

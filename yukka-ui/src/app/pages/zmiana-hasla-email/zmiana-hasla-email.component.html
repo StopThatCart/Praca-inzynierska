@@ -1,0 +1,23 @@
+<div class="container d-flex justify-content-center align-items-center mt-2">
+  <div class="card mb-5" style="background: var(--bs-secondary);">
+    <div class="card-body p-sm-5">
+        <h3 class="text-center mb-4">Podaj swój adres email</h3>
+        <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
+        <form method="patch">
+
+          <div class="mb-3">
+            <label class="form-label text-white fs-4">Adres email</label>
+            <input [(ngModel)]="email"
+            class="form-control bg-light text-black" type="email" name="email" placeholder="imie@email.pl">
+          </div>
+          <div>
+            <button (click)="sendZmianaHaslaEmail()"
+            class="btn btn-primary d-block w-100" type="submit">Wyślij</button>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+
+

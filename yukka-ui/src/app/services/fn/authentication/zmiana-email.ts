@@ -7,22 +7,26 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface Confirmus2$Params {
+export interface ZmianaEmail$Params {
+  token: string;
 }
 
-export function confirmus2(http: HttpClient, rootUrl: string, params?: Confirmus2$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, confirmus2.PATH, 'get');
+export function zmianaEmail(http: HttpClient, rootUrl: string, params: ZmianaEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+  const rb = new RequestBuilder(rootUrl, zmianaEmail.PATH, 'post');
   if (params) {
+    rb.query('token', params.token, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<string>;
+      return r as StrictHttpResponse<{
+      }>;
     })
   );
 }
 
-confirmus2.PATH = '/api/auth/testUnprotected';
+zmianaEmail.PATH = '/api/auth/zmiana-email';

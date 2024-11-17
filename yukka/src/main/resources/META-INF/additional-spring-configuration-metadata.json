@@ -98,5 +98,15 @@
     "name": "application.mailing.frontend.activation-url",
     "type": "java.lang.String",
     "description": "A description for 'application.mailing.frontend.activation-url'"
+  },
+  {
+    "name": "application.mailing.frontend.zmiana-haslo-url",
+    "type": "java.lang.String",
+    "description": "A description for 'application.mailing.frontend.zmiana-haslo-url'"
+  },
+  {
+    "name": "application.mailing.frontend.zmiana-email-url",
+    "type": "java.lang.String",
+    "description": "A description for 'application.mailing.frontend.zmiana-email-url'"
   }
 ]}

@@ -1,4 +1,4 @@
-package com.example.yukka.auth;
+package com.example.yukka.auth.requests;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -36,6 +36,7 @@ public class RegistrationRequest {
     private String haslo;
 
     @NotEmpty(message = "Hasła nie zgadzają się")
+    @Size(min = 8, message = "Nowe hasło powinno mieć co najmniej 8 znaków")
     private String powtorzHaslo;
 
     @JsonIgnore

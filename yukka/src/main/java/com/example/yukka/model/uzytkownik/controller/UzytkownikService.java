@@ -14,13 +14,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.yukka.auth.requests.EmailRequest;
+import com.example.yukka.auth.requests.HasloRequest;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.BlockedUzytkownikException;
+import com.example.yukka.handler.EntityAlreadyExistsException;
 import com.example.yukka.handler.EntityNotFoundException;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.social.request.UstawieniaRequest;
@@ -28,8 +32,16 @@ import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 
-import lombok.RequiredArgsConstructor;
+import jakarta.mail.MessagingException;
 
+import com.example.yukka.auth.AuthenticationService;
+import com.example.yukka.auth.email.EmailService;
+import com.example.yukka.auth.email.EmailTemplateName;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -39,10 +51,11 @@ public class UzytkownikService implements  UserDetailsService {
 
     @Autowired
     private final UzytkownikRepository uzytkownikRepository;
-
     private final FileUtils fileUtils;
     private final FileStoreService fileStoreService;
     private final CommonMapperService commonMapperService;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Override
     @Transactional(readOnly = true)
@@ -118,7 +131,26 @@ public class UzytkownikService implements  UserDetailsService {
 
         return commonMapperService.toUzytkownikResponse(uzytkownik);
     }
-    
+
+    public void sendChangeEmail(EmailRequest request, Authentication currentUser) throws MessagingException {
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        log.info("Zmiana emaila użytkownika: " + uzyt.getEmail() + " na " + request.getNowyEmail());
+
+        if(uzyt.getEmail().equals(request.getNowyEmail())) {
+            throw new IllegalArgumentException("Nie można zmienić emaila na obecny email");
+        }
+        Uzytkownik uzyt2 = uzytkownikRepository.findByEmail(uzyt.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika z podanym adresem email"));
+        if(!passwordEncoder.matches(request.getHaslo(), uzyt2.getHaslo())) {
+            throw new IllegalArgumentException("Podane hasło jest nieprawidłowe");
+        }
+
+        if(uzytkownikRepository.findByEmail(request.getNowyEmail()).isPresent()) {
+            throw new EntityAlreadyExistsException("Użytkownik o podanym emailu już istnieje");
+        }
+
+        emailService.sendValidationEmail(uzyt, request.getNowyEmail(), EmailTemplateName.ZMIANA_EMAIL);
+    }
 
     public UzytkownikResponse updateUzytkownikAvatar(MultipartFile file, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();

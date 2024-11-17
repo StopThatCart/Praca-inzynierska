@@ -14,6 +14,7 @@ import { EdycjaProfilPageComponent } from './pages/edycja-profil-page/edycja-pro
 import { EdycjaAvatarPageComponent } from './pages/edycja-avatar-page/edycja-avatar-page.component';
 import { ProfilPostyPageComponent } from './pages/profil-posty-page/profil-posty-page.component';
 import { ProfilKomentarzePageComponent } from './pages/profil-komentarze-page/profil-komentarze-page.component';
+import { EdycjaEmailPageComponent } from './pages/edycja-email-page/edycja-email-page.component';
 
 const routes: Routes = [
   {
@@ -69,6 +70,11 @@ const routes: Routes = [
                 path: 'avatar',
                 component: EdycjaAvatarPageComponent,
                 data: { breadcrumb: `Edycja avataru` }
+              },
+              {
+                path: 'email',
+                component: EdycjaEmailPageComponent,
+                data: { breadcrumb: `Zmiana adresu email` }
               }
             ]
           },

@@ -6,6 +6,8 @@ import { Post } from './services/models/post';
 import { ProfilModule } from './modules/profil/profil.module';
 import { loggedInGuard } from './services/guard/loggedIn/logged-in.guard';
 import { AktywacjaKontaComponent } from './pages/aktywacja-konta/aktywacja-konta.component';
+import { ZmianaHaslaComponent } from './pages/zmiana-hasla/zmiana-hasla.component';
+import { ZmianaHaslaEmailComponent } from './pages/zmiana-hasla-email/zmiana-hasla-email.component';
 
 export const routes: Routes = [
   { path: '', component: IndeksusComponent },
@@ -26,6 +28,18 @@ export const routes: Routes = [
     component: AktywacjaKontaComponent,
     canActivate: [loggedInGuard],
     data: { breadcrumb: 'Aktywacja konta' }
+  },
+  {
+    path: 'zmiana-hasla',
+    component: ZmianaHaslaComponent,
+    canActivate: [loggedInGuard],
+    data: { breadcrumb: 'Reset hasła' }
+  },
+  {
+    path: 'zmiana-hasla-email',
+    component: ZmianaHaslaEmailComponent,
+    canActivate: [loggedInGuard],
+    data: { breadcrumb: 'Reset hasła' }
   },
   {
     path: 'rosliny',

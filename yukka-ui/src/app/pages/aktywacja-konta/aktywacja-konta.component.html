@@ -2,7 +2,6 @@
   <div class="text-center" *ngIf="isOkay; else activationError">
     <h2 class="text-primary mt-2">Aktywacja udana!</h2>
     <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
-    <p class="text-primary">Twoje konto zostało aktywowane.</p>
     <button class="btn btn-primary" (click)="redirectToLogin()">Przejdź do logowania</button>
   </div>
 
@@ -23,7 +22,6 @@
                   [code]="'number'"
                   (codeCompleted)="onCodeCompleted($event)">
       </code-input>
-      <button class="btn btn-primary mt-3" (click)="redirectToLogin()">Przejdź do logowania</button>
     </div>
   </div>
 </ng-template>

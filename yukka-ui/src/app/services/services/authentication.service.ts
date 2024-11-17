@@ -12,21 +12,110 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { AuthenticationResponse } from '../models/authentication-response';
 import { confirm } from '../fn/authentication/confirm';
 import { Confirm$Params } from '../fn/authentication/confirm';
-import { confirmus } from '../fn/authentication/confirmus';
-import { Confirmus$Params } from '../fn/authentication/confirmus';
-import { confirmus2 } from '../fn/authentication/confirmus-2';
-import { Confirmus2$Params } from '../fn/authentication/confirmus-2';
 import { login } from '../fn/authentication/login';
 import { Login$Params } from '../fn/authentication/login';
 import { refreshToken } from '../fn/authentication/refresh-token';
 import { RefreshToken$Params } from '../fn/authentication/refresh-token';
 import { register } from '../fn/authentication/register';
 import { Register$Params } from '../fn/authentication/register';
+import { zmianaEmail } from '../fn/authentication/zmiana-email';
+import { ZmianaEmail$Params } from '../fn/authentication/zmiana-email';
+import { zmianaHasla } from '../fn/authentication/zmiana-hasla';
+import { ZmianaHasla$Params } from '../fn/authentication/zmiana-hasla';
+import { zmianaHaslaEmail } from '../fn/authentication/zmiana-hasla-email';
+import { ZmianaHaslaEmail$Params } from '../fn/authentication/zmiana-hasla-email';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `zmianaHasla()` */
+  static readonly ZmianaHaslaPath = '/api/auth/zmiana-hasla';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `zmianaHasla()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  zmianaHasla$Response(params: ZmianaHasla$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return zmianaHasla(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `zmianaHasla$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  zmianaHasla(params: ZmianaHasla$Params, context?: HttpContext): Observable<{
+}> {
+    return this.zmianaHasla$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
+  }
+
+  /** Path part for operation `zmianaHaslaEmail()` */
+  static readonly ZmianaHaslaEmailPath = '/api/auth/zmiana-hasla-email/{email}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `zmianaHaslaEmail()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  zmianaHaslaEmail$Response(params: ZmianaHaslaEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return zmianaHaslaEmail(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `zmianaHaslaEmail$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  zmianaHaslaEmail(params: ZmianaHaslaEmail$Params, context?: HttpContext): Observable<{
+}> {
+    return this.zmianaHaslaEmail$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
+  }
+
+  /** Path part for operation `zmianaEmail()` */
+  static readonly ZmianaEmailPath = '/api/auth/zmiana-email';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `zmianaEmail()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  zmianaEmail$Response(params: ZmianaEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return zmianaEmail(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `zmianaEmail$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  zmianaEmail(params: ZmianaEmail$Params, context?: HttpContext): Observable<{
+}> {
+    return this.zmianaEmail$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
   }
 
   /** Path part for operation `register()` */
@@ -105,56 +194,6 @@ export class AuthenticationService extends BaseService {
   login(params: Login$Params, context?: HttpContext): Observable<AuthenticationResponse> {
     return this.login$Response(params, context).pipe(
       map((r: StrictHttpResponse<AuthenticationResponse>): AuthenticationResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `confirmus()` */
-  static readonly ConfirmusPath = '/api/auth/test';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `confirmus()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  confirmus$Response(params?: Confirmus$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return confirmus(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `confirmus$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  confirmus(params?: Confirmus$Params, context?: HttpContext): Observable<string> {
-    return this.confirmus$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
-  }
-
-  /** Path part for operation `confirmus2()` */
-  static readonly Confirmus2Path = '/api/auth/testUnprotected';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `confirmus2()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  confirmus2$Response(params?: Confirmus2$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return confirmus2(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `confirmus2$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  confirmus2(params?: Confirmus2$Params, context?: HttpContext): Observable<string> {
-    return this.confirmus2$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 
