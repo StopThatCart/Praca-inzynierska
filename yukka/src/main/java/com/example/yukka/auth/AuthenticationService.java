@@ -141,12 +141,12 @@ public class AuthenticationService {
         Token savedToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono tokenu aktywacyjnego"));
                 
-        if (LocalDateTime.now().isAfter(savedToken.getDataWygasniecia())) {
+        if (savedToken.getDataWalidacji() != null) {
+            throw new IllegalArgumentException("Token aktywacyjny został już użyty.");
+        } else if (LocalDateTime.now().isAfter(savedToken.getDataWygasniecia())) {
             emailService.sendValidationEmail(savedToken.getUzytkownik(), EmailTemplateName.AKTYWACJA_KONTA);
             throw new IllegalArgumentException("Token aktywacyjny wygasł. Wysłano nowy token na ten adres email.");
-        }  else if (savedToken.getDataWalidacji() != null) {
-            throw new IllegalArgumentException("Token aktywacyjny został już użyty.");
-        }
+        }  
 
         var uzyt = uzytkownikRepository.findByEmail(savedToken.getUzytkownik().getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika związanego z tokenem aktywacyjnym"));
@@ -174,11 +174,11 @@ public class AuthenticationService {
         Token savedToken = tokenRepository.findByToken(request.getToken())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono tokenu aktywacyjnego"));
                 
-        if (LocalDateTime.now().isAfter(savedToken.getDataWygasniecia())) {
+        if (savedToken.getDataWalidacji() != null) {
+            throw new IllegalArgumentException("Token aktywacyjny został już użyty.");
+        } else if (LocalDateTime.now().isAfter(savedToken.getDataWygasniecia())) {
             emailService.sendValidationEmail(savedToken.getUzytkownik(), EmailTemplateName.RESET_HASLO);
             throw new IllegalArgumentException("Token aktywacyjny wygasł. Wysłano nowy token na ten adres email.");
-        } else if (savedToken.getDataWalidacji() != null) {
-            throw new IllegalArgumentException("Token aktywacyjny został już użyty.");
         }
 
         var uzyt = uzytkownikRepository.findByEmail(savedToken.getUzytkownik().getEmail())
@@ -199,11 +199,11 @@ public class AuthenticationService {
         Token savedToken = tokenRepository.findByToken(token, EmailTemplateName.ZMIANA_EMAIL.getName())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono tokenu aktywacyjnego"));
                 
-        if (LocalDateTime.now().isAfter(savedToken.getDataWygasniecia())) {
+        if (savedToken.getDataWalidacji() != null) {
+            throw new IllegalArgumentException("Token aktywacyjny został już użyty.");
+        } else if (LocalDateTime.now().isAfter(savedToken.getDataWygasniecia())) {
             emailService.sendValidationEmail(savedToken.getUzytkownik(), EmailTemplateName.ZMIANA_EMAIL);
             throw new IllegalArgumentException("Token aktywacyjny wygasł. Wysłano nowy token na ten adres email.");
-        } else if (savedToken.getDataWalidacji() != null) {
-            throw new IllegalArgumentException("Token aktywacyjny został już użyty.");
         }
 
         var uzyt = uzytkownikRepository.findByEmail(savedToken.getUzytkownik().getEmail())
