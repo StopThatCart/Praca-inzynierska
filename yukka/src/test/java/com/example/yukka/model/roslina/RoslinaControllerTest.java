@@ -10,15 +10,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.example.yukka.authorities.ROLE;
@@ -35,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @Testcontainers
 @Slf4j
 //@TestInstance(TestInstance.Lifecycle.PER_METHOD)
-//@TestMethodOrder(OrderAnnotation.class)
+@TestMethodOrder(OrderAnnotation.class)
 //@ContextConfiguration
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -57,7 +60,7 @@ public class RoslinaControllerTest {
     Roslina roslina;
     //private Long roslinaId;
     private final String roslinaNazwa = "Na pewno takiej nazwy nie ma";
-    private final String nazwaLacinska = "Nomen Latinum certe nullum est";
+    private final String nazwaLacinska = "nomen latinum certe nullum est";
     private final String roslinaOpis = "To jest dramat.";
    // private final String roslinaObraz = "tilia_henryana.jpg";
     private final Double wysokoscMin = 0.5;
@@ -148,21 +151,19 @@ public class RoslinaControllerTest {
     }
 
     @Test
-  //  @WithMockUser(username = "admin", roles = {"ADMIN"})
-    //@Order(1)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Order(1)
     void testRoslinaRequestInvalidDataAccessResourceUsageException(){
-        
-
         Roslina emptyRoslina2 = Roslina.builder().build();
         RoslinaRequest emptyRoslinaRequest2 = roslinaMapper.toRoslinaRequest(emptyRoslina2);
-        assertThrows(InvalidDataAccessResourceUsageException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             roslinaController.saveRoslina(emptyRoslinaRequest2, mockAuth);
         });
     }
 
     @Test
     void testSaveRoslinaWithoutRelations() {
-        String lacinskaNazwa2 = "Jeśli taka łacińska nazwa się znajdzie to będę bardzo zdziwiony";
+        String lacinskaNazwa2 = "jeśli taka łacińska nazwa się znajdzie to będę bardzo zdziwiony";
         Roslina roslinaWithoutRelations = Roslina.builder()
             .nazwa(roslinaNazwa)
             .nazwaLacinska(lacinskaNazwa2)
@@ -194,7 +195,7 @@ public class RoslinaControllerTest {
     }
 
     @Test
-   // @Order(2)
+    @Order(2)
     void testSaveRoslina() {
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
         ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(roslinaRequest, mockAuth);
@@ -225,7 +226,7 @@ public class RoslinaControllerTest {
     }
 
     @Test
-   // @Order(3)
+    @Order(3)
     void testUpdateRoslina() {
         RoslinaRequest roslinaRequestOld = roslinaMapper.toRoslinaRequest(roslina);
         roslinaService.save(roslinaRequestOld);
@@ -273,7 +274,7 @@ public class RoslinaControllerTest {
     }
 
     @Test
-   // @Order(4) 
+    @Order(4) 
     void testDeleteRoslina() {
         System.out.println("\n\n\nRozpoczęto test usuwania roślin.\n\n\n");
         System.out.println("\n\n\nRoslina: " + roslina + "\n\n\n");

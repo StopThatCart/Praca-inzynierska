@@ -39,12 +39,12 @@ public class UzytkownikRoslinaController {
     private final UzytkownikRoslinaService uzytkownikRoslinaService;
   //  private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
 
-    @GetMapping(value = "/{roslinaId}", produces="application/json")
-    public ResponseEntity<Roslina> findUzytkownikRoslinaByRoslinaId(
-        @PathVariable("roslinaId") String roslinaId, 
-            Authentication connectedUser) {
-        return ResponseEntity.ok(uzytkownikRoslinaService.findByRoslinaId(roslinaId).orElse(null));
-    }
+    // @GetMapping(value = "/{roslinaId}", produces="application/json")
+    // public ResponseEntity<Roslina> findUzytkownikRoslinaByRoslinaId(
+    //     @PathVariable("roslinaId") String roslinaId, 
+    //         Authentication connectedUser) {
+    //     return ResponseEntity.ok(uzytkownikRoslinaService.findByRoslinaId(roslinaId).orElse(null));
+    // }
 
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllRosliny(
@@ -89,17 +89,17 @@ public class UzytkownikRoslinaController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     
-    @DeleteMapping("/{roslinaId}")
-    public ResponseEntity<String> deleteRoslina(@PathVariable String roslinaId) {
-        Optional<Roslina> roslina = uzytkownikRoslinaService.findByRoslinaId(roslinaId);
+    // @DeleteMapping("/{roslinaId}")
+    // public ResponseEntity<String> deleteRoslina(@PathVariable String roslinaId) {
+    //     Optional<Roslina> roslina = uzytkownikRoslinaService.findByRoslinaId(roslinaId);
 
-        if (roslina.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nie znaleziono rośliny o nazwie łacińskiej - " + roslinaId);
-        }
+    //     if (roslina.isEmpty()) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nie znaleziono rośliny o nazwie łacińskiej - " + roslinaId);
+    //     }
 
-        uzytkownikRoslinaService.deleteByRoslinaId(roslinaId);
+    //     uzytkownikRoslinaService.deleteByRoslinaId(roslinaId);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usunięto rośline o nazwie łacińskiej - " + roslinaId);
-    }
+    //     return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usunięto rośline o nazwie łacińskiej - " + roslinaId);
+    // }
     
 }

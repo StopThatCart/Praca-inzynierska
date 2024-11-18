@@ -13,19 +13,17 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import com.example.yukka.authorities.ROLE;
 import com.example.yukka.model.dzialka.ZasadzonaNa;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
-import lombok.Builder;
 @Node
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,8 +42,6 @@ public class Roslina {
 
     @Property("roslinaId")
     private String roslinaId;
-
-
 
     @Property("nazwa")
     private String nazwa;

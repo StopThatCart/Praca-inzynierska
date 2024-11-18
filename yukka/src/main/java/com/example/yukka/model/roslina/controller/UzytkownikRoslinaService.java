@@ -28,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UzytkownikRoslinaService {
     private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
+    private final RoslinaRepository roslinaRepository;
+    private final RoslinaService roslinaService;
 
     @SuppressWarnings("unused")
     private final FileUtils fileUtils;
@@ -64,7 +66,7 @@ public class UzytkownikRoslinaService {
     public Roslina save(UzytkownikRoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
-        Optional<Roslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
+        Optional<Roslina> roslina = roslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
             System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
@@ -76,7 +78,7 @@ public class UzytkownikRoslinaService {
         }
 
         return uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(),
-            request.getNazwa(), createRoslinaId(),
+            request.getNazwa(), roslinaService.createRoslinaId(),
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosciAsMap());
@@ -87,7 +89,7 @@ public class UzytkownikRoslinaService {
     public Roslina save(UzytkownikRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
 
-        Optional<Roslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
+        Optional<Roslina> roslina = roslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
             System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
@@ -108,7 +110,7 @@ public class UzytkownikRoslinaService {
 
     public Roslina save(UzytkownikRoslinaRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Optional<Roslina> roslina = uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId());
+        Optional<Roslina> roslina = roslinaRepository.findByRoslinaId(request.getRoslinaId());
         if (roslina.isPresent()) {
             System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
             return null;
@@ -123,7 +125,7 @@ public class UzytkownikRoslinaService {
         }
         Roslina ros = uzytkownikRoslinaRepository.addRoslina(
             uzyt.getUzytId(),
-            request.getNazwa(), createRoslinaId(),
+            request.getNazwa(), roslinaService.createRoslinaId(),
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosciAsMap());
@@ -150,7 +152,7 @@ public class UzytkownikRoslinaService {
 
 
     public void uploadUzytkownikRoslinaObraz(MultipartFile file, Authentication connectedUser, String roslinaId) {
-        Roslina roslina = uzytkownikRoslinaRepository.findByRoslinaId(roslinaId).orElse(null);
+        Roslina roslina = roslinaRepository.findByRoslinaId(roslinaId).orElse(null);
         if (roslina == null) {
             return;
         }
@@ -169,26 +171,5 @@ public class UzytkownikRoslinaService {
         uzytkownikRoslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getObraz(), roslina.getWysokoscMin(), roslina.getWysokoscMax());
     }
 
-
-    public void deleteByRoslinaId(String roslinaId) {
-        Roslina roslina = uzytkownikRoslinaRepository.findByRoslinaId(roslinaId).orElse(null);
-        if (roslina == null) {
-            return;
-        }
-        uzytkownikRoslinaRepository.deleteByRoslinaId(roslinaId);
-    }
-
-
-
-    public String createRoslinaId() {
-        String resultId = UUID.randomUUID().toString();
-        do { 
-            Optional<Roslina> kom =uzytkownikRoslinaRepository.findByRoslinaId(resultId);
-            if(kom.isEmpty()){
-                break;
-            }
-            resultId = UUID.randomUUID().toString();
-        } while (true);
-        return resultId;
-    }
+    
 }

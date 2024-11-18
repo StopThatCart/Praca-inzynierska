@@ -23,11 +23,11 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, L
     Optional<Roslina> findByRoslinaIdWithRelations(@Param("roslinaId") String roslinaId);
 
 
-    @Query("""
-        MATCH (ros:UzytkownikRoslina{roslinaId: $roslinaId})
-        RETURN ros
-    """)
-    Optional<Roslina> findByRoslinaId(@Param("roslinaId") String roslinaId);
+    // @Query("""
+    //     MATCH (ros:UzytkownikRoslina{roslinaId: $roslinaId})
+    //     RETURN ros
+    // """)
+    // Optional<Roslina> findByRoslinaId(@Param("roslinaId") String roslinaId);
 
     @Query(value = """
         MATCH (roslina:UzytkownikRoslina)-[:STWORZONA_PRZEZ]->(uzytkownik:Uzytkownik{uzytId: $uzytId})

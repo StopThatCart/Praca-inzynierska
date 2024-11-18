@@ -1,9 +1,9 @@
 package com.example.yukka.model.roslina.controller;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,11 @@ import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwosciRodzaje;
 
-import io.micrometer.common.lang.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class RoslinaService {
     @Autowired
     RoslinaRepository roslinaRepository;
@@ -44,24 +45,26 @@ public class RoslinaService {
     @Autowired
     FileUtils fileUtils;
 
+
+
     @Autowired
     RoslinaMapper roslinaMapper;
 
     @Value("${roslina.obraz.default.name}")
     private String defaultRoslinaObrazName;
 
-    public Collection<Roslina> getSome(int amount) {
-        System.out.println("BOOOOOOOOOI " + amount);
-        Collection<Roslina> beep = roslinaRepository.getSomePlants(amount);
-        Iterable<Roslina> properties = beep;
-        for (Roslina property : properties) {
-            System.out.println(property.getNazwa());
-            System.out.println(property.getGleby());
+    // public Collection<Roslina> getSome(int amount) {
+    //     System.out.println("BOOOOOOOOOI " + amount);
+    //     Collection<Roslina> beep = roslinaRepository.getSomePlants(amount);
+    //     Iterable<Roslina> properties = beep;
+    //     for (Roslina property : properties) {
+    //         System.out.println(property.getNazwa());
+    //         System.out.println(property.getGleby());
             
-        }
+    //     }
 
-        return roslinaRepository.getSomePlants(2);
-    }
+    //     return roslinaRepository.getSomePlants(2);
+    // }
 
     @Transactional(readOnly = true)
     public PageResponse<RoslinaResponse> findAllRosliny(int page, int size) {
@@ -122,6 +125,13 @@ public class RoslinaService {
     }
 
     @Transactional(readOnly = true)
+    public RoslinaResponse findByRoslinaId(String id) {
+        Roslina ros = roslinaRepository.findByRoslinaId(id)
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o roslinaId: " + id));
+        return roslinaMapper.toRoslinaResponse(ros);
+    }
+
+    @Transactional(readOnly = true)
     public RoslinaResponse findByNazwaLacinska(String nazwaLacinska) {
         Roslina ros = roslinaRepository.findByNazwaLacinskaWithWlasciwosci(nazwaLacinska)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
@@ -143,6 +153,7 @@ public class RoslinaService {
 
     public Roslina save(RoslinaRequest request) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
+        request.setRoslinaId(createRoslinaId());
         Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
             throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje.");
@@ -152,11 +163,14 @@ public class RoslinaService {
             Roslina pl = roslinaMapper.toRoslina(request);
             return roslinaRepository.addRoslina(pl);
         }
+        
 
         System.out.println("\n\n\n Nazwa: " + request.getNazwa() + "\n\n\n");
-        System.out.println("\n\n\n Relacje: " + request.getWlasciwosciAsMap() + "\n\n\n");
+        System.out.println("\n\n\n roslinaId: " + request.getRoslinaId() + "\n\n\n");
+       // System.out.println("\n\n\n Relacje: " + request.getWlasciwosciAsMap() + "\n\n\n");
 
         return roslinaRepository.addRoslina(
+            request.getRoslinaId(),
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
@@ -165,6 +179,7 @@ public class RoslinaService {
 
     public Roslina save(RoslinaRequest request, MultipartFile file) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
+        request.setRoslinaId(createRoslinaId());
         Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
             throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje.");
@@ -178,6 +193,7 @@ public class RoslinaService {
             return ros;
         }
         Roslina ros = roslinaRepository.addRoslina(
+            request.getRoslinaId(),
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
@@ -188,6 +204,7 @@ public class RoslinaService {
 
     public Roslina saveSeededRoslina(RoslinaRequest request, MultipartFile file) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
+        request.setRoslinaId(createRoslinaId());
         Roslina pl = roslinaMapper.toRoslina(request);
         
         String leObraz = fileStoreService.saveSeededRoslina(file, request.getObraz());
@@ -197,6 +214,7 @@ public class RoslinaService {
             return ros;
         }
         Roslina ros = roslinaRepository.addRoslina(
+            request.getRoslinaId(),
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
@@ -262,11 +280,33 @@ public class RoslinaService {
      * @param nazwaLacinska
      */
     public void deleteByNazwaLacinska(String nazwaLacinska) {
-        Roslina roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska)
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
-        
-        fileUtils.deleteObraz(roslina.getObraz());
-        roslinaRepository.deleteByNazwaLacinska(nazwaLacinska);
+        roslinaRepository.findByNazwaLacinska(nazwaLacinska).ifPresent(
+            roslina -> {
+                fileUtils.deleteObraz(roslina.getObraz());
+                roslinaRepository.deleteByNazwaLacinska(nazwaLacinska);
+            }
+        );
+    }
+
+    public void deleteByRoslinaId(String roslinaId) {
+       Optional<Roslina> roslina = roslinaRepository.findByRoslinaId(roslinaId);
+        if(roslina.isPresent()) {
+            fileUtils.deleteObraz(roslina.get().getObraz());
+            roslinaRepository.deleteByRoslinaId(roslinaId);
+        }
+    }
+
+
+    public String createRoslinaId() {
+        String resultId = UUID.randomUUID().toString();
+        do { 
+            Optional<Roslina> kom = roslinaRepository.findByRoslinaId(resultId);
+            if(kom.isEmpty()){
+                break;
+            }
+            resultId = UUID.randomUUID().toString();
+        } while (true);
+        return resultId;
     }
 
 

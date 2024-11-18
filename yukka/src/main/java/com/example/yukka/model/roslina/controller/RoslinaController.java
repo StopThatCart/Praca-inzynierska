@@ -29,21 +29,18 @@ import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 
 @RestController
 @RequestMapping("rosliny")
 @Tag(name = "Roslina")
+@RequiredArgsConstructor
 public class RoslinaController {
 
-    @Autowired
-    RoslinaService roslinaService;
-
-    @Autowired
-    RoslinaRepository roslinaRepository;
-
-    @Autowired
-    RoslinaMapper roslinaMapper;
+    private final RoslinaService roslinaService;
+    private final RoslinaRepository roslinaRepository;
+    private final RoslinaMapper roslinaMapper;
 
     /*
     @GetMapping(produces="application/json")
@@ -63,14 +60,7 @@ public class RoslinaController {
             @RequestBody RoslinaRequest request) {
         return ResponseEntity.ok(roslinaService.findAllRoslinyWithParameters(page, size, request));
     }
-/* 
-    @GetMapping
-    public Collection<Roslina> getSome() {
-        System.out.println("COOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n\n");
-        int amount = 1;
-        return roslinaService.getSome(amount);
-    }
-*/
+
     @GetMapping(value = "/wlasciwosci", produces="application/json")
     public ResponseEntity<Set<WlasciwoscResponse>> getWlasciwosciWithRelations() {
         Set<WlasciwoscResponse> response = roslinaService.getWlasciwosciWithRelations();
@@ -79,14 +69,17 @@ public class RoslinaController {
 
     @GetMapping(value = "/nazwa-lacinska/{nazwa-lacinska}", produces="application/json")
     public ResponseEntity<RoslinaResponse> findByNazwaLacinska(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
-     //   String nazwaLacinska = URLDecoder.decode(encodedNazwaLacinska, StandardCharsets.UTF_8);
         return ResponseEntity.ok(roslinaService.findByNazwaLacinska(nazwaLacinska.toLowerCase()));
     }
 
     @GetMapping(value = "/id/{id}", produces="application/json")
     public ResponseEntity<RoslinaResponse> findById(@PathVariable("id") Long id) {
-     //   String nazwaLacinska = URLDecoder.decode(encodedNazwaLacinska, StandardCharsets.UTF_8);
         return ResponseEntity.ok(roslinaService.findById(id));
+    }
+
+    @GetMapping(value = "/roslina-id/{roslina-id}", produces="application/json")
+    public ResponseEntity<RoslinaResponse> findByRoslinaId(@PathVariable("roslina-id") String id) {
+        return ResponseEntity.ok(roslinaService.findByRoslinaId(id));
     }
 
     @PostMapping(consumes="application/json", produces="application/json")

@@ -1,6 +1,5 @@
 package com.example.yukka.model.roslina.controller;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +39,13 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     """)
     @Override
     Optional<Roslina> findById(@Param("id") Long id);
+
+    @Query("""
+        MATCH (roslina:Roslina {roslinaId: $roslinaId})
+        OPTIONAL MATCH (roslina)-[r:STWORZONA_PRZEZ]->(u:Uzytkownik)
+        RETURN roslina, r, u
+    """)
+    Optional<Roslina> findByRoslinaId(@Param("roslinaId") String roslinaId);
 
     @Query("""
         MATCH (roslina:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT roslina:UzytkownikRoslina
@@ -310,15 +316,8 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         @Param("zimozielonosci") Set<Wlasciwosc> zimozielonosci,
         Pageable pageable);
 
-    // Do wyrzucenia
-    @Query("MATCH path=(p:Roslina)-[r]->(g:Wlasciwosc) WHERE NOT p:UzytkownikRoslina RETURN p, collect(nodes(path)), collect(relationships(path)) LIMIT $amount")
-    Collection<Roslina> getSomePlants(@Param("amount") int amount);
-    // Do wyrzucenia
-    @Query("MATCH (r:Roslina)-[:MA_GLEBE]->(g:Gleba) WHERE NOT r:UzytkownikRoslina AND r.nazwa = $nazwa RETURN r, collect(g) as glebus")
-    Roslina findRoslinaWithGleba(@Param("nazwa") String nazwa);
-
     @Query("""
-        MERGE (p:Roslina {nazwa: $name, nazwaLacinska: toLower($latinName), opis: $description, 
+        MERGE (p:Roslina {roslinaId: $roslinaId, nazwa: $name, nazwaLacinska: toLower($latinName), opis: $description, 
         obraz: COALESCE($obraz, 'default_plant.jpg'), wysokoscMin: $heightMin, wysokoscMax: $heightMax}) 
 
         WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
@@ -333,6 +332,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
     Roslina addRoslina(
+        @Param("roslinaId") String roslinaId,
         @Param("name") String name, @Param("latinName") String latinName, 
         @Param("description") String description, 
         @Param("obraz") String obraz, 
@@ -343,6 +343,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     @Query("""
         WITH $roslina.__properties__ AS rp 
         MERGE (p:Roslina {
+        roslinaId: rp.roslinaId, 
         nazwa: rp.nazwa, 
         nazwaLacinska: toLower(rp.nazwaLacinska), 
         opis: rp.opis, 
@@ -471,5 +472,15 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
             DELETE wlasciwosc
             """)
     void deleteByNazwaLacinska(@Param("latinName") String latinName);
+
+    @Query("""
+            MATCH (p:Roslina{roslinaId: roslinaId})
+            DETACH DELETE p
+
+            WITH p 
+            MATCH (wlasciwosc:Wlasciwosc) WHERE NOT (wlasciwosc)--()
+            DELETE wlasciwosc
+            """)
+    void deleteByRoslinaId(@Param("roslinaId") String roslinaId);
 
 }

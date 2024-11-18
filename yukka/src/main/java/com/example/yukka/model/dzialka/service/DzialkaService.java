@@ -169,7 +169,7 @@ public class DzialkaService {
         String nazwaLacinskaOrId;
 
         if(request.getRoslinaId() != null) {
-            uzytkownikRoslinaRepository.findByRoslinaId(request.getRoslinaId())
+            roslinaRepository.findByRoslinaId(request.getRoslinaId())
             .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rośliny użytkownika o roslinaId: " + request.getNazwaLacinska()));
             nazwaLacinskaOrId = request.getRoslinaId();
         } else if (request.getNazwaLacinska() != null) {

@@ -141,7 +141,7 @@ public class YukkaApplication {
 	@Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
-		//	roslinaImporterService.seedRosliny();
+			roslinaImporterService.seedRosliny();
 			 unseed();
         	 seed();
 		//roslinaSearchTest();
@@ -197,7 +197,7 @@ public class YukkaApplication {
 		// 		""").build();
 		//powiadomienieService.addSpecjalnePowiadomienie(pow1);
 
-		//seedDzialka();
+		seedDzialka();
 
 	}
 
