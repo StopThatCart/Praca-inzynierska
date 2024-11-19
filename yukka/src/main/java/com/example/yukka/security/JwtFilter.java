@@ -10,6 +10,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.example.yukka.handler.BannedUzytkownikException;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 
 import jakarta.annotation.Nonnull;
@@ -54,6 +56,13 @@ public class JwtFilter extends OncePerRequestFilter {
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             if (jwtService.isTokenValid(jwt, userDetails)) {
+                Uzytkownik uzytkownik = (Uzytkownik) userDetails;
+                if (uzytkownik.isBan()) {
+                    throw new BannedUzytkownikException("Użytkownik jest zbanowany");
+                   // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                   // return;
+                }
+
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

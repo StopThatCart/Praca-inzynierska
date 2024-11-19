@@ -132,7 +132,7 @@ export class TokenService {
       hasRights = this.nazwa === targetUzyt.nazwa;
     }
     return hasRights;
-}
+  }
 
   hasAuthenticationRights(targetUzytNazwa: string): boolean {
     if(this.isAdmin()) {
@@ -142,8 +142,6 @@ export class TokenService {
     } else {
         return this.nazwa === targetUzytNazwa;
     }
-}
-
-
+  }
 
 }
