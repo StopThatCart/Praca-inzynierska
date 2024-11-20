@@ -6,16 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AuthenticationResponse } from '../../models/authentication-response';
+import { RoslinaResponse } from '../../models/roslina-response';
 
-export interface RefreshToken$Params {
-  token: string;
+export interface FindByRoslinaId$Params {
+  'roslina-id': string;
 }
 
-export function refreshToken(http: HttpClient, rootUrl: string, params: RefreshToken$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResponse>> {
-  const rb = new RequestBuilder(rootUrl, refreshToken.PATH, 'post');
+export function findByRoslinaId(http: HttpClient, rootUrl: string, params: FindByRoslinaId$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+  const rb = new RequestBuilder(rootUrl, findByRoslinaId.PATH, 'get');
   if (params) {
-    rb.query('token', params.token, {});
+    rb.path('roslina-id', params['roslina-id'], {});
   }
 
   return http.request(
@@ -23,9 +23,9 @@ export function refreshToken(http: HttpClient, rootUrl: string, params: RefreshT
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<AuthenticationResponse>;
+      return r as StrictHttpResponse<RoslinaResponse>;
     })
   );
 }
 
-refreshToken.PATH = '/api/auth/refresh-token';
+findByRoslinaId.PATH = '/rosliny/roslina-id/{roslina-id}';

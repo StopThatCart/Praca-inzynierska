@@ -115,11 +115,15 @@ public class YukkaApplication {
 	String piotrEmail = "piotr@email.pl";
 	String katarzynaEmail = "katarzyna@email.pl";
 
+	String niegrzecznyEmail = "bad@email.pl";
+
 	Uzytkownik usJan;
 	Uzytkownik usPrac;
 	Uzytkownik usPiotr;
 	Uzytkownik usKatarzyna;
 	Uzytkownik usMichal;
+
+	Uzytkownik usNiegrzeczny;
 
 	List<Uzytkownik> uzytkownicy;
 
@@ -141,7 +145,7 @@ public class YukkaApplication {
 	@Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
-			roslinaImporterService.seedRosliny();
+			//roslinaImporterService.seedRosliny();
 			 unseed();
         	 seed();
 		//roslinaSearchTest();
@@ -197,7 +201,7 @@ public class YukkaApplication {
 		// 		""").build();
 		//powiadomienieService.addSpecjalnePowiadomienie(pow1);
 
-		seedDzialka();
+		//seedDzialka();
 
 	}
 
@@ -386,11 +390,19 @@ public class YukkaApplication {
 		.aktywowany(true)
         .build();
 
+		Uzytkownik usNiegrzeczny = Uzytkownik.builder()
+		.uzytId("niegrzecznyId")
+		.nazwa("Niegrzeczny Użytkownik").email(niegrzecznyEmail)
+		.haslo(passwordEncoder.encode("bad12345678"))
+		.aktywowany(true)
+		.build();
+
 		uzytkownikService.addPracownik(usJan);
 		uzytkownikService.addPracownik(usPrac);	
 		uzytkownikService.addUzytkownik(usPiotr);
 		uzytkownikService.addUzytkownik(usKatarzyna);
 		uzytkownikService.addUzytkownik(usMichal);
+		uzytkownikService.addUzytkownik(usNiegrzeczny);
 
 		Path adachiPath = Paths.get(obrazSeedPath, "adachi.jpg");
 		MockMultipartFile obrazAvatar1 = new MockMultipartFile("tempFileName", "adachi.jpg", 
@@ -404,8 +416,9 @@ public class YukkaApplication {
 		this.usPiotr = uzytkownikRepository.findByEmail(piotrEmail).get();
 		this.usKatarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
 		this.usMichal = uzytkownikRepository.findByEmail(michalEmail).get();
+		this.usNiegrzeczny = uzytkownikRepository.findByEmail(niegrzecznyEmail).get();
 		
-		this.uzytkownicy = Arrays.asList(this.usJan, this.usPrac, this.usPiotr, this.usKatarzyna, this.usMichal);
+		this.uzytkownicy = Arrays.asList(this.usJan, this.usPrac, this.usPiotr, this.usKatarzyna, this.usMichal, this.usNiegrzeczny);
 
 		return this.uzytkownicy;
 	}

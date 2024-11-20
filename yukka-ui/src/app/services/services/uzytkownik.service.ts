@@ -9,6 +9,7 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { FileResponse } from '../models/file-response';
 import { findAllUzytkownicy } from '../fn/uzytkownik/find-all-uzytkownicy';
 import { FindAllUzytkownicy$Params } from '../fn/uzytkownik/find-all-uzytkownicy';
 import { findByEmail } from '../fn/uzytkownik/find-by-email';
@@ -124,7 +125,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `setBanUzytkownik()` */
-  static readonly SetBanUzytkownikPath = '/uzytkownicy/pracownik/ban/{email}/{ban}';
+  static readonly SetBanUzytkownikPath = '/uzytkownicy/pracownik/ban/{nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -132,7 +133,7 @@ export class UzytkownikService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  setBanUzytkownik$Response(params: SetBanUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<Uzytkownik>> {
+  setBanUzytkownik$Response(params: SetBanUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
     return setBanUzytkownik(this.http, this.rootUrl, params, context);
   }
 
@@ -142,9 +143,9 @@ export class UzytkownikService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  setBanUzytkownik(params: SetBanUzytkownik$Params, context?: HttpContext): Observable<Uzytkownik> {
+  setBanUzytkownik(params: SetBanUzytkownik$Params, context?: HttpContext): Observable<boolean> {
     return this.setBanUzytkownik$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Uzytkownik>): Uzytkownik => r.body)
+      map((r: StrictHttpResponse<boolean>): boolean => r.body)
     );
   }
 
@@ -182,7 +183,7 @@ export class UzytkownikService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAvatar$Response(params?: GetAvatar$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+  getAvatar$Response(params?: GetAvatar$Params, context?: HttpContext): Observable<StrictHttpResponse<FileResponse>> {
     return getAvatar(this.http, this.rootUrl, params, context);
   }
 
@@ -192,9 +193,9 @@ export class UzytkownikService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAvatar(params?: GetAvatar$Params, context?: HttpContext): Observable<UzytkownikResponse> {
+  getAvatar(params?: GetAvatar$Params, context?: HttpContext): Observable<FileResponse> {
     return this.getAvatar$Response(params, context).pipe(
-      map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
+      map((r: StrictHttpResponse<FileResponse>): FileResponse => r.body)
     );
   }
 

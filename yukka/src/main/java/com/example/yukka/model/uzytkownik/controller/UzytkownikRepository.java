@@ -215,8 +215,8 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             """)
     Boolean odblokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, @Param("blokujacyEmail") String blokujacyEmail);
 
-    @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.ban = $ban RETURN u")
-    Uzytkownik banUzytkownik(@Param("email") String email, @Param("ban") boolean ban);
+    @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa SET u.ban = $ban RETURN COUNT(u) > 0 AS success")
+    Boolean banUzytkownik(@Param("nazwa") String nazwa, @Param("ban") boolean ban);
 
 
     // TODO: Zmień jak będą kolejne komponenty dodawane

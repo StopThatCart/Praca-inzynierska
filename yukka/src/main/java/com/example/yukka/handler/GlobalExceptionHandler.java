@@ -23,6 +23,10 @@ import static com.example.yukka.handler.YukkaErrorCodes.ACCOUNT_DISABLED;
 import static com.example.yukka.handler.YukkaErrorCodes.BAD_CREDENTIALS;
 import static com.example.yukka.handler.YukkaErrorCodes.BLOCKED_UZYTKOWNIK;
 import static com.example.yukka.handler.YukkaErrorCodes.ENTITY_NOT_FOUND;
+import com.example.yukka.handler.exceptions.BannedUzytkownikException;
+import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
+import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
 
 import jakarta.mail.MessagingException;
 

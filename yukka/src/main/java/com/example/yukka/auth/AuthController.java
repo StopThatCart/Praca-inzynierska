@@ -54,7 +54,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/refresh-token", produces="application/json")
-    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody String token) {
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestParam String token) {
         return ResponseEntity.ok(service.refreshToken(token));
     }
 

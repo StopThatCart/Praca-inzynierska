@@ -81,7 +81,7 @@ public class SecurityConfig {
                     ).authenticated()
 
 
-                    .requestMatchers("/uzytkownicy/pracownik/ban/{email}/{ban}")
+                    .requestMatchers("/uzytkownicy/pracownik/ban/{email}")
                         .hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers("/uzytkownicy/blok/{nazwa}/{blok}").authenticated()
                     .requestMatchers("/uzytkownicy/blokowani").authenticated()

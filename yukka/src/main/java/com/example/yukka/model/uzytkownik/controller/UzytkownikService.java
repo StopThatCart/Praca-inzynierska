@@ -19,13 +19,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.yukka.auth.email.EmailService;
+import com.example.yukka.auth.email.EmailTemplateName;
 import com.example.yukka.auth.requests.EmailRequest;
-import com.example.yukka.auth.requests.HasloRequest;
+import com.example.yukka.common.FileResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
-import com.example.yukka.handler.BlockedUzytkownikException;
-import com.example.yukka.handler.EntityAlreadyExistsException;
-import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
+import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.uzytkownik.Ustawienia;
@@ -33,11 +35,6 @@ import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 
 import jakarta.mail.MessagingException;
-
-import com.example.yukka.auth.AuthenticationService;
-import com.example.yukka.auth.email.EmailService;
-import com.example.yukka.auth.email.EmailTemplateName;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,7 +57,7 @@ public class UzytkownikService implements  UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String nazwa) {
-        return uzytkownikRepository.findByNazwa(nazwa)
+        return uzytkownikRepository.findByNameOrEmail(nazwa)
                 .orElseThrow(() -> new UsernameNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
     }
 
@@ -86,13 +83,13 @@ public class UzytkownikService implements  UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public UzytkownikResponse getLoggedInAvatar(Authentication currentUser) {
+    public FileResponse getLoggedInAvatar(Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
 
         Uzytkownik uzyt2 = uzytkownikRepository.findByEmail(uzyt.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + uzyt.getEmail()));
-
-        return commonMapperService.toSimpleAvatar(uzyt2);
+                
+        return FileResponse.builder().content(fileUtils.readFile(uzyt2.getAvatar())).build();
     }
 
     @Transactional(readOnly = true)
@@ -108,12 +105,12 @@ public class UzytkownikService implements  UserDetailsService {
     }
 
 
-    public Ustawienia getUstawienia(Authentication currentUser) {
+    public UzytkownikResponse getUstawienia(Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         Uzytkownik uzytus = uzytkownikRepository.findByNazwa(uzyt.getNazwa())
         .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + uzyt.getNazwa()));
 
-        return uzytus.getUstawienia();
+        return  commonMapperService.toUzytkownikResponse(uzytus);
     }
 
     public UzytkownikResponse updateUstawienia(UstawieniaRequest ustawienia, Authentication currentUser) {
@@ -211,17 +208,11 @@ public class UzytkownikService implements  UserDetailsService {
         return uzytkownikRepository.odblokujUzyt(blokowany.getEmail(), uzyt.getEmail());
     }
 
-    public Uzytkownik setBanUzytkownik(String email, Authentication currentUser, boolean ban){
+    public Boolean setBanUzytkownik(String nazwa, Authentication currentUser, boolean ban){
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
-        Optional<Uzytkownik> uzytOpt = uzytkownikRepository.findByEmail(email);
-        if(uzytOpt.isEmpty()) {
-            return null;
-        }
-        Uzytkownik targetUzyt = uzytOpt.get();
 
-        if(uzyt.isNormalUzytkownik()) {
-            throw new IllegalArgumentException("Zwykli użytkownicy nie mogą banować nikogo");
-        }
+        Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + nazwa));
 
         if(targetUzyt.getEmail().equals(uzyt.getEmail())) {
             throw new IllegalArgumentException("Nie można banować samego siebie");
@@ -234,7 +225,7 @@ public class UzytkownikService implements  UserDetailsService {
         if(targetUzyt.isAdmin() || targetUzyt.isPracownik()) {
             throw new IllegalArgumentException("Admini i pracownicy nie mogą być banowani ani odbanowywani");
         }
-        return uzytkownikRepository.banUzytkownik(email, ban);
+        return uzytkownikRepository.banUzytkownik(nazwa, ban);
     }
 
     // Bez zabezpieczeń bo to tylko do seedowania

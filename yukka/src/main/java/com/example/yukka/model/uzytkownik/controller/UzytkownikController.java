@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.auth.requests.EmailRequest;
+import com.example.yukka.common.FileResponse;
 import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.social.service.PowiadomienieService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
@@ -56,13 +58,13 @@ public class UzytkownikController {
     }
 
     @GetMapping(value = "/avatar", produces="application/json")
-    public ResponseEntity<UzytkownikResponse> getAvatar(Authentication connectedUser) {
+    public ResponseEntity<FileResponse> getAvatar(Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.getLoggedInAvatar(connectedUser));
     }
 
     @GetMapping(value = "/ustawienia", produces="application/json")
     public ResponseEntity<UzytkownikResponse> getUstawienia(Authentication connectedUser) {
-        return ResponseEntity.ok(uzytkownikService.getLoggedInAvatar(connectedUser));
+        return ResponseEntity.ok(uzytkownikService.getUstawienia(connectedUser));
     }
 
     @GetMapping(value = "/blokowani", produces="application/json")
@@ -102,10 +104,10 @@ public class UzytkownikController {
     }
 
 
-    @PatchMapping(value = "pracownik/ban/{email}/{ban}", produces="application/json")
-    public ResponseEntity<Uzytkownik> setBanUzytkownik(@PathVariable("email") String email, 
-            @PathVariable("ban") boolean ban, Authentication currentUser) {
-        return ResponseEntity.ok(uzytkownikService.setBanUzytkownik(email, currentUser, ban));
+    @PatchMapping(value = "pracownik/ban/{nazwa}", produces="application/json")
+    public ResponseEntity<Boolean> setBanUzytkownik(@PathVariable("nazwa") String nazwa, 
+        @RequestParam boolean ban, Authentication currentUser) {
+        return ResponseEntity.ok(uzytkownikService.setBanUzytkownik(nazwa, currentUser, ban));
     }
     
 

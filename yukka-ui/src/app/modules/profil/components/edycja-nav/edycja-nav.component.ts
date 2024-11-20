@@ -29,8 +29,8 @@ export class EdycjaNavComponent implements OnInit {
   private loadAvatar() {
      if (this.tokenService.isTokenValid()) {
       this.uzytService.getAvatar().subscribe({
-         next: (uzyt) => {
-           this._avatar = uzyt.avatar;
+         next: (file) => {
+           this._avatar = file.content;
          }
       });
     }

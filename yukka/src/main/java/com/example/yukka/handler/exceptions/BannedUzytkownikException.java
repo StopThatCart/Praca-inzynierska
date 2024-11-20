@@ -1,4 +1,4 @@
-package com.example.yukka.handler;
+package com.example.yukka.handler.exceptions;
 
 public class BannedUzytkownikException extends RuntimeException {
 

@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.handler.EntityAlreadyExistsException;
-import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;

@@ -6,18 +6,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Uzytkownik } from '../../models/uzytkownik';
 
 export interface SetBanUzytkownik$Params {
-  email: string;
+  nazwa: string;
   ban: boolean;
 }
 
-export function setBanUzytkownik(http: HttpClient, rootUrl: string, params: SetBanUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<Uzytkownik>> {
+export function setBanUzytkownik(http: HttpClient, rootUrl: string, params: SetBanUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
   const rb = new RequestBuilder(rootUrl, setBanUzytkownik.PATH, 'patch');
   if (params) {
-    rb.path('email', params.email, {});
-    rb.path('ban', params.ban, {});
+    rb.path('nazwa', params.nazwa, {});
+    rb.query('ban', params.ban, {});
   }
 
   return http.request(
@@ -25,9 +24,9 @@ export function setBanUzytkownik(http: HttpClient, rootUrl: string, params: SetB
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Uzytkownik>;
+      return (r as HttpResponse<any>).clone({ body: String((r as HttpResponse<any>).body) === 'true' }) as StrictHttpResponse<boolean>;
     })
   );
 }
 
-setBanUzytkownik.PATH = '/uzytkownicy/pracownik/ban/{email}/{ban}';
+setBanUzytkownik.PATH = '/uzytkownicy/pracownik/ban/{nazwa}';

@@ -78,7 +78,7 @@ export class RoslinaPageComponent implements OnInit {
     }
 
     if(confirm("Czy na pewno chcesz usunąć roślinę?")) {
-      this.roslinaService.deleteRoslina1({ 'nazwa-lacinska': this.roslina?.nazwaLacinska }).subscribe({
+      this.roslinaService.deleteRoslina({ 'nazwa-lacinska': this.roslina?.nazwaLacinska }).subscribe({
         next: () => {
           this.router.navigate(['..'], { relativeTo: this.route });
         },

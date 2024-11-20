@@ -9,14 +9,9 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { deleteRoslina } from '../fn/uzytkownik-roslina/delete-roslina';
-import { DeleteRoslina$Params } from '../fn/uzytkownik-roslina/delete-roslina';
 import { findAllRosliny } from '../fn/uzytkownik-roslina/find-all-rosliny';
 import { FindAllRosliny$Params } from '../fn/uzytkownik-roslina/find-all-rosliny';
-import { findUzytkownikRoslinaByRoslinaId } from '../fn/uzytkownik-roslina/find-uzytkownik-roslina-by-roslina-id';
-import { FindUzytkownikRoslinaByRoslinaId$Params } from '../fn/uzytkownik-roslina/find-uzytkownik-roslina-by-roslina-id';
 import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
-import { Roslina } from '../models/roslina';
 import { saveRoslina1$FormData } from '../fn/uzytkownik-roslina/save-roslina-1-form-data';
 import { SaveRoslina1$FormData$Params } from '../fn/uzytkownik-roslina/save-roslina-1-form-data';
 import { saveRoslina1$Json } from '../fn/uzytkownik-roslina/save-roslina-1-json';
@@ -129,31 +124,6 @@ export class UzytkownikRoslinaService extends BaseService {
     );
   }
 
-  /** Path part for operation `findUzytkownikRoslinaByRoslinaId()` */
-  static readonly FindUzytkownikRoslinaByRoslinaIdPath = '/uzytkownikRosliny/{roslinaId}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findUzytkownikRoslinaByRoslinaId()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findUzytkownikRoslinaByRoslinaId$Response(params: FindUzytkownikRoslinaByRoslinaId$Params, context?: HttpContext): Observable<StrictHttpResponse<Roslina>> {
-    return findUzytkownikRoslinaByRoslinaId(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findUzytkownikRoslinaByRoslinaId$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findUzytkownikRoslinaByRoslinaId(params: FindUzytkownikRoslinaByRoslinaId$Params, context?: HttpContext): Observable<Roslina> {
-    return this.findUzytkownikRoslinaByRoslinaId$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Roslina>): Roslina => r.body)
-    );
-  }
-
   /** Path part for operation `updateRoslinaObraz1()` */
   static readonly UpdateRoslinaObraz1Path = '/uzytkownikRosliny/{roslinaId}';
 
@@ -180,31 +150,6 @@ export class UzytkownikRoslinaService extends BaseService {
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)
-    );
-  }
-
-  /** Path part for operation `deleteRoslina()` */
-  static readonly DeleteRoslinaPath = '/uzytkownikRosliny/{roslinaId}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `deleteRoslina()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deleteRoslina$Response(params: DeleteRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return deleteRoslina(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `deleteRoslina$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deleteRoslina(params: DeleteRoslina$Params, context?: HttpContext): Observable<string> {
-    return this.deleteRoslina$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 

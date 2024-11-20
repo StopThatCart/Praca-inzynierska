@@ -21,7 +21,7 @@ export class LoginComponent {
   isServer = false;
 
 
-  authRequest: AuthRequest = {email: 'piotr@email.pl', haslo: 'piotr12345678'};
+  authRequest: AuthRequest = {email: 'bad@email.pl', haslo: 'bad12345678'};
   errorMsg: Array<string> = [];
 
   constructor(

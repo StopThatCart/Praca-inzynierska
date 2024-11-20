@@ -1,10 +1,7 @@
 package com.example.yukka.model.dzialka.service;
 
-import java.io.File;
 import java.util.List;
-import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -14,12 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yukka.common.FileResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
-import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
-import com.example.yukka.model.dzialka.ZasadzonaRoslinaResponse;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;

@@ -133,7 +133,7 @@
         "tags": [
           "Roslina"
         ],
-        "operationId": "deleteRoslina_1",
+        "operationId": "deleteRoslina",
         "parameters": [
           {
             "name": "nazwa-lacinska",
@@ -438,34 +438,6 @@
       }
     },
     "/uzytkownikRosliny/{roslinaId}": {
-      "get": {
-        "tags": [
-          "UzytkownikRoslina"
-        ],
-        "operationId": "findUzytkownikRoslinaByRoslinaId",
-        "parameters": [
-          {
-            "name": "roslinaId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Roslina"
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "UzytkownikRoslina"
@@ -506,34 +478,6 @@
               "*/*": {
                 "schema": {
                   "type": "object"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "UzytkownikRoslina"
-        ],
-        "operationId": "deleteRoslina",
-        "parameters": [
-          {
-            "name": "roslinaId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -1234,16 +1178,16 @@
           "Authentication"
         ],
         "operationId": "refreshToken",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1343,7 +1287,7 @@
         }
       }
     },
-    "/uzytkownicy/pracownik/ban/{email}/{ban}": {
+    "/uzytkownicy/pracownik/ban/{nazwa}": {
       "patch": {
         "tags": [
           "Uzytkownik"
@@ -1351,7 +1295,7 @@
         "operationId": "setBanUzytkownik",
         "parameters": [
           {
-            "name": "email",
+            "name": "nazwa",
             "in": "path",
             "required": true,
             "schema": {
@@ -1360,7 +1304,7 @@
           },
           {
             "name": "ban",
-            "in": "path",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "boolean"
@@ -1373,7 +1317,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Uzytkownik"
+                  "type": "boolean"
                 }
               }
             }
@@ -1431,7 +1375,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UzytkownikResponse"
+                  "$ref": "#/components/schemas/FileResponse"
                 }
               }
             }
@@ -2029,6 +1973,36 @@
                   "items": {
                     "$ref": "#/components/schemas/WlasciwoscResponse"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rosliny/roslina-id/{roslina-id}": {
+      "get": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "findByRoslinaId",
+        "parameters": [
+          {
+            "name": "roslina-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoslinaResponse"
                 }
               }
             }
@@ -3134,10 +3108,13 @@
           "name": {
             "type": "string"
           },
-          "admin": {
-            "type": "boolean"
+          "authorities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedAuthority"
+            }
           },
-          "normalUzytkownik": {
+          "admin": {
             "type": "boolean"
           },
           "pracownik": {
@@ -3146,11 +3123,8 @@
           "username": {
             "type": "string"
           },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
+          "normalUzytkownik": {
+            "type": "boolean"
           },
           "password": {
             "type": "string"
@@ -4224,6 +4198,72 @@
           }
         }
       },
+      "PageResponseRozmowaPrywatnaResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RozmowaPrywatnaResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "WlasciwoscResponse": {
+        "type": "object",
+        "properties": {
+          "etykieta": {
+            "type": "string"
+          },
+          "nazwy": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Gleba": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nazwa": {
+            "type": "string"
+          },
+          "rosliny": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Roslina"
+            }
+          }
+        }
+      },
       "Roslina": {
         "type": "object",
         "properties": {
@@ -4399,72 +4439,6 @@
           },
           "nazwa": {
             "type": "string"
-          }
-        }
-      },
-      "PageResponseRozmowaPrywatnaResponse": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RozmowaPrywatnaResponse"
-            }
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
-        }
-      },
-      "WlasciwoscResponse": {
-        "type": "object",
-        "properties": {
-          "etykieta": {
-            "type": "string"
-          },
-          "nazwy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "Gleba": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "rosliny": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Roslina"
-            }
           }
         }
       },

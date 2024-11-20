@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
-import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostMapper;

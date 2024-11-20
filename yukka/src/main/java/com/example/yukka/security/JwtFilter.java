@@ -2,7 +2,7 @@ package com.example.yukka.security;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +10,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.yukka.handler.BannedUzytkownikException;
+import com.example.yukka.handler.ExceptionResponse;
+import com.example.yukka.handler.YukkaErrorCodes;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
@@ -24,11 +26,8 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UzytkownikService userDetailsService;
+    private final JwtService jwtService;
+    private final UzytkownikService userDetailsService;
 
     @Override
     @SuppressWarnings("null")
@@ -41,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String jwt;
         final String userEmail;
 
@@ -58,9 +57,19 @@ public class JwtFilter extends OncePerRequestFilter {
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 Uzytkownik uzytkownik = (Uzytkownik) userDetails;
                 if (uzytkownik.isBan()) {
-                    throw new BannedUzytkownikException("Użytkownik jest zbanowany");
-                   // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                   // return;
+                    response.setStatus(YukkaErrorCodes.ACCOUNT_BANNED.getCode());
+                    response.setContentType("application/json");
+                    
+                    ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+                            .businessErrorCode(YukkaErrorCodes.ACCOUNT_BANNED.getCode())
+                            .businessErrorDescription(YukkaErrorCodes.ACCOUNT_BANNED.getDescription())
+                            .build();
+                    
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonResponse = objectMapper.writeValueAsString(exceptionResponse);
+                    
+                    response.getWriter().write(jsonResponse);
+                    return;
                 }
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

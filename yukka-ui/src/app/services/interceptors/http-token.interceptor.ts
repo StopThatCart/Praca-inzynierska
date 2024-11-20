@@ -19,7 +19,7 @@ export const httpTokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, n
 
   if (token) {
     if (jwtHelper.isTokenExpired(token)) {
-      return authService.refreshToken({ body: token }).pipe(
+      return authService.refreshToken({ token }).pipe(
         switchMap((response) => {
           if (response.token) {
             tokenService.token = response.token;
@@ -42,7 +42,7 @@ export const httpTokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, n
       });
     }
   }
-  
+
   return next(req).pipe(
     catchError((error) => {
       if (error.status === 302) {

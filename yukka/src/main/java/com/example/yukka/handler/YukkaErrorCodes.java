@@ -12,7 +12,7 @@ public enum YukkaErrorCodes {
     NO_CODE(0, NOT_IMPLEMENTED, "Żadnego kodu"),
     INCORRECT_CURRENT_PASSWORD(300, BAD_REQUEST, "Aktualne hasło jest niepoprawne"),
     NEW_PASSWORD_DOES_NOT_MATCH(301, BAD_REQUEST, "Nowe hasło nie pasuje"),
-    ACCOUNT_BANNED(302, FORBIDDEN, "Konto użytkownika jest zbanowane"),
+    ACCOUNT_BANNED(302, FORBIDDEN, "Twoje konto jest zbanowane."),
     
     ACCOUNT_DISABLED(303, FORBIDDEN, "Konto użytkownika jest wyłączone"),
     BAD_CREDENTIALS(304, FORBIDDEN, "Niepoprawny login lub hasło"),
