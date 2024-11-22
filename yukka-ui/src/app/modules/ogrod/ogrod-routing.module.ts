@@ -33,7 +33,7 @@ const routes: Routes = [
             data: { breadcrumb: (data: any) =>`Działka` },
             children: [
               {
-                path: 'dodawanie/:id',
+                path: 'dodawanie/:roslinaId',
                 component: AddRoslinaToDzialkaComponent,
                 data: { breadcrumb: 'Dodawanie rośliny' }
               },

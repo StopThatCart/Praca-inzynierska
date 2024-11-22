@@ -9,14 +9,18 @@ import { RequestBuilder } from '../../request-builder';
 import { DzialkaResponse } from '../../models/dzialka-response';
 import { DzialkaRoslinaRequest } from '../../models/dzialka-roslina-request';
 
-export interface SaveRoslinaToDzialka1$Json$Params {
-      body: DzialkaRoslinaRequest
+export interface SaveRoslinaToDzialka$Params {
+      body?: {
+'request': DzialkaRoslinaRequest;
+'obraz'?: Blob;
+'tekstura'?: Blob;
+}
 }
 
-export function saveRoslinaToDzialka1$Json(http: HttpClient, rootUrl: string, params: SaveRoslinaToDzialka1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
-  const rb = new RequestBuilder(rootUrl, saveRoslinaToDzialka1$Json.PATH, 'post');
+export function saveRoslinaToDzialka(http: HttpClient, rootUrl: string, params?: SaveRoslinaToDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+  const rb = new RequestBuilder(rootUrl, saveRoslinaToDzialka.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'multipart/form-data');
   }
 
   return http.request(
@@ -29,4 +33,4 @@ export function saveRoslinaToDzialka1$Json(http: HttpClient, rootUrl: string, pa
   );
 }
 
-saveRoslinaToDzialka1$Json.PATH = '/dzialki/rosliny';
+saveRoslinaToDzialka.PATH = '/dzialki/rosliny';

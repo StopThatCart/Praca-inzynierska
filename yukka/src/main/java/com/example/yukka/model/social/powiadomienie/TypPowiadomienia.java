@@ -12,7 +12,7 @@ public enum TypPowiadomienia {
     KWITNIENIE_ROSLIN_TERAZ("W aktualnym miesiącu twoje rośliny {nazwyRoslin} powinny kwitnąć!"),
     PODLEWANIE_ROSLIN("Za {data} powinieneś podlać następujące rośliny: {nazwyRoslin}"),
     USUNIECIE_KOMENTARZA("Usunięto twój komentarz pod postem {tytul}"),
-    BAN("Zostałeś zbanowany aż do {data}"),
+    BAN("Zostałeś zbanowany aż do {okres} za {tytul}"),
     ODBANOWANIE("Twoje konto zostało odbanowane"),
     OCENA_ROSLINY("Ktoś ocenił twoją roślinę {tytul} {odnosnik}"),
     USUNIECIE_ROSLINY("Twoja roślina została usunięta bo tak"),

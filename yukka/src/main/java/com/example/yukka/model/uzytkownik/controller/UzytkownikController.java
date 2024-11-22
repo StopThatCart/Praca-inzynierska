@@ -79,12 +79,6 @@ public class UzytkownikController {
         return ResponseEntity.ok(uzytkownikService.updateUstawienia(ustawienia, connectedUser));
     }
 
-    // @PatchMapping(value = "/change-email",  produces="application/json")
-    // public ResponseEntity<UzytkownikResponse> updateEmail(@Valid @RequestBody EmailRequest request, Authentication connectedUser) {
-    //     //TODO: Przenieść to do AuthService i zaimplementować z wysyłaniem na nowy mail
-    //     return ResponseEntity.ok(uzytkownikService.updateEmail(request, connectedUser));
-    // }
-
     @PostMapping(value = "/send-zmiana-email", produces="application/json")
     public ResponseEntity<?> sendZmianaEmail(@Valid @RequestBody EmailRequest request, Authentication currentUser) throws MessagingException {
         uzytkownikService.sendChangeEmail(request, currentUser);
@@ -101,13 +95,6 @@ public class UzytkownikController {
     public ResponseEntity<Boolean> setBlokUzytkownik(@PathVariable("nazwa") String nazwa, 
             @PathVariable("blok") boolean blok, Authentication currentUser) {
         return ResponseEntity.ok(uzytkownikService.setBlokUzytkownik(nazwa, currentUser, blok));
-    }
-
-
-    @PatchMapping(value = "pracownik/ban/{nazwa}", produces="application/json")
-    public ResponseEntity<Boolean> setBanUzytkownik(@PathVariable("nazwa") String nazwa, 
-        @RequestParam boolean ban, Authentication currentUser) {
-        return ResponseEntity.ok(uzytkownikService.setBanUzytkownik(nazwa, currentUser, ban));
     }
     
 

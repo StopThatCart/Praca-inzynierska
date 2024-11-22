@@ -76,22 +76,17 @@ public class ZasadzonaNaReverse {
 
     @JsonIgnore
     public boolean equalsRoslina(Roslina roslina) {
-        return this.roslina.getNazwaLacinska().equals(roslina.getNazwaLacinska()) 
-        || this.roslina.getRoslinaId().equals(roslina.getRoslinaId());
+        return this.roslina.getRoslinaId().equals(roslina.getRoslinaId());
     }
 
     @JsonIgnore
-    public boolean equalsRoslina(String roslinaWhatever) {
+    public boolean equalsRoslina(String roslinaId) {
         Roslina roslina = this.roslina;
         if(roslina == null) {
             return false;
         } 
 
-        if(this.roslina.getNazwaLacinska() == null) {
-            return this.roslina.getRoslinaId().equals(roslinaWhatever);
-        } else {
-            return this.roslina.getNazwaLacinska().equals(roslinaWhatever);
-        }
+        return this.roslina.getRoslinaId().equals(roslinaId);
     }
 
     @JsonIgnore
@@ -101,12 +96,7 @@ public class ZasadzonaNaReverse {
         if(roslina == null || roslinaWhatever == null) {
             return false;
         } 
-
-        if(this.roslina.getNazwaLacinska() == null) {
-            return this.roslina.getRoslinaId().equals(roslinaWhatever.getRoslinaId());
-        } else {
-            return this.roslina.getNazwaLacinska().equals(roslinaWhatever.getNazwaLacinska());
-        }
+        return this.roslina.getRoslinaId().equals(roslinaWhatever.getRoslinaId());
     }
 
 }

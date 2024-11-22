@@ -1,5 +1,4 @@
 package com.example.yukka.model.social.controller;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -69,17 +68,11 @@ public class PostController {
         return ResponseEntity.ok(postService.findAllPostyCountOfUzytkownik(nazwa));
     }
 
-    @PostMapping(consumes="application/json", produces="application/json")
-    public ResponseEntity<Post> addPost(@Valid @RequestBody PostRequest request, Authentication connectedUser) {
-        return ResponseEntity.ok(postService.save(request, connectedUser));
-    }
-
     @PostMapping(consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<Post> addPost(@Valid @RequestPart("request") PostRequest request, 
-    @Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) throws FileUploadException {
+    @Parameter() @RequestPart(value = "file", required = false) MultipartFile file, Authentication connectedUser) {
         return ResponseEntity.ok(postService.save(request, file, connectedUser));
     }
-
 
     @PutMapping(value = "/oceny", produces="application/json")
     public ResponseEntity<PostResponse> addOcenaToPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
@@ -92,19 +85,6 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-
-    /*
-    // UWAGA: nietestowane
-    @PostMapping(value = "/{post-id}/obraz", consumes = "multipart/form-data")
-    public ResponseEntity<?> uploadPostImage(
-            @PathVariable("post-id") String postId,
-            @Parameter()
-            @RequestPart("file") MultipartFile file,
-            Authentication connectedUser) {
-        postService.uploadPostObraz(file, connectedUser, postId);
-        return ResponseEntity.accepted().build();
-    }
- */
     @DeleteMapping(value = "/{post-id}", produces="application/json")
     public ResponseEntity<String> removePost(
                     @PathVariable("post-id") String postId,
@@ -113,7 +93,5 @@ public class PostController {
         postService.deletePost(postId, currentUser);
         return ResponseEntity.noContent().build();
     }
-
-
 
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 import com.example.yukka.model.dzialka.Pozycja;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -68,4 +69,6 @@ public class BaseDzialkaRequest {
         }
         return tabY;
     }
+
+    
 }

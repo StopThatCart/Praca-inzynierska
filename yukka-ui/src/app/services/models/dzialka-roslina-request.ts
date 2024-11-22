@@ -3,12 +3,11 @@
 import { Pozycja } from '../models/pozycja';
 export interface DzialkaRoslinaRequest {
   kolor: string;
-  nazwaLacinska?: string;
   notatka?: string;
   numerDzialki: number;
   obraz?: string;
   pozycje: Array<Pozycja>;
-  roslinaId?: string;
+  roslinaId: string;
   tekstura?: string;
   wyswietlanie: string;
   x: number;

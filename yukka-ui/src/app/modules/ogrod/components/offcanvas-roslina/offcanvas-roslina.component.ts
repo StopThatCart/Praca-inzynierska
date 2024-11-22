@@ -286,6 +286,7 @@ export class OffcanvasRoslinaComponent {
 
   private makeDzialkaRoslinaRequest(): DzialkaRoslinaRequest {
     return {
+      roslinaId: this.zasadzonaRoslina!.roslina!.roslinaId!,
       numerDzialki: this.numerDzialki!,
       x: this.zasadzonaRoslina!.x!,
       y: this.zasadzonaRoslina!.y!,

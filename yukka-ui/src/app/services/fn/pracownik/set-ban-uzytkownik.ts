@@ -6,17 +6,18 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { BanRequest } from '../../models/ban-request';
 
 export interface SetBanUzytkownik$Params {
-  nazwa: string;
-  ban: boolean;
+      body?: {
+'request': BanRequest;
+}
 }
 
-export function setBanUzytkownik(http: HttpClient, rootUrl: string, params: SetBanUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+export function setBanUzytkownik(http: HttpClient, rootUrl: string, params?: SetBanUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
   const rb = new RequestBuilder(rootUrl, setBanUzytkownik.PATH, 'patch');
   if (params) {
-    rb.path('nazwa', params.nazwa, {});
-    rb.query('ban', params.ban, {});
+    rb.body(params.body, 'multipart/form-data');
   }
 
   return http.request(
@@ -29,4 +30,4 @@ export function setBanUzytkownik(http: HttpClient, rootUrl: string, params: SetB
   );
 }
 
-setBanUzytkownik.PATH = '/uzytkownicy/pracownik/ban/{nazwa}';
+setBanUzytkownik.PATH = '/pracownicy/ban';

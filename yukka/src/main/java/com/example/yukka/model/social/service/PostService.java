@@ -104,28 +104,28 @@ public class PostService {
     }
 
 
-    public Post save(PostRequest request, Authentication connectedUser) {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+    // public Post save(PostRequest request, Authentication connectedUser) {
+    //     Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
-        Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
-        checkTimeSinceLastPost(newestPost);
+    //     Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
+    //     checkTimeSinceLastPost(newestPost);
         
-        return save(request, uzyt);
-    }
+    //     return save(request, uzyt);
+    // }
 
-    public Post save(PostRequest request, Uzytkownik connectedUser) {
-        Uzytkownik uzyt = connectedUser;
+    // public Post save(PostRequest request, Uzytkownik connectedUser) {
+    //     Uzytkownik uzyt = connectedUser;
 
-        Post post = postMapper.toPost(request);
-        if(post.getPostId() == null) {
-            post.setPostId(createPostId());
-        }
+    //     Post post = postMapper.toPost(request);
+    //     if(post.getPostId() == null) {
+    //         post.setPostId(createPostId());
+    //     }
         
         
-        return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
-    }
+    //     return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
+    // }
 
-    public Post save(PostRequest request, MultipartFile file, Authentication connectedUser) throws FileUploadException {
+    public Post save(PostRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         
         Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
@@ -134,18 +134,16 @@ public class PostService {
         return save(request, file, uzyt);
     }
 
-    public Post save(PostRequest request, MultipartFile file, Uzytkownik connectedUser) throws FileUploadException {
+    public Post save(PostRequest request, MultipartFile file, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
 
         Post post = postMapper.toPost(request);
         post.setPostId(createPostId());
 
-        String leObraz = fileStoreService.savePost(file, post.getPostId(), uzyt.getUzytId());
-        if(leObraz == null) {
-            throw new FileUploadException("Wystąpił błąd podczas wysyłania pliku");
+        if (file != null) {
+            post.setObraz(fileStoreService.savePost(file, post.getPostId(), uzyt.getUzytId()));
         }
-        post.setObraz(leObraz);
-        
+
         return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
     }
 
@@ -226,28 +224,6 @@ public class PostService {
             postRepository.deletePostButBetter(post.getPostId());
         }
     }
-
-    /* 
-    public void uploadPostObraz(MultipartFile file, Authentication connectedUser, String postId) {
-        Optional<Post> postOptional = postRepository.findPostByPostId(postId);
-    
-        if (postOptional.isEmpty()) {
-            throw new NoSuchElementException("Nie znaleziono posta o podanym ID: " + postId);
-        }
-        Post post = postOptional.get();
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-
-        String pfp = fileStoreService.savePost(file, post.getPostId(), uzyt.getNazwa());
-
-        if (pfp == null) {
-            throw new IllegalStateException("Nie udało się zapisać obrazu.");
-        }
-   
-        
-        post.setObraz(pfp);
-        postRepository.updatePostObraz(post.getPostId(), post.getObraz());
-    }
- */
 
     // Pomocnicze
 

@@ -68,7 +68,7 @@ export class RoslinaPageComponent implements OnInit {
 
   goToAddRoslinaToDzialka() {
     if (this.roslina?.nazwaLacinska) {
-      this.router.navigate(['ogrod', this.tokenService.nazwa, 'dzialka', 'dodawanie', this.roslina.id]);
+      this.router.navigate(['ogrod', this.tokenService.nazwa, 'dzialka', 'dodawanie', this.roslina.roslinaId]);
     }
   }
 

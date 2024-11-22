@@ -63,11 +63,11 @@ public class DzialkaController {
         return ResponseEntity.ok(dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa, connectedUser));
     }
 
-    @PostMapping(value = "/rosliny", consumes="application/json", produces="application/json")
-    public ResponseEntity<DzialkaResponse> saveRoslinaToDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, 
-    Authentication connectedUser) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, null, null, connectedUser));
-    }
+    // @PostMapping(value = "/rosliny", consumes="application/json", produces="application/json")
+    // public ResponseEntity<DzialkaResponse> saveRoslinaToDzialka(@Valid @RequestBody DzialkaRoslinaRequest request, 
+    // Authentication connectedUser) {
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(dzialkaService.saveRoslinaToDzialka(request, null, null, connectedUser));
+    // }
 
     @PostMapping(value = "/rosliny", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<DzialkaResponse> saveRoslinaToDzialka(@Valid @RequestPart("request") DzialkaRoslinaRequest request, 

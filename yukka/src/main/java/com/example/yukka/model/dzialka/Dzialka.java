@@ -63,8 +63,7 @@ public class Dzialka {
     public boolean isRoslinaInDzialka(Roslina roslina) {
         for (ZasadzonaNaReverse zasadzonaNa : zasadzoneRosliny) {
             Roslina roslinaZasadzona = zasadzonaNa.getRoslina();
-            if (roslinaZasadzona.getNazwaLacinska().equals(roslina.getNazwaLacinska()) 
-            || roslinaZasadzona.getRoslinaId().equals(roslina.getRoslinaId())) {
+            if (roslinaZasadzona.getRoslinaId().equals(roslina.getRoslinaId())) {
                 return true;
             }
         }
@@ -75,8 +74,7 @@ public class Dzialka {
         for (ZasadzonaNaReverse zasadzonaNa : zasadzoneRosliny) {
             Roslina roslinaZasadzona = zasadzonaNa.getRoslina();
             if(roslinaZasadzona == null) continue;
-            if ((roslinaZasadzona.getNazwaLacinska() != null && roslinaZasadzona.getNazwaLacinska().equals(request.getNazwaLacinska()))
-            || (roslinaZasadzona.getRoslinaId() != null && roslinaZasadzona.getRoslinaId().equals(request.getRoslinaId()))) {
+            if ((roslinaZasadzona.getRoslinaId() != null && roslinaZasadzona.getRoslinaId().equals(request.getRoslinaId()))) {
                 return true;
             }
         }
@@ -91,8 +89,7 @@ public class Dzialka {
         if(zasadzonaRoslina == null) return zajetePozycje;
         
         for (ZasadzonaNaReverse zasadzona : zasadzoneRosliny) {
-            if (zasadzona.equalsRoslina(zasadzonaRoslina.getRoslina().getRoslinaId()) 
-            || zasadzona.equalsRoslina(zasadzonaRoslina.getRoslina().getNazwaLacinska())) {
+            if (zasadzona.equalsRoslina(zasadzonaRoslina.getRoslina())) {
                 continue;
             }
     

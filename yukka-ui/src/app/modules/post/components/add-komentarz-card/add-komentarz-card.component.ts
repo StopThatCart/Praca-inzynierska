@@ -52,8 +52,8 @@ export class AddKomentarzCardComponent implements OnInit {
 
 
   onFileSelected(event: any) {
-   // console.log("Obraz wybrano");
-   this.wybranyPlik = event.target.files[0];
+    // console.log("Obraz wybrano");
+    this.wybranyPlik = event.target.files[0];
     //console.log(file);
 
     if (this.wybranyPlik) {
@@ -99,67 +99,55 @@ export class AddKomentarzCardComponent implements OnInit {
   }
 
   private addKomentarzToPost() {
+    let leFile = this.wybranyPlik;
     if(this.request.obraz === '') {
-      this.komentarzService.addKomentarzToPost1$Json({
-        body: this.request
-      }).subscribe( {
-          next: (res) => {
-            window.location.reload();
-          },
-          error: (err) => {
-            this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
-          }
-      });
-    }else {
-      this.komentarzService.addKomentarzToPost1$FormData({
-        body: { request: this.request, file: this.wybranyPlik }
-      }).subscribe( {
-          next: (res) => {
-            window.location.reload();
-          },
-          error: (err) => {  this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg); }
-      });
+      leFile = null;
     }
+
+    this.komentarzService.addKomentarzToPost({
+      body: { request: this.request, file: leFile }
+    }).subscribe( {
+        next: (res) => {
+          window.location.reload();
+        },
+        error: (err) => {  this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg); }
+    });
   }
 
   private addOdpowiedzToKomentarz() {
+    let leFile = this.wybranyPlik;
     if(this.request.obraz === '') {
-      this.komentarzService.addOdpowiedzToKomentarz1$Json({
-        body: this.request
-      }).subscribe( {
-          next: (res) => { window.location.reload(); },
-          error: (err) => {  this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg); }
-      });
-    }else {
-      this.komentarzService.addOdpowiedzToKomentarz1$FormData({
-        body: { request: this.request, file: this.wybranyPlik }
-      }).subscribe( {
-          next: (res) => { window.location.reload(); },
-          error: (err) => {  this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg); }
-      });
+      leFile = null;
     }
+
+    this.komentarzService.addOdpowiedzToKomentarz({
+      body: { request: this.request, file: leFile }
+    }).subscribe( {
+        next: (res) => { window.location.reload(); },
+        error: (err) => {  this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg); }
+    });
   }
 
 
   private addWiadomoscToRozmowaPrywatna() {
+    let leFile = this.wybranyPlik;
     if(this.request.obraz === '') {
-      this.komentarzService.addKomentarzToWiadomoscPrywatna1$Json({
-        body: this.request
-      }).subscribe( {
-          next: (res) => { this.updateRozmowa(res); },
-          error: (err) => { this.errorHandlingService.handleErrors(err, this.errorMsg); }
-      });
-    } else {
-      this.komentarzService.addKomentarzToWiadomoscPrywatna1$FormData({
-        body: { request: this.request, file: this.wybranyPlik }
-      }).subscribe( {
-          next: (res) => { this.updateRozmowa(res); },
-          error: (err) => { this.errorHandlingService.handleErrors(err, this.errorMsg); }
-      });
+      leFile = null;
     }
+
+    this.wybranyPlik = null;
+    this.komentarzService.addKomentarzToWiadomoscPrywatna({
+      body: { request: this.request, file: leFile }
+    }).subscribe( {
+        next: (res) => { this.updateRozmowa(res); },
+        error: (err) => { this.errorHandlingService.handleErrors(err, this.errorMsg); }
+    });
+
   }
 
   private updateRozmowa(newMessage: any) {
+    this.request.opis = '';
+    this.clearImage();
     this.onNewMessage.emit(newMessage);
   }
 

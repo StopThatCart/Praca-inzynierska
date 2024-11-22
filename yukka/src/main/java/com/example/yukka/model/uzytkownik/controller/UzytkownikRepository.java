@@ -1,5 +1,7 @@
 package com.example.yukka.model.uzytkownik.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,6 +83,12 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         RETURN uzyt, collect(NODES(path)), collect(RELATIONSHIPS(path))
         """)
     List<Uzytkownik> getUzytkownicyWithRoslinyInDzialki();
+
+    @Query("""
+        MATCH (uzyt:Uzytkownik { ban: true })
+        RETURN uzyt
+        """)
+    List<Uzytkownik> getZbanowaniUzytkownicy();
 
 
     @Query("""
@@ -215,8 +223,12 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             """)
     Boolean odblokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, @Param("blokujacyEmail") String blokujacyEmail);
 
-    @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa SET u.ban = $ban RETURN COUNT(u) > 0 AS success")
-    Boolean banUzytkownik(@Param("nazwa") String nazwa, @Param("ban") boolean ban);
+    @Query("""
+       MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa 
+       SET u.ban = $ban, u.banDo = $banDo 
+       RETURN COUNT(u) > 0 AS success     
+            """)
+    Boolean banUzytkownik(String nazwa, boolean ban, LocalDate banDo);
 
 
     // TODO: Zmień jak będą kolejne komponenty dodawane

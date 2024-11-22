@@ -6,6 +6,7 @@ import com.example.yukka.model.enums.Wyswietlanie;
 import com.example.yukka.validations.valueOfEnum.ValueOfEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -25,12 +26,12 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @ToString
 
-//@ValidRoslinaIdAlboNazwaLacinska
+
 //@ValidPozycje
 //@YetAnotherConstraint
 public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
+    @NotEmpty(message = "Id rośliny jest wymagane")
     private String roslinaId;
-    private String nazwaLacinska;
 
     @NotEmpty(message = "Kolor jest wymagany")
     @Pattern(regexp = "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$", message = "Kolor musi być w formacie hex")
@@ -54,6 +55,18 @@ public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
         Pozycja pos = Pozycja.builder().x(this.getX()).y(this.getY()).build();
 
         return this.getPozycje().contains(pos);
+    }
+
+    @JsonIgnore
+    @AssertTrue(message = "Pozycja rośliny musi być w przydzielonych kafelkach")
+    private boolean isValid() {
+        if (this.getX() == null || this.getY() == null) {
+            System.out.println("Pozycja x i y nie może być null");
+            return false;
+        }
+        Pozycja pos = Pozycja.builder().x(this.getX()).y(this.getY()).build();
+
+        return this.pozycje.contains(pos);
     }
 
 }

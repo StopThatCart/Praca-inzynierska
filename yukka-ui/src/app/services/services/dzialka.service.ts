@@ -27,10 +27,8 @@ import { getDzialkiOfUzytkownik } from '../fn/dzialka/get-dzialki-of-uzytkownik'
 import { GetDzialkiOfUzytkownik$Params } from '../fn/dzialka/get-dzialki-of-uzytkownik';
 import { getPozycjeInDzialki } from '../fn/dzialka/get-pozycje-in-dzialki';
 import { GetPozycjeInDzialki$Params } from '../fn/dzialka/get-pozycje-in-dzialki';
-import { saveRoslinaToDzialka1$FormData } from '../fn/dzialka/save-roslina-to-dzialka-1-form-data';
-import { SaveRoslinaToDzialka1$FormData$Params } from '../fn/dzialka/save-roslina-to-dzialka-1-form-data';
-import { saveRoslinaToDzialka1$Json } from '../fn/dzialka/save-roslina-to-dzialka-1-json';
-import { SaveRoslinaToDzialka1$Json$Params } from '../fn/dzialka/save-roslina-to-dzialka-1-json';
+import { saveRoslinaToDzialka } from '../fn/dzialka/save-roslina-to-dzialka';
+import { SaveRoslinaToDzialka$Params } from '../fn/dzialka/save-roslina-to-dzialka';
 import { updateRoslinaKolorInDzialka } from '../fn/dzialka/update-roslina-kolor-in-dzialka';
 import { UpdateRoslinaKolorInDzialka$Params } from '../fn/dzialka/update-roslina-kolor-in-dzialka';
 import { updateRoslinaNotatkaInDzialka } from '../fn/dzialka/update-roslina-notatka-in-dzialka';
@@ -48,49 +46,27 @@ export class DzialkaService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `saveRoslinaToDzialka1()` */
-  static readonly SaveRoslinaToDzialka1Path = '/dzialki/rosliny';
+  /** Path part for operation `saveRoslinaToDzialka()` */
+  static readonly SaveRoslinaToDzialkaPath = '/dzialki/rosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslinaToDzialka1$FormData()` instead.
+   * To access only the response body, use `saveRoslinaToDzialka()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslinaToDzialka1$FormData$Response(params: SaveRoslinaToDzialka1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
-    return saveRoslinaToDzialka1$FormData(this.http, this.rootUrl, params, context);
+  saveRoslinaToDzialka$Response(params?: SaveRoslinaToDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
+    return saveRoslinaToDzialka(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslinaToDzialka1$FormData$Response()` instead.
+   * To access the full response (for headers, for example), `saveRoslinaToDzialka$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslinaToDzialka1$FormData(params: SaveRoslinaToDzialka1$FormData$Params, context?: HttpContext): Observable<DzialkaResponse> {
-    return this.saveRoslinaToDzialka1$FormData$Response(params, context).pipe(
-      map((r: StrictHttpResponse<DzialkaResponse>): DzialkaResponse => r.body)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslinaToDzialka1$Json()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  saveRoslinaToDzialka1$Json$Response(params: SaveRoslinaToDzialka1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<DzialkaResponse>> {
-    return saveRoslinaToDzialka1$Json(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslinaToDzialka1$Json$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  saveRoslinaToDzialka1$Json(params: SaveRoslinaToDzialka1$Json$Params, context?: HttpContext): Observable<DzialkaResponse> {
-    return this.saveRoslinaToDzialka1$Json$Response(params, context).pipe(
+  saveRoslinaToDzialka(params?: SaveRoslinaToDzialka$Params, context?: HttpContext): Observable<DzialkaResponse> {
+    return this.saveRoslinaToDzialka$Response(params, context).pipe(
       map((r: StrictHttpResponse<DzialkaResponse>): DzialkaResponse => r.body)
     );
   }

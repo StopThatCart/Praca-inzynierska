@@ -8,6 +8,7 @@ export interface PowiadomienieDto {
   iloscPolubien?: number;
   nazwyRoslin?: Array<string>;
   odnosnik?: string;
+  okres?: string;
   opis?: string;
   przeczytane?: boolean;
   typ?: string;

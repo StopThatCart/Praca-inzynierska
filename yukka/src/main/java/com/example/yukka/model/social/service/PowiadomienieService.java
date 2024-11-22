@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.yukka.YukkaApplication;
+import com.example.yukka.auth.requests.BanRequest;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
@@ -105,6 +106,23 @@ public class PowiadomienieService {
         }
     }
 
+    @Scheduled(cron = "0 0 0 * * ?")  // Codziennie
+    public void checkUnban() {
+        if (!YukkaApplication.isApplicationReady()) {
+            System.out.println("Aplikacja nie jest gotowa do sprawdzania okresów powiadomień");
+            return; 
+        }
+        System.out.println("Sprawdzanie zbanowanych użytkowników");
+        List<Uzytkownik> uzytkownicy = uzytkownikRepository.getZbanowaniUzytkownicy();
+        if(uzytkownicy.isEmpty()) return;
+        
+        for (Uzytkownik uzytkownik : uzytkownicy) {
+            if(uzytkownik.getBanDo().isBefore(LocalDate.now())) {
+                uzytkownikRepository.banUzytkownik(uzytkownik.getNazwa(), false, null);
+                sendPowiadomienieOfBan(uzytkownik, null);
+            }
+        }
+    }
 
     public void addSpecjalnePowiadomienie(PowiadomienieDTO powiadomienieRequest) {
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest);
@@ -199,6 +217,23 @@ public class PowiadomienieService {
         addPowiadomienie(powiadomienie, odbiorca);
     }
 
+    public void sendPowiadomienieOfBan(Uzytkownik odbiorca, BanRequest request) {
+        PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
+            .typ(TypPowiadomienia.BAN.name())
+            .okres(request.getBanDo())
+            .tytul(request.getPowod())
+            .build();
+        addPowiadomienie(powiadomienie, odbiorca);
+    }
+
+    public void sendPowiadomienieOfUnban(Uzytkownik odbiorca, BanRequest request) {
+        PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
+            .typ(TypPowiadomienia.ODBANOWANIE.name())
+            .build();
+        addPowiadomienie(powiadomienie, odbiorca);
+    }
+
+
     public void sendPowiadomienieOfKomentarz(Uzytkownik nadawca, Uzytkownik odbiorca, Komentarz komentarz) {
         if(komentarz.getUzytkownik().getUzytId().equals(nadawca.getUzytId())) {
             return;
@@ -233,6 +268,7 @@ public class PowiadomienieService {
         template = template.replace("{uzytkownikNazwa}", request.getUzytkownikNazwa() != null ? request.getUzytkownikNazwa() : "");
         template = template.replace("{iloscPolubien}", request.getIloscPolubien() != 0 ? String.valueOf(request.getIloscPolubien()) : "");
         template = template.replace("{data}", request.getData() != null ? request.getData().toString() : "");
+        template = template.replace("{okres}", request.getOkres() != null ? request.getOkres().toString() : "");
 
         StringJoiner joiner = new StringJoiner(", ");
         if (request.getNazwyRoslin() != null) {

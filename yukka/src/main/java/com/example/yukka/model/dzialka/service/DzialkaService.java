@@ -29,10 +29,12 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class DzialkaService {
     private final DzialkaRepository dzialkaRepository;
     private final RoslinaRepository roslinaRepository;
@@ -146,6 +148,7 @@ public class DzialkaService {
     MultipartFile obraz, MultipartFile tekstura, 
     Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
+        log.info("Zapisywanie rośliny na działce [" + request.getNumerDzialki() + "] użytkownika " + uzyt.getNazwa());
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
 
         if(!request.isValidDzialkaRoslinaRequest()) {
@@ -166,14 +169,10 @@ public class DzialkaService {
 
         if(request.getRoslinaId() != null) {
             roslinaRepository.findByRoslinaId(request.getRoslinaId())
-            .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rośliny użytkownika o roslinaId: " + request.getNazwaLacinska()));
+            .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rośliny użytkownika o roslinaId: " + request.getRoslinaId()));
             nazwaLacinskaOrId = request.getRoslinaId();
-        } else if (request.getNazwaLacinska() != null) {
-            roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska())
-            .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rośliny o nazwie łacińskiej " + request.getNazwaLacinska()));
-            nazwaLacinskaOrId = request.getNazwaLacinska();
         } else {
-            throw new IllegalArgumentException("Nie podano nazwy łacińskiej ani id rośliny");
+            throw new IllegalArgumentException("Nie podano id rośliny");
         }
 
         Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), request.getNumerDzialki())
@@ -213,10 +212,6 @@ public class DzialkaService {
     public DzialkaResponse updateRoslinaPozycjaInDzialka(MoveRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
-
-        if(!request.isValidMoveRoslinaRequest()) {
-            throw new IllegalArgumentException("Pozycja rośliny musi być w przydzielonych kafelkach");
-        }
 
         ZasadzonaNaReverse zasadzonaRoslina = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
         if (zasadzonaRoslina == null) {
@@ -258,23 +253,6 @@ public class DzialkaService {
             }
         }
 
-        // List<ZasadzonaNaReverse> zasadzoneRosliny = dzialka.getZasadzoneRosliny();
-        // for (ZasadzonaNaReverse zasadzona : zasadzoneRosliny) {
-        //     if(zasadzona.equalsRoslina(zasadzonaRoslina.getRoslina().getRoslinaId()) 
-        //     || zasadzona.equalsRoslina(zasadzonaRoslina.getRoslina().getNazwaLacinska())) {
-        //         continue;
-        //     }
-
-        //     Set<Pozycja> pozycje = zasadzona.getPozycje();
-        //     Set<Pozycja> nowePozycje = request.getPozycje();
-
-        //     for (Pozycja pozycja : pozycje) {
-        //         if (nowePozycje.contains(pozycja)) {
-        //             throw new IllegalArgumentException("Pozycja (" + pozycja.getX() + ", " + pozycja.getY() 
-        //             + ") jest zajęta przez inną roślinę: " + zasadzona.getRoslina().getNazwa());
-        //         }
-        //     }
-        // }
         List<Pozycja> zajetePozycje = dzialka.isPozycjeOccupied(request);
         if (!zajetePozycje.isEmpty()) {
             throw new IllegalArgumentException("Pozycje są zajęte przez inne rośliny: " + zajetePozycje);
@@ -377,8 +355,6 @@ public class DzialkaService {
         ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
 
         if(pozycja != null) {
-
-
             Dzialka dzialkaZRoslina = null;
             String pfp = null;
             if(obraz != null) {

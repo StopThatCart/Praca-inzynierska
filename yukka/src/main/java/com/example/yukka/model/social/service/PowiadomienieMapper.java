@@ -68,6 +68,7 @@ public class PowiadomienieMapper {
             .iloscPolubien(powiadomienie.getIloscPolubien())
             .data(powiadomienie.getData())
             .dataUtworzenia(powiadomienie.getDataUtworzenia())
+            .okres(powiadomienie.getOkres())
             .build();
     }
 

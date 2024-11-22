@@ -1,6 +1,7 @@
 package com.example.yukka.model.uzytkownik;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,6 +90,9 @@ public class Uzytkownik implements UserDetails, Principal{
     @Property("ban")
     @Builder.Default
     private boolean ban = false;
+
+    @Property("banDo")
+    private LocalDate banDo;
 
     @Relationship(type = "MA_POST", direction = Relationship.Direction.OUTGOING)
     private List<Post> posty;

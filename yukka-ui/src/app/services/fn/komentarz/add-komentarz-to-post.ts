@@ -9,14 +9,17 @@ import { RequestBuilder } from '../../request-builder';
 import { KomentarzRequest } from '../../models/komentarz-request';
 import { KomentarzResponse } from '../../models/komentarz-response';
 
-export interface AddOdpowiedzToKomentarz1$Json$Params {
-      body: KomentarzRequest
+export interface AddKomentarzToPost$Params {
+      body?: {
+'request': KomentarzRequest;
+'file'?: Blob;
+}
 }
 
-export function addOdpowiedzToKomentarz1$Json(http: HttpClient, rootUrl: string, params: AddOdpowiedzToKomentarz1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-  const rb = new RequestBuilder(rootUrl, addOdpowiedzToKomentarz1$Json.PATH, 'post');
+export function addKomentarzToPost(http: HttpClient, rootUrl: string, params?: AddKomentarzToPost$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+  const rb = new RequestBuilder(rootUrl, addKomentarzToPost.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'multipart/form-data');
   }
 
   return http.request(
@@ -29,4 +32,4 @@ export function addOdpowiedzToKomentarz1$Json(http: HttpClient, rootUrl: string,
   );
 }
 
-addOdpowiedzToKomentarz1$Json.PATH = '/komentarze/odpowiedzi';
+addKomentarzToPost.PATH = '/komentarze/posty';

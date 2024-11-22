@@ -786,13 +786,12 @@
         "tags": [
           "Post"
         ],
-        "operationId": "addPost_1",
+        "operationId": "addPost",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file",
                   "request"
                 ],
                 "type": "object",
@@ -806,14 +805,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -834,13 +827,12 @@
         "tags": [
           "Komentarz"
         ],
-        "operationId": "addKomentarzToWiadomoscPrywatna_1",
+        "operationId": "addKomentarzToWiadomoscPrywatna",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file",
                   "request"
                 ],
                 "type": "object",
@@ -854,14 +846,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/KomentarzRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -882,13 +868,12 @@
         "tags": [
           "Komentarz"
         ],
-        "operationId": "addKomentarzToPost_1",
+        "operationId": "addKomentarzToPost",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file",
                   "request"
                 ],
                 "type": "object",
@@ -902,14 +887,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/KomentarzRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -930,13 +909,12 @@
         "tags": [
           "Komentarz"
         ],
-        "operationId": "addOdpowiedzToKomentarz_1",
+        "operationId": "addOdpowiedzToKomentarz",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file",
                   "request"
                 ],
                 "type": "object",
@@ -950,14 +928,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/KomentarzRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -978,7 +950,7 @@
         "tags": [
           "Dzialka"
         ],
-        "operationId": "saveRoslinaToDzialka_1",
+        "operationId": "saveRoslinaToDzialka",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -1001,14 +973,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DzialkaRoslinaRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1287,44 +1253,6 @@
         }
       }
     },
-    "/uzytkownicy/pracownik/ban/{nazwa}": {
-      "patch": {
-        "tags": [
-          "Uzytkownik"
-        ],
-        "operationId": "setBanUzytkownik",
-        "parameters": [
-          {
-            "name": "nazwa",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "ban",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/uzytkownicy/blok/{nazwa}/{blok}": {
       "patch": {
         "tags": [
@@ -1412,6 +1340,43 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UzytkownikResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pracownicy/ban": {
+      "patch": {
+        "tags": [
+          "Pracownik"
+        ],
+        "operationId": "setBanUzytkownik",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "request"
+                ],
+                "type": "object",
+                "properties": {
+                  "request": {
+                    "$ref": "#/components/schemas/BanRequest"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
                 }
               }
             }
@@ -3060,6 +3025,10 @@
           "ban": {
             "type": "boolean"
           },
+          "banDo": {
+            "type": "string",
+            "format": "date"
+          },
           "posty": {
             "type": "array",
             "items": {
@@ -3108,37 +3077,37 @@
           "name": {
             "type": "string"
           },
+          "pracownik": {
+            "type": "boolean"
+          },
+          "admin": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string"
+          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "admin": {
-            "type": "boolean"
-          },
-          "pracownik": {
-            "type": "boolean"
-          },
-          "username": {
+          "password": {
             "type": "string"
           },
           "normalUzytkownik": {
             "type": "boolean"
           },
-          "password": {
-            "type": "string"
-          },
           "enabled": {
+            "type": "boolean"
+          },
+          "accountNonLocked": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
-            "type": "boolean"
-          },
-          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -3758,6 +3727,10 @@
           "dataUtworzenia": {
             "type": "string",
             "format": "date-time"
+          },
+          "okres": {
+            "type": "string",
+            "format": "date"
           }
         }
       },
@@ -3808,6 +3781,7 @@
           "kolor",
           "numerDzialki",
           "pozycje",
+          "roslinaId",
           "wyswietlanie",
           "x",
           "y"
@@ -3842,9 +3816,6 @@
             }
           },
           "roslinaId": {
-            "type": "string"
-          },
-          "nazwaLacinska": {
             "type": "string"
           },
           "kolor": {
@@ -4090,6 +4061,30 @@
           }
         }
       },
+      "BanRequest": {
+        "required": [
+          "ban",
+          "banDo",
+          "nazwa",
+          "powod"
+        ],
+        "type": "object",
+        "properties": {
+          "nazwa": {
+            "type": "string"
+          },
+          "powod": {
+            "type": "string"
+          },
+          "ban": {
+            "type": "boolean"
+          },
+          "banDo": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
       "PowiadomienieResponse": {
         "type": "object",
         "properties": {
@@ -4179,11 +4174,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           }

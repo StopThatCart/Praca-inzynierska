@@ -9,14 +9,17 @@ import { RequestBuilder } from '../../request-builder';
 import { KomentarzRequest } from '../../models/komentarz-request';
 import { KomentarzResponse } from '../../models/komentarz-response';
 
-export interface AddKomentarzToWiadomoscPrywatna1$Json$Params {
-      body: KomentarzRequest
+export interface AddKomentarzToWiadomoscPrywatna$Params {
+      body?: {
+'request': KomentarzRequest;
+'file'?: Blob;
+}
 }
 
-export function addKomentarzToWiadomoscPrywatna1$Json(http: HttpClient, rootUrl: string, params: AddKomentarzToWiadomoscPrywatna1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-  const rb = new RequestBuilder(rootUrl, addKomentarzToWiadomoscPrywatna1$Json.PATH, 'post');
+export function addKomentarzToWiadomoscPrywatna(http: HttpClient, rootUrl: string, params?: AddKomentarzToWiadomoscPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+  const rb = new RequestBuilder(rootUrl, addKomentarzToWiadomoscPrywatna.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'multipart/form-data');
   }
 
   return http.request(
@@ -29,4 +32,4 @@ export function addKomentarzToWiadomoscPrywatna1$Json(http: HttpClient, rootUrl:
   );
 }
 
-addKomentarzToWiadomoscPrywatna1$Json.PATH = '/komentarze/wiadomosciPrywatne';
+addKomentarzToWiadomoscPrywatna.PATH = '/komentarze/wiadomosciPrywatne';

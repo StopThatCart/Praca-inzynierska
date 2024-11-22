@@ -104,9 +104,11 @@ public class UzytkownikService implements  UserDetailsService {
         return commonMapperService.toUzytkownikResponse(uzyt2);
     }
 
-
+    @Transactional(readOnly = true)
     public UzytkownikResponse getUstawienia(Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        log.info("Pobieranie ustawień użytkownika " + uzyt.getNazwa());
+
         Uzytkownik uzytus = uzytkownikRepository.findByNazwa(uzyt.getNazwa())
         .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + uzyt.getNazwa()));
 
@@ -115,6 +117,8 @@ public class UzytkownikService implements  UserDetailsService {
 
     public UzytkownikResponse updateUstawienia(UstawieniaRequest ustawienia, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        log.info("Zmiana ustawień użytkownika: " + uzyt.getNazwa());
+        
         Ustawienia ust = commonMapperService.toUstawienia(ustawienia);
 
         System.out.println("\n\n\nUstawienia przed: " + uzyt.getUstawienia());
@@ -206,26 +210,6 @@ public class UzytkownikService implements  UserDetailsService {
 
         System.out.println("Odblokowywanie użytkownika");
         return uzytkownikRepository.odblokujUzyt(blokowany.getEmail(), uzyt.getEmail());
-    }
-
-    public Boolean setBanUzytkownik(String nazwa, Authentication currentUser, boolean ban){
-        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
-
-        Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + nazwa));
-
-        if(targetUzyt.getEmail().equals(uzyt.getEmail())) {
-            throw new IllegalArgumentException("Nie można banować samego siebie");
-        }
-
-        if(targetUzyt.isBan() == ban) {
-            throw new IllegalArgumentException("Użytkownik jest już zbanowany/odbanowany");
-        }
-
-        if(targetUzyt.isAdmin() || targetUzyt.isPracownik()) {
-            throw new IllegalArgumentException("Admini i pracownicy nie mogą być banowani ani odbanowywani");
-        }
-        return uzytkownikRepository.banUzytkownik(nazwa, ban);
     }
 
     // Bez zabezpieczeń bo to tylko do seedowania

@@ -50,56 +50,38 @@ public class KomentarzController {
         return ResponseEntity.ok(komentarzService.findKomentarzeOfUzytkownik(page, size, nazwa, connectedUser));
     }
 
-    @PostMapping(value = "/odpowiedzi", consumes="application/json", produces="application/json")
-    public ResponseEntity<KomentarzResponse> addOdpowiedzToKomentarz(
-                  //  @PathVariable("komentarz-id") String komentarzId, 
-                    @Valid @RequestBody KomentarzRequest request, 
-                    Authentication connectedUser) {
-        return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, connectedUser));
-    }
-
     @PostMapping(value = "/odpowiedzi", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<KomentarzResponse> addOdpowiedzToKomentarz(
-                  //  @PathVariable("komentarz-id") String komentarzId, 
                     @Valid @RequestPart("request") KomentarzRequest request, 
-                    @Parameter() @RequestPart("file") MultipartFile file, 
-                    Authentication connectedUser) throws FileUploadException {
+                    @Parameter() @RequestPart(value = "file", required = false) MultipartFile file, 
+                    Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addOdpowiedzToKomentarz(request, file, connectedUser));
     }
 
-    @PostMapping(value = "/posty", consumes="application/json", produces="application/json")
-    public ResponseEntity<KomentarzResponse> addKomentarzToPost(
-                    //@PathVariable("post-id") String postId, 
-                    @Valid @RequestBody KomentarzRequest request, 
-                    Authentication connectedUser) {
-        return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, connectedUser));
-    }
 
     // TODO: Jak masz problem z plikami to w endpointach z plikami zamień @RequestBody na @RequestPart("request")
     @PostMapping(value =  "/posty", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<KomentarzResponse> addKomentarzToPost(
-                  //  @PathVariable("post-id") String postId, 
                      @Valid @RequestPart("request") KomentarzRequest request, 
-                     @RequestPart("file") MultipartFile file,
-                    Authentication connectedUser) throws FileUploadException {
-        System.out.println("Received file: " + file.getOriginalFilename());
+                     @RequestPart(value = "file", required = false) MultipartFile file,
+                    Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addKomentarzToPost(request, file, connectedUser));
     }
 
     @PostMapping(value =  "/wiadomosciPrywatne", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<KomentarzResponse> addKomentarzToWiadomoscPrywatna(
                     @Valid @RequestPart("request") KomentarzRequest request, 
-                    @Parameter() @RequestPart("file") MultipartFile file,
-                    Authentication connectedUser) throws FileUploadException {
+                    @Parameter() @RequestPart(value = "file", required = false) MultipartFile file,
+                    Authentication connectedUser) {
         return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(request, file, connectedUser));
     }
 
-    @PostMapping(value = "/wiadomosciPrywatne", consumes="application/json", produces="application/json")
-    public ResponseEntity<KomentarzResponse> addKomentarzToWiadomoscPrywatna(
-                    @Valid @RequestBody KomentarzRequest request, 
-                    Authentication connectedUser){
-        return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(request, connectedUser));
-    }
+    // @PostMapping(value = "/wiadomosciPrywatne", consumes="application/json", produces="application/json")
+    // public ResponseEntity<KomentarzResponse> addKomentarzToWiadomoscPrywatna(
+    //                 @Valid @RequestBody KomentarzRequest request, 
+    //                 Authentication connectedUser){
+    //     return ResponseEntity.ok(komentarzService.addKomentarzToWiadomoscPrywatna(request, connectedUser));
+    // }
 
     // Działa też jako update
     @PutMapping(value = "/oceny", consumes="application/json", produces="application/json")

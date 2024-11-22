@@ -35,6 +35,7 @@ import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.enums.Wyswietlanie;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
+import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
@@ -90,6 +91,7 @@ public class YukkaApplication {
 	private final DzialkaRepository dzialkaRepository;
 
 	private final RoslinaService roslinaService;
+	private final RoslinaRepository roslinaRepository;
 	@SuppressWarnings("unused")
 	private final RoslinaImporterService roslinaImporterService;
 
@@ -201,12 +203,14 @@ public class YukkaApplication {
 		// 		""").build();
 		//powiadomienieService.addSpecjalnePowiadomienie(pow1);
 
-		//seedDzialka();
+		seedDzialka();
 
 	}
 
 	private void seedDzialka() {
 		log.info("Seedowanie dzialek...");
+
+		RoslinaResponse ros = roslinaService.findByNazwaLacinska("symphytum grandiflorum'goldsmith'");
 
 		Path peppinoPath = Paths.get(obrazSeedPath, "peppino.png");
 		MockMultipartFile obraz2 = new MockMultipartFile("tempFileName", "peppino.png", 
@@ -224,9 +228,11 @@ public class YukkaApplication {
 			))
 		.kolor("#6c6ef0")
 		.wyswietlanie(Wyswietlanie.TEKSTURA_KOLOR.toString())
-		.nazwaLacinska("symphytum grandiflorum'goldsmith'")
+		.roslinaId(ros.getRoslinaId())
 		.build();
 
+
+		ros = roslinaService.findByNazwaLacinska("taxus baccata'adpressa'");
 		DzialkaRoslinaRequest req2 = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2)
 		.x(12).y(11)
@@ -239,7 +245,7 @@ public class YukkaApplication {
 			))
 		.kolor("#f06ce7")
 		.wyswietlanie(Wyswietlanie.KOLOR.toString())
-		.nazwaLacinska("taxus baccata'adpressa'")
+		.roslinaId(ros.getRoslinaId())
 		.build();
 		
 		log.info("Dodawanie rosliny 1 do dzialek");
@@ -306,7 +312,7 @@ public class YukkaApplication {
 
 
 		// To samo ale dla anny
-
+		ros = roslinaService.findByNazwaLacinska("vaccinium corymbosum'alvar'");
 		DzialkaRoslinaRequest reqAna = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2)
 		.x(1).y(4)
@@ -319,7 +325,7 @@ public class YukkaApplication {
 			))
 		.kolor("#1ba626")
 		.wyswietlanie(Wyswietlanie.KOLOR.toString())
-		.nazwaLacinska("vaccinium corymbosum'alvar'")
+		.roslinaId(ros.getRoslinaId())
 		.build();
 		
 		log.info("Dodawanie rosliny dla anny do dzialek");
@@ -337,8 +343,10 @@ public class YukkaApplication {
 
 		log.info("Dodawanie komentarzy do rozmowy prywatnej");
 		for (int i = 0; i < 10; i++) {
-			komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Piotra " + i).targetId(usKatarzyna.getNazwa()).build(), usPiotr);
-			komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Katarzyny " + i).targetId(usPiotr.getNazwa()).build(), usKatarzyna);
+			KomentarzRequest piotrWiad = KomentarzRequest.builder().opis("Wiadomość od Piotra " + i).targetId(usKatarzyna.getNazwa()).build();
+			KomentarzRequest katarzynaWiad = KomentarzRequest.builder().opis("Wiadomość od Katarzyny " + i).targetId(usPiotr.getNazwa()).build();
+			komentarzService.addKomentarzToWiadomoscPrywatna(piotrWiad, null, usPiotr);
+			komentarzService.addKomentarzToWiadomoscPrywatna(katarzynaWiad, null, usKatarzyna);
 		}
 
 		// Dodanie paru zaproszeń
@@ -437,13 +445,14 @@ public class YukkaApplication {
 			// Losowe dodawanie obrazka z postem
 			if (Math.random() < 0.5) {
 				Path cheezyPath = Paths.get(obrazSeedPath, "cheezy.jpg");
-				MockMultipartFile obrazPost = new MockMultipartFile("tempFileName", "cheezy.jpg", 
+				byte[] fileContent = fileUtils.readFileFromLocation(cheezyPath);
+				if (fileContent != null) {
+					MockMultipartFile obrazPost = new MockMultipartFile("tempFileName", "cheezy.jpg", 
 					"image/png", fileUtils.readFileFromLocation(cheezyPath));
-				try {
 					post = postService.save(postReq, obrazPost, uzytkownicy.get(rand));
-				} catch (FileUploadException e) {}
+				} 
 			} else {
-				post = postService.save(postReq, uzytkownicy.get(rand));
+				post = postService.save(postReq, null, uzytkownicy.get(rand));
 			}
 			
 			// Dodawanie ocen do postów
@@ -471,13 +480,17 @@ public class YukkaApplication {
 				Komentarz kom = null;
 				if (Math.random() < 0.5) {
 					Path kotPath = Paths.get(obrazSeedPath, "kot.png");
-					MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
-					"image/png", fileUtils.readFileFromLocation(kotPath));
-					try {
+
+					byte[] fileContent = fileUtils.readFileFromLocation(kotPath);
+					if (fileContent == null) {
+						kom = komentarzService.addKomentarzToPost(komReq, null, uzytkownicy.get(rand));
+					} else {
+						MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
+						"image/png", fileUtils.readFileFromLocation(kotPath));
 						kom = komentarzService.addKomentarzToPost(komReq, obrazKom, uzytkownicy.get(rand));
-					} catch (FileUploadException e) {}
+					}
 				} else {
-					kom = komentarzService.addKomentarzToPost(komReq, uzytkownicy.get(rand));
+					kom = komentarzService.addKomentarzToPost(komReq, null, uzytkownicy.get(rand));
 				}
 
 				// Dodawanie losowej ilości odpowiedzi do komentarza
@@ -506,13 +519,18 @@ public class YukkaApplication {
 			Komentarz nowaOdp = null;
 				if (Math.random() < 0.5) {
 					Path kotPath = Paths.get(obrazSeedPath, "kot.png");
-					MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
+
+					byte[] fileContent = fileUtils.readFileFromLocation(kotPath);
+					if (fileContent == null) {
+						nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, null, uzytkownicy.get(rand));
+					} else {
+						MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
 					"image/png", fileUtils.readFileFromLocation(kotPath));
-					try {
 						nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, obrazKom, uzytkownicy.get(rand));
-					} catch (FileUploadException e) {}
+					}
+					
 				} else {
-					nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, uzytkownicy.get(rand));
+					nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, null, uzytkownicy.get(rand));
 				}
 	
 			addOdpowiedziRekursywne(nowaOdp, uzytkownicy, random, depth + 1);

@@ -33,6 +33,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
 
   wyswietlanieOpcje = WyswietlanieRosliny;
   request : DzialkaRoslinaRequest = {
+    roslinaId: '',
     numerDzialki: 1,
     pozycje: [],
     x: -1,
@@ -44,35 +45,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
 
   wybranyPlik: any = null;
   wybranaTekstura: any = null;
-
-  // onFileSelected(event: any) {
-  //   this.wybranyPlik = event.target.files[0];
-
-  //    if (this.wybranyPlik) {
-  //      this.request.obraz = this.wybranyPlik.name;
-
-  //      const reader = new FileReader();
-  //      reader.onload = () => {
-  //        this.wybranyObraz = reader.result as string;
-  //      };
-  //      reader.readAsDataURL(this.wybranyPlik);
-  //    }
-  // }
-  onFileSelected(file: File) {
-    this.wybranyPlik = file;
-  }
-
-  clearImage() {
-    this.wybranyPlik = null;
-  }
-
-  onTeksturaSelected(file: File) {
-    this.wybranaTekstura = file;
-  }
-
-  clearTekstura() {
-    this.wybranaTekstura = null;
-  }
 
   tiles: Tile[] = [];
   rowColls = 20;
@@ -96,10 +68,10 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
   ngOnInit(): void {
     this.initializeTiles();
     this.route.params.subscribe(params => {
-      const id = params['id'];
-      if (id) {
-        this.getRoslinaById(id);
-        this.route.snapshot.data['id'] = id;
+      const roslinaId = params['roslinaId'];
+      if (roslinaId) {
+        this.getRoslinaByRoslinaId(roslinaId);
+        this.route.snapshot.data['roslinaId'] = roslinaId;
 
         this.getPozycjeInDzialki();
 
@@ -160,19 +132,21 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     }
   }
 
-  getRoslinaById(id: number): void {
+  getRoslinaByRoslinaId(roslinaId: string): void {
     this.errorMsg = [];
-    this.roslinaService.findById({ 'id': id }).subscribe({
+    if(!roslinaId) return;
+    this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId }).subscribe({
       next: (roslina) => {
         this.roslina = roslina;
-        this.request.roslinaId = roslina.roslinaId || undefined;
-        this.request.nazwaLacinska = roslina.nazwaLacinska || undefined;
+        if (roslina.roslinaId) {
+          this.request.roslinaId = roslina.roslinaId;
+        }
         console.log(roslina);
       },
       error: (err) => {
         this.roslina = undefined;
         console.log(err);
-        this.errorMsg.push('Nie znaleziono rośliny o podanym id.');
+        this.errorMsg.push('Nie znaleziono rośliny o podanym roslinaId.');
       }
     });
   }
@@ -212,7 +186,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
       zasadzonaRoslina.pozycje?.forEach((pozycja: Pozycja) => {
         const tile = this.tiles.find(t => t.x === pozycja.x && t.y === pozycja.y);
         if (tile) {
-          tile.roslinaId = zasadzonaRoslina.roslina?.id;
+          tile.roslinaId = zasadzonaRoslina.roslina?.roslinaId;
           tile.backgroundColor = this.takenColor;
         }
       });
@@ -237,7 +211,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     this.message = '';
     this.errorMsg = [];
 
-    this.dzialkaService.saveRoslinaToDzialka1$FormData({ body: { request: this.request, obraz: this.wybranyPlik, tekstura: this.wybranaTekstura } }).subscribe({
+    this.dzialkaService.saveRoslinaToDzialka({ body: { request: this.request, obraz: this.wybranyPlik, tekstura: this.wybranaTekstura } }).subscribe({
       next: () => {
         this.goToDzialka();
       },
@@ -258,7 +232,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
   onTileClick(tile: Tile) {
     console.log('x:', tile.x, 'y:', tile.y);
 
-    if(tile.roslinaId  && tile.roslinaId !== this.roslina?.id) {
+    if(tile.roslinaId  && tile.roslinaId !== this.roslina?.roslinaId) {
       console.log('Ten kafelek jest zajęty przez inną roślinę.');
       return;
     }
@@ -274,11 +248,11 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     if (!this.roslina) return;
     console.log(tile);
 
-    if (tile.roslinaId === this.roslina.id) {
+    if (tile.roslinaId === this.roslina.roslinaId) {
       TileUtils.clearTile(tile);
       this.request.pozycje = this.request.pozycje.filter(p => p.x !== tile.x || p.y !== tile.y);
     } else if (!this.request.pozycje.some(p => p.x === tile.x && p.y === tile.y)) {
-      tile.roslinaId = this.roslina.id;
+      tile.roslinaId = this.roslina.roslinaId;
       tile.backgroundColor = this.selectColor;
       this.request.pozycje.push({ x: tile.x, y: tile.y });
     }
@@ -293,7 +267,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
       }
     });
 
-      tile.roslinaId = this.roslina.id;
+      tile.roslinaId = this.roslina.roslinaId;
       tile.zasadzonaRoslina = this.roslina;
       tile.backgroundColor = this.roslinaPosColor;
 
@@ -311,6 +285,20 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     console.log('pozycje:', this.request.pozycje);
   }
 
+  onFileSelected(file: File) {
+    this.wybranyPlik = file;
+  }
 
+  clearImage() {
+    this.wybranyPlik = null;
+  }
+
+  onTeksturaSelected(file: File) {
+    this.wybranaTekstura = file;
+  }
+
+  clearTekstura() {
+    this.wybranaTekstura = null;
+  }
 
 }

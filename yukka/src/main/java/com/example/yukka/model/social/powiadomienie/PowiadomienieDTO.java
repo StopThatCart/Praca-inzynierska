@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.powiadomienie;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -32,5 +33,6 @@ public class PowiadomienieDTO {
     private LocalDateTime data;
     @Builder.Default
     private LocalDateTime dataUtworzenia = LocalDateTime.now();
+    private LocalDate okres;
 
 }

@@ -28,8 +28,6 @@ import { removeSelf } from '../fn/uzytkownik/remove-self';
 import { RemoveSelf$Params } from '../fn/uzytkownik/remove-self';
 import { sendZmianaEmail } from '../fn/uzytkownik/send-zmiana-email';
 import { SendZmianaEmail$Params } from '../fn/uzytkownik/send-zmiana-email';
-import { setBanUzytkownik } from '../fn/uzytkownik/set-ban-uzytkownik';
-import { SetBanUzytkownik$Params } from '../fn/uzytkownik/set-ban-uzytkownik';
 import { setBlokUzytkownik } from '../fn/uzytkownik/set-blok-uzytkownik';
 import { SetBlokUzytkownik$Params } from '../fn/uzytkownik/set-blok-uzytkownik';
 import { updateAvatar } from '../fn/uzytkownik/update-avatar';
@@ -121,31 +119,6 @@ export class UzytkownikService extends BaseService {
   updateUstawienia(params?: UpdateUstawienia$Params, context?: HttpContext): Observable<UzytkownikResponse> {
     return this.updateUstawienia$Response(params, context).pipe(
       map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `setBanUzytkownik()` */
-  static readonly SetBanUzytkownikPath = '/uzytkownicy/pracownik/ban/{nazwa}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `setBanUzytkownik()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  setBanUzytkownik$Response(params: SetBanUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
-    return setBanUzytkownik(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `setBanUzytkownik$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  setBanUzytkownik(params: SetBanUzytkownik$Params, context?: HttpContext): Observable<boolean> {
-    return this.setBanUzytkownik$Response(params, context).pipe(
-      map((r: StrictHttpResponse<boolean>): boolean => r.body)
     );
   }
 

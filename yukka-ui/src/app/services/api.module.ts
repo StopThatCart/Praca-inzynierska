@@ -13,6 +13,7 @@ import { UzytkownikService } from './services/uzytkownik.service';
 import { PowiadomienieService } from './services/powiadomienie.service';
 import { DzialkaService } from './services/dzialka.service';
 import { AuthenticationService } from './services/authentication.service';
+import { PracownikService } from './services/pracownik.service';
 import { OgrodService } from './services/ogrod.service';
 import { SoilResourceService } from './services/soil-resource.service';
 
@@ -33,6 +34,7 @@ import { SoilResourceService } from './services/soil-resource.service';
     PowiadomienieService,
     DzialkaService,
     AuthenticationService,
+    PracownikService,
     OgrodService,
     SoilResourceService,
     ApiConfiguration

@@ -9,20 +9,14 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { addKomentarzToPost1$FormData } from '../fn/komentarz/add-komentarz-to-post-1-form-data';
-import { AddKomentarzToPost1$FormData$Params } from '../fn/komentarz/add-komentarz-to-post-1-form-data';
-import { addKomentarzToPost1$Json } from '../fn/komentarz/add-komentarz-to-post-1-json';
-import { AddKomentarzToPost1$Json$Params } from '../fn/komentarz/add-komentarz-to-post-1-json';
-import { addKomentarzToWiadomoscPrywatna1$FormData } from '../fn/komentarz/add-komentarz-to-wiadomosc-prywatna-1-form-data';
-import { AddKomentarzToWiadomoscPrywatna1$FormData$Params } from '../fn/komentarz/add-komentarz-to-wiadomosc-prywatna-1-form-data';
-import { addKomentarzToWiadomoscPrywatna1$Json } from '../fn/komentarz/add-komentarz-to-wiadomosc-prywatna-1-json';
-import { AddKomentarzToWiadomoscPrywatna1$Json$Params } from '../fn/komentarz/add-komentarz-to-wiadomosc-prywatna-1-json';
+import { addKomentarzToPost } from '../fn/komentarz/add-komentarz-to-post';
+import { AddKomentarzToPost$Params } from '../fn/komentarz/add-komentarz-to-post';
+import { addKomentarzToWiadomoscPrywatna } from '../fn/komentarz/add-komentarz-to-wiadomosc-prywatna';
+import { AddKomentarzToWiadomoscPrywatna$Params } from '../fn/komentarz/add-komentarz-to-wiadomosc-prywatna';
 import { addOcenaToKomentarz } from '../fn/komentarz/add-ocena-to-komentarz';
 import { AddOcenaToKomentarz$Params } from '../fn/komentarz/add-ocena-to-komentarz';
-import { addOdpowiedzToKomentarz1$FormData } from '../fn/komentarz/add-odpowiedz-to-komentarz-1-form-data';
-import { AddOdpowiedzToKomentarz1$FormData$Params } from '../fn/komentarz/add-odpowiedz-to-komentarz-1-form-data';
-import { addOdpowiedzToKomentarz1$Json } from '../fn/komentarz/add-odpowiedz-to-komentarz-1-json';
-import { AddOdpowiedzToKomentarz1$Json$Params } from '../fn/komentarz/add-odpowiedz-to-komentarz-1-json';
+import { addOdpowiedzToKomentarz } from '../fn/komentarz/add-odpowiedz-to-komentarz';
+import { AddOdpowiedzToKomentarz$Params } from '../fn/komentarz/add-odpowiedz-to-komentarz';
 import { findKomentarzById } from '../fn/komentarz/find-komentarz-by-id';
 import { FindKomentarzById$Params } from '../fn/komentarz/find-komentarz-by-id';
 import { findKomentarzeOfUzytkownik } from '../fn/komentarz/find-komentarze-of-uzytkownik';
@@ -94,143 +88,77 @@ export class KomentarzService extends BaseService {
     );
   }
 
-  /** Path part for operation `addKomentarzToWiadomoscPrywatna1()` */
-  static readonly AddKomentarzToWiadomoscPrywatna1Path = '/komentarze/wiadomosciPrywatne';
+  /** Path part for operation `addKomentarzToWiadomoscPrywatna()` */
+  static readonly AddKomentarzToWiadomoscPrywatnaPath = '/komentarze/wiadomosciPrywatne';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addKomentarzToWiadomoscPrywatna1$FormData()` instead.
+   * To access only the response body, use `addKomentarzToWiadomoscPrywatna()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addKomentarzToWiadomoscPrywatna1$FormData$Response(params: AddKomentarzToWiadomoscPrywatna1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-    return addKomentarzToWiadomoscPrywatna1$FormData(this.http, this.rootUrl, params, context);
+  addKomentarzToWiadomoscPrywatna$Response(params?: AddKomentarzToWiadomoscPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+    return addKomentarzToWiadomoscPrywatna(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addKomentarzToWiadomoscPrywatna1$FormData$Response()` instead.
+   * To access the full response (for headers, for example), `addKomentarzToWiadomoscPrywatna$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addKomentarzToWiadomoscPrywatna1$FormData(params: AddKomentarzToWiadomoscPrywatna1$FormData$Params, context?: HttpContext): Observable<KomentarzResponse> {
-    return this.addKomentarzToWiadomoscPrywatna1$FormData$Response(params, context).pipe(
+  addKomentarzToWiadomoscPrywatna(params?: AddKomentarzToWiadomoscPrywatna$Params, context?: HttpContext): Observable<KomentarzResponse> {
+    return this.addKomentarzToWiadomoscPrywatna$Response(params, context).pipe(
       map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
+  /** Path part for operation `addKomentarzToPost()` */
+  static readonly AddKomentarzToPostPath = '/komentarze/posty';
+
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addKomentarzToWiadomoscPrywatna1$Json()` instead.
+   * To access only the response body, use `addKomentarzToPost()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addKomentarzToWiadomoscPrywatna1$Json$Response(params: AddKomentarzToWiadomoscPrywatna1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-    return addKomentarzToWiadomoscPrywatna1$Json(this.http, this.rootUrl, params, context);
+  addKomentarzToPost$Response(params?: AddKomentarzToPost$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+    return addKomentarzToPost(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addKomentarzToWiadomoscPrywatna1$Json$Response()` instead.
+   * To access the full response (for headers, for example), `addKomentarzToPost$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addKomentarzToWiadomoscPrywatna1$Json(params: AddKomentarzToWiadomoscPrywatna1$Json$Params, context?: HttpContext): Observable<KomentarzResponse> {
-    return this.addKomentarzToWiadomoscPrywatna1$Json$Response(params, context).pipe(
+  addKomentarzToPost(params?: AddKomentarzToPost$Params, context?: HttpContext): Observable<KomentarzResponse> {
+    return this.addKomentarzToPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
-  /** Path part for operation `addKomentarzToPost1()` */
-  static readonly AddKomentarzToPost1Path = '/komentarze/posty';
+  /** Path part for operation `addOdpowiedzToKomentarz()` */
+  static readonly AddOdpowiedzToKomentarzPath = '/komentarze/odpowiedzi';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addKomentarzToPost1$FormData()` instead.
+   * To access only the response body, use `addOdpowiedzToKomentarz()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addKomentarzToPost1$FormData$Response(params: AddKomentarzToPost1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-    return addKomentarzToPost1$FormData(this.http, this.rootUrl, params, context);
+  addOdpowiedzToKomentarz$Response(params?: AddOdpowiedzToKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+    return addOdpowiedzToKomentarz(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addKomentarzToPost1$FormData$Response()` instead.
+   * To access the full response (for headers, for example), `addOdpowiedzToKomentarz$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addKomentarzToPost1$FormData(params: AddKomentarzToPost1$FormData$Params, context?: HttpContext): Observable<KomentarzResponse> {
-    return this.addKomentarzToPost1$FormData$Response(params, context).pipe(
-      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addKomentarzToPost1$Json()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  addKomentarzToPost1$Json$Response(params: AddKomentarzToPost1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-    return addKomentarzToPost1$Json(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addKomentarzToPost1$Json$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  addKomentarzToPost1$Json(params: AddKomentarzToPost1$Json$Params, context?: HttpContext): Observable<KomentarzResponse> {
-    return this.addKomentarzToPost1$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `addOdpowiedzToKomentarz1()` */
-  static readonly AddOdpowiedzToKomentarz1Path = '/komentarze/odpowiedzi';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addOdpowiedzToKomentarz1$FormData()` instead.
-   *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
-   */
-  addOdpowiedzToKomentarz1$FormData$Response(params: AddOdpowiedzToKomentarz1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-    return addOdpowiedzToKomentarz1$FormData(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addOdpowiedzToKomentarz1$FormData$Response()` instead.
-   *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
-   */
-  addOdpowiedzToKomentarz1$FormData(params: AddOdpowiedzToKomentarz1$FormData$Params, context?: HttpContext): Observable<KomentarzResponse> {
-    return this.addOdpowiedzToKomentarz1$FormData$Response(params, context).pipe(
-      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addOdpowiedzToKomentarz1$Json()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  addOdpowiedzToKomentarz1$Json$Response(params: AddOdpowiedzToKomentarz1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-    return addOdpowiedzToKomentarz1$Json(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addOdpowiedzToKomentarz1$Json$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  addOdpowiedzToKomentarz1$Json(params: AddOdpowiedzToKomentarz1$Json$Params, context?: HttpContext): Observable<KomentarzResponse> {
-    return this.addOdpowiedzToKomentarz1$Json$Response(params, context).pipe(
+  addOdpowiedzToKomentarz(params?: AddOdpowiedzToKomentarz$Params, context?: HttpContext): Observable<KomentarzResponse> {
+    return this.addOdpowiedzToKomentarz$Response(params, context).pipe(
       map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }

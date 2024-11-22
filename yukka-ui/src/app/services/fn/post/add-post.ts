@@ -9,14 +9,17 @@ import { RequestBuilder } from '../../request-builder';
 import { Post } from '../../models/post';
 import { PostRequest } from '../../models/post-request';
 
-export interface AddPost1$Json$Params {
-      body: PostRequest
+export interface AddPost$Params {
+      body?: {
+'request': PostRequest;
+'file'?: Blob;
+}
 }
 
-export function addPost1$Json(http: HttpClient, rootUrl: string, params: AddPost1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Post>> {
-  const rb = new RequestBuilder(rootUrl, addPost1$Json.PATH, 'post');
+export function addPost(http: HttpClient, rootUrl: string, params?: AddPost$Params, context?: HttpContext): Observable<StrictHttpResponse<Post>> {
+  const rb = new RequestBuilder(rootUrl, addPost.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.body(params.body, 'multipart/form-data');
   }
 
   return http.request(
@@ -29,4 +32,4 @@ export function addPost1$Json(http: HttpClient, rootUrl: string, params: AddPost
   );
 }
 
-addPost1$Json.PATH = '/posty';
+addPost.PATH = '/posty';

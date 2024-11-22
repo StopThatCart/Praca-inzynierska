@@ -1,5 +1,6 @@
 package com.example.yukka.model.social.powiadomienie;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -57,6 +58,8 @@ public class Powiadomienie {
     @Builder.Default
     @Property(name = "dataUtworzenia")
     private LocalDateTime dataUtworzenia = LocalDateTime.now();
+
+    private LocalDate okres;
 
     @Relationship(type = "POWIADAMIA", direction = Relationship.Direction.OUTGOING)
     private Powiadamia powiadamia;
