@@ -56,7 +56,7 @@ public class RoslinaController {
     @PostMapping(value="/szukaj", produces="application/json")
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllRoslinyWithParameters(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(name = "size", defaultValue = "12", required = false) int size,
             @RequestBody RoslinaRequest request) {
         return ResponseEntity.ok(roslinaService.findAllRoslinyWithParameters(page, size, request));
     }
@@ -82,16 +82,10 @@ public class RoslinaController {
         return ResponseEntity.ok(roslinaService.findByRoslinaId(id));
     }
 
-    @PostMapping(consumes="application/json", produces="application/json")
-    public ResponseEntity<RoslinaResponse> saveRoslina(@Valid @RequestBody RoslinaRequest request,
-    Authentication currentUser) {
-        Roslina roslina = roslinaService.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(roslinaMapper.toRoslinaResponse(roslina));
-    }
-
     @PostMapping(consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<RoslinaResponse> saveRoslina(@Valid @RequestPart("request") RoslinaRequest request, 
-    @Parameter() @RequestPart("file") MultipartFile file) {
+    @Parameter() @RequestPart(value = "file", required = false) MultipartFile file,
+    Authentication currentUser) {
         Roslina roslina = roslinaService.save(request, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(roslinaMapper.toRoslinaResponse(roslina));
     }
@@ -112,15 +106,9 @@ public class RoslinaController {
     }
     
     
-    @DeleteMapping("/{nazwa-lacinska}")
-    public ResponseEntity<String> deleteRoslina(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
-        Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska.toLowerCase());
-
-        if (roslina.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nie znaleziono rośliny o nazwie łacińskiej - " + nazwaLacinska);
-        }
-
-        roslinaService.deleteByNazwaLacinska(nazwaLacinska.toLowerCase());
+    @DeleteMapping("/{roslina-id}")
+    public ResponseEntity<String> deleteRoslina(@PathVariable("roslina-id") String roslinaId, Authentication connectedUser) {
+        roslinaService.deleteByRoslinaId(roslinaId, connectedUser);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

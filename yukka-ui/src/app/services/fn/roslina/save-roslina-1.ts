@@ -9,15 +9,15 @@ import { RequestBuilder } from '../../request-builder';
 import { RoslinaRequest } from '../../models/roslina-request';
 import { RoslinaResponse } from '../../models/roslina-response';
 
-export interface SaveRoslina2$FormData$Params {
-      body: {
+export interface SaveRoslina1$Params {
+      body?: {
 'request': RoslinaRequest;
-'file': Blob;
+'file'?: Blob;
 }
 }
 
-export function saveRoslina2$FormData(http: HttpClient, rootUrl: string, params: SaveRoslina2$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
-  const rb = new RequestBuilder(rootUrl, saveRoslina2$FormData.PATH, 'post');
+export function saveRoslina1(http: HttpClient, rootUrl: string, params?: SaveRoslina1$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+  const rb = new RequestBuilder(rootUrl, saveRoslina1.PATH, 'post');
   if (params) {
     rb.body(params.body, 'multipart/form-data');
   }
@@ -32,4 +32,4 @@ export function saveRoslina2$FormData(http: HttpClient, rootUrl: string, params:
   );
 }
 
-saveRoslina2$FormData.PATH = '/rosliny';
+saveRoslina1.PATH = '/rosliny';

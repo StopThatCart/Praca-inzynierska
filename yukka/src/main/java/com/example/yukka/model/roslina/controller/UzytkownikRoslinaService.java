@@ -11,22 +11,27 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.security.access.AccessDeniedException;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UzytkownikRoslinaService {
+    private final UzytkownikRepository uzytkownikRepository;
     private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
     private final RoslinaRepository roslinaRepository;
     private final RoslinaService roslinaService;
@@ -44,10 +49,38 @@ public class UzytkownikRoslinaService {
     }
 
 
-    public PageResponse<RoslinaResponse> findAllRoslinyOfUzytkownik(int page, int size, Authentication connectedUser) {
+    public PageResponse<RoslinaResponse> findRoslinyOfUzytkownik(int page, int size, UzytkownikRoslinaRequest request, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info(nazwa + " próbuje pobrać rośliny użytkownika: " + nazwa);
+        Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie " + nazwa));
+
+
+        if(!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+            throw new AccessDeniedException("Brak uprawnień do przeglądania roślin użytkownika " + targetUzyt.getNazwa());
+        }
+
+        return findRoslinyOfUzytkownik(page, size, request, nazwa, uzyt);
+    }
+
+    public PageResponse<RoslinaResponse> findRoslinyOfUzytkownik(int page, int size, UzytkownikRoslinaRequest request, String nazwa, Uzytkownik uzyt) {
+        if (request == null) {
+            System.out.println("Request is null");
+            request = UzytkownikRoslinaRequest.builder().build();
+        }
+        
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").descending());
-        Page<Roslina> rosliny = uzytkownikRoslinaRepository.findAllRoslinyOfUzytkownik(uzyt.getUzytId(), pageable);
+        //Page<Roslina> rosliny = uzytkownikRoslinaRepository.findRoslinyOfUzytkownik(nazwa, pageable);
+        Roslina ros = roslinaMapper.toRoslina(request);
+        Page<Roslina> rosliny = uzytkownikRoslinaRepository.findAllRoslinyOfUzytkownikWithParameters(
+            ros, 
+            ros.getFormy(), ros.getGleby(), ros.getGrupy(), ros.getKoloryLisci(),
+            ros.getKoloryKwiatow(), ros.getKwiaty(), ros.getOdczyny(),
+            ros.getOkresyKwitnienia(), ros.getOkresyOwocowania(), ros.getOwoce(), ros.getPodgrupa(),
+            ros.getPokroje(), ros.getSilyWzrostu(), ros.getStanowiska(), ros.getWalory(),
+            ros.getWilgotnosci(), ros.getZastosowania(), ros.getZimozielonosci(),
+            pageable);
+
         List<RoslinaResponse> roslinyResponse = rosliny.stream()
                 .map(roslinaMapper::toRoslinaResponse)
                 .toList();
@@ -62,70 +95,33 @@ public class UzytkownikRoslinaService {
         );
     }
 
-
-    public Roslina save(UzytkownikRoslinaRequest request, Authentication connectedUser) {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-
-        Optional<Roslina> roslina = roslinaRepository.findByRoslinaId(request.getRoslinaId());
-        if (roslina.isPresent()) {
-            System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
-            return null;
-        }
-        
-        if(request.areWlasciwosciEmpty()) {
-            Roslina pl = roslinaMapper.toRoslina(request);
-            return uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(), pl);
-        }
-
-        return uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(),
-            request.getNazwa(), roslinaService.createRoslinaId(),
-            request.getOpis(), request.getObraz(), 
-            request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosciAsMap());
-
-    }
-
-
-    public Roslina save(UzytkownikRoslinaRequest request, Uzytkownik connectedUser) {
-        Uzytkownik uzyt = connectedUser;
-
-        Optional<Roslina> roslina = roslinaRepository.findByRoslinaId(request.getRoslinaId());
-        if (roslina.isPresent()) {
-            System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
-            return null;
-        }
-        
-        if(request.areWlasciwosciEmpty()) {
-            Roslina pl = roslinaMapper.toRoslina(request);
-            return uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(), pl);
-        }
-
-        return uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(),
-            request.getNazwa(), request.getRoslinaId(),
-            request.getOpis(), request.getObraz(), 
-            request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosciAsMap());
-
-    }
-
     public Roslina save(UzytkownikRoslinaRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Optional<Roslina> roslina = roslinaRepository.findByRoslinaId(request.getRoslinaId());
-        if (roslina.isPresent()) {
-            System.out.println("\n\n\nUZYT IS PRESENT\n\n\n");
-            return null;
-        }
+        return save(request, file, uzyt);
+    }
+
+    public Roslina save(UzytkownikRoslinaRequest request, MultipartFile file, Uzytkownik connectedUser) {
+        log.info("Zapisywanie rośliny użytkownika: " + connectedUser.getNazwa());
+        Uzytkownik uzyt = connectedUser;
+        request.setRoslinaId(roslinaService.createRoslinaId());
         
-        String leObraz = fileStoreService.saveUzytkownikRoslinaObraz(file, request.getRoslinaId(), uzyt.getUzytId());
-        request.setObraz(leObraz);
+        if (file != null) {
+            request.setObraz(fileStoreService.saveUzytkownikRoslinaObraz(file, request.getRoslinaId(), uzyt.getUzytId()));
+        }
+
         if(request.areWlasciwosciEmpty()) {
+            log.info("Zapisywanie rośliny bez właściwości");
+            log.info("Request id: " + request.getRoslinaId());
             Roslina pl = roslinaMapper.toRoslina(request);
+            log.info("Roslina id: " + pl.getRoslinaId());
+
             Roslina ros = uzytkownikRoslinaRepository.addRoslina(uzyt.getUzytId(), pl);
             return ros;
         }
+        log.info("Zapisywanie rośliny z właściwościami");
         Roslina ros = uzytkownikRoslinaRepository.addRoslina(
             uzyt.getUzytId(),
-            request.getNazwa(), roslinaService.createRoslinaId(),
+            request.getNazwa(), request.getRoslinaId(),
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosciAsMap());
@@ -134,41 +130,53 @@ public class UzytkownikRoslinaService {
     }
 
 
-    // Niechronione. Potem sie poprawi
-    public Roslina update(UzytkownikRoslinaRequest request) {
+    public Roslina update(UzytkownikRoslinaRequest request, Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info("Aktualizacja rośliny " + request.getRoslinaId() + " przez użytkownika: " + uzyt.getNazwa());
+
+        Roslina roslina = uzytkownikRoslinaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), request.getRoslinaId())
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + request.getRoslinaId()));
+
+        System.out.println("Właściwości: " + request.getWlasciwosciAsMap());
         if(request.areWlasciwosciEmpty()) {
             return uzytkownikRoslinaRepository.updateRoslina(
-            request.getNazwa(), request.getRoslinaId(),
+            request.getRoslinaId(), request.getNazwa(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax());
         }
         
-        return uzytkownikRoslinaRepository.updateRoslina(
-            request.getNazwa(), request.getRoslinaId(),
+        Roslina ros = uzytkownikRoslinaRepository.updateRoslina(
+            request.getRoslinaId(), request.getNazwa(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getWlasciwosciAsMap());
+        uzytkownikRoslinaRepository.removeLeftoverUzytkownikWlasciwosci();
+
+        return ros;
     }
 
-
     public void uploadUzytkownikRoslinaObraz(MultipartFile file, Authentication connectedUser, String roslinaId) {
-        Roslina roslina = roslinaRepository.findByRoslinaId(roslinaId).orElse(null);
-        if (roslina == null) {
-            return;
-        }
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        if(!roslina.getUzytkownik().getUzytId().equals(uzyt.getUzytId())){
-            return;
-        }
+        log.info("Zmiana obrazu rośliny " + roslinaId + " przez użytkownika: " + uzyt.getNazwa());
+        // Roslina roslina = roslinaRepository.findByRoslinaId(roslinaId).orElse(null);
+        // if (roslina == null) {
+        //     return;
+        // }
+        // if(!roslina.getUzytkownik().getUzytId().equals(uzyt.getUzytId())){
+        //     return;
+        // }
+
+        Roslina roslina = uzytkownikRoslinaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), roslinaId)
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId));
         
-        //fileUtils.deleteObraz(roslina.getObraz());
+        fileUtils.deleteObraz(roslina.getObraz());
         String pfp = fileStoreService.saveUzytkownikRoslinaObraz(file, roslinaId, uzyt.getUsername());
-        if(pfp == null){
+        if(pfp == null) {
             return;
         }
        
         roslina.setObraz(pfp);
-        uzytkownikRoslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getObraz(), roslina.getWysokoscMin(), roslina.getWysokoscMax());
+        uzytkownikRoslinaRepository.updateRoslinaObraz(roslinaId, pfp);
     }
 
     

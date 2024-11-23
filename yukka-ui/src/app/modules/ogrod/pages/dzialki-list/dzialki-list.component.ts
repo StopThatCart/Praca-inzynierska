@@ -15,6 +15,7 @@ import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.co
   styleUrl: './dzialki-list.component.css'
 })
 export class DzialkiListComponent implements OnInit {
+
   ogrodResponse : OgrodResponse = {};
   uzytNazwa: string | undefined;
 
@@ -66,6 +67,10 @@ export class DzialkiListComponent implements OnInit {
   goToDzialkaPage(numer: number | undefined) {
     if(!numer) return;
     this.router.navigate(['dzialka', numer], { relativeTo: this.route });
+  }
+
+  goToRoslinyUzytkownikaPage() {
+    this.router.navigate(['rosliny'], { relativeTo: this.route });
   }
 
 }

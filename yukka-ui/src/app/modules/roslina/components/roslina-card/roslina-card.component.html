@@ -1,24 +1,12 @@
 
-<!--<a href="#">
-      <div class="card">
-        <img [src]="getRoslinaObraz()" class="card-img-top" alt="... ">
-          <div class="card-body p-4 d-flex flex-column" style="background: var(--bs-secondary);border-color: var(--bs-primary-text-emphasis);">
-              <p class="text-truncate fs-6 card-text mb-0">{{roslina.grupy}}</p>
-              <h4 class="fs-5 card-title">{{roslina.nazwa}}</h4>
-              <p class="text-start card-text" style="max-height: 100px;overflow: hidden;">{{roslina.opis}}</p>
-          </div>
-      </div>
-  </a>
-
-ADD CLASSES HERE d-flex align-items-stretch-->
   <div class="card">
 
     <img [src]="getRoslinaObraz()" class="card-img-top" alt="Card Image">
     <div class="card-body d-flex flex-column" style="background: var(--bs-secondary);border-color: var(--bs-primary-text-emphasis);">
-      <p class="text-truncate mb-1 text-white-50 fs-6 card-text mb-0">({{roslina.nazwaLacinska}})</p>
+      <p *ngIf="!roslina.roslinaUzytkownika" class="text-truncate mb-1 text-white-50 fs-6 card-text mb-0">({{roslina.nazwaLacinska}})</p>
       <h5 class="card-title">{{roslina.nazwa}}</h5>
       <p class=" help-me">{{roslina.opis}}</p>
-      <a (click)="goToRoslina(roslina.nazwaLacinska)" class="btn btn-primary mt-auto align-self-start">Przejdź do rośliny</a>
+      <a (click)="goToRoslina()" class="btn btn-primary mt-auto align-self-start">Przejdź do rośliny</a>
     </div>
 
   </div>

@@ -187,6 +187,16 @@ public class Uzytkownik implements UserDetails, Principal{
             return uzyt.getEmail().equals(targetUzyt.getEmail());
         }
     }
+
+    public boolean hasAuthenticationRights(Uzytkownik targetUzyt, Uzytkownik uzyt) {
+        if(uzyt.isAdmin()){
+            return true;
+        }else if (uzyt.isPracownik()) {
+            return targetUzyt.isNormalUzytkownik() || uzyt.getEmail().equals(targetUzyt.getEmail());
+        } else  {
+            return uzyt.getEmail().equals(targetUzyt.getEmail());
+        }
+    }
     
     @Override
     public String toString() {

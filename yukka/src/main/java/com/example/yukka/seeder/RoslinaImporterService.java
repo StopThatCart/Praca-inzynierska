@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.controller.RoslinaService;
+import com.example.yukka.model.roslina.enums.RoslinaEtykietyFrontend;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
@@ -197,23 +198,24 @@ public class RoslinaImporterService {
     private List<WlasciwoscWithRelations> parseWlasciwosci(String[] row, Map<String, Integer> headerMap) {
         List<WlasciwoscWithRelations> wlasciwosci = new ArrayList<>();
 
-        addWlasciwosc(wlasciwosci, "Grupa", row[headerMap.get("grupa_roslin")]);
-        addWlasciwosc(wlasciwosci, "Podgrupa", row[headerMap.get("grupa_uzytkowa")]);
-        addWlasciwosc(wlasciwosci, "Forma", row[headerMap.get("forma")]);
-        addWlasciwosc(wlasciwosci, "SilaWzrostu", row[headerMap.get("sila_wzrostu")]);
-        addWlasciwosc(wlasciwosci, "Pokroj", row[headerMap.get("pokroj")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.GRUPA.getBackendValue(), row[headerMap.get("grupa_roslin")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.PODGRUPA.getBackendValue(), row[headerMap.get("grupa_uzytkowa")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.FORMA.getBackendValue(), row[headerMap.get("forma")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.SILA_WZROSTU.getBackendValue(), row[headerMap.get("sila_wzrostu")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.POKROJ.getBackendValue(), row[headerMap.get("pokroj")]);
         addWlasciwosc(wlasciwosci, "KolorLisci", row[headerMap.get("barwa_lisci_(igiel)")]);
-        addWlasciwosc(wlasciwosci, "Zimozielonosc", row[headerMap.get("zimozielonosc_lisci_(igiel)")]);
-        addWlasciwosc(wlasciwosci, "Kwiat", row[headerMap.get("rodzaj_kwiatow")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.ZIMOZIELONOSC.getBackendValue(), row[headerMap.get("zimozielonosc_lisci_(igiel)")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.KWIAT.getBackendValue(), row[headerMap.get("rodzaj_kwiatow")]);
         addWlasciwosc(wlasciwosci, "OkresKwitnienia", row[headerMap.get("pora_kwitnienia")]);
-        addWlasciwosc(wlasciwosci, "Owoc", row[headerMap.get("owoce")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.OWOC.getBackendValue(), row[headerMap.get("owoce")]);
         addWlasciwosc(wlasciwosci, "OkresOwocowania", row[headerMap.get("pora_owocowania")]);
-        addWlasciwosc(wlasciwosci, "Stanowisko", row[headerMap.get("naslonecznienie")]);
-        addWlasciwosc(wlasciwosci, "Wilgotnosc", row[headerMap.get("wilgotnosc")]);
-        addWlasciwosc(wlasciwosci, "Odczyn", row[headerMap.get("ph_podloza")]);
-        addWlasciwosc(wlasciwosci, "Gleba", row[headerMap.get("rodzaj_gleby")]);
-        addWlasciwosc(wlasciwosci, "Walor", row[headerMap.get("walory")]);
-        addWlasciwosc(wlasciwosci, "Zastosowanie", row[headerMap.get("zastosowanie")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.STANOWISKO.getBackendValue(), row[headerMap.get("naslonecznienie")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.WILGOTNOSC.getBackendValue(), row[headerMap.get("wilgotnosc")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.ODCZYN.getBackendValue(), row[headerMap.get("ph_podloza")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.GLEBA.getBackendValue(), row[headerMap.get("rodzaj_gleby")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.WALOR.getBackendValue(), row[headerMap.get("walory")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.ZASTOSOWANIE.getBackendValue(), row[headerMap.get("zastosowanie")]);
+        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.ZASTOSOWANIE.getBackendValue(), row[headerMap.get("zastosowanie")]);
         addWlasciwosc(wlasciwosci, "KolorKwiatow", row[headerMap.get("barwa_kwiatow")]);
          //  addWlasciwosc(wlasciwosci, "Nagroda", row[23]);
     

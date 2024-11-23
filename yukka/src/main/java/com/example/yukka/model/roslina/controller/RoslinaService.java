@@ -8,10 +8,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,12 +30,15 @@ import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwosciRodzaje;
+import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class RoslinaService {
     @Autowired
     RoslinaRepository roslinaRepository;
@@ -128,7 +134,7 @@ public class RoslinaService {
     public RoslinaResponse findByRoslinaId(String id) {
         Roslina ros = roslinaRepository.findByRoslinaId(id)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o roslinaId: " + id));
-        return roslinaMapper.toRoslinaResponse(ros);
+        return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
     @Transactional(readOnly = true)
@@ -151,47 +157,25 @@ public class RoslinaService {
             .collect(Collectors.toSet());
     }
 
-    public Roslina save(RoslinaRequest request) {
-        request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
-        request.setRoslinaId(createRoslinaId());
-        Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
-        if (roslina.isPresent()) {
-            throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje.");
-        }
-        
-        if(request.areWlasciwosciEmpty()) {
-            Roslina pl = roslinaMapper.toRoslina(request);
-            return roslinaRepository.addRoslina(pl);
-        }
-        
-
-        System.out.println("\n\n\n Nazwa: " + request.getNazwa() + "\n\n\n");
-        System.out.println("\n\n\n roslinaId: " + request.getRoslinaId() + "\n\n\n");
-       // System.out.println("\n\n\n Relacje: " + request.getWlasciwosciAsMap() + "\n\n\n");
-
-        return roslinaRepository.addRoslina(
-            request.getRoslinaId(),
-            request.getNazwa(), request.getNazwaLacinska(), 
-            request.getOpis(), request.getObraz(), 
-            request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosciAsMap());
-    }
-
     public Roslina save(RoslinaRequest request, MultipartFile file) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
         request.setRoslinaId(createRoslinaId());
+
         Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
             throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje.");
         }
         
-        String leObraz = fileStoreService.saveRoslina(file, request.getNazwaLacinska());
-        request.setObraz(leObraz);
+        if (file != null) {
+            request.setObraz(fileStoreService.saveRoslina(file, request.getNazwaLacinska()));
+        }
+
         if(request.areWlasciwosciEmpty()) {
             Roslina pl = roslinaMapper.toRoslina(request);
             Roslina ros = roslinaRepository.addRoslina(pl);
             return ros;
         }
+
         Roslina ros = roslinaRepository.addRoslina(
             request.getRoslinaId(),
             request.getNazwa(), request.getNazwaLacinska(), 
@@ -253,11 +237,14 @@ public class RoslinaService {
             request.getWysokoscMin(), request.getWysokoscMax(),
             request.getNazwaLacinska(), 
             request.getWlasciwosciAsMap());
+        roslinaRepository.removeLeftoverWlasciwosci();
+        
         return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
     // Uwaga: to jest do głównej rośliny, nie customowej
     public RoslinaResponse uploadRoslinaObraz(String nazwaLacinska, MultipartFile file) {
+        log.info("Aktualizacja obrazu rośliny: " + nazwaLacinska);
         Roslina roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
         
@@ -288,12 +275,37 @@ public class RoslinaService {
         );
     }
 
-    public void deleteByRoslinaId(String roslinaId) {
-       Optional<Roslina> roslina = roslinaRepository.findByRoslinaId(roslinaId);
-        if(roslina.isPresent()) {
-            fileUtils.deleteObraz(roslina.get().getObraz());
+    public void deleteByRoslinaId(String roslinaId, Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+
+        Roslina roslina = roslinaRepository.findByRoslinaId(roslinaId)
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId));
+        
+
+        if(roslina.isUzytkownikRoslina() ) {
+            Uzytkownik targetUzyt = roslina.getUzytkownik();
+            if (!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+                throw new IllegalArgumentException("Nie masz uprawnień do usunięcia rośliny użytkownika: " + targetUzyt.getNazwa());
+            }
+
+            fileUtils.deleteObraz(roslina.getObraz());
             roslinaRepository.deleteByRoslinaId(roslinaId);
+            return;
+            
+        } else if (uzyt.isNormalUzytkownik()) {
+            throw new IllegalArgumentException("Nie masz uprawnień do usunięcia tej rośliny.");
         }
+        
+        fileUtils.deleteObraz(roslina.getObraz());
+        roslinaRepository.deleteByRoslinaId(roslinaId);
+    }
+
+    public void deleteByRoslinaId(String roslinaId, Uzytkownik uzyt) {
+        Roslina roslina = roslinaRepository.findByRoslinaId(roslinaId)
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId));
+
+        fileUtils.deleteObraz(roslina.getObraz());
+        roslinaRepository.deleteByRoslinaId(roslinaId);
     }
 
 

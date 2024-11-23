@@ -23,10 +23,8 @@ import { getWlasciwosciWithRelations } from '../fn/roslina/get-wlasciwosci-with-
 import { GetWlasciwosciWithRelations$Params } from '../fn/roslina/get-wlasciwosci-with-relations';
 import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
 import { RoslinaResponse } from '../models/roslina-response';
-import { saveRoslina2$FormData } from '../fn/roslina/save-roslina-2-form-data';
-import { SaveRoslina2$FormData$Params } from '../fn/roslina/save-roslina-2-form-data';
-import { saveRoslina2$Json } from '../fn/roslina/save-roslina-2-json';
-import { SaveRoslina2$Json$Params } from '../fn/roslina/save-roslina-2-json';
+import { saveRoslina1 } from '../fn/roslina/save-roslina-1';
+import { SaveRoslina1$Params } from '../fn/roslina/save-roslina-1';
 import { updateRoslina } from '../fn/roslina/update-roslina';
 import { UpdateRoslina$Params } from '../fn/roslina/update-roslina';
 import { updateRoslinaObraz } from '../fn/roslina/update-roslina-obraz';
@@ -64,31 +62,6 @@ export class RoslinaService extends BaseService {
     );
   }
 
-  /** Path part for operation `deleteRoslina()` */
-  static readonly DeleteRoslinaPath = '/rosliny/{nazwa-lacinska}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `deleteRoslina()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deleteRoslina$Response(params: DeleteRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return deleteRoslina(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `deleteRoslina$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deleteRoslina(params: DeleteRoslina$Params, context?: HttpContext): Observable<string> {
-    return this.deleteRoslina$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
-  }
-
   /** Path part for operation `updateRoslinaObraz()` */
   static readonly UpdateRoslinaObrazPath = '/rosliny/{nazwa-lacinska}/obraz';
 
@@ -114,49 +87,27 @@ export class RoslinaService extends BaseService {
     );
   }
 
-  /** Path part for operation `saveRoslina2()` */
-  static readonly SaveRoslina2Path = '/rosliny';
+  /** Path part for operation `saveRoslina1()` */
+  static readonly SaveRoslina1Path = '/rosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslina2$FormData()` instead.
+   * To access only the response body, use `saveRoslina1()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslina2$FormData$Response(params: SaveRoslina2$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
-    return saveRoslina2$FormData(this.http, this.rootUrl, params, context);
+  saveRoslina1$Response(params?: SaveRoslina1$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+    return saveRoslina1(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslina2$FormData$Response()` instead.
+   * To access the full response (for headers, for example), `saveRoslina1$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslina2$FormData(params: SaveRoslina2$FormData$Params, context?: HttpContext): Observable<RoslinaResponse> {
-    return this.saveRoslina2$FormData$Response(params, context).pipe(
-      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslina2$Json()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  saveRoslina2$Json$Response(params: SaveRoslina2$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
-    return saveRoslina2$Json(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslina2$Json$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  saveRoslina2$Json(params: SaveRoslina2$Json$Params, context?: HttpContext): Observable<RoslinaResponse> {
-    return this.saveRoslina2$Json$Response(params, context).pipe(
+  saveRoslina1(params?: SaveRoslina1$Params, context?: HttpContext): Observable<RoslinaResponse> {
+    return this.saveRoslina1$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
     );
   }
@@ -283,6 +234,31 @@ export class RoslinaService extends BaseService {
   findById(params: FindById$Params, context?: HttpContext): Observable<RoslinaResponse> {
     return this.findById$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `deleteRoslina()` */
+  static readonly DeleteRoslinaPath = '/rosliny/{roslina-id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteRoslina()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteRoslina$Response(params: DeleteRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+    return deleteRoslina(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteRoslina$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteRoslina(params: DeleteRoslina$Params, context?: HttpContext): Observable<string> {
+    return this.deleteRoslina$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 

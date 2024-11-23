@@ -1,7 +1,6 @@
 package com.example.yukka.model.uzytkownik.controller;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -254,7 +253,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
         WITH u
         OPTIONAL MATCH (u)<-[:STWORZONA_PRZEZ]-(roslina:UzytkownikRoslina)
-        OPTIONAL MATCH (roslina)<-[:MA_ROSLINE]-(wl:UzytkownikWlasciwosc)
+        OPTIONAL MATCH (roslina)-[rel]-(wl:UzytkownikWlasciwosc)
         DETACH DELETE roslina
 
         WITH u
@@ -297,7 +296,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
     @Query("""
         MATCH (roslina:UzytkownikRoslina)
-        OPTIONAL MATCH (roslina)<-[:MA_ROSLINE]-(wl:UzytkownikWlasciwosc)
+        OPTIONAL MATCH (roslina)-[rel]-(wl:UzytkownikWlasciwosc)
         DETACH DELETE roslina, wl
         """)
     void clearUzytkownikRoslina(); 

@@ -7,17 +7,22 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { PageResponseRoslinaResponse } from '../../models/page-response-roslina-response';
+import { UzytkownikRoslinaRequest } from '../../models/uzytkownik-roslina-request';
 
-export interface FindAllRosliny$Params {
+export interface FindAllRoslinyOfUzytkownik$Params {
   page?: number;
   size?: number;
+  'uzytkownik-nazwa'?: string;
+      body: UzytkownikRoslinaRequest
 }
 
-export function findAllRosliny(http: HttpClient, rootUrl: string, params?: FindAllRosliny$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
-  const rb = new RequestBuilder(rootUrl, findAllRosliny.PATH, 'get');
+export function findAllRoslinyOfUzytkownik(http: HttpClient, rootUrl: string, params: FindAllRoslinyOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
+  const rb = new RequestBuilder(rootUrl, findAllRoslinyOfUzytkownik.PATH, 'post');
   if (params) {
     rb.query('page', params.page, {});
     rb.query('size', params.size, {});
+    rb.query('uzytkownik-nazwa', params['uzytkownik-nazwa'], {});
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -30,4 +35,4 @@ export function findAllRosliny(http: HttpClient, rootUrl: string, params?: FindA
   );
 }
 
-findAllRosliny.PATH = '/uzytkownikRosliny';
+findAllRoslinyOfUzytkownik.PATH = '/uzytkownikRosliny/szukaj';

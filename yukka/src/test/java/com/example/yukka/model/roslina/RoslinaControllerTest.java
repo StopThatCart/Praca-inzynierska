@@ -157,7 +157,7 @@ public class RoslinaControllerTest {
         Roslina emptyRoslina2 = Roslina.builder().build();
         RoslinaRequest emptyRoslinaRequest2 = roslinaMapper.toRoslinaRequest(emptyRoslina2);
         assertThrows(NullPointerException.class, () -> {
-            roslinaController.saveRoslina(emptyRoslinaRequest2, mockAuth);
+            roslinaController.saveRoslina(emptyRoslinaRequest2, null, mockAuth);
         });
     }
 
@@ -174,7 +174,7 @@ public class RoslinaControllerTest {
             .build();
 
         RoslinaRequest emptyRoslinaRequest = roslinaMapper.toRoslinaRequest(roslinaWithoutRelations);
-        ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(emptyRoslinaRequest, mockAuth);
+        ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(emptyRoslinaRequest, null, mockAuth);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
         Roslina roslina2 = roslinaRepository.findByNazwaLacinska(lacinskaNazwa2).get();
@@ -198,7 +198,7 @@ public class RoslinaControllerTest {
     @Order(2)
     void testSaveRoslina() {
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
-        ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(roslinaRequest, mockAuth);
+        ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(roslinaRequest, null, mockAuth);
        
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         
@@ -229,7 +229,7 @@ public class RoslinaControllerTest {
     @Order(3)
     void testUpdateRoslina() {
         RoslinaRequest roslinaRequestOld = roslinaMapper.toRoslinaRequest(roslina);
-        roslinaService.save(roslinaRequestOld);
+        roslinaService.save(roslinaRequestOld, null);
 
         String nazwa2 = "Zmieniona nazwa";
         Set<Wlasciwosc> grupa2 = new HashSet<>(Arrays.asList(new Wlasciwosc(Collections.singletonList("Grupa"), "owocowe")));
@@ -282,12 +282,12 @@ public class RoslinaControllerTest {
         System.out.println("\n\n\n<a[[er]]>: " + roslinaMapper.toRoslinaRequest(roslina) + "\n\n\n");
         
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
-        ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(roslinaRequest, mockAuth);
+        ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(roslinaRequest, null, mockAuth);
     
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Roslina roslina2 = roslinaRepository.findByNazwaLacinska(nazwaLacinska).get();
 
-        roslinaController.deleteRoslina(roslina2.getNazwaLacinska());
+        roslinaController.deleteRoslina(roslina2.getRoslinaId(), mockAuth);
 
         Assertions.assertThat(roslinaRepository.findByNazwaLacinska(nazwaLacinska)).isEmpty();
 

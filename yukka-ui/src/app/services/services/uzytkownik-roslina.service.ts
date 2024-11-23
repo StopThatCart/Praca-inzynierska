@@ -9,13 +9,11 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { findAllRosliny } from '../fn/uzytkownik-roslina/find-all-rosliny';
-import { FindAllRosliny$Params } from '../fn/uzytkownik-roslina/find-all-rosliny';
+import { findAllRoslinyOfUzytkownik } from '../fn/uzytkownik-roslina/find-all-rosliny-of-uzytkownik';
+import { FindAllRoslinyOfUzytkownik$Params } from '../fn/uzytkownik-roslina/find-all-rosliny-of-uzytkownik';
 import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
-import { saveRoslina1$FormData } from '../fn/uzytkownik-roslina/save-roslina-1-form-data';
-import { SaveRoslina1$FormData$Params } from '../fn/uzytkownik-roslina/save-roslina-1-form-data';
-import { saveRoslina1$Json } from '../fn/uzytkownik-roslina/save-roslina-1-json';
-import { SaveRoslina1$Json$Params } from '../fn/uzytkownik-roslina/save-roslina-1-json';
+import { saveRoslina } from '../fn/uzytkownik-roslina/save-roslina';
+import { SaveRoslina$Params } from '../fn/uzytkownik-roslina/save-roslina';
 import { updateRoslina1 } from '../fn/uzytkownik-roslina/update-roslina-1';
 import { UpdateRoslina1$Params } from '../fn/uzytkownik-roslina/update-roslina-1';
 import { updateRoslinaObraz1 } from '../fn/uzytkownik-roslina/update-roslina-obraz-1';
@@ -27,75 +25,32 @@ export class UzytkownikRoslinaService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `findAllRosliny()` */
-  static readonly FindAllRoslinyPath = '/uzytkownikRosliny';
+  /** Path part for operation `saveRoslina()` */
+  static readonly SaveRoslinaPath = '/uzytkownikRosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findAllRosliny()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findAllRosliny$Response(params?: FindAllRosliny$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
-    return findAllRosliny(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findAllRosliny$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findAllRosliny(params?: FindAllRosliny$Params, context?: HttpContext): Observable<PageResponseRoslinaResponse> {
-    return this.findAllRosliny$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PageResponseRoslinaResponse>): PageResponseRoslinaResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `saveRoslina1()` */
-  static readonly SaveRoslina1Path = '/uzytkownikRosliny';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslina1$Json()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  saveRoslina1$Json$Response(params: SaveRoslina1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return saveRoslina1$Json(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslina1$Json$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  saveRoslina1$Json(params: SaveRoslina1$Json$Params, context?: HttpContext): Observable<string> {
-    return this.saveRoslina1$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslina1$FormData()` instead.
+   * To access only the response body, use `saveRoslina()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslina1$FormData$Response(params: SaveRoslina1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return saveRoslina1$FormData(this.http, this.rootUrl, params, context);
+  saveRoslina$Response(params?: SaveRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return saveRoslina(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslina1$FormData$Response()` instead.
+   * To access the full response (for headers, for example), `saveRoslina$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslina1$FormData(params: SaveRoslina1$FormData$Params, context?: HttpContext): Observable<string> {
-    return this.saveRoslina1$FormData$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+  saveRoslina(params?: SaveRoslina$Params, context?: HttpContext): Observable<{
+}> {
+    return this.saveRoslina$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
     );
   }
 
@@ -150,6 +105,31 @@ export class UzytkownikRoslinaService extends BaseService {
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)
+    );
+  }
+
+  /** Path part for operation `findAllRoslinyOfUzytkownik()` */
+  static readonly FindAllRoslinyOfUzytkownikPath = '/uzytkownikRosliny/szukaj';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `findAllRoslinyOfUzytkownik()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  findAllRoslinyOfUzytkownik$Response(params: FindAllRoslinyOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
+    return findAllRoslinyOfUzytkownik(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `findAllRoslinyOfUzytkownik$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  findAllRoslinyOfUzytkownik(params: FindAllRoslinyOfUzytkownik$Params, context?: HttpContext): Observable<PageResponseRoslinaResponse> {
+    return this.findAllRoslinyOfUzytkownik$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PageResponseRoslinaResponse>): PageResponseRoslinaResponse => r.body)
     );
   }
 

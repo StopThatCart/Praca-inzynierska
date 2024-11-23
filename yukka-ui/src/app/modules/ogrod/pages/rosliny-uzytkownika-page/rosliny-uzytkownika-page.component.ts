@@ -1,64 +1,46 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { RoslinaService } from '../../../../services/services/roslina.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PageResponseRoslinaResponse, RoslinaRequest, Wlasciwosc, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
 import { CommonModule } from '@angular/common';
-import { RoslinaCardComponent } from "../../components/roslina-card/roslina-card.component";
-import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";
-import { WlasciwoscDropdownComponent } from "../../components/wlasciwosc-dropdown/wlasciwosc-dropdown.component";
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SpinnerComponent } from "../../../../services/LoaderSpinner/spinner/spinner.component";
+import { PaginationComponent } from '../../../../components/pagination/pagination.component';
+import { SpinnerComponent } from '../../../../services/LoaderSpinner/spinner/spinner.component';
+import { RoslinaCardComponent } from '../../../roslina/components/roslina-card/roslina-card.component';
+import { WlasciwoscDropdownComponent } from '../../../roslina/components/wlasciwosc-dropdown/wlasciwosc-dropdown.component';
+import { WlasciwoscTagComponent } from '../../../roslina/components/wlasciwosc-tag/wlasciwosc-tag.component';
+import { WysokoscInputComponent } from '../../../roslina/components/wysokosc-input/wysokosc-input.component';
 import { Convert } from '../../../../services/converts/wlasciwosc-with-relations-convert';
-import { PaginationComponent } from "../../../../components/pagination/pagination.component";
-import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
-import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
+import { PageResponseRoslinaResponse, RoslinaRequest, UzytkownikRoslinaRequest, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
+import { RoslinaService, UzytkownikRoslinaService } from '../../../../services/services';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
+import { WlasciwoscProcessService } from '../../../roslina/services/wlasciwosc-service/wlasciwosc.service';
 
 @Component({
-  selector: 'app-roslina-list',
+  selector: 'app-rosliny-uzytkownika-page',
   standalone: true,
   imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, SpinnerComponent, PaginationComponent, WysokoscInputComponent],
-  templateUrl: './roslina-list.component.html',
-  styleUrl: './roslina-list.component.css'
+  templateUrl: './rosliny-uzytkownika-page.component.html',
+  styleUrl: './rosliny-uzytkownika-page.component.css'
 })
-export class RoslinaListComponent implements OnInit{
+export class RoslinyUzytkownikaPageComponent {
   canAddRoslina: boolean = false;
+  uzytNazwa: string | undefined;
 
   roslinaResponse: PageResponseRoslinaResponse = {};
   wlasciwosciResponse: WlasciwoscResponse[] = [];
   isLoading = false;
   message = '';
 
-  request: RoslinaRequest = {
+  request: UzytkownikRoslinaRequest = {
     nazwa: '',
-    nazwaLacinska: '',
+   // nazwaLacinska: '',
     obraz: '',
     opis: '',
     wysokoscMin: 0,
     wysokoscMax: 100,
     wlasciwosci: [
-/*
-      {
-        etykieta: 'Kolor', relacja: 'MA_KOLOR_LISCI', nazwa: 'ciemnozielone'
-      },
-      {
-        etykieta: 'Okres', relacja: 'MA_OKRES_OWOCOWANIA', nazwa: 'październik'
-      },
 
-      {
-        etykieta: 'Okres', relacja: 'MA_OKRES_KWITNIENIA', nazwa: 'lipiec'
-      },
-
-      {
-        etykieta: 'Gleba', relacja: 'MA_GLEBE', nazwa: 'przeciętna ogrodowa'
-      },
-      {
-        etykieta: 'Gleba', relacja: 'MA_GLEBE', nazwa: 'próchniczna'
-      }
-*/
     ] as WlasciwoscWithRelations[],
   };
-  // Na backendzie jest size 10, więc tutaj tylko testuję
   page = 1;
   size = 12;
   roslinaCount: number = 0;
@@ -67,6 +49,7 @@ export class RoslinaListComponent implements OnInit{
 
   constructor(
     private roslinaService: RoslinaService,
+    private uzytkownikRoslinaService: UzytkownikRoslinaService,
     private wlasciwoscProcessService: WlasciwoscProcessService,
     private router: Router,
     private route: ActivatedRoute,
@@ -74,6 +57,13 @@ export class RoslinaListComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.uzytNazwa = params['uzytkownik-nazwa'];
+      if (this.uzytNazwa) {
+        this.route.snapshot.data['uzytkownik-nazwa'] = this.uzytNazwa;
+      }
+    });
+
     this.checkRoles();
 
     this.route.queryParams.subscribe(params => {
@@ -82,12 +72,11 @@ export class RoslinaListComponent implements OnInit{
       this.request.wysokoscMin = params['wysokoscMin'] || 0;
       this.request.wysokoscMax = params['wysokoscMax'] || 100;
       this.request.nazwa = params['nazwa'] || '';
-      this.request.nazwaLacinska = params['nazwaLacinska'] || '';
+      //this.request.nazwaLacinska = params['nazwaLacinska'] || '';
 
       // Uwaga: uważaj na api-gen, bo trzeba ręcznie tworzyć konwersję na JSON
       // Tutaj link dla przyszłego mnie. https://app.quicktype.io/
       let wlasciwosci2 = params['wlasciwosci'] ? JSON.parse(params['wlasciwosci']) : [];
-     // console.log("Właściwości2: " + wlasciwosci2);
 
       this.request.wlasciwosci = Convert.toWlasciwoscWithRelationsArray(JSON.stringify(wlasciwosci2));
 
@@ -96,7 +85,8 @@ export class RoslinaListComponent implements OnInit{
   }
 
   private checkRoles() {
-    this.canAddRoslina = this.tokenService.isAdmin() || this.tokenService.isPracownik();
+    this.canAddRoslina = //this.tokenService.isAdmin() || this.tokenService.isPracownik() ||
+    this.tokenService.nazwa === this.uzytNazwa;
   }
 
   goToAddRoslina() {
@@ -105,39 +95,17 @@ export class RoslinaListComponent implements OnInit{
     }
   }
 
-  /*
-  fetchWlasciwosciFromString(wlasciwosciString: string): WlasciwoscWithRelations[] {
-    let lel: WlasciwoscWithRelations[] = [];
-    let items = wlasciwosciString.substring(1, wlasciwosciString.length - 1).split('},{');
-    items = items.map((item: string) => (item[0] !== '{' ? '{' + item : item) + (item[item.length - 1] !== '}' ? '}' : ''));
-    for (let item of items) {
-      console.log("Item: " + item);
-      let w = { etykieta: '', relacja: '', nazwa: '' } as WlasciwoscWithRelations;
-
-      let etykietaMatch = item.match(/"etykieta":"(.*?)"/);
-      let relacjaMatch = item.match(/"relacja":"(.*?)"/);
-      let nazwaMatch = item.match(/"nazwa":"(.*?)"/);
-
-      if (etykietaMatch) w.etykieta = etykietaMatch[1];
-      if (relacjaMatch) w.relacja = relacjaMatch[1];
-      if (nazwaMatch) w.nazwa = nazwaMatch[1];
-
-      lel.push(w);
-    }
-    return lel;
-  }
-    */
-
-
   findAllRosliny() {
    // console.log('Request:', this.request);
     this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 1;
 
     this.isLoading = true;
-    this.roslinaService.findAllRoslinyWithParameters({
+    this.uzytkownikRoslinaService.findAllRoslinyOfUzytkownik({
       page: this.page - 1,
       size: this.size,
+      'uzytkownik-nazwa': this.uzytNazwa,
       body: this.request
+
     }).subscribe({
         next: (rosliny) => {
           this.roslinaResponse = rosliny;
@@ -166,7 +134,6 @@ export class RoslinaListComponent implements OnInit{
   onSearch() {
    // console.log('Search:', this.request);
     this.goToFirstPage();
-   // this.findAllRosliny();
   }
 
   onWysokoscMinChange(min: number) {
@@ -195,13 +162,13 @@ export class RoslinaListComponent implements OnInit{
   goToPage(page: number) {
     const wlasciwosciJson = Convert.wlasciwoscWithRelationsArrayToJson(this.request.wlasciwosci);
 
-    this.router.navigate(['/rosliny'], {
+    this.router.navigate(['ogrod', this.uzytNazwa, 'rosliny'], {
       queryParams: {
         page: page,
         wysokoscMin: this.request.wysokoscMin,
         wysokoscMax: this.request.wysokoscMax,
         nazwa: this.request.nazwa,
-        nazwaLacinska: this.request.nazwaLacinska,
+       // nazwaLacinska: this.request.nazwaLacinska,
         wlasciwosci: wlasciwosciJson
       },
       queryParamsHandling: 'merge'

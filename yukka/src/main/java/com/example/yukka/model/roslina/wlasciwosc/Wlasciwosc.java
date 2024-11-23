@@ -8,12 +8,10 @@ import java.util.Objects;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
     import org.springframework.data.neo4j.core.schema.Property;
-    import org.springframework.data.neo4j.core.schema.Relationship;
 
-    import com.example.yukka.model.roslina.Roslina;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+    import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.Getter;
+    import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -31,17 +29,6 @@ public class Wlasciwosc {
     private long id;
     @Property("nazwa")
     private String nazwa;
-
-    @JsonIgnore
-    @Relationship(type="MA_ROSLINE", direction=Relationship.Direction.OUTGOING)
-    private List<Roslina> plants;
-
-    // Na razie nieużywane
-    /* 
-    public List<Roslina> getPlants() {
-        return plants;
-    }
-    */
 
     public Wlasciwosc(List<String> labels, String nazwa) {
         this.labels = labels;

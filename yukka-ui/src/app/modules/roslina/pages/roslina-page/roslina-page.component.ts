@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoslinaResponse } from '../../../../services/models';
-import { RoslinaService } from '../../../../services/services';
+import { RoslinaService, UzytkownikRoslinaService } from '../../../../services/services';
 import { switchMap } from 'rxjs/operators';
 import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
 import { TokenService } from '../../../../services/token/token.service';
@@ -31,17 +31,20 @@ export class RoslinaPageComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private roslinaService: RoslinaService,
+    private uzytkownikRoslinaService: UzytkownikRoslinaService,
     private wlasciwoscProcessService: WlasciwoscProcessService,
     private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
     this.checkRoles();
+
     this.route.params.subscribe(params => {
-      const nazwaLacinska = params['nazwa-lacinska'];
-      if (nazwaLacinska) {
-        this.getRoslinaByNazwaLacinska(nazwaLacinska);
-        this.route.snapshot.data['nazwa-lacinska'] = nazwaLacinska;
+      const roslinaId = params['roslina-id'];
+      if (roslinaId) {
+        this.getRoslinaByRoslinaId(roslinaId);
+        //this.getRoslinaByNazwaLacinska(nazwaLacinska);
+        this.route.snapshot.data['roslina-id'] = roslinaId;
       }
     });
 
@@ -50,35 +53,41 @@ export class RoslinaPageComponent implements OnInit {
 
   private checkRoles() {
     this.isAdminOrPracownik = this.tokenService.isAdmin() || this.tokenService.isPracownik();
+
     this.isLoggedIn = this.tokenService.isTokenValid();
+  }
+
+  isAutor(): boolean | undefined {
+    return this.roslina?.roslinaUzytkownika && this.tokenService.nazwa === this.roslina.autor;
   }
 
 
   goToUpdateRoslina() {
-    if (this.isAdminOrPracownik && this.roslina?.nazwaLacinska) {
-      this.router.navigate(['aktualizuj'], { relativeTo: this.route });
+    if ((this.isAdminOrPracownik || this.isAutor()) && this.roslina?.roslinaId) {
+      this.router.navigate(['rosliny', this.roslina.roslinaId ,'aktualizuj']);
     }
   }
 
   goToUploadRoslinaObraz() {
-    if (this.isAdminOrPracownik && this.roslina?.nazwaLacinska) {
-      this.router.navigate(['obraz'], { relativeTo: this.route });
+    if ((this.isAdminOrPracownik || this.isAutor()) && this.roslina?.roslinaId) {
+      this.router.navigate(['rosliny', this.roslina.roslinaId ,'obraz']);
     }
   }
 
   goToAddRoslinaToDzialka() {
-    if (this.roslina?.nazwaLacinska) {
+    if (this.roslina?.roslinaId) {
       this.router.navigate(['ogrod', this.tokenService.nazwa, 'dzialka', 'dodawanie', this.roslina.roslinaId]);
     }
   }
 
+  // TODO
   removeRoslina() {
-    if(!this.isAdminOrPracownik || !this.roslina?.nazwaLacinska) {
+    if(!(this.isAdminOrPracownik || this.isAutor()) || !this.roslina?.roslinaId) {
       return;
     }
 
     if(confirm("Czy na pewno chcesz usunąć roślinę?")) {
-      this.roslinaService.deleteRoslina({ 'nazwa-lacinska': this.roslina?.nazwaLacinska }).subscribe({
+      this.roslinaService.deleteRoslina({ 'roslina-id': this.roslina?.roslinaId }).subscribe({
         next: () => {
           this.router.navigate(['..'], { relativeTo: this.route });
         },
@@ -99,6 +108,20 @@ export class RoslinaPageComponent implements OnInit {
       error: (err) => {
         this.roslina = null;
         this.errorMessage = 'Nie znaleziono rośliny o podanej nazwie łacińskiej.';
+      }
+    });
+  }
+
+  getRoslinaByRoslinaId(roslinaId: string): void {
+    this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId }).subscribe({
+      next: (roslina) => {
+        this.roslina = roslina;
+        this.roslinaWlasciwosci = this.wlasciwoscProcessService.setRoslinaWlasciwosci(roslina);
+        this.errorMessage = null;
+      },
+      error: (err) => {
+        this.roslina = null;
+        this.errorMessage = 'Nie znaleziono rośliny o podanym id.';
       }
     });
   }

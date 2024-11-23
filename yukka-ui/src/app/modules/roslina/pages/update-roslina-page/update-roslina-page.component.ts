@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { WlasciwoscDropdownComponent } from '../../components/wlasciwosc-dropdown/wlasciwosc-dropdown.component';
 import { WlasciwoscTagComponent } from '../../components/wlasciwosc-tag/wlasciwosc-tag.component';
 import { WysokoscInputComponent } from '../../components/wysokosc-input/wysokosc-input.component';
-import { RoslinaRequest, RoslinaResponse, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
+import { RoslinaRequest, RoslinaResponse, UzytkownikRoslinaRequest, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
 import { RoslinaService } from '../../../../services/services';
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasciwosc/add-custom-wlasciwosc.component';
 import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
+import { UzytkownikRoslinaService } from '../../../../services/services/uzytkownik-roslina.service';
 
 @Component({
   selector: 'app-update-roslina-page',
@@ -44,7 +45,7 @@ export class UpdateRoslinaPageComponent {
 
   roslina: RoslinaResponse = {};
 
-  nazwaLacinska: string = '';
+  //roslinaId: string = '';
 
   wybranyObraz: any;
   wybranyPlik: any;
@@ -54,6 +55,7 @@ export class UpdateRoslinaPageComponent {
 
   constructor(
     private roslinaService: RoslinaService,
+    private uzytkownikRoslinaService: UzytkownikRoslinaService,
     private wlasciwoscProcessService: WlasciwoscProcessService,
     private router: Router,
     private route: ActivatedRoute
@@ -62,16 +64,16 @@ export class UpdateRoslinaPageComponent {
   ngOnInit(): void {
     this.fetchWlasciwosci();
     this.route.params.subscribe(params => {
-      const nazwaLacinska = params['nazwa-lacinska'];
-      if (nazwaLacinska) {
-        this.getRoslinaByNazwaLacinska(nazwaLacinska);
-        this.route.snapshot.data['nazwa-lacinska'] = nazwaLacinska;
+      const roslinaId = params['roslina-id'];
+      if (roslinaId) {
+        this.getRoslinaByRoslinaId(roslinaId);
+        this.route.snapshot.data['roslina-id'] = roslinaId;
       }
     });
   }
 
-  getRoslinaByNazwaLacinska(nazwaLacinska: string): void {
-    this.roslinaService.findByNazwaLacinska({ 'nazwa-lacinska': nazwaLacinska }).subscribe({
+  getRoslinaByRoslinaId(roslinaId: string): void {
+    this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId }).subscribe({
       next: (roslina) => {
         this.roslina = roslina;
 
@@ -80,7 +82,7 @@ export class UpdateRoslinaPageComponent {
       },
       error: (err) => {
         this.roslina = {};
-        this.errorMsg.push('Nie znaleziono rośliny o podanej nazwie łacińskiej.');
+        this.errorMsg.push('Nie znaleziono rośliny o podanym id.');
       }
     });
   }
@@ -124,11 +126,16 @@ export class UpdateRoslinaPageComponent {
   }
 
   updateRoslina(): void {
-    if(!this.roslina.nazwaLacinska) {
+    if(!this.roslina.roslinaId) {
       return;
     }
     this.errorMsg = [];
     this.message = '';
+
+    if (this.roslina.roslinaUzytkownika) {
+      this.updateUzytkownikRoslina(this.request);
+      return;
+    } else if (!this.roslina.nazwaLacinska) return;
 
     this.request.nazwaLacinska = this.request.nazwaLacinska.toLowerCase();
 
@@ -139,7 +146,34 @@ export class UpdateRoslinaPageComponent {
         next: () => {
           this.message = 'Roślina została zaaktualizowana';
           //this.getRoslinaByNazwaLacinska(this.request.nazwaLacinska);
-          this.router.navigate(['/rosliny', this.request.nazwaLacinska]);
+          this.router.navigate(['/rosliny', this.roslina.roslinaId]);
+        },
+        error: (error) => {
+          this.message = 'Błąd podczas aktualizacji rośliny';
+          this.handleErrors(error);
+        }
+      });
+  }
+
+  updateUzytkownikRoslina(request: RoslinaRequest): void {
+    console.log("AKTUALIZACJA ROŚLINY UZYTKOWNIKA");
+    let uzytRequest : UzytkownikRoslinaRequest = {
+      roslinaId: this.roslina.roslinaId,
+      nazwa: request.nazwa,
+      obraz: '',
+      opis: request.opis,
+      wysokoscMin: request.wysokoscMin,
+      wysokoscMax: request.wysokoscMax,
+      wlasciwosci: request.wlasciwosci
+    }
+
+    console.log("Uzytkownik roslina request: ", uzytRequest);
+
+    this.uzytkownikRoslinaService.updateRoslina1({ body: uzytRequest })
+      .subscribe({
+        next: () => {
+          this.message = 'Roślina została zaaktualizowana';
+          this.router.navigate(['/rosliny', this.roslina.roslinaId]);
         },
         error: (error) => {
           this.message = 'Błąd podczas aktualizacji rośliny';

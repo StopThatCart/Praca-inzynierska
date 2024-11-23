@@ -261,7 +261,15 @@ public class YukkaApplication {
 		String lolId = "12345678";
 		
 		// Wiem wiem, okropieństwo
-		uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usPiotr, lolId);
+		PageResponse<RoslinaResponse> roslinyUzytkownika = uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usPiotr);
+		if (roslinyUzytkownika.getSize() == 0) {
+			throw new RuntimeException("Nie udało się załadować roślin użytkownika.");
+
+		}
+		RoslinaResponse roslinaUzyt = roslinyUzytkownika.getContent().get(0);
+		
+
+
 		
         DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2).x(9).y(9)
@@ -273,7 +281,7 @@ public class YukkaApplication {
 			))
 		.kolor("#ebf06c")
 		.wyswietlanie(Wyswietlanie.TEKSTURA_KOLOR.toString())
-		.roslinaId(lolId)
+		.roslinaId(roslinaUzyt.getRoslinaId())
 		.build();
 
 		dzialkaService.saveRoslinaToDzialka(req3, null, null, usPiotr);

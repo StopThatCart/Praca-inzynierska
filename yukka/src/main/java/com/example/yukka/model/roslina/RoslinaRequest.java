@@ -6,10 +6,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import com.example.yukka.model.roslina.enums.RoslinaEtykietyFrontend;
+import com.example.yukka.model.roslina.enums.RoslinaRelacje;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
-import com.example.yukka.validations.ValidWysokosc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +25,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-@ValidWysokosc
+//@ValidWysokosc
 public class RoslinaRequest {
 
     private String roslinaId;
@@ -46,11 +49,19 @@ public class RoslinaRequest {
 
     @NotNull(message = "wysokość musi być zdefiniowana")
     @Min(value = 0, message = "Wysokość minimalna nie może być mniejsza niż 0")
+    @Max(value = 300, message = "Wysokość minimalna nie może być większa niż 300")
     private Double wysokoscMin;
 
     @NotNull(message = "wysokość musi być zdefiniowana")
     @Min(value = 0, message = "Wysokość maksymalna nie może być mniejsza niż 0")
+    @Max(value = 300, message = "Wysokość maksymalna nie może być większa niż 300")
     private Double wysokoscMax;
+
+    @JsonIgnore
+    @AssertTrue(message = "Wysokość minimalna nie może być większa niż wysokości maksymalnej")
+    private boolean isValidWysokosc() {
+        return this.wysokoscMin <= this.wysokoscMax;
+    }
 
     @NotNull(message = "Właściwości nie mogą być nullem. Daj puste jak musisz.")
     @Builder.Default
@@ -90,11 +101,29 @@ public class RoslinaRequest {
         }
         return wlasciwosci.stream()
             .map(w -> Map.of(
-                "etykieta", w.getEtykieta(),
+                "etykieta", RoslinaEtykietyFrontend.toBackend(w.getEtykieta()),
                 "nazwa", w.getNazwa(),
-                "relacja", w.getRelacja()
+                "relacja", RoslinaRelacje.valueOf(w.getRelacja().toUpperCase()).toString()
             ))
             .collect(Collectors.toList());
     }
+
+    @AssertTrue(message = "W liście właściwości znajdują się niepoprawne etykiety")
+    @JsonIgnore
+    public boolean isValidEtykiety() {
+        if (wlasciwosci == null || wlasciwosci.isEmpty()) {
+            return true;
+        }
+        for (WlasciwoscWithRelations wlasciwosc : wlasciwosci) {
+            if (!RoslinaEtykietyFrontend.fromString(wlasciwosc.getEtykieta()).isPresent()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+
     
 }

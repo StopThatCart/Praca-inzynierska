@@ -3,15 +3,16 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WlasciwoscDropdownComponent } from '../../components/wlasciwosc-dropdown/wlasciwosc-dropdown.component';
 import { WlasciwoscResponse } from '../../../../services/models/wlasciwosc-response';
-import { RoslinaRequest, WlasciwoscWithRelations } from '../../../../services/models';
-import { RoslinaService } from '../../../../services/services';
-import { Router } from '@angular/router';
+import { RoslinaRequest, UzytkownikRoslinaRequest, WlasciwoscWithRelations } from '../../../../services/models';
+import { RoslinaService, UzytkownikRoslinaService } from '../../../../services/services';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SpinnerComponent } from '../../../../services/LoaderSpinner/spinner/spinner.component';
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
 import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";
 import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasciwosc/add-custom-wlasciwosc.component';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
+import { TokenService } from '../../../../services/token/token.service';
 
 @Component({
   selector: 'app-add-roslina-page',
@@ -31,6 +32,7 @@ export class AddRoslinaPageComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild(WlasciwoscTagComponent) wlasciwoscTagComponent!: WlasciwoscTagComponent;
 
+  doKatalogu: boolean = false;
   request: RoslinaRequest = {
     nazwa: '',
     nazwaLacinska: '',
@@ -49,8 +51,11 @@ export class AddRoslinaPageComponent implements OnInit {
 
   constructor(
     private roslinaService: RoslinaService,
+    private uzytkownikRoslinaService: UzytkownikRoslinaService,
     private wlasciwoscProcessService: WlasciwoscProcessService,
-    private router: Router
+    private tokenService: TokenService,
+    private router: Router,
+    private route : ActivatedRoute
   ) {}
 
   onFileSelected(event: any) {
@@ -131,32 +136,57 @@ export class AddRoslinaPageComponent implements OnInit {
     }
   }
 
+  isAddingUzytkownikRoslina(): boolean {
+    return this.tokenService.isNormalUzytkownik();
+  }
+
   addRoslina(): void {
     this.errorMsg = [];
     this.message = '';
     this.request.nazwaLacinska = this.request.nazwaLacinska.toLowerCase();
-    if(this.request.obraz === '') {
-      this.roslinaService.saveRoslina2$Json({ body: this.request }).subscribe({
-        next: () => {
-          this.afterAddRoslina();
-        },
-        error: (error) => {
-          this.message = 'Błąd podczas dodawania rośliny';
-          this.handleErrors(error);
-        }
-      });
-    } else {
-      this.roslinaService.saveRoslina2$FormData({ body: { request: this.request, file: this.wybranyPlik } }).subscribe({
-        next: () => {
-          this.afterAddRoslina();
-        },
-        error: (error) => {
-          this.message = 'Błąd podczas dodawania rośliny';
-          this.handleErrors(error);
-        }
-      });
+
+    let leFile = null;
+    if (this.request.obraz !== '') {
+      leFile = this.wybranyPlik;
     }
 
+    if (this.isAddingUzytkownikRoslina()) {
+      this.addUzytkownikRoslina(this.request, leFile);
+      return;
+    }
+    console.log('Dodawanie rośliny: ', this.request);
+    this.roslinaService.saveRoslina1({ body: { request: this.request, file: leFile } }).subscribe({
+      next: () => {
+        this.afterAddRoslina();
+      },
+      error: (error) => {
+        this.message = 'Błąd podczas dodawania rośliny';
+        this.handleErrors(error);
+      }
+    });
+  }
+
+
+  addUzytkownikRoslina(request: RoslinaRequest, leFile: any) {
+    console.log('Dodawanie rośliny użytkownika: ', request);
+    let uzytRequest: UzytkownikRoslinaRequest = {
+      nazwa: this.request.nazwa,
+      opis: this.request.opis,
+      //obraz: '',
+      wysokoscMin: this.request.wysokoscMin,
+      wysokoscMax: this.request.wysokoscMax,
+      wlasciwosci: this.request.wlasciwosci,
+    };
+
+    this.uzytkownikRoslinaService.saveRoslina({ body: { request: uzytRequest, file: leFile } }).subscribe({
+      next: () => {
+        this.afterAddRoslina();
+      },
+      error: (error) => {
+        this.message = 'Błąd podczas dodawania rośliny';
+        this.handleErrors(error);
+      }
+    });
   }
 
   afterAddRoslina(): void {

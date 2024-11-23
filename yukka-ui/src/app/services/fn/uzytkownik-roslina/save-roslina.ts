@@ -8,15 +8,16 @@ import { RequestBuilder } from '../../request-builder';
 
 import { UzytkownikRoslinaRequest } from '../../models/uzytkownik-roslina-request';
 
-export interface SaveRoslina1$FormData$Params {
-      body: {
-'request'?: UzytkownikRoslinaRequest;
-'file': Blob;
+export interface SaveRoslina$Params {
+      body?: {
+'request': UzytkownikRoslinaRequest;
+'file'?: Blob;
 }
 }
 
-export function saveRoslina1$FormData(http: HttpClient, rootUrl: string, params: SaveRoslina1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, saveRoslina1$FormData.PATH, 'post');
+export function saveRoslina(http: HttpClient, rootUrl: string, params?: SaveRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+  const rb = new RequestBuilder(rootUrl, saveRoslina.PATH, 'post');
   if (params) {
     rb.body(params.body, 'multipart/form-data');
   }
@@ -26,9 +27,10 @@ export function saveRoslina1$FormData(http: HttpClient, rootUrl: string, params:
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<string>;
+      return r as StrictHttpResponse<{
+      }>;
     })
   );
 }
 
-saveRoslina1$FormData.PATH = '/uzytkownikRosliny';
+saveRoslina.PATH = '/uzytkownikRosliny';
