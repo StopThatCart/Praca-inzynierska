@@ -37,6 +37,7 @@ public class PowiadomienieMapper {
         return PowiadomienieResponse.builder()
             .id(powiadomienie.getId())
             .typ(powiadomienie.getTyp())
+            .isZgloszenie(powiadomienie.isZgloszenie())
             .tytul(powiadomienie.getTytul())
             .przeczytane(przeczytane)
             .odnosnik(powiadomienie.getOdnosnik())
@@ -57,6 +58,7 @@ public class PowiadomienieMapper {
         }
         return PowiadomienieDTO.builder()
             .id(powiadomienie.getId())
+            .isZgloszenie(powiadomienie.isZgloszenie())
             .typ(powiadomienie.getTyp())
             .tytul(powiadomienie.getTytul())
             .przeczytane(powiadomienie.getPowiadamia() != null ? powiadomienie.getPowiadamia().getPrzeczytane() : null)

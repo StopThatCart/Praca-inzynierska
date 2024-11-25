@@ -4,9 +4,7 @@ package com.example.yukka.validations.pozycje;
 
 import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
-import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
-import com.example.yukka.validations.ValidWysokosc;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

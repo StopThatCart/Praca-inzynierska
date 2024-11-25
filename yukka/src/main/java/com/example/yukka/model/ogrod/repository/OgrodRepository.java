@@ -9,7 +9,7 @@ import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.yukka.model.ogrod.Ogrod;
-import com.example.yukka.model.social.post.Post;
+
 
 public interface OgrodRepository  extends Neo4jRepository<Ogrod, Long> {
 

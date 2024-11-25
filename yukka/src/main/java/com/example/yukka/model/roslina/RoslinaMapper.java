@@ -21,8 +21,6 @@ import com.example.yukka.model.ogrod.OgrodResponse;
 import com.example.yukka.model.roslina.enums.RoslinaRelacje;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
-import com.example.yukka.model.social.post.Post;
-import com.example.yukka.model.social.post.PostResponse;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import jakarta.validation.Valid;
@@ -33,8 +31,6 @@ import lombok.RequiredArgsConstructor;
 public class RoslinaMapper {
     private final FileUtils fileUtils;
 
-
-    // TODO: PRzerobić na simple response jak trzeba.
     public PageResponse<OgrodResponse> ogrodResponsetoPageResponse(Page<Ogrod> ogrody) {
         List<OgrodResponse> postyResponse = ogrody.stream()
                 .map(this::toOgrodResponse)
@@ -100,7 +96,6 @@ public class RoslinaMapper {
         //     obraz = fileUtils.readRoslinaObrazFile(zasadzonaNaReverse.getRoslina().getObraz());
         // }
 
-        // TODO: zrobić to lepiej
         byte[] tekstura = null;
         if (zasadzonaNaReverse.getTekstura() != null) {
             tekstura = fileUtils.readRoslinaObrazFile(zasadzonaNaReverse.getTekstura());

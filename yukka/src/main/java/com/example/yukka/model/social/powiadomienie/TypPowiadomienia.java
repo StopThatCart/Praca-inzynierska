@@ -17,6 +17,9 @@ public enum TypPowiadomienia {
     OCENA_ROSLINY("Ktoś ocenił twoją roślinę {tytul} {odnosnik}"),
     USUNIECIE_ROSLINY("Twoja roślina została usunięta bo tak"),
     GRATULACJE("Gratulacje użytkowniku! Zyskałeś(aś) ponad {iloscPolubien} polubień!"),
+    ZGLOSZENIE("Użytkownik {uzytkownikNazwa} wysłał(a) zgłoszenie na użytkownika {zglaszany}: {tytul}"),
+    ZGLOSZENIE_POST("Użytkownik {uzytkownikNazwa} zgłosił(a) post użytkownika {zglaszany}: {tytul}"),
+    ZGLOSZENIE_KOMENTARZ("Użytkownik {uzytkownikNazwa} zgłosił(a) komentarz użytkownika {zglaszany} pod postem {tytul}"),
     SPECJALNE("{tytul}");
 
     private final String template;

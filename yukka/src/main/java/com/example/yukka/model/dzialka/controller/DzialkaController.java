@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -84,7 +83,7 @@ public class DzialkaController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(dzialkaService.updateRoslinaPozycjaInDzialka(request, connectedUser));
     }
 
-    // TODO: Lepsze endpointy, np. /{dzialka}/{x}/{y}/{kolor}
+
     @PatchMapping(value = "/rosliny/kolor", consumes="application/json", produces="application/json")
     public ResponseEntity<DzialkaResponse> updateRoslinaKolorInDzialka(@Valid @RequestBody DzialkaRoslinaRequest request,
         Authentication connectedUser) {

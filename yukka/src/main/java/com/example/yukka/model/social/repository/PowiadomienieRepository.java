@@ -54,6 +54,12 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
     Optional<Powiadomienie> setPrzeczytane(@Param("email") String email, @Param("id") Long id);
 
     @Query(value = """
+        MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+        SET r1.przeczytane = true
+        """)
+    void setAllPrzeczytane(@Param("email") String email);
+
+    @Query(value = """
         MATCH path=(powiadomienie:Powiadomienie)-[:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
 
         RETURN  powiadomienie, collect(nodes(path)), collect(relationships(path))
@@ -117,6 +123,22 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
         CREATE (pow)-[:POWIADAMIA{przeczytane: false}]->(uzyt)
         """)
     void addCustomPowiadomienieToPracownicy(@Param("powiadomienie") Powiadomienie powiadomienie);
+
+    @Query("""
+        MATCH (prac:Pracownik)
+        OPTIONAL MATCH (prac)<-[:POWIADAMIA]-(zetka:Zgloszenie)
+        WITH prac, $powiadomienie.__properties__ AS pp, COUNT(zetka) AS liczbaZgloszen
+        ORDER BY liczbaZgloszen ASC LIMIT 1
+
+        CREATE (pow:Powiadomienie:Zgloszenie{  
+                                    typ:  pp.typ, odnosnik: pp.odnosnik, 
+                                    opis: pp.opis, avatar: pp.avatar,
+                                    data: pp.data, dataUtworzenia: pp.dataUtworzenia}
+                )-[r1:POWIADAMIA{przeczytane: false}]->(prac)
+
+        RETURN pow, r1, prac
+        """)
+    Powiadomienie sendZgloszenieToPracownik(@Param("powiadomienie") Powiadomienie powiadomienie);
 
 
 

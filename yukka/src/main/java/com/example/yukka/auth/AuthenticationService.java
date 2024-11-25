@@ -5,7 +5,6 @@
 
 package com.example.yukka.auth;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Optional;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,14 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.yukka.auth.email.EmailService;
 import com.example.yukka.auth.email.EmailTemplateName;
 import com.example.yukka.auth.requests.AuthRequest;
-import com.example.yukka.auth.requests.EmailRequest;
 import com.example.yukka.auth.requests.HasloRequest;
 import com.example.yukka.auth.requests.RegistrationRequest;
 import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
-import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 import com.example.yukka.model.uzytkownik.token.Token;

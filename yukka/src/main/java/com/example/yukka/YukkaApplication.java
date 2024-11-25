@@ -12,7 +12,6 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -42,12 +41,14 @@ import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
+import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
+import com.example.yukka.model.social.request.ZgloszenieRequest;
 import com.example.yukka.model.social.service.KomentarzService;
 import com.example.yukka.model.social.service.PostService;
 import com.example.yukka.model.social.service.PowiadomienieService;
@@ -56,6 +57,7 @@ import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 import com.example.yukka.seeder.RoslinaImporterService;
+import com.github.javafaker.Faker;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -194,16 +196,114 @@ public class YukkaApplication {
 
 		//seedRozmowy();
 
-		//log.info("Dodawanie specjalnego powiadomienia...");
-		// PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
-		// .tytul("""
-		// 		Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
-		// 		Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
-		// 		Ten komunikat został wygenerowany.
-		// 		""").build();
-		//powiadomienieService.addSpecjalnePowiadomienie(pow1);
+		seedZgloszenia();
 
 		seedDzialka();
+
+	}
+
+	private List<Uzytkownik> seedUzytkownicy() {
+		log.info("Seedowanie uzytkownikow...");
+
+		Uzytkownik usJan = Uzytkownik.builder()
+		.uzytId("jasiuId")
+        .nazwa("Jan Kowalski").email("jan@email.pl")
+        .haslo(passwordEncoder.encode("jan12345678"))
+		.labels(List.of("Admin"))
+		.aktywowany(true)
+        .build();
+
+		Uzytkownik usPrac = Uzytkownik.builder()
+		.uzytId("annaJakasId")
+		.labels(List.of("Pracownik")).nazwa("Anna Nowak")
+		.email("anna@email.pl")
+		.haslo(passwordEncoder.encode("anna12345678"))
+		.aktywowany(true)
+		.build();
+
+
+		Uzytkownik usPiotr = Uzytkownik.builder()
+		.uzytId("piotrekId")
+        .nazwa("Piotr Wiśniewski").email(piotrEmail)
+        .haslo(passwordEncoder.encode("piotr12345678"))
+		.aktywowany(true)
+        .build();
+
+
+		Uzytkownik usKatarzyna = Uzytkownik.builder()
+		.uzytId("jakasKatarzynaId")
+		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
+        .haslo(passwordEncoder.encode("katarzyna12345678"))
+		.aktywowany(true)
+        .build();
+
+
+		Uzytkownik usMichal = Uzytkownik.builder()
+		.uzytId("michalekId")
+        .nazwa("Michał Zieliński").email(michalEmail)
+        .haslo(passwordEncoder.encode("michal12345678"))
+		.aktywowany(true)
+        .build();
+
+		Uzytkownik usNiegrzeczny = Uzytkownik.builder()
+		.uzytId("niegrzecznyId")
+		.nazwa("Niegrzeczny Użytkownik").email(niegrzecznyEmail)
+		.haslo(passwordEncoder.encode("bad12345678"))
+		.aktywowany(true)
+		.build();
+
+		uzytkownikService.addPracownik(usJan);
+		uzytkownikService.addPracownik(usPrac);	
+		uzytkownikService.addUzytkownik(usPiotr);
+		uzytkownikService.addUzytkownik(usKatarzyna);
+		uzytkownikService.addUzytkownik(usMichal);
+		uzytkownikService.addUzytkownik(usNiegrzeczny);
+
+		Path adachiPath = Paths.get(obrazSeedPath, "adachi.jpg");
+		MockMultipartFile obrazAvatar1 = new MockMultipartFile("tempFileName", "adachi.jpg", 
+		"image/png", fileUtils.readFileFromLocation(adachiPath));
+
+		uzytkownikService.updateUzytkownikAvatar(obrazAvatar1, usPiotr);
+		
+
+		this.usJan = uzytkownikRepository.findByEmail(usJan.getEmail()).get();
+		this.usPrac = uzytkownikRepository.findByEmail(usPrac.getEmail()).get();
+		this.usPiotr = uzytkownikRepository.findByEmail(piotrEmail).get();
+		this.usKatarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
+		this.usMichal = uzytkownikRepository.findByEmail(michalEmail).get();
+		this.usNiegrzeczny = uzytkownikRepository.findByEmail(niegrzecznyEmail).get();
+		
+		this.uzytkownicy = Arrays.asList(this.usJan, this.usPrac, this.usPiotr, this.usKatarzyna, this.usMichal, this.usNiegrzeczny);
+
+		return this.uzytkownicy;
+	}
+
+	private void seedZgloszenia() {
+		log.info("Seedowanie zgłoszeń...");
+		Faker faker = new Faker(new Locale("pl"));
+		
+		ZgloszenieRequest request = ZgloszenieRequest.builder()
+		.zglaszany(usNiegrzeczny.getNazwa())
+		.opis(faker.witcher().character())
+		.build();
+		
+
+		powiadomienieService.sendZgloszenie(request, usMichal);
+		request.setOpis(faker.witcher().quote());
+		powiadomienieService.sendZgloszenie(request, usPiotr);
+		request.setOpis(faker.witcher().quote());
+		powiadomienieService.sendZgloszenie(request, usKatarzyna);
+
+
+		log.info("Dodawanie specjalnego powiadomienia...");
+		PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
+		.tytul("""
+				Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
+				Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
+				Ten komunikat został wygenerowany.
+				""").build();
+		powiadomienieService.addSpecjalnePowiadomienie(pow1);
+
 
 	}
 
@@ -362,82 +462,6 @@ public class YukkaApplication {
 		rozmowaPrywatnaService.inviteToRozmowaPrywatna(usMichal.getNazwa(), usKatarzyna);
 	}
 
-
-	private List<Uzytkownik> seedUzytkownicy() {
-		log.info("Seedowanie uzytkownikow...");
-
-		Uzytkownik usJan = Uzytkownik.builder()
-		.uzytId("jasiuId")
-        .nazwa("Jan Kowalski").email("jan@email.pl")
-        .haslo(passwordEncoder.encode("jan12345678"))
-		.labels(List.of("Admin"))
-		.aktywowany(true)
-        .build();
-
-		Uzytkownik usPrac = Uzytkownik.builder()
-		.uzytId("annaJakasId")
-		.labels(List.of("Pracownik")).nazwa("Anna Nowak")
-		.email("anna@email.pl")
-		.haslo(passwordEncoder.encode("anna12345678"))
-		.aktywowany(true)
-		.build();
-
-
-		Uzytkownik usPiotr = Uzytkownik.builder()
-		.uzytId("piotrekId")
-        .nazwa("Piotr Wiśniewski").email(piotrEmail)
-        .haslo(passwordEncoder.encode("piotr12345678"))
-		.aktywowany(true)
-        .build();
-
-
-		Uzytkownik usKatarzyna = Uzytkownik.builder()
-		.uzytId("jakasKatarzynaId")
-		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
-        .haslo(passwordEncoder.encode("katarzyna12345678"))
-		.aktywowany(true)
-        .build();
-
-
-		Uzytkownik usMichal = Uzytkownik.builder()
-		.uzytId("michalekId")
-        .nazwa("Michał Zieliński").email(michalEmail)
-        .haslo(passwordEncoder.encode("michal12345678"))
-		.aktywowany(true)
-        .build();
-
-		Uzytkownik usNiegrzeczny = Uzytkownik.builder()
-		.uzytId("niegrzecznyId")
-		.nazwa("Niegrzeczny Użytkownik").email(niegrzecznyEmail)
-		.haslo(passwordEncoder.encode("bad12345678"))
-		.aktywowany(true)
-		.build();
-
-		uzytkownikService.addPracownik(usJan);
-		uzytkownikService.addPracownik(usPrac);	
-		uzytkownikService.addUzytkownik(usPiotr);
-		uzytkownikService.addUzytkownik(usKatarzyna);
-		uzytkownikService.addUzytkownik(usMichal);
-		uzytkownikService.addUzytkownik(usNiegrzeczny);
-
-		Path adachiPath = Paths.get(obrazSeedPath, "adachi.jpg");
-		MockMultipartFile obrazAvatar1 = new MockMultipartFile("tempFileName", "adachi.jpg", 
-		"image/png", fileUtils.readFileFromLocation(adachiPath));
-
-		uzytkownikService.updateUzytkownikAvatar(obrazAvatar1, usPiotr);
-		
-
-		this.usJan = uzytkownikRepository.findByEmail(usJan.getEmail()).get();
-		this.usPrac = uzytkownikRepository.findByEmail(usPrac.getEmail()).get();
-		this.usPiotr = uzytkownikRepository.findByEmail(piotrEmail).get();
-		this.usKatarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
-		this.usMichal = uzytkownikRepository.findByEmail(michalEmail).get();
-		this.usNiegrzeczny = uzytkownikRepository.findByEmail(niegrzecznyEmail).get();
-		
-		this.uzytkownicy = Arrays.asList(this.usJan, this.usPrac, this.usPiotr, this.usKatarzyna, this.usMichal, this.usNiegrzeczny);
-
-		return this.uzytkownicy;
-	}
 
 	private void addPostyWithKomentarze(List<Uzytkownik> uzytkownicy) {
 		log.info("Dodawanie postów testowych...");

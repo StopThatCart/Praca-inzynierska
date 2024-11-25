@@ -1,14 +1,11 @@
 package com.example.yukka.model.uzytkownik.controller;
 
-import java.time.LocalDateTime;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.yukka.auth.requests.BanRequest;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
-import com.example.yukka.model.social.powiadomienie.Powiadomienie;
 import com.example.yukka.model.social.service.PowiadomienieService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 

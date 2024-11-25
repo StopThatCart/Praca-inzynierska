@@ -23,7 +23,7 @@ import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
 import com.example.yukka.model.enums.Wyswietlanie;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
-import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
+
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DzialkaService {
     private final DzialkaRepository dzialkaRepository;
     private final RoslinaRepository roslinaRepository;
-    private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
+    //private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
     @SuppressWarnings("unused")
     private final ZasadzonaNaService zasadzonaNaService;
     private final UzytkownikRepository uzytkownikRepository;

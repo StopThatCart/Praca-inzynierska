@@ -19,6 +19,7 @@ import lombok.ToString;
 public class PowiadomienieResponse {
     private Long id;
     private String typ;
+    private boolean isZgloszenie;
     private Boolean przeczytane;
     private String tytul;
     private String odnosnik;

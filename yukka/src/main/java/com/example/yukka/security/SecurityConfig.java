@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtFilter authFilter;
-    private final BanCheckFilter banCheckFilter;
+   // private final BanCheckFilter banCheckFilter;
     private final Neo4JAuthenticationProvider authenticationProvider;
 
     @Bean

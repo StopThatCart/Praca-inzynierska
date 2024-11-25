@@ -20,6 +20,7 @@ import lombok.ToString;
 public class PowiadomienieDTO {
     private Long id;
     private String typ;
+    private boolean isZgloszenie;
     private Boolean przeczytane;
     private String tytul;
     private String odnosnik;
@@ -29,6 +30,7 @@ public class PowiadomienieDTO {
     @Value("${powiadomienia.obraz.default.name}")
     private String avatar = "default_powiadomienie_avatar.png";
     private String uzytkownikNazwa;
+    private String zglaszany;
     private int iloscPolubien;
     private LocalDateTime data;
     @Builder.Default

@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
+import com.example.yukka.model.social.request.ZgloszenieRequest;
 import com.example.yukka.model.social.service.PowiadomienieService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 
@@ -54,9 +56,21 @@ public class PowiadomienieController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping(value = "/zgloszenie", produces="application/json")
+    public ResponseEntity<?> sendZgloszenie(@Valid @RequestBody ZgloszenieRequest request, Authentication connectedUser) {
+        powiadomienieService.sendZgloszenie(request, connectedUser);
+        return ResponseEntity.ok().build();
+    }
+
     @PatchMapping(value = "/{id}/przeczytane", produces="application/json")
     public ResponseEntity<PowiadomienieResponse> setPowiadomieniePrzeczytane(@PathVariable("id") Long id, Authentication connectedUser) {
         return ResponseEntity.ok(powiadomienieService.setPrzeczytane(id, connectedUser));
+    }
+
+    @PatchMapping(value = "/przeczytane", produces="application/json")
+    public ResponseEntity<?> setAllPowiadomieniaPrzeczytane(Authentication connectedUser) {
+        powiadomienieService.setAllPrzeczytane(connectedUser);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}", produces="application/json")

@@ -1,9 +1,7 @@
 package com.example.yukka.model.roslina.controller;
 
-import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -39,7 +37,6 @@ import lombok.RequiredArgsConstructor;
 public class RoslinaController {
 
     private final RoslinaService roslinaService;
-    private final RoslinaRepository roslinaRepository;
     private final RoslinaMapper roslinaMapper;
 
     /*

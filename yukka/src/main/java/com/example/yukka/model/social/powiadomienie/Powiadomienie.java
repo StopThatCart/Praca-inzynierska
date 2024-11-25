@@ -2,9 +2,12 @@ package com.example.yukka.model.social.powiadomienie;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.neo4j.core.schema.DynamicLabels;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -27,6 +30,10 @@ public class Powiadomienie {
     @Id @GeneratedValue
     private Long id;
 
+    @DynamicLabels
+    @Builder.Default
+    private List<String> labels = new ArrayList<>();
+
     @Property(name = "typ")
     private String typ;
 
@@ -38,6 +45,9 @@ public class Powiadomienie {
 
     @Property(name = "uzytkownikNazwa")
     private String uzytkownikNazwa;
+
+    @Property(name = "zglaszany")
+    private String zglaszany;
 
     @Property(name = "opis")
     private String opis;
@@ -63,6 +73,11 @@ public class Powiadomienie {
 
     @Relationship(type = "POWIADAMIA", direction = Relationship.Direction.OUTGOING)
     private Powiadamia powiadamia;
+
+
+    public boolean isZgloszenie() {
+        return labels.contains("Zgloszenie");
+    }
 
     @Override
     public String toString() {

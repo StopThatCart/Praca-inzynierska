@@ -288,10 +288,6 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         """)
     Optional<Komentarz> updateKomentarz(@Param("komentarzId") String komentarzId, @Param("opis") String opis);
 
-
-    // TODO: Komentarze na profilowe, ogród, galerię, może jeszcze rośliny
-
-
     // UWAGA: To prawdopodobnie nie będzie używane, gdyż komentarze powinno się usuwać tylko wtedy, kiedy usuwa się cały post/ogród/obraz
     /* 
     @Query("""

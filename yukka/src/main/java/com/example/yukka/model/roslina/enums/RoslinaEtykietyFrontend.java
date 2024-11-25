@@ -2,8 +2,6 @@ package com.example.yukka.model.roslina.enums;
 
 import java.text.Normalizer;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
