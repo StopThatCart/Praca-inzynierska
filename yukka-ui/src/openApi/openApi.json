@@ -652,6 +652,36 @@
         }
       }
     },
+    "/powiadomienia/zgloszenie": {
+      "post": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "sendZgloszenie",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ZgloszenieRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/powiadomienia/pracownik": {
       "post": {
         "tags": [
@@ -1387,6 +1417,26 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PowiadomienieResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/powiadomienia/przeczytane": {
+      "patch": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "setAllPowiadomieniaPrzeczytane",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -3095,14 +3145,14 @@
           "username": {
             "type": "string"
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
+          },
+          "normalUzytkownik": {
+            "type": "boolean"
           },
           "password": {
             "type": "string"
@@ -3110,13 +3160,13 @@
           "enabled": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonLocked": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonLocked": {
+          "credentialsNonExpired": {
             "type": "boolean"
           }
         }
@@ -3138,9 +3188,6 @@
           "nazwa": {
             "type": "string"
           },
-          "nazwaLacinska": {
-            "type": "string"
-          },
           "opis": {
             "type": "string"
           },
@@ -3148,22 +3195,27 @@
             "type": "string"
           },
           "wysokoscMin": {
-            "maximum": 300,
+            "maximum": 200,
             "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "wysokoscMax": {
-            "maximum": 300,
+            "maximum": 200,
             "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "wlasciwosci": {
+            "maxItems": 100,
+            "minItems": 0,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WlasciwoscWithRelations"
             }
+          },
+          "nazwaLacinska": {
+            "type": "string"
           }
         }
       },
@@ -3472,6 +3524,7 @@
       "UzytkownikRoslinaRequest": {
         "required": [
           "nazwa",
+          "opis",
           "wlasciwosci",
           "wysokoscMax",
           "wysokoscMin"
@@ -3491,16 +3544,20 @@
             "type": "string"
           },
           "wysokoscMin": {
+            "maximum": 200,
             "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "wysokoscMax": {
+            "maximum": 200,
             "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "wlasciwosci": {
+            "maxItems": 100,
+            "minItems": 0,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WlasciwoscWithRelations"
@@ -3695,6 +3752,25 @@
           }
         }
       },
+      "ZgloszenieRequest": {
+        "required": [
+          "opis",
+          "zglaszany"
+        ],
+        "type": "object",
+        "properties": {
+          "zglaszany": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "opis": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          }
+        }
+      },
       "PowiadomienieDTO": {
         "type": "object",
         "properties": {
@@ -3730,6 +3806,9 @@
           "uzytkownikNazwa": {
             "type": "string"
           },
+          "zglaszany": {
+            "type": "string"
+          },
           "iloscPolubien": {
             "type": "integer",
             "format": "int32"
@@ -3745,6 +3824,9 @@
           "okres": {
             "type": "string",
             "format": "date"
+          },
+          "zgloszenie": {
+            "type": "boolean"
           }
         }
       },
@@ -4145,6 +4227,9 @@
           },
           "dataUtworzenia": {
             "type": "string"
+          },
+          "zgloszenie": {
+            "type": "boolean"
           }
         }
       },

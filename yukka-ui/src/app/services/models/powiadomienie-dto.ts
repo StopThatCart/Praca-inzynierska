@@ -14,4 +14,6 @@ export interface PowiadomienieDto {
   typ?: string;
   tytul?: string;
   uzytkownikNazwa?: string;
+  zglaszany?: string;
+  zgloszenie?: boolean;
 }

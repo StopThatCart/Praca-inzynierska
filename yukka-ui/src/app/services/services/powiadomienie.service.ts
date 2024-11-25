@@ -21,6 +21,10 @@ import { sendSpecjalnePowiadomienie } from '../fn/powiadomienie/send-specjalne-p
 import { SendSpecjalnePowiadomienie$Params } from '../fn/powiadomienie/send-specjalne-powiadomienie';
 import { sendSpecjalnePowiadomienieToPracownicy } from '../fn/powiadomienie/send-specjalne-powiadomienie-to-pracownicy';
 import { SendSpecjalnePowiadomienieToPracownicy$Params } from '../fn/powiadomienie/send-specjalne-powiadomienie-to-pracownicy';
+import { sendZgloszenie } from '../fn/powiadomienie/send-zgloszenie';
+import { SendZgloszenie$Params } from '../fn/powiadomienie/send-zgloszenie';
+import { setAllPowiadomieniaPrzeczytane } from '../fn/powiadomienie/set-all-powiadomienia-przeczytane';
+import { SetAllPowiadomieniaPrzeczytane$Params } from '../fn/powiadomienie/set-all-powiadomienia-przeczytane';
 import { setPowiadomieniePrzeczytane } from '../fn/powiadomienie/set-powiadomienie-przeczytane';
 import { SetPowiadomieniePrzeczytane$Params } from '../fn/powiadomienie/set-powiadomienie-przeczytane';
 
@@ -28,6 +32,35 @@ import { SetPowiadomieniePrzeczytane$Params } from '../fn/powiadomienie/set-powi
 export class PowiadomienieService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `sendZgloszenie()` */
+  static readonly SendZgloszeniePath = '/powiadomienia/zgloszenie';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `sendZgloszenie()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  sendZgloszenie$Response(params: SendZgloszenie$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return sendZgloszenie(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `sendZgloszenie$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  sendZgloszenie(params: SendZgloszenie$Params, context?: HttpContext): Observable<{
+}> {
+    return this.sendZgloszenie$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
   }
 
   /** Path part for operation `sendSpecjalnePowiadomienie()` */
@@ -110,6 +143,35 @@ export class PowiadomienieService extends BaseService {
   setPowiadomieniePrzeczytane(params: SetPowiadomieniePrzeczytane$Params, context?: HttpContext): Observable<PowiadomienieResponse> {
     return this.setPowiadomieniePrzeczytane$Response(params, context).pipe(
       map((r: StrictHttpResponse<PowiadomienieResponse>): PowiadomienieResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `setAllPowiadomieniaPrzeczytane()` */
+  static readonly SetAllPowiadomieniaPrzeczytanePath = '/powiadomienia/przeczytane';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `setAllPowiadomieniaPrzeczytane()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  setAllPowiadomieniaPrzeczytane$Response(params?: SetAllPowiadomieniaPrzeczytane$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return setAllPowiadomieniaPrzeczytane(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `setAllPowiadomieniaPrzeczytane$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  setAllPowiadomieniaPrzeczytane(params?: SetAllPowiadomieniaPrzeczytane$Params, context?: HttpContext): Observable<{
+}> {
+    return this.setAllPowiadomieniaPrzeczytane$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
     );
   }
 

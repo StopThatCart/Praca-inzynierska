@@ -1,9 +1,12 @@
-<a class="link-underline link-underline-opacity-0 link-dark bg-secondary "
+
+<a class="link-underline link-underline-opacity-0 link-dark bg-secondary"
 (mouseenter)="onHover()"
 (click)="goToTarget()"
 >
 
-  <div class="d-flex  card-header my-2">
+  <div class="d-flex  card-header my-2"
+  [ngClass]="{'bg-warning': pow.zgloszenie}"
+  >
 
     <div class="hstack align-self-start">
       <div [ngClass]="{'bg-danger': !pow.przeczytane, 'bg-transparent': pow.przeczytane}"

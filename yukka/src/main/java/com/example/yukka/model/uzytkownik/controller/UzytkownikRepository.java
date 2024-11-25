@@ -160,7 +160,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     Uzytkownik addUzytkownik(@Param("uzyt") Uzytkownik uzyt, @Param("ustawienia") Ustawienia ustawienia);
 
     @Query("""
-        CREATE (u:Uzytkownik:`:#{allOf(#roles)}`) SET u += $uzyt.__properties__
+        CREATE (u:Uzytkownik::#{allOf(#roles)}) SET u += $uzyt.__properties__
         WITH u
         CREATE (ustawienia:Ustawienia) SET ustawienia += $ustawienia.__properties__
         WITH u, ustawienia
@@ -177,7 +177,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         RETURN u
             """
             )
-    Uzytkownik addUzytkownik(@Param("uzyt") Uzytkownik uzyt, List<String> roles, @Param("ustawienia") Ustawienia ustawienia);
+    Uzytkownik addUzytkownik(@Param("uzyt") Uzytkownik uzyt, String roles, @Param("ustawienia") Ustawienia ustawienia);
 
   //  @Query("CREATE (u:Uzytkownik:`:#{literal(#rola)}` {nazwa: $nazwa, email: $email, haslo: $haslo, data_utworzenia: localdatetime(), ban: false})")
    // void addNewPracownik(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo, @Param("rola") String rola);

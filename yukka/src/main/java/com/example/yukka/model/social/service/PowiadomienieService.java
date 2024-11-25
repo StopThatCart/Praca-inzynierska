@@ -155,6 +155,7 @@ public class PowiadomienieService {
             .uzytkownikNazwa(uzyt.getNazwa())
             .avatar(uzyt.getAvatar())
             .zglaszany(zglaszany.getNazwa())
+            .odnosnik(zglaszany.getNazwa())
             .build();
 
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.ZGLOSZENIE, powiadomienieRequest, null);
@@ -252,7 +253,7 @@ public class PowiadomienieService {
         addPowiadomienie(powiadomienie, komentarz.getUzytkownik());
     }
 
-
+    // TODO: Dodać przycisk ustawiający wszystkie powiadomienia jako przeczytane oraz przycisk zgłaszania użytkownika + modal do tego
     
     public PowiadomienieResponse setPrzeczytane(Long id, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
@@ -269,6 +270,10 @@ public class PowiadomienieService {
     
     public void remove(Long id, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        Optional<Powiadomienie> pow = powiadomienieRepository.findById(id);
+        if(pow.isPresent() && pow.get().getTyp().equals(TypPowiadomienia.ZGLOSZENIE.name())) {
+            throw new IllegalArgumentException("Nie można usunąć zgłoszenia");
+        }
         powiadomienieRepository.remove(uzyt.getEmail(), id);
     }
 

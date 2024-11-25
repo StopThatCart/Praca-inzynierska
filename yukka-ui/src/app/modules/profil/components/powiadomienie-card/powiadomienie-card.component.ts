@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { PowiadomienieResponse } from '../../../../services/models';
 import { PowiadomienieService } from '../../../../services/services';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
 import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powiadomienia-sync.service';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TokenService } from '../../../../services/token/token.service';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-powiadomienie-card',
@@ -22,11 +23,13 @@ export class PowiadomienieCardComponent {
   @Output() powiadomienieUsuniete = new EventEmitter<PowiadomienieResponse>();
   @Output() powiadomieniePrzeczytane = new EventEmitter<PowiadomienieResponse>();
 
+  errorMsg : Array<string> = [];
   private _avatar: string | undefined;
 
   constructor(
     private powiadomienieService : PowiadomienieService,
     private powiadomieniaSyncService: PowiadomieniaSyncService,
+    private errorHandlingService: ErrorHandlingService,
     private tokenService: TokenService,
     private router: Router
   ) {}
@@ -58,6 +61,9 @@ export class PowiadomienieCardComponent {
         case TypPowiadomienia.BAN:
         case TypPowiadomienia.ZAPROSZENIE_ODRUCONE:
           break;
+        case TypPowiadomienia.ZGLOSZENIE:
+          this.router.navigate(['profil', this.pow.odnosnik]);
+          break;
         case TypPowiadomienia.KOMENTARZ_POST:
         case TypPowiadomienia.POLUBIENIA_POST:
           this.router.navigate(['/posty', this.pow.odnosnik]);
@@ -74,8 +80,8 @@ export class PowiadomienieCardComponent {
         case TypPowiadomienia.OWOCOWANIE_ROSLIN_TERAZ:
         case TypPowiadomienia.KWITNIENIE_ROSLIN_TERAZ:
         case TypPowiadomienia.PODLEWANIE_ROSLIN:
-          //this.router.navigate(['/ogrod', this.pow.odnosnik]);
-          throw new Error('NotImplementedYet: Typ powiadomienia nie jest obsługiwany');
+          this.router.navigate(['/ogrod', this.pow.odnosnik]);
+          //throw new Error('NotImplementedYet: Typ powiadomienia nie jest obsługiwany');
           break;
         default:
           throw new Error('NotImplementedYet: Typ powiadomienia nie jest obsługiwany');
@@ -93,6 +99,7 @@ export class PowiadomienieCardComponent {
 
   setPrzeczytane() {
     if (this.pow.id) {
+      this.errorMsg = [];
       this.powiadomienieService.setPowiadomieniePrzeczytane({ id: this.pow.id }).subscribe({
         next: (pow) => {
           if(pow) {
@@ -103,6 +110,8 @@ export class PowiadomienieCardComponent {
           }
         },
         error: (error) => {
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
+          alert(this.errorMsg);
           console.error('Error setting powiadomienie as przeczytane:', error);
         }
       });
@@ -110,6 +119,7 @@ export class PowiadomienieCardComponent {
   }
 
   remove(event : Event) {
+    this.errorMsg = [];
     event.stopPropagation();
     if (this.pow.id) {
       this.powiadomienieService.remove1({ id: this.pow.id }).subscribe({
@@ -118,13 +128,13 @@ export class PowiadomienieCardComponent {
           this.powiadomieniaSyncService.notifyPowiadomienieUsuniete(this.pow);
         },
         error: (error) => {
+
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
+          alert(this.errorMsg);
           console.error('Error removing powiadomienie:', error);
         }
       });
     }
   }
-
-
-
 
 }

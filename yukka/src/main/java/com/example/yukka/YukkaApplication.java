@@ -209,7 +209,7 @@ public class YukkaApplication {
 		.uzytId("jasiuId")
         .nazwa("Jan Kowalski").email("jan@email.pl")
         .haslo(passwordEncoder.encode("jan12345678"))
-		.labels(List.of("Admin"))
+		.labels(List.of("Admin", "Pracownik"))
 		.aktywowany(true)
         .build();
 

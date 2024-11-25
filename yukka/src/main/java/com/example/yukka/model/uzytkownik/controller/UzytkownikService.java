@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -221,7 +222,13 @@ public class UzytkownikService implements  UserDetailsService {
     // Bez zabezpieczeń bo to tylko do seedowania
     public void addPracownik(Uzytkownik uzytkownik){
         Ustawienia ust = Ustawienia.builder().build();
-        uzytkownikRepository.addUzytkownik(uzytkownik, uzytkownik.getLabels(), ust);
+        
+        String labels = uzytkownik.getLabels().stream()
+                     .map(role -> "`" + role + "`")
+                     .collect(Collectors.joining(":")
+                     );
+
+        uzytkownikRepository.addUzytkownik(uzytkownik, labels, ust);
     }
 
     public void remove(String email, Authentication currentUser) {

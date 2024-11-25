@@ -13,4 +13,5 @@ export interface PowiadomienieResponse {
   typ?: string;
   tytul?: string;
   uzytkownikNazwa?: string;
+  zgloszenie?: boolean;
 }

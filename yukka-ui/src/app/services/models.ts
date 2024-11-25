@@ -48,3 +48,4 @@ export type { Wlasciwosc } from './models/wlasciwosc';
 export type { WlasciwoscResponse } from './models/wlasciwosc-response';
 export type { WlasciwoscWithRelations } from './models/wlasciwosc-with-relations';
 export type { ZasadzonaRoslinaResponse } from './models/zasadzona-roslina-response';
+export type { ZgloszenieRequest } from './models/zgloszenie-request';
