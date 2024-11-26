@@ -54,7 +54,7 @@ public class RoslinaController {
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllRoslinyWithParameters(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "12", required = false) int size,
-            @RequestBody RoslinaRequest request) {
+            @RequestBody(required = false) RoslinaRequest request) {
         return ResponseEntity.ok(roslinaService.findAllRoslinyWithParameters(page, size, request));
     }
 

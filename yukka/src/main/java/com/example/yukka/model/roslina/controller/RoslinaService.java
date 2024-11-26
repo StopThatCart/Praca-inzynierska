@@ -92,7 +92,9 @@ public class RoslinaService {
     @Transactional(readOnly = true)
     public PageResponse<RoslinaResponse> findAllRoslinyWithParameters(int page, int size, RoslinaRequest request) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").ascending());
-
+        if(request == null) {
+            return findAllRosliny(page, size);
+        }
         Roslina ros = roslinaMapper.toRoslina(request);
 
         //System.out.println("Rozmiar relat: " + request.getWlasciwosciAsMap().size());

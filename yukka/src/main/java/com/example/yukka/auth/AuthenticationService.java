@@ -32,8 +32,8 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 import com.example.yukka.model.uzytkownik.token.Token;
 import com.example.yukka.model.uzytkownik.token.TokenRepository;
-import com.example.yukka.security.JwtService;
 import com.example.yukka.security.Neo4JAuthenticationProvider;
+import com.example.yukka.security.jwt.JwtService;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;

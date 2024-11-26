@@ -1,4 +1,4 @@
-package com.example.yukka.security;
+package com.example.yukka.security.jwt;
 
 import java.security.Key;
 import java.util.Date;

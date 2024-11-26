@@ -1,15 +1,18 @@
 package com.example.yukka.model.roslina;
 
 import jakarta.validation.constraints.NotEmpty;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class RoslinaRequest extends UzytkownikRoslinaRequest{
     @NotEmpty(message = "Nazwa łacińska jest wymagana")
