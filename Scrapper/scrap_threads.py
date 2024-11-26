@@ -22,18 +22,33 @@ banned_properties = ['pochodzenie', 'zasieg_geograficzny', 'strefa', 'nagrody']
 
 url_list = [
     "https://e-katalogroslin.pl/przegladaj-katalog?se=b873c55f322d2ae7c077b52480a75f81",
-#    "https://e-katalogroslin.pl/przegladaj-katalog?se=6fa1929f87113a75900ba8d4b4b46a98",
+    
+    
+##    "https://e-katalogroslin.pl/przegladaj-katalog?se=6fa1929f87113a75900ba8d4b4b46a98",
+
+
     "https://e-katalogroslin.pl/przegladaj-katalog?se=39921be9413de6ac538a4df45da7d104",
-#    "https://e-katalogroslin.pl/przegladaj-katalog?se=38ec3b62fa9d7cb98b7e2a47becf8f04",
+    
+##    "https://e-katalogroslin.pl/przegladaj-katalog?se=38ec3b62fa9d7cb98b7e2a47becf8f04",
+
     "https://e-katalogroslin.pl/przegladaj-katalog?se=0f53540eb1787eab5cf47d55874e4372",
-#    "https://e-katalogroslin.pl/przegladaj-katalog?se=5dc50211f4e63ccd8eefa37c99d6186b",
+    
+    
+##    "https://e-katalogroslin.pl/przegladaj-katalog?se=5dc50211f4e63ccd8eefa37c99d6186b",
+
+
     "https://e-katalogroslin.pl/przegladaj-katalog?se=04c2fcb871ee0704e7af0cd6183a01e1",
-#    "https://e-katalogroslin.pl/przegladaj-katalog?se=5869b59c0dfb79d0604ad654ddf4b404",
+    
+    
+##    "https://e-katalogroslin.pl/przegladaj-katalog?se=5869b59c0dfb79d0604ad654ddf4b404",
+
+
     "https://e-katalogroslin.pl/przegladaj-katalog?se=85f76f2e4609984bd0caa1a567285df3",
     "https://e-katalogroslin.pl/przegladaj-katalog?se=b0282224a707a5010c36fa11e8fd8c18"
+    ##"https://e-katalogroslin.pl/przegladaj-katalog?se=c94bf7912b270f9c04423786d26f051f"
 ]
 
-last_url = "https://e-katalogroslin.pl/przegladaj-katalog?se=60e5c0024c14f99ceaa4840aa4d02bd1"
+last_url = "https://e-katalogroslin.pl/przegladaj-katalog?se=4d4d14322be96da421727124e8e76fff"
 
 no_description = "Ta roślina nie posiada opisu."
 no_image = "https://e-katalogroslin.pl/wp-content/themes/e-katalogroslin/img/e-kat_noimg.jpg"
@@ -140,8 +155,11 @@ async def parse_page(html):
 
     return plant_info_list
 
-async def get_all_plant_info(start_url, url_list, amount=999):
-    max_tries = 3
+
+
+
+async def get_all_plant_info(start_url, url_list, amount=9999):
+    max_tries = 5
     page_number = 1
     all_plant_info = []
     current_url = start_url
@@ -184,21 +202,29 @@ async def get_all_plant_info(start_url, url_list, amount=999):
             
             for _ in range(max_tries):
                 try:
-                    next_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-next]")))
+                    next_button = WebDriverWait(driver, 12).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-next]")))
                     next_button.click()
-                    WebDriverWait(driver, 10).until(EC.url_changes(current_url))
+                    WebDriverWait(driver, 12).until(EC.url_changes(current_url))
                     break
                 except (ElementClickInterceptedException, StaleElementReferenceException, TimeoutException):
                     continue
             try:
-                WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "listning")))
+                WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.ID, "listning")))
             except:
                 print("Nie udało się załadować nowej strony.")
                 
             new_url = driver.current_url
+            tries = 0
             if new_url == current_url:
                 print("URL nie zmienił się. Spróbuj ponownie.")
+                tries += 1
+                if tries >= 30:
+                    print("Przekroczono limit prób zmiany adresu.")
+                    break
                 continue
+            
+            if tries > 0:
+                print(f"Ilość prób zmiany adresu nr: {tries}.")
 
             current_url = new_url
             page_number += 1
@@ -233,7 +259,7 @@ def commit_scrap(urls, output, amount=999):
     df.to_csv(output, index=False)
 
 
-output_name = "katalog_roslin.csv"
+output_name = "katalog_roslin2.csv"
 test_file = "testowy.csv"
 
 def main():
