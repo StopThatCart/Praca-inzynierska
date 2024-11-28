@@ -32,26 +32,23 @@
                   <span>{{ getUzytkownikNazwa()}}</span>
                 </button>
 
-                <div class="bg-secondary" ngbDropdownMenu aria-labelledby="navbarLeDropdown">
-                  <button ngbDropdownItem (click)="goToProfil()">
+                <div class="bg-primary" ngbDropdownMenu aria-labelledby="navbarLeDropdown">
+                  <button ngbDropdownItem (click)="goToProfil()" class="text-black">
                     <span><i class="fas fa-house"></i>&nbsp;Profil</span>
                   </button>
-                  <button ngbDropdownItem (click)="goToRozmowy()">
+                  <button ngbDropdownItem (click)="goToRozmowy()" class="text-black">
                     <span><i class="fa-solid fa-envelope"></i>&nbsp;Wiadomości prywatne</span>
                   </button>
-                  <button ngbDropdownItem (click)="goToUstawienia()">
+                  <button ngbDropdownItem (click)="goToUstawienia()" class="text-black">
                     <span><i class="fa-solid fa-gear"></i>&nbsp;Ustawienia</span>
                   </button>
-                  <button ngbDropdownItem (click)="goToUstawienia()">
-                    <span><i class="fa-solid fa-images"></i>&nbsp;Moja galeria</span>
-                  </button>
-                  <button ngbDropdownItem (click)="goToPosty()">
+                  <button ngbDropdownItem (click)="goToPosty()" class="text-black">
                     <span><i class="fa-solid fa-signs-post"></i>&nbsp;Moje posty</span>
                   </button>
-                  <button ngbDropdownItem (click)="goToKomentarze()">
+                  <button ngbDropdownItem (click)="goToKomentarze()" class="text-black">
                     <span><i class="fa-solid fa-comment"></i>&nbsp;Moje komentarze</span>
                   </button>
-                  <button ngbDropdownItem (click)="logout()">
+                  <button ngbDropdownItem (click)="logout()" class="text-black">
                     <span><i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;Wyloguj się</span>
                   </button>
                 </div>
