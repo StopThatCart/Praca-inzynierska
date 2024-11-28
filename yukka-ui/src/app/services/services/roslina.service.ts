@@ -121,7 +121,7 @@ export class RoslinaService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  findAllRoslinyWithParameters$Response(params: FindAllRoslinyWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
+  findAllRoslinyWithParameters$Response(params?: FindAllRoslinyWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
     return findAllRoslinyWithParameters(this.http, this.rootUrl, params, context);
   }
 
@@ -131,7 +131,7 @@ export class RoslinaService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  findAllRoslinyWithParameters(params: FindAllRoslinyWithParameters$Params, context?: HttpContext): Observable<PageResponseRoslinaResponse> {
+  findAllRoslinyWithParameters(params?: FindAllRoslinyWithParameters$Params, context?: HttpContext): Observable<PageResponseRoslinaResponse> {
     return this.findAllRoslinyWithParameters$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageResponseRoslinaResponse>): PageResponseRoslinaResponse => r.body)
     );

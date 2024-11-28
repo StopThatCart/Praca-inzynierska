@@ -24,9 +24,9 @@
                                       <button (click)="odblokujUzyt()" class="btn btn-danger" type="button">
                                         Odblokuj &nbsp;<i class="fa-solid fa-user-slash" ></i>
                                       </button>
-                                      <button class="btn btn-danger" type="button">
-                                        Zgłoś &nbsp;<i class="fa-solid fa-flag" ></i>
-                                      </button>
+                                      <app-zgloszenie-button
+                                      [zglaszany]="rozmowaUzyt.nazwa">
+                                      </app-zgloszenie-button>
                                     </div>
                                     <div class="row search-results rozmowa-divus scroll-container" #scrollus>
                                         <div class="col">

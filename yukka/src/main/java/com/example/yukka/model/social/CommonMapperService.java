@@ -74,14 +74,8 @@ public class CommonMapperService {
         }
         return Ustawienia.builder()
             .statystykiProfilu(ustawieniaRequest.isStatystykiProfilu())
-            .galeriaPokaz(ustawieniaRequest.isGaleriaPokaz())
-            .galeriaOcenaKomentarze(ustawieniaRequest.isGaleriaOcenaKomentarze())
             .ogrodPokaz(ustawieniaRequest.isOgrodPokaz())
-            .ogrodOcenaKomentarze(ustawieniaRequest.isOgrodOcenaKomentarze())
             .powiadomieniaKomentarzeOdpowiedz(ustawieniaRequest.isPowiadomieniaKomentarzeOdpowiedz())
-            .powiadomieniaKomentarzeOgrod(ustawieniaRequest.isPowiadomieniaKomentarzeOgrod())
-            .powiadomieniaKomentarzeGaleria(ustawieniaRequest.isPowiadomieniaKomentarzeGaleria())
-            .powiadomieniaOgrodPodlewanie(ustawieniaRequest.isPowiadomieniaOgrodPodlewanie())
             .powiadomieniaOgrodKwitnienie(ustawieniaRequest.isPowiadomieniaOgrodKwitnienie())
             .powiadomieniaOgrodOwocowanie(ustawieniaRequest.isPowiadomieniaOgrodOwocowanie())
             .build();

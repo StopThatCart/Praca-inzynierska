@@ -14,11 +14,14 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import com.example.yukka.model.uzytkownik.Uzytkownik;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Node
 @Getter
@@ -73,6 +76,12 @@ public class Powiadomienie {
 
     @Relationship(type = "POWIADAMIA", direction = Relationship.Direction.OUTGOING)
     private Powiadamia powiadamia;
+
+
+    @ToString.Exclude
+    @Relationship(type = "ZGLASZA", direction = Relationship.Direction.INCOMING)
+    private Uzytkownik zglaszajacy;
+
 
 
     public boolean isZgloszenie() {

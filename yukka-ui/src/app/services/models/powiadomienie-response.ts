@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+import { UzytkownikResponse } from '../models/uzytkownik-response';
 export interface PowiadomienieResponse {
   avatar?: string;
   data?: string;
@@ -13,5 +14,6 @@ export interface PowiadomienieResponse {
   typ?: string;
   tytul?: string;
   uzytkownikNazwa?: string;
+  zglaszajacy?: UzytkownikResponse;
   zgloszenie?: boolean;
 }

@@ -27,37 +27,13 @@ public class Ustawienia {
     @Builder.Default
     private boolean statystykiProfilu = true;
 
-    @Property("galeria_pokaz")
-    @Builder.Default
-    private boolean galeriaPokaz = true;
-
-    @Property("galeria_ocena_komentarze")
-    @Builder.Default
-    private boolean galeriaOcenaKomentarze = true;
-
     @Property("ogrod_pokaz")
     @Builder.Default
     private boolean ogrodPokaz = true;
 
-    @Property("ogrod_ocena_komentarze")
-    @Builder.Default
-    private boolean ogrodOcenaKomentarze = true;
-
     @Property("powiadomienia_komentarze_odpowiedz")
     @Builder.Default
     private boolean powiadomieniaKomentarzeOdpowiedz = true;
-
-    @Property("powiadomienia_komentarze_ogrod")
-    @Builder.Default
-    private boolean powiadomieniaKomentarzeOgrod = true;
-
-    @Property("powiadomienia_komentarze_galeria")
-    @Builder.Default
-    private boolean powiadomieniaKomentarzeGaleria = true;
-
-    @Property("powiadomienia_ogrod_podlewanie")
-    @Builder.Default
-    private boolean powiadomieniaOgrodPodlewanie = true;
 
     @Property("powiadomienia_ogrod_kwitnienie")
     @Builder.Default

@@ -5,11 +5,12 @@ import { PostService, UzytkownikService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule } from '@angular/common';
 import { RozmowaPrywatnaService } from '../../../../services/services/rozmowa-prywatna.service';
+import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zgloszenie-button.component";
 
 @Component({
   selector: 'app-profil-page',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ZgloszenieButtonComponent],
   templateUrl: './profil-page.component.html',
   styleUrl: './profil-page.component.css'
 })

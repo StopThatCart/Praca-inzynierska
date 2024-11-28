@@ -89,9 +89,9 @@ export class RoslinyUzytkownikaPageComponent {
     this.tokenService.nazwa === this.uzytNazwa;
   }
 
-  goToAddRoslina() {
-    if(this.canAddRoslina) {
-      this.router.navigate(['rosliny/dodaj']);
+  goToAddRoslina(doKatalogu: boolean) {
+    if (this.canAddRoslina) {
+      this.router.navigate(['rosliny/dodaj', doKatalogu]);
     }
   }
 

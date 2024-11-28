@@ -8,11 +8,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TypKomentarza } from '../../../post/enums/TypKomentarza';
+import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zgloszenie-button.component";
 
 @Component({
   selector: 'app-rozmowa-page',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage, EdycjaNavComponent, AddKomentarzCardComponent, WiadomoscCardComponent],
+  imports: [CommonModule, NgOptimizedImage, EdycjaNavComponent, AddKomentarzCardComponent, WiadomoscCardComponent, ZgloszenieButtonComponent],
   templateUrl: './rozmowa-page.component.html',
   styleUrl: './rozmowa-page.component.css'
 })

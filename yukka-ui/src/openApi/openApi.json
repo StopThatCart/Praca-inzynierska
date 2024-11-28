@@ -635,8 +635,7 @@
                 "$ref": "#/components/schemas/RoslinaRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2998,28 +2997,10 @@
           "statystykiProfilu": {
             "type": "boolean"
           },
-          "galeriaPokaz": {
-            "type": "boolean"
-          },
-          "galeriaOcenaKomentarze": {
-            "type": "boolean"
-          },
           "ogrodPokaz": {
             "type": "boolean"
           },
-          "ogrodOcenaKomentarze": {
-            "type": "boolean"
-          },
           "powiadomieniaKomentarzeOdpowiedz": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeOgrod": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeGaleria": {
-            "type": "boolean"
-          },
-          "powiadomieniaOgrodPodlewanie": {
             "type": "boolean"
           },
           "powiadomieniaOgrodKwitnienie": {
@@ -3136,15 +3117,6 @@
           "name": {
             "type": "string"
           },
-          "pracownik": {
-            "type": "boolean"
-          },
-          "admin": {
-            "type": "boolean"
-          },
-          "username": {
-            "type": "string"
-          },
           "authorities": {
             "type": "array",
             "items": {
@@ -3154,19 +3126,28 @@
           "normalUzytkownik": {
             "type": "boolean"
           },
+          "pracownik": {
+            "type": "boolean"
+          },
+          "admin": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string"
+          },
           "password": {
             "type": "string"
           },
           "enabled": {
             "type": "boolean"
           },
-          "accountNonLocked": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -3781,6 +3762,9 @@
           "typ": {
             "type": "string"
           },
+          "zglaszajacy": {
+            "$ref": "#/components/schemas/Uzytkownik"
+          },
           "przeczytane": {
             "type": "boolean"
           },
@@ -4108,16 +4092,10 @@
       },
       "UstawieniaRequest": {
         "required": [
-          "galeriaOcenaKomentarze",
-          "galeriaPokaz",
-          "ogrodOcenaKomentarze",
           "ogrodPokaz",
-          "powiadomieniaKomentarzeGaleria",
           "powiadomieniaKomentarzeOdpowiedz",
-          "powiadomieniaKomentarzeOgrod",
           "powiadomieniaOgrodKwitnienie",
           "powiadomieniaOgrodOwocowanie",
-          "powiadomieniaOgrodPodlewanie",
           "statystykiProfilu"
         ],
         "type": "object",
@@ -4125,28 +4103,10 @@
           "statystykiProfilu": {
             "type": "boolean"
           },
-          "galeriaPokaz": {
-            "type": "boolean"
-          },
-          "galeriaOcenaKomentarze": {
-            "type": "boolean"
-          },
           "ogrodPokaz": {
             "type": "boolean"
           },
-          "ogrodOcenaKomentarze": {
-            "type": "boolean"
-          },
           "powiadomieniaKomentarzeOdpowiedz": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeOgrod": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeGaleria": {
-            "type": "boolean"
-          },
-          "powiadomieniaOgrodPodlewanie": {
             "type": "boolean"
           },
           "powiadomieniaOgrodKwitnienie": {
@@ -4227,6 +4187,9 @@
           },
           "dataUtworzenia": {
             "type": "string"
+          },
+          "zglaszajacy": {
+            "$ref": "#/components/schemas/UzytkownikResponse"
           },
           "zgloszenie": {
             "type": "boolean"

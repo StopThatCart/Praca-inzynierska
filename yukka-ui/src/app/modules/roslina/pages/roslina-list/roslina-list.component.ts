@@ -99,9 +99,9 @@ export class RoslinaListComponent implements OnInit{
     this.canAddRoslina = this.tokenService.isAdmin() || this.tokenService.isPracownik();
   }
 
-  goToAddRoslina() {
+  goToAddRoslina(doKatalogu: boolean) {
     if(this.canAddRoslina) {
-      this.router.navigate(['rosliny/dodaj']);
+      this.router.navigate(['rosliny/dodaj', doKatalogu]);
     }
   }
 

@@ -6,6 +6,9 @@
         <ng-container *ngIf="isCurrentUser() else wyslijWiadomosc">
           <a class="btn btn-primary btn-custom" role="button">Edytuj profil</a>
         </ng-container>
+        <app-zgloszenie-button
+        [zglaszany]="uzyt.nazwa">
+        </app-zgloszenie-button>
 
         <ng-template #wyslijWiadomosc>
           <ng-container *ngIf="isZaproszony() else wyslijZaproszenie">

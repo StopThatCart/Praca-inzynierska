@@ -80,6 +80,12 @@ export class AddRoslinaPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      if (params['doKatalogu'] !== undefined) {
+        this.doKatalogu = params['doKatalogu'] === 'true';
+      }
+      console.log('doKatalogu:', this.doKatalogu);
+    });
     this.fetchWlasciwosci();
   }
 
@@ -136,8 +142,8 @@ export class AddRoslinaPageComponent implements OnInit {
     }
   }
 
-  isAddingUzytkownikRoslina(): boolean {
-    return this.tokenService.isNormalUzytkownik();
+  isAddingDoKatalogu(): boolean {
+    return this.doKatalogu && !this.tokenService.isNormalUzytkownik();
   }
 
   addRoslina(): void {
@@ -150,7 +156,7 @@ export class AddRoslinaPageComponent implements OnInit {
       leFile = this.wybranyPlik;
     }
 
-    if (this.isAddingUzytkownikRoslina()) {
+    if (!this.isAddingDoKatalogu()) {
       this.addUzytkownikRoslina(this.request, leFile);
       return;
     }

@@ -26,6 +26,7 @@ import com.example.yukka.model.ogrod.Ogrod;
 import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
+import com.example.yukka.model.social.powiadomienie.Powiadomienie;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 
 import lombok.AllArgsConstructor;
@@ -122,7 +123,6 @@ public class Uzytkownik implements UserDetails, Principal{
     @ToString.Exclude
     @Relationship(type = "BLOKUJE", direction = Relationship.Direction.INCOMING)
     private Set<Uzytkownik> blokujacyUzytkownicy;
-
 
     public Uzytkownik(String name, String email, String password) {
         this.nazwa = name;

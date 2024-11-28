@@ -61,8 +61,9 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
 
     @Query(value = """
         MATCH path=(powiadomienie:Powiadomienie)-[:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+        OPTIONAL MATCH (zglaszajacy:Uzytkownik)-[r1:ZGLASZA]->(powiadomienie)
 
-        RETURN  powiadomienie, collect(nodes(path)), collect(relationships(path))
+        RETURN powiadomienie, zglaszajacy, r1, collect(nodes(path)), collect(relationships(path))
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
         """,
         countQuery = """
@@ -125,22 +126,30 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
     void addCustomPowiadomienieToPracownicy(@Param("powiadomienie") Powiadomienie powiadomienie);
 
     @Query("""
+        MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
         MATCH (prac:Pracownik)
         OPTIONAL MATCH (prac)<-[:POWIADAMIA]-(zetka:Zgloszenie)
-        WITH prac, $powiadomienie.__properties__ AS pp, COUNT(zetka) AS liczbaZgloszen
+        WITH uzyt, prac, $powiadomienie.__properties__ AS pp, COUNT(zetka) AS liczbaZgloszen
         ORDER BY liczbaZgloszen ASC LIMIT 1
 
-        CREATE (pow:Powiadomienie:Zgloszenie{  
+        MERGE (uzyt)-[:ZGLASZA]->(pow:Powiadomienie:Zgloszenie{  
                                     typ:  pp.typ, odnosnik: pp.odnosnik, 
                                     opis: pp.opis, avatar: pp.avatar,
-                                    data: pp.data, dataUtworzenia: pp.dataUtworzenia}
+                                    dataUtworzenia: pp.dataUtworzenia}
                 )-[r1:POWIADAMIA{przeczytane: false}]->(prac)
 
         RETURN pow, r1, prac
         """)
-    Powiadomienie sendZgloszenieToPracownik(@Param("powiadomienie") Powiadomienie powiadomienie);
+    Powiadomienie sendZgloszenieToPracownik(@Param("powiadomienie") Powiadomienie powiadomienie, @Param("nazwa") String nazwa);
 
 
+    @Query("""
+        MATCH (uzyt:Uzytkownik{nazwa: $nazwa})-[r1:ZGLASZA]->(pow:Zgloszenie)
+        RETURN pow, r1, uzyt
+        ORDER BY pow.dataUtworzenia DESC
+        LIMIT 1
+        """)
+    Optional<Powiadomienie> getNajnowszeZgloszenieUzytkownika(@Param("nazwa") String nazwa);
 
 
     @Query(value = """

@@ -141,6 +141,10 @@ public class PowiadomienieService {
 
     public void sendZgloszenie(ZgloszenieRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        if (checkIfUzytkownikSentZgloszenieBeforeCooldown(connectedUser)) {
+            throw new IllegalArgumentException("Możesz wysłać zgłoszenie raz na 15 minut");
+        }
+
         sendZgloszenie(request, uzyt);
     }
 
@@ -148,6 +152,10 @@ public class PowiadomienieService {
         log.info("Zgłoszenie użytkownika: " + request.getZglaszany() + " przez użytkownika: " + uzyt.getNazwa());
         Uzytkownik zglaszany = uzytkownikRepository.findByNameOrEmail(request.getZglaszany())
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika " + request.getZglaszany()));
+
+        if (zglaszany.getUzytId().equals(uzyt.getUzytId())) {
+            throw new IllegalArgumentException("Nie można zgłosić samego siebie");
+        }
 
         PowiadomienieDTO powiadomienieRequest = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.ZGLOSZENIE.name())
@@ -159,7 +167,7 @@ public class PowiadomienieService {
             .build();
 
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.ZGLOSZENIE, powiadomienieRequest, null);
-        powiadomienieRepository.sendZgloszenieToPracownik(powiadomienie);
+        powiadomienieRepository.sendZgloszenieToPracownik(powiadomienie, uzyt.getNazwa());
 
     }
 
@@ -275,6 +283,23 @@ public class PowiadomienieService {
             throw new IllegalArgumentException("Nie można usunąć zgłoszenia");
         }
         powiadomienieRepository.remove(uzyt.getEmail(), id);
+    }
+
+    @Transactional(readOnly = true)
+    private Boolean checkIfUzytkownikSentZgloszenieBeforeCooldown(Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+
+        Optional<Powiadomienie> pow = powiadomienieRepository.getNajnowszeZgloszenieUzytkownika(uzyt.getNazwa());
+        if(pow.isEmpty()) {
+            return false;
+        }
+        System.out.println("Data utworzenia zgłoszenia: " + pow.get().getDataUtworzenia());
+        if (pow.get().getDataUtworzenia().plusMinutes(15).isBefore(LocalDateTime.now())) {
+            return false;
+        }
+
+
+        return true;
     }
 
     private String generatePowiadomienieOpis(TypPowiadomienia typ, PowiadomienieDTO request) {

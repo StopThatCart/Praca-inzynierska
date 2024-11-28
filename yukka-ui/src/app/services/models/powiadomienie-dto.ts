@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+import { Uzytkownik } from '../models/uzytkownik';
 export interface PowiadomienieDto {
   avatar?: string;
   data?: string;
@@ -14,6 +15,7 @@ export interface PowiadomienieDto {
   typ?: string;
   tytul?: string;
   uzytkownikNazwa?: string;
+  zglaszajacy?: Uzytkownik;
   zglaszany?: string;
   zgloszenie?: boolean;
 }

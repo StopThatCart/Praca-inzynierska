@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
+import com.example.yukka.model.uzytkownik.UzytkownikResponse;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,5 +33,7 @@ public class PowiadomienieResponse {
     private LocalDateTime data;
     @Builder.Default
     private String dataUtworzenia = new PrettyTime(Locale.forLanguageTag("pl")).format(new Date());
+
+    private UzytkownikResponse zglaszajacy;
 
 }

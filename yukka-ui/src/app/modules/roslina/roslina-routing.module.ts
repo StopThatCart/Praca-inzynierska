@@ -27,6 +27,12 @@ const routes: Routes = [
         data: { breadcrumb: 'Dodawanie rośliny' }
       },
       {
+        path: 'dodaj/:doKatalogu',
+        component: AddRoslinaPageComponent,
+        canActivate: [authGuard],
+        data: { breadcrumb: 'Dodawanie rośliny' }
+      },
+      {
         path: ':roslina-id',
         data: { breadcrumb: (data: any) =>`${data.roslina.nazwa}` },
         resolve: { roslina: RoslinaResolverService },

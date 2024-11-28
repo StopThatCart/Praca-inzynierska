@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import com.example.yukka.model.uzytkownik.Uzytkownik;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +23,7 @@ public class PowiadomienieDTO {
     private Long id;
     private String typ;
     private boolean isZgloszenie;
+    private Uzytkownik zglaszajacy;
     private Boolean przeczytane;
     private String tytul;
     private String odnosnik;

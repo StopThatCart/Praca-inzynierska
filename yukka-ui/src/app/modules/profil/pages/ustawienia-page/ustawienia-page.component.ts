@@ -19,16 +19,10 @@ import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.compo
 export class UstawieniaPageComponent  implements OnInit {
   uzyt: UzytkownikResponse = {};
   ustawienia : UstawieniaRequest = {
-    galeriaOcenaKomentarze: false,
-    galeriaPokaz: false,
-    ogrodOcenaKomentarze: false,
     ogrodPokaz: false,
-    powiadomieniaKomentarzeGaleria: false,
     powiadomieniaKomentarzeOdpowiedz: false,
-    powiadomieniaKomentarzeOgrod: false,
     powiadomieniaOgrodKwitnienie: false,
     powiadomieniaOgrodOwocowanie: false,
-    powiadomieniaOgrodPodlewanie: false,
     statystykiProfilu: false
   };
 
@@ -68,16 +62,10 @@ export class UstawieniaPageComponent  implements OnInit {
 
   convertToUstawieniaRequest(ustawienia: Ustawienia): UstawieniaRequest {
     return {
-      galeriaOcenaKomentarze: ustawienia.galeriaOcenaKomentarze ?? false,
-      galeriaPokaz: ustawienia.galeriaPokaz ?? false,
-      ogrodOcenaKomentarze: ustawienia.ogrodOcenaKomentarze ?? false,
       ogrodPokaz: ustawienia.ogrodPokaz ?? false,
-      powiadomieniaKomentarzeGaleria: ustawienia.powiadomieniaKomentarzeGaleria ?? false,
       powiadomieniaKomentarzeOdpowiedz: ustawienia.powiadomieniaKomentarzeOdpowiedz ?? false,
-      powiadomieniaKomentarzeOgrod: ustawienia.powiadomieniaKomentarzeOgrod ?? false,
       powiadomieniaOgrodKwitnienie: ustawienia.powiadomieniaOgrodKwitnienie ?? false,
       powiadomieniaOgrodOwocowanie: ustawienia.powiadomieniaOgrodOwocowanie ?? false,
-      powiadomieniaOgrodPodlewanie: ustawienia.powiadomieniaOgrodPodlewanie ?? false,
       statystykiProfilu: ustawienia.statystykiProfilu ?? false
     };
   }
