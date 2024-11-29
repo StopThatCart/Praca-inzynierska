@@ -1,5 +1,7 @@
 package com.example.yukka.model.uzytkownik.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +23,29 @@ public class PracownikService {
     private final UzytkownikRepository uzytkownikRepository;
     private final PowiadomienieService powiadomienieService;
 
+    public Boolean unbanUzytkownik(String nazwa, Authentication currentUser) {
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+
+        Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
+
+        if(!targetUzyt.isBan()) {
+            throw new IllegalArgumentException("Użytkownik nie jest zbanowany");
+        }
+
+        if(targetUzyt.isPracownik() && !uzyt.isAdmin()) {
+            throw new IllegalArgumentException("Nie masz uprawnień do odbanowywania tego użytkownika");
+        }
+
+        log.info("Użytkownik {} odbanowany przez {}", targetUzyt.getNazwa(), uzyt.getNazwa());
+        Boolean unbanus = uzytkownikRepository.banUzytkownik(nazwa, false, null);
+        powiadomienieService.sendPowiadomienieOfUnban(targetUzyt);
+        return unbanus;
+    }
+
     public Boolean setBanUzytkownik(BanRequest request, Authentication currentUser){
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        log.info( "Użytkownik {} próbuje zbanować użytkownika {}", uzyt.getNazwa(), request.getNazwa());
 
         Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(request.getNazwa())
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + request.getNazwa()));
@@ -35,7 +58,7 @@ public class PracownikService {
             throw new IllegalArgumentException("Użytkownik jest już zbanowany/odbanowany");
         }
         
-        if(targetUzyt.isPracownik() || !uzyt.isAdmin()) { 
+        if(targetUzyt.isPracownik() && !uzyt.isAdmin()) { 
             throw new IllegalArgumentException("Nie masz uprawnień do banowania/odbanowywania tego użytkownika");
         }
 
@@ -44,8 +67,7 @@ public class PracownikService {
         }
 
         if(request.getBan() == false) {
-            log.info("Użytkownik {} odbanowany przez {}", targetUzyt.getNazwa(), uzyt.getNazwa());
-            request.setBanDo(null);
+            throw new IllegalArgumentException("Użytkownik nie może być odbanowany podczas banowania");
         }
 
         Boolean banus = uzytkownikRepository.banUzytkownik(request.getNazwa(), request.getBan(), request.getBanDo());

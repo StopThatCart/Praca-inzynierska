@@ -1,0 +1,37 @@
+<button
+(click)="zbanowany ? showAlert() : open(content)"
+class="btn btn-info rounded" type="button" placement="bottom" [ngbTooltip]="zbanowany ? 'Odbanuj' : 'Zbanuj'">
+  <i class="fa-solid fa-hammer" ></i>
+</button>
+
+
+<ng-template #content let-modal class="bg-secondary">
+	<div class="modal-header bg-secondary">
+      <h4 class="modal-title" id="modal-ban">Banowanie użytkownika {{ zglaszany }}</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body bg-secondary" >
+    <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
+		<form>
+      <div class="mb-3">
+				<label>Ban do:</label>
+				<div class="input-group">
+          <input [(ngModel)]="request.banDo"
+          class="form-control text-black"
+          name="banDo" type="date" placeholder="Ban do"/>
+				</div>
+			</div>
+			<div class="mb-3">
+				<label>Podaj powód zbanowania</label>
+				<div class="input-group">
+					<input [(ngModel)]="request.powod"
+          class="form-control text-black"
+          name="opis" type="text" placeholder="Powód zgłoszenia"/>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer bg-secondary">
+		<button type="button" class="btn btn-primary" (click)="zbanujUzytkownika()">Wyślij</button>
+	</div>
+</ng-template>

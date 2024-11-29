@@ -1355,6 +1355,36 @@
         }
       }
     },
+    "/pracownicy/unban/{uzytkownik-nazwa}": {
+      "patch": {
+        "tags": [
+          "Pracownik"
+        ],
+        "operationId": "unbanUzytkownik",
+        "parameters": [
+          {
+            "name": "uzytkownik-nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/pracownicy/ban": {
       "patch": {
         "tags": [
@@ -3094,9 +3124,6 @@
           "name": {
             "type": "string"
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
           "admin": {
             "type": "boolean"
           },
@@ -3112,19 +3139,22 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
           "password": {
             "type": "string"
           },
           "enabled": {
             "type": "boolean"
           },
-          "accountNonLocked": {
-            "type": "boolean"
-          },
           "credentialsNonExpired": {
             "type": "boolean"
           },
           "accountNonExpired": {
+            "type": "boolean"
+          },
+          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -3690,6 +3720,10 @@
           },
           "ban": {
             "type": "boolean"
+          },
+          "banDo": {
+            "type": "string",
+            "format": "date"
           },
           "ustawienia": {
             "$ref": "#/components/schemas/Ustawienia"

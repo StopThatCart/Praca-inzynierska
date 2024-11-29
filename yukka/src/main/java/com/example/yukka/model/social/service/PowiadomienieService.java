@@ -233,7 +233,7 @@ public class PowiadomienieService {
         addPowiadomienie(powiadomienie, odbiorca);
     }
 
-    public void sendPowiadomienieOfUnban(Uzytkownik odbiorca, BanRequest request) {
+    public void sendPowiadomienieOfUnban(Uzytkownik odbiorca) {
         PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.ODBANOWANIE.name())
             .build();

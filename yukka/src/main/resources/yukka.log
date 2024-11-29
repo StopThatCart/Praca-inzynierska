@@ -6168,3 +6168,279 @@ The query used a deprecated function: `id`.
 The query used a deprecated function: `id`.
 2024-11-29T14:20:32.123+01:00  INFO 3920 --- [yukka] [http-nio-8081-exec-6] c.e.y.m.s.service.PowiadomienieService   : Zgłoszenie użytkownika: Anna Nowak przez użytkownika: Anna Nowak
 2024-11-29T14:20:42.164+01:00  INFO 3920 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.s.service.PowiadomienieService   : Zgłoszenie użytkownika: Niegrzeczny Użytkownik przez użytkownika: Anna Nowak
+2024-11-29T14:53:05.268+01:00  INFO 3920 --- [yukka] [http-nio-8081-exec-8] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: piotr@email.pl
+2024-11-29T14:53:05.334+01:00  INFO 3920 --- [yukka] [http-nio-8081-exec-8] c.e.y.s.Neo4JAuthenticationProvider      : login [piotr@email.pl] udany
+2024-11-29T14:53:15.897+01:00  INFO 3920 --- [yukka] [http-nio-8081-exec-3] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: jan@email.pl
+2024-11-29T14:53:15.962+01:00  INFO 3920 --- [yukka] [http-nio-8081-exec-3] c.e.y.s.Neo4JAuthenticationProvider      : login [jan@email.pl] udany
+2024-11-29T14:53:19.638+01:00  WARN 3920 --- [yukka] [http-nio-8081-exec-9] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET r1.przeczytane = true
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-11-29T15:11:32.797+01:00  WARN 3920 --- [yukka] [http-nio-8081-exec-5] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET r1.przeczytane = true
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-11-29T15:36:48.246+01:00 ERROR 3920 --- [yukka] [http-nio-8081-exec-7] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception
+
+io.jsonwebtoken.ExpiredJwtException: JWT expired 67503244 milliseconds ago at 2024-11-28T19:51:45.000Z. Current time: 2024-11-29T14:36:48.244Z. Allowed clock skew: 0 milliseconds.
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:682) ~[jjwt-impl-0.12.5.jar:0.12.5]
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:362) ~[jjwt-impl-0.12.5.jar:0.12.5]
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:94) ~[jjwt-impl-0.12.5.jar:0.12.5]
+	at io.jsonwebtoken.impl.io.AbstractParser.parse(AbstractParser.java:36) ~[jjwt-impl-0.12.5.jar:0.12.5]
+	at io.jsonwebtoken.impl.io.AbstractParser.parse(AbstractParser.java:29) ~[jjwt-impl-0.12.5.jar:0.12.5]
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseSignedClaims(DefaultJwtParser.java:821) ~[jjwt-impl-0.12.5.jar:0.12.5]
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:797) ~[jjwt-impl-0.12.5.jar:0.12.5]
+	at com.example.yukka.security.jwt.JwtService.extractAllClaims(JwtService.java:77) ~[classes/:na]
+	at com.example.yukka.security.jwt.JwtService.extractClaim(JwtService.java:32) ~[classes/:na]
+	at com.example.yukka.security.jwt.JwtService.extractUsername(JwtService.java:28) ~[classes/:na]
+	at com.example.yukka.security.jwt.JwtFilter.doFilterInternal(JwtFilter.java:53) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$0(ObservationFilterChainDecorator.java:323) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:224) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.3.1.jar:6.3.1]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195) ~[spring-webmvc-6.1.11.jar:6.1.11]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230) ~[spring-security-config-6.3.1.jar:6.3.1]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:113) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.11.jar:6.1.11]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.26.jar:10.1.26]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2024-11-29T15:37:02.217+01:00  INFO 3920 --- [yukka] [http-nio-8081-exec-6] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: jan@email.pl
+2024-11-29T15:37:02.278+01:00  INFO 3920 --- [yukka] [http-nio-8081-exec-6] c.e.y.s.Neo4JAuthenticationProvider      : login [jan@email.pl] udany
+2024-11-29T15:44:57.365+01:00  INFO 38176 --- [yukka] [main] com.example.yukka.YukkaApplication       : Starting YukkaApplication using Java 17.0.10 with PID 38176 (F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka\target\classes started by Toshi in F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka)
+2024-11-29T15:44:57.367+01:00  INFO 38176 --- [yukka] [main] com.example.yukka.YukkaApplication       : No active profile set, falling back to 1 default profile: "default"
+2024-11-29T15:44:58.422+01:00  INFO 38176 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-11-29T15:44:58.548+01:00  INFO 38176 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 121 ms. Found 0 Neo4j repository interfaces.
+2024-11-29T15:44:58.553+01:00  INFO 38176 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-11-29T15:44:58.593+01:00  INFO 38176 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 13 Neo4j repository interfaces.
+2024-11-29T15:44:59.196+01:00  INFO 38176 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-11-29T15:44:59.216+01:00  INFO 38176 --- [yukka] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-29T15:44:59.217+01:00  INFO 38176 --- [yukka] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.26]
+2024-11-29T15:44:59.303+01:00  INFO 38176 --- [yukka] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-29T15:44:59.304+01:00  INFO 38176 --- [yukka] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1885 ms
+2024-11-29T15:44:59.782+01:00  INFO 38176 --- [yukka] [main] o.neo4j.driver.internal.DriverFactory    : Direct driver instance 462735241 created for server address localhost:7687
+2024-11-29T15:45:00.063+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.093+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.Ocenil is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.096+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.komentarz.Komentarz is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.099+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.post.Post is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.105+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Ustawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.137+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNa is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.142+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.150+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.Roslina is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.155+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNaReverse is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.156+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.Dzialka is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.157+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.ogrod.Ogrod is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.162+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Uzytkownik is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.164+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadamia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.167+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.relationshipnodes.Gleba is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.171+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.token.Token is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.173+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.UzytkownikWlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.180+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadomienie is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:00.186+01:00  WARN 38176 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.MaUstawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:45:01.197+01:00  INFO 38176 --- [yukka] [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name neo4JAuthenticationProvider
+2024-11-29T15:45:01.199+01:00  WARN 38176 --- [yukka] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2024-11-29T15:45:01.291+01:00  INFO 38176 --- [yukka] [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-11-29T15:45:01.681+01:00  INFO 38176 --- [yukka] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2024-11-29T15:45:02.282+01:00  INFO 38176 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-11-29T15:45:02.306+01:00  INFO 38176 --- [yukka] [main] com.example.yukka.YukkaApplication       : Started YukkaApplication in 5.265 seconds (process running for 5.756)
+2024-11-29T15:45:03.199+01:00  INFO 38176 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-29T15:45:03.200+01:00  INFO 38176 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-29T15:45:03.201+01:00  INFO 38176 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-11-29T15:45:33.297+01:00  INFO 38176 --- [yukka] [http-nio-8081-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1617 ms
+2024-11-29T15:46:14.397+01:00  INFO 4552 --- [yukka] [main] com.example.yukka.YukkaApplication       : Starting YukkaApplication using Java 17.0.10 with PID 4552 (F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka\target\classes started by Toshi in F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka)
+2024-11-29T15:46:14.400+01:00  INFO 4552 --- [yukka] [main] com.example.yukka.YukkaApplication       : No active profile set, falling back to 1 default profile: "default"
+2024-11-29T15:46:15.391+01:00  INFO 4552 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-11-29T15:46:15.516+01:00  INFO 4552 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 119 ms. Found 0 Neo4j repository interfaces.
+2024-11-29T15:46:15.521+01:00  INFO 4552 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-11-29T15:46:15.560+01:00  INFO 4552 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 13 Neo4j repository interfaces.
+2024-11-29T15:46:16.146+01:00  INFO 4552 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-11-29T15:46:16.168+01:00  INFO 4552 --- [yukka] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-29T15:46:16.169+01:00  INFO 4552 --- [yukka] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.26]
+2024-11-29T15:46:16.260+01:00  INFO 4552 --- [yukka] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-29T15:46:16.261+01:00  INFO 4552 --- [yukka] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1809 ms
+2024-11-29T15:46:16.682+01:00  INFO 4552 --- [yukka] [main] o.neo4j.driver.internal.DriverFactory    : Direct driver instance 1880741401 created for server address localhost:7687
+2024-11-29T15:46:16.907+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Ustawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:16.949+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.MaUstawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:16.981+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:16.990+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.Ocenil is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:16.992+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.komentarz.Komentarz is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:16.994+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.post.Post is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.001+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Uzytkownik is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.025+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNa is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.030+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.036+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.Roslina is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.041+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNaReverse is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.042+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.Dzialka is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.043+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.ogrod.Ogrod is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.045+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.UzytkownikWlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.047+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadamia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.050+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.token.Token is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.056+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadomienie is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:17.059+01:00  WARN 4552 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.relationshipnodes.Gleba is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:46:18.060+01:00  INFO 4552 --- [yukka] [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name neo4JAuthenticationProvider
+2024-11-29T15:46:18.062+01:00  WARN 4552 --- [yukka] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2024-11-29T15:46:18.192+01:00  INFO 4552 --- [yukka] [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-11-29T15:46:18.636+01:00  INFO 4552 --- [yukka] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2024-11-29T15:46:19.250+01:00  INFO 4552 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-11-29T15:46:19.273+01:00  INFO 4552 --- [yukka] [main] com.example.yukka.YukkaApplication       : Started YukkaApplication in 5.206 seconds (process running for 5.643)
+2024-11-29T15:46:20.292+01:00  INFO 4552 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-29T15:46:20.293+01:00  INFO 4552 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-29T15:46:20.294+01:00  INFO 4552 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-11-29T15:46:28.872+01:00  INFO 4552 --- [yukka] [http-nio-8081-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1603 ms
+2024-11-29T15:48:13.286+01:00  INFO 30480 --- [yukka] [main] com.example.yukka.YukkaApplication       : Starting YukkaApplication using Java 17.0.10 with PID 30480 (F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka\target\classes started by Toshi in F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka)
+2024-11-29T15:48:13.289+01:00  INFO 30480 --- [yukka] [main] com.example.yukka.YukkaApplication       : No active profile set, falling back to 1 default profile: "default"
+2024-11-29T15:48:14.382+01:00  INFO 30480 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-11-29T15:48:14.525+01:00  INFO 30480 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 137 ms. Found 0 Neo4j repository interfaces.
+2024-11-29T15:48:14.530+01:00  INFO 30480 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-11-29T15:48:14.570+01:00  INFO 30480 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 13 Neo4j repository interfaces.
+2024-11-29T15:48:15.233+01:00  INFO 30480 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-11-29T15:48:15.262+01:00  INFO 30480 --- [yukka] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-29T15:48:15.263+01:00  INFO 30480 --- [yukka] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.26]
+2024-11-29T15:48:15.359+01:00  INFO 30480 --- [yukka] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-29T15:48:15.361+01:00  INFO 30480 --- [yukka] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2019 ms
+2024-11-29T15:48:15.855+01:00  INFO 30480 --- [yukka] [main] o.neo4j.driver.internal.DriverFactory    : Direct driver instance 22426187 created for server address localhost:7687
+2024-11-29T15:48:16.148+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.183+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.Ocenil is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.186+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.komentarz.Komentarz is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.188+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.post.Post is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.193+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Ustawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.198+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Uzytkownik is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.201+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.ogrod.Ogrod is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.210+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNaReverse is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.211+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.Dzialka is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.217+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNa is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.220+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.226+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.Roslina is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.227+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.relationshipnodes.Gleba is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.232+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.MaUstawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.234+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.UzytkownikWlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.236+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadamia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.241+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.token.Token is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:16.247+01:00  WARN 30480 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadomienie is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:48:17.259+01:00  INFO 30480 --- [yukka] [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name neo4JAuthenticationProvider
+2024-11-29T15:48:17.261+01:00  WARN 30480 --- [yukka] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2024-11-29T15:48:17.367+01:00  INFO 30480 --- [yukka] [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-11-29T15:48:17.859+01:00  INFO 30480 --- [yukka] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2024-11-29T15:48:18.485+01:00  INFO 30480 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-11-29T15:48:18.509+01:00  INFO 30480 --- [yukka] [main] com.example.yukka.YukkaApplication       : Started YukkaApplication in 5.562 seconds (process running for 6.02)
+2024-11-29T15:48:19.170+01:00  INFO 30480 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-29T15:48:19.171+01:00  INFO 30480 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-29T15:48:19.172+01:00  INFO 30480 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-11-29T15:50:46.108+01:00  INFO 30480 --- [yukka] [http-nio-8081-exec-6] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: jan@email.pl
+2024-11-29T15:50:46.179+01:00  INFO 30480 --- [yukka] [http-nio-8081-exec-6] c.e.y.s.Neo4JAuthenticationProvider      : login [jan@email.pl] udany
+2024-11-29T15:50:59.160+01:00  INFO 30480 --- [yukka] [http-nio-8081-exec-7] c.e.y.m.u.controller.PracownikService    : Użytkownik Jan Kowalski próbuje zbanować użytkownika Katarzyna Mazur
+2024-11-29T15:54:03.680+01:00  INFO 32484 --- [yukka] [main] com.example.yukka.YukkaApplication       : Starting YukkaApplication using Java 17.0.10 with PID 32484 (F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka\target\classes started by Toshi in F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka)
+2024-11-29T15:54:03.683+01:00  INFO 32484 --- [yukka] [main] com.example.yukka.YukkaApplication       : No active profile set, falling back to 1 default profile: "default"
+2024-11-29T15:54:04.794+01:00  INFO 32484 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-11-29T15:54:04.926+01:00  INFO 32484 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 126 ms. Found 0 Neo4j repository interfaces.
+2024-11-29T15:54:04.931+01:00  INFO 32484 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-11-29T15:54:04.973+01:00  INFO 32484 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 41 ms. Found 13 Neo4j repository interfaces.
+2024-11-29T15:54:05.572+01:00  INFO 32484 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-11-29T15:54:05.592+01:00  INFO 32484 --- [yukka] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-29T15:54:05.593+01:00  INFO 32484 --- [yukka] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.26]
+2024-11-29T15:54:05.691+01:00  INFO 32484 --- [yukka] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-29T15:54:05.692+01:00  INFO 32484 --- [yukka] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1956 ms
+2024-11-29T15:54:06.149+01:00  INFO 32484 --- [yukka] [main] o.neo4j.driver.internal.DriverFactory    : Direct driver instance 399994555 created for server address localhost:7687
+2024-11-29T15:54:06.421+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.478+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.Ocenil is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.482+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.komentarz.Komentarz is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.484+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.post.Post is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.491+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Ustawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.498+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Uzytkownik is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.501+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.ogrod.Ogrod is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.519+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNa is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.523+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.530+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.Roslina is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.537+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNaReverse is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.539+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.Dzialka is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.543+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.token.Token is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.545+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.relationshipnodes.Gleba is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.554+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadamia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.556+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadomienie is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.561+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.MaUstawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:06.564+01:00  WARN 32484 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.UzytkownikWlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:54:07.595+01:00  INFO 32484 --- [yukka] [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name neo4JAuthenticationProvider
+2024-11-29T15:54:07.597+01:00  WARN 32484 --- [yukka] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2024-11-29T15:54:07.730+01:00  INFO 32484 --- [yukka] [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-11-29T15:54:08.220+01:00  INFO 32484 --- [yukka] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2024-11-29T15:54:08.899+01:00  INFO 32484 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-11-29T15:54:08.928+01:00  INFO 32484 --- [yukka] [main] com.example.yukka.YukkaApplication       : Started YukkaApplication in 5.593 seconds (process running for 6.043)
+2024-11-29T15:54:09.562+01:00  INFO 32484 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-29T15:54:09.563+01:00  INFO 32484 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-29T15:54:09.565+01:00  INFO 32484 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-11-29T15:54:24.586+01:00  INFO 32484 --- [yukka] [http-nio-8081-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1613 ms

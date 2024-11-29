@@ -4,6 +4,7 @@ import { Ustawienia } from '../models/ustawienia';
 export interface UzytkownikResponse {
   avatar?: string;
   ban?: boolean;
+  banDo?: string;
   blokowaniUzytkownicy?: Array<UzytkownikResponse>;
   blokujacyUzytkownicy?: Array<UzytkownikResponse>;
   dataUtworzenia?: string;
