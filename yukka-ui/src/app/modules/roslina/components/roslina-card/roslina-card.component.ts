@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { RoslinaResponse } from '../../../../services/models';
-import { Roslina } from '../../../../services/models/roslina';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 

@@ -66,6 +66,8 @@ export class PowiadomienieCardComponent {
           break;
         case TypPowiadomienia.KOMENTARZ_POST:
         case TypPowiadomienia.POLUBIENIA_POST:
+        case TypPowiadomienia.ZGLOSZENIE_KOMENTARZ:
+        case TypPowiadomienia.ZGLOSZENIE_POST:
           this.router.navigate(['/posty', this.pow.odnosnik]);
           break;
         case TypPowiadomienia.ZAPROSZENIE:
@@ -79,7 +81,6 @@ export class PowiadomienieCardComponent {
         case TypPowiadomienia.OWOCOWANIE_ROSLIN:
         case TypPowiadomienia.OWOCOWANIE_ROSLIN_TERAZ:
         case TypPowiadomienia.KWITNIENIE_ROSLIN_TERAZ:
-        case TypPowiadomienia.PODLEWANIE_ROSLIN:
           this.router.navigate(['/ogrod', this.pow.odnosnik]);
           //throw new Error('NotImplementedYet: Typ powiadomienia nie jest obsługiwany');
           break;

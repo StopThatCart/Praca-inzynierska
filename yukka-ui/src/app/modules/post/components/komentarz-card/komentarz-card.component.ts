@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { KomentarzRequest, KomentarzResponse, OcenaRequest } from '../../../../services/models';
 
 import { KomentarzService } from '../../../../services/services';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { TokenService } from '../../../../services/token/token.service';
@@ -10,11 +10,14 @@ import { FormsModule } from '@angular/forms';
 import { AddKomentarzCardComponent } from "../add-komentarz-card/add-komentarz-card.component";
 import {TimeAgoPipe} from 'time-ago-pipe';
 import { TypKomentarza } from '../../enums/TypKomentarza';
+import { ZgloszenieButtonComponent } from "../../../profil/components/zgloszenie-button/zgloszenie-button.component";
+import { TypPowiadomienia } from '../../../profil/enums/TypPowiadomienia';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-komentarz-card',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddKomentarzCardComponent],
+  imports: [CommonModule, FormsModule, AddKomentarzCardComponent, ZgloszenieButtonComponent, NgbTooltipModule],
   templateUrl: './komentarz-card.component.html',
   styleUrls: ['./komentarz-card.component.css']
 })
@@ -23,6 +26,7 @@ export class KomentarzCardComponent implements OnInit {
   @Input() depth: number = 0;
 
   typ: TypKomentarza = TypKomentarza.ODPOWIEDZ;
+  typPowiadomienia = TypPowiadomienia;
 
   private _komentarzObraz: string | undefined;
   private _komentarzAvatar: string | undefined;
@@ -45,6 +49,7 @@ export class KomentarzCardComponent implements OnInit {
   public TypKomentarza = TypKomentarza;
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private komentarzService: KomentarzService,
     private tokenService: TokenService) {}
 
@@ -88,6 +93,11 @@ export class KomentarzCardComponent implements OnInit {
       return 'data:image/jpeg;base64,' + this.komentarz.avatar;
     }
     return this._komentarzAvatar;
+  }
+
+  getPostIdFromPage(): string | undefined {
+    let postId = this.route.snapshot.data['postId'];
+    return postId;
   }
 
   goToProfil() {

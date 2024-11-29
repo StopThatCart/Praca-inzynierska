@@ -6,6 +6,7 @@ import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule } from '@angular/common';
 import { RozmowaPrywatnaService } from '../../../../services/services/rozmowa-prywatna.service';
 import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zgloszenie-button.component";
+import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
 
 @Component({
   selector: 'app-profil-page',
@@ -29,6 +30,8 @@ export class ProfilPageComponent implements OnInit {
   zaproszony: boolean | undefined;
   isZaproszonyChecked: boolean = false;
   zaproszenieWyslane: boolean = false;
+
+  typPowiadomienia = TypPowiadomienia;
 
   constructor(
     private tokenService: TokenService,

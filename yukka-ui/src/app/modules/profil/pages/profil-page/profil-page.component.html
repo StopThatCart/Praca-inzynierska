@@ -7,7 +7,9 @@
           <a class="btn btn-primary btn-custom" role="button">Edytuj profil</a>
         </ng-container>
         <app-zgloszenie-button
-        [zglaszany]="uzyt.nazwa">
+        [typPowiadomienia]="typPowiadomienia.ZGLOSZENIE"
+        [zglaszany]="uzyt.nazwa"
+        [odnosnik]="uzyt.nazwa">
         </app-zgloszenie-button>
 
         <ng-template #wyslijWiadomosc>

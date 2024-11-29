@@ -42,6 +42,7 @@ import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
+import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
@@ -150,8 +151,8 @@ public class YukkaApplication {
     public CommandLineRunner seedDatabase() {
         return args -> {
 			//roslinaImporterService.seedRosliny();
-			unseed();
-			seed();
+			// unseed();
+			// seed();
 		//roslinaSearchTest();
         };
     }
@@ -285,6 +286,7 @@ public class YukkaApplication {
 		ZgloszenieRequest request = ZgloszenieRequest.builder()
 		.zglaszany(usNiegrzeczny.getNazwa())
 		.opis(faker.witcher().character())
+		.typPowiadomienia(TypPowiadomienia.ZGLOSZENIE.name())
 		.build();
 		
 

@@ -157,16 +157,21 @@ public class PowiadomienieService {
             throw new IllegalArgumentException("Nie można zgłosić samego siebie");
         }
 
+        TypPowiadomienia typPowiadomienia = TypPowiadomienia.valueOf(request.getTypPowiadomienia());
+        if (typPowiadomienia.equals(TypPowiadomienia.ZGLOSZENIE)) {
+            request.setOdnosnik(zglaszany.getNazwa());
+        }
+
         PowiadomienieDTO powiadomienieRequest = PowiadomienieDTO.builder()
-            .typ(TypPowiadomienia.ZGLOSZENIE.name())
+            .typ(typPowiadomienia.name())
             .tytul(request.getOpis())
             .uzytkownikNazwa(uzyt.getNazwa())
             .avatar(uzyt.getAvatar())
             .zglaszany(zglaszany.getNazwa())
-            .odnosnik(zglaszany.getNazwa())
+            .odnosnik(request.getOdnosnik())
             .build();
 
-        Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.ZGLOSZENIE, powiadomienieRequest, null);
+        Powiadomienie powiadomienie = createPowiadomienie(typPowiadomienia, powiadomienieRequest, null);
         powiadomienieRepository.sendZgloszenieToPracownik(powiadomienie, uzyt.getNazwa());
 
     }

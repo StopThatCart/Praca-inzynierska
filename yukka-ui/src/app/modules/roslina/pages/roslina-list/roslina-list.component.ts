@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RoslinaService } from '../../../../services/services/roslina.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PageResponseRoslinaResponse, RoslinaRequest, Wlasciwosc, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
+import { PageResponseRoslinaResponse, RoslinaRequest, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
 import { CommonModule } from '@angular/common';
 import { RoslinaCardComponent } from "../../components/roslina-card/roslina-card.component";
 import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";

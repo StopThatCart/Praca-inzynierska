@@ -3,20 +3,24 @@ import { PowiadomienieService } from '../../../../services/services/powiadomieni
 import { TokenService } from '../../../../services/token/token.service';
 import { ZgloszenieRequest } from '../../../../services/models';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
+import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-zgloszenie-button',
   standalone: true,
-  imports: [FormsModule, ErrorMsgComponent],
+  imports: [FormsModule, ErrorMsgComponent, NgbTooltipModule],
   templateUrl: './zgloszenie-button.component.html',
   styleUrl: './zgloszenie-button.component.css'
 })
 export class ZgloszenieButtonComponent {
 
+  @Input() typPowiadomienia: TypPowiadomienia | undefined;
   @Input() zglaszany: string | undefined;
+  @Input() odnosnik: string | undefined;
 
   errorMsg: Array<string> = [];
   message: string = '';
@@ -25,17 +29,25 @@ export class ZgloszenieButtonComponent {
 	closeResult = '';
 
   request: ZgloszenieRequest = {
-    opis: '',
-    zglaszany: ''
+    typPowiadomienia: '',
+    zglaszany: '',
+    odnosnik: '',
+    opis: ''
   };
 
   constructor(
     private powiadomienieService: PowiadomienieService,
     private tokenService: TokenService,
+    private router: Router,
     private errorHandlingService: ErrorHandlingService
   ) {}
 
   open(content: TemplateRef<any>) {
+    if(!this.tokenService.isTokenValid()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
 		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
 			(result) => {
 				this.closeResult = `Closed with: ${result}`;
@@ -62,8 +74,15 @@ export class ZgloszenieButtonComponent {
    // console.log('Zgłoszenie użytkownika');
    // console.log(this.request);
     //console.log(this.zglaszany);
-    if (this.zglaszany === undefined || this.request.opis === '') return;
+    if (this.typPowiadomienia === undefined ||
+      this.zglaszany === undefined ||
+      this.odnosnik === undefined ||
+      this.request.opis === '')
+      return;
+
+    this.request.typPowiadomienia = this.typPowiadomienia.toString();
     this.request.zglaszany = this.zglaszany;
+    this.request.odnosnik = this.odnosnik;
 
     this.errorMsg = [];
     this.message = '';

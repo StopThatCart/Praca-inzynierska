@@ -9,4 +9,3 @@ export { DzialkaService } from './services/dzialka.service';
 export { AuthenticationService } from './services/authentication.service';
 export { PracownikService } from './services/pracownik.service';
 export { OgrodService } from './services/ogrod.service';
-export { SoilResourceService } from './services/soil-resource.service';

@@ -1,13 +1,13 @@
 <button
 (click)="open(content)"
-class="btn btn-danger" type="button">
-  Zgłoś &nbsp;<i class="fa-solid fa-flag" ></i>
+class="btn btn-danger rounded" type="button" placement="bottom" ngbTooltip="Zgłoś">
+  <i class="fa-solid fa-flag" ></i>
 </button>
 
 
 <ng-template #content let-modal class="bg-secondary">
 	<div class="modal-header bg-secondary">
-      <h4 class="modal-title" id="modal-basic-title">Zgłaszanie użytkownika</h4>
+      <h4 class="modal-title" id="modal-basic-title">Zgłaszanie użytkownika {{ zglaszany }}</h4>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body bg-secondary" >
