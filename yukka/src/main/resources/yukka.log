@@ -6444,3 +6444,71 @@ io.jsonwebtoken.ExpiredJwtException: JWT expired 67503244 milliseconds ago at 20
 2024-11-29T15:54:09.563+01:00  INFO 32484 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2024-11-29T15:54:09.565+01:00  INFO 32484 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
 2024-11-29T15:54:24.586+01:00  INFO 32484 --- [yukka] [http-nio-8081-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1613 ms
+2024-11-29T15:56:49.659+01:00  INFO 34644 --- [yukka] [main] com.example.yukka.YukkaApplication       : Starting YukkaApplication using Java 17.0.10 with PID 34644 (F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka\target\classes started by Toshi in F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka)
+2024-11-29T15:56:49.662+01:00  INFO 34644 --- [yukka] [main] com.example.yukka.YukkaApplication       : No active profile set, falling back to 1 default profile: "default"
+2024-11-29T15:56:50.690+01:00  INFO 34644 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-11-29T15:56:50.816+01:00  INFO 34644 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 120 ms. Found 0 Neo4j repository interfaces.
+2024-11-29T15:56:50.820+01:00  INFO 34644 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-11-29T15:56:50.853+01:00  INFO 34644 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 13 Neo4j repository interfaces.
+2024-11-29T15:56:51.497+01:00  INFO 34644 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-11-29T15:56:51.513+01:00  INFO 34644 --- [yukka] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-29T15:56:51.513+01:00  INFO 34644 --- [yukka] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.26]
+2024-11-29T15:56:51.600+01:00  INFO 34644 --- [yukka] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-29T15:56:51.602+01:00  INFO 34644 --- [yukka] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1892 ms
+2024-11-29T15:56:52.009+01:00  INFO 34644 --- [yukka] [main] o.neo4j.driver.internal.DriverFactory    : Direct driver instance 1032375822 created for server address localhost:7687
+2024-11-29T15:56:52.210+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.240+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.UzytkownikWlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.279+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.289+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.Ocenil is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.293+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.komentarz.Komentarz is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.296+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.post.Post is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.301+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Ustawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.329+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNa is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.339+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.Roslina is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.347+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNaReverse is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.348+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.Dzialka is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.350+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.ogrod.Ogrod is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.355+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Uzytkownik is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.357+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadamia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.363+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.token.Token is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.370+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.MaUstawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.372+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.relationshipnodes.Gleba is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:52.380+01:00  WARN 34644 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadomienie is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-11-29T15:56:53.463+01:00  INFO 34644 --- [yukka] [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name neo4JAuthenticationProvider
+2024-11-29T15:56:53.465+01:00  WARN 34644 --- [yukka] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2024-11-29T15:56:53.559+01:00  INFO 34644 --- [yukka] [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-11-29T15:56:54.062+01:00  INFO 34644 --- [yukka] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2024-11-29T15:56:54.686+01:00  INFO 34644 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-11-29T15:56:54.709+01:00  INFO 34644 --- [yukka] [main] com.example.yukka.YukkaApplication       : Started YukkaApplication in 5.386 seconds (process running for 5.827)
+2024-11-29T15:56:54.957+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-29T15:56:54.958+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-29T15:56:54.960+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-11-29T15:56:56.779+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1745 ms
+2024-11-29T15:57:17.196+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.u.controller.PracownikService    : Użytkownik Katarzyna Mazur odbanowany przez Jan Kowalski
+2024-11-29T15:58:34.006+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-1] c.e.y.m.u.controller.PracownikService    : Użytkownik Jan Kowalski próbuje zbanować użytkownika Katarzyna Mazur
+2024-11-29T15:58:43.949+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-8] c.e.y.m.u.controller.PracownikService    : Użytkownik Katarzyna Mazur odbanowany przez Jan Kowalski
+2024-11-29T15:58:43.986+01:00  WARN 34644 --- [yukka] [http-nio-8081-exec-8] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-11-29T16:00:02.474+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-5] c.e.y.m.u.controller.PracownikService    : Użytkownik Jan Kowalski próbuje zbanować użytkownika Katarzyna Mazur
+2024-11-29T16:00:05.632+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-8] c.e.y.m.u.controller.PracownikService    : Użytkownik Katarzyna Mazur odbanowany przez Jan Kowalski
+2024-11-29T16:00:05.637+01:00  WARN 34644 --- [yukka] [http-nio-8081-exec-8] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-11-29T16:01:00.678+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-3] c.e.y.m.u.controller.PracownikService    : Użytkownik Jan Kowalski próbuje zbanować użytkownika Katarzyna Mazur
+2024-11-29T16:01:08.312+01:00  INFO 34644 --- [yukka] [http-nio-8081-exec-10] c.e.y.m.u.controller.PracownikService    : Użytkownik Katarzyna Mazur odbanowany przez Jan Kowalski
+2024-11-29T16:01:08.316+01:00  WARN 34644 --- [yukka] [http-nio-8081-exec-10] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
