@@ -15,6 +15,7 @@ import { EdycjaAvatarPageComponent } from './pages/edycja-avatar-page/edycja-ava
 import { ProfilPostyPageComponent } from './pages/profil-posty-page/profil-posty-page.component';
 import { ProfilKomentarzePageComponent } from './pages/profil-komentarze-page/profil-komentarze-page.component';
 import { EdycjaEmailPageComponent } from './pages/edycja-email-page/edycja-email-page.component';
+import { profilGuard } from '../../services/guard/profil-guard/profil.guard';
 
 const routes: Routes = [
   {
@@ -47,13 +48,13 @@ const routes: Routes = [
           {
             path: 'posty',
             component: ProfilPostyPageComponent,
-            canActivate: [authGuard],
+            canActivate: [profilGuard],
             data: { breadcrumb: 'Posty' }
           },
           {
             path: 'komentarze',
             component: ProfilKomentarzePageComponent,
-            canActivate: [authGuard],
+            canActivate: [profilGuard],
             data: { breadcrumb: 'Komentarze' }
           },
           {

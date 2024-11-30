@@ -11,6 +11,7 @@ import { DzialkaPageComponent } from './pages/dzialka-page/dzialka-page.componen
 import { DzialkaResolverService } from './services/dzialka-resolver/dzialka-resolver.service';
 import { AddRoslinaToDzialkaComponent } from './pages/add-roslina-to-dzialka/add-roslina-to-dzialka.component';
 import { RoslinyUzytkownikaPageComponent } from './pages/rosliny-uzytkownika-page/rosliny-uzytkownika-page.component';
+import { NotFoundComponent } from '../../components/not-found/not-found.component';
 
 const routes: Routes = [
   {

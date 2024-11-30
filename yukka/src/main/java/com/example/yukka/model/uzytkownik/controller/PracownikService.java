@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.yukka.auth.requests.BanRequest;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.social.service.PowiadomienieService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
@@ -34,7 +35,7 @@ public class PracownikService {
         }
 
         if(targetUzyt.isPracownik() && !uzyt.isAdmin()) {
-            throw new IllegalArgumentException("Nie masz uprawnień do odbanowywania tego użytkownika");
+            throw new ForbiddenException("Nie masz uprawnień do odbanowywania tego użytkownika");
         }
 
         log.info("Użytkownik {} odbanowany przez {}", targetUzyt.getNazwa(), uzyt.getNazwa());
@@ -59,7 +60,7 @@ public class PracownikService {
         }
         
         if(targetUzyt.isPracownik() && !uzyt.isAdmin()) { 
-            throw new IllegalArgumentException("Nie masz uprawnień do banowania/odbanowywania tego użytkownika");
+            throw new ForbiddenException("Nie masz uprawnień do banowania/odbanowywania tego użytkownika");
         }
 
         if(targetUzyt.isAdmin()) {

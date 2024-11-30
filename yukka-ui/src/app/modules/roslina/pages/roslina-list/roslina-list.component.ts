@@ -146,6 +146,7 @@ export class RoslinaListComponent implements OnInit{
         error: (error) => {
           console.error('Error fetching rosliny:', error);
           this.message = 'Wystąpił błąd podczas pobierania roślin.';
+          this.isLoading = false;
         },
         complete: () => {
           this.isLoading = false;

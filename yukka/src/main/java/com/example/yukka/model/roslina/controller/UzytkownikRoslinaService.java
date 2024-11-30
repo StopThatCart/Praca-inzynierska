@@ -15,6 +15,7 @@ import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaResponse;
@@ -56,7 +57,7 @@ public class UzytkownikRoslinaService {
 
 
         if(!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
-            throw new AccessDeniedException("Brak uprawnień do przeglądania roślin użytkownika " + targetUzyt.getNazwa());
+            throw new ForbiddenException("Brak uprawnień do przeglądania roślin użytkownika " + targetUzyt.getNazwa());
         }
 
         return findRoslinyOfUzytkownik(page, size, request, nazwa, uzyt);
@@ -157,13 +158,6 @@ public class UzytkownikRoslinaService {
     public void uploadUzytkownikRoslinaObraz(MultipartFile file, Authentication connectedUser, String roslinaId) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         log.info("Zmiana obrazu rośliny " + roslinaId + " przez użytkownika: " + uzyt.getNazwa());
-        // Roslina roslina = roslinaRepository.findByRoslinaId(roslinaId).orElse(null);
-        // if (roslina == null) {
-        //     return;
-        // }
-        // if(!roslina.getUzytkownik().getUzytId().equals(uzyt.getUzytId())){
-        //     return;
-        // }
 
         Roslina roslina = uzytkownikRoslinaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), roslinaId)
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId));
@@ -177,6 +171,4 @@ public class UzytkownikRoslinaService {
         roslina.setObraz(pfp);
         uzytkownikRoslinaRepository.updateRoslinaObraz(roslinaId, pfp);
     }
-
-    
 }

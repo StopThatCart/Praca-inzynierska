@@ -46,7 +46,6 @@ export class ProfilKomentarzePageComponent {
 
     this.route.queryParams.subscribe(params => {
       this.page = +params['page'] || 1;
-     // this.nazwa = params['nazwa'];
       this.findKomentarzeOfUzytkownik();
     });
   }
@@ -62,11 +61,10 @@ export class ProfilKomentarzePageComponent {
         next: (response) => {
           this.komentarze = response;
           this.komentarzeCount = response.totalElements as number;
-          console.log('Komentarze:', this.komentarze);
         },
         error: (error) => {
-          console.error('Error fetching komentarze:', error);
           this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
+          this.isLoading = false;
         },
         complete:()=> this.isLoading = false
       });

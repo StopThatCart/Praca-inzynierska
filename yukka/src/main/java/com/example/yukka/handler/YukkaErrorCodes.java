@@ -20,6 +20,7 @@ public enum YukkaErrorCodes {
     ENTITY_ALREADY_EXISTS(306, BAD_REQUEST, "Obiekt już istnieje w bazie danych"),
     OCENA(307, BAD_REQUEST, "Wystąpił błąd podczas oceniania"),
     BLOCKED_UZYTKOWNIK(308, FORBIDDEN, "Ty albo użytkownik się blokujecie"),
+    FORBIDDEN_EXCEPTION(403, FORBIDDEN, "Nie masz uprawnień do wykonania tej operacji"),
     ;
 
     @Getter

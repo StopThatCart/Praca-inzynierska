@@ -67,9 +67,14 @@ export class ProfilPostyPageComponent {
         next: (posty) => {
           this.postResponse = posty;
         },
-        error: (error) => {
-          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
-          console.error('Error fetching posty:', error);
+        error: (err) => {
+          if (err.status === 403) {
+
+            //console.log('Eaaaaa');
+          }
+          this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
+          this.toggleLoading();
+          //console.error('Error fetching posty:', err);
         },
         complete:()=> this.toggleLoading()
       });

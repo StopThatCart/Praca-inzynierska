@@ -22,6 +22,7 @@ import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.BannedUzytkownikException;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzMapper;
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
@@ -75,11 +76,11 @@ public class KomentarzService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
         if (targetUzyt.isEmpty() || !uzyt.hasAuthenticationRights(targetUzyt.get(), connectedUser)) {
-            return new PageResponse<>();
+           throw new ForbiddenException("Nie masz uprawnień do przeglądania komentarzy tego użytkownika");
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("komentarz.dataUtworzenia").descending());
 
-        Page<Komentarz> komentarze = komentarzRepository.findKomentarzeOfUzytkownik(uzyt.getNazwa(), pageable);
+        Page<Komentarz> komentarze = komentarzRepository.findKomentarzeOfUzytkownik(targetUzyt.get().getNazwa(), pageable);
         return komentarzMapper.komentarzResponsetoPageResponse(komentarze);
     }
 
@@ -258,7 +259,7 @@ public class KomentarzService {
         System.out.println("Role: " + uzyt.getAuthorities());
         
         if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik(), connectedUser)) {
-            throw new AccessDeniedException("Nie masz uprawnień do usunięcia komentarza");
+            throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
         }
 
         if(komentarz.getWPoscie() != null) {
@@ -283,7 +284,7 @@ public class KomentarzService {
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
         
         if (!uzyt.hasAuthenticationRights(kom.getUzytkownik(), connectedUser)) {
-            throw new AccessDeniedException("Nie masz uprawnień do usunięcia komentarza");
+            throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
         }
 
         List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(post.getPostId());

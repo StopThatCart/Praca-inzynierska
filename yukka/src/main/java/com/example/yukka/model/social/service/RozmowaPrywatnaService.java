@@ -76,7 +76,7 @@ public class RozmowaPrywatnaService {
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + nazwa));
 
         if (nadawca.getNazwa().equals(odbiorca.getNazwa())) {
-            throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
+            throw new IllegalArgumentException("Rozmowę ze sobą polecamy poćwiczyć przed lustrem");
         }
         
         RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaWithKomentarze(odbiorca.getUzytId(), nadawca.getUzytId())

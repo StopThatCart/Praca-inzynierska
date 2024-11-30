@@ -12,6 +12,7 @@ import com.example.yukka.common.FileResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.Pozycja;
@@ -66,7 +67,7 @@ public class DzialkaService {
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika " + nazwa));
 
         if(!wlasciciel.getUstawienia().isOgrodPokaz() && !uzyt.getEmail().equals(wlasciciel.getEmail())) {
-            throw new AccessDeniedException("Ogród użytkownika " + nazwa + " jest ukryty");
+            throw new ForbiddenException("Ogród użytkownika " + nazwa + " jest ukryty");
         }
 
         List<Dzialka> dzialki = dzialkaRepository.getDzialkiOfUzytkownikByNazwa(nazwa);
@@ -85,7 +86,7 @@ public class DzialkaService {
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika " + uzyt.getNazwa()));
 
         if(!wlasciciel.getUstawienia().isOgrodPokaz() && !uzyt.getEmail().equals(wlasciciel.getEmail())) {
-            throw new AccessDeniedException("Ogród użytkownika " + uzyt.getNazwa() + " jest ukryty");
+            throw new ForbiddenException("Ogród użytkownika " + uzyt.getNazwa() + " jest ukryty");
         }
 
         List<Dzialka> dzialki = dzialkaRepository.getPozycjeInDzialki(uzyt.getNazwa());
@@ -105,19 +106,11 @@ public class DzialkaService {
         }
 
         Uzytkownik wlasciciel = uzytkownikRepository.findByNazwa(nazwa).orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika " + nazwa));
-
         if (!wlasciciel.getUstawienia().isOgrodPokaz() && (uzyt == null || !uzyt.getEmail().equals(wlasciciel.getEmail()))) {
-            throw new AccessDeniedException("Ogród użytkownika " + nazwa + " jest ukryty");
+            throw new ForbiddenException("Ogród użytkownika " + nazwa + " jest ukryty");
         }
 
         Dzialka dzialka = getDzialkaByNumer(numer, wlasciciel);
-
-        for (ZasadzonaNaReverse zasadzona : dzialka.getZasadzoneRosliny()) {
-            System.out.println("\nZasadzona: " + zasadzona.getRoslina().getNazwa());
-            System.out.println("Obraz: " + zasadzona.getObraz());
-            System.out.println("Obraz 2: " + zasadzona.getRoslina().getObraz());
-            System.out.println("Tekstura: " + zasadzona.getTekstura());
-        }
 
         return roslinaMapper.toDzialkaResponse(dzialka);
     }
@@ -133,7 +126,7 @@ public class DzialkaService {
     @Transactional(readOnly = true)
     public Dzialka getDzialkaByNumer(int numer, Uzytkownik uzyt) {
         return dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), numer)
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono działki " + numer + " dla użytkownika " + uzyt.getEmail()));
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono działki " + numer + " dla użytkownika " + uzyt.getNazwa()));
     }
 
     public DzialkaResponse saveRoslinaToDzialka(DzialkaRoslinaRequest request, 
@@ -336,10 +329,6 @@ public class DzialkaService {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
 
-        if (request.getNotatka() == null){
-            System.out.println("Hehe notatka jest nullem.");
-        }
-
         ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
         System.out.println("Le aktualizacja notatki rośliny na działce");
         if (pozycja != null) {
@@ -448,7 +437,7 @@ public class DzialkaService {
         Uzytkownik wlasciciel = dzialka.getOgrod().getUzytkownik();
         
         if(!uzyt.hasAuthenticationRights(wlasciciel, connectedUser)) {
-            throw new AccessDeniedException("Nie masz uprawnień do usunięcia rośliny z działki użytkownika " + dzialka.getOgrod().getUzytkownik().getEmail());
+            throw new ForbiddenException("Nie masz uprawnień do usunięcia rośliny z działki użytkownika " + dzialka.getOgrod().getUzytkownik().getNazwa());
         }
         ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
 

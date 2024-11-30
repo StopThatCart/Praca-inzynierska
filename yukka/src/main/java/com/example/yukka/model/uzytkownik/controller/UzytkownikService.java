@@ -121,15 +121,7 @@ public class UzytkownikService implements  UserDetailsService {
         log.info("Zmiana ustawień użytkownika: " + uzyt.getNazwa());
         
         Ustawienia ust = commonMapperService.toUstawienia(ustawienia);
-
-        System.out.println("\n\n\nUstawienia przed: " + uzyt.getUstawienia());
-        System.out.println("\nUstawienia zmiany: " + ust);
-
-        System.out.println("\nto samo ale request: " + ustawienia);
-
         Uzytkownik uzytkownik = uzytkownikRepository.updateUstawienia(ust, uzyt.getEmail());
-
-        System.out.println("\nUstawienia po: " + uzytkownik.getUstawienia());
 
         return commonMapperService.toUzytkownikResponse(uzytkownik);
     }
@@ -254,7 +246,7 @@ public class UzytkownikService implements  UserDetailsService {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         
         if(uzyt.isAdmin() || uzyt.isPracownik()) {
-            throw new IllegalArgumentException("Nie można usuwać samego admina lub pracownika, przynajmniej na razie.");
+            throw new IllegalArgumentException("Nie można usuwać konta admina lub pracownika");
         }
 
         // Wylogowanie

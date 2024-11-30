@@ -7,6 +7,8 @@ import { PostCardComponent } from "../../components/post-card/post-card.componen
 import { KomentarzCardComponent } from '../../components/komentarz-card/komentarz-card.component';
 import { AddKomentarzCardComponent } from '../../components/add-komentarz-card/add-komentarz-card.component';
 import { TypKomentarza } from '../../enums/TypKomentarza';
+import { error } from 'console';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-posty-page',
@@ -22,12 +24,13 @@ export class PostyPageComponent implements OnInit {
 
   private _postObraz: string | undefined;
 
-  errorMessage: string | null = null;
+  errorMsg: Array<string> = [];
 
   public TypKomentarza = TypKomentarza;
   constructor(
     private route: ActivatedRoute,
-    private postService: PostService
+    private postService: PostService,
+    private errorHandlingService: ErrorHandlingService
   ) {}
 
   ngOnInit(): void {
@@ -45,10 +48,13 @@ export class PostyPageComponent implements OnInit {
     this.postService.findPostById({ 'post-id': postId }).subscribe({
       next: (post) => {
         this.post = post;
-        this.errorMessage = null;
+        this.errorMsg = [];
       },
       error: (err) => {
-        this.errorMessage = 'Nie znaleziono posta o podanym ID.';
+        if (err.status === 404) {
+
+        }
+        this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
       }
     });
   }

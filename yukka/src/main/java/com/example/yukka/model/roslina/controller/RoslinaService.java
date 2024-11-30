@@ -23,6 +23,7 @@ import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
@@ -58,19 +59,6 @@ public class RoslinaService {
     @Value("${roslina.obraz.default.name}")
     private String defaultRoslinaObrazName;
 
-    // public Collection<Roslina> getSome(int amount) {
-    //     System.out.println("BOOOOOOOOOI " + amount);
-    //     Collection<Roslina> beep = roslinaRepository.getSomePlants(amount);
-    //     Iterable<Roslina> properties = beep;
-    //     for (Roslina property : properties) {
-    //         System.out.println(property.getNazwa());
-    //         System.out.println(property.getGleby());
-            
-    //     }
-
-    //     return roslinaRepository.getSomePlants(2);
-    // }
-
     @Transactional(readOnly = true)
     public PageResponse<RoslinaResponse> findAllRosliny(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").descending());
@@ -96,10 +84,6 @@ public class RoslinaService {
             return findAllRosliny(page, size);
         }
         Roslina ros = roslinaMapper.toRoslina(request);
-
-        //System.out.println("Rozmiar relat: " + request.getWlasciwosciAsMap().size());
-      //  System.out.println("Rozmiar okresow: " + ros.getOkresyOwocowania().size());
-     //   System.out.println("Rozmiar kwiatow: " + ros.getKwiaty().size());
 
         Page<Roslina> rosliny = roslinaRepository.findAllRoslinyWithParameters(
             ros, 
@@ -258,8 +242,7 @@ public class RoslinaService {
         roslina.setObraz(pfp);
         Roslina ros = roslinaRepository.updateRoslinaObraz(roslina.getNazwaLacinska(), pfp);
         return roslinaMapper.toRoslinaResponse(ros);
-        //roslinaRepository.updateRoslina(roslina.getNazwa(), roslina.getNazwaLacinska(), roslina.getOpis(), roslina.getWysokoscMin(), roslina.getWysokoscMax());
-    }
+   }
 
 
     // Usuwanie po ID zajmuje ogromną ilość czasu i wywołuje HeapOverflow, więc lepiej jest użyć UNIQUE atrybutu jak nazwaLacinska
@@ -286,7 +269,7 @@ public class RoslinaService {
         if(roslina.isUzytkownikRoslina() ) {
             Uzytkownik targetUzyt = roslina.getUzytkownik();
             if (!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
-                throw new IllegalArgumentException("Nie masz uprawnień do usunięcia rośliny użytkownika: " + targetUzyt.getNazwa());
+                throw new ForbiddenException("Nie masz uprawnień do usunięcia rośliny użytkownika: " + targetUzyt.getNazwa());
             }
 
             fileUtils.deleteObraz(roslina.getObraz());
@@ -294,7 +277,7 @@ public class RoslinaService {
             return;
             
         } else if (uzyt.isNormalUzytkownik()) {
-            throw new IllegalArgumentException("Nie masz uprawnień do usunięcia tej rośliny.");
+            throw new ForbiddenException("Nie masz uprawnień do usunięcia tej rośliny.");
         }
         
         fileUtils.deleteObraz(roslina.getObraz());
