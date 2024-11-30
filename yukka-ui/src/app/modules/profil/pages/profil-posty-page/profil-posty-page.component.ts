@@ -9,11 +9,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
 import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.component";
+import { LoadingComponent } from "../../../../components/loading/loading.component";
 
 @Component({
   selector: 'app-profil-posty-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, PostCardComponent, InfiniteScrollModule, ErrorMsgComponent, EdycjaNavComponent],
+  imports: [CommonModule, FormsModule, PostCardComponent, InfiniteScrollModule, ErrorMsgComponent, EdycjaNavComponent, LoadingComponent],
   templateUrl: './profil-posty-page.component.html',
   styleUrl: './profil-posty-page.component.css'
 })
@@ -67,9 +68,14 @@ export class ProfilPostyPageComponent {
         next: (posty) => {
           this.postResponse = posty;
         },
-        error: (error) => {
-          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
-          console.error('Error fetching posty:', error);
+        error: (err) => {
+          if (err.status === 403) {
+
+            //console.log('Eaaaaa');
+          }
+          this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
+          this.toggleLoading();
+          //console.error('Error fetching posty:', err);
         },
         complete:()=> this.toggleLoading()
       });

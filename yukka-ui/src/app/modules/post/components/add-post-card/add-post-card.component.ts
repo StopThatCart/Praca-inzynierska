@@ -52,21 +52,18 @@ export class AddPostCardComponent {
 
   addPost() {
     this.errorMsg = [];
-    if(this.request.obraz === '') {
-      this.postService.addPost1$Json({
-        body: this.request
-      }).subscribe( {
-          next: (res) => { this.goToPost(res.postId); },
-          error: (err) => { this.handleErrors(err); }
-      });
-    }else {
-      this.postService.addPost1$FormData({
-        body: { request: this.request, file: this.wybranyPlik }
-      }).subscribe( {
-          next: (res) => { this.goToPost(res.postId); },
-          error: (err) => { this.handleErrors(err); }
-      });
+    let leFile = null;
+    if(this.request.obraz !== '') {
+      leFile = this.wybranyPlik;
     }
+
+    this.postService.addPost({
+      body: { request: this.request, file: leFile }
+    }).subscribe( {
+        next: (res) => { this.goToPost(res.postId); },
+        error: (err) => { this.handleErrors(err); }
+    });
+
   }
 
   private goToPost(postId: string | undefined) {

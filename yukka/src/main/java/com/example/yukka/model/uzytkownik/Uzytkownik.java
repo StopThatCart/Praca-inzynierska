@@ -1,6 +1,7 @@
 package com.example.yukka.model.uzytkownik;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +26,7 @@ import com.example.yukka.model.ogrod.Ogrod;
 import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
+import com.example.yukka.model.social.powiadomienie.Powiadomienie;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 
 import lombok.AllArgsConstructor;
@@ -90,6 +92,9 @@ public class Uzytkownik implements UserDetails, Principal{
     @Builder.Default
     private boolean ban = false;
 
+    @Property("banDo")
+    private LocalDate banDo;
+
     @Relationship(type = "MA_POST", direction = Relationship.Direction.OUTGOING)
     private List<Post> posty;
 
@@ -118,7 +123,6 @@ public class Uzytkownik implements UserDetails, Principal{
     @ToString.Exclude
     @Relationship(type = "BLOKUJE", direction = Relationship.Direction.INCOMING)
     private Set<Uzytkownik> blokujacyUzytkownicy;
-
 
     public Uzytkownik(String name, String email, String password) {
         this.nazwa = name;
@@ -175,6 +179,16 @@ public class Uzytkownik implements UserDetails, Principal{
     */
     public boolean hasAuthenticationRights(Uzytkownik targetUzyt, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        if(uzyt.isAdmin()){
+            return true;
+        }else if (uzyt.isPracownik()) {
+            return targetUzyt.isNormalUzytkownik() || uzyt.getEmail().equals(targetUzyt.getEmail());
+        } else  {
+            return uzyt.getEmail().equals(targetUzyt.getEmail());
+        }
+    }
+
+    public boolean hasAuthenticationRights(Uzytkownik targetUzyt, Uzytkownik uzyt) {
         if(uzyt.isAdmin()){
             return true;
         }else if (uzyt.isPracownik()) {

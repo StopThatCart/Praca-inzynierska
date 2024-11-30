@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.auth.requests.EmailRequest;
+import com.example.yukka.common.FileResponse;
 import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.social.service.PowiadomienieService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
@@ -56,13 +57,13 @@ public class UzytkownikController {
     }
 
     @GetMapping(value = "/avatar", produces="application/json")
-    public ResponseEntity<UzytkownikResponse> getAvatar(Authentication connectedUser) {
+    public ResponseEntity<FileResponse> getAvatar(Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.getLoggedInAvatar(connectedUser));
     }
 
     @GetMapping(value = "/ustawienia", produces="application/json")
     public ResponseEntity<UzytkownikResponse> getUstawienia(Authentication connectedUser) {
-        return ResponseEntity.ok(uzytkownikService.getLoggedInAvatar(connectedUser));
+        return ResponseEntity.ok(uzytkownikService.getUstawienia(connectedUser));
     }
 
     @GetMapping(value = "/blokowani", produces="application/json")
@@ -76,12 +77,6 @@ public class UzytkownikController {
         
         return ResponseEntity.ok(uzytkownikService.updateUstawienia(ustawienia, connectedUser));
     }
-
-    // @PatchMapping(value = "/change-email",  produces="application/json")
-    // public ResponseEntity<UzytkownikResponse> updateEmail(@Valid @RequestBody EmailRequest request, Authentication connectedUser) {
-    //     //TODO: Przenieść to do AuthService i zaimplementować z wysyłaniem na nowy mail
-    //     return ResponseEntity.ok(uzytkownikService.updateEmail(request, connectedUser));
-    // }
 
     @PostMapping(value = "/send-zmiana-email", produces="application/json")
     public ResponseEntity<?> sendZmianaEmail(@Valid @RequestBody EmailRequest request, Authentication currentUser) throws MessagingException {
@@ -99,13 +94,6 @@ public class UzytkownikController {
     public ResponseEntity<Boolean> setBlokUzytkownik(@PathVariable("nazwa") String nazwa, 
             @PathVariable("blok") boolean blok, Authentication currentUser) {
         return ResponseEntity.ok(uzytkownikService.setBlokUzytkownik(nazwa, currentUser, blok));
-    }
-
-
-    @PatchMapping(value = "pracownik/ban/{email}/{ban}", produces="application/json")
-    public ResponseEntity<Uzytkownik> setBanUzytkownik(@PathVariable("email") String email, 
-            @PathVariable("ban") boolean ban, Authentication currentUser) {
-        return ResponseEntity.ok(uzytkownikService.setBanUzytkownik(email, currentUser, ban));
     }
     
 

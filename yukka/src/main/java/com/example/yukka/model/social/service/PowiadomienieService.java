@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.yukka.YukkaApplication;
+import com.example.yukka.auth.requests.BanRequest;
 import com.example.yukka.common.PageResponse;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.social.komentarz.Komentarz;
@@ -31,16 +33,19 @@ import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
 import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.PowiadomienieRepository;
+import com.example.yukka.model.social.request.ZgloszenieRequest;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @EnableScheduling
 @Transactional
+@Slf4j
 public class PowiadomienieService {
     private final PowiadomienieRepository powiadomienieRepository;
     private final PowiadomienieMapper powiadomienieMapper;
@@ -105,16 +110,70 @@ public class PowiadomienieService {
         }
     }
 
+    @Scheduled(cron = "0 0 0 * * ?")  // Codziennie
+    public void checkUnban() {
+        if (!YukkaApplication.isApplicationReady()) {
+            System.out.println("Aplikacja nie jest gotowa do sprawdzania okresów powiadomień");
+            return; 
+        }
+        System.out.println("Sprawdzanie zbanowanych użytkowników");
+        List<Uzytkownik> uzytkownicy = uzytkownikRepository.getZbanowaniUzytkownicy();
+        if(uzytkownicy.isEmpty()) return;
+        
+        for (Uzytkownik uzytkownik : uzytkownicy) {
+            if(uzytkownik.getBanDo().isBefore(LocalDate.now())) {
+                uzytkownikRepository.banUzytkownik(uzytkownik.getNazwa(), false, null);
+                sendPowiadomienieOfBan(uzytkownik, null);
+            }
+        }
+    }
 
     public void addSpecjalnePowiadomienie(PowiadomienieDTO powiadomienieRequest) {
-        Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest);
+        Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest, null);
         powiadomienieRepository.addGlobalCustomPowiadomienie(powiadomienie);
 
     }
 
     public void addSpecjalnePowiadomienieToPracownicy(PowiadomienieDTO powiadomienieRequest) {
-        Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest);
+        Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest, null);
         powiadomienieRepository.addCustomPowiadomienieToPracownicy(powiadomienie);
+    }
+
+    public void sendZgloszenie(ZgloszenieRequest request, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        if (checkIfUzytkownikSentZgloszenieBeforeCooldown(connectedUser)) {
+            throw new IllegalArgumentException("Możesz wysłać zgłoszenie raz na 15 minut");
+        }
+
+        sendZgloszenie(request, uzyt);
+    }
+
+    public void sendZgloszenie(ZgloszenieRequest request, Uzytkownik uzyt) {
+        log.info("Zgłoszenie użytkownika: " + request.getZglaszany() + " przez użytkownika: " + uzyt.getNazwa());
+        Uzytkownik zglaszany = uzytkownikRepository.findByNameOrEmail(request.getZglaszany())
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika " + request.getZglaszany()));
+
+        if (zglaszany.getUzytId().equals(uzyt.getUzytId())) {
+            throw new IllegalArgumentException("Nie można zgłosić samego siebie");
+        }
+
+        TypPowiadomienia typPowiadomienia = TypPowiadomienia.valueOf(request.getTypPowiadomienia());
+        if (typPowiadomienia.equals(TypPowiadomienia.ZGLOSZENIE)) {
+            request.setOdnosnik(zglaszany.getNazwa());
+        }
+
+        PowiadomienieDTO powiadomienieRequest = PowiadomienieDTO.builder()
+            .typ(typPowiadomienia.name())
+            .tytul(request.getOpis())
+            .uzytkownikNazwa(uzyt.getNazwa())
+            .avatar(uzyt.getAvatar())
+            .zglaszany(zglaszany.getNazwa())
+            .odnosnik(request.getOdnosnik())
+            .build();
+
+        Powiadomienie powiadomienie = createPowiadomienie(typPowiadomienia, powiadomienieRequest, null);
+        powiadomienieRepository.sendZgloszenieToPracownik(powiadomienie, uzyt.getNazwa());
+
     }
 
     public Powiadomienie addPowiadomienie(PowiadomienieDTO request, Uzytkownik uzytkownik) {
@@ -131,24 +190,12 @@ public class PowiadomienieService {
         }
     }
 
-    public PowiadomienieResponse setPrzeczytane(Long id, Authentication connectedUser) {
-        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
-        Powiadomienie powiadomienie = powiadomienieRepository.setPrzeczytane(uzyt.getEmail(), id).orElse(null);;
-
-        return powiadomienieMapper.toPowiadomienieResponse(powiadomienie);
-    }
-
-    public void remove(Long id, Authentication connectedUser) {
-        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
-        powiadomienieRepository.remove(uzyt.getEmail(), id);
-    }
-
     public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieDTO request, Uzytkownik uzytkownik) {
         String opis = generatePowiadomienieOpis(typ, request);
 
         Powiadamia powiadamia = Powiadamia.builder()
                 .przeczytane(false)
-                .oceniany(uzytkownik)
+                .oceniany(uzytkownik != null ? uzytkownik : null)
                 .build();
 
         return Powiadomienie.builder()
@@ -160,32 +207,10 @@ public class PowiadomienieService {
                 .nazwyRoslin(request.getNazwyRoslin())
                 .powiadamia(powiadamia)
                 .uzytkownikNazwa(request.getUzytkownikNazwa())
+                .zglaszany(request.getZglaszany())
                 .data(request.getData())
                 .build();
     }
-
-    public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieDTO request) {
-        String opis = generatePowiadomienieOpis(typ, request);
-
-        Powiadamia powiadamia = Powiadamia.builder()
-                .przeczytane(false)
-                .oceniany(null)
-                .build();
-
-        return Powiadomienie.builder()
-                .typ(typ.name())
-                .powiadamia(powiadamia)
-                .odnosnik(request.getOdnosnik())
-                .tytul(request.getTytul())
-                .opis(opis)
-                .avatar(request.getAvatar())
-                .nazwyRoslin(request.getNazwyRoslin())
-                .uzytkownikNazwa(request.getUzytkownikNazwa())
-                .data(request.getData())
-                .build();
-    }
-
-
 
     // TODO: Jakoś to połączyć jak mnie już głowa przestanie boleć
     public void sendPowiadomienieOfRozmowa(Uzytkownik nadawca, Uzytkownik odbiorca, RozmowaPrywatna rozmowa) {
@@ -199,13 +224,29 @@ public class PowiadomienieService {
         addPowiadomienie(powiadomienie, odbiorca);
     }
 
+    public void sendPowiadomienieOfBan(Uzytkownik odbiorca, BanRequest request) {
+        PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
+            .typ(TypPowiadomienia.BAN.name())
+            .okres(request.getBanDo())
+            .tytul(request.getPowod())
+            .build();
+        addPowiadomienie(powiadomienie, odbiorca);
+    }
+
+    public void sendPowiadomienieOfUnban(Uzytkownik odbiorca) {
+        PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
+            .typ(TypPowiadomienia.ODBANOWANIE.name())
+            .build();
+        addPowiadomienie(powiadomienie, odbiorca);
+    }
+
+
     public void sendPowiadomienieOfKomentarz(Uzytkownik nadawca, Uzytkownik odbiorca, Komentarz komentarz) {
         if(komentarz.getUzytkownik().getUzytId().equals(nadawca.getUzytId())) {
             return;
         }
 
         Post post =  komentarz.getPost();
-
         if(post == null && komentarz.getWPoscie() != null) {
             post = komentarz.getWPoscie();
             if(post == null) {
@@ -216,8 +257,8 @@ public class PowiadomienieService {
 
         PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.KOMENTARZ_POST.name())
-            .tytul(post.getTytul())
-            .odnosnik(post.getPostId())
+            .tytul(post != null ? post.getTytul() : "")
+            .odnosnik(post != null ? post.getPostId() : "")
             .uzytkownikNazwa(nadawca.getNazwa()).avatar(nadawca.getAvatar())
             .avatar(nadawca.getAvatar())
             .build();
@@ -225,6 +266,46 @@ public class PowiadomienieService {
         addPowiadomienie(powiadomienie, komentarz.getUzytkownik());
     }
 
+    // TODO: Dodać przycisk ustawiający wszystkie powiadomienia jako przeczytane oraz przycisk zgłaszania użytkownika + modal do tego
+    
+    public PowiadomienieResponse setPrzeczytane(Long id, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        Powiadomienie powiadomienie = powiadomienieRepository.setPrzeczytane(uzyt.getEmail(), id).orElse(null);;
+
+        return powiadomienieMapper.toPowiadomienieResponse(powiadomienie);
+    }
+
+    public void setAllPrzeczytane(Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        powiadomienieRepository.setAllPrzeczytane(uzyt.getEmail());
+    }
+
+    
+    public void remove(Long id, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        Optional<Powiadomienie> pow = powiadomienieRepository.findById(id);
+        if(pow.isPresent() && pow.get().getTyp().equals(TypPowiadomienia.ZGLOSZENIE.name())) {
+            throw new IllegalArgumentException("Nie można usunąć zgłoszenia");
+        }
+        powiadomienieRepository.remove(uzyt.getEmail(), id);
+    }
+
+    @Transactional(readOnly = true)
+    private Boolean checkIfUzytkownikSentZgloszenieBeforeCooldown(Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+
+        Optional<Powiadomienie> pow = powiadomienieRepository.getNajnowszeZgloszenieUzytkownika(uzyt.getNazwa());
+        if(pow.isEmpty()) {
+            return false;
+        }
+        System.out.println("Data utworzenia zgłoszenia: " + pow.get().getDataUtworzenia());
+        if (pow.get().getDataUtworzenia().plusMinutes(15).isBefore(LocalDateTime.now())) {
+            return false;
+        }
+
+
+        return true;
+    }
 
     private String generatePowiadomienieOpis(TypPowiadomienia typ, PowiadomienieDTO request) {
         String template = typ.getTemplate();
@@ -233,6 +314,8 @@ public class PowiadomienieService {
         template = template.replace("{uzytkownikNazwa}", request.getUzytkownikNazwa() != null ? request.getUzytkownikNazwa() : "");
         template = template.replace("{iloscPolubien}", request.getIloscPolubien() != 0 ? String.valueOf(request.getIloscPolubien()) : "");
         template = template.replace("{data}", request.getData() != null ? request.getData().toString() : "");
+        template = template.replace("{okres}", request.getOkres() != null ? request.getOkres().toString() : "");
+        template = template.replace("{zglaszany}", request.getZglaszany() != null ? request.getZglaszany() : "");
 
         StringJoiner joiner = new StringJoiner(", ");
         if (request.getNazwyRoslin() != null) {
@@ -263,32 +346,4 @@ public class PowiadomienieService {
             addPowiadomienie(powiadomienieRequest, uzytkownik);
         }
     }
-
-
-    /* 
-    public static void main(String[] args) {
-        PowiadomienieService service = new PowiadomienieService();
-
-        // Example usage
-        PowiadomienieResponse request = PowiadomienieResponse.builder()
-                .typ(TypPowiadomienia.KOMENTARZ_POST.toString())
-                .tytul("Jan Kowalski")
-                .odnosnik("jakisPostId")
-                .nazwyRoslin(Arrays.asList("Pomidory", "Ogórki"))
-                .avatar("powiadomienie_avatar.png")
-                .uzytkownikNazwa("JanK")
-                .iloscPolubien(100)
-                .data(LocalDate.now())
-                .build();
-        
-        request.setOdnosnik("jakiesPostId");
-
-        String description = service.generateNotificationDescription(TypPowiadomienia.OWOCOWANIE_ROSLIN, request);
-        request.setOpis(description);
-
-        System.out.println(description);  // Output: Jan Kowalski odpowiedzial na twój komentarz pod postem Jak uprawiać pomidory
-        System.out.println(request.getTyp());
-    }
-
-    */
 }

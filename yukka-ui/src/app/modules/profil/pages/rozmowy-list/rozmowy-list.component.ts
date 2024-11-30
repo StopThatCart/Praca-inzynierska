@@ -7,11 +7,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { getBlokowaniAndBlokujacy } from '../../../../services/fn/uzytkownik/get-blokowani-and-blokujacy';
+import { LoadingComponent } from "../../../../components/loading/loading.component";
 
 @Component({
   selector: 'app-rozmowy-list',
   standalone: true,
-  imports: [CommonModule, InfiniteScrollModule, EdycjaNavComponent, RozmowaCardComponent],
+  imports: [CommonModule, InfiniteScrollModule, EdycjaNavComponent, RozmowaCardComponent, LoadingComponent],
   templateUrl: './rozmowy-list.component.html',
   styleUrl: './rozmowy-list.component.css'
 })

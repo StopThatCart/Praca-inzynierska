@@ -6,9 +6,11 @@ import java.util.HashSet;
 
 import org.springframework.stereotype.Service;
 
+import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
+import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
@@ -27,7 +29,7 @@ public class UzytkownikRoslinaSeeder {
 
     Roslina roslina1;
 
-	void seedUzytkownikRosliny(Uzytkownik uzyt, String lolId) {
+	PageResponse<RoslinaResponse> seedUzytkownikRosliny(Uzytkownik uzyt) {
         String roslinaNazwa = "pierwsza roślina użytkownika";
         String roslinaOpis = "To jest dramat.";
        // String roslinaObraz = "tilia_henryana.jpg";
@@ -59,7 +61,6 @@ public class UzytkownikRoslinaSeeder {
 
         Roslina lipaHenryego = Roslina.builder()
             //.id(12345678L)
-            .roslinaId(lolId)
             .nazwa(roslinaNazwa)
             .opis(roslinaOpis)
             .wysokoscMin(wysokoscMin)
@@ -85,9 +86,10 @@ public class UzytkownikRoslinaSeeder {
 
         UzytkownikRoslinaRequest roslinaRequest = roslinaMapper.toUzytkownikRoslinaRequest(roslina1);
 
-        uzytkownikRoslinaService.save(roslinaRequest, uzyt);
+        uzytkownikRoslinaService.save(roslinaRequest, null, uzyt);
 
       //  System.out.println("ROSLINA1: " + roslina1);
+        return uzytkownikRoslinaService.findRoslinyOfUzytkownik(0, 12, null, uzyt.getNazwa(), uzyt);
 	}
 
 }

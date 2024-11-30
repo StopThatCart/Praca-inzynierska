@@ -7,7 +7,7 @@
   </div><!-- Start: Articles Cards -->
   <div class="container p-2">
     <div *ngIf="canAddRoslina">
-      <button (click)="goToAddRoslina()" class="btn btn-primary mb-2">Dodaj roślinę</button>
+      <button (click)="goToAddRoslina(true)" class="btn btn-primary mb-2">Dodaj roślinę</button>
     </div>
     <div class="row w-100 justify-content-center align-items-center"
       style="background: var(--bs-primary-border-subtle);">
@@ -63,11 +63,7 @@
           </div>
         </div>
         <div class="row gy-4 d-flex justify-content-center">
-          <div class="d-flex justify-content-center" *ngIf="isLoading">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
+          <app-loading [isLoading]="isLoading"></app-loading>
           <app-roslina-card
             class="col-auto col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 d-flex align-items-stretch"
             style="min-width: 25%;"

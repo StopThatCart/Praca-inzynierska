@@ -39,8 +39,8 @@ export class NavbarComponent implements OnInit {
    //  console.log('loadAvatar');
     if (this.tokenService.isTokenValid()) {
       this.uzytService.getAvatar().subscribe({
-        next: (uzyt) => {
-          this._avatar = uzyt.avatar;
+        next: (file) => {
+          this._avatar = file.content;
         }
       });
     }

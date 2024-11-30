@@ -90,7 +90,7 @@ def remove_column(file_path, column_name):
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 
-file_path = os.path.join(os.getcwd(), 'katalog_roslin.csv')
+file_path = os.path.join(os.getcwd(), 'katalog_roslin2.csv')
 image_link = 'image'
 name_label = 'latin_name'
 

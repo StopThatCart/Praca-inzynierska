@@ -43,11 +43,7 @@
       [post]="post">
     </app-post-card>
 
-    <div class="d-flex justify-content-center" *ngIf="isLoading">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
+    <app-loading [isLoading]="isLoading"></app-loading>
 
   </div>
 

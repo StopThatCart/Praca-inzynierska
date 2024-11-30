@@ -7,12 +7,13 @@ import { Router } from '@angular/router';
 import { TokenService } from '../../services/token/token.service';
 import { ErrorHandlingService } from '../../services/error-handler/error-handling.service';
 import { ErrorMsgComponent } from "../../components/error-msg/error-msg.component";
+import { LoadingComponent } from "../../components/loading/loading.component";
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, ErrorMsgComponent],
+  imports: [CommonModule, FormsModule, ErrorMsgComponent, LoadingComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

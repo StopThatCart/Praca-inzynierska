@@ -1,12 +1,13 @@
   <!-- Start: Navbar Centered Links -->
   <nav class="navbar navbar-expand-md py-3" style="background: var(--bs-secondary);">
     <div class="container">
-      <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <a class="navbar-brand d-flex align-items-center  text-center" [routerLink]="['']">
         <img class="d-flex justify-content-center align-items-center me-2 filter" src="ico.svg" alt="a" width="48" height="48" style="background: var(--bs-primary);border-radius: 5px;">
-        <span style="color: #ffffff;">Wirtualny Ogród Yukka</span>
+        <h3 class="pt-2 text-white">Wirtualny ogród Yukka</h3>
       </a>
+
       <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-3">
-        <span class="visually-hidden">Toggle navigation</span>
+        <span class="visually-hidden">Przełącz nawigację</span>
         <span class="navbar-toggler-icon"></span>
       </button>
         <div class="collapse navbar-collapse" id="navcol-3">
@@ -32,26 +33,23 @@
                   <span>{{ getUzytkownikNazwa()}}</span>
                 </button>
 
-                <div class="bg-secondary" ngbDropdownMenu aria-labelledby="navbarLeDropdown">
-                  <button ngbDropdownItem (click)="goToProfil()">
+                <div class="bg-primary" ngbDropdownMenu aria-labelledby="navbarLeDropdown">
+                  <button ngbDropdownItem (click)="goToProfil()" class="text-black">
                     <span><i class="fas fa-house"></i>&nbsp;Profil</span>
                   </button>
-                  <button ngbDropdownItem (click)="goToRozmowy()">
+                  <button ngbDropdownItem (click)="goToRozmowy()" class="text-black">
                     <span><i class="fa-solid fa-envelope"></i>&nbsp;Wiadomości prywatne</span>
                   </button>
-                  <button ngbDropdownItem (click)="goToUstawienia()">
+                  <button ngbDropdownItem (click)="goToUstawienia()" class="text-black">
                     <span><i class="fa-solid fa-gear"></i>&nbsp;Ustawienia</span>
                   </button>
-                  <button ngbDropdownItem (click)="goToUstawienia()">
-                    <span><i class="fa-solid fa-images"></i>&nbsp;Moja galeria</span>
-                  </button>
-                  <button ngbDropdownItem (click)="goToPosty()">
+                  <button ngbDropdownItem (click)="goToPosty()" class="text-black">
                     <span><i class="fa-solid fa-signs-post"></i>&nbsp;Moje posty</span>
                   </button>
-                  <button ngbDropdownItem (click)="goToKomentarze()">
+                  <button ngbDropdownItem (click)="goToKomentarze()" class="text-black">
                     <span><i class="fa-solid fa-comment"></i>&nbsp;Moje komentarze</span>
                   </button>
-                  <button ngbDropdownItem (click)="logout()">
+                  <button ngbDropdownItem (click)="logout()" class="text-black">
                     <span><i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;Wyloguj się</span>
                   </button>
                 </div>

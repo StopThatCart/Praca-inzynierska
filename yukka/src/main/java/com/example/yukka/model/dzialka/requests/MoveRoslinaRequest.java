@@ -3,6 +3,7 @@ package com.example.yukka.model.dzialka.requests;
 import com.example.yukka.model.dzialka.Pozycja;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -23,8 +24,6 @@ import lombok.experimental.SuperBuilder;
 //@ValidPozycje
 //@YetAnotherConstraint
 public class MoveRoslinaRequest extends BaseDzialkaRequest {
-
-
     // Może być null jak nie zmienia się działki
     private Integer numerDzialkiNowy;
 
@@ -38,18 +37,25 @@ public class MoveRoslinaRequest extends BaseDzialkaRequest {
     @NotNull(message = "Pozycja nowego y jest wymagana")
     private Integer yNowy;
 
+    // @JsonIgnore
+    // public boolean isValidMoveRoslinaRequest() {
+    //     if (this.xNowy == null || this.yNowy == null) {
+    //         return false;
+    //     }
+    //     Pozycja pos = Pozycja.builder().x(this.getXNowy()).y(this.getYNowy()).build();
+
+    //     return this.getPozycje().contains(pos);
+    // }
+
     @JsonIgnore
-    public boolean isValidMoveRoslinaRequest() {
+    @AssertTrue(message = "Nowa pozycja rośliny musi być w przydzielonych kafelkach")
+    private boolean isValidMoveRoslinaRequestCheck() {
         if (this.xNowy == null || this.yNowy == null) {
             return false;
         }
-        Pozycja pos = Pozycja.builder().x(this.getXNowy()).y(this.getYNowy()).build();
-        // System.out.println("Pozycja original: " + pos);
-        // for (Pozycja p : request.getPozycje()) {
-        //     System.out.println("Pozycja: " + p);
-        //     System.out.println(p.equals(pos));
-        // }
-        return this.getPozycje().contains(pos);
+        Pozycja pos = Pozycja.builder().x(this.xNowy).y(this.yNowy).build();
+
+        return this.pozycje.contains(pos);
     }
 
 }

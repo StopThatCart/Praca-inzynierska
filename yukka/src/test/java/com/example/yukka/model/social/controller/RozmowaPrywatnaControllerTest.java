@@ -21,7 +21,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.social.komentarz.Komentarz;
-import com.example.yukka.model.social.repository.KomentarzRepository;
+
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
 import com.example.yukka.model.social.service.RozmowaPrywatnaService;

@@ -1,10 +1,7 @@
 package com.example.yukka.model.dzialka.service;
 
-import java.io.File;
 import java.util.List;
-import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -14,12 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yukka.common.FileResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
-import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
-import com.example.yukka.model.dzialka.ZasadzonaRoslinaResponse;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
@@ -27,20 +24,22 @@ import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
 import com.example.yukka.model.enums.Wyswietlanie;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
-import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
+
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class DzialkaService {
     private final DzialkaRepository dzialkaRepository;
     private final RoslinaRepository roslinaRepository;
-    private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
+    //private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
     @SuppressWarnings("unused")
     private final ZasadzonaNaService zasadzonaNaService;
     private final UzytkownikRepository uzytkownikRepository;
@@ -68,7 +67,7 @@ public class DzialkaService {
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika " + nazwa));
 
         if(!wlasciciel.getUstawienia().isOgrodPokaz() && !uzyt.getEmail().equals(wlasciciel.getEmail())) {
-            throw new AccessDeniedException("Ogród użytkownika " + nazwa + " jest ukryty");
+            throw new ForbiddenException("Ogród użytkownika " + nazwa + " jest ukryty");
         }
 
         List<Dzialka> dzialki = dzialkaRepository.getDzialkiOfUzytkownikByNazwa(nazwa);
@@ -87,7 +86,7 @@ public class DzialkaService {
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika " + uzyt.getNazwa()));
 
         if(!wlasciciel.getUstawienia().isOgrodPokaz() && !uzyt.getEmail().equals(wlasciciel.getEmail())) {
-            throw new AccessDeniedException("Ogród użytkownika " + uzyt.getNazwa() + " jest ukryty");
+            throw new ForbiddenException("Ogród użytkownika " + uzyt.getNazwa() + " jest ukryty");
         }
 
         List<Dzialka> dzialki = dzialkaRepository.getPozycjeInDzialki(uzyt.getNazwa());
@@ -107,19 +106,11 @@ public class DzialkaService {
         }
 
         Uzytkownik wlasciciel = uzytkownikRepository.findByNazwa(nazwa).orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika " + nazwa));
-
         if (!wlasciciel.getUstawienia().isOgrodPokaz() && (uzyt == null || !uzyt.getEmail().equals(wlasciciel.getEmail()))) {
-            throw new AccessDeniedException("Ogród użytkownika " + nazwa + " jest ukryty");
+            throw new ForbiddenException("Ogród użytkownika " + nazwa + " jest ukryty");
         }
 
         Dzialka dzialka = getDzialkaByNumer(numer, wlasciciel);
-
-        for (ZasadzonaNaReverse zasadzona : dzialka.getZasadzoneRosliny()) {
-            System.out.println("\nZasadzona: " + zasadzona.getRoslina().getNazwa());
-            System.out.println("Obraz: " + zasadzona.getObraz());
-            System.out.println("Obraz 2: " + zasadzona.getRoslina().getObraz());
-            System.out.println("Tekstura: " + zasadzona.getTekstura());
-        }
 
         return roslinaMapper.toDzialkaResponse(dzialka);
     }
@@ -135,7 +126,7 @@ public class DzialkaService {
     @Transactional(readOnly = true)
     public Dzialka getDzialkaByNumer(int numer, Uzytkownik uzyt) {
         return dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), numer)
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono działki " + numer + " dla użytkownika " + uzyt.getEmail()));
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono działki " + numer + " dla użytkownika " + uzyt.getNazwa()));
     }
 
     public DzialkaResponse saveRoslinaToDzialka(DzialkaRoslinaRequest request, 
@@ -150,6 +141,7 @@ public class DzialkaService {
     MultipartFile obraz, MultipartFile tekstura, 
     Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
+        log.info("Zapisywanie rośliny na działce [" + request.getNumerDzialki() + "] użytkownika " + uzyt.getNazwa());
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
 
         if(!request.isValidDzialkaRoslinaRequest()) {
@@ -157,7 +149,6 @@ public class DzialkaService {
         }
             
         if(dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()) != null) {
-            System.out.println("Koordynaty zajęte.");
             throw new IllegalArgumentException("Pozycja (" + request.getX() + ", " + request.getY() + ") jest zajęta");
         }
 
@@ -170,14 +161,10 @@ public class DzialkaService {
 
         if(request.getRoslinaId() != null) {
             roslinaRepository.findByRoslinaId(request.getRoslinaId())
-            .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rośliny użytkownika o roslinaId: " + request.getNazwaLacinska()));
+            .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rośliny użytkownika o roslinaId: " + request.getRoslinaId()));
             nazwaLacinskaOrId = request.getRoslinaId();
-        } else if (request.getNazwaLacinska() != null) {
-            roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska())
-            .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rośliny o nazwie łacińskiej " + request.getNazwaLacinska()));
-            nazwaLacinskaOrId = request.getNazwaLacinska();
         } else {
-            throw new IllegalArgumentException("Nie podano nazwy łacińskiej ani id rośliny");
+            throw new IllegalArgumentException("Nie podano id rośliny");
         }
 
         Dzialka dzialka = dzialkaRepository.getDzialkaByNumer(uzyt.getEmail(), request.getNumerDzialki())
@@ -217,10 +204,10 @@ public class DzialkaService {
     public DzialkaResponse updateRoslinaPozycjaInDzialka(MoveRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
-
-        if(!request.isValidMoveRoslinaRequest()) {
-            throw new IllegalArgumentException("Pozycja rośliny musi być w przydzielonych kafelkach");
-        }
+        log.info("Zmiana pozycji rośliny z [" + request.getX() + ", " + request.getY()  
+        + "] na [" + request.getXNowy() + ", " + request.getYNowy()
+        + "] na działce [" + request.getNumerDzialki() 
+        + "] użytkownika " + uzyt.getNazwa());
 
         ZasadzonaNaReverse zasadzonaRoslina = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
         if (zasadzonaRoslina == null) {
@@ -262,29 +249,12 @@ public class DzialkaService {
             }
         }
 
-        // List<ZasadzonaNaReverse> zasadzoneRosliny = dzialka.getZasadzoneRosliny();
-        // for (ZasadzonaNaReverse zasadzona : zasadzoneRosliny) {
-        //     if(zasadzona.equalsRoslina(zasadzonaRoslina.getRoslina().getRoslinaId()) 
-        //     || zasadzona.equalsRoslina(zasadzonaRoslina.getRoslina().getNazwaLacinska())) {
-        //         continue;
-        //     }
-
-        //     Set<Pozycja> pozycje = zasadzona.getPozycje();
-        //     Set<Pozycja> nowePozycje = request.getPozycje();
-
-        //     for (Pozycja pozycja : pozycje) {
-        //         if (nowePozycje.contains(pozycja)) {
-        //             throw new IllegalArgumentException("Pozycja (" + pozycja.getX() + ", " + pozycja.getY() 
-        //             + ") jest zajęta przez inną roślinę: " + zasadzona.getRoslina().getNazwa());
-        //         }
-        //     }
-        // }
         List<Pozycja> zajetePozycje = dzialka.isPozycjeOccupied(request);
         if (!zajetePozycje.isEmpty()) {
             throw new IllegalArgumentException("Pozycje są zajęte przez inne rośliny: " + zajetePozycje);
         }
 
-        System.out.println("Pozycje: " + request.getPozycje().toString());
+        //System.out.println("Pozycje: " + request.getPozycje().toString());
     
         Dzialka res = dzialkaRepository.changeRoslinaPozycjaInDzialka(uzyt.getEmail(),
                 request.getNumerDzialki(),
@@ -306,7 +276,10 @@ public class DzialkaService {
 
         if (request.getKolor() == null) throw new IllegalArgumentException("Nie podano koloru");
 
-        System.out.println("Le aktualizacja koloru rośliny na działce");
+        log.info("Aktualizacja koloru rośliny na pozycji: [" 
+        + request.getX() + ", " + request.getY()  
+        + "] na działce [" + request.getNumerDzialki() 
+        + "] użytkownika " + uzyt.getNazwa());
         if (dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY()) != null) {
 
             Dzialka dzialkaZRoslina = dzialkaRepository.updateRoslinaKolorInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
@@ -323,12 +296,17 @@ public class DzialkaService {
 
     public DzialkaResponse updateRoslinaWyswietlanieInDzialka(DzialkaRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
+        log.info("Aktualizacja wyświetlania rośliny na pozycji: [" 
+        + request.getX() + ", " + request.getY()  
+        + "] na działce [" + request.getNumerDzialki() 
+        + "] użytkownika " + uzyt.getNazwa());
+
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
 
         if (request.getWyswietlanie() == null) throw new IllegalArgumentException("Nie podano sposobu wyświetlania");
 
         ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
-        System.out.println("Le aktualizacja wyświetlania rośliny na działce");
+
         if (pozycja != null) {
             if(pozycja.getTekstura() == null && request.getWyswietlanie().equals(Wyswietlanie.TEKSTURA.toString())) {
                 throw new IllegalArgumentException("Nie można wybrać wyświetlania samej tekstury bez podania obrazu");
@@ -350,10 +328,6 @@ public class DzialkaService {
     public DzialkaResponse updateRoslinaNotatkaInDzialka(DzialkaRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
-
-        if (request.getNotatka() == null){
-            System.out.println("Hehe notatka jest nullem.");
-        }
 
         ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
         System.out.println("Le aktualizacja notatki rośliny na działce");
@@ -377,26 +351,27 @@ public class DzialkaService {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
 
-        System.out.println("Le aktualizacja obrazu rośliny na działce");
+        log.info("Aktualizacja obrazu/tesktury rośliny na pozycji: [" 
+        + request.getX() + ", " + request.getY()  
+        + "] na działce: [" + request.getNumerDzialki()
+        + "] użytkownika " + uzyt.getNazwa());
         ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
 
         if(pozycja != null) {
-
-
             Dzialka dzialkaZRoslina = null;
             String pfp = null;
             if(obraz != null) {
                 if (pozycja.getObraz() != null) fileUtils.deleteObraz(pozycja.getObraz());
                 
-                System.out.println("Zapisuję obraz rośliny na działce");
+                log.info("Zapisywanie obrazu rośliny na działce[" + request.getNumerDzialki() + "]");
                 pfp = fileStoreService.saveRoslinaObrazInDzialka(obraz, uzyt.getUzytId());
                 if(pfp == null) return null;
                 dzialkaZRoslina = dzialkaRepository.updateRoslinaObrazInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
                  request.getX(), request.getY(), pfp);
             } else if (tekstura != null) {
                 if (pozycja.getTekstura() != null) fileUtils.deleteObraz(pozycja.getTekstura());
-                
-                System.out.println("Zapisuję teksturę rośliny na działce");
+
+                log.info("Zapisywanie tekstury rośliny na działce[" + request.getNumerDzialki() + "]");
                 pfp = fileStoreService.saveRoslinaObrazInDzialka(tekstura, uzyt.getUzytId());
                 if(pfp == null) return null;
                 dzialkaZRoslina = dzialkaRepository.updateRoslinaTeksturaInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
@@ -417,6 +392,11 @@ public class DzialkaService {
         Uzytkownik uzyt = connectedUser;
         // Zawsze zwróci działkę zalogowanego użytkownika
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
+
+        log.info("Usuwanie obrazu rośliny na pozycji: [" + 
+                + request.getX() + ", " + request.getY()   
+                + "] na działce [" + request.getNumerDzialki() + "]"
+        + " użytkownika " + uzyt.getNazwa());
 
         ZasadzonaNaReverse target = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
         if (target != null && target.getObraz() != null) {
@@ -457,7 +437,7 @@ public class DzialkaService {
         Uzytkownik wlasciciel = dzialka.getOgrod().getUzytkownik();
         
         if(!uzyt.hasAuthenticationRights(wlasciciel, connectedUser)) {
-            throw new AccessDeniedException("Nie masz uprawnień do usunięcia rośliny z działki użytkownika " + dzialka.getOgrod().getUzytkownik().getEmail());
+            throw new ForbiddenException("Nie masz uprawnień do usunięcia rośliny z działki użytkownika " + dzialka.getOgrod().getUzytkownik().getNazwa());
         }
         ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
 

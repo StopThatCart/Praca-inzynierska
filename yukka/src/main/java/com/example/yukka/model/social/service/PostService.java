@@ -20,7 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
-import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostMapper;
@@ -83,10 +84,10 @@ public class PostService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
         if(targetUzyt.isEmpty()) {
-            return new PageResponse<>();
+            throw new EntityNotFoundException("Nie znaleziono użytkownika o podanej nazwie: " + nazwa);
         }
         if(!uzyt.hasAuthenticationRights(targetUzyt.get(), connectedUser)){
-            return new PageResponse<>();
+            throw new ForbiddenException("Nie masz uprawnień do przeglądania postów tego użytkownika");
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPostyByUzytkownik(nazwa, pageable);
@@ -103,29 +104,7 @@ public class PostService {
         return postRepository.findAllPostyCountOfUzytkownik(nazwa);
     }
 
-
-    public Post save(PostRequest request, Authentication connectedUser) {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-
-        Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
-        checkTimeSinceLastPost(newestPost);
-        
-        return save(request, uzyt);
-    }
-
-    public Post save(PostRequest request, Uzytkownik connectedUser) {
-        Uzytkownik uzyt = connectedUser;
-
-        Post post = postMapper.toPost(request);
-        if(post.getPostId() == null) {
-            post.setPostId(createPostId());
-        }
-        
-        
-        return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
-    }
-
-    public Post save(PostRequest request, MultipartFile file, Authentication connectedUser) throws FileUploadException {
+    public Post save(PostRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         
         Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
@@ -134,18 +113,16 @@ public class PostService {
         return save(request, file, uzyt);
     }
 
-    public Post save(PostRequest request, MultipartFile file, Uzytkownik connectedUser) throws FileUploadException {
+    public Post save(PostRequest request, MultipartFile file, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
 
         Post post = postMapper.toPost(request);
         post.setPostId(createPostId());
 
-        String leObraz = fileStoreService.savePost(file, post.getPostId(), uzyt.getUzytId());
-        if(leObraz == null) {
-            throw new FileUploadException("Wystąpił błąd podczas wysyłania pliku");
+        if (file != null) {
+            post.setObraz(fileStoreService.savePost(file, post.getPostId(), uzyt.getUzytId()));
         }
-        post.setObraz(leObraz);
-        
+
         return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
     }
 
@@ -177,30 +154,14 @@ public class PostService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
         if(!uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
-            throw new IllegalArgumentException("Nie masz uprawnień do usunięcia tego posta");
-        }
-        List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(postId);
-
-        fileUtils.deleteObraz(post.getObraz());
-        postRepository.deletePost(postId);
-
-        for (Uzytkownik u : uzytkownicyInPost) {
-            komentarzRepository.updateUzytkownikKomentarzeOcenyCount(u.getUzytId());
+            throw new ForbiddenException("Nie masz uprawnień do usunięcia tego posta");
         }
 
-        for (Komentarz kom : post.getKomentarze()) {
-            fileUtils.deleteObraz(kom.getObraz());
-        }
-
-        postRepository.updateOcenyCountOfPost(post.getPostId());
+        deletePost(postId, uzyt);
     }
 
-    public void deletePost(String postId, Uzytkownik connectedUser) {
-        Uzytkownik uzyt = connectedUser;
+    public void deletePost(String postId, Uzytkownik uzyt) {
         Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
-      //  if(uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
-       //     postRepository.deletePost(postId);
-      //  }
         List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(postId);
 
         fileUtils.deleteObraz(post.getObraz());
@@ -226,28 +187,6 @@ public class PostService {
             postRepository.deletePostButBetter(post.getPostId());
         }
     }
-
-    /* 
-    public void uploadPostObraz(MultipartFile file, Authentication connectedUser, String postId) {
-        Optional<Post> postOptional = postRepository.findPostByPostId(postId);
-    
-        if (postOptional.isEmpty()) {
-            throw new NoSuchElementException("Nie znaleziono posta o podanym ID: " + postId);
-        }
-        Post post = postOptional.get();
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-
-        String pfp = fileStoreService.savePost(file, post.getPostId(), uzyt.getNazwa());
-
-        if (pfp == null) {
-            throw new IllegalStateException("Nie udało się zapisać obrazu.");
-        }
-   
-        
-        post.setObraz(pfp);
-        postRepository.updatePostObraz(post.getPostId(), post.getObraz());
-    }
- */
 
     // Pomocnicze
 

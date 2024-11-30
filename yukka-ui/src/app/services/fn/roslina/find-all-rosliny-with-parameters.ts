@@ -12,10 +12,10 @@ import { RoslinaRequest } from '../../models/roslina-request';
 export interface FindAllRoslinyWithParameters$Params {
   page?: number;
   size?: number;
-      body: RoslinaRequest
+      body?: RoslinaRequest
 }
 
-export function findAllRoslinyWithParameters(http: HttpClient, rootUrl: string, params: FindAllRoslinyWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
+export function findAllRoslinyWithParameters(http: HttpClient, rootUrl: string, params?: FindAllRoslinyWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
   const rb = new RequestBuilder(rootUrl, findAllRoslinyWithParameters.PATH, 'post');
   if (params) {
     rb.query('page', params.page, {});

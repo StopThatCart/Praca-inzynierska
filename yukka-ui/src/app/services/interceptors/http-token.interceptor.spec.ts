@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpTokenInterceptor } from './http-token.interceptor';
+import { httpTokenInterceptor } from './http-token.interceptor';
 
-describe('HttpTokenInterceptor', () => {
+describe('httpTokenInterceptor', () => {
   beforeEach(() => TestBed.configureTestingModule({
     providers: [
-      HttpTokenInterceptor
+      httpTokenInterceptor
       ]
   }));
 
   it('should be created', () => {
-    const interceptor: HttpTokenInterceptor = TestBed.inject(HttpTokenInterceptor);
+    const interceptor: typeof httpTokenInterceptor = TestBed.inject(httpTokenInterceptor);
     expect(interceptor).toBeTruthy();
   });
 });

@@ -44,12 +44,17 @@
 
       <div class="btn-group gap-4" role="group">
         <ng-container *ngIf="canModify()">
-          <a (click)="deletePost()" class="link-light link-underline link-underline-opacity-0">
-            <i class="fas fs-5 fa-trash text-danger "></i>
-            <span class="small text-danger">&nbsp;Usuń post</span>
-          </a>
+
+          <button (click)="deletePost()" class="btn btn-danger" type="button"  placement="bottom" ngbTooltip="Usuń">
+            <i class="fas fa-trash"></i>
+          </button>
         </ng-container>
 
+        <app-zgloszenie-button
+        [typPowiadomienia]="typPowiadomienia.ZGLOSZENIE_POST"
+        [zglaszany]="post.uzytkownik"
+        [odnosnik]="post.postId">
+        </app-zgloszenie-button>
 
         <a (click)="goToPost(post.postId)" class="link-light link-underline link-underline-opacity-0">
           <i class="fas fs-5 fa-comment"></i>

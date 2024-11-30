@@ -24,6 +24,13 @@ export class WlasciwoscProcessService {
         w.etykieta = WlasciwoscEtykiety.ZIMOZIELONOSC;
       }
 
+      if (w.etykieta === 'Wilgotnosc') {
+        w.etykieta = WlasciwoscEtykiety.WILGOTNOSC;
+      }
+
+      if (w.etykieta === 'Pokroj') {
+        w.etykieta = WlasciwoscEtykiety.POKROJ;
+      }
 
       if (w.etykieta === 'Okres') {
         const okresKwitnienia = { ...w, etykieta: WlasciwoscEtykiety.OKRES_KWITNIENIA, nazwy: this.miesiace };

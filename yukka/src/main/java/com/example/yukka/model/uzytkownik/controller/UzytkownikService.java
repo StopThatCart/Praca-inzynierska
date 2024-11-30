@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,13 +20,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.yukka.auth.email.EmailService;
+import com.example.yukka.auth.email.EmailTemplateName;
 import com.example.yukka.auth.requests.EmailRequest;
-import com.example.yukka.auth.requests.HasloRequest;
+import com.example.yukka.common.FileResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
-import com.example.yukka.handler.BlockedUzytkownikException;
-import com.example.yukka.handler.EntityAlreadyExistsException;
-import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
+import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.uzytkownik.Ustawienia;
@@ -33,11 +36,6 @@ import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 
 import jakarta.mail.MessagingException;
-
-import com.example.yukka.auth.AuthenticationService;
-import com.example.yukka.auth.email.EmailService;
-import com.example.yukka.auth.email.EmailTemplateName;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,7 +58,7 @@ public class UzytkownikService implements  UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String nazwa) {
-        return uzytkownikRepository.findByNazwa(nazwa)
+        return uzytkownikRepository.findByNameOrEmail(nazwa)
                 .orElseThrow(() -> new UsernameNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
     }
 
@@ -86,13 +84,13 @@ public class UzytkownikService implements  UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public UzytkownikResponse getLoggedInAvatar(Authentication currentUser) {
+    public FileResponse getLoggedInAvatar(Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
 
         Uzytkownik uzyt2 = uzytkownikRepository.findByEmail(uzyt.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + uzyt.getEmail()));
-
-        return commonMapperService.toSimpleAvatar(uzyt2);
+                
+        return FileResponse.builder().content(fileUtils.readFile(uzyt2.getAvatar())).build();
     }
 
     @Transactional(readOnly = true)
@@ -107,27 +105,23 @@ public class UzytkownikService implements  UserDetailsService {
         return commonMapperService.toUzytkownikResponse(uzyt2);
     }
 
-
-    public Ustawienia getUstawienia(Authentication currentUser) {
+    @Transactional(readOnly = true)
+    public UzytkownikResponse getUstawienia(Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        log.info("Pobieranie ustawień użytkownika " + uzyt.getNazwa());
+
         Uzytkownik uzytus = uzytkownikRepository.findByNazwa(uzyt.getNazwa())
         .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + uzyt.getNazwa()));
 
-        return uzytus.getUstawienia();
+        return  commonMapperService.toUzytkownikResponse(uzytus);
     }
 
     public UzytkownikResponse updateUstawienia(UstawieniaRequest ustawienia, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        log.info("Zmiana ustawień użytkownika: " + uzyt.getNazwa());
+        
         Ustawienia ust = commonMapperService.toUstawienia(ustawienia);
-
-        System.out.println("\n\n\nUstawienia przed: " + uzyt.getUstawienia());
-        System.out.println("\nUstawienia zmiany: " + ust);
-
-        System.out.println("\nto samo ale request: " + ustawienia);
-
         Uzytkownik uzytkownik = uzytkownikRepository.updateUstawienia(ust, uzyt.getEmail());
-
-        System.out.println("\nUstawienia po: " + uzytkownik.getUstawienia());
 
         return commonMapperService.toUzytkownikResponse(uzytkownik);
     }
@@ -211,32 +205,6 @@ public class UzytkownikService implements  UserDetailsService {
         return uzytkownikRepository.odblokujUzyt(blokowany.getEmail(), uzyt.getEmail());
     }
 
-    public Uzytkownik setBanUzytkownik(String email, Authentication currentUser, boolean ban){
-        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
-        Optional<Uzytkownik> uzytOpt = uzytkownikRepository.findByEmail(email);
-        if(uzytOpt.isEmpty()) {
-            return null;
-        }
-        Uzytkownik targetUzyt = uzytOpt.get();
-
-        if(uzyt.isNormalUzytkownik()) {
-            throw new IllegalArgumentException("Zwykli użytkownicy nie mogą banować nikogo");
-        }
-
-        if(targetUzyt.getEmail().equals(uzyt.getEmail())) {
-            throw new IllegalArgumentException("Nie można banować samego siebie");
-        }
-
-        if(targetUzyt.isBan() == ban) {
-            throw new IllegalArgumentException("Użytkownik jest już zbanowany/odbanowany");
-        }
-
-        if(targetUzyt.isAdmin() || targetUzyt.isPracownik()) {
-            throw new IllegalArgumentException("Admini i pracownicy nie mogą być banowani ani odbanowywani");
-        }
-        return uzytkownikRepository.banUzytkownik(email, ban);
-    }
-
     // Bez zabezpieczeń bo to tylko do seedowania
     public void addUzytkownik(Uzytkownik uzytkownik){
         Ustawienia ust = Ustawienia.builder().build();
@@ -246,7 +214,13 @@ public class UzytkownikService implements  UserDetailsService {
     // Bez zabezpieczeń bo to tylko do seedowania
     public void addPracownik(Uzytkownik uzytkownik){
         Ustawienia ust = Ustawienia.builder().build();
-        uzytkownikRepository.addUzytkownik(uzytkownik, uzytkownik.getLabels(), ust);
+        
+        String labels = uzytkownik.getLabels().stream()
+                     .map(role -> "`" + role + "`")
+                     .collect(Collectors.joining(":")
+                     );
+
+        uzytkownikRepository.addUzytkownik(uzytkownik, labels, ust);
     }
 
     public void remove(String email, Authentication currentUser) {
@@ -272,7 +246,7 @@ public class UzytkownikService implements  UserDetailsService {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         
         if(uzyt.isAdmin() || uzyt.isPracownik()) {
-            throw new IllegalArgumentException("Nie można usuwać samego admina lub pracownika, przynajmniej na razie.");
+            throw new IllegalArgumentException("Nie można usuwać konta admina lub pracownika");
         }
 
         // Wylogowanie

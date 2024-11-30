@@ -15,6 +15,7 @@ export interface Uzytkownik {
   authorities?: Array<GrantedAuthority>;
   avatar?: string;
   ban?: boolean;
+  banDo?: string;
   blokowaniUzytkownicy?: Array<Uzytkownik>;
   blokujacyUzytkownicy?: Array<Uzytkownik>;
   credentialsNonExpired?: boolean;

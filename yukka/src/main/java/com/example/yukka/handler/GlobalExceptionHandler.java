@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.TOO_EARLY;
@@ -23,6 +24,13 @@ import static com.example.yukka.handler.YukkaErrorCodes.ACCOUNT_DISABLED;
 import static com.example.yukka.handler.YukkaErrorCodes.BAD_CREDENTIALS;
 import static com.example.yukka.handler.YukkaErrorCodes.BLOCKED_UZYTKOWNIK;
 import static com.example.yukka.handler.YukkaErrorCodes.ENTITY_NOT_FOUND;
+import static com.example.yukka.handler.YukkaErrorCodes.FORBIDDEN_EXCEPTION;
+
+import com.example.yukka.handler.exceptions.BannedUzytkownikException;
+import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
+import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 
 import jakarta.mail.MessagingException;
 
@@ -65,6 +73,20 @@ public class GlobalExceptionHandler {
                                 .build()
                 );
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ExceptionResponse> handleException(ForbiddenException exp) {
+        return ResponseEntity
+                .status(FORBIDDEN)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(FORBIDDEN_EXCEPTION.getCode())
+                                .businessErrorDescription(FORBIDDEN_EXCEPTION.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
 
     @ExceptionHandler(BlockedUzytkownikException.class)
     public ResponseEntity<ExceptionResponse> handleException(BlockedUzytkownikException exp) {

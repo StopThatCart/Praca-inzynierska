@@ -57,10 +57,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
               (:Ogrod)-[:MA_DZIALKE]->
               (d:Dzialka{numer: $numerDzialki})
 
-        OPTIONAL MATCH (roslina1:Roslina {nazwaLacinska: $nazwaLacinska})
-        OPTIONAL MATCH (roslina2:UzytkownikRoslina {roslinaId: $nazwaLacinska})
-        
-        WITH d, coalesce(roslina1, roslina2) AS roslina
+        MATCH (roslina:Roslina {roslinaId: $roslinaId})
 
         OPTIONAL MATCH (d)<-[existing:ZASADZONA_NA]-(existingRoslina)
         WHERE   existing.x = $x AND existing.y = $y 
@@ -84,7 +81,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Param("tekstura") String tekstura, 
         @Param("wyswietlanie") String wyswietlanie,
         @Param("obraz") String obraz,
-        @Param("nazwaLacinska") String nazwaLacinska);
+        @Param("roslinaId") String roslinaId);
 
         @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->

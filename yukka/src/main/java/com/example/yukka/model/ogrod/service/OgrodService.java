@@ -12,14 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.ogrod.Ogrod;
 import com.example.yukka.model.ogrod.OgrodResponse;
 import com.example.yukka.model.ogrod.repository.OgrodRepository;
 import com.example.yukka.model.roslina.RoslinaMapper;
-import com.example.yukka.model.social.post.Post;
-import com.example.yukka.model.social.post.PostResponse;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 

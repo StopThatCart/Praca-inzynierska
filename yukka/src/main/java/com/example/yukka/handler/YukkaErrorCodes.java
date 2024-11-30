@@ -12,7 +12,7 @@ public enum YukkaErrorCodes {
     NO_CODE(0, NOT_IMPLEMENTED, "Żadnego kodu"),
     INCORRECT_CURRENT_PASSWORD(300, BAD_REQUEST, "Aktualne hasło jest niepoprawne"),
     NEW_PASSWORD_DOES_NOT_MATCH(301, BAD_REQUEST, "Nowe hasło nie pasuje"),
-    ACCOUNT_BANNED(302, FORBIDDEN, "Konto użytkownika jest zbanowane"),
+    ACCOUNT_BANNED(302, FORBIDDEN, "Twoje konto jest zbanowane."),
     
     ACCOUNT_DISABLED(303, FORBIDDEN, "Konto użytkownika jest wyłączone"),
     BAD_CREDENTIALS(304, FORBIDDEN, "Niepoprawny login lub hasło"),
@@ -20,6 +20,7 @@ public enum YukkaErrorCodes {
     ENTITY_ALREADY_EXISTS(306, BAD_REQUEST, "Obiekt już istnieje w bazie danych"),
     OCENA(307, BAD_REQUEST, "Wystąpił błąd podczas oceniania"),
     BLOCKED_UZYTKOWNIK(308, FORBIDDEN, "Ty albo użytkownik się blokujecie"),
+    FORBIDDEN_EXCEPTION(403, FORBIDDEN, "Nie masz uprawnień do wykonania tej operacji"),
     ;
 
     @Getter

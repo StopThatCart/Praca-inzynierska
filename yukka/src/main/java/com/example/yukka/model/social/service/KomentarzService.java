@@ -20,8 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
-import com.example.yukka.handler.BannedUzytkownikException;
-import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.BannedUzytkownikException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzMapper;
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
@@ -61,6 +62,7 @@ public class KomentarzService {
     private final KomentarzMapper komentarzMapper;
 
     // Przysięgam, potem poprawię te funkcje, ale teraz nie mam czasu
+    // No poprawiłem delikatnie
                 
     @Transactional(readOnly = true)
     public KomentarzResponse findByKomentarzIdWithOdpowiedzi(String komentarzId) {
@@ -74,11 +76,11 @@ public class KomentarzService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
         if (targetUzyt.isEmpty() || !uzyt.hasAuthenticationRights(targetUzyt.get(), connectedUser)) {
-            return new PageResponse<>();
+           throw new ForbiddenException("Nie masz uprawnień do przeglądania komentarzy tego użytkownika");
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("komentarz.dataUtworzenia").descending());
 
-        Page<Komentarz> komentarze = komentarzRepository.findKomentarzeOfUzytkownik(uzyt.getNazwa(), pageable);
+        Page<Komentarz> komentarze = komentarzRepository.findKomentarzeOfUzytkownik(targetUzyt.get().getNazwa(), pageable);
         return komentarzMapper.komentarzResponsetoPageResponse(komentarze);
     }
 
@@ -134,42 +136,16 @@ public class KomentarzService {
     }
 
 
-    public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request, Authentication connectedUser) {
+    public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik nadawca = ((Uzytkownik) connectedUser.getPrincipal());
-        return addKomentarzToWiadomoscPrywatna(request, nadawca);
+        return addKomentarzToWiadomoscPrywatna(request, file, nadawca);
     }
-
-    public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request, Uzytkownik connectedUser) {
-        String otherUzytNazwa = request.getTargetId();
-        Uzytkownik nadawca = connectedUser;
-        
-        if(nadawca.getNazwa().equals(otherUzytNazwa)) {
-            throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
-        }
-        Uzytkownik odbiorca = uzytkownikService.sprawdzBlokowanie(otherUzytNazwa, nadawca);
-
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaByNazwa(odbiorca.getNazwa(), nadawca.getNazwa())
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rozmowy prywatnej"));
-
-        Komentarz kom = komentarzMapper.toKomentarz(request);
-        kom.setKomentarzId(createKomentarzId());
-        
-        Komentarz response = komentarzRepository.addKomentarzToRozmowaPrywatna(nadawca.getNazwa(), odbiorca.getNazwa(), 
-        kom, LocalDateTime.now());
-        System.out.println("DataUtowrzneia komaentasdezsa: " + kom.getDataUtworzenia());
-
-
-        powiadomienieService.sendPowiadomienieOfRozmowa(nadawca, odbiorca, rozmowa);
-
-        return komentarzMapper.toKomentarzResponse(response); 
-    }
-
 
     public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request,
-        MultipartFile file, Authentication connectedUser) throws FileUploadException {
+        MultipartFile file, Uzytkownik connectedUser) {
 
         String otherUzytNazwa = request.getTargetId();
-        Uzytkownik nadawca = ((Uzytkownik) connectedUser.getPrincipal());
+        Uzytkownik nadawca = connectedUser;
         
         if(nadawca.getNazwa().equals(otherUzytNazwa)) {
            throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
@@ -192,39 +168,7 @@ public class KomentarzService {
         return komentarzMapper.toKomentarzResponse(response);
     }
 
-
-
-
-
-    public KomentarzResponse addKomentarzToPost(KomentarzRequest request, Authentication connectedUser) {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-
-        Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
-        checkTimeSinceLastKomentarz(newestKomentarz);
-
-        Komentarz kom = addKomentarzToPost(request, uzyt);
-
-        return komentarzMapper.toKomentarzResponse(kom);
-    }
-
-    public Komentarz addKomentarzToPost(KomentarzRequest request, Uzytkownik connectedUser) {
-        Uzytkownik uzyt = connectedUser;
-
-        Post post = postRepository.findPostByPostId(request.getTargetId()).orElseThrow(
-            () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getTargetId()));
-
-        uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), connectedUser);
-
-        Komentarz kom = komentarzMapper.toKomentarz(request);
-        kom.setKomentarzId(createKomentarzId());
-
-        Komentarz response = komentarzRepository.addKomentarzToPost(uzyt.getEmail(), post.getPostId(), 
-        kom, LocalDateTime.now());
-
-        return response;
-    }
-
-    public KomentarzResponse addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Authentication connectedUser) throws FileUploadException {
+    public KomentarzResponse addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
@@ -233,7 +177,7 @@ public class KomentarzService {
         return komentarzMapper.toKomentarzResponse(addKomentarzToPost(request, file, uzyt));
     }
 
-    public Komentarz addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Uzytkownik connectedUser) throws FileUploadException {
+    public Komentarz addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Uzytkownik connectedUser)  {
         Uzytkownik uzyt = connectedUser;
 
         Post post = postRepository.findPostByPostId(request.getTargetId())
@@ -250,59 +194,20 @@ public class KomentarzService {
         return response;
     }
 
-    public KomentarzResponse addOdpowiedzToKomentarz(@Valid KomentarzRequest request, Authentication connectedUser) {
+    public KomentarzResponse addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastKomentarz(newestKomentarz);
-
-        Komentarz kom = addOdpowiedzToKomentarz(request, uzyt);
+        Komentarz kom = null;
+        kom = addOdpowiedzToKomentarz(request, file, uzyt);
         
-        return komentarzMapper.toKomentarzResponse(kom);
-    }
-
-    public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, Uzytkownik connectedUser) {
-        Uzytkownik uzyt = connectedUser;
-
-        Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByKomentarzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
-       // Post post = postRepository.findPostByKomentarzOdpowiedzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta dla odpowiedzi o podanym ID: " + request.getTargetId()));
-
-        
-        if(komentarzDoOdpowiedzi.getPost() == null && komentarzDoOdpowiedzi.getWPoscie() == null) {
-            uzytkownikService.sprawdzBlokowanie(komentarzDoOdpowiedzi.getUzytkownik().getNazwa(), connectedUser);  
-        } else {
-            Post post = komentarzDoOdpowiedzi.getWPoscie();
-            if(post == null) {
-                post = komentarzDoOdpowiedzi.getPost();
-            }
-            uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), connectedUser);
-        }
-
-        Komentarz kom = komentarzMapper.toKomentarz(request);
-        kom.setKomentarzId(createKomentarzId());
-
-        Komentarz response = komentarzRepository.addOdpowiedzToKomentarzInPost(uzyt.getEmail(), kom, 
-        request.getTargetId(), LocalDateTime.now());
-
-        powiadomienieService.sendPowiadomienieOfKomentarz(connectedUser, komentarzDoOdpowiedzi.getUzytkownik(), komentarzDoOdpowiedzi);
-        
-        return response;
-        
-    }
-
-    public KomentarzResponse addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Authentication connectedUser) throws FileUploadException {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-
-        Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
-        checkTimeSinceLastKomentarz(newestKomentarz);
-
-        Komentarz kom =  addOdpowiedzToKomentarz(request, file, uzyt);
 
         return komentarzMapper.toKomentarzResponse(kom);
 
     }
 
-    public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Uzytkownik connectedUser) throws FileUploadException {
+    public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Uzytkownik connectedUser) {
         Uzytkownik nadawca = connectedUser;
 
        // Post post = postRepository.findPostByKomentarzOdpowiedzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta dla odpowiedzi o podanym ID: " + request.getTargetId()));
@@ -354,7 +259,7 @@ public class KomentarzService {
         System.out.println("Role: " + uzyt.getAuthorities());
         
         if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik(), connectedUser)) {
-            throw new AccessDeniedException("Nie masz uprawnień do usunięcia komentarza");
+            throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
         }
 
         if(komentarz.getWPoscie() != null) {
@@ -379,7 +284,7 @@ public class KomentarzService {
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
         
         if (!uzyt.hasAuthenticationRights(kom.getUzytkownik(), connectedUser)) {
-            throw new AccessDeniedException("Nie masz uprawnień do usunięcia komentarza");
+            throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
         }
 
         List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(post.getPostId());
@@ -434,8 +339,6 @@ public class KomentarzService {
     }
 
     // Pomocnicze
-
-    
    
     private Komentarz createKomentarz(KomentarzRequest request) {
         Komentarz kom = komentarzMapper.toKomentarz(request);
@@ -455,12 +358,12 @@ public class KomentarzService {
         return resultId;
     }
 
-    private void saveKomentarzFile(MultipartFile file, Komentarz kom, Uzytkownik uzyt) throws FileUploadException {
+    private void saveKomentarzFile(MultipartFile file, Komentarz kom, Uzytkownik uzyt) {
         if (file != null) {
             String leObraz = fileStoreService.saveKomentarz(file, kom.getKomentarzId(), uzyt.getUzytId());
-            if (leObraz == null) {
-                throw new FileUploadException("Wystąpił błąd podczas wysyłania pliku");
-            }
+            // if (leObraz == null) {
+            //     throw new FileUploadException("Wystąpił błąd podczas wysyłania pliku");
+            // }
             kom.setObraz(leObraz);
         }
     }

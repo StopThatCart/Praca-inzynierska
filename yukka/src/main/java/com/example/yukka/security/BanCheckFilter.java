@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class BanCheckFilter extends OncePerRequestFilter {
 
+    @SuppressWarnings("unused")
     private static final List<String> PROTECTED_URLS = List.of(
             "/posty/oceny",
             "/komentarze/oceny",
@@ -31,6 +32,7 @@ public class BanCheckFilter extends OncePerRequestFilter {
 
     private static final Set<String> PROTECTED_METHODS = Set.of("POST", "PATCH", "PUT", "DELETE");
 
+    @SuppressWarnings("null")
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -39,8 +41,8 @@ public class BanCheckFilter extends OncePerRequestFilter {
         if (authentication != null && authentication.getPrincipal() instanceof Uzytkownik) {
             Uzytkownik uzyt = (Uzytkownik) authentication.getPrincipal();
 
-            String requestURI = request.getRequestURI();
-            boolean isProtectedUrl = PROTECTED_URLS.stream().anyMatch(requestURI::startsWith);
+            
+            
 
             String method = request.getMethod();
 
@@ -48,7 +50,8 @@ public class BanCheckFilter extends OncePerRequestFilter {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Operacja niedozwolona - Jesteś zbanowany.");
                 return;
             }
-
+            //String requestURI = request.getRequestURI();
+            //boolean isProtectedUrl = PROTECTED_URLS.stream().anyMatch(requestURI::startsWith);
           //  if (isProtectedUrl && uzyt.isBan()) {
          //       response.sendError(HttpServletResponse.SC_FORBIDDEN, "Operacja niedozwolona - Jesteś zbanowany.");
          //       return;

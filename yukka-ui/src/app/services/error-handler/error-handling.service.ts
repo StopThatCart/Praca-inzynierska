@@ -20,8 +20,7 @@ export class ErrorHandlingService {
     } else {
       errorMsg.push(err.message);
     }
-    console.log("Error message: " + errorMsg);
-    console.log("Error message: " + errorMsg.length);
+    //console.log("Error message: " + errorMsg);
     return errorMsg;
   }
 }

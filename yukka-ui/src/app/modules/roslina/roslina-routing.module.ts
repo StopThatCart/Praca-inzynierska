@@ -23,12 +23,18 @@ const routes: Routes = [
       {
         path: 'dodaj',
         component: AddRoslinaPageComponent,
-        canActivate: [pracownikGuard],
+        canActivate: [authGuard],
         data: { breadcrumb: 'Dodawanie rośliny' }
       },
       {
-        path: ':nazwa-lacinska',
-        data: { breadcrumb: (data: any) =>`${data.roslina.nazwaLacinska}` },
+        path: 'dodaj/:doKatalogu',
+        component: AddRoslinaPageComponent,
+        canActivate: [authGuard],
+        data: { breadcrumb: 'Dodawanie rośliny' }
+      },
+      {
+        path: ':roslina-id',
+        data: { breadcrumb: (data: any) =>`${data.roslina.nazwa}` },
         resolve: { roslina: RoslinaResolverService },
         children:[
           {
@@ -39,13 +45,13 @@ const routes: Routes = [
             path: 'aktualizuj',
             component: UpdateRoslinaPageComponent,
             data: { breadcrumb: 'Aktualizuj' },
-            canActivate: [pracownikGuard]
+            canActivate: [authGuard]
           },
           {
             path: 'obraz',
             component: UploadRoslinaObrazPageComponent,
             data: { breadcrumb: 'Zmień obraz' },
-            canActivate: [pracownikGuard]
+            canActivate: [authGuard]
           }
         ]
       },

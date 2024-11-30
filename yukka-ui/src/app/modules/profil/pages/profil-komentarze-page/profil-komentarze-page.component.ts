@@ -9,11 +9,12 @@ import { KomentarzCardComponent } from "../../../post/components/komentarz-card/
 import { CommonModule } from '@angular/common';
 import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.component";
 import { SimpleKomentarzCardComponent } from "../../components/simple-komentarz-card/simple-komentarz-card.component";
+import { LoadingComponent } from "../../../../components/loading/loading.component";
 
 @Component({
   selector: 'app-profil-komentarze-page',
   standalone: true,
-  imports: [CommonModule, PaginationComponent, KomentarzCardComponent, EdycjaNavComponent, SimpleKomentarzCardComponent],
+  imports: [CommonModule, PaginationComponent, KomentarzCardComponent, EdycjaNavComponent, SimpleKomentarzCardComponent, LoadingComponent],
   templateUrl: './profil-komentarze-page.component.html',
   styleUrl: './profil-komentarze-page.component.css'
 })
@@ -46,7 +47,6 @@ export class ProfilKomentarzePageComponent {
 
     this.route.queryParams.subscribe(params => {
       this.page = +params['page'] || 1;
-     // this.nazwa = params['nazwa'];
       this.findKomentarzeOfUzytkownik();
     });
   }
@@ -62,11 +62,10 @@ export class ProfilKomentarzePageComponent {
         next: (response) => {
           this.komentarze = response;
           this.komentarzeCount = response.totalElements as number;
-          console.log('Komentarze:', this.komentarze);
         },
         error: (error) => {
-          console.error('Error fetching komentarze:', error);
           this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
+          this.isLoading = false;
         },
         complete:()=> this.isLoading = false
       });

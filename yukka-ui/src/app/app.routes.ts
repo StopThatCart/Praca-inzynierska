@@ -8,6 +8,7 @@ import { loggedInGuard } from './services/guard/loggedIn/logged-in.guard';
 import { AktywacjaKontaComponent } from './pages/aktywacja-konta/aktywacja-konta.component';
 import { ZmianaHaslaComponent } from './pages/zmiana-hasla/zmiana-hasla.component';
 import { ZmianaHaslaEmailComponent } from './pages/zmiana-hasla-email/zmiana-hasla-email.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 export const routes: Routes = [
   { path: '', component: IndeksusComponent },
@@ -56,8 +57,9 @@ export const routes: Routes = [
   {
     path: 'ogrod',
     loadChildren: () => import('./modules/ogrod/ogrod.module').then(m => m.OgrodModule)
-  }
+  },
+  { path: '404', component: NotFoundComponent },
+  { path: '**', pathMatch: 'full', redirectTo: '404' }
 
-  //,
-//  { path: '**', redirectTo: '' }
+
 ];

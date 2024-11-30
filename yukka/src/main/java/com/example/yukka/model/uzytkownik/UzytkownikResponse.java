@@ -1,5 +1,6 @@
 package com.example.yukka.model.uzytkownik;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +30,10 @@ private Long id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private int postyOcenyNegatywne;
     private LocalDateTime dataUtworzenia;
+    
     private boolean ban;
+    public LocalDate banDo;
+    
     private Ustawienia ustawienia;
     
     private Set<UzytkownikResponse> blokowaniUzytkownicy;

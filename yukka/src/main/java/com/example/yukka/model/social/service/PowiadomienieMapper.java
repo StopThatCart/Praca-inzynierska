@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileUtils;
+import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.social.powiadomienie.Powiadomienie;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
@@ -23,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PowiadomienieMapper {
     private final FileUtils fileUtils;
+
+    private final CommonMapperService commonMapperService;
 
 
     public PowiadomienieResponse toPowiadomienieResponse(Powiadomienie powiadomienie) {
@@ -37,6 +40,8 @@ public class PowiadomienieMapper {
         return PowiadomienieResponse.builder()
             .id(powiadomienie.getId())
             .typ(powiadomienie.getTyp())
+            .isZgloszenie(powiadomienie.isZgloszenie())
+            .zglaszajacy(commonMapperService.toUzytkownikResponse(powiadomienie.getZglaszajacy()))
             .tytul(powiadomienie.getTytul())
             .przeczytane(przeczytane)
             .odnosnik(powiadomienie.getOdnosnik())
@@ -57,6 +62,8 @@ public class PowiadomienieMapper {
         }
         return PowiadomienieDTO.builder()
             .id(powiadomienie.getId())
+            .isZgloszenie(powiadomienie.isZgloszenie())
+            .zglaszajacy(powiadomienie.getZglaszajacy())
             .typ(powiadomienie.getTyp())
             .tytul(powiadomienie.getTytul())
             .przeczytane(powiadomienie.getPowiadamia() != null ? powiadomienie.getPowiadamia().getPrzeczytane() : null)
@@ -68,6 +75,7 @@ public class PowiadomienieMapper {
             .iloscPolubien(powiadomienie.getIloscPolubien())
             .data(powiadomienie.getData())
             .dataUtworzenia(powiadomienie.getDataUtworzenia())
+            .okres(powiadomienie.getOkres())
             .build();
     }
 

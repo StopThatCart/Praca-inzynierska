@@ -9,6 +9,7 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { FileResponse } from '../models/file-response';
 import { findAllUzytkownicy } from '../fn/uzytkownik/find-all-uzytkownicy';
 import { FindAllUzytkownicy$Params } from '../fn/uzytkownik/find-all-uzytkownicy';
 import { findByEmail } from '../fn/uzytkownik/find-by-email';
@@ -27,8 +28,6 @@ import { removeSelf } from '../fn/uzytkownik/remove-self';
 import { RemoveSelf$Params } from '../fn/uzytkownik/remove-self';
 import { sendZmianaEmail } from '../fn/uzytkownik/send-zmiana-email';
 import { SendZmianaEmail$Params } from '../fn/uzytkownik/send-zmiana-email';
-import { setBanUzytkownik } from '../fn/uzytkownik/set-ban-uzytkownik';
-import { SetBanUzytkownik$Params } from '../fn/uzytkownik/set-ban-uzytkownik';
 import { setBlokUzytkownik } from '../fn/uzytkownik/set-blok-uzytkownik';
 import { SetBlokUzytkownik$Params } from '../fn/uzytkownik/set-blok-uzytkownik';
 import { updateAvatar } from '../fn/uzytkownik/update-avatar';
@@ -123,31 +122,6 @@ export class UzytkownikService extends BaseService {
     );
   }
 
-  /** Path part for operation `setBanUzytkownik()` */
-  static readonly SetBanUzytkownikPath = '/uzytkownicy/pracownik/ban/{email}/{ban}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `setBanUzytkownik()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  setBanUzytkownik$Response(params: SetBanUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<Uzytkownik>> {
-    return setBanUzytkownik(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `setBanUzytkownik$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  setBanUzytkownik(params: SetBanUzytkownik$Params, context?: HttpContext): Observable<Uzytkownik> {
-    return this.setBanUzytkownik$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Uzytkownik>): Uzytkownik => r.body)
-    );
-  }
-
   /** Path part for operation `setBlokUzytkownik()` */
   static readonly SetBlokUzytkownikPath = '/uzytkownicy/blok/{nazwa}/{blok}';
 
@@ -182,7 +156,7 @@ export class UzytkownikService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAvatar$Response(params?: GetAvatar$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+  getAvatar$Response(params?: GetAvatar$Params, context?: HttpContext): Observable<StrictHttpResponse<FileResponse>> {
     return getAvatar(this.http, this.rootUrl, params, context);
   }
 
@@ -192,9 +166,9 @@ export class UzytkownikService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAvatar(params?: GetAvatar$Params, context?: HttpContext): Observable<UzytkownikResponse> {
+  getAvatar(params?: GetAvatar$Params, context?: HttpContext): Observable<FileResponse> {
     return this.getAvatar$Response(params, context).pipe(
-      map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
+      map((r: StrictHttpResponse<FileResponse>): FileResponse => r.body)
     );
   }
 

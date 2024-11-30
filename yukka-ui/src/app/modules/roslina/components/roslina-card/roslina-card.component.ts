@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { RoslinaResponse } from '../../../../services/models';
-import { Roslina } from '../../../../services/models/roslina';
 import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-roslina-card',
   standalone: true,
-  imports: [RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './roslina-card.component.html',
   styleUrl: './roslina-card.component.css'
 })
@@ -31,9 +31,15 @@ export class RoslinaCardComponent {
     return this._roslinaObraz;
   }
 
-  goToRoslina(nazwaLacinska: string | undefined) {
-    if (nazwaLacinska) {
-      this.router.navigate(['/rosliny', nazwaLacinska]);
+  goToRoslina() {
+    let doKatalogu = true;
+    if (this.roslina.roslinaUzytkownika) {
+      doKatalogu = false;
+    }
+    if (this.roslina.roslinaId) {
+      this.router.navigate(
+        ['/rosliny', this.roslina.roslinaId]
+      );
     }
   }
 

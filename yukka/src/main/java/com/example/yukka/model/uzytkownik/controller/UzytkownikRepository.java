@@ -1,5 +1,6 @@
 package com.example.yukka.model.uzytkownik.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,6 +83,12 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         """)
     List<Uzytkownik> getUzytkownicyWithRoslinyInDzialki();
 
+    @Query("""
+        MATCH (uzyt:Uzytkownik { ban: true })
+        RETURN uzyt
+        """)
+    List<Uzytkownik> getZbanowaniUzytkownicy();
+
 
     @Query("""
         MATCH (post:Post{postId: $postId})
@@ -153,7 +160,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     Uzytkownik addUzytkownik(@Param("uzyt") Uzytkownik uzyt, @Param("ustawienia") Ustawienia ustawienia);
 
     @Query("""
-        CREATE (u:Uzytkownik:`:#{allOf(#roles)}`) SET u += $uzyt.__properties__
+        CREATE (u:Uzytkownik::#{allOf(#roles)}) SET u += $uzyt.__properties__
         WITH u
         CREATE (ustawienia:Ustawienia) SET ustawienia += $ustawienia.__properties__
         WITH u, ustawienia
@@ -170,7 +177,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         RETURN u
             """
             )
-    Uzytkownik addUzytkownik(@Param("uzyt") Uzytkownik uzyt, List<String> roles, @Param("ustawienia") Ustawienia ustawienia);
+    Uzytkownik addUzytkownik(@Param("uzyt") Uzytkownik uzyt, String roles, @Param("ustawienia") Ustawienia ustawienia);
 
   //  @Query("CREATE (u:Uzytkownik:`:#{literal(#rola)}` {nazwa: $nazwa, email: $email, haslo: $haslo, data_utworzenia: localdatetime(), ban: false})")
    // void addNewPracownik(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo, @Param("rola") String rola);
@@ -215,8 +222,12 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             """)
     Boolean odblokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, @Param("blokujacyEmail") String blokujacyEmail);
 
-    @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.ban = $ban RETURN u")
-    Uzytkownik banUzytkownik(@Param("email") String email, @Param("ban") boolean ban);
+    @Query("""
+       MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa 
+       SET u.ban = $ban, u.banDo = $banDo 
+       RETURN COUNT(u) > 0 AS success     
+            """)
+    Boolean banUzytkownik(String nazwa, boolean ban, LocalDate banDo);
 
 
     // TODO: Zmień jak będą kolejne komponenty dodawane
@@ -242,7 +253,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
         WITH u
         OPTIONAL MATCH (u)<-[:STWORZONA_PRZEZ]-(roslina:UzytkownikRoslina)
-        OPTIONAL MATCH (roslina)<-[:MA_ROSLINE]-(wl:UzytkownikWlasciwosc)
+        OPTIONAL MATCH (roslina)-[rel]-(wl:UzytkownikWlasciwosc)
         DETACH DELETE roslina
 
         WITH u
@@ -285,7 +296,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
     @Query("""
         MATCH (roslina:UzytkownikRoslina)
-        OPTIONAL MATCH (roslina)<-[:MA_ROSLINE]-(wl:UzytkownikWlasciwosc)
+        OPTIONAL MATCH (roslina)-[rel]-(wl:UzytkownikWlasciwosc)
         DETACH DELETE roslina, wl
         """)
     void clearUzytkownikRoslina(); 

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.example.yukka.handler.exceptions.BannedUzytkownikException;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
@@ -40,16 +41,17 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
         if (uzytOpt.isEmpty()) {
             System.out.println("Nie ma takiego uzytkownika");
             throw new BadCredentialsException("Niepoprawny login lub hasło.");
-            //return null;
         }
 
         Uzytkownik uzyt = uzytOpt.get();
-       // .orElseThrow(() -> new BadCredentialsException("Niepoprawny login lub hasło."));
 
-       if (!uzyt.isAktywowany()) {
-            log.info("login [" + nameOrEmail + "] nieudany: konto nieaktywowane");
-            throw new IllegalArgumentException("Konto nie zostało jeszcze aktywowane. Sprawdź swoje wiadomości w poczcie email albo zarejestruj się ponownie.");
-       }
+        if (!uzyt.isAktywowany()) {
+                log.info("login [" + nameOrEmail + "] nieudany: konto nieaktywowane");
+                throw new IllegalArgumentException("Konto nie zostało jeszcze aktywowane. Sprawdź swoje wiadomości w poczcie email albo zarejestruj się ponownie.");
+        } else if (uzyt.isBan()) {
+            log.info("login [" + nameOrEmail + "] nieudany: konto zbanowane");
+            throw new BannedUzytkownikException("Konto zostało zbanowane do " + uzyt.getBanDo());
+        }
 
         if(passwordEncoder.matches(haslo, uzyt.getHaslo())) {
             log.info("login [" + nameOrEmail + "] udany");
@@ -59,44 +61,10 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
             log.info("login [" + nameOrEmail + "] nieudany: Niepoprawny login lub hasło");
             throw new BadCredentialsException("Niepoprawny login lub hasło.");
         }
-
-        // Possible to add more information from user
-       // List<GrantedAuthority> authorities = new ArrayList<>();
-        //.add();
-       
-        //return new UsernamePasswordAuthenticationToken(principal, haslo, uzyt.getAuthorities());
-/* 
-        try (Session session = driver.session(sessionConfig)) {
-            if (nameOrEmail.contains("@")){
-                query = "MATCH (n:Uzytkownik) WHERE n.email = $nameOrEmail AND n.haslo = $haslo RETURN n";
-            }else {
-                query = "MATCH (n:Uzytkownik) WHERE n.nazwa = $nameOrEmail AND n.haslo = $haslo RETURN n";
-            }
-
-            List<Record> results = session.run(query,
-                    Map.of("nameOrEmail", nameOrEmail, "haslo", haslo)).list();
-            
-            if (results.isEmpty()) {
-                return null;
-            }
-
-            Node user = results.get(0).get("n").asNode();
-
-            System.out.println("\n\n\n USEEEEERR: " + user.toString() + "\n\n\n");
-
-            // Possible to add more information from user
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            final UserDetails principal = new User(nameOrEmail, haslo, authorities);
-
-            return new UsernamePasswordAuthenticationToken(principal, haslo, authorities);
-        }
-            */
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        //return false;
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 

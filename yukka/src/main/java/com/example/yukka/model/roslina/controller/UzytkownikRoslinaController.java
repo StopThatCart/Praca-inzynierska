@@ -5,8 +5,6 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,43 +37,31 @@ public class UzytkownikRoslinaController {
     private final UzytkownikRoslinaService uzytkownikRoslinaService;
   //  private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
 
-    // @GetMapping(value = "/{roslinaId}", produces="application/json")
-    // public ResponseEntity<Roslina> findUzytkownikRoslinaByRoslinaId(
-    //     @PathVariable("roslinaId") String roslinaId, 
-    //         Authentication connectedUser) {
-    //     return ResponseEntity.ok(uzytkownikRoslinaService.findByRoslinaId(roslinaId).orElse(null));
-    // }
-
-    @GetMapping(produces="application/json")
-    public ResponseEntity<PageResponse<RoslinaResponse>> findAllRosliny(
+    @PostMapping(value = "/szukaj", produces="application/json")
+    public ResponseEntity<PageResponse<RoslinaResponse>> findAllRoslinyOfUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(name = "size", defaultValue = "12", required = false) int size,
+            @RequestBody UzytkownikRoslinaRequest request,
+            @RequestParam(name = "uzytkownik-nazwa", required = false) String uzytkownikNazwa,
             Authentication connectedUser) {
-        return ResponseEntity.ok(uzytkownikRoslinaService.findAllRoslinyOfUzytkownik(page, size, connectedUser));
-    }
-
-    @PostMapping
-    public ResponseEntity<String> saveRoslina(@Valid @RequestBody UzytkownikRoslinaRequest request,
-    Authentication currentUser) {
-        uzytkownikRoslinaService.save(request, currentUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
+        return ResponseEntity.ok(uzytkownikRoslinaService.findRoslinyOfUzytkownik(page, size, request, uzytkownikNazwa, connectedUser));
     }
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<String> saveRoslina(@Valid @RequestBody UzytkownikRoslinaRequest request, 
-    @Parameter() @RequestPart("file") MultipartFile file,
+    public ResponseEntity<?> saveRoslina(@Valid @RequestPart("request") UzytkownikRoslinaRequest request, 
+    @Parameter() @RequestPart(value = "file", required = false) MultipartFile file,
     Authentication currentUser) {
         uzytkownikRoslinaService.save(request, file, currentUser);
         return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
     }
 
     @PatchMapping
-    public ResponseEntity<String> updateRoslina(@Valid @RequestBody UzytkownikRoslinaRequest request) {
+    public ResponseEntity<String> updateRoslina(@Valid @RequestBody UzytkownikRoslinaRequest request, Authentication connectedUser) {
         Optional<Roslina> roslina = uzytkownikRoslinaService.findByRoslinaId(request.getRoslinaId());
         if (roslina.isEmpty()) {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body("Roślina o takiej nazwie łacińskiej już istnieje.");
         }
-        uzytkownikRoslinaService.update(request);
+        uzytkownikRoslinaService.update(request, connectedUser);
         return ResponseEntity.status(HttpStatus.OK).body("Roślina została pomyślnie zaktualizowana.");
     }
 
@@ -88,18 +74,5 @@ public class UzytkownikRoslinaController {
         uzytkownikRoslinaService.uploadUzytkownikRoslinaObraz(file, connectedUser, roslinaId);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
-    
-    // @DeleteMapping("/{roslinaId}")
-    // public ResponseEntity<String> deleteRoslina(@PathVariable String roslinaId) {
-    //     Optional<Roslina> roslina = uzytkownikRoslinaService.findByRoslinaId(roslinaId);
-
-    //     if (roslina.isEmpty()) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nie znaleziono rośliny o nazwie łacińskiej - " + roslinaId);
-    //     }
-
-    //     uzytkownikRoslinaService.deleteByRoslinaId(roslinaId);
-
-    //     return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usunięto rośline o nazwie łacińskiej - " + roslinaId);
-    // }
     
 }

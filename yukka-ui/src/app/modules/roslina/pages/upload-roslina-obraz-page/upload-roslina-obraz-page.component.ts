@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RoslinaService } from '../../../../services/services/roslina.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RoslinaResponse } from '../../../../services/models';
+import { RoslinaRequest, RoslinaResponse, UzytkownikRoslinaRequest } from '../../../../services/models';
 import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
+import { UzytkownikRoslinaService } from '../../../../services/services';
 
 @Component({
   selector: 'app-upload-roslina-obraz-page',
@@ -17,7 +18,7 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
   roslina: RoslinaResponse = {};
   private _roslinaObraz: string | undefined;
 
-  nazwaLacinska: string = '';
+  roslinaId: string = '';
 
   wybranyObraz: any;
   wybranyPlik: any;
@@ -30,29 +31,30 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
 
   constructor(
     private roslinaService: RoslinaService,
+    private uzytkownikRoslinaService: UzytkownikRoslinaService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.nazwaLacinska = params['nazwa-lacinska'];
-      if (this.nazwaLacinska) {
-        this.getRoslinaByNazwaLacinska(this.nazwaLacinska);
-        this.route.snapshot.data['nazwa-lacinska'] = this.nazwaLacinska;
+      this.roslinaId = params['roslina-id'];
+      if (this.roslinaId) {
+        this.getRoslinaByRoslinaId(this.roslinaId);
+        this.route.snapshot.data['roslina-id'] = this.roslinaId;
       }
     });
   }
 
-  getRoslinaByNazwaLacinska(nazwaLacinska: string): void {
-    this.roslinaService.findByNazwaLacinska({ 'nazwa-lacinska': nazwaLacinska }).subscribe({
+  getRoslinaByRoslinaId(roslinaId: string): void {
+    this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId }).subscribe({
       next: (roslina) => {
         this.roslina = roslina;
         this.errorMsg = [];
       },
       error: (err) => {
         this.roslina = {};
-        this.errorMsg.push('Nie znaleziono rośliny o podanej nazwie łacińskiej.');
+        this.errorMsg.push('Nie znaleziono rośliny o podanym id.');
       }
     });
   }
@@ -88,16 +90,39 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
     this.errorMsg = [];
     this.message = '';
 
-    console.log("nazwa łacińska: " + this.nazwaLacinska);
+    console.log("roslina id: " + this.roslinaId);
+
+    if (this.roslina.roslinaUzytkownika) {
+      this.uploadUzytkownikRoslinaObraz();
+      return;
+    } else if (!this.roslina.nazwaLacinska) return;
 
     this.roslinaService.updateRoslinaObraz({
-      'nazwa-lacinska': this.nazwaLacinska,
+      'nazwa-lacinska': this.roslina.nazwaLacinska,
       body: { file: this.wybranyPlik } })
       .subscribe({
         next: () => {
           //this.message = 'Roślina została zaaktualizowana';
          // this.clearImage();
-          this.router.navigate(['/rosliny', this.nazwaLacinska]);
+          this.router.navigate(['/rosliny', this.roslinaId]);
+        },
+        error: (error) => {
+          this.message = 'Błąd podczas aktualizacji rośliny';
+          this.handleErrors(error);
+        }
+      });
+  }
+
+  uploadUzytkownikRoslinaObraz(): void {
+    console.log("AKTUALIZACJA OBRAZU ROŚLINY UZYTKOWNIKA");
+
+    this.uzytkownikRoslinaService.updateRoslinaObraz1({
+      roslinaId: this.roslinaId,
+      body: { file: this.wybranyPlik } })
+      .subscribe({
+        next: () => {
+          this.message = 'Roślina została zaaktualizowana';
+          this.router.navigate(['/rosliny', this.roslina.roslinaId]);
         },
         error: (error) => {
           this.message = 'Błąd podczas aktualizacji rośliny';

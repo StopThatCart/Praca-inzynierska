@@ -24,7 +24,6 @@ def query_string(node_name, label, relationship):
         f"WITH p, item WHERE item <> '{brak}' "
         f"MERGE (n:Wlasciwosc:{node_name.capitalize()} {{nazwa: item}}) "
         f"MERGE (p)-[:{relationship}]->(n) "
-        f"MERGE (n)-[:MA_ROSLINE]->(p)"
     )
     return query
 
@@ -38,7 +37,6 @@ def query_string_good(node_name, label, relationship):
         f"WITH p, item WHERE item <> '{brak}' "
         f"MERGE (n:Wlasciwosc:{node_name.capitalize()} {{nazwa: item}}) "
         f"MERGE (p)-[:{relationship}]->(n) "
-        f"MERGE (n)-[:MA_ROSLINE]->(p)"
     )
     return query
 

@@ -64,15 +64,20 @@
             <span class="small">&nbsp;Odpisz</span>
           </a>
           <ng-container *ngIf="canEdit">
-            <a (click)="startEditing()" class="komentarz-option">
-              <i class="fas fa-edit fa-xs"></i>
-              <span class="small">&nbsp;Edytuj</span>
-            </a>
-            <a (click)="deleteKomentarz()" class="komentarz-option">
-              <i class="fas fa-trash fa-xs"></i>
-              <span class="small">&nbsp;Usuń</span>
-            </a>
+            <button (click)="startEditing()" class="btn btn-warning" type="button"  placement="bottom" ngbTooltip="Edytuj">
+              <i class="fas fa-edit"></i>
+            </button>
+
+            <button (click)="deleteKomentarz()" class="btn btn-danger" type="button"  placement="bottom" ngbTooltip="Usuń">
+              <i class="fas fa-trash"></i>
+            </button>
           </ng-container>
+
+          <app-zgloszenie-button
+          [typPowiadomienia]="typPowiadomienia.ZGLOSZENIE_KOMENTARZ"
+          [zglaszany]="komentarz.uzytkownikNazwa"
+          [odnosnik]="getPostIdFromPage()">
+          </app-zgloszenie-button>
 
         </div>
         <ng-container *ngIf="komentarz.odpowiedzi && komentarz.odpowiedzi.length > 0">

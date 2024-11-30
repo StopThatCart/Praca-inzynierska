@@ -3,6 +3,7 @@ package com.example.yukka.security;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.catalina.filters.RateLimitFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -22,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.yukka.authorities.ROLE;
+import com.example.yukka.security.jwt.JwtFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,8 +36,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtFilter authFilter;
-    private final BanCheckFilter banCheckFilter;
+   // private final BanCheckFilter banCheckFilter;
     private final Neo4JAuthenticationProvider authenticationProvider;
+
+    private final com.example.yukka.security.rateLimiter.RateLimitFilter rateLimitFilter;
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
@@ -81,7 +85,7 @@ public class SecurityConfig {
                     ).authenticated()
 
 
-                    .requestMatchers("/uzytkownicy/pracownik/ban/{email}/{ban}")
+                    .requestMatchers("/uzytkownicy/pracownik/ban/{email}")
                         .hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers("/uzytkownicy/blok/{nazwa}/{blok}").authenticated()
                     .requestMatchers("/uzytkownicy/blokowani").authenticated()
@@ -126,6 +130,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
               //  .addFilterBefore(banCheckFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

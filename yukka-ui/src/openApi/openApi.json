@@ -128,34 +128,6 @@
             }
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "Roslina"
-        ],
-        "operationId": "deleteRoslina_1",
-        "parameters": [
-          {
-            "name": "nazwa-lacinska",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/rosliny/{nazwa-lacinska}/obraz": {
@@ -323,62 +295,17 @@
       }
     },
     "/uzytkownikRosliny": {
-      "get": {
-        "tags": [
-          "UzytkownikRoslina"
-        ],
-        "operationId": "findAllRosliny",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PageResponseRoslinaResponse"
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "UzytkownikRoslina"
         ],
-        "operationId": "saveRoslina_1",
+        "operationId": "saveRoslina",
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UzytkownikRoslinaRequest"
-              }
-            },
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file"
+                  "request"
                 ],
                 "type": "object",
                 "properties": {
@@ -392,8 +319,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -401,7 +327,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "string"
+                  "type": "object"
                 }
               }
             }
@@ -438,34 +364,6 @@
       }
     },
     "/uzytkownikRosliny/{roslinaId}": {
-      "get": {
-        "tags": [
-          "UzytkownikRoslina"
-        ],
-        "operationId": "findUzytkownikRoslinaByRoslinaId",
-        "parameters": [
-          {
-            "name": "roslinaId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Roslina"
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "UzytkownikRoslina"
@@ -511,29 +409,61 @@
             }
           }
         }
-      },
-      "delete": {
+      }
+    },
+    "/uzytkownikRosliny/szukaj": {
+      "post": {
         "tags": [
           "UzytkownikRoslina"
         ],
-        "operationId": "deleteRoslina",
+        "operationId": "findAllRoslinyOfUzytkownik",
         "parameters": [
           {
-            "name": "roslinaId",
-            "in": "path",
-            "required": true,
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 12
+            }
+          },
+          {
+            "name": "uzytkownik-nazwa",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UzytkownikRoslinaRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/PageResponseRoslinaResponse"
                 }
               }
             }
@@ -634,13 +564,12 @@
         "tags": [
           "Roslina"
         ],
-        "operationId": "saveRoslina_2",
+        "operationId": "saveRoslina_1",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file",
                   "request"
                 ],
                 "type": "object",
@@ -654,14 +583,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -701,7 +624,7 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "default": 10
+              "default": 12
             }
           }
         ],
@@ -710,6 +633,35 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RoslinaRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseRoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/powiadomienia/zgloszenie": {
+      "post": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "sendZgloszenie",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ZgloszenieRequest"
               }
             }
           },
@@ -721,7 +673,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageResponseRoslinaResponse"
+                  "type": "object"
                 }
               }
             }
@@ -842,13 +794,12 @@
         "tags": [
           "Post"
         ],
-        "operationId": "addPost_1",
+        "operationId": "addPost",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file",
                   "request"
                 ],
                 "type": "object",
@@ -862,14 +813,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -890,13 +835,12 @@
         "tags": [
           "Komentarz"
         ],
-        "operationId": "addKomentarzToWiadomoscPrywatna_1",
+        "operationId": "addKomentarzToWiadomoscPrywatna",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file",
                   "request"
                 ],
                 "type": "object",
@@ -910,14 +854,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/KomentarzRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -938,13 +876,12 @@
         "tags": [
           "Komentarz"
         ],
-        "operationId": "addKomentarzToPost_1",
+        "operationId": "addKomentarzToPost",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file",
                   "request"
                 ],
                 "type": "object",
@@ -958,14 +895,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/KomentarzRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -986,13 +917,12 @@
         "tags": [
           "Komentarz"
         ],
-        "operationId": "addOdpowiedzToKomentarz_1",
+        "operationId": "addOdpowiedzToKomentarz",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "file",
                   "request"
                 ],
                 "type": "object",
@@ -1006,14 +936,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/KomentarzRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1034,7 +958,7 @@
         "tags": [
           "Dzialka"
         ],
-        "operationId": "saveRoslinaToDzialka_1",
+        "operationId": "saveRoslinaToDzialka",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -1057,14 +981,8 @@
                   }
                 }
               }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DzialkaRoslinaRequest"
-              }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1234,16 +1152,16 @@
           "Authentication"
         ],
         "operationId": "refreshToken",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1343,44 +1261,6 @@
         }
       }
     },
-    "/uzytkownicy/pracownik/ban/{email}/{ban}": {
-      "patch": {
-        "tags": [
-          "Uzytkownik"
-        ],
-        "operationId": "setBanUzytkownik",
-        "parameters": [
-          {
-            "name": "email",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "ban",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Uzytkownik"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/uzytkownicy/blok/{nazwa}/{blok}": {
       "patch": {
         "tags": [
@@ -1431,7 +1311,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UzytkownikResponse"
+                  "$ref": "#/components/schemas/FileResponse"
                 }
               }
             }
@@ -1475,6 +1355,73 @@
         }
       }
     },
+    "/pracownicy/unban/{uzytkownik-nazwa}": {
+      "patch": {
+        "tags": [
+          "Pracownik"
+        ],
+        "operationId": "unbanUzytkownik",
+        "parameters": [
+          {
+            "name": "uzytkownik-nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pracownicy/ban": {
+      "patch": {
+        "tags": [
+          "Pracownik"
+        ],
+        "operationId": "setBanUzytkownik",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "request"
+                ],
+                "type": "object",
+                "properties": {
+                  "request": {
+                    "$ref": "#/components/schemas/BanRequest"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/powiadomienia/{id}/przeczytane": {
       "patch": {
         "tags": [
@@ -1499,6 +1446,26 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PowiadomienieResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/powiadomienia/przeczytane": {
+      "patch": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "setAllPowiadomieniaPrzeczytane",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -2036,6 +2003,36 @@
         }
       }
     },
+    "/rosliny/roslina-id/{roslina-id}": {
+      "get": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "findByRoslinaId",
+        "parameters": [
+          {
+            "name": "roslina-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rosliny/nazwa-lacinska/{nazwa-lacinska}": {
       "get": {
         "tags": [
@@ -2090,29 +2087,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RoslinaResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/rest/neo4j/gleba": {
-      "get": {
-        "tags": [
-          "soil-resource"
-        ],
-        "operationId": "getAllSoils",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Gleba"
-                  }
                 }
               }
             }
@@ -2689,6 +2663,36 @@
         }
       }
     },
+    "/rosliny/{roslina-id}": {
+      "delete": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "deleteRoslina",
+        "parameters": [
+          {
+            "name": "roslina-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/powiadomienia/{id}": {
       "delete": {
         "tags": [
@@ -3000,28 +3004,10 @@
           "statystykiProfilu": {
             "type": "boolean"
           },
-          "galeriaPokaz": {
-            "type": "boolean"
-          },
-          "galeriaOcenaKomentarze": {
-            "type": "boolean"
-          },
           "ogrodPokaz": {
             "type": "boolean"
           },
-          "ogrodOcenaKomentarze": {
-            "type": "boolean"
-          },
           "powiadomieniaKomentarzeOdpowiedz": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeOgrod": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeGaleria": {
-            "type": "boolean"
-          },
-          "powiadomieniaOgrodPodlewanie": {
             "type": "boolean"
           },
           "powiadomieniaOgrodKwitnienie": {
@@ -3086,6 +3072,10 @@
           "ban": {
             "type": "boolean"
           },
+          "banDo": {
+            "type": "string",
+            "format": "date"
+          },
           "posty": {
             "type": "array",
             "items": {
@@ -3137,9 +3127,6 @@
           "admin": {
             "type": "boolean"
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
           "pracownik": {
             "type": "boolean"
           },
@@ -3152,16 +3139,19 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
           "password": {
             "type": "string"
           },
           "enabled": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           },
           "accountNonLocked": {
@@ -3186,9 +3176,6 @@
           "nazwa": {
             "type": "string"
           },
-          "nazwaLacinska": {
-            "type": "string"
-          },
           "opis": {
             "type": "string"
           },
@@ -3196,20 +3183,27 @@
             "type": "string"
           },
           "wysokoscMin": {
+            "maximum": 200,
             "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "wysokoscMax": {
+            "maximum": 200,
             "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "wlasciwosci": {
+            "maxItems": 100,
+            "minItems": 0,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WlasciwoscWithRelations"
             }
+          },
+          "nazwaLacinska": {
+            "type": "string"
           }
         }
       },
@@ -3518,8 +3512,10 @@
       "UzytkownikRoslinaRequest": {
         "required": [
           "nazwa",
-          "obraz",
-          "roslinaId"
+          "opis",
+          "wlasciwosci",
+          "wysokoscMax",
+          "wysokoscMin"
         ],
         "type": "object",
         "properties": {
@@ -3536,18 +3532,57 @@
             "type": "string"
           },
           "wysokoscMin": {
+            "maximum": 200,
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "wysokoscMax": {
+            "maximum": 200,
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "wlasciwosci": {
+            "maxItems": 100,
+            "minItems": 0,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WlasciwoscWithRelations"
             }
+          }
+        }
+      },
+      "PageResponseRoslinaResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoslinaResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           }
         }
       },
@@ -3686,6 +3721,10 @@
           "ban": {
             "type": "boolean"
           },
+          "banDo": {
+            "type": "string",
+            "format": "date"
+          },
           "ustawienia": {
             "$ref": "#/components/schemas/Ustawienia"
           },
@@ -3705,36 +3744,30 @@
           }
         }
       },
-      "PageResponseRoslinaResponse": {
+      "ZgloszenieRequest": {
+        "required": [
+          "odnosnik",
+          "opis",
+          "typPowiadomienia",
+          "zglaszany"
+        ],
         "type": "object",
         "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RoslinaResponse"
-            }
+          "zglaszany": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
           },
-          "number": {
-            "type": "integer",
-            "format": "int32"
+          "opis": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
           },
-          "size": {
-            "type": "integer",
-            "format": "int32"
+          "typPowiadomienia": {
+            "type": "string"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
+          "odnosnik": {
+            "type": "string"
           }
         }
       },
@@ -3747,6 +3780,9 @@
           },
           "typ": {
             "type": "string"
+          },
+          "zglaszajacy": {
+            "$ref": "#/components/schemas/Uzytkownik"
           },
           "przeczytane": {
             "type": "boolean"
@@ -3773,6 +3809,9 @@
           "uzytkownikNazwa": {
             "type": "string"
           },
+          "zglaszany": {
+            "type": "string"
+          },
           "iloscPolubien": {
             "type": "integer",
             "format": "int32"
@@ -3784,6 +3823,13 @@
           "dataUtworzenia": {
             "type": "string",
             "format": "date-time"
+          },
+          "okres": {
+            "type": "string",
+            "format": "date"
+          },
+          "zgloszenie": {
+            "type": "boolean"
           }
         }
       },
@@ -3834,6 +3880,7 @@
           "kolor",
           "numerDzialki",
           "pozycje",
+          "roslinaId",
           "wyswietlanie",
           "x",
           "y"
@@ -3868,9 +3915,6 @@
             }
           },
           "roslinaId": {
-            "type": "string"
-          },
-          "nazwaLacinska": {
             "type": "string"
           },
           "kolor": {
@@ -4067,16 +4111,10 @@
       },
       "UstawieniaRequest": {
         "required": [
-          "galeriaOcenaKomentarze",
-          "galeriaPokaz",
-          "ogrodOcenaKomentarze",
           "ogrodPokaz",
-          "powiadomieniaKomentarzeGaleria",
           "powiadomieniaKomentarzeOdpowiedz",
-          "powiadomieniaKomentarzeOgrod",
           "powiadomieniaOgrodKwitnienie",
           "powiadomieniaOgrodOwocowanie",
-          "powiadomieniaOgrodPodlewanie",
           "statystykiProfilu"
         ],
         "type": "object",
@@ -4084,28 +4122,10 @@
           "statystykiProfilu": {
             "type": "boolean"
           },
-          "galeriaPokaz": {
-            "type": "boolean"
-          },
-          "galeriaOcenaKomentarze": {
-            "type": "boolean"
-          },
           "ogrodPokaz": {
             "type": "boolean"
           },
-          "ogrodOcenaKomentarze": {
-            "type": "boolean"
-          },
           "powiadomieniaKomentarzeOdpowiedz": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeOgrod": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeGaleria": {
-            "type": "boolean"
-          },
-          "powiadomieniaOgrodPodlewanie": {
             "type": "boolean"
           },
           "powiadomieniaOgrodKwitnienie": {
@@ -4113,6 +4133,30 @@
           },
           "powiadomieniaOgrodOwocowanie": {
             "type": "boolean"
+          }
+        }
+      },
+      "BanRequest": {
+        "required": [
+          "ban",
+          "banDo",
+          "nazwa",
+          "powod"
+        ],
+        "type": "object",
+        "properties": {
+          "nazwa": {
+            "type": "string"
+          },
+          "powod": {
+            "type": "string"
+          },
+          "ban": {
+            "type": "boolean"
+          },
+          "banDo": {
+            "type": "string",
+            "format": "date"
           }
         }
       },
@@ -4162,6 +4206,12 @@
           },
           "dataUtworzenia": {
             "type": "string"
+          },
+          "zglaszajacy": {
+            "$ref": "#/components/schemas/UzytkownikResponse"
+          },
+          "zgloszenie": {
+            "type": "boolean"
           }
         }
       },
@@ -4224,184 +4274,6 @@
           }
         }
       },
-      "Roslina": {
-        "type": "object",
-        "properties": {
-          "labels": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "roslinaId": {
-            "type": "string"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "nazwaLacinska": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "wysokoscMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "wysokoscMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "obraz": {
-            "type": "string"
-          },
-          "formy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "gleby": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "grupy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "koloryLisci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "koloryKwiatow": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "kwiaty": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "odczyny": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "okresyKwitnienia": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "okresyOwocowania": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "owoce": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "podgrupa": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "pokroje": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "silyWzrostu": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "stanowiska": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "walory": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "wilgotnosci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "zastosowania": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "zimozielonosci": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Wlasciwosc"
-            }
-          },
-          "uzytkownikRoslina": {
-            "type": "boolean"
-          }
-        }
-      },
-      "Wlasciwosc": {
-        "type": "object",
-        "properties": {
-          "labels": {
-            "type": "string"
-          },
-          "nazwa": {
-            "type": "string"
-          }
-        }
-      },
       "PageResponseRozmowaPrywatnaResponse": {
         "type": "object",
         "properties": {
@@ -4446,24 +4318,6 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
-          }
-        }
-      },
-      "Gleba": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "rosliny": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Roslina"
             }
           }
         }

@@ -9,11 +9,14 @@ import { remove } from '../../../../services/fn/uzytkownik/remove';
 import { removeOcenaFromPost } from '../../../../services/fn/post/remove-ocena-from-post';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TokenService } from '../../../../services/token/token.service';
+import { ZgloszenieButtonComponent } from "../../../profil/components/zgloszenie-button/zgloszenie-button.component";
+import { TypPowiadomienia } from '../../../profil/enums/TypPowiadomienia';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ZgloszenieButtonComponent, NgbTooltipModule],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css'
 })
@@ -23,7 +26,7 @@ export class PostCardComponent implements OnInit {
   private _postAvatar: string | undefined;
 
   errorMsg: Array<string> = [];
-
+  typPowiadomienia = TypPowiadomienia;
   constructor(private router: Router,
               private postService: PostService,
               private tokenService: TokenService) {}

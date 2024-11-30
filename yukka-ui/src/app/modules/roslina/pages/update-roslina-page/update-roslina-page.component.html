@@ -2,7 +2,7 @@
   <app-breadcrumb></app-breadcrumb>
   <div class="card add-roslina-card " >
     <div class="card-header">
-      <h4 class="card-title">Dodaj roślinę</h4>
+      <h4 class="card-title">Edytuj roślinę</h4>
       <div class="alert alert-success" role="alert" *ngIf="message && !errorMsg.length">
         {{ message }}
       </div>
@@ -17,11 +17,11 @@
           <input [(ngModel)]="request.nazwa"
           class="mb-2 form-control" name="nazwa" placeholder="nazwa" required />
         </div>
-        <div>
+        <div *ngIf="!roslina.roslinaUzytkownika">
           <label class="form-label">Nazwa Łacińska:</label>
           <input
           [(ngModel)]="request.nazwaLacinska"
-          class="mb-2 form-control" name="nazwaLacinska" placeholder="nazwa łacińska" required />
+          class="mb-2 form-control" name="nazwaLacinska" placeholder="nazwa łacińska" />
         </div>
         <div>
           <label class="form-label">Opis:</label>

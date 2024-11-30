@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.handler.EntityAlreadyExistsException;
-import com.example.yukka.handler.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
+import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
@@ -76,7 +76,7 @@ public class RozmowaPrywatnaService {
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika odbiorcy o nazwie: " + nazwa));
 
         if (nadawca.getNazwa().equals(odbiorca.getNazwa())) {
-            throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
+            throw new IllegalArgumentException("Rozmowę ze sobą polecamy poćwiczyć przed lustrem");
         }
         
         RozmowaPrywatna rozmowa = rozmowaPrywatnaRepository.findRozmowaPrywatnaWithKomentarze(odbiorca.getUzytId(), nadawca.getUzytId())

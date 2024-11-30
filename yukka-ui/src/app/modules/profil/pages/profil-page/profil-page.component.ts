@@ -5,11 +5,14 @@ import { PostService, UzytkownikService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule } from '@angular/common';
 import { RozmowaPrywatnaService } from '../../../../services/services/rozmowa-prywatna.service';
+import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zgloszenie-button.component";
+import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
+import { BanButtonComponent } from "../../components/ban-button/ban-button.component";
 
 @Component({
   selector: 'app-profil-page',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ZgloszenieButtonComponent, BanButtonComponent],
   templateUrl: './profil-page.component.html',
   styleUrl: './profil-page.component.css'
 })
@@ -28,6 +31,8 @@ export class ProfilPageComponent implements OnInit {
   zaproszony: boolean | undefined;
   isZaproszonyChecked: boolean = false;
   zaproszenieWyslane: boolean = false;
+
+  typPowiadomienia = TypPowiadomienia;
 
   constructor(
     private tokenService: TokenService,
@@ -101,6 +106,15 @@ export class ProfilPageComponent implements OnInit {
   isCurrentUser(): boolean {
     if(this.tokenService) {
       if(this.tokenService.nazwa === this.uzyt.nazwa) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isPracownikOrAdmin(): boolean {
+    if(this.tokenService) {
+      if(this.tokenService.isPracownik() || this.tokenService.isAdmin()) {
         return true;
       }
     }

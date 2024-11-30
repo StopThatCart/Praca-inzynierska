@@ -11,10 +11,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { addOcenaToPost } from '../fn/post/add-ocena-to-post';
 import { AddOcenaToPost$Params } from '../fn/post/add-ocena-to-post';
-import { addPost1$FormData } from '../fn/post/add-post-1-form-data';
-import { AddPost1$FormData$Params } from '../fn/post/add-post-1-form-data';
-import { addPost1$Json } from '../fn/post/add-post-1-json';
-import { AddPost1$Json$Params } from '../fn/post/add-post-1-json';
+import { addPost } from '../fn/post/add-post';
+import { AddPost$Params } from '../fn/post/add-post';
 import { findAllPosty } from '../fn/post/find-all-posty';
 import { FindAllPosty$Params } from '../fn/post/find-all-posty';
 import { findAllPostyByConnectedUzytkownik } from '../fn/post/find-all-posty-by-connected-uzytkownik';
@@ -114,49 +112,27 @@ export class PostService extends BaseService {
     );
   }
 
-  /** Path part for operation `addPost1()` */
-  static readonly AddPost1Path = '/posty';
+  /** Path part for operation `addPost()` */
+  static readonly AddPostPath = '/posty';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addPost1$FormData()` instead.
+   * To access only the response body, use `addPost()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addPost1$FormData$Response(params: AddPost1$FormData$Params, context?: HttpContext): Observable<StrictHttpResponse<Post>> {
-    return addPost1$FormData(this.http, this.rootUrl, params, context);
+  addPost$Response(params?: AddPost$Params, context?: HttpContext): Observable<StrictHttpResponse<Post>> {
+    return addPost(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addPost1$FormData$Response()` instead.
+   * To access the full response (for headers, for example), `addPost$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addPost1$FormData(params: AddPost1$FormData$Params, context?: HttpContext): Observable<Post> {
-    return this.addPost1$FormData$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Post>): Post => r.body)
-    );
-  }
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addPost1$Json()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  addPost1$Json$Response(params: AddPost1$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<Post>> {
-    return addPost1$Json(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addPost1$Json$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  addPost1$Json(params: AddPost1$Json$Params, context?: HttpContext): Observable<Post> {
-    return this.addPost1$Json$Response(params, context).pipe(
+  addPost(params?: AddPost$Params, context?: HttpContext): Observable<Post> {
+    return this.addPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<Post>): Post => r.body)
     );
   }

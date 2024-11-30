@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UzytkownikResponse } from '../../models/uzytkownik-response';
+import { FileResponse } from '../../models/file-response';
 
 export interface GetAvatar$Params {
 }
 
-export function getAvatar(http: HttpClient, rootUrl: string, params?: GetAvatar$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+export function getAvatar(http: HttpClient, rootUrl: string, params?: GetAvatar$Params, context?: HttpContext): Observable<StrictHttpResponse<FileResponse>> {
   const rb = new RequestBuilder(rootUrl, getAvatar.PATH, 'get');
   if (params) {
   }
@@ -21,7 +21,7 @@ export function getAvatar(http: HttpClient, rootUrl: string, params?: GetAvatar$
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<UzytkownikResponse>;
+      return r as StrictHttpResponse<FileResponse>;
     })
   );
 }

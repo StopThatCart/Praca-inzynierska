@@ -42,8 +42,10 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
     @Query("""
         MATCH (roslina:Roslina {roslinaId: $roslinaId})
-        OPTIONAL MATCH (roslina)-[r:STWORZONA_PRZEZ]->(u:Uzytkownik)
-        RETURN roslina, r, u
+        OPTIONAL MATCH (roslina)-[r1:STWORZONA_PRZEZ]->(u:Uzytkownik)
+        OPTIONAL MATCH path=(roslina)-[rels]->(w:Wlasciwosc)
+
+        RETURN roslina, r1, u, collect(nodes(path)), collect(relationships(path))
     """)
     Optional<Roslina> findByRoslinaId(@Param("roslinaId") String roslinaId);
 
@@ -326,7 +328,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
         WITH p, w, relat
         CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
-        MERGE (w)-[:MA_ROSLINE]->(p)
 
         WITH p OPTIONAL MATCH path=(p)-[r]->(w)
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
@@ -379,12 +380,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
            CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
            WITH p, w, relat
            CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
-           MERGE (w)-[:MA_ROSLINE]->(p)
-
-           WITH p 
-           MATCH (wlasciwosc:Wlasciwosc) 
-           WHERE NOT (wlasciwosc)--()
-           DELETE wlasciwosc
 
            WITH p 
            OPTIONAL MATCH path=(p)-[r]->(w)
@@ -438,8 +433,8 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
                 p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
 
             WITH p
-            OPTIONAL MATCH (p)-[r]->(w:Wlasciwosc), (p)<-[r2:MA_ROSLINE]-(w)
-            DELETE r, r2
+            OPTIONAL MATCH (p)-[r]->(w:Wlasciwosc)
+            DELETE r
 
             WITH p, $relatLump AS relatLump
             UNWIND relatLump AS relat
@@ -447,7 +442,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
             CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
             WITH p, w, relat
             CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
-            MERGE (w)-[:MA_ROSLINE]->(p)
 
             WITH p OPTIONAL MATCH path=(p)-[r]->(w)
             RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
@@ -474,7 +468,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     void deleteByNazwaLacinska(@Param("latinName") String latinName);
 
     @Query("""
-            MATCH (p:Roslina{roslinaId: roslinaId})
+            MATCH (p:Roslina{roslinaId: $roslinaId})
             DETACH DELETE p
 
             WITH p 
@@ -482,5 +476,12 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
             DELETE wlasciwosc
             """)
     void deleteByRoslinaId(@Param("roslinaId") String roslinaId);
+
+    @Query("""
+        MATCH (wlasciwosc:Wlasciwosc) 
+        WHERE NOT (wlasciwosc)--()
+        DELETE wlasciwosc
+    """)
+    void removeLeftoverWlasciwosci();
 
 }

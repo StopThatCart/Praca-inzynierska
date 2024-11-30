@@ -12,7 +12,6 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -35,18 +34,22 @@ import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.enums.Wyswietlanie;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
+import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
+import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
+import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
+import com.example.yukka.model.social.request.ZgloszenieRequest;
 import com.example.yukka.model.social.service.KomentarzService;
 import com.example.yukka.model.social.service.PostService;
 import com.example.yukka.model.social.service.PowiadomienieService;
@@ -55,6 +58,7 @@ import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 import com.example.yukka.seeder.RoslinaImporterService;
+import com.github.javafaker.Faker;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,6 +94,7 @@ public class YukkaApplication {
 	private final DzialkaRepository dzialkaRepository;
 
 	private final RoslinaService roslinaService;
+	private final RoslinaRepository roslinaRepository;
 	@SuppressWarnings("unused")
 	private final RoslinaImporterService roslinaImporterService;
 
@@ -115,11 +120,15 @@ public class YukkaApplication {
 	String piotrEmail = "piotr@email.pl";
 	String katarzynaEmail = "katarzyna@email.pl";
 
+	String niegrzecznyEmail = "bad@email.pl";
+
 	Uzytkownik usJan;
 	Uzytkownik usPrac;
 	Uzytkownik usPiotr;
 	Uzytkownik usKatarzyna;
 	Uzytkownik usMichal;
+
+	Uzytkownik usNiegrzeczny;
 
 	List<Uzytkownik> uzytkownicy;
 
@@ -141,9 +150,9 @@ public class YukkaApplication {
 	@Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
-			roslinaImporterService.seedRosliny();
-			 unseed();
-        	 seed();
+			//roslinaImporterService.seedRosliny();
+			// unseed();
+			// seed();
 		//roslinaSearchTest();
         };
     }
@@ -179,30 +188,131 @@ public class YukkaApplication {
 
 		uzytkownicy = seedUzytkownicy();
 		
-		//addPostyWithKomentarze(uzytkownicy);
+		addPostyWithKomentarze(uzytkownicy);
 		//System.out.println("Dodano posty testowe. Może lepiej dać je potem w batchu.");
 
 		// Path kotPath = Paths.get(obrazSeedPath, "kot.png");
 		// MockMultipartFile obraz1 = new MockMultipartFile("tempFileName", "kot.png", 
 		// "image/png", fileUtils.readFileFromLocation(kotPath));
 
-		//seedRozmowy();
+		seedRozmowy();
 
-		//log.info("Dodawanie specjalnego powiadomienia...");
-		// PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
-		// .tytul("""
-		// 		Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
-		// 		Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
-		// 		Ten komunikat został wygenerowany.
-		// 		""").build();
-		//powiadomienieService.addSpecjalnePowiadomienie(pow1);
+		seedZgloszenia();
 
 		seedDzialka();
 
 	}
 
+	private List<Uzytkownik> seedUzytkownicy() {
+		log.info("Seedowanie uzytkownikow...");
+
+		Uzytkownik usJan = Uzytkownik.builder()
+		.uzytId("jasiuId")
+        .nazwa("Jan Kowalski").email("jan@email.pl")
+        .haslo(passwordEncoder.encode("jan12345678"))
+		.labels(List.of("Admin", "Pracownik"))
+		.aktywowany(true)
+        .build();
+
+		Uzytkownik usPrac = Uzytkownik.builder()
+		.uzytId("annaJakasId")
+		.labels(List.of("Pracownik")).nazwa("Anna Nowak")
+		.email("anna@email.pl")
+		.haslo(passwordEncoder.encode("anna12345678"))
+		.aktywowany(true)
+		.build();
+
+
+		Uzytkownik usPiotr = Uzytkownik.builder()
+		.uzytId("piotrekId")
+        .nazwa("Piotr Wiśniewski").email(piotrEmail)
+        .haslo(passwordEncoder.encode("piotr12345678"))
+		.aktywowany(true)
+        .build();
+
+
+		Uzytkownik usKatarzyna = Uzytkownik.builder()
+		.uzytId("jakasKatarzynaId")
+		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
+        .haslo(passwordEncoder.encode("katarzyna12345678"))
+		.aktywowany(true)
+        .build();
+
+
+		Uzytkownik usMichal = Uzytkownik.builder()
+		.uzytId("michalekId")
+        .nazwa("Michał Zieliński").email(michalEmail)
+        .haslo(passwordEncoder.encode("michal12345678"))
+		.aktywowany(true)
+        .build();
+
+		Uzytkownik usNiegrzeczny = Uzytkownik.builder()
+		.uzytId("niegrzecznyId")
+		.nazwa("Niegrzeczny Użytkownik").email(niegrzecznyEmail)
+		.haslo(passwordEncoder.encode("bad12345678"))
+		.aktywowany(true)
+		.build();
+
+		uzytkownikService.addPracownik(usJan);
+		uzytkownikService.addPracownik(usPrac);	
+		uzytkownikService.addUzytkownik(usPiotr);
+		uzytkownikService.addUzytkownik(usKatarzyna);
+		uzytkownikService.addUzytkownik(usMichal);
+		uzytkownikService.addUzytkownik(usNiegrzeczny);
+
+		Path adachiPath = Paths.get(obrazSeedPath, "adachi.jpg");
+		MockMultipartFile obrazAvatar1 = new MockMultipartFile("tempFileName", "adachi.jpg", 
+		"image/png", fileUtils.readFileFromLocation(adachiPath));
+
+		uzytkownikService.updateUzytkownikAvatar(obrazAvatar1, usPiotr);
+		
+
+		this.usJan = uzytkownikRepository.findByEmail(usJan.getEmail()).get();
+		this.usPrac = uzytkownikRepository.findByEmail(usPrac.getEmail()).get();
+		this.usPiotr = uzytkownikRepository.findByEmail(piotrEmail).get();
+		this.usKatarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
+		this.usMichal = uzytkownikRepository.findByEmail(michalEmail).get();
+		this.usNiegrzeczny = uzytkownikRepository.findByEmail(niegrzecznyEmail).get();
+		
+		this.uzytkownicy = Arrays.asList(this.usJan, this.usPrac, this.usPiotr, this.usKatarzyna, this.usMichal, this.usNiegrzeczny);
+
+		return this.uzytkownicy;
+	}
+
+	private void seedZgloszenia() {
+		log.info("Seedowanie zgłoszeń...");
+		Faker faker = new Faker(new Locale("pl"));
+		
+		ZgloszenieRequest request = ZgloszenieRequest.builder()
+		.zglaszany(usNiegrzeczny.getNazwa())
+		.opis(faker.witcher().character())
+		.typPowiadomienia(TypPowiadomienia.ZGLOSZENIE.name())
+		.build();
+		
+
+		powiadomienieService.sendZgloszenie(request, usMichal);
+		request.setOpis(faker.witcher().quote());
+		powiadomienieService.sendZgloszenie(request, usPiotr);
+		request.setOpis(faker.witcher().quote());
+		powiadomienieService.sendZgloszenie(request, usKatarzyna);
+
+
+		log.info("Dodawanie specjalnego powiadomienia...");
+		PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
+		.tytul("""
+				Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
+				Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
+				Ten komunikat został wygenerowany.
+				""").build();
+		powiadomienieService.addSpecjalnePowiadomienie(pow1);
+
+
+	}
+
 	private void seedDzialka() {
 		log.info("Seedowanie dzialek...");
+
+		RoslinaResponse ros = roslinaService.findByNazwaLacinska("symphytum grandiflorum'goldsmith'");
 
 		Path peppinoPath = Paths.get(obrazSeedPath, "peppino.png");
 		MockMultipartFile obraz2 = new MockMultipartFile("tempFileName", "peppino.png", 
@@ -220,9 +330,11 @@ public class YukkaApplication {
 			))
 		.kolor("#6c6ef0")
 		.wyswietlanie(Wyswietlanie.TEKSTURA_KOLOR.toString())
-		.nazwaLacinska("symphytum grandiflorum'goldsmith'")
+		.roslinaId(ros.getRoslinaId())
 		.build();
 
+
+		ros = roslinaService.findByNazwaLacinska("taxus baccata'adpressa'");
 		DzialkaRoslinaRequest req2 = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2)
 		.x(12).y(11)
@@ -235,7 +347,7 @@ public class YukkaApplication {
 			))
 		.kolor("#f06ce7")
 		.wyswietlanie(Wyswietlanie.KOLOR.toString())
-		.nazwaLacinska("taxus baccata'adpressa'")
+		.roslinaId(ros.getRoslinaId())
 		.build();
 		
 		log.info("Dodawanie rosliny 1 do dzialek");
@@ -251,7 +363,15 @@ public class YukkaApplication {
 		String lolId = "12345678";
 		
 		// Wiem wiem, okropieństwo
-		uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usPiotr, lolId);
+		PageResponse<RoslinaResponse> roslinyUzytkownika = uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usPiotr);
+		if (roslinyUzytkownika.getSize() == 0) {
+			throw new RuntimeException("Nie udało się załadować roślin użytkownika.");
+
+		}
+		RoslinaResponse roslinaUzyt = roslinyUzytkownika.getContent().get(0);
+		
+
+
 		
         DzialkaRoslinaRequest req3 = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2).x(9).y(9)
@@ -263,7 +383,7 @@ public class YukkaApplication {
 			))
 		.kolor("#ebf06c")
 		.wyswietlanie(Wyswietlanie.TEKSTURA_KOLOR.toString())
-		.roslinaId(lolId)
+		.roslinaId(roslinaUzyt.getRoslinaId())
 		.build();
 
 		dzialkaService.saveRoslinaToDzialka(req3, null, null, usPiotr);
@@ -302,7 +422,7 @@ public class YukkaApplication {
 
 
 		// To samo ale dla anny
-
+		ros = roslinaService.findByNazwaLacinska("vaccinium corymbosum'alvar'");
 		DzialkaRoslinaRequest reqAna = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2)
 		.x(1).y(4)
@@ -315,7 +435,7 @@ public class YukkaApplication {
 			))
 		.kolor("#1ba626")
 		.wyswietlanie(Wyswietlanie.KOLOR.toString())
-		.nazwaLacinska("vaccinium corymbosum'alvar'")
+		.roslinaId(ros.getRoslinaId())
 		.build();
 		
 		log.info("Dodawanie rosliny dla anny do dzialek");
@@ -333,8 +453,10 @@ public class YukkaApplication {
 
 		log.info("Dodawanie komentarzy do rozmowy prywatnej");
 		for (int i = 0; i < 10; i++) {
-			komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Piotra " + i).targetId(usKatarzyna.getNazwa()).build(), usPiotr);
-			komentarzService.addKomentarzToWiadomoscPrywatna(KomentarzRequest.builder().opis("Wiadomość od Katarzyny " + i).targetId(usPiotr.getNazwa()).build(), usKatarzyna);
+			KomentarzRequest piotrWiad = KomentarzRequest.builder().opis("Wiadomość od Piotra " + i).targetId(usKatarzyna.getNazwa()).build();
+			KomentarzRequest katarzynaWiad = KomentarzRequest.builder().opis("Wiadomość od Katarzyny " + i).targetId(usPiotr.getNazwa()).build();
+			komentarzService.addKomentarzToWiadomoscPrywatna(piotrWiad, null, usPiotr);
+			komentarzService.addKomentarzToWiadomoscPrywatna(katarzynaWiad, null, usKatarzyna);
 		}
 
 		// Dodanie paru zaproszeń
@@ -342,73 +464,6 @@ public class YukkaApplication {
 		rozmowaPrywatnaService.inviteToRozmowaPrywatna(usMichal.getNazwa(), usKatarzyna);
 	}
 
-
-	private List<Uzytkownik> seedUzytkownicy() {
-		log.info("Seedowanie uzytkownikow...");
-
-		Uzytkownik usJan = Uzytkownik.builder()
-		.uzytId("jasiuId")
-        .nazwa("Jan Kowalski").email("jan@email.pl")
-        .haslo(passwordEncoder.encode("jan12345678"))
-		.labels(List.of("Admin"))
-		.aktywowany(true)
-        .build();
-
-		Uzytkownik usPrac = Uzytkownik.builder()
-		.uzytId("annaJakasId")
-		.labels(List.of("Pracownik")).nazwa("Anna Nowak")
-		.email("anna@email.pl")
-		.haslo(passwordEncoder.encode("anna12345678"))
-		.aktywowany(true)
-		.build();
-
-
-		Uzytkownik usPiotr = Uzytkownik.builder()
-		.uzytId("piotrekId")
-        .nazwa("Piotr Wiśniewski").email(piotrEmail)
-        .haslo(passwordEncoder.encode("piotr12345678"))
-		.aktywowany(true)
-        .build();
-
-
-		Uzytkownik usKatarzyna = Uzytkownik.builder()
-		.uzytId("jakasKatarzynaId")
-		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
-        .haslo(passwordEncoder.encode("katarzyna12345678"))
-		.aktywowany(true)
-        .build();
-
-
-		Uzytkownik usMichal = Uzytkownik.builder()
-		.uzytId("michalekId")
-        .nazwa("Michał Zieliński").email(michalEmail)
-        .haslo(passwordEncoder.encode("michal12345678"))
-		.aktywowany(true)
-        .build();
-
-		uzytkownikService.addPracownik(usJan);
-		uzytkownikService.addPracownik(usPrac);	
-		uzytkownikService.addUzytkownik(usPiotr);
-		uzytkownikService.addUzytkownik(usKatarzyna);
-		uzytkownikService.addUzytkownik(usMichal);
-
-		Path adachiPath = Paths.get(obrazSeedPath, "adachi.jpg");
-		MockMultipartFile obrazAvatar1 = new MockMultipartFile("tempFileName", "adachi.jpg", 
-		"image/png", fileUtils.readFileFromLocation(adachiPath));
-
-		uzytkownikService.updateUzytkownikAvatar(obrazAvatar1, usPiotr);
-		
-
-		this.usJan = uzytkownikRepository.findByEmail(usJan.getEmail()).get();
-		this.usPrac = uzytkownikRepository.findByEmail(usPrac.getEmail()).get();
-		this.usPiotr = uzytkownikRepository.findByEmail(piotrEmail).get();
-		this.usKatarzyna = uzytkownikRepository.findByEmail(katarzynaEmail).get();
-		this.usMichal = uzytkownikRepository.findByEmail(michalEmail).get();
-		
-		this.uzytkownicy = Arrays.asList(this.usJan, this.usPrac, this.usPiotr, this.usKatarzyna, this.usMichal);
-
-		return this.uzytkownicy;
-	}
 
 	private void addPostyWithKomentarze(List<Uzytkownik> uzytkownicy) {
 		log.info("Dodawanie postów testowych...");
@@ -424,13 +479,14 @@ public class YukkaApplication {
 			// Losowe dodawanie obrazka z postem
 			if (Math.random() < 0.5) {
 				Path cheezyPath = Paths.get(obrazSeedPath, "cheezy.jpg");
-				MockMultipartFile obrazPost = new MockMultipartFile("tempFileName", "cheezy.jpg", 
+				byte[] fileContent = fileUtils.readFileFromLocation(cheezyPath);
+				if (fileContent != null) {
+					MockMultipartFile obrazPost = new MockMultipartFile("tempFileName", "cheezy.jpg", 
 					"image/png", fileUtils.readFileFromLocation(cheezyPath));
-				try {
 					post = postService.save(postReq, obrazPost, uzytkownicy.get(rand));
-				} catch (FileUploadException e) {}
+				} 
 			} else {
-				post = postService.save(postReq, uzytkownicy.get(rand));
+				post = postService.save(postReq, null, uzytkownicy.get(rand));
 			}
 			
 			// Dodawanie ocen do postów
@@ -458,13 +514,17 @@ public class YukkaApplication {
 				Komentarz kom = null;
 				if (Math.random() < 0.5) {
 					Path kotPath = Paths.get(obrazSeedPath, "kot.png");
-					MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
-					"image/png", fileUtils.readFileFromLocation(kotPath));
-					try {
+
+					byte[] fileContent = fileUtils.readFileFromLocation(kotPath);
+					if (fileContent == null) {
+						kom = komentarzService.addKomentarzToPost(komReq, null, uzytkownicy.get(rand));
+					} else {
+						MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
+						"image/png", fileUtils.readFileFromLocation(kotPath));
 						kom = komentarzService.addKomentarzToPost(komReq, obrazKom, uzytkownicy.get(rand));
-					} catch (FileUploadException e) {}
+					}
 				} else {
-					kom = komentarzService.addKomentarzToPost(komReq, uzytkownicy.get(rand));
+					kom = komentarzService.addKomentarzToPost(komReq, null, uzytkownicy.get(rand));
 				}
 
 				// Dodawanie losowej ilości odpowiedzi do komentarza
@@ -493,13 +553,18 @@ public class YukkaApplication {
 			Komentarz nowaOdp = null;
 				if (Math.random() < 0.5) {
 					Path kotPath = Paths.get(obrazSeedPath, "kot.png");
-					MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
+
+					byte[] fileContent = fileUtils.readFileFromLocation(kotPath);
+					if (fileContent == null) {
+						nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, null, uzytkownicy.get(rand));
+					} else {
+						MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
 					"image/png", fileUtils.readFileFromLocation(kotPath));
-					try {
 						nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, obrazKom, uzytkownicy.get(rand));
-					} catch (FileUploadException e) {}
+					}
+					
 				} else {
-					nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, uzytkownicy.get(rand));
+					nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, null, uzytkownicy.get(rand));
 				}
 	
 			addOdpowiedziRekursywne(nowaOdp, uzytkownicy, random, depth + 1);

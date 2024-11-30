@@ -112,7 +112,8 @@ export class DzialkaPageComponent implements OnInit  {
 
   changeEditMode(mode: DzialkaModes): void {
     this.editMode = mode;
-    console.log('pozycje:', this.selectedRoslina?.pozycje);
+    console.log('pozycje:', this.selectedRoslina?.pozycje, 'x:', this.selectedRoslina?.x, 'y:', this.selectedRoslina?.y);
+
   }
 
   createBackup(): void {
@@ -310,8 +311,8 @@ export class DzialkaPageComponent implements OnInit  {
 
       const tile = TileUtils.findTile(this.tiles, pozycja.x, pozycja.y);
       if (tile) {
-        if (zasadzonaRoslina.roslina && zasadzonaRoslina.roslina.id) {
-          tile.roslinaId = zasadzonaRoslina.roslina.id;
+        if (zasadzonaRoslina.roslina && zasadzonaRoslina.roslina.roslinaId) {
+          tile.roslinaId = zasadzonaRoslina.roslina.roslinaId;
           if(zasadzonaRoslina.wyswietlanie !== WyswietlanieRosliny.TEKSTURA) {
             tile.backgroundColor = zasadzonaRoslina.kolor;
           }
@@ -341,7 +342,7 @@ export class DzialkaPageComponent implements OnInit  {
         return;
       }
 
-      if(tile.roslinaId  && tile.roslinaId !== this.selectedRoslina?.roslina?.id) {
+      if(tile.roslinaId  && tile.roslinaId !== this.selectedRoslina?.roslina?.roslinaId) {
         console.log('Ten kafelek nie jest przypisany do tej rośliny.');
         return;
       }
@@ -376,7 +377,7 @@ export class DzialkaPageComponent implements OnInit  {
         this.drawTileTexture(tile, this.canvas.nativeElement.getContext('2d')!);
       } else {
         this.selectedRoslina.pozycje?.push({ x: tile.x, y: tile.y });
-        tile.roslinaId = this.selectedRoslina.roslina?.id;
+        tile.roslinaId = this.selectedRoslina.roslina?.roslinaId;
         tile.backgroundColor = this.selectedRoslina.kolor;
         tile.image = this.selectedRoslina.tekstura || TileUtils.images.dirt;
       }
@@ -390,11 +391,13 @@ export class DzialkaPageComponent implements OnInit  {
     const oldTile = TileUtils.findTile(this.tiles, this.selectedRoslina.x!, this.selectedRoslina.y!);
     if(oldTile) {
       console.log('Czyści stary kafelek');
+      console.log("x:", oldTile.x, "y:", oldTile.y);
+      console.log(this.selectedRoslina)
       TileUtils.removeRoslina(oldTile);
 
     }
 
-    tile.roslinaId = this.selectedRoslina.roslina?.id;
+    tile.roslinaId = this.selectedRoslina.roslina?.roslinaId;
     tile.zasadzonaRoslina = this.selectedRoslina;
     tile.backgroundColor = this.selectedRoslina.kolor;
     tile.image = this.selectedRoslina.tekstura || TileUtils.images.dirt;
@@ -444,7 +447,9 @@ export class DzialkaPageComponent implements OnInit  {
   onRoslinaClick(roslina: ZasadzonaRoslinaResponse): void {
     if (this.mode === DzialkaModes.Select) {
       this.selectedRoslina = roslina;
-      if(roslina.x && roslina.y) {
+      console.log('Wybrano roślinę');
+
+      if (roslina.x !== undefined && roslina.y !== undefined) {
         this.moveRoslinaRequest.x = roslina.x;
         this.moveRoslinaRequest.y = roslina.y;
       }
