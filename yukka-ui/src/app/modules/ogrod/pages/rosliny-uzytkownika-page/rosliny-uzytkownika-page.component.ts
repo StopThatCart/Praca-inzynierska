@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from '../../../../components/pagination/pagination.component';
-import { SpinnerComponent } from '../../../../services/LoaderSpinner/spinner/spinner.component';
 import { RoslinaCardComponent } from '../../../roslina/components/roslina-card/roslina-card.component';
 import { WlasciwoscDropdownComponent } from '../../../roslina/components/wlasciwosc-dropdown/wlasciwosc-dropdown.component';
 import { WlasciwoscTagComponent } from '../../../roslina/components/wlasciwosc-tag/wlasciwosc-tag.component';
@@ -13,11 +12,12 @@ import { RoslinaService, UzytkownikRoslinaService } from '../../../../services/s
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
 import { WlasciwoscProcessService } from '../../../roslina/services/wlasciwosc-service/wlasciwosc.service';
+import { LoadingComponent } from "../../../../components/loading/loading.component";
 
 @Component({
   selector: 'app-rosliny-uzytkownika-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, SpinnerComponent, PaginationComponent, WysokoscInputComponent],
+  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, PaginationComponent, WysokoscInputComponent, LoadingComponent],
   templateUrl: './rosliny-uzytkownika-page.component.html',
   styleUrl: './rosliny-uzytkownika-page.component.css'
 })

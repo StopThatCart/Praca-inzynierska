@@ -21,7 +21,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, L
      // Dodatkowo, byłoby więcej problemów z dynamicznymi etykietami bo Neo4j na to nie pozwala, a APOC jest mocno nieczytelny
     @Query(value = """
         WITH $roslina.__properties__ AS rp
-        MATCH (roslina:UzytkownikRoslina)
+        MATCH (roslina:UzytkownikRoslina)-[:STWORZONA_PRZEZ]->(uzyt:Uzytkownik{nazwa: $uzytkownikNazwa})
             WHERE (rp.nazwa IS NULL OR roslina.nazwa CONTAINS rp.nazwa) 
             AND (rp.wysokoscMin IS NULL OR roslina.wysokoscMin >= rp.wysokoscMin)
             AND (rp.wysokoscMax IS NULL OR roslina.wysokoscMax <= rp.wysokoscMax)
@@ -121,7 +121,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, L
         """,
        countQuery = """
         WITH $roslina.__properties__ AS rp 
-        MATCH (roslina:UzytkownikRoslina)
+        MATCH (roslina:UzytkownikRoslina)-[:STWORZONA_PRZEZ]->(uzyt:Uzytkownik{nazwa: $uzytkownikNazwa})
             WHERE (rp.nazwa IS NULL OR roslina.nazwa CONTAINS rp.nazwa) 
             AND (rp.wysokoscMin IS NULL OR roslina.wysokoscMin >= rp.wysokoscMin)
             AND (rp.wysokoscMax IS NULL OR roslina.wysokoscMax <= rp.wysokoscMax)
@@ -219,6 +219,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, L
         RETURN count(DISTINCT roslina)
         """)
     Page<Roslina> findAllRoslinyOfUzytkownikWithParameters(
+        @Param("uzytkownikNazwa") String uzytkownikNazwa,
         @Param("roslina") Roslina roslina, 
         @Param("formy") Set<Wlasciwosc> formy,
         @Param("gleby") Set<Wlasciwosc> gleby,

@@ -9,11 +9,12 @@ import { KomentarzCardComponent } from "../../../post/components/komentarz-card/
 import { CommonModule } from '@angular/common';
 import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.component";
 import { SimpleKomentarzCardComponent } from "../../components/simple-komentarz-card/simple-komentarz-card.component";
+import { LoadingComponent } from "../../../../components/loading/loading.component";
 
 @Component({
   selector: 'app-profil-komentarze-page',
   standalone: true,
-  imports: [CommonModule, PaginationComponent, KomentarzCardComponent, EdycjaNavComponent, SimpleKomentarzCardComponent],
+  imports: [CommonModule, PaginationComponent, KomentarzCardComponent, EdycjaNavComponent, SimpleKomentarzCardComponent, LoadingComponent],
   templateUrl: './profil-komentarze-page.component.html',
   styleUrl: './profil-komentarze-page.component.css'
 })

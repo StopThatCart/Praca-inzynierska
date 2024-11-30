@@ -7,11 +7,12 @@ import { PowiadomienieService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaginationComponent } from "../../../../components/pagination/pagination.component";
 import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powiadomienia-sync.service';
+import { LoadingComponent } from "../../../../components/loading/loading.component";
 
 @Component({
   selector: 'app-powiadomienia-page',
   standalone: true,
-  imports: [CommonModule, EdycjaNavComponent, PowiadomienieCardComponent, PaginationComponent],
+  imports: [CommonModule, EdycjaNavComponent, PowiadomienieCardComponent, PaginationComponent, LoadingComponent],
   templateUrl: './powiadomienia-page.component.html',
   styleUrl: './powiadomienia-page.component.css'
 })

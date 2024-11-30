@@ -73,6 +73,7 @@ public class UzytkownikRoslinaService {
         //Page<Roslina> rosliny = uzytkownikRoslinaRepository.findRoslinyOfUzytkownik(nazwa, pageable);
         Roslina ros = roslinaMapper.toRoslina(request);
         Page<Roslina> rosliny = uzytkownikRoslinaRepository.findAllRoslinyOfUzytkownikWithParameters(
+            nazwa,
             ros, 
             ros.getFormy(), ros.getGleby(), ros.getGrupy(), ros.getKoloryLisci(),
             ros.getKoloryKwiatow(), ros.getKwiaty(), ros.getOdczyny(),

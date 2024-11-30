@@ -6,7 +6,6 @@ import { WlasciwoscResponse } from '../../../../services/models/wlasciwosc-respo
 import { RoslinaRequest, UzytkownikRoslinaRequest, WlasciwoscWithRelations } from '../../../../services/models';
 import { RoslinaService, UzytkownikRoslinaService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SpinnerComponent } from '../../../../services/LoaderSpinner/spinner/spinner.component';
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
 import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";

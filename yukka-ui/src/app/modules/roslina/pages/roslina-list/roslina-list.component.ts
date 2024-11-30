@@ -7,17 +7,17 @@ import { RoslinaCardComponent } from "../../components/roslina-card/roslina-card
 import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";
 import { WlasciwoscDropdownComponent } from "../../components/wlasciwosc-dropdown/wlasciwosc-dropdown.component";
 import { FormsModule } from '@angular/forms';
-import { SpinnerComponent } from "../../../../services/LoaderSpinner/spinner/spinner.component";
 import { Convert } from '../../../../services/converts/wlasciwosc-with-relations-convert';
 import { PaginationComponent } from "../../../../components/pagination/pagination.component";
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
 import { TokenService } from '../../../../services/token/token.service';
+import { LoadingComponent } from "../../../../components/loading/loading.component";
 
 @Component({
   selector: 'app-roslina-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, SpinnerComponent, PaginationComponent, WysokoscInputComponent],
+  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, PaginationComponent, WysokoscInputComponent, LoadingComponent],
   templateUrl: './roslina-list.component.html',
   styleUrl: './roslina-list.component.css'
 })
