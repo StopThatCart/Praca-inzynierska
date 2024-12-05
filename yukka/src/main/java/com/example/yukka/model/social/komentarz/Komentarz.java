@@ -84,8 +84,8 @@ public class Komentarz extends Oceniany {
                 "id=" + id +
                 ", komentarzId='" + komentarzId + '\'' +
                 ", opis='" + opis + '\'' +
-                ", polubienia='" + getOcenyLubi() + '\'' +
-                ", niepolubienia='" + getOcenyNieLubi() + '\'' +
+                ", polubienia='" + getOcenyLubiButGood() + '\'' +
+                ", niepolubienia='" + getOcenyNieLubiButGood() + '\'' +
                 ", edytowany=" + edytowany +
                 ", dataUtworzenia=" + dataUtworzenia +
                 ", postId=" + (post != null ? post.getPostId() : "null") +

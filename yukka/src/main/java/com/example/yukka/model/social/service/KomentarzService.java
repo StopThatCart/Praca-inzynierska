@@ -205,8 +205,6 @@ public class KomentarzService {
 
     public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Uzytkownik connectedUser) {
         Uzytkownik nadawca = connectedUser;
-
-       // Post post = postRepository.findPostByKomentarzOdpowiedzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta dla odpowiedzi o podanym ID: " + request.getTargetId()));
         Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByKomentarzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
 
         if(komentarzDoOdpowiedzi.getPost() == null && komentarzDoOdpowiedzi.getWPoscie() == null) {

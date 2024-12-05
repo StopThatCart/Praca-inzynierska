@@ -19,11 +19,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Oceniany {
-    @Property(name = "ocenyLubi")
-    private int ocenyLubi = 0;
-
-    @Property(name = "ocenyNieLubi")
-    private int ocenyNieLubi = 0;
 
     @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
     private List<OcenilReverse> ocenil;

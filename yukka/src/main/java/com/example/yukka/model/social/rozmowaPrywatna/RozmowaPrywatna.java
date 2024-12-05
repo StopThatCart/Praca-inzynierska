@@ -38,9 +38,6 @@ public class RozmowaPrywatna {
     @Property(name = "nadawca")
     private String nadawca;
 
-    @Property(name = "liczbaWiadomosci")
-    private int liczbaWiadomosci;
-
     @CreatedDate
     @Property(name = "dataUtworzenia")
     private LocalDateTime dataUtworzenia;
@@ -65,7 +62,7 @@ public class RozmowaPrywatna {
                 "id=" + id +
                 ", jestAktywna=" + aktywna +
                 ", nadawca=" + nadawca +
-                ", liczbaWiadomosci=" + liczbaWiadomosci +
+                ", liczbaWiadomosci=" + wiadomosci.size() +
                 ", dataUtworzenia=" + dataUtworzenia +
                 ", ostatnioAktualizowana=" + ostatnioAktualizowana +
                 ", uzytkownicy=" + nazwyUzytkownikow +

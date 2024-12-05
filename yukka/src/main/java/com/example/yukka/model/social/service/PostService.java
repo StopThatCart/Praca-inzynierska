@@ -53,12 +53,28 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostResponse findByPostId(String postId) {
-        Post post = postRepository.findPostByPostId(postId).orElse(null);
-        if(post == null) {
-            throw new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId);
-        }
+        Optional<Post> postOpt = postRepository.findPostByPostId(postId);
+        Post post = postOpt.orElseThrow(
+            () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId)
+        );
 
-        return postRepository.findPostByPostId(postId)
+        // System.out.println("\n" + post.getAutor().getNazwa());
+        // System.out.println("Rozmiar komentarzy: " + post.getKomentarze().size());
+        // System.out.println("Rozmiar komentarzyWPoscie: " + post.getKomentarzeWPoscie().size());
+
+        // for (Komentarz kom : post.getKomentarze()) {
+        //     System.out.println("\nKomentarz: " + kom.getKomentarzId());
+        //     System.out.println("Ilość oceniających: " + kom.getOcenil().size());
+
+        //     System.out.println("Rozmiar odpowiedzi: " + kom.getOdpowiedzi().size());
+
+        //     for (Komentarz odp : kom.getOdpowiedzi()) {
+        //         System.out.println("Odpowiedź: " + odp.getKomentarzId());
+        //         System.out.println("Ilość oceniających: " + odp.getOcenil().size());
+        //     }
+        // }
+
+        return postOpt
                 .map(postMapper::toPostResponse)
                 .orElseThrow();
     }

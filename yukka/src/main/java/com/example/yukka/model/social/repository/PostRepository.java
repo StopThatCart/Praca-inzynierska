@@ -45,28 +45,24 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         OPTIONAL MATCH path2 = (post)<-[:OCENIL]-(oceniajacy:Uzytkownik) WHERE oceniajacy <> autor
         OPTIONAL MATCH path3 = (post)<-[:JEST_W_POSCIE]-(:Komentarz)
 
+        OPTIONAL MATCH oceniajacyKomentarze = (kom)<-[:OCENIL]-(oceniajacyKom:Uzytkownik)
+        OPTIONAL MATCH oceniajacyOdpowiedzi = (odpowiedz)<-[:OCENIL]-(oceniajacyOdp:Uzytkownik)
+
         RETURN post, r1, autor, collect(nodes(path)), collect(relationships(path)),
                 collect(nodes(path2)), collect(relationships(path2)),
-                collect(nodes(path3)), collect(relationships(path3))
+                collect(nodes(path3)), collect(relationships(path3)),
+                collect(nodes(oceniajacyKomentarze)),  collect(relationships(oceniajacyKomentarze)),
+                collect(nodes(oceniajacyOdpowiedzi)),  collect(relationships(oceniajacyOdpowiedzi))
         """)
     Optional<Post> findPostByPostId(@Param("postId") String postId);
 
 
     @Query("""
-        MATCH (kom2:Komentarz {komentarzId: $komentarzId})
-        WITH kom2
-        OPTIONAL MATCH (kom2)-[:ODPOWIEDZIAL*0..]->(kom1:Komentarz)<-[:MA_KOMENTARZ]-(post:Post)
+        MATCH (post:Post)<-[r1:MA_POST]-(uzyt:Uzytkownik{email: $email})
         RETURN post
+        ORDER BY post.dataUtworzenia DESC
+        LIMIT 1
         """)
-    Optional<Post> findPostByKomentarzOdpowiedzId(@Param("komentarzId") String komentarzId);
-
-
-        @Query("""
-            MATCH (post:Post)<-[r1:MA_POST]-(uzyt:Uzytkownik{email: $email})
-            RETURN post
-            ORDER BY post.dataUtworzenia DESC
-            LIMIT 1
-            """)
     Optional<Post> findNewestPostOfUzytkownik(@Param("email") String email);
 
 
@@ -92,8 +88,12 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
     @Query(value = """
         MATCH path = (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{nazwa: $nazwa})
         OPTIONAL MATCH path2 = (post)<-[:OCENIL]-(oceniajacy:Uzytkownik)
+        OPTIONAL MATCH path3 = (post)<-[:JEST_W_POSCIE]-(:Komentarz)
+
+        
         RETURN post, collect(nodes(path)), collect(relationships(path)),
-                collect(nodes(path2)), collect(relationships(path2)) 
+                collect(nodes(path2)), collect(relationships(path2)),
+                collect(nodes(path3)), collect(relationships(path3)) 
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
             """,
             countQuery = """
@@ -101,13 +101,6 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         RETURN count(post)
         """)
     Page<Post> findAllPostyByUzytkownik(@Param("nazwa") String nazwa, Pageable pageable);
-
-
-    // @Query("""
-    //     MATCH path = (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{nazwa: $nazwa})
-    //     RETURN count(post)
-    //         """)
-    // Integer findAllPostyCountOfUzytkownik(@Param("nazwa") String nazwa);
 
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})
@@ -145,8 +138,6 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         """)
     void updatePostObraz(@Param("postId") String postId, @Param("obraz") String obraz);
 
-    // Po wykonaiu tej funkcji trzeba robić update ocen posta oraz komentarzy
-    // Ewentualnie porzucić te atrybuty i tylko zwracać liczbę ocen/komentarzy w countach
     @Query("""
         MATCH (post:Post {postId: $postId})
         OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(komentarz:Komentarz)
@@ -166,19 +157,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         """)
     void deletePostButBetter(@Param("postId") String postId);
 
-    // Nie używaj
-    /* 
-    @Query("""
-        MATCH (post:Post{postId: $postId})
-        OPTIONAL MATCH (post)<-[:MA_POST]-(uzyt:Uzytkownik)
-        OPTIONAL MATCH (post)-[:MA_KOMENTARZ]->()<-[:SKOMENTOWAL]-(uzyt2:Uzytkownik)
-        OPTIONAL MATCH (post)<-[:OCENIL]-(uzyt3:Uzytkownik)
-        WITH post, COLLECT(DISTINCT uzyt) + COLLECT(DISTINCT uzyt2) + COLLECT(DISTINCT uzyt3) AS uzytkownicy
-        RETURN uzytkownicy
-        """)
-    List<Uzytkownik> getConnectedUzytkownicyFromPost(@Param("postId") String postId);
 
-*/
     @Query("""
         MATCH (u:Post) 
         DETACH DELETE u 

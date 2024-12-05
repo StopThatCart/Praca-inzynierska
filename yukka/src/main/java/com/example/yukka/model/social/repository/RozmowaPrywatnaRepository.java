@@ -93,7 +93,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
                 (priv:RozmowaPrywatna)
                 <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawcaId})
         WHERE  priv.aktywna = false
-        SET    priv.aktywna = true, priv.liczbaWiadomosci = 0
+        SET    priv.aktywna = true
         WITH   priv
         REMOVE priv.nadawca
         RETURN priv
