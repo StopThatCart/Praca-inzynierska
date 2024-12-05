@@ -71,38 +71,20 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> 
-                    auth.requestMatchers("/rosliny/szukaj",
-                                        "/rosliny/wlasciwosci",
-                                        "/rosliny/{nazwa-lacinska}"
+                    auth.requestMatchers("/rosliny",
+                    "/rosliny/szukaj"
+                                        
                     ).permitAll()
-                    .requestMatchers( 
-                                    //"/**",
-                                  "/api/auth/test",
-                                  "/komentarze/oceny",
-                                 // "/posty/oceny",
-                                  "/rozmowy/**",
-                                  "/dzialki/**"
-                    ).authenticated()
+                    .requestMatchers(HttpMethod.GET, 
+                    "/posty/**",
+                    "/rosliny/**",
+                    "/uzytkownicy/**"
+                    ).permitAll()
 
 
-                    .requestMatchers("/uzytkownicy/pracownik/ban/{email}")
-                        .hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
-                    .requestMatchers("/uzytkownicy/blok/{nazwa}/{blok}").authenticated()
-                    .requestMatchers("/uzytkownicy/blokowani").authenticated()
-                    .requestMatchers(HttpMethod.PATCH,"/uzytkownicy/avatar").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/uzytkownicy/{email}",
-                                                                    "/uzytkownicy"
-                    ).authenticated()
+                    .requestMatchers("/pracownicy/**").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
 
-
-
-                    .requestMatchers(HttpMethod.POST, "/posty").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/posty/{post-id}").authenticated()
-                   // .requestMatchers("/posty/uzytkownik/**").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/komentarze/{komentarz-id}").authenticated()
-                    .requestMatchers(HttpMethod.PATCH, "/komentarze/{komentarz-id}").authenticated()
-
-                    .requestMatchers(HttpMethod.DELETE, "/rosliny/{nazwa-lacinska}").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
+                    .requestMatchers(HttpMethod.DELETE, "/rosliny/{roslina-id}").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers(HttpMethod.POST, "/rosliny").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers(HttpMethod.PUT, "/rosliny/{nazwa-lacinska}/**").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
 
@@ -119,18 +101,19 @@ public class SecurityConfig {
                                     "/swagger-ui.html").permitAll()
                     .requestMatchers("/admin/**").hasAuthority(ROLE.Admin.toString())
                     .requestMatchers("/pracownik/**").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers( "/favicon.ico").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                      // .requestMatchers("/rest/neo4j/rozmowy").hasAuthority(ROLE.Admin.toString())
 
 
-                      .anyRequest().permitAll())
+                      .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
-              //  .addFilterBefore(banCheckFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
+              //  .addFilterBefore(banCheckFilter, UsernamePasswordAuthenticationFilter.class)
+                
                 .build();
     }
 

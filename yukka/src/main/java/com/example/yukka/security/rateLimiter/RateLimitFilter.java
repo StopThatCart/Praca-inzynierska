@@ -21,31 +21,35 @@ public class RateLimitFilter extends OncePerRequestFilter {
     @Autowired
     private Bucket bucket;
 
+
+
     @Override
     protected void doFilterInternal(@SuppressWarnings("null") HttpServletRequest request, @SuppressWarnings("null") HttpServletResponse response, @SuppressWarnings("null") FilterChain filterChain)
             throws ServletException, IOException {
-        if (request.getServletPath().contains("/rosliny/szukaj")) {
-            if (bucket.tryConsume(1)) {
-                filterChain.doFilter(request, response);
-                return;
-            } else {
-                ExceptionResponse exceptionResponse = ExceptionResponse.builder()
-                            .businessErrorCode(HttpStatus.TOO_MANY_REQUESTS.value())
-                            .businessErrorDescription("Wykonano zbyt dużo operacji. Poczekaj.")
-                            .build();
-                    
-                ObjectMapper objectMapper = new ObjectMapper();
-                String jsonResponse = objectMapper.writeValueAsString(exceptionResponse);
+        // if (!request.getServletPath().contains("/rosliny/szukaj")) {
+        //     filterChain.doFilter(request, response);
+        //     return;
+        // }
 
-                response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-                response.setContentType("application/json");
-                response.getWriter().write(jsonResponse);
 
-                return;
-            }
+        if (bucket.tryConsume(1)) {
+            filterChain.doFilter(request, response);
+            return;
+        } else {
+            ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+                        .businessErrorCode(HttpStatus.TOO_MANY_REQUESTS.value())
+                        .businessErrorDescription("Wykonano zbyt dużo operacji. Poczekaj.")
+                        .build();
+                
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonResponse = objectMapper.writeValueAsString(exceptionResponse);
+
+            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse);
+
+            return;
         }
-        filterChain.doFilter(request, response);
-        return;
 
     }
 }

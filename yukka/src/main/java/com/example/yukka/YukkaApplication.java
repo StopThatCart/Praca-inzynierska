@@ -151,8 +151,8 @@ public class YukkaApplication {
     public CommandLineRunner seedDatabase() {
         return args -> {
 			//roslinaImporterService.seedRosliny();
-			 unseed();
-			 seed();
+			// unseed();
+			// seed();
 		//roslinaSearchTest();
         };
     }
