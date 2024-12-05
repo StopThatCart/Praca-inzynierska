@@ -1,6 +1,8 @@
 <div class="powiadomienia">
-  <div ngbDropdown class="d-inline-block">
-    <button  ngbDropdownToggle type="button"
+  <div ngbDropdown class="d-inline-block" #myDrop="ngbDropdown">
+    <button
+    (click)="$event.stopPropagation(); myDrop.open()"
+    type="button"
     class="btn nav-item position-relative me-3" id="dropdownBasic1"
     (click)="toggleDropdown()">
       <i class="fa-solid fa-bell"></i>

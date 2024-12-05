@@ -18,12 +18,12 @@ import com.example.yukka.model.social.komentarz.KomentarzResponse;
 import com.example.yukka.model.social.komentarz.KomentarzSimpleResponse;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostResponse;
-import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
+import com.example.yukka.model.uzytkownik.requests.UstawieniaRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -59,6 +59,10 @@ public class CommonMapperService {
             .dataUtworzenia(uzytkownik.getDataUtworzenia())
             .ban(uzytkownik.isBan())
             .banDo(uzytkownik.getBanDo())
+            .imie(uzytkownik.getImie())
+            .miasto(uzytkownik.getMiasto())
+            .miejsceZamieszkania(uzytkownik.getMiejsceZamieszkania())
+            .opis(uzytkownik.getOpis())
             .ustawienia(uzytkownik.getUstawienia())
             .blokowaniUzytkownicy(uzytkownik.getBlokowaniUzytkownicy().stream()
                 .map(this::toUzytkownikSimpleResponse)
@@ -139,7 +143,8 @@ public class CommonMapperService {
             .build();
     }
 
-    public PageResponse<RozmowaPrywatnaResponse> rozmowaPrywatnaPagetoPageRozmowaPrywatnaResponse(Page<RozmowaPrywatna> rozmowyPrywatne) {
+    public PageResponse<RozmowaPrywatnaResponse> rozmowaPrywatnaPagetoPageRozmowaPrywatnaResponse(
+        Page<RozmowaPrywatna> rozmowyPrywatne) {
             List<RozmowaPrywatnaResponse> rozmowyPrywatneResponse = rozmowyPrywatne.getContent().stream()
             .map(this::toRozmowaPrywatnaResponse)
             .collect(Collectors.toList());

@@ -16,6 +16,7 @@ import { ProfilPostyPageComponent } from './pages/profil-posty-page/profil-posty
 import { ProfilKomentarzePageComponent } from './pages/profil-komentarze-page/profil-komentarze-page.component';
 import { EdycjaEmailPageComponent } from './pages/edycja-email-page/edycja-email-page.component';
 import { profilGuard } from '../../services/guard/profil-guard/profil.guard';
+import { EdycjaUsunKontoPageComponent } from './pages/edycja-usun-konto-page/edycja-usun-konto-page.component';
 
 const routes: Routes = [
   {
@@ -68,6 +69,11 @@ const routes: Routes = [
                 component: EdycjaProfilPageComponent,
               },
               {
+                path: 'profil',
+                component: EdycjaProfilPageComponent,
+                data: { breadcrumb: `Edycja profilu` }
+              },
+              {
                 path: 'avatar',
                 component: EdycjaAvatarPageComponent,
                 data: { breadcrumb: `Edycja avataru` }
@@ -76,6 +82,11 @@ const routes: Routes = [
                 path: 'email',
                 component: EdycjaEmailPageComponent,
                 data: { breadcrumb: `Zmiana adresu email` }
+              },
+              {
+                path: 'usun-konto',
+                component: EdycjaUsunKontoPageComponent,
+                data: { breadcrumb: `Usuwanie konta` }
               }
             ]
           },

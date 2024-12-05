@@ -42,9 +42,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(BAD_REQUEST)
                 .body(
-                        ExceptionResponse.builder()
-                                .businessErrorDescription(ex.getMessage())
-                                .build()
+                        ex.getMessage()
                 );
     }
 

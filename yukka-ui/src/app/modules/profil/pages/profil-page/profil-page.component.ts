@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Uzytkownik, UzytkownikResponse } from '../../../../services/models';
+import { StatystykiDto, Uzytkownik, UzytkownikResponse } from '../../../../services/models';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PostService, UzytkownikService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
@@ -8,11 +8,13 @@ import { RozmowaPrywatnaService } from '../../../../services/services/rozmowa-pr
 import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zgloszenie-button.component";
 import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
 import { BanButtonComponent } from "../../components/ban-button/ban-button.component";
+import { getStatystykiOfUzytkownik } from '../../../../services/fn/uzytkownik/get-statystyki-of-uzytkownik';
+import { UsunKontoButtonComponent } from "../../components/usun-konto-button/usun-konto-button.component";
 
 @Component({
   selector: 'app-profil-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, ZgloszenieButtonComponent, BanButtonComponent],
+  imports: [CommonModule, RouterModule, ZgloszenieButtonComponent, BanButtonComponent, UsunKontoButtonComponent],
   templateUrl: './profil-page.component.html',
   styleUrl: './profil-page.component.css'
 })
@@ -20,13 +22,14 @@ export class ProfilPageComponent implements OnInit {
   uzyt: UzytkownikResponse = {};
   nazwa: string | undefined;
   private _avatar: string | undefined;
+  statystyki: StatystykiDto = {};
+  oceny: number = 0;
 
-  errorMessage: string | null = null;
+  errorMsg: string | null = null;
 
   isCurrentUserBoi: boolean = false;
 
-  postyCount: number = 0;
-  oceny: number = 0;
+
 
   zaproszony: boolean | undefined;
   isZaproszonyChecked: boolean = false;
@@ -49,21 +52,21 @@ export class ProfilPageComponent implements OnInit {
       if (this.nazwa) {
         this.getUzytkownikByNazwa(this.nazwa);
         this.route.snapshot.data['nazwa'] = this.nazwa;
-        this.postyCount = this.getPostyCount();
+        this.getStatystykiOfUzytkownik(this.nazwa);
         this.oceny = this.getOverallOceny();
       }
     });
-    this.isCurrentUserBoi =   this.isCurrentUser();
+    this.isCurrentUserBoi = this.isCurrentUser();
   }
 
   getUzytkownikByNazwa(nazwa: string): void {
     this.uzytService.findByNazwa({ nazwa: nazwa }).subscribe({
       next: (uzyt) => {
         this.uzyt = uzyt;
-        this.errorMessage = null;
+        this.errorMsg = null;
       },
       error: (err) => {
-        this.errorMessage = 'Nie znaleziono użytkownika o podanej nazwie.';
+        this.errorMsg = 'Nie znaleziono użytkownika o podanej nazwie.';
       }
     });
   }
@@ -76,21 +79,19 @@ export class ProfilPageComponent implements OnInit {
     return this._avatar;
   }
 
-  getPostyCount(): number {
-    if(this.nazwa) {
-      this.postService.findAllPostyCountOfUzytkownik({ nazwa: this.nazwa }).subscribe({
-        next: (count) => {
-          console.log('Posty count: ', count);
-          this.postyCount = count;
-          return this.postyCount;
-        },
-        error: (err) => {
-          console.log('Error: ', err);
-          return 0;
-        }
-      });
-    }
-    return 0;
+  getStatystykiOfUzytkownik(nazwa: string): void {
+    if(!this.tokenService.isTokenValid()) return;
+
+    console.log('Pobieranie statystyk: ', nazwa);
+    this.uzytService.getStatystykiOfUzytkownik({ nazwa: nazwa }).subscribe({
+      next: (statystyki) => {
+        this.statystyki = statystyki;
+        this.errorMsg = null;
+      },
+      error: (err) => {
+        console.log('Error: ', err);
+      }
+    });
   }
 
   getOverallOceny(): number {
@@ -101,6 +102,10 @@ export class ProfilPageComponent implements OnInit {
       this.oceny = (this.uzyt.komentarzeOcenyPozytywne + this.uzyt.postyOcenyPozytywne);
     }
     return this.oceny;
+  }
+
+  isTokenAvailable(): boolean {
+    return this.tokenService.isTokenValid();
   }
 
   isCurrentUser(): boolean {
@@ -186,16 +191,18 @@ export class ProfilPageComponent implements OnInit {
     }
   }
 
+  goToEdycjaProfil() {
+    this.router.navigate(['edycja', 'profil'], { relativeTo: this.route });
+  }
+
   goToRozmowa() {
     this.router.navigate(['rozmowy', this.uzyt.nazwa], { relativeTo: this.route });
-    //this.router.navigate(['profil/rozmowy', this.uzyt.nazwa]);
   }
 
 
 
   goToRozmowy() {
     this.router.navigate(['rozmowy'], { relativeTo: this.route });
-    //this.router.navigate(['profil/rozmowy']);
   }
 
   goToOgrod() {

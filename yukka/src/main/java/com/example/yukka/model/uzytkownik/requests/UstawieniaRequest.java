@@ -1,4 +1,4 @@
-package com.example.yukka.model.social.request;
+package com.example.yukka.model.uzytkownik.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

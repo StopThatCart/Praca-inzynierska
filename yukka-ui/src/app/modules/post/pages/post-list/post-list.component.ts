@@ -9,11 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { AddPostCardComponent } from "../../components/add-post-card/add-post-card.component";
 import { LoadingComponent } from "../../../../components/loading/loading.component";
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, PostCardComponent, InfiniteScrollModule, AddPostCardComponent, LoadingComponent],
+  imports: [CommonModule, FormsModule, PostCardComponent, InfiniteScrollModule, AddPostCardComponent, LoadingComponent, NgbTooltipModule],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })

@@ -4,6 +4,7 @@ import static java.io.File.separator;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yukka.auth.email.EmailService;
 import com.example.yukka.auth.email.EmailTemplateName;
 import com.example.yukka.auth.requests.EmailRequest;
+import com.example.yukka.auth.requests.UsunKontoRequest;
 import com.example.yukka.common.FileResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
@@ -30,10 +32,12 @@ import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
 import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.social.CommonMapperService;
-import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
+import com.example.yukka.model.uzytkownik.requests.ProfilRequest;
+import com.example.yukka.model.uzytkownik.requests.StatystykiDTO;
+import com.example.yukka.model.uzytkownik.requests.UstawieniaRequest;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -123,6 +127,34 @@ public class UzytkownikService implements  UserDetailsService {
         Ustawienia ust = commonMapperService.toUstawienia(ustawienia);
         Uzytkownik uzytkownik = uzytkownikRepository.updateUstawienia(ust, uzyt.getEmail());
 
+        return commonMapperService.toUzytkownikResponse(uzytkownik);
+    }
+
+    public StatystykiDTO getStatystykiOfUzytkownik(String nazwa, Authentication currentUser) {
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        log.info("Pobieranie statystyk użytkownika: " + nazwa);
+
+        Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
+
+        if(!targetUzyt.getUstawienia().isStatystykiProfilu() && !uzyt.hasAuthenticationRights(targetUzyt, currentUser)) {
+            return null;
+        }
+        StatystykiDTO statystyki = StatystykiDTO.builder()
+                .posty(uzytkownikRepository.getPostyCountOfUzytkownik(nazwa))
+                .komentarze(uzytkownikRepository.getKomentarzeCountOfUzytkownik(nazwa))
+                .rosliny(uzytkownikRepository.getRoslinyCountOfUzytkownik(nazwa))
+                .build();
+                
+        return statystyki;
+    }
+
+    public UzytkownikResponse updateProfil(ProfilRequest request, Authentication currentUser) {
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        log.info("Zmiana prfilu użytkownika: " + uzyt.getNazwa());
+        
+        Uzytkownik uzytkownik = uzytkownikRepository.updateProfil(uzyt.getEmail(), request.getImie(), request.getMiasto(), 
+        request.getMiejsceZamieszkania(), request.getOpis());
         return commonMapperService.toUzytkownikResponse(uzytkownik);
     }
 
@@ -223,43 +255,42 @@ public class UzytkownikService implements  UserDetailsService {
         uzytkownikRepository.addUzytkownik(uzytkownik, labels, ust);
     }
 
-    public void remove(String email, Authentication currentUser) {
+
+    public void removeSelf(UsunKontoRequest request, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
-        Uzytkownik uzytOpt = uzytkownikRepository.findByEmail(email)
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + email));
-        
-        if(uzytOpt.getEmail().equals(uzyt.getEmail())) {
-            throw new IllegalArgumentException("Nie można usuwać samego siebie, przynajmniej na razie.");
-        }
-
-        if(uzytOpt.isAdmin() || uzytOpt.isPracownik()) {
-            throw new IllegalArgumentException("Nie można usuwać samego admina lub pracownika, przynajmniej na razie.");
-        }
-
-        Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzytOpt.getUzytId());
-        System.out.println("Usuwanie folderu: " + path);
-        uzytkownikRepository.removeUzytkownik(uzytOpt.getEmail());
-        fileUtils.deleteDirectory(path);
-    }
-
-    public void removeSelf(Authentication currentUser) {
-        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        log.info("Użytkownika o emailu: " + uzyt.getEmail() + " usuwa się sam");
         
         if(uzyt.isAdmin() || uzyt.isPracownik()) {
             throw new IllegalArgumentException("Nie można usuwać konta admina lub pracownika");
         }
 
+        if(!passwordEncoder.matches(request.getHaslo(), uzyt.getHaslo())) {
+            throw new IllegalArgumentException("Podane hasło jest nieprawidłowe");
+        }
+
+
+
         // Wylogowanie
         SecurityContextHolder.clearContext();
 
+        //uzytkownikRepository.removeUzytkownik(uzyt.getEmail());
+        removeUzytkownikQueries(uzyt.getEmail());
+
         Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUzytId());
         System.out.println("Usuwanie folderu: " + path);
-        uzytkownikRepository.removeUzytkownik(uzyt.getEmail());
         fileUtils.deleteDirectory(path);
     }
 
 
     // Pomocnicze
+
+
+    private void removeUzytkownikQueries(String email) {
+        uzytkownikRepository.removePostyOfUzytkownik(email);
+        uzytkownikRepository.removeKomentarzeOfUzytkownik(email);
+        uzytkownikRepository.removeRoslinyOfUzytkownik(email);
+        uzytkownikRepository.removeUzytkownik(email);
+    }
     
     public Uzytkownik sprawdzBlokowanie(String nazwaUzytkownika, Uzytkownik connectedUser) {
         Uzytkownik odbiorca = uzytkownikRepository.getBlokowaniAndBlokujacy(nazwaUzytkownika)

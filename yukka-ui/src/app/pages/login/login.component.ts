@@ -8,6 +8,7 @@ import { TokenService } from '../../services/token/token.service';
 import { ErrorHandlingService } from '../../services/error-handler/error-handling.service';
 import { ErrorMsgComponent } from "../../components/error-msg/error-msg.component";
 import { LoadingComponent } from "../../components/loading/loading.component";
+import { NavbarComponent } from '../../components/navbar/navbar.component';
 
 
 @Component({
@@ -49,6 +50,7 @@ export class LoginComponent {
           console.log(res);
           this.tokenService.token = res.token as string;
           this.router.navigate(['']);
+
         },
         error: (err) => {
           console.log(err);

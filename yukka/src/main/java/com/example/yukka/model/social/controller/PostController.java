@@ -62,11 +62,11 @@ public class PostController {
         return ResponseEntity.ok(postService.findAllPostyByUzytkownik(page, size, nazwa, connectedUser));
     }
 
-    @GetMapping(value = "/uzytkownik/{nazwa}/count", produces="application/json")
-    public ResponseEntity<Integer> findAllPostyCountOfUzytkownik(
-            @PathVariable("nazwa") String nazwa) {
-        return ResponseEntity.ok(postService.findAllPostyCountOfUzytkownik(nazwa));
-    }
+    // @GetMapping(value = "/uzytkownik/{nazwa}/count", produces="application/json")
+    // public ResponseEntity<Integer> findAllPostyCountOfUzytkownik(
+    //         @PathVariable("nazwa") String nazwa) {
+    //     return ResponseEntity.ok(postService.findAllPostyCountOfUzytkownik(nazwa));
+    // }
 
     @PostMapping(consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<Post> addPost(@Valid @RequestPart("request") PostRequest request, 

@@ -20,18 +20,21 @@ import { getAvatar } from '../fn/uzytkownik/get-avatar';
 import { GetAvatar$Params } from '../fn/uzytkownik/get-avatar';
 import { getBlokowaniAndBlokujacy } from '../fn/uzytkownik/get-blokowani-and-blokujacy';
 import { GetBlokowaniAndBlokujacy$Params } from '../fn/uzytkownik/get-blokowani-and-blokujacy';
+import { getStatystykiOfUzytkownik } from '../fn/uzytkownik/get-statystyki-of-uzytkownik';
+import { GetStatystykiOfUzytkownik$Params } from '../fn/uzytkownik/get-statystyki-of-uzytkownik';
 import { getUstawienia } from '../fn/uzytkownik/get-ustawienia';
 import { GetUstawienia$Params } from '../fn/uzytkownik/get-ustawienia';
-import { remove } from '../fn/uzytkownik/remove';
-import { Remove$Params } from '../fn/uzytkownik/remove';
 import { removeSelf } from '../fn/uzytkownik/remove-self';
 import { RemoveSelf$Params } from '../fn/uzytkownik/remove-self';
 import { sendZmianaEmail } from '../fn/uzytkownik/send-zmiana-email';
 import { SendZmianaEmail$Params } from '../fn/uzytkownik/send-zmiana-email';
 import { setBlokUzytkownik } from '../fn/uzytkownik/set-blok-uzytkownik';
 import { SetBlokUzytkownik$Params } from '../fn/uzytkownik/set-blok-uzytkownik';
+import { StatystykiDto } from '../models/statystyki-dto';
 import { updateAvatar } from '../fn/uzytkownik/update-avatar';
 import { UpdateAvatar$Params } from '../fn/uzytkownik/update-avatar';
+import { updateProfil } from '../fn/uzytkownik/update-profil';
+import { UpdateProfil$Params } from '../fn/uzytkownik/update-profil';
 import { updateUstawienia } from '../fn/uzytkownik/update-ustawienia';
 import { UpdateUstawienia$Params } from '../fn/uzytkownik/update-ustawienia';
 import { Uzytkownik } from '../models/uzytkownik';
@@ -118,6 +121,31 @@ export class UzytkownikService extends BaseService {
    */
   updateUstawienia(params?: UpdateUstawienia$Params, context?: HttpContext): Observable<UzytkownikResponse> {
     return this.updateUstawienia$Response(params, context).pipe(
+      map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `updateProfil()` */
+  static readonly UpdateProfilPath = '/uzytkownicy/profil';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateProfil()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  updateProfil$Response(params?: UpdateProfil$Params, context?: HttpContext): Observable<StrictHttpResponse<UzytkownikResponse>> {
+    return updateProfil(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateProfil$Response()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  updateProfil(params?: UpdateProfil$Params, context?: HttpContext): Observable<UzytkownikResponse> {
+    return this.updateProfil$Response(params, context).pipe(
       map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
     );
   }
@@ -229,9 +257,9 @@ export class UzytkownikService extends BaseService {
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `removeSelf()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  removeSelf$Response(params?: RemoveSelf$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  removeSelf$Response(params: RemoveSelf$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
     return removeSelf(this.http, this.rootUrl, params, context);
   }
 
@@ -239,11 +267,36 @@ export class UzytkownikService extends BaseService {
    * This method provides access only to the response body.
    * To access the full response (for headers, for example), `removeSelf$Response()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  removeSelf(params?: RemoveSelf$Params, context?: HttpContext): Observable<void> {
+  removeSelf(params: RemoveSelf$Params, context?: HttpContext): Observable<void> {
     return this.removeSelf$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `getStatystykiOfUzytkownik()` */
+  static readonly GetStatystykiOfUzytkownikPath = '/uzytkownicy/profil/{nazwa}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getStatystykiOfUzytkownik()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getStatystykiOfUzytkownik$Response(params: GetStatystykiOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<StatystykiDto>> {
+    return getStatystykiOfUzytkownik(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getStatystykiOfUzytkownik$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getStatystykiOfUzytkownik(params: GetStatystykiOfUzytkownik$Params, context?: HttpContext): Observable<StatystykiDto> {
+    return this.getStatystykiOfUzytkownik$Response(params, context).pipe(
+      map((r: StrictHttpResponse<StatystykiDto>): StatystykiDto => r.body)
     );
   }
 
@@ -319,31 +372,6 @@ export class UzytkownikService extends BaseService {
   getBlokowaniAndBlokujacy(params?: GetBlokowaniAndBlokujacy$Params, context?: HttpContext): Observable<UzytkownikResponse> {
     return this.getBlokowaniAndBlokujacy$Response(params, context).pipe(
       map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `remove()` */
-  static readonly RemovePath = '/uzytkownicy/{email}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `remove()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  remove$Response(params: Remove$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return remove(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `remove$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  remove(params: Remove$Params, context?: HttpContext): Observable<void> {
-    return this.remove$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

@@ -1261,6 +1261,43 @@
         }
       }
     },
+    "/uzytkownicy/profil": {
+      "patch": {
+        "tags": [
+          "Uzytkownik"
+        ],
+        "operationId": "updateProfil",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "profil"
+                ],
+                "type": "object",
+                "properties": {
+                  "profil": {
+                    "$ref": "#/components/schemas/ProfilRequest"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UzytkownikResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/uzytkownicy/blok/{nazwa}/{blok}": {
       "patch": {
         "tags": [
@@ -1819,9 +1856,49 @@
           "Uzytkownik"
         ],
         "operationId": "removeSelf",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsunKontoRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/uzytkownicy/profil/{nazwa}": {
+      "get": {
+        "tags": [
+          "Uzytkownik"
+        ],
+        "operationId": "getStatystykiOfUzytkownik",
+        "parameters": [
+          {
+            "name": "nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatystykiDTO"
+                }
+              }
+            }
           }
         }
       }
@@ -2307,37 +2384,6 @@
         }
       }
     },
-    "/posty/uzytkownik/{nazwa}/count": {
-      "get": {
-        "tags": [
-          "Post"
-        ],
-        "operationId": "findAllPostyCountOfUzytkownik",
-        "parameters": [
-          {
-            "name": "nazwa",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/ogrody": {
       "get": {
         "tags": [
@@ -2640,29 +2686,6 @@
         }
       }
     },
-    "/uzytkownicy/{email}": {
-      "delete": {
-        "tags": [
-          "Uzytkownik"
-        ],
-        "operationId": "remove",
-        "parameters": [
-          {
-            "name": "email",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/rosliny/{roslina-id}": {
       "delete": {
         "tags": [
@@ -2689,6 +2712,29 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/pracownicy/{uzytkownik-nazwa}": {
+      "delete": {
+        "tags": [
+          "Pracownik"
+        ],
+        "operationId": "remove",
+        "parameters": [
+          {
+            "name": "uzytkownik-nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -3076,6 +3122,18 @@
             "type": "string",
             "format": "date"
           },
+          "imie": {
+            "type": "string"
+          },
+          "miasto": {
+            "type": "string"
+          },
+          "miejsceZamieszkania": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
           "posty": {
             "type": "array",
             "items": {
@@ -3124,10 +3182,10 @@
           "name": {
             "type": "string"
           },
-          "admin": {
+          "pracownik": {
             "type": "boolean"
           },
-          "pracownik": {
+          "admin": {
             "type": "boolean"
           },
           "username": {
@@ -3148,10 +3206,10 @@
           "enabled": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
           "accountNonLocked": {
@@ -3725,6 +3783,18 @@
             "type": "string",
             "format": "date"
           },
+          "imie": {
+            "type": "string"
+          },
+          "miasto": {
+            "type": "string"
+          },
+          "miejsceZamieszkania": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
           "ustawienia": {
             "$ref": "#/components/schemas/Ustawienia"
           },
@@ -4064,7 +4134,7 @@
         "type": "object",
         "properties": {
           "nazwa": {
-            "maxLength": 2147483647,
+            "maxLength": 100,
             "minLength": 3,
             "pattern": "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$",
             "type": "string"
@@ -4133,6 +4203,31 @@
           },
           "powiadomieniaOgrodOwocowanie": {
             "type": "boolean"
+          }
+        }
+      },
+      "ProfilRequest": {
+        "type": "object",
+        "properties": {
+          "imie": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "miasto": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "miejsceZamieszkania": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "opis": {
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string"
           }
         }
       },
@@ -4271,6 +4366,23 @@
           "content": {
             "type": "string",
             "format": "byte"
+          }
+        }
+      },
+      "StatystykiDTO": {
+        "type": "object",
+        "properties": {
+          "posty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "komentarze": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rosliny": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -4472,6 +4584,19 @@
           },
           "last": {
             "type": "boolean"
+          }
+        }
+      },
+      "UsunKontoRequest": {
+        "required": [
+          "haslo"
+        ],
+        "type": "object",
+        "properties": {
+          "haslo": {
+            "maxLength": 2147483647,
+            "minLength": 8,
+            "type": "string"
           }
         }
       },

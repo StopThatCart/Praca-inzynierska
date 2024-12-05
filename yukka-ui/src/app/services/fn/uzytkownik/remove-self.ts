@@ -6,13 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { UsunKontoRequest } from '../../models/usun-konto-request';
 
 export interface RemoveSelf$Params {
+      body: UsunKontoRequest
 }
 
-export function removeSelf(http: HttpClient, rootUrl: string, params?: RemoveSelf$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function removeSelf(http: HttpClient, rootUrl: string, params: RemoveSelf$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
   const rb = new RequestBuilder(rootUrl, removeSelf.PATH, 'delete');
   if (params) {
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(

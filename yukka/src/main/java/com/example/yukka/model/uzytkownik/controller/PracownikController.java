@@ -2,6 +2,7 @@ package com.example.yukka.model.uzytkownik.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,11 @@ public class PracownikController {
     public ResponseEntity<Boolean> unbanUzytkownik(@PathVariable("uzytkownik-nazwa") String nazwa, 
     Authentication currentUser) {
         return ResponseEntity.ok(pracownikService.unbanUzytkownik(nazwa, currentUser));
+    }
+
+    @DeleteMapping("/{uzytkownik-nazwa}")
+    public void remove(@PathVariable("uzytkownik-nazwa") String nazwa, Authentication currentUser) {
+        pracownikService.remove(nazwa, currentUser);
     }
 
 }

@@ -27,15 +27,17 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.loadAvatar();
 
 
     if (!this.tokenService.isTokenValid()) {
       this.loggedIn = false;
+      this._avatar = undefined;
     }
   }
 
-  private loadAvatar() {
+  public loadAvatar() {
    //  console.log('loadAvatar');
     if (this.tokenService.isTokenValid()) {
       this.uzytService.getAvatar().subscribe({

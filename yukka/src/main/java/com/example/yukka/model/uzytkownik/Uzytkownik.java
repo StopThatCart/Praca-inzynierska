@@ -95,10 +95,21 @@ public class Uzytkownik implements UserDetails, Principal{
     @Property("banDo")
     private LocalDate banDo;
 
+    @Property("imie")
+    private String imie;
+
+    @Property("miasto")
+    private String miasto;
+
+    @Property("miejsceZamieszkania")
+    private String miejsceZamieszkania;
+
+    @Property("opis")
+    private String opis;
+
     @Relationship(type = "MA_POST", direction = Relationship.Direction.OUTGOING)
     private List<Post> posty;
 
-    // TODO: Profil
 
     @Relationship(type = "SKOMENTOWAL", direction = Relationship.Direction.OUTGOING)
     private List<Komentarz> komentarze;

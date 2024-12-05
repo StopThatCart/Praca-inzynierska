@@ -9,6 +9,8 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { remove } from '../fn/pracownik/remove';
+import { Remove$Params } from '../fn/pracownik/remove';
 import { setBanUzytkownik } from '../fn/pracownik/set-ban-uzytkownik';
 import { SetBanUzytkownik$Params } from '../fn/pracownik/set-ban-uzytkownik';
 import { unbanUzytkownik } from '../fn/pracownik/unban-uzytkownik';
@@ -67,6 +69,31 @@ export class PracownikService extends BaseService {
   setBanUzytkownik(params?: SetBanUzytkownik$Params, context?: HttpContext): Observable<boolean> {
     return this.setBanUzytkownik$Response(params, context).pipe(
       map((r: StrictHttpResponse<boolean>): boolean => r.body)
+    );
+  }
+
+  /** Path part for operation `remove()` */
+  static readonly RemovePath = '/pracownicy/{uzytkownik-nazwa}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `remove()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  remove$Response(params: Remove$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return remove(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `remove$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  remove(params: Remove$Params, context?: HttpContext): Observable<void> {
+    return this.remove$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

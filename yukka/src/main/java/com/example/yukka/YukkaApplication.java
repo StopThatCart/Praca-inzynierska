@@ -151,8 +151,8 @@ public class YukkaApplication {
     public CommandLineRunner seedDatabase() {
         return args -> {
 			//roslinaImporterService.seedRosliny();
-			// unseed();
-			// seed();
+			 unseed();
+			 seed();
 		//roslinaSearchTest();
         };
     }
@@ -195,9 +195,9 @@ public class YukkaApplication {
 		// MockMultipartFile obraz1 = new MockMultipartFile("tempFileName", "kot.png", 
 		// "image/png", fileUtils.readFileFromLocation(kotPath));
 
-		seedRozmowy();
+		//seedRozmowy();
 
-		seedZgloszenia();
+		//seedZgloszenia();
 
 		seedDzialka();
 

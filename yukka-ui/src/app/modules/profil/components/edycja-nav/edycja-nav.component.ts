@@ -45,10 +45,10 @@ export class EdycjaNavComponent implements OnInit {
     return this._avatar;
   }
 
-  goToProfil() {
+  goToEdycjaProfil() {
     const nazwa = this.tokenService.nazwa;
     if (nazwa) {
-      this.router.navigate([`/profil/${nazwa}`]);
+      this.router.navigate([`/profil/${nazwa}/edycja/profil`]);
     }
   }
 
@@ -85,6 +85,13 @@ export class EdycjaNavComponent implements OnInit {
     const nazwa = this.tokenService.nazwa;
     if (nazwa) {
       this.router.navigate([`profil/${nazwa}/edycja/email`]);
+    }
+  }
+
+  goToUsunKonto() {
+    const nazwa = this.tokenService.nazwa;
+    if (nazwa) {
+      this.router.navigate([`profil/${nazwa}/edycja/usun-konto`]);
     }
   }
 

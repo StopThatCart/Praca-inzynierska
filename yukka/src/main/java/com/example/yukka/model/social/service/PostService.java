@@ -95,14 +95,14 @@ public class PostService {
     }
 
 
-    @Transactional(readOnly = true)
-    public Integer findAllPostyCountOfUzytkownik(String nazwa) {
-        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
-        if(targetUzyt.isEmpty()) {
-            return 0;
-        }
-        return postRepository.findAllPostyCountOfUzytkownik(nazwa);
-    }
+    // @Transactional(readOnly = true)
+    // public Integer findAllPostyCountOfUzytkownik(String nazwa) {
+    //     Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
+    //     if(targetUzyt.isEmpty()) {
+    //         return 0;
+    //     }
+    //     return postRepository.findAllPostyCountOfUzytkownik(nazwa);
+    // }
 
     public Post save(PostRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());

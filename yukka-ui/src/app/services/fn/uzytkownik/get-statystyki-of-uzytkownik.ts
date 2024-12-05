@@ -6,13 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { StatystykiDto } from '../../models/statystyki-dto';
 
-export interface FindAllPostyCountOfUzytkownik$Params {
+export interface GetStatystykiOfUzytkownik$Params {
   nazwa: string;
 }
 
-export function findAllPostyCountOfUzytkownik(http: HttpClient, rootUrl: string, params: FindAllPostyCountOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
-  const rb = new RequestBuilder(rootUrl, findAllPostyCountOfUzytkownik.PATH, 'get');
+export function getStatystykiOfUzytkownik(http: HttpClient, rootUrl: string, params: GetStatystykiOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<StatystykiDto>> {
+  const rb = new RequestBuilder(rootUrl, getStatystykiOfUzytkownik.PATH, 'get');
   if (params) {
     rb.path('nazwa', params.nazwa, {});
   }
@@ -22,9 +23,9 @@ export function findAllPostyCountOfUzytkownik(http: HttpClient, rootUrl: string,
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: parseFloat(String((r as HttpResponse<any>).body)) }) as StrictHttpResponse<number>;
+      return r as StrictHttpResponse<StatystykiDto>;
     })
   );
 }
 
-findAllPostyCountOfUzytkownik.PATH = '/posty/uzytkownik/{nazwa}/count';
+getStatystykiOfUzytkownik.PATH = '/uzytkownicy/profil/{nazwa}';

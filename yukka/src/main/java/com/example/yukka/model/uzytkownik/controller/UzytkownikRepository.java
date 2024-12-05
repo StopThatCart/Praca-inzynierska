@@ -2,6 +2,7 @@ package com.example.yukka.model.uzytkownik.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -10,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
+import com.example.yukka.model.uzytkownik.requests.StatystykiDTO;
 
 import jakarta.annotation.Nonnull;
 
@@ -100,6 +102,40 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         RETURN DISTINCT uzytkownik
         """)
     List<Uzytkownik> getConnectedUzytkownicyFromPostButBetter(@Param("postId") String postId);
+
+
+    // Nie działa, gdyż "Records with more than one value cannot be converted without a mapper", a mapowanie nic tu nie dało
+    // @Query("""
+    //     MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
+    //     OPTIONAL MATCH (uzyt)-[:MA_POST]->(post:Post)
+    //     OPTIONAL MATCH (uzyt)-[:SKOMENTOWAL]->(kom:Komentarz)
+    //     OPTIONAL MATCH (uzyt)<-[:STWORZONA_PRZEZ]-(ros:UzytkownikRoslina)
+    //     RETURN count(post) as posty, count(kom) as komentarze, ount(ros) as rosliny
+    //     LIMIT 1
+    //         """)
+    // StatystykiDTO getStatystykiOfUzytkownik(@Param("nazwa") String nazwa);
+
+
+    @Query("""
+        MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
+        OPTIONAL MATCH (uzyt)-[:MA_POST]->(post:Post)
+        RETURN count(post) as posty
+                """)
+    Integer getPostyCountOfUzytkownik(@Param("nazwa") String nazwa);
+    @Query("""
+        MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
+        OPTIONAL MATCH (uzyt)-[:SKOMENTOWAL]->(kom:Komentarz)
+        RETURN count(kom) as komentarze
+                """)
+    Integer getKomentarzeCountOfUzytkownik(@Param("nazwa") String nazwa);
+    @Query("""
+        MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
+        OPTIONAL MATCH (uzyt)<-[:STWORZONA_PRZEZ]-(ros:UzytkownikRoslina)
+        RETURN count(ros) as rosliny
+                """)
+    Integer getRoslinyCountOfUzytkownik(@Param("nazwa") String nazwa);
+
+    
 
     /* 
     @Query("""
@@ -200,6 +236,17 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.avatar = $avatar RETURN u")
     Uzytkownik updateAvatar(@Param("email") String email, @Param("avatar") String avatar);
 
+    
+    @Query("""
+        MATCH (u:Uzytkownik) WHERE u.email = $email 
+        SET u.imie = $imie, u.miasto = $miasto, 
+            u.miejsceZamieszkania = $miejsceZamieszkania, u.opis = $opis
+        RETURN u
+        """)
+    Uzytkownik updateProfil(@Param("email") String email, @Param("imie") String imie, 
+    @Param("miasto") String miasto, @Param("miejsceZamieszkania") String miejsceZamieszkania,
+    @Param("opis") String opis);
+
 
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.aktywowany = true RETURN u")
     Uzytkownik activate(@Param("email") String email);
@@ -239,7 +286,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         DETACH DELETE ust
 
         WITH u
-        OPTIONAL MATCH (t:Token)-[:WALIDUJE]->(u) 
+        OPTIONAL MATCH (t:Token)-[]-(u) 
         DETACH DELETE t
 
         WITH u
@@ -252,6 +299,25 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         DETACH DELETE powiadomienie
 
         WITH u
+        DETACH DELETE u 
+        """)
+    void removeUzytkownik(@Param("email") String email);
+
+    @Query("""
+        MATCH (u:Uzytkownik{email: $email})
+        OPTIONAL MATCH (u)-[:MA_POST]->(post:Post)
+        DETACH DELETE post
+        """)
+    void removePostyOfUzytkownik(@Param("email") String email);
+
+    @Query("""
+        MATCH (u:Uzytkownik{email: $email})
+        OPTIONAL MATCH (u)-[:SKOMENTOWAL]->(kom:Komentarz)
+        DETACH DELETE kom
+        """)
+    void removeKomentarzeOfUzytkownik(@Param("email") String email);
+    @Query("""
+        MATCH (u:Uzytkownik{email: $email})
         OPTIONAL MATCH (u)<-[:STWORZONA_PRZEZ]-(roslina:UzytkownikRoslina)
         OPTIONAL MATCH (roslina)-[rel]-(wl:UzytkownikWlasciwosc)
         DETACH DELETE roslina
@@ -260,11 +326,8 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         MATCH (wlasciwosc:UzytkownikWlasciwosc) 
         WHERE NOT (wlasciwosc)--()
         DELETE wlasciwosc
-
-        WITH u
-        DETACH DELETE u 
         """)
-    void removeUzytkownik(@Param("email") String email);
+    void removeRoslinyOfUzytkownik(@Param("email") String email);
 
     @Query("""
         MATCH (u:Uzytkownik) DETACH DELETE u 

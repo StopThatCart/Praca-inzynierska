@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.auth.requests.EmailRequest;
+import com.example.yukka.auth.requests.UsunKontoRequest;
 import com.example.yukka.common.FileResponse;
-import com.example.yukka.model.social.request.UstawieniaRequest;
 import com.example.yukka.model.social.service.PowiadomienieService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
+import com.example.yukka.model.uzytkownik.requests.ProfilRequest;
+import com.example.yukka.model.uzytkownik.requests.StatystykiDTO;
+import com.example.yukka.model.uzytkownik.requests.UstawieniaRequest;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -73,9 +76,17 @@ public class UzytkownikController {
 
     @PatchMapping(value = "/ustawienia", consumes="multipart/form-data", produces="application/json")
     public ResponseEntity<UzytkownikResponse> updateUstawienia(@Valid @RequestPart("ustawienia") UstawieniaRequest ustawienia, Authentication connectedUser) {
-        System.out.println("Received UstawieniaRequest: " + ustawienia);
-        
         return ResponseEntity.ok(uzytkownikService.updateUstawienia(ustawienia, connectedUser));
+    }
+
+    @GetMapping(value = "/profil/{nazwa}",  produces="application/json")
+    public ResponseEntity<StatystykiDTO> getStatystykiOfUzytkownik(@PathVariable("nazwa") String nazwa, Authentication connectedUser) {
+        return ResponseEntity.ok(uzytkownikService.getStatystykiOfUzytkownik(nazwa, connectedUser));
+    }
+
+    @PatchMapping(value = "/profil", consumes="multipart/form-data", produces="application/json")
+    public ResponseEntity<UzytkownikResponse> updateProfil(@Valid @RequestPart("profil") ProfilRequest request, Authentication connectedUser) {
+        return ResponseEntity.ok(uzytkownikService.updateProfil(request, connectedUser));
     }
 
     @PostMapping(value = "/send-zmiana-email", produces="application/json")
@@ -97,13 +108,10 @@ public class UzytkownikController {
     }
     
 
-    @DeleteMapping
-    public void removeSelf(Authentication currentUser) {
-        uzytkownikService.removeSelf(currentUser);
+    @DeleteMapping(consumes = "application/json", produces = "application/json")
+    public void removeSelf(@RequestBody UsunKontoRequest request, Authentication currentUser) {
+        uzytkownikService.removeSelf(request, currentUser);
     }
 
-    @DeleteMapping("/{email}")
-    public void remove(@PathVariable("email") String email, Authentication currentUser) {
-        uzytkownikService.remove(email, currentUser);
-    }
+
 }

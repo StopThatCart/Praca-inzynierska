@@ -33,6 +33,11 @@ private Long id;
     
     private boolean ban;
     public LocalDate banDo;
+
+    private String imie;
+    private String miasto;
+    private String miejsceZamieszkania;
+    private String opis;
     
     private Ustawienia ustawienia;
     

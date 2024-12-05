@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { addOcenaToPost } from '../../../../services/fn/post/add-ocena-to-post';
 import { PostService } from '../../../../services/services';
 import { OcenaRequest } from '../../../../services/models/ocena-request';
-import { remove } from '../../../../services/fn/uzytkownik/remove';
 import { removeOcenaFromPost } from '../../../../services/fn/post/remove-ocena-from-post';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TokenService } from '../../../../services/token/token.service';

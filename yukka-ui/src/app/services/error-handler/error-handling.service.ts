@@ -17,6 +17,8 @@ export class ErrorHandlingService {
       errorMsg.push(err.error.error);
     } else if (err.error.businessErrorDescription) {
       errorMsg.push(err.error.businessErrorDescription);
+    } else if (err.error) {
+      errorMsg.push(err.error);
     } else {
       errorMsg.push(err.message);
     }
