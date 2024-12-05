@@ -26,8 +26,6 @@ export interface Uzytkownik {
   id?: number;
   imie?: string;
   komentarze?: Array<Komentarz>;
-  komentarzeOcenyNegatywne?: number;
-  komentarzeOcenyPozytywne?: number;
   labels?: Array<string>;
   miasto?: string;
   miejsceZamieszkania?: string;
@@ -39,8 +37,6 @@ export interface Uzytkownik {
   opis?: string;
   password?: string;
   posty?: Array<Post>;
-  postyOcenyNegatywne?: number;
-  postyOcenyPozytywne?: number;
   pracownik?: boolean;
   rozmowyPrywatne?: Array<RozmowaPrywatna>;
   username?: string;

@@ -266,8 +266,6 @@ public class PowiadomienieService {
         addPowiadomienie(powiadomienie, komentarz.getUzytkownik());
     }
 
-    // TODO: Dodać przycisk ustawiający wszystkie powiadomienia jako przeczytane oraz przycisk zgłaszania użytkownika + modal do tego
-    
     public PowiadomienieResponse setPrzeczytane(Long id, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         Powiadomienie powiadomienie = powiadomienieRepository.setPrzeczytane(uzyt.getEmail(), id).orElse(null);;

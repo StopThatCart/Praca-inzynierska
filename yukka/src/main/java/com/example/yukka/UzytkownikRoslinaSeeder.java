@@ -7,7 +7,7 @@ import java.util.HashSet;
 import org.springframework.stereotype.Service;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.dzialka.service.DzialkaService;
+
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaResponse;
@@ -24,7 +24,7 @@ public class UzytkownikRoslinaSeeder {
     private final UzytkownikRoslinaService uzytkownikRoslinaService;
     //private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
     private final RoslinaMapper roslinaMapper;
-    private final DzialkaService dzialkaService;
+    //private final DzialkaService dzialkaService;
     
 
     Roslina roslina1;

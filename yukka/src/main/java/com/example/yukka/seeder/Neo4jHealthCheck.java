@@ -106,7 +106,7 @@ public class Neo4jHealthCheck {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
+
     public boolean checkDatabase() {
         Driver driver = null;
         Neo4jClient client = null;

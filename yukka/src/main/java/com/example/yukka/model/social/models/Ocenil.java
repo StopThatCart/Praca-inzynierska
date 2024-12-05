@@ -1,4 +1,4 @@
-package com.example.yukka.model.social;
+package com.example.yukka.model.social.models;
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;

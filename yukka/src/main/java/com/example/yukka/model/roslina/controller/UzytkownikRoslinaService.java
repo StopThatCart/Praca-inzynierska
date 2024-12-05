@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.security.access.AccessDeniedException;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
@@ -33,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 public class UzytkownikRoslinaService {
     private final UzytkownikRepository uzytkownikRepository;
     private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
-    private final RoslinaRepository roslinaRepository;
     private final RoslinaService roslinaService;
 
     @SuppressWarnings("unused")
@@ -135,7 +133,7 @@ public class UzytkownikRoslinaService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         log.info("Aktualizacja rośliny " + request.getRoslinaId() + " przez użytkownika: " + uzyt.getNazwa());
 
-        Roslina roslina = uzytkownikRoslinaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), request.getRoslinaId())
+        uzytkownikRoslinaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), request.getRoslinaId())
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + request.getRoslinaId()));
 
         System.out.println("Właściwości: " + request.getWlasciwosciAsMap());

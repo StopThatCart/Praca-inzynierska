@@ -5,13 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +27,6 @@ import com.example.yukka.model.social.komentarz.KomentarzResponse;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
-import com.example.yukka.model.social.repository.PowiadomienieRepository;
 import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
@@ -56,7 +53,6 @@ public class KomentarzService {
     private final FileStoreService fileStoreService;
     private final FileUtils fileUtils;
     private final PowiadomienieService powiadomienieService;
-    private final PowiadomienieRepository powiadomienieRepository;
 
    // PostMapper postMapper;
     private final KomentarzMapper komentarzMapper;
@@ -267,19 +263,14 @@ public class KomentarzService {
             deleteKomentarzFromPost(komentarz.getWPoscie().getPostId(), komentarzId, uzyt);
         } else if(komentarz.getRozmowaPrywatna() != null) {
             komentarzRepository.removeKomentarz(komentarzId);
-        } else if (komentarz.getOdpowiadaKomentarzowi() != null) {
-            throw new UnsupportedOperationException("Usuwanie komentarza odpowiadającego nie z posta nie jest jeszcze obsługiwane");
         } else {
             throw new IllegalArgumentException("Nie można usunąć komentarza, bo nie komentuje ani posta, ani komentarza, ani rozmowy prywatnej.");
         }
-
-        //fileUtils.deleteObraz(komentarz.getObraz());
-       // komentarzRepository.removeKomentarz(komentarz.getKomentarzId());
     }
 
     public void deleteKomentarzFromPost(String postId, String komentarzId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+        postRepository.findPostByPostId(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
         Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
         
@@ -287,45 +278,25 @@ public class KomentarzService {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
         }
 
-        List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(post.getPostId());
-
         fileUtils.deleteObraz(kom.getObraz());
         for (Komentarz odp : kom.getOdpowiedzi()) {
             fileUtils.deleteObraz(odp.getObraz());
         }
         komentarzRepository.removeKomentarz(kom.getKomentarzId());
-        
-        komentarzRepository.updateUzytkownikKomentarzeOcenyCount(uzytkownicyInPost);
-        komentarzRepository.updateKomentarzeCountInPostButWithFunniNewRelation(post.getPostId());
     }
 
     public void deleteKomentarzFromPost(String postId, String komentarzId, Uzytkownik connectedUser) {
-        Uzytkownik uzyt = connectedUser;
-        Post post = postRepository.findPostByPostId(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
-        Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
+        postRepository.findPostByPostId(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+        Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
 
         System.out.println("Pobieranie użytowników z posta");
-      //  List<Uzytkownik> uzytkownicyInPost = postRepository.getConnectedUzytkownicyFromPostButBetter(post.getPostId());
-        List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(post.getPostId());
 
         fileUtils.deleteObraz(kom.getObraz());
         for (Komentarz odp : kom.getOdpowiedzi()) {
             fileUtils.deleteObraz(odp.getObraz());
         }
         komentarzRepository.removeKomentarz(kom.getKomentarzId());
-
-        System.out.println("Aktualizacja użytowników");
-        for (Uzytkownik u : uzytkownicyInPost) {
-
-            System.out.println("Aktualizacja użytownika: " + u.getNazwa());
-            komentarzRepository.updateUzytkownikKomentarzeOcenyCount(u.getUzytId());
-        }
-
-        System.out.println("Flex");
-      //  komentarzRepository.updateUzytkownikKomentarzeOcenyCount(uzytkownicyInPost);
-
-        System.out.println("Aktualizacja posta");
-        komentarzRepository.updateKomentarzeCountInPostButWithFunniNewRelation(post.getPostId());
     }
 
     // Seedowane bo trzeba usuwać obrazy

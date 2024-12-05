@@ -23,10 +23,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.yukka.authorities.ROLE;
 import com.example.yukka.model.ogrod.Ogrod;
-import com.example.yukka.model.social.Ocenil;
 import com.example.yukka.model.social.komentarz.Komentarz;
+import com.example.yukka.model.social.models.Ocenil;
 import com.example.yukka.model.social.post.Post;
-import com.example.yukka.model.social.powiadomienie.Powiadomienie;
+
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 
 import lombok.AllArgsConstructor;
@@ -65,19 +65,6 @@ public class Uzytkownik implements UserDetails, Principal{
     @Property("avatar")
     @Builder.Default
     private String avatar = "default_avatar.png";
-
-    @Property("komentarzeOcenyPozytywne")
-    private int komentarzeOcenyPozytywne;
-
-    @Property("komentarzeOcenyNegatywne")
-    private int komentarzeOcenyNegatywne;
-
-    @Property("postyOcenyPozytywne")
-    private int postyOcenyPozytywne;
-
-    @Property("postyOcenyNegatywne")
-    private int postyOcenyNegatywne;
-
 
     @CreatedDate
     @Property("dataUtworzenia")
@@ -190,6 +177,7 @@ public class Uzytkownik implements UserDetails, Principal{
     */
     public boolean hasAuthenticationRights(Uzytkownik targetUzyt, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+
         if(uzyt.isAdmin()){
             return true;
         }else if (uzyt.isPracownik()) {

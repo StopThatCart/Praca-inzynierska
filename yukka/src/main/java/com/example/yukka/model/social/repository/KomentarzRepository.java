@@ -19,6 +19,7 @@ import io.micrometer.common.lang.NonNull;
 
 public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
+    @SuppressWarnings("null")
     @Override
     @Query("""
             MATCH (kom:Komentarz)
@@ -85,70 +86,10 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
                     COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
             SET kom.ocenyLubi = ocenyLubi, kom.ocenyNieLubi = ocenyNieLubi
 
-            WITH kom
-            MATCH (oceniany:Uzytkownik)-[:SKOMENTOWAL]->(kom)
-            OPTIONAL MATCH (oceniany)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
-                WHERE oceniany <> uzyt
-            WITH kom, oceniany,  
-                COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-                COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-            SET oceniany.komentarzeOcenyPozytywne = ocenyPozytywne, 
-                oceniany.komentarzeOcenyNegatywne = ocenyNegatywne
-
             RETURN kom
             """)
     Komentarz addOcenaToKomentarz(@Param("email") String email, @Param("komentarzId") String komentarzId, @Param("ocena") boolean ocena);
 
-
-    @Query("""
-            MATCH (kom:Komentarz{komentarzId: $komentarzId})
-            WITH kom
-            MATCH (kom)<-[r:OCENIL]-(:Uzytkownik)
-            WITH kom, 
-                    COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
-                    COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
-            SET kom.ocenyLubi = ocenyLubi, kom.ocenyNieLubi = ocenyNieLubi
-
-            WITH kom
-            MATCH (oceniany:Uzytkownik)-[:SKOMENTOWAL]->(kom)
-            MATCH (oceniany)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
-                WHERE oceniany <> uzyt
-            WITH kom, oceniany,  
-                COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-                COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-            SET oceniany.komentarzeOcenyPozytywne = ocenyPozytywne, 
-                oceniany.komentarzeOcenyNegatywne = ocenyNegatywne
-
-            RETURN kom
-            """)
-    Komentarz updateUzytkownikKomentarzeOcenyCountButBad(@Param("email") String email, @Param("komentarzId") String komentarzId, @Param("ocena") boolean ocena);
-
-    @Query("""
-        MATCH (oceniany:Uzytkownik{uzytId: $uzytId})
-        OPTIONAL MATCH (oceniany)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
-            WHERE oceniany <> uzyt
-        WITH oceniany,  
-            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-        SET oceniany.komentarzeOcenyPozytywne = ocenyPozytywne, 
-            oceniany.komentarzeOcenyNegatywne = ocenyNegatywne
-        RETURN oceniany
-        """)
-    void updateUzytkownikKomentarzeOcenyCount(@Param("uzytId") String uzytId);
-
-    @Query("""
-        UNWIND $uzytkownicy AS uzytkownik
-        WITH uzytkownik
-        OPTIONAL MATCH (oceniany:Uzytkownik)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
-            WHERE oceniany <> uzyt AND oceniany.uzytId = uzytkownik.uzytId
-        WITH oceniany,  
-            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-        SET oceniany.komentarzeOcenyPozytywne = ocenyPozytywne, 
-            oceniany.komentarzeOcenyNegatywne = ocenyNegatywne
-        
-        """)
-    void updateUzytkownikKomentarzeOcenyCount(@Param("uzytkownicy") List<Uzytkownik> uzytkownicy);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})-[relu:OCENIL]->(kom:Komentarz{komentarzId: $komentarzId})
@@ -159,17 +100,6 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         WITH kom, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
                   COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
         SET kom.ocenyLubi = ocenyLubi, kom.ocenyNieLubi = ocenyNieLubi
-
-        WITH kom
-        MATCH (oceniany:Uzytkownik)-[:SKOMENTOWAL]->(kom)
-        OPTIONAL MATCH (oceniany)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
-            WHERE oceniany <> uzyt
-        WITH kom, oceniany,  
-            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-        SET oceniany.komentarzeOcenyPozytywne = ocenyPozytywne, 
-            oceniany.komentarzeOcenyNegatywne = ocenyNegatywne
-
         """)
     void removeOcenaFromKomentarz(@Param("email") String email, @Param("komentarzId") String komentarzId);
 
@@ -188,13 +118,6 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
         WITH kom, post
         CREATE (kom)-[:JEST_W_POSCIE]->(post)
-
-        WITH kom, post
-        MATCH (post)-[:MA_KOMENTARZ]->(komentarz:Komentarz)
-        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
-        WITH kom, post, komentarz, collect(odpowiedz) AS odpowiedzi
-        WITH kom, post, sum(size(odpowiedzi)) AS liczbaOdpowiedzi
-        SET post.liczbaKomentarzy = liczbaOdpowiedzi
 
         RETURN kom
         """)
@@ -229,12 +152,6 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         CREATE (kom)-[:JEST_W_POSCIE]->(post)
 
         WITH kom 
-
-        MATCH (post:Post{postId: $postId})-[:MA_KOMENTARZ]->(komentarz:Komentarz)
-        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
-        WITH kom, post, komentarz, collect(odpowiedz) AS odpowiedzi
-        WITH kom, post, sum(size(odpowiedzi)) AS liczbaOdpowiedzi
-        SET post.liczbaKomentarzy = liczbaOdpowiedzi
     
         RETURN kom
         """)
@@ -263,22 +180,17 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         @Param("time") LocalDateTime time);
 
     // Jakimś cudem działa z i bez odpowiedzi. Czary.
-    @Query("""
-        MATCH (post:Post{postId: $postId})-[:MA_KOMENTARZ]->(komentarz:Komentarz)
-        OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
-        WITH post, komentarz, collect(odpowiedz) AS odpowiedzi
-        WITH post, sum(size(odpowiedzi)) AS liczbaOdpowiedzi
-        SET post.liczbaKomentarzy = liczbaOdpowiedzi
-        """)
-    void updateKomentarzeCountInPost(@Param("postId") String postId);
+    // @Query("""
+    //     MATCH (post:Post{postId: $postId})-[:MA_KOMENTARZ]->(komentarz:Komentarz)
+    //     OPTIONAL MATCH (komentarz)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
+    //     """)
+    // void updateKomentarzeCountInPost(@Param("postId") String postId);
 
-    @Query("""
-        MATCH (post:Post{postId: $postId})
-        MATCH (reszta:Komentarz)-[r1:JEST_W_POSCIE]->(post)
-        WITH post, count(r1) AS liczbaKomentarzy
-        SET post.liczbaKomentarzy = liczbaKomentarzy
-        """)
-    void updateKomentarzeCountInPostButWithFunniNewRelation(@Param("postId") String postId);
+    // @Query("""
+    //     MATCH (post:Post{postId: $postId})
+    //     MATCH (reszta:Komentarz)-[r1:JEST_W_POSCIE]->(post)
+    //     """)
+    // void updateKomentarzeCountInPostButWithFunniNewRelation(@Param("postId") String postId);
 
 
     @Query("""
@@ -316,23 +228,6 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
         MATCH (oceniany:Uzytkownik)-[:SKOMENTOWAL]->(kom:Komentarz{komentarzId: $komentarzId})
         OPTIONAL MATCH (kom)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)<-[:SKOMENTOWAL]-(uzyt:Uzytkownik)
         DETACH DELETE odpowiedz
-
-        WITH DISTINCT uzyt, odpowiedz
-        OPTIONAL MATCH (uzyt)-[:SKOMENTOWAL]->(k:Komentarz)<-[r:OCENIL]-(innyUzyt:Uzytkownik)
-        WITH uzyt, innyUzyt, odpowiedz,
-            COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-            COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-        SET uzyt.komentarzeOcenyPozytywne = ocenyPozytywne,
-            uzyt.komentarzeOcenyPozytywne = ocenyNegatywne
-
-        WITH innyUzyt, odpowiedz
-        OPTIONAL MATCH (innyUzyt)-[:SKOMENTOWAL]->(k:Komentarz)<-[r:OCENIL]-(uzyt:Uzytkownik)
-            WHERE innyUzyt <> uzyt
-        WITH innyUzyt,  odpowiedz,  
-            COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-            COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-        SET innyUzyt.komentarzeOcenyPozytywne = ocenyPozytywne, 
-            innyUzyt.komentarzeOcenyNegatywne = ocenyNegatywne
         """)
     void removeKomentarz(@Param("komentarzId") String komentarzId);
 

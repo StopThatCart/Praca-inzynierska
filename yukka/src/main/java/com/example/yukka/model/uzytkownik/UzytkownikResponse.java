@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,14 +19,6 @@ private Long id;
     private String nazwa;
     private String email;
     private byte[] avatar;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private int komentarzeOcenyPozytywne;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private int komentarzeOcenyNegatywne;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private int postyOcenyPozytywne;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private int postyOcenyNegatywne;
     private LocalDateTime dataUtworzenia;
     
     private boolean ban;

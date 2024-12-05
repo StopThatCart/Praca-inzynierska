@@ -18,6 +18,7 @@ import jakarta.annotation.Nonnull;
 
 public interface PostRepository extends Neo4jRepository<Post, Long> {
 
+    @SuppressWarnings("null")
     @Override
     @Query("""
         MATCH (post:Post)
@@ -41,18 +42,12 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
                               (kom:Komentarz)
                               <-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
                               <-[:SKOMENTOWAL]-(uzytkownik:Uzytkownik)
-        RETURN post, r1, autor, collect(nodes(path)), collect(relationships(path))
-        """)
-    Optional<Post> findPostByPostIdButWithPath(@Param("postId") String postId);
-     
-    @Query("""
-        MATCH (post:Post{postId: $postId})<-[r1:MA_POST]-(autor:Uzytkownik)
-        OPTIONAL MATCH (post)-[:MA_KOMENTARZ]->(kom:Komentarz)
-        OPTIONAL MATCH (kom)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
-        OPTIONAL MATCH (uzytkownik)-[:SKOMENTOWAL]->(odpowiedz)
+        OPTIONAL MATCH path2 = (post)<-[:OCENIL]-(oceniajacy:Uzytkownik) WHERE oceniajacy <> autor
+        OPTIONAL MATCH path3 = (post)<-[:JEST_W_POSCIE]-(:Komentarz)
 
-        WITH post, r1, autor, collect(DISTINCT odpowiedz) AS komentarze, collect(DISTINCT uzytkownik) AS uzytkownicy
-        RETURN post, r1, autor, komentarze, uzytkownicy
+        RETURN post, r1, autor, collect(nodes(path)), collect(relationships(path)),
+                collect(nodes(path2)), collect(relationships(path2)),
+                collect(nodes(path3)), collect(relationships(path3))
         """)
     Optional<Post> findPostByPostId(@Param("postId") String postId);
 
@@ -77,12 +72,18 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @Query(value = """
         MATCH path = (post:Post)<-[:MA_POST]-(:Uzytkownik)
+        OPTIONAL MATCH path2 = (post)-[:OCENIL]-(:Uzytkownik)
+        OPTIONAL MATCH path3 = (post)<-[:JEST_W_POSCIE]-(kom:Komentarz)
+
         WHERE $szukaj IS NULL OR post.tytul CONTAINS $szukaj OR post.opis CONTAINS $szukaj
-        RETURN post, collect(nodes(path)), collect(relationships(path)) 
+        RETURN post, collect(nodes(path)), collect(relationships(path)),
+                collect(nodes(path2)), collect(relationships(path2)),
+                collect(nodes(path3)), collect(relationships(path3))
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
         """,
        countQuery = """
         MATCH (post:Post)<-[:MA_POST]-(:Uzytkownik)
+
         WHERE $szukaj IS NULL OR post.tytul CONTAINS $szukaj OR post.opis CONTAINS $szukaj
         RETURN count(post)
         """)
@@ -90,7 +91,9 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @Query(value = """
         MATCH path = (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{nazwa: $nazwa})
-        RETURN post, collect(nodes(path)), collect(relationships(path)) 
+        OPTIONAL MATCH path2 = (post)<-[:OCENIL]-(oceniajacy:Uzytkownik)
+        RETURN post, collect(nodes(path)), collect(relationships(path)),
+                collect(nodes(path2)), collect(relationships(path2)) 
         :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
             """,
             countQuery = """
@@ -114,58 +117,14 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
             ON MATCH SET relu.lubi = $ocena
 
             WITH post
-            MATCH (post)<-[r:OCENIL]-(uzyt)
-            WITH post, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
-            COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
-            SET post.ocenyLubi = ocenyLubi, post.ocenyNieLubi = ocenyNieLubi
-
-            WITH post
-            OPTIONAL MATCH (oceniany:Uzytkownik)-[:MA_POST]->(post)<-[r2:OCENIL]-(uzyt:Uzytkownik)
-                WHERE oceniany <> uzyt
-            WITH post, oceniany,  
-                COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-                COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-            SET oceniany.postyOcenyPozytywne = ocenyPozytywne, 
-                oceniany.postyOcenyNegatywne = ocenyNegatywne
-
-            WITH post
             MATCH (autor:Uzytkownik)-[r1:MA_POST]->(post)
             RETURN post, r1, autor
             """)
     Post addOcenaToPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
 
-
-    @Query("""
-        MATCH (post:Post{postId: $postId})
-        OPTIONAL MATCH (oceniany:Uzytkownik)-[:MA_POST]->(post)<-[r2:OCENIL]-(uzyt:Uzytkownik)
-            WHERE oceniany <> uzyt
-        WITH post, oceniany,  
-            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-        SET oceniany.postyOcenyPozytywne = ocenyPozytywne, 
-            oceniany.postyOcenyNegatywne = ocenyNegatywne
-        """)
-    void updateOcenyCountOfPost(@Param("postId") String postId);
-
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})-[relu:OCENIL]->(post:Post{postId: $postId})
         DELETE relu
-
-        WITH post
-        MATCH (post)<-[r:OCENIL]-(uzyt)
-        WITH post, COUNT(CASE WHEN r.lubi = true THEN 1 ELSE NULL END) AS ocenyLubi,
-        COUNT(CASE WHEN r.lubi = false THEN 1 ELSE NULL END) AS ocenyNieLubi
-        SET post.ocenyLubi = ocenyLubi, post.ocenyNieLubi = ocenyNieLubi
-
-        WITH post
-        OPTIONAL MATCH (oceniany:Uzytkownik)-[:MA_POST]->(post)<-[r2:OCENIL]-(uzyt:Uzytkownik)
-            WHERE oceniany <> uzyt
-        WITH post, oceniany,  
-            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-        SET oceniany.postyOcenyPozytywne = ocenyPozytywne, 
-            oceniany.postyOcenyNegatywne = ocenyNegatywne
-
         """)
     void removeOcenaFromPost(@Param("email") String email, @Param("postId") String postId);
 
@@ -174,7 +133,6 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         WITH uzyt, $post.__properties__ AS pt 
         CREATE (uzyt)-[relu:MA_POST]->(post:Post{postId: pt.postId, 
                                         tytul: pt.tytul, opis: pt.opis, 
-                                        ocenyLubi: 0, ocenyNieLubi: 0, liczbaKomentarzy: 0,
                                         obraz: COALESCE(pt.obraz, null), dataUtworzenia: $time
                                         })
         RETURN post

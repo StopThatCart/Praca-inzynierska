@@ -1,4 +1,4 @@
-package com.example.yukka.model.social;
+package com.example.yukka.model.social.models;
 
 import java.util.List;
 
@@ -26,5 +26,13 @@ public class Oceniany {
     private int ocenyNieLubi = 0;
 
     @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
-    private List<Ocenil> ocenil;
+    private List<OcenilReverse> ocenil;
+
+    public int getOcenyLubiButGood() {
+        return (int) ocenil.stream().filter(OcenilReverse::isLubi).count();
+    }
+
+    public int getOcenyNieLubiButGood() {
+        return (int) ocenil.stream().filter(ocenil -> !ocenil.isLubi()).count();
+    }
 }

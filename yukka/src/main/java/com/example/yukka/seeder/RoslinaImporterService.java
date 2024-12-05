@@ -62,7 +62,7 @@ public class RoslinaImporterService {
     @Value("${roslina.seed.amount}")
     private int limit;
 
-    @SuppressWarnings("deprecation")
+  
     public void seedRosliny() {
         try {
             if(seedMode.equals("create")){

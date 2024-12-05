@@ -25,7 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
-import com.example.yukka.model.dzialka.Dzialka;
+
 import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
@@ -34,7 +34,7 @@ import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.enums.Wyswietlanie;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
-import com.example.yukka.model.roslina.controller.RoslinaRepository;
+
 import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
@@ -94,7 +94,7 @@ public class YukkaApplication {
 	private final DzialkaRepository dzialkaRepository;
 
 	private final RoslinaService roslinaService;
-	private final RoslinaRepository roslinaRepository;
+	//private final RoslinaRepository roslinaRepository;
 	@SuppressWarnings("unused")
 	private final RoslinaImporterService roslinaImporterService;
 
@@ -195,9 +195,9 @@ public class YukkaApplication {
 		// MockMultipartFile obraz1 = new MockMultipartFile("tempFileName", "kot.png", 
 		// "image/png", fileUtils.readFileFromLocation(kotPath));
 
-		//seedRozmowy();
+		seedRozmowy();
 
-		//seedZgloszenia();
+		seedZgloszenia();
 
 		seedDzialka();
 
@@ -356,11 +356,11 @@ public class YukkaApplication {
 		log.info("Dodawanie rosliny 2 do dzialek");
 		dzialkaService.saveRoslinaToDzialka(req2, null, null, usPiotr);
 
-		Dzialka piotrDzialka2 = dzialkaRepository.getDzialkaByNumer(usPiotr.getEmail(), 2).get();
+		dzialkaRepository.getDzialkaByNumer(usPiotr.getEmail(), 2).get();
 
 		// Rosliny uzytkownika 
 		log.info("Seedowanie roslin uzytkownika[TESTOWE]...");
-		String lolId = "12345678";
+
 		
 		// Wiem wiem, okropieństwo
 		PageResponse<RoslinaResponse> roslinyUzytkownika = uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usPiotr);

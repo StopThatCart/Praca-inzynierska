@@ -8,7 +8,6 @@ export interface Post {
   dataUtworzenia?: string;
   id?: number;
   komentarze?: Array<Komentarz>;
-  liczbaKomentarzy?: number;
   obraz?: string;
   ocenil?: Array<Ocenil>;
   ocenyLubi?: number;

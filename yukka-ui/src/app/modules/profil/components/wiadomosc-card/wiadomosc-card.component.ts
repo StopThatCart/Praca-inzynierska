@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-wiadomosc-card',
   standalone: true,
-  imports: [CommonModule,  FormsModule, NgOptimizedImage],
+  imports: [CommonModule,  FormsModule],
   templateUrl: './wiadomosc-card.component.html',
   styleUrl: './wiadomosc-card.component.css'
 })

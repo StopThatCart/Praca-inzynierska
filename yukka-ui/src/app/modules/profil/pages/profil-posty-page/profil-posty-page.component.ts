@@ -14,7 +14,7 @@ import { LoadingComponent } from "../../../../components/loading/loading.compone
 @Component({
   selector: 'app-profil-posty-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, PostCardComponent, InfiniteScrollModule, ErrorMsgComponent, EdycjaNavComponent, LoadingComponent],
+  imports: [CommonModule, FormsModule, PostCardComponent, InfiniteScrollModule, ErrorMsgComponent, LoadingComponent],
   templateUrl: './profil-posty-page.component.html',
   styleUrl: './profil-posty-page.component.css'
 })

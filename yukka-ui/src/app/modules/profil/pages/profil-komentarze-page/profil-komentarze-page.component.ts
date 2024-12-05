@@ -14,7 +14,7 @@ import { LoadingComponent } from "../../../../components/loading/loading.compone
 @Component({
   selector: 'app-profil-komentarze-page',
   standalone: true,
-  imports: [CommonModule, PaginationComponent, KomentarzCardComponent, EdycjaNavComponent, SimpleKomentarzCardComponent, LoadingComponent],
+  imports: [CommonModule, PaginationComponent, SimpleKomentarzCardComponent, LoadingComponent],
   templateUrl: './profil-komentarze-page.component.html',
   styleUrl: './profil-komentarze-page.component.css'
 })

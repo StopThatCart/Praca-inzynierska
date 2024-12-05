@@ -23,7 +23,6 @@ export class ProfilPageComponent implements OnInit {
   nazwa: string | undefined;
   private _avatar: string | undefined;
   statystyki: StatystykiDto = {};
-  oceny: number = 0;
 
   errorMsg: string | null = null;
 
@@ -53,7 +52,7 @@ export class ProfilPageComponent implements OnInit {
         this.getUzytkownikByNazwa(this.nazwa);
         this.route.snapshot.data['nazwa'] = this.nazwa;
         this.getStatystykiOfUzytkownik(this.nazwa);
-        this.oceny = this.getOverallOceny();
+        this.getOcenyPozytywne();
       }
     });
     this.isCurrentUserBoi = this.isCurrentUser();
@@ -80,7 +79,7 @@ export class ProfilPageComponent implements OnInit {
   }
 
   getStatystykiOfUzytkownik(nazwa: string): void {
-    if(!this.tokenService.isTokenValid()) return;
+    //if(!this.tokenService.isTokenValid()) return;
 
     console.log('Pobieranie statystyk: ', nazwa);
     this.uzytService.getStatystykiOfUzytkownik({ nazwa: nazwa }).subscribe({
@@ -94,14 +93,24 @@ export class ProfilPageComponent implements OnInit {
     });
   }
 
-  getOverallOceny(): number {
+  getOcenyPozytywne(): number {
+    let oceny = 0;
     if(!this.uzyt) {
-      this.oceny = 0;
+      return oceny;
+    } else if(this.statystyki.komentarzeOcenyPozytywne !== undefined && this.statystyki.postyOcenyPozytywne !== undefined) {
+      oceny = (this.statystyki.komentarzeOcenyPozytywne + this.statystyki.postyOcenyPozytywne);
     }
-    if(this.uzyt?.komentarzeOcenyPozytywne !== undefined && this.uzyt?.postyOcenyPozytywne !== undefined) {
-      this.oceny = (this.uzyt.komentarzeOcenyPozytywne + this.uzyt.postyOcenyPozytywne);
+    return oceny;
+  }
+
+  getOcenyNegatywne(): number {
+    let oceny = 0;
+    if(!this.uzyt) {
+      return oceny;
+    } else if(this.statystyki.komentarzeOcenyNegatywne !== undefined && this.statystyki.postyOcenyNegatywne !== undefined) {
+      oceny = (this.statystyki.komentarzeOcenyNegatywne + this.statystyki.postyOcenyNegatywne);
     }
-    return this.oceny;
+    return oceny;
   }
 
   isTokenAvailable(): boolean {

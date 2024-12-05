@@ -10,7 +10,7 @@ import { ErrorHandlingService } from '../../../../services/error-handler/error-h
 @Component({
   selector: 'app-usun-konto-button',
   standalone: true,
-  imports: [FormsModule, ErrorMsgComponent, NgbTooltipModule],
+  imports: [FormsModule, NgbTooltipModule],
   templateUrl: './usun-konto-button.component.html',
   styleUrl: './usun-konto-button.component.css'
 })

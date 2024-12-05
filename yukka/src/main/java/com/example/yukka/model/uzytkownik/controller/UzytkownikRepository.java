@@ -2,7 +2,6 @@ package com.example.yukka.model.uzytkownik.controller;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -11,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
-import com.example.yukka.model.uzytkownik.requests.StatystykiDTO;
 
 import jakarta.annotation.Nonnull;
 
@@ -49,6 +47,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
    // List<Uzytkownik> findByLabels(Set<String> labels);
 
 
+    @SuppressWarnings("null")
     @Override
     @Query("MATCH (u:Uzytkownik) RETURN u")
     @Nonnull List<Uzytkownik> findAll();
@@ -134,6 +133,67 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         RETURN count(ros) as rosliny
                 """)
     Integer getRoslinyCountOfUzytkownik(@Param("nazwa") String nazwa);
+
+    // @Query("""
+    //     MATCH (oceniany:Uzytkownik{nazwa: $nazwa})
+    //     OPTIONAL MATCH (oceniany)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
+    //         WHERE oceniany <> uzyt
+    //     WITH oceniany,  
+    //         COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
+    //         COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
+    //     RETURN max(0, (ocenyPozytywne - ocenyNegatywne)) as komentarzeOceny
+    //             """)
+    // Integer getKomentarzeOcenyOfUzytkownik(@Param("nazwa") String nazwa);
+
+    @Query("""
+        MATCH (oceniany:Uzytkownik{nazwa: $nazwa})
+        OPTIONAL MATCH (oceniany)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
+            WHERE oceniany <> uzyt
+        WITH oceniany,  
+            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
+            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
+        RETURN ocenyPozytywne
+                """)
+    Integer getKomentarzeOcenyPozytywneOfUzytkownik(@Param("nazwa") String nazwa);
+
+
+    @Query("""
+        MATCH (oceniany:Uzytkownik{nazwa: $nazwa})
+        OPTIONAL MATCH (oceniany)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
+            WHERE oceniany <> uzyt
+        WITH oceniany,  
+            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
+            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
+        RETURN ocenyNegatywne
+                """)
+    Integer getKomentarzeOcenyNegatywneOfUzytkownik(@Param("nazwa") String nazwa);
+
+
+    @Query("""
+        MATCH (oceniany:Uzytkownik{nazwa: $nazwa})
+        OPTIONAL MATCH (oceniany)-[:MA_POST]->(post:Post)<-[r2:OCENIL]-(uzyt:Uzytkownik)
+            WHERE oceniany <> uzyt
+        WITH oceniany,  
+            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
+            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
+
+        RETURN ocenyPozytywne
+                """)
+    Integer getPostyOcenyPozytywneOfUzytkownik(@Param("nazwa") String nazwa);
+
+    @Query("""
+        MATCH (oceniany:Uzytkownik{nazwa: $nazwa})
+        OPTIONAL MATCH (oceniany)-[:MA_POST]->(post:Post)<-[r2:OCENIL]-(uzyt:Uzytkownik)
+            WHERE oceniany <> uzyt
+        WITH oceniany,  
+            COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
+            COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
+
+        RETURN ocenyNegatywne
+                """)
+    Integer getPostyOcenyNegatywneOfUzytkownik(@Param("nazwa") String nazwa);
+
+
 
     
 

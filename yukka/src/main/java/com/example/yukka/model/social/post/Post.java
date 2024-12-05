@@ -10,8 +10,8 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import com.example.yukka.model.social.Oceniany;
 import com.example.yukka.model.social.komentarz.Komentarz;
+import com.example.yukka.model.social.models.Oceniany;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.AllArgsConstructor;
@@ -42,9 +42,6 @@ public class Post extends Oceniany {
 
     @Property(name = "obraz")
     private String obraz;
-
-    @Property(name = "liczbaKomentarzy")
-    private Integer liczbaKomentarzy;
     
     @CreatedDate
     @Property(name = "dataUtworzenia")
@@ -52,10 +49,13 @@ public class Post extends Oceniany {
 
     @Relationship(type = "MA_POST", direction = Relationship.Direction.INCOMING)
     private Uzytkownik autor;
-
     
     @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.OUTGOING)
   //  @JsonBackReference
     private List<Komentarz> komentarze;
+
+    @Relationship(type = "JEST_W_POSCIE", direction = Relationship.Direction.INCOMING)
+    //  @JsonBackReference
+      private List<Komentarz> komentarzeWPoscie;
 
 }

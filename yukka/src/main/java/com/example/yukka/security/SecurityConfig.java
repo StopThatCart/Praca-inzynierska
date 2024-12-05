@@ -3,7 +3,7 @@ package com.example.yukka.security;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.catalina.filters.RateLimitFilter;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;

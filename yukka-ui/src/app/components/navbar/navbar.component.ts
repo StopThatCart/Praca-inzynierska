@@ -12,7 +12,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgbDropdownModule, PowiadomienieCardComponent, PowiadomieniaDropdownComponent],
+  imports: [CommonModule, RouterModule, NgbDropdownModule, PowiadomieniaDropdownComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

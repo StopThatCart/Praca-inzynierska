@@ -4,7 +4,7 @@ import static java.io.File.separator;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -131,19 +131,31 @@ public class UzytkownikService implements  UserDetailsService {
     }
 
     public StatystykiDTO getStatystykiOfUzytkownik(String nazwa, Authentication currentUser) {
-        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         log.info("Pobieranie statystyk użytkownika: " + nazwa);
 
         Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
 
-        if(!targetUzyt.getUstawienia().isStatystykiProfilu() && !uzyt.hasAuthenticationRights(targetUzyt, currentUser)) {
-            return null;
+        if(!targetUzyt.getUstawienia().isStatystykiProfilu() ) {
+            if (currentUser == null) {
+                return null;
+            }
+            Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+            if(!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+                return null;
+            }
         }
+
         StatystykiDTO statystyki = StatystykiDTO.builder()
                 .posty(uzytkownikRepository.getPostyCountOfUzytkownik(nazwa))
                 .komentarze(uzytkownikRepository.getKomentarzeCountOfUzytkownik(nazwa))
                 .rosliny(uzytkownikRepository.getRoslinyCountOfUzytkownik(nazwa))
+                //.komentarzeOceny(uzytkownikRepository.getKomentarzeOcenyOfUzytkownik(nazwa))
+                .komentarzeOcenyPozytywne(uzytkownikRepository.getKomentarzeOcenyPozytywneOfUzytkownik(nazwa))
+                .komentarzeOcenyNegatywne(uzytkownikRepository.getKomentarzeOcenyNegatywneOfUzytkownik(nazwa))
+                //.postyOceny(uzytkownikRepository.getPostyOcenyOfUzytkownik(nazwa))
+                .postyOcenyPozytywne(uzytkownikRepository.getPostyOcenyPozytywneOfUzytkownik(nazwa))
+                .postyOcenyNegatywne(uzytkownikRepository.getPostyOcenyNegatywneOfUzytkownik(nazwa))
                 .build();
                 
         return statystyki;

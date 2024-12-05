@@ -22,6 +22,13 @@ public class StatystykiDTO {
     private Integer komentarze;
     private Integer rosliny;
 
+   // private Integer komentarzeOceny;
+    private Integer komentarzeOcenyPozytywne;
+    private Integer komentarzeOcenyNegatywne;
+   // private Integer postyOceny;
+    private Integer postyOcenyPozytywne;
+    private Integer postyOcenyNegatywne;
+
     // @JsonIgnore
     // public static StatystykiDTO fromMap(Map<String, Object> map) {
     //     return StatystykiDTO.builder()

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +26,7 @@ import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostMapper;
 import com.example.yukka.model.social.post.PostResponse;
-import com.example.yukka.model.social.repository.KomentarzRepository;
+
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
@@ -44,7 +44,7 @@ public class PostService {
     private Integer postAddCD;
 
     private final PostRepository postRepository;
-    private final KomentarzRepository komentarzRepository;
+
     private final UzytkownikRepository uzytkownikRepository;
     private final UzytkownikService uzytkownikService;
     private final FileStoreService fileStoreService;
@@ -53,12 +53,12 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostResponse findByPostId(String postId) {
-        Post post = postRepository.findPostByPostIdButWithPath(postId).orElse(null);
+        Post post = postRepository.findPostByPostId(postId).orElse(null);
         if(post == null) {
             throw new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId);
         }
 
-        return postRepository.findPostByPostIdButWithPath(postId)
+        return postRepository.findPostByPostId(postId)
                 .map(postMapper::toPostResponse)
                 .orElseThrow();
     }
@@ -134,7 +134,7 @@ public class PostService {
         uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
 
         post =  postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
-        postRepository.updateOcenyCountOfPost(post.getPostId());
+        // postRepository.updateOcenyCountOfPost(post.getPostId());
 
         return postMapper.toPostResponse(post);
     }
@@ -147,7 +147,7 @@ public class PostService {
         uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
 
         postRepository.removeOcenaFromPost(uzyt.getEmail(), post.getPostId());
-        postRepository.updateOcenyCountOfPost(post.getPostId());
+        // postRepository.updateOcenyCountOfPost(post.getPostId());
     }
 
     public void deletePost(String postId, Authentication connectedUser) {
@@ -162,22 +162,13 @@ public class PostService {
 
     public void deletePost(String postId, Uzytkownik uzyt) {
         Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
-        List<Uzytkownik> uzytkownicyInPost = uzytkownikRepository.getConnectedUzytkownicyFromPostButBetter(postId);
 
         fileUtils.deleteObraz(post.getObraz());
         postRepository.deletePost(postId);
 
-        for (Uzytkownik u : uzytkownicyInPost) {
-            System.out.println("Aktualizacja użytownika LE POST: " + u.getNazwa());
-            komentarzRepository.updateUzytkownikKomentarzeOcenyCount(u.getUzytId());
-        }
-
         for (Komentarz kom : post.getKomentarze()) {
             fileUtils.deleteObraz(kom.getObraz());
         }
-
-        System.out.println("Flex");
-        postRepository.updateOcenyCountOfPost(post.getPostId());
     }
 
     public void seedRemovePostyObrazy() {

@@ -26,7 +26,6 @@ import com.example.yukka.auth.requests.HasloRequest;
 import com.example.yukka.auth.requests.RegistrationRequest;
 import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
-import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
@@ -52,7 +51,6 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     //private final AuthenticationManager authenticationManager;
     private final Neo4JAuthenticationProvider neo4jAuthenticationProvider;
-    private final CommonMapperService commonMapperService;
 
 
 

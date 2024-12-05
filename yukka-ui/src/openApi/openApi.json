@@ -2982,10 +2982,6 @@
           "obraz": {
             "type": "string"
           },
-          "liczbaKomentarzy": {
-            "type": "integer",
-            "format": "int32"
-          },
           "dataUtworzenia": {
             "type": "string",
             "format": "date-time"
@@ -3092,22 +3088,6 @@
           "avatar": {
             "type": "string"
           },
-          "komentarzeOcenyPozytywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "komentarzeOcenyNegatywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "postyOcenyPozytywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "postyOcenyNegatywne": {
-            "type": "integer",
-            "format": "int32"
-          },
           "dataUtworzenia": {
             "type": "string",
             "format": "date-time"
@@ -3182,10 +3162,10 @@
           "name": {
             "type": "string"
           },
-          "pracownik": {
+          "admin": {
             "type": "boolean"
           },
-          "admin": {
+          "pracownik": {
             "type": "boolean"
           },
           "username": {
@@ -3755,22 +3735,6 @@
           "avatar": {
             "type": "string",
             "format": "byte"
-          },
-          "komentarzeOcenyPozytywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "komentarzeOcenyNegatywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "postyOcenyPozytywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "postyOcenyNegatywne": {
-            "type": "integer",
-            "format": "int32"
           },
           "dataUtworzenia": {
             "type": "string",
@@ -4381,6 +4345,22 @@
             "format": "int32"
           },
           "rosliny": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "komentarzeOcenyPozytywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "komentarzeOcenyNegatywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "postyOcenyPozytywne": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "postyOcenyNegatywne": {
             "type": "integer",
             "format": "int32"
           }
