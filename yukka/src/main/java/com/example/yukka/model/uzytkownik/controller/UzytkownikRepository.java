@@ -366,6 +366,10 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
         OPTIONAL MATCH (u)-[:MA_POST]->(post:Post)
+        OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(komentarz:Komentarz)
+        DETACH DELETE komentarz
+
+        WITH post
         DETACH DELETE post
         """)
     void removePostyOfUzytkownik(@Param("email") String email);
@@ -373,7 +377,8 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
         OPTIONAL MATCH (u)-[:SKOMENTOWAL]->(kom:Komentarz)
-        DETACH DELETE kom
+        OPTIONAL MATCH (kom)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)<-[:SKOMENTOWAL]-(:Uzytkownik)
+        DETACH DELETE odpowiedz
         """)
     void removeKomentarzeOfUzytkownik(@Param("email") String email);
     @Query("""
