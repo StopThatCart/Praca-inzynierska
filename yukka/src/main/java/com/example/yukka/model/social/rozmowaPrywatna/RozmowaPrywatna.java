@@ -22,6 +22,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Klasa reprezentująca prywatną rozmowę.
+ * 
+ * <ul>
+ * <li><strong>id</strong>: Unikalny identyfikator rozmowy.</li>
+ * <li><strong>aktywna</strong>: Flaga określająca, czy rozmowa jest aktywna.</li>
+ * <li><strong>nadawca</strong>: Nazwa nadawcy rozmowy.</li>
+ * <li><strong>dataUtworzenia</strong>: Data utworzenia rozmowy.</li>
+ * <li><strong>ostatnioAktualizowana</strong>: Data ostatniej aktualizacji rozmowy.</li>
+ * <li><strong>uzytkownicy</strong>: Lista użytkowników biorących udział w rozmowie.</li>
+ * <li><strong>wiadomosci</strong>: Lista wiadomości w rozmowie.</li>
+ * </ul>
+ */
 @Node
 @Getter
 @Setter

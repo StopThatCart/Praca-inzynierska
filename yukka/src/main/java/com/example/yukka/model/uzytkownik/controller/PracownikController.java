@@ -1,5 +1,6 @@
 package com.example.yukka.model.uzytkownik.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Kontroler REST dla operacji na pracownikach.
+ * 
+ * <ul>
+ * <li><strong>pracownikService</strong>: Serwis do obsługi operacji na pracownikach.</li>
+ * </ul>
+ * 
+ * <ul>
+ * <li><strong>setBanUzytkownik</strong>: Ustawia ban na użytkownika.</li>
+ * <li><strong>unbanUzytkownik</strong>: Usuwa ban z użytkownika.</li>
+ * <li><strong>remove</strong>: Usuwa użytkownika.</li>
+ * </ul>
+ */
 @RestController
 @RequestMapping("pracownicy")
 @RequiredArgsConstructor
@@ -25,10 +39,13 @@ public class PracownikController {
     private final PracownikService pracownikService;
 
     
-    /** 
-     * @param request
-     * @param currentUser
-     * @return ResponseEntity<Boolean>
+
+    /**
+     * Ustawia ban dla użytkownika.
+     *
+     * @param request <ul><li><strong>BanRequest</strong> - obiekt zawierający szczegóły dotyczące bana</li></ul>
+     * @param currentUser <ul><li><strong>Authentication</strong> - obiekt reprezentujący aktualnie zalogowanego użytkownika</li></ul>
+     * @return <ul><li><strong>ResponseEntity<Boolean></strong> - odpowiedź zawierająca informację, czy operacja się powiodła</li></ul>
      */
     @PatchMapping(value = "/ban", consumes="multipart/form-data", produces="application/json")
     public ResponseEntity<Boolean> setBanUzytkownik(@Valid @RequestPart("request") BanRequest request, 
@@ -36,15 +53,30 @@ public class PracownikController {
         return ResponseEntity.ok(pracownikService.setBanUzytkownik(request, currentUser));
     }
 
+
+    /**
+     * Odblokowuje użytkownika o podanej nazwie.
+     *
+     * @param nazwa <ul><li><strong>nazwa</strong> - Nazwa użytkownika, który ma zostać odblokowany.</li></ul>
+     * @param currentUser <ul><li><strong>currentUser</strong> - Obecnie zalogowany użytkownik wykonujący operację.</li></ul>
+     * @return <ul><li><strong>ResponseEntity<Boolean></strong> - Zwraca odpowiedź HTTP z wartością true, jeśli operacja się powiodła.</li></ul>
+     */
     @PatchMapping(value = "/unban/{uzytkownik-nazwa}", produces="application/json") 
     public ResponseEntity<Boolean> unbanUzytkownik(@PathVariable("uzytkownik-nazwa") String nazwa, 
     Authentication currentUser) {
         return ResponseEntity.ok(pracownikService.unbanUzytkownik(nazwa, currentUser));
     }
 
+    /**
+     * Usuwa użytkownika o podanej nazwie.
+     *
+     * @param nazwa <ul><li><strong>nazwa</strong> - Nazwa użytkownika, który ma zostać usunięty.</li></ul>
+     * @param currentUser <ul><li><strong>currentUser</strong> - Obecnie zalogowany użytkownik wykonujący operację.</li></ul>
+     */
     @DeleteMapping("/{uzytkownik-nazwa}")
-    public void remove(@PathVariable("uzytkownik-nazwa") String nazwa, Authentication currentUser) {
+    public ResponseEntity<String> remove(@PathVariable("uzytkownik-nazwa") String nazwa, Authentication currentUser) {
         pracownikService.remove(nazwa, currentUser);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

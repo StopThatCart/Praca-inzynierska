@@ -11,9 +11,40 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.yukka.model.social.powiadomienie.Powiadomienie;
 
+/**
+ * Repozytorium dla operacji na encji Powiadomienie w bazie danych Neo4j.
+ * 
+ * <p>Interfejs ten rozszerza Neo4jRepository i zapewnia metody do wykonywania
+ * zapytań Cypher na bazie danych Neo4j. Metody te umożliwiają sprawdzanie,
+ * pobieranie, zapisywanie oraz aktualizowanie danych dotyczących powiadomień
+ * użytkowników.</p>
+ * 
+ * <p>Metody w tym repozytorium wykorzystują adnotacje @Query do definiowania
+ * zapytań Cypher, które są wykonywane na bazie danych. Parametry zapytań
+ * są przekazywane za pomocą adnotacji @Param.</p>
+ * 
+ * <p>Przykładowe operacje obejmują:</p>
+ * <ul>
+ *   <li>Sprawdzanie, czy istnieje powiadomienie o tych samych parametrach.</li>
+ *   <li>Sprawdzanie, czy istnieje powiadomienie dotyczące rozmowy.</li>
+ *   <li>Aktualizowanie danych powiadomienia.</li>
+ *   <li>Oznaczanie powiadomienia jako przeczytane.</li>
+ *   <li>Oznaczanie wszystkich powiadomień jako przeczytane.</li>
+ *   <li>Pobieranie powiadomień użytkownika z paginacją.</li>
+ *   <li>Liczenie nieprzeczytanych powiadomień użytkownika.</li>
+ *   <li>Dodawanie powiadomienia do użytkownika.</li>
+ *   <li>Dodawanie globalnego powiadomienia.</li>
+ *   <li>Dodawanie powiadomienia do pracowników.</li>
+ *   <li>Wysyłanie zgłoszenia do pracownika.</li>
+ *   <li>Pobieranie najnowszego zgłoszenia użytkownika.</li>
+ *   <li>Usuwanie powiadomienia.</li>
+ * </ul>
+ * 
+ * <p>Repozytorium to jest częścią aplikacji zarządzającej powiadomieniami
+ * użytkowników, umożliwiającej zarządzanie i monitorowanie powiadomień
+ * w systemie.</p>
+ */
 public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, Long> {
-
-
     @Query(value = """
         MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
         WHERE powiadomienie.typ = $typ AND powiadomienie.opis = $opis

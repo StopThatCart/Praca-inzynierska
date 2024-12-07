@@ -23,6 +23,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * <p>Filtr JWT, który jest wykonywany raz na każde żądanie.</p>
+ * 
+ * @throws ServletException - W przypadku błędu serwletu.
+ * @throws IOException - W przypadku błędu wejścia/wyjścia.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {

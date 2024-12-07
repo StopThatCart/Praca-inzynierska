@@ -1,5 +1,30 @@
 package com.example.yukka.model.social.powiadomienie;
 
+/**
+ * TypPowiadomienia enum reprezentuje różne typy powiadomień w aplikacji.
+ * Każdy typ powiadomienia ma przypisany szablon wiadomości.
+ * 
+ * <ul>
+ *   <li><strong>KOMENTARZ_POST</strong>: {uzytkownikNazwa} odpowiedział(a) na twój komentarz pod postem {tytul}</li>
+ *   <li><strong>POLUBIENIA_POST</strong>: Twój post {tytul} zebrał ponad {iloscPolubien} polubień!</li>
+ *   <li><strong>ZAPROSZENIE</strong>: {uzytkownikNazwa} zaprosił(a) cię do rozmowy!</li>
+ *   <li><strong>ZAPROSZENIE_ODRUCONE</strong>: {uzytkownikNazwa} odrzucił(a) twoje zaproszenie.</li>
+ *   <li><strong>ZAPROSZENIE_ZAAKCEPTOWANE</strong>: {uzytkownikNazwa} zaakceptował(a) twoje zaproszenie.</li>
+ *   <li><strong>WIADOMOSC_PRYWATNA</strong>: {uzytkownikNazwa} odpowiedział(a) tobie w wiadomosci prywatnej</li>
+ *   <li><strong>OWOCOWANIE_ROSLIN</strong>: Za {data} twoje rośliny {nazwyRoslin} zaczną owocować!</li>
+ *   <li><strong>OWOCOWANIE_ROSLIN_TERAZ</strong>: W aktualnym miesiącu twoje rośliny {nazwyRoslin} powinny owocować!</li>
+ *   <li><strong>KWITNIENIE_ROSLIN_TERAZ</strong>: W aktualnym miesiącu twoje rośliny {nazwyRoslin} powinny kwitnąć!</li>
+ *   <li><strong>USUNIECIE_KOMENTARZA</strong>: Usunięto twój komentarz pod postem {tytul}</li>
+ *   <li><strong>BAN</strong>: Zostałeś zbanowany aż do {okres} za {tytul}</li>
+ *   <li><strong>ODBANOWANIE</strong>: Twoje konto zostało odbanowane</li>
+ *   <li><strong>USUNIECIE_ROSLINY</strong>: Twoja roślina została usunięta bo tak</li>
+ *   <li><strong>GRATULACJE</strong>: Gratulacje użytkowniku! Zyskałeś(aś) ponad {iloscPolubien} polubień!</li>
+ *   <li><strong>ZGLOSZENIE</strong>: {uzytkownikNazwa} wysłał(a) zgłoszenie na {zglaszany}: {tytul}</li>
+ *   <li><strong>ZGLOSZENIE_POST</strong>: {uzytkownikNazwa} zgłosił(a) post {zglaszany} z powodu: {tytul}</li>
+ *   <li><strong>ZGLOSZENIE_KOMENTARZ</strong>: {uzytkownikNazwa} zgłosił(a) komentarz {zglaszany} pod postem z powodu: {tytul}</li>
+ *   <li><strong>SPECJALNE</strong>: {tytul}</li>
+ * </ul>
+ */
 public enum TypPowiadomienia {
     KOMENTARZ_POST("{uzytkownikNazwa} odpowiedział(a) na twój komentarz pod postem {tytul}"),
     POLUBIENIA_POST("Twój post {tytul} zebrał ponad {iloscPolubien} polubień!"),

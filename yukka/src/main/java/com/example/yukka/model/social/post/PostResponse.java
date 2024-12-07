@@ -10,6 +10,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Reprezentuje formę response obiektu Post.
+ * 
+ * <ul>
+ * <li><strong>id</strong>: Unikalny identyfikator posta.</li>
+ * <li><strong>postId</strong>: Identyfikator posta.</li>
+ * <li><strong>tytul</strong>: Tytuł posta.</li>
+ * <li><strong>opis</strong>: Opis posta.</li>
+ * <li><strong>ocenyLubi</strong>: Liczba polubień posta.</li>
+ * <li><strong>ocenyNieLubi</strong>: Liczba niepolubień posta.</li>
+ * <li><strong>liczbaKomentarzy</strong>: Liczba komentarzy pod postem.</li>
+ * <li><strong>komentarze</strong>: Lista komentarzy do posta.</li>
+ * <li><strong>uzytkownik</strong>: Nazwa użytkownika, który opublikował post.</li>
+ * <li><strong>obraz</strong>: Obraz dołączony do posta.</li>
+ * <li><strong>avatar</strong>: Avatar użytkownika, który opublikował post.</li>
+ * <li><strong>dataUtworzenia</strong>: Data utworzenia posta.</li>
+ * </ul>
+ */
 @Getter
 @Setter
 @AllArgsConstructor

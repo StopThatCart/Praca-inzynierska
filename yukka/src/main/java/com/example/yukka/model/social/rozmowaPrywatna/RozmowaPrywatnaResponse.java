@@ -11,6 +11,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Reprezentuje odpowiedź na rozmowę prywatną.
+ * 
+ * <ul>
+ * <li><strong>id</strong>: Unikalny identyfikator rozmowy prywatnej.</li>
+ * <li><strong>aktywna</strong>: Status aktywności rozmowy.</li>
+ * <li><strong>nadawca</strong>: Nazwa nadawcy rozmowy.</li>
+ * <li><strong>uzytkownicy</strong>: Lista użytkowników biorących udział w rozmowie.</li>
+ * <li><strong>komentarze</strong>: Lista komentarzy w rozmowie.</li>
+ * <li><strong>liczbaWiadomosci</strong>: Liczba wiadomości w rozmowie.</li>
+ * <li><strong>ostatnioAktualizowana</strong>: Data ostatniej aktualizacji rozmowy.</li>
+ * </ul>
+ */
 @Getter
 @Setter
 @AllArgsConstructor

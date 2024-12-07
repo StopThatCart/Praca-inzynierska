@@ -34,6 +34,25 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Serwis odpowiedzialny za operacje związane z postami.
+ * 
+ * Metody:
+ * 
+ * <ul>
+ * <li><strong>findByPostId</strong>: Znajduje post na podstawie jego ID.</li>
+ * <li><strong>findAllPosts</strong>: Znajduje wszystkie posty z możliwością paginacji i filtrowania.</li>
+ * <li><strong>findAllPostyByConnectedUzytkownik</strong>: Znajduje wszystkie posty powiązane z zalogowanym użytkownikiem.</li>
+ * <li><strong>findAllPostyByUzytkownik</strong>: Znajduje wszystkie posty konkretnego użytkownika z możliwością paginacji.</li>
+ * <li><strong>save</strong>: Zapisuje nowy post.</li>
+ * <li><strong>addOcenaToPost</strong>: Dodaje ocenę do posta.</li>
+ * <li><strong>removeOcenaFromPost</strong>: Usuwa ocenę z posta.</li>
+ * <li><strong>deletePost</strong>: Usuwa post na podstawie jego ID.</li>
+ * <li><strong>seedRemovePostyObrazy</strong>: Usuwa obrazy z wszystkich postów.</li>
+ * <li><strong>createPostId</strong>: Tworzy unikalne ID dla posta.</li>
+ * <li><strong>checkTimeSinceLastPost</strong>: Sprawdza czas, który upłynął od ostatniego posta.</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -50,9 +69,13 @@ public class PostService {
     private final PostMapper postMapper;
 
     
-    /** 
-     * @param postId
-     * @return PostResponse
+
+    /**
+     * Znajduje post na podstawie podanego identyfikatora postu.
+     *
+     * @param postId <ul><li><strong>String</strong>: Identyfikator postu do znalezienia.</li></ul>
+     * @return <ul><li><strong>PostResponse</strong>: Odpowiedź zawierająca dane znalezionego postu.</li></ul>
+     * @throws EntityNotFoundException <ul><li><strong>EntityNotFoundException</strong>: Wyjątek rzucany, gdy post o podanym identyfikatorze nie zostanie znaleziony.</li></ul>
      */
     @Transactional(readOnly = true)
     public PostResponse findByPostId(String postId) {
@@ -62,6 +85,14 @@ public class PostService {
         return postMapper.toPostResponse(post);
     }
 
+    /**
+     * Znajduje wszystkie posty z możliwością paginacji i filtrowania.
+     *
+     * @param page <ul><li><strong>int</strong>: Numer strony.</li></ul>
+     * @param size <ul><li><strong>int</strong>: Rozmiar strony.</li></ul>
+     * @param szukaj <ul><li><strong>String</strong>: Wartość, po której ma być filtrowana lista postów.</li></ul>
+     * @return <ul><li><strong>PageResponse&lt;PostResponse&gt;</strong>: Odpowiedź zawierająca listę postów oraz dane paginacji.</li></ul>
+     */
     @Transactional(readOnly = true)
     public PageResponse<PostResponse> findAllPosts(int page, int size, String szukaj) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
@@ -70,6 +101,14 @@ public class PostService {
         return postMapper.postResponsetoPageResponse(posts);
     }
 
+    /**
+     * Znajduje wszystkie posty powiązane z zalogowanym użytkownikiem.
+     *
+     * @param page <ul><li><strong>int</strong>: Numer strony.</li></ul>
+     * @param size <ul><li><strong>int</strong>: Rozmiar strony.</li></ul>
+     * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
+     * @return <ul><li><strong>PageResponse&lt;PostResponse&gt;</strong>: Odpowiedź zawierająca listę postów oraz dane paginacji.</li></ul>
+     */
     @Transactional(readOnly = true)
     public PageResponse<PostResponse> findAllPostyByConnectedUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
@@ -78,6 +117,17 @@ public class PostService {
         return postMapper.postResponsetoPageResponse(posts);
     }
 
+    /**
+     * Znajduje wszystkie posty użytkownika na podstawie nazwy użytkownika.
+     *
+     * @param page <strong>Numer strony</strong> - numer strony do pobrania.
+     * @param size <strong>Rozmiar strony</strong> - liczba elementów na stronie.
+     * @param nazwa <strong>Nazwa użytkownika</strong> - nazwa użytkownika, którego posty mają być pobrane.
+     * @param connectedUser <strong>Uwierzytelniony użytkownik</strong> - aktualnie zalogowany użytkownik.
+     * @return <strong>PageResponse<PostResponse></strong> - strona z postami użytkownika.
+     * @throws EntityNotFoundException <strong>Nie znaleziono użytkownika</strong> - jeśli użytkownik o podanej nazwie nie istnieje.
+     * @throws ForbiddenException <strong>Brak uprawnień</strong> - jeśli zalogowany użytkownik nie ma uprawnień do przeglądania postów tego użytkownika.
+     */
     @Transactional(readOnly = true)
     public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
@@ -93,16 +143,14 @@ public class PostService {
         return postMapper.postResponsetoPageResponse(posts);
     }
 
-
-    // @Transactional(readOnly = true)
-    // public Integer findAllPostyCountOfUzytkownik(String nazwa) {
-    //     Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
-    //     if(targetUzyt.isEmpty()) {
-    //         return 0;
-    //     }
-    //     return postRepository.findAllPostyCountOfUzytkownik(nazwa);
-    // }
-
+    /**
+     * Zapisuje nowy post.
+     *
+     * @param request <ul><li><strong>PostRequest</strong>: Dane nowego postu.</li></ul>
+     * @param file <ul><li><strong>MultipartFile</strong>: Obraz postu.</li></ul>
+     * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
+     * @return <ul><li><strong>Post</strong>: Zapisany post.</li></ul>
+     */
     public Post save(PostRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         
@@ -112,6 +160,13 @@ public class PostService {
         return save(request, file, uzyt);
     }
 
+    /**
+     * Dodaje ocenę do posta.
+     *
+     * @param request <ul><li><strong>OcenaRequest</strong>: Dane oceny.</li></ul>
+     * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
+     * @return <ul><li><strong>PostResponse</strong>: Odpowiedź zawierająca dane posta po dodaniu oceny.</li></ul>
+     */
     public Post save(PostRequest request, MultipartFile file, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
 
@@ -125,6 +180,13 @@ public class PostService {
         return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
     }
 
+    /**
+     * Dodaje ocenę do posta.
+     *
+     * @param request <ul><li><strong>OcenaRequest</strong>: Dane oceny.</li></ul>
+     * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
+     * @return <ul><li><strong>PostResponse</strong>: Odpowiedź zawierająca dane posta po dodaniu oceny.</li></ul>
+     */
     public PostResponse addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostId(request.getOcenialnyId())
@@ -133,22 +195,32 @@ public class PostService {
         uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
 
         post =  postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
-        // postRepository.updateOcenyCountOfPost(post.getPostId());
-
         return postMapper.toPostResponse(post);
     }
 
+    /**
+     * Usuwa ocenę z posta.
+     *
+     * @param request <ul><li><strong>OcenaRequest</strong>: Dane oceny.</li></ul>
+     * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
+     */
     public void removeOcenaFromPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostId(request.getOcenialnyId())
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getOcenialnyId()));
         
         uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
-
         postRepository.removeOcenaFromPost(uzyt.getEmail(), post.getPostId());
-        // postRepository.updateOcenyCountOfPost(post.getPostId());
     }
 
+    /**
+     * Usuwa post na podstawie jego identyfikatora.
+     *
+     * @param postId <ul><li><strong>String</strong>: Identyfikator postu do usunięcia.</li></ul>
+     * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
+     * @throws EntityNotFoundException <ul><li><strong>EntityNotFoundException</strong>: Wyjątek rzucany, gdy post o podanym identyfikatorze nie zostanie znaleziony.</li></ul>
+     * @throws ForbiddenException <ul><li><strong>ForbiddenException</strong>: Wyjątek rzucany, gdy zalogowany użytkownik nie ma uprawnień do usunięcia posta.</li></ul>
+     */
     public void deletePost(String postId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
@@ -159,6 +231,12 @@ public class PostService {
         deletePost(postId, uzyt);
     }
 
+    /**
+     * Usuwa post na podstawie jego identyfikatora.
+     *
+     * @param postId <ul><li><strong>String</strong>: Identyfikator postu do usunięcia.</li></ul>
+     * @param uzyt <ul><li><strong>Uzytkownik</strong>: Użytkownik, który usuwa post.</li></ul>
+     */
     public void deletePost(String postId, Uzytkownik uzyt) {
         Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
 
@@ -170,6 +248,9 @@ public class PostService {
         }
     }
 
+    /**
+     * Usuwa obrazy z wszystkich postów.
+     */
     public void seedRemovePostyObrazy() {
         List<Post> posty = postRepository.findAll();
         for (Post post : posty) {
@@ -179,7 +260,11 @@ public class PostService {
     }
 
     // Pomocnicze
-
+    /**
+     * Tworzy unikalne ID dla posta.
+     *
+     * @return <ul><li><strong>String</strong>: Unikalne ID posta.</li></ul>
+     */
     public String createPostId() {
         String resultId = UUID.randomUUID().toString();
         do { 
@@ -192,6 +277,12 @@ public class PostService {
         return resultId;
     }
 
+    /**
+     * Sprawdza czas, który upłynął od ostatniego posta.
+     *
+     * @param newestPost <ul><li><strong>Optional&lt;Post&gt;</strong>: Ostatni post użytkownika.</li></ul>
+     * @throws IllegalStateException <ul><li><strong>IllegalStateException</strong>: Wyjątek rzucany, gdy użytkownik próbuje dodać post zbyt szybko po poprzednim.</li></ul>
+     */
     private void checkTimeSinceLastPost(Optional<Post> newestPost) {
         if (newestPost.isPresent()) {
             LocalDateTime lastPostTime = newestPost.get().getDataUtworzenia();

@@ -12,8 +12,35 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 
-
-
+/**
+ * Repozytorium dla operacji na encji RozmowaPrywatna w bazie danych Neo4j.
+ * 
+ * <p>Interfejs ten rozszerza Neo4jRepository i zapewnia metody do wykonywania
+ * zapytań Cypher na bazie danych Neo4j. Metody te umożliwiają sprawdzanie,
+ * pobieranie, zapisywanie oraz aktualizowanie danych dotyczących prywatnych rozmów
+ * między użytkownikami.</p>
+ * 
+ * <p>Metody w tym repozytorium wykorzystują adnotacje @Query do definiowania
+ * zapytań Cypher, które są wykonywane na bazie danych. Parametry zapytań
+ * są przekazywane za pomocą adnotacji @Param.</p>
+ * 
+ * <p>Przykładowe operacje obejmują:</p>
+ * <ul>
+ *   <li>Wyszukiwanie prywatnej rozmowy na podstawie identyfikatorów użytkowników.</li>
+ *   <li>Wyszukiwanie prywatnej rozmowy na podstawie nazw użytkowników.</li>
+ *   <li>Wyszukiwanie prywatnej rozmowy wraz z komentarzami.</li>
+ *   <li>Wyszukiwanie prywatnej rozmowy na podstawie identyfikatora rozmowy.</li>
+ *   <li>Wyszukiwanie prywatnych rozmów użytkownika na podstawie jego adresu email.</li>
+ *   <li>Zapraszanie użytkownika do prywatnej rozmowy.</li>
+ *   <li>Akceptowanie zaproszenia do prywatnej rozmowy.</li>
+ *   <li>Odrzucanie zaproszenia do prywatnej rozmowy.</li>
+ *   <li>Usuwanie prywatnej rozmowy wraz z powiązanymi komentarzami.</li>
+ *   <li>Czyszczenie wszystkich prywatnych rozmów i powiązanych komentarzy.</li>
+ * </ul>
+ * 
+ * <p>Repozytorium to jest częścią aplikacji społecznościowej, umożliwiającej użytkownikom
+ * prowadzenie prywatnych rozmów oraz zarządzanie nimi.</p>
+ */
 public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywatna, Long> {
    @Query("""
     MATCH path = (uzyt1:Uzytkownik{uzytId: $odbiorca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawca})

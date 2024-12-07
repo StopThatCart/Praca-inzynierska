@@ -18,6 +18,20 @@ import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Klasa <strong>UzytkownikRoslinaSeeder</strong> jest odpowiedzialna za inicjalizację danych roślin użytkownika.
+ * 
+ * <ul>
+ * <li><strong>uzytkownikRoslinaService</strong>: Serwis do obsługi operacji na roślinach użytkownika.</li>
+ * <li><strong>roslinaMapper</strong>: Mapper do konwersji obiektów roślin.</li>
+ * <li><strong>roslina1</strong>: Przykładowa roślina użytkownika.</li>
+ * </ul>
+ * 
+ * Metoda <strong>seedUzytkownikRosliny</strong> inicjalizuje przykładową roślinę użytkownika i zapisuje ją w bazie danych.
+ * 
+ * @param uzyt Obiekt użytkownika, dla którego inicjalizowane są rośliny.
+ * @return PageResponse<RoslinaResponse> Zwraca stronę z odpowiedzią zawierającą rośliny użytkownika.
+ */
 @Service
 @RequiredArgsConstructor
 public class UzytkownikRoslinaSeeder {

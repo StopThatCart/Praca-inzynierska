@@ -6,6 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Reprezentuje żądanie utworzenia nowego posta.
+ * <ul>
+ *   <li><strong>tytul</strong> - Tytuł posta. Jest to pole wymagane, które nie może zawierać więcej niż 100 znaków.</li>
+ *   <li><strong>opis</strong> - Opis posta. Pole opcjonalne, które nie może zawierać więcej niż 3000 znaków.</li>
+ *   <li><strong>obraz</strong> - Nazwa pliku obrazu. Pole opcjonalne, które nie może zawierać więcej niż 200 znaków.</li>
+ * </ul>
+ */
 @Getter
 @Setter
 @Builder

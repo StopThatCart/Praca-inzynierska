@@ -3,6 +3,17 @@ package com.example.yukka.seeder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Klasa HeightProcessor przetwarza dane dotyczące wysokości i oblicza ogólną wysokość.
+ * 
+ * <ul>
+ * <li><strong>getWysokosc</strong> - Metoda pobiera wysokości w formie Stringa, przetwarza je i zwraca obiekt Wysokosc reprezentujący ogólną wysokość.</li>
+ * <li><strong>calculateOverallHeight</strong> - Metoda oblicza ogólną minimalną i maksymalną wysokość z listy obiektów Wysokosc.</li>
+ * <li><strong>processHeights</strong> - Metoda przetwarza String zawierający wysokości i zwraca listę obiektów Wysokosc.</li>
+ * <li><strong>processHeightString</strong> - Metoda przetwarza pojedynczy String reprezentujący wysokość i zwraca tablicę Stringów zawierającą minimalną i maksymalną wysokość.</li>
+ * <li><strong>heightQueryStringToClass</strong> - Metoda konwertuje Stringi reprezentujące minimalną i maksymalną wysokość na obiekt Wysokosc.</li>
+ * </ul>
+ */
 public class HeightProcessor {
 
     

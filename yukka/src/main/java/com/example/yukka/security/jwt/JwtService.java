@@ -17,6 +17,26 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+/**
+ * Serwis JwtService zapewnia funkcjonalność do generowania i weryfikacji tokenów JWT.
+ * 
+ * <ul>
+ *   <li><strong>secretKey</strong>: Klucz tajny używany do podpisywania tokenów JWT.</li>
+ *   <li><strong>jwtExpiration</strong>: Czas wygaśnięcia tokenu JWT w milisekundach.</li>
+ * </ul>
+ * 
+ * <ul>
+ *   <li><strong>extractUsername</strong>: Wyodrębnia nazwę użytkownika z tokenu JWT.</li>
+ *   <li><strong>extractClaim</strong>: Wyodrębnia określone roszczenie z tokenu JWT.</li>
+ *   <li><strong>generateToken</strong>: Generuje token JWT dla podanych danych użytkownika.</li>
+ *   <li><strong>buildToken</strong>: Buduje token JWT z dodatkowymi roszczeniami i czasem wygaśnięcia.</li>
+ *   <li><strong>isTokenValid</strong>: Sprawdza, czy token JWT jest ważny dla podanych danych użytkownika.</li>
+ *   <li><strong>isTokenExpired</strong>: Sprawdza, czy token JWT wygasł.</li>
+ *   <li><strong>extractExpiration</strong>: Wyodrębnia datę wygaśnięcia z tokenu JWT.</li>
+ *   <li><strong>extractAllClaims</strong>: Wyodrębnia wszystkie roszczenia z tokenu JWT.</li>
+ *   <li><strong>getSignInKey</strong>: Pobiera klucz używany do podpisywania tokenów JWT.</li>
+ * </ul>
+ */
 @Service
 public class JwtService {
     @Value("${jwt.secret}")

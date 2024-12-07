@@ -15,6 +15,23 @@ import com.example.yukka.model.social.request.PostRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Klasa PostMapper jest odpowiedzialna za mapowanie obiektów Post na różne reprezentacje.
+ * 
+ * <ul>
+ * <li><strong>fileUtils</strong>: Narzędzie do operacji na plikach (nieużywane w tej klasie).</li>
+ * <li><strong>commonMapperService</strong>: Usługa wspomagająca mapowanie obiektów.</li>
+ * </ul>
+ * 
+ * Metody:
+ * 
+ * <ul>
+ * <li><strong>toPostRequest(Post post)</strong>: Mapuje obiekt Post na PostRequest.</li>
+ * <li><strong>toPost(@Valid PostRequest request)</strong>: Mapuje obiekt PostRequest na Post.</li>
+ * <li><strong>toPostResponse(Post post)</strong>: Mapuje obiekt Post na PostResponse.</li>
+ * <li><strong>postResponsetoPageResponse(Page<Post> posty)</strong>: Mapuje stronę obiektów Post na PageResponse<PostResponse>.</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
 public class PostMapper {
@@ -26,9 +43,12 @@ public class PostMapper {
 
     
     
-    /** 
-     * @param post
-     * @return PostRequest
+
+    /**
+     * Konwertuje obiekt typu {@link Post} na obiekt typu {@link PostRequest}.
+     *
+     * @param post obiekt typu {@link Post}, który ma zostać przekonwertowany
+     * @return obiekt typu {@link PostRequest} zawierający dane z obiektu {@link Post}
      */
     public PostRequest toPostRequest(Post post) {
         return PostRequest.builder()
@@ -38,6 +58,12 @@ public class PostMapper {
             .build();
     }
 
+    /**
+     * Konwertuje obiekt typu {@link PostRequest} na obiekt typu {@link Post}.
+     *
+     * @param request obiekt typu {@link PostRequest} zawierający dane do utworzenia nowego posta
+     * @return nowo utworzony obiekt typu {@link Post}
+     */
     public Post toPost(@Valid PostRequest request) {
         return Post.builder()
             .postId(UUID.randomUUID().toString())
@@ -47,10 +73,22 @@ public class PostMapper {
             .build();
     }
 
+    /**
+     * Konwertuje obiekt typu <strong>Post</strong> na obiekt typu <strong>PostResponse</strong>.
+     *
+     * @param post obiekt typu <strong>Post</strong> do konwersji
+     * @return obiekt typu <strong>PostResponse</strong>
+     */
      public PostResponse toPostResponse(Post post) {
         return commonMapperService.mapToPostResponse(post);
     }
 
+    /**
+     * Konwertuje stronę obiektów typu <strong>Post</strong> na obiekt typu <strong>PageResponse<PostResponse></strong>.
+     *
+     * @param posty strona obiektów typu <strong>Post</strong> do konwersji
+     * @return obiekt typu <strong>PageResponse<PostResponse></strong>
+     */
     public PageResponse<PostResponse> postResponsetoPageResponse(Page<Post> posty) {
         List<PostResponse> postyResponse = posty.stream()
                 .map(this::toPostResponse)

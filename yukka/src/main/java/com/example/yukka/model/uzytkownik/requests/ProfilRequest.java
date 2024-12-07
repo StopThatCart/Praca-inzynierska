@@ -8,6 +8,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * Reprezentuje żądanie profilu użytkownika.
+ * <ul>
+ *   <li><strong>imie</strong> - Imię użytkownika. Musi zawierać od 1 do 100 znaków.</li>
+ *   <li><strong>miasto</strong> - Miasto użytkownika. Musi zawierać od 1 do 100 znaków.</li>
+ *   <li><strong>miejsceZamieszkania</strong> - Miejsce zamieszkania użytkownika. Musi zawierać od 1 do 100 znaków.</li>
+ *   <li><strong>opis</strong> - Opis użytkownika. Musi zawierać od 1 do 500 znaków.</li>
+ * </ul>
+ */
 @Builder
 @Getter
 @Setter

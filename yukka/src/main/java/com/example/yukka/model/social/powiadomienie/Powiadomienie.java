@@ -23,6 +23,35 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Klasa reprezentująca powiadomienie w systemie. Używana w prywatnych funkcjach do konstrukcji odpowiedniego powiadomienia.
+ * Jest to klasa zrobiona pośpiesznie, dlatego ma ona problem z dużą ilością pól.
+ * 
+ * <ul>
+ * <li><strong>id</strong>: Unikalny identyfikator powiadomienia.</li>
+ * <li><strong>labels</strong>: Lista etykiet dynamicznych przypisanych do powiadomienia.</li>
+ * <li><strong>typ</strong>: Typ powiadomienia.</li>
+ * <li><strong>odnosnik</strong>: Odnośnik związany z powiadomieniem.</li>
+ * <li><strong>tytul</strong>: Tytuł powiadomienia.</li>
+ * <li><strong>uzytkownikNazwa</strong>: Nazwa użytkownika, który otrzymał powiadomienie.</li>
+ * <li><strong>zglaszany</strong>: Informacja o zgłaszanym elemencie.</li>
+ * <li><strong>opis</strong>: Opis powiadomienia.</li>
+ * <li><strong>avatar</strong>: Avatar użytkownika.</li>
+ * <li><strong>nazwyRoslin</strong>: Zbiór nazw roślin związanych z powiadomieniem.</li>
+ * <li><strong>iloscPolubien</strong>: Ilość polubień powiadomienia.</li>
+ * <li><strong>data</strong>: Data powiadomienia.</li>
+ * <li><strong>dataUtworzenia</strong>: Data utworzenia powiadomienia.</li>
+ * <li><strong>okres</strong>: Okres powiadomienia.</li>
+ * <li><strong>powiadamia</strong>: Relacja powiadomienia.</li>
+ * <li><strong>zglaszajacy</strong>: Użytkownik zgłaszający powiadomienie.</li>
+ * </ul>
+ * 
+ * Metody:
+ * <ul>
+ * <li><strong>isZgloszenie</strong>: Sprawdza, czy powiadomienie jest zgłoszeniem.</li>
+ * <li><strong>toString</strong>: Zwraca reprezentację tekstową powiadomienia.</li>
+ * </ul>
+ */
 @Node
 @Getter
 @Setter

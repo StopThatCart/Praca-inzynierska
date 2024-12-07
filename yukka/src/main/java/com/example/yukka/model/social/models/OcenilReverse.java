@@ -12,6 +12,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Klasa reprezentująca relację ocenienia w odwrotnym kierunku.
+ * 
+ * <ul>
+ *   <li><strong>id</strong>: Unikalny identyfikator relacji.</li>
+ *   <li><strong>lubi</strong>: Wartość logiczna określająca, czy użytkownik lubi dany element.</li>
+ *   <li><strong>uzytkownik</strong>: Obiekt reprezentujący użytkownika, który ocenił.</li>
+ * </ul>
+ */
 @RelationshipProperties
 @Getter
 @Builder

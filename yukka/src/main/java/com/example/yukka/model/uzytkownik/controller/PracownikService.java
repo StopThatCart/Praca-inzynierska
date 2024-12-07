@@ -22,6 +22,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
+/**
+ * Serwis do zarządzania użytkownikami w systemie.
+ * 
+ * <ul>
+ * <li><strong>unbanUzytkownik</strong> - Odbanowuje użytkownika na podstawie jego nazwy.</li>
+ * <li><strong>setBanUzytkownik</strong> - Ustawia ban na użytkownika na podstawie żądania BanRequest.</li>
+ * <li><strong>remove</strong> - Usuwa użytkownika na podstawie jego nazwy.</li>
+ * </ul>
+ * 
+ * 
+ * <strong>Wyjątki:</strong>
+ * <ul>
+ * <li>EntityNotFoundException - Rzucany, gdy użytkownik nie zostanie znaleziony.</li>
+ * <li>IllegalArgumentException - Rzucany, gdy wystąpi nieprawidłowy argument.</li>
+ * <li>ForbiddenException - Rzucany, gdy użytkownik nie ma odpowiednich uprawnień.</li>
+ * </ul>
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,13 +52,20 @@ public class PracownikService {
     String fileUploadPath;
 
     
-    /** 
-     * @param nazwa
-     * @param currentUser
-     * @return Boolean
+
+    /**
+     * Odbanowuje użytkownika o podanej nazwie.
+     *
+     * @param nazwa Nazwa użytkownika, który ma zostać odbanowany.
+     * @param currentUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return true, jeśli użytkownik został pomyślnie odbanowany, w przeciwnym razie false.
+     * @throws EntityNotFoundException Jeśli użytkownik o podanej nazwie nie istnieje.
+     * @throws IllegalArgumentException Jeśli użytkownik nie jest zbanowany.
+     * @throws ForbiddenException Jeśli aktualnie zalogowany użytkownik nie ma uprawnień do odbanowywania tego użytkownika.
      */
     public Boolean unbanUzytkownik(String nazwa, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        log.info("Odbanowywanie użytkownika o nazwie: " + nazwa);
 
         Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
@@ -60,6 +84,16 @@ public class PracownikService {
         return unbanus;
     }
 
+    /**
+     * Ustawia ban na użytkownika.
+     *
+     * @param request Obiekt zawierający szczegóły dotyczące bana.
+     * @param currentUser Obiekt reprezentujący aktualnie zalogowanego użytkownika.
+     * @return Odpowiedź zawierająca informację, czy operacja się powiodła.
+     * @throws EntityNotFoundException Jeśli użytkownik o podanej nazwie nie istnieje.
+     * @throws IllegalArgumentException Jeśli użytkownik jest już zbanowany/odbanowany.
+     * @throws ForbiddenException Jeśli aktualnie zalogowany użytkownik nie ma uprawnień do banowania/odbanowywania tego użytkownika.
+     */
     public Boolean setBanUzytkownik(BanRequest request, Authentication currentUser){
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         log.info( "Użytkownik {} próbuje zbanować użytkownika {}", uzyt.getNazwa(), request.getNazwa());
@@ -92,7 +126,15 @@ public class PracownikService {
         return banus;
     }
 
-
+    /**
+     * Usuwa użytkownika o podanej nazwie.
+     *
+     * @param nazwa Nazwa użytkownika, który ma zostać usunięty.
+     * @param currentUser Obecnie zalogowany użytkownik wykonujący operację.
+     * @throws EntityNotFoundException Jeśli użytkownik o podanej nazwie nie istnieje.
+     * @throws IllegalArgumentException Jeśli wystąpi nieprawidłowy argument.
+     * @throws ForbiddenException Jeśli użytkownik nie ma odpowiednich uprawnień.
+     */
     public void remove(String nazwa, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         log.info("Usuwanie użytkownika o nazwie: " + nazwa);
@@ -120,6 +162,11 @@ public class PracownikService {
         fileUtils.deleteDirectory(path);
     }
 
+    /**
+     * Seria zapytań do usunięcia użytkownika.
+     *
+     * @param email Email użytkownika, który ma zostać usunięty.
+     */
     private void removeUzytkownikQueries(String email) {
         uzytkownikRepository.removePostyOfUzytkownik(email);
         uzytkownikRepository.removeKomentarzeOfUzytkownik(email);

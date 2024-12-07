@@ -11,6 +11,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Reprezentuje relację oceny.
+ * 
+ * <ul>
+ *   <li><strong>id</strong>: Unikalny identyfikator relacji.</li>
+ *   <li><strong>lubi</strong>: Określa, czy użytkownik lubi oceniany obiekt.</li>
+ *   <li><strong>oceniany</strong>: Obiekt, który jest oceniany.</li>
+ * </ul>
+ */
 @RelationshipProperties
 @Getter
 @Builder

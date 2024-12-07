@@ -21,6 +21,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Reprezentuje post.
+ * 
+ * <ul>
+ *   <li><strong>id</strong>: Unikalny identyfikator posta.</li>
+ *   <li><strong>postId</strong>: Identyfikator posta jako String.</li>
+ *   <li><strong>tytul</strong>: Tytuł posta.</li>
+ *   <li><strong>opis</strong>: Opis posta.</li>
+ *   <li><strong>obraz</strong>: URL obrazu powiązanego z postem.</li>
+ *   <li><strong>dataUtworzenia</strong>: Data utworzenia posta.</li>
+ *   <li><strong>autor</strong>: Użytkownik, który stworzył post.</li>
+ *   <li><strong>komentarze</strong>: Lista komentarzy powiązanych z postem.</li>
+ *   <li><strong>komentarzeWPoscie</strong>: Lista komentarzy zawartych w poście.</li>
+ * </ul>
+ */
 @Node
 @Getter
 @Setter

@@ -33,6 +33,32 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 
+/**
+ * Kontroler REST dla zasobów użytkowników.
+ * 
+ * <ul>
+ * <li><strong>UzytkownikService</strong>: Serwis do obsługi operacji na użytkownikach.</li>
+ * <li><strong>PowiadomienieService</strong>: Serwis do obsługi powiadomień.</li>
+ * </ul>
+ * 
+ * Endpointy:
+ * 
+ * <ul>
+ * <li><strong>GET /uzytkownicy</strong>: Pobiera listę wszystkich użytkowników.</li>
+ * <li><strong>GET /uzytkownicy/nazwa/{nazwa}</strong>: Pobiera użytkownika na podstawie nazwy.</li>
+ * <li><strong>GET /uzytkownicy/email/{email}</strong>: Pobiera użytkownika na podstawie emaila.</li>
+ * <li><strong>GET /uzytkownicy/avatar</strong>: Pobiera avatar zalogowanego użytkownika.</li>
+ * <li><strong>GET /uzytkownicy/ustawienia</strong>: Pobiera ustawienia zalogowanego użytkownika.</li>
+ * <li><strong>GET /uzytkownicy/blokowani</strong>: Pobiera listę zablokowanych i blokujących użytkowników.</li>
+ * <li><strong>PATCH /uzytkownicy/ustawienia</strong>: Aktualizuje ustawienia zalogowanego użytkownika.</li>
+ * <li><strong>GET /uzytkownicy/profil/{nazwa}</strong>: Pobiera statystyki użytkownika na podstawie nazwy.</li>
+ * <li><strong>PATCH /uzytkownicy/profil</strong>: Aktualizuje profil zalogowanego użytkownika.</li>
+ * <li><strong>POST /uzytkownicy/send-zmiana-email</strong>: Wysyła żądanie zmiany emaila.</li>
+ * <li><strong>PATCH /uzytkownicy/avatar</strong>: Aktualizuje avatar zalogowanego użytkownika.</li>
+ * <li><strong>PATCH /uzytkownicy/blok/{nazwa}/{blok}</strong>: Ustawia blokadę na użytkownika.</li>
+ * <li><strong>DELETE /uzytkownicy</strong>: Usuwa konto zalogowanego użytkownika.</li>
+ * </ul>
+ */
 @RestController
 @RequestMapping("uzytkownicy")
 @RequiredArgsConstructor
@@ -44,55 +70,125 @@ public class UzytkownikController {
     PowiadomienieService powiadomienieService;
 
     
-    /** 
-     * @return List<Uzytkownik>
+    
+    /**
+     * Metoda zwracająca listę wszystkich użytkowników.
+     * 
+     * <ul>
+     *   <li><strong>produces:</strong> application/json</li>
+     *   <li><strong>returns:</strong> Lista obiektów typu Uzytkownik</li>
+     * </ul>
      */
-    // dodawanie użytkowników jest w authorization. Za to dodawanie pracowników będzie u admina
     @GetMapping(produces="application/json")
     public List<Uzytkownik> findAllUzytkownicy() {
         return uzytkownikService.findAll();
     }
     
+    
+    /**
+     * Metoda obsługująca żądanie GET na endpoint "/nazwa/{nazwa}".
+     * Zwraca obiekt UzytkownikResponse w formacie JSON na podstawie podanej nazwy użytkownika.
+     *
+     * @param nazwa nazwa użytkownika, którego dane mają zostać zwrócone
+     * @return ResponseEntity zawierające obiekt UzytkownikResponse z danymi użytkownika
+     */
     @GetMapping(value = "/nazwa/{nazwa}", produces="application/json")
     public ResponseEntity<UzytkownikResponse> findByNazwa(@PathVariable("nazwa") String nazwa) {
         return ResponseEntity.ok(uzytkownikService.findByNazwa(nazwa));
     }
 
+
+    /**
+     * Metoda obsługująca żądanie GET na endpoint "/email/{email}".
+     * Zwraca obiekt UzytkownikResponse na podstawie podanego adresu email.
+     *
+     * @param email Adres email użytkownika, którego dane mają zostać zwrócone.
+     * @return ResponseEntity zawierający obiekt UzytkownikResponse z danymi użytkownika.
+     */
     @GetMapping(value = "/email/{email}", produces="application/json")
     public ResponseEntity<UzytkownikResponse> findByEmail(@PathVariable("email") String email) {
         return ResponseEntity.ok(uzytkownikService.findByEmail(email));
     }
 
+    /**
+     * Pobiera awatar zalogowanego użytkownika.
+     *
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return ResponseEntity zawierający obiekt FileResponse z awatarem użytkownika
+     */
     @GetMapping(value = "/avatar", produces="application/json")
     public ResponseEntity<FileResponse> getAvatar(Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.getLoggedInAvatar(connectedUser));
     }
 
+    /**
+     * Metoda obsługująca żądanie GET na endpoint "/ustawienia".
+     * Zwraca ustawienia użytkownika w formacie JSON.
+     *
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     * @return ResponseEntity zawierający obiekt UzytkownikResponse z ustawieniami użytkownika
+     */
     @GetMapping(value = "/ustawienia", produces="application/json")
     public ResponseEntity<UzytkownikResponse> getUstawienia(Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.getUstawienia(connectedUser));
     }
 
+    /**
+     * Endpoint do pobierania listy zablokowanych użytkowników oraz użytkowników blokujących.
+     *
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     * @return ResponseEntity zawierające obiekt UzytkownikResponse z listą zablokowanych i blokujących użytkowników
+     */
     @GetMapping(value = "/blokowani", produces="application/json")
     public ResponseEntity<UzytkownikResponse> getBlokowaniAndBlokujacy(Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.getBlokowaniAndBlokujacy(connectedUser));
     }
 
+    /**
+     * Aktualizuje ustawienia użytkownika.
+     *
+     * @param ustawienia obiekt zawierający nowe ustawienia użytkownika
+     * @param connectedUser uwierzytelniony użytkownik, który dokonuje zmiany
+     * @return odpowiedź zawierająca zaktualizowane dane użytkownika
+     */
     @PatchMapping(value = "/ustawienia", consumes="multipart/form-data", produces="application/json")
     public ResponseEntity<UzytkownikResponse> updateUstawienia(@Valid @RequestPart("ustawienia") UstawieniaRequest ustawienia, Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.updateUstawienia(ustawienia, connectedUser));
     }
 
+    /**
+     * Metoda obsługująca żądanie HTTP GET na endpoint "/profil/{nazwa}".
+     * Zwraca statystyki użytkownika w formacie JSON.
+     *
+     * @param nazwa Nazwa użytkownika, którego statystyki mają zostać pobrane.
+     * @param connectedUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return ResponseEntity zawierające obiekt StatystykiDTO z danymi statystyk użytkownika.
+     */
     @GetMapping(value = "/profil/{nazwa}",  produces="application/json")
     public ResponseEntity<StatystykiDTO> getStatystykiOfUzytkownik(@PathVariable("nazwa") String nazwa, Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.getStatystykiOfUzytkownik(nazwa, connectedUser));
     }
 
+    /**
+     * Aktualizuje profil użytkownika.
+     *
+     * @param request         Obiekt ProfilRequest zawierający dane do aktualizacji profilu.
+     * @param connectedUser   Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return                ResponseEntity zawierający zaktualizowany profil użytkownika w formacie JSON.
+     */
     @PatchMapping(value = "/profil", consumes="multipart/form-data", produces="application/json")
     public ResponseEntity<UzytkownikResponse> updateProfil(@Valid @RequestPart("profil") ProfilRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.updateProfil(request, connectedUser));
     }
 
+    /**
+     * Obsługuje żądanie zmiany adresu e-mail użytkownika.
+     *
+     * @param request obiekt EmailRequest zawierający dane dotyczące nowego adresu e-mail
+     * @param currentUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     * @return ResponseEntity z kodem statusu 202 (Accepted) w przypadku pomyślnego przetworzenia żądania
+     * @throws MessagingException w przypadku problemów z wysyłaniem wiadomości e-mail
+     */
     @PostMapping(value = "/send-zmiana-email", produces="application/json")
     public ResponseEntity<?> sendZmianaEmail(@Valid @RequestBody EmailRequest request, Authentication currentUser) throws MessagingException {
         uzytkownikService.sendChangeEmail(request, currentUser);
@@ -100,11 +196,26 @@ public class UzytkownikController {
     }
 
 
+    /**
+     * Aktualizuje awatar użytkownika.
+     *
+     * @param file Plik zawierający nowy awatar użytkownika.
+     * @param connectedUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return ResponseEntity zawierający zaktualizowane dane użytkownika w formacie JSON.
+     */
     @PatchMapping(value = "/avatar", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<UzytkownikResponse> updateAvatar(@Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.updateUzytkownikAvatar(file, connectedUser));
     }
 
+    /**
+     * Blokuje/odblokowuje użytkownika dla aktualnie zalogowanego użytkownika.
+     *
+     * @param nazwa Nazwa użytkownika, którego blokada ma zostać zmieniona.
+     * @param blok  Wartość blokady (true - zablokowany, false - odblokowany).
+     * @param currentUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return ResponseEntity z wartością true, jeśli operacja się powiodła, w przeciwnym razie false.
+     */
     @PatchMapping(value = "/blok/{nazwa}/{blok}", produces="application/json")
     public ResponseEntity<Boolean> setBlokUzytkownik(@PathVariable("nazwa") String nazwa, 
             @PathVariable("blok") boolean blok, Authentication currentUser) {
@@ -112,6 +223,12 @@ public class UzytkownikController {
     }
     
 
+    /**
+     * Usuwa konto zalogoanego użytkownika.
+     *
+     * @param request obiekt zawierający dane żądania usunięcia konta
+     * @param currentUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     */
     @DeleteMapping(consumes = "application/json", produces = "application/json")
     public void removeSelf(@RequestBody UsunKontoRequest request, Authentication currentUser) {
         uzytkownikService.removeSelf(request, currentUser);

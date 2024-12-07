@@ -8,6 +8,19 @@ import lombok.Setter;
 import lombok.ToString;
 
 
+/**
+ * Klasa StatystykiDTO reprezentuje dane statystyczne użytkownika.
+ * 
+ * <ul>
+ *   <li><strong>posty</strong>: Liczba postów użytkownika.</li>
+ *   <li><strong>komentarze</strong>: Liczba komentarzy użytkownika.</li>
+ *   <li><strong>rosliny</strong>: Liczba roślin dodanych przez użytkownika.</li>
+ *   <li><strong>komentarzeOcenyPozytywne</strong>: Liczba pozytywnych ocen komentarzy użytkownika.</li>
+ *   <li><strong>komentarzeOcenyNegatywne</strong>: Liczba negatywnych ocen komentarzy użytkownika.</li>
+ *   <li><strong>postyOcenyPozytywne</strong>: Liczba pozytywnych ocen postów użytkownika.</li>
+ *   <li><strong>postyOcenyNegatywne</strong>: Liczba negatywnych ocen postów użytkownika.</li>
+ * </ul>
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,26 +28,14 @@ import lombok.ToString;
 @Setter
 @ToString
 public class StatystykiDTO {
-    // private ArrayList<Long> posty;
-    // private ArrayList<Long> komentarze;
-    // private ArrayList<Long> rosliny;
+
     private Integer posty;
     private Integer komentarze;
     private Integer rosliny;
 
-   // private Integer komentarzeOceny;
+
     private Integer komentarzeOcenyPozytywne;
     private Integer komentarzeOcenyNegatywne;
-   // private Integer postyOceny;
     private Integer postyOcenyPozytywne;
     private Integer postyOcenyNegatywne;
-
-    // @JsonIgnore
-    // public static StatystykiDTO fromMap(Map<String, Object> map) {
-    //     return StatystykiDTO.builder()
-    //             .posty(((Number) map.get("posty")).longValue())
-    //             .komentarze(((Number) map.get("komentarze")).longValue())
-    //             .rosliny(((Number) map.get("rosliny")).longValue())
-    //             .build();
-    // }
 }

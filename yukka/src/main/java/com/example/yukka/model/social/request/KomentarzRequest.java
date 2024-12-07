@@ -7,6 +7,20 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Reprezentuje żądanie dodania komentarza.
+ * 
+ * <ul>
+ * <li><strong>opis</strong> - Opis komentarza, maksymalnie 3000 znaków.</li>
+ * <li><strong>obraz</strong> - Opcjonalny obraz dołączony do komentarza.</li>
+ * <li><strong>targetId</strong> - Identyfikator obiektu, który jest komentowany. Pole wymagane.</li>
+ * </ul>
+ * 
+ * Metody:
+ * <ul>
+ * <li><strong>isOpisOrObrazPresent</strong> - Sprawdza, czy komentarz zawiera opis lub obraz. Zwraca wartość boolean.</li>
+ * </ul>
+ */
 @Getter
 @Setter
 @Builder

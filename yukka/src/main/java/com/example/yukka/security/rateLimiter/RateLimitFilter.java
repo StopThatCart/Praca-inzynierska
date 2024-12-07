@@ -16,30 +16,55 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * <strong>RateLimitFilter</strong> - Filtr ograniczający liczbę żądań HTTP.
+ * 
+ * <ul>
+ * <li><strong>bucket</strong> - Obiekt typu Bucket używany do śledzenia i ograniczania liczby żądań.</li>
+ * </ul>
+ * 
+ * <strong>Metody:</strong>
+ * 
+ * <ul>
+ * <li><strong>doFilterInternal</strong> - Metoda filtrująca żądania HTTP.
+ * <ul>
+ * <li><strong>request</strong> - Obiekt HttpServletRequest reprezentujący żądanie HTTP.</li>
+ * <li><strong>response</strong> - Obiekt HttpServletResponse reprezentujący odpowiedź HTTP.</li>
+ * <li><strong>filterChain</strong> - Obiekt FilterChain używany do kontynuowania przetwarzania filtra.</li>
+ * </ul>
+ * </li>
+ * </ul>
+ * 
+ * <strong>Wyjątki:</strong>
+ * <ul>
+ * <li><strong>ServletException</strong> - Rzucany w przypadku błędów serwletu.</li>
+ * <li><strong>IOException</strong> - Rzucany w przypadku błędów wejścia/wyjścia.</li>
+ * </ul>
+ */
 @Component
 public class RateLimitFilter extends OncePerRequestFilter {
     @Autowired
     private Bucket bucket;
 
 
-
-    
-    /** 
-     * @param request
-     * @param response
-     * @param filterChain
-     * @throws ServletException
-     * @throws IOException
+    /**
+     * Przefiltrowuje żądanie HTTP, aby sprawdzić, czy przekroczono limit żądań.
+     * 
+     * @param request żądanie HTTP
+     * @param response odpowiedź HTTP
+     * @param filterChain łańcuch filtrów
+     * @throws ServletException w przypadku błędu serwletu
+     * @throws IOException w przypadku błędu wejścia/wyjścia
+     * 
+     * <ul>
+     *   <li><strong>request</strong>: żądanie HTTP</li>
+     *   <li><strong>response</strong>: odpowiedź HTTP</li>
+     *   <li><strong>filterChain</strong>: łańcuch filtrów</li>
+     * </ul>
      */
     @Override
     protected void doFilterInternal(@SuppressWarnings("null") HttpServletRequest request, @SuppressWarnings("null") HttpServletResponse response, @SuppressWarnings("null") FilterChain filterChain)
             throws ServletException, IOException {
-        // if (!request.getServletPath().contains("/rosliny/szukaj")) {
-        //     filterChain.doFilter(request, response);
-        //     return;
-        // }
-
-
         if (bucket.tryConsume(1)) {
             filterChain.doFilter(request, response);
             return;
@@ -58,6 +83,5 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
             return;
         }
-
     }
 }

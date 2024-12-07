@@ -36,6 +36,38 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Klasa reprezentująca użytkownika w systemie.
+ * Implementuje interfejsy <strong>UserDetails</strong> oraz <strong>Principal</strong>.
+ * 
+ * <ul>
+ * <li><strong>id</strong>: Unikalny identyfikator użytkownika.</li>
+ * <li><strong>uzytId</strong>: Identyfikator użytkownika.</li>
+ * <li><strong>labels</strong>: Lista etykiet przypisanych do użytkownika.</li>
+ * <li><strong>nazwa</strong>: Nazwa użytkownika.</li>
+ * <li><strong>email</strong>: Adres email użytkownika.</li>
+ * <li><strong>haslo</strong>: Hasło użytkownika.</li>
+ * <li><strong>avatar</strong>: Ścieżka do awatara użytkownika.</li>
+ * <li><strong>dataUtworzenia</strong>: Data utworzenia konta użytkownika.</li>
+ * <li><strong>aktywowany</strong>: Status aktywacji konta użytkownika.</li>
+ * <li><strong>ban</strong>: Status bana użytkownika.</li>
+ * <li><strong>banDo</strong>: Data wygaśnięcia bana.</li>
+ * <li><strong>imie</strong>: Imię użytkownika.</li>
+ * <li><strong>miasto</strong>: Miasto użytkownika.</li>
+ * <li><strong>miejsceZamieszkania</strong>: Miejsce zamieszkania użytkownika.</li>
+ * <li><strong>opis</strong>: Opis użytkownika.</li>
+ * <li><strong>posty</strong>: Lista postów użytkownika.</li>
+ * <li><strong>komentarze</strong>: Lista komentarzy użytkownika.</li>
+ * <li><strong>oceny</strong>: Lista ocen użytkownika.</li>
+ * <li><strong>ustawienia</strong>: Ustawienia użytkownika.</li>
+ * <li><strong>ogrod</strong>: Ogród użytkownika.</li>
+ * <li><strong>rozmowyPrywatne</strong>: Zestaw prywatnych rozmów użytkownika.</li>
+ * <li><strong>blokowaniUzytkownicy</strong>: Zestaw użytkowników zablokowanych przez tego użytkownika.</li>
+ * <li><strong>blokujacyUzytkownicy</strong>: Zestaw użytkowników, którzy zablokowali tego użytkownika.</li>
+ * </ul>
+ * 
+ * Klasa zawiera również metody do sprawdzania ról użytkownika oraz uprawnień do dostępu do prywatnych treści.
+ */
 @Getter
 @Setter
 @Builder

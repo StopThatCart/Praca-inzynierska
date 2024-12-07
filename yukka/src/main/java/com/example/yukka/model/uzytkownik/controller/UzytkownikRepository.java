@@ -13,9 +13,35 @@ import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import jakarta.annotation.Nonnull;
 
+/**
+ * Repozytorium dla operacji na encji Uzytkownik w bazie danych Neo4j.
+ * 
+ * <p>Interfejs ten rozszerza Neo4jRepository i zapewnia metody do wykonywania
+ * zapytań Cypher na bazie danych Neo4j. Metody te umożliwiają sprawdzanie,
+ * pobieranie, zapisywanie oraz aktualizowanie danych dotyczących użytkowników
+ * oraz ich powiązań z innymi encjami, takimi jak ustawienia, ogród, działki,
+ * posty, komentarze i powiadomienia.</p>
+ * 
+ * <p>Metody w tym repozytorium wykorzystują adnotacje @Query do definiowania
+ * zapytań Cypher, które są wykonywane na bazie danych. Parametry zapytań
+ * są przekazywane za pomocą adnotacji @Param.</p>
+ * 
+ * <p>Przykładowe operacje obejmują:</p>
+ * <ul>
+ *   <li>Wyszukiwanie użytkowników na podstawie różnych kryteriów, takich jak ID, nazwa, email.</li>
+ *   <li>Sprawdzanie, czy użytkownik istnieje na podstawie nazwy lub emaila.</li>
+ *   <li>Pobieranie użytkowników zablokowanych przez innego użytkownika.</li>
+ *   <li>Dodawanie nowych użytkowników wraz z ich ustawieniami i ogrodem.</li>
+ *   <li>Aktualizowanie danych użytkownika, takich jak email, hasło, avatar, profil.</li>
+ *   <li>Usuwanie użytkowników oraz powiązanych z nimi danych, takich jak posty, komentarze, rośliny.</li>
+ *   <li>Banowanie użytkowników oraz zarządzanie ich stanem aktywacji.</li>
+ * </ul>
+ * 
+ * <p>Repozytorium to jest częścią aplikacji zarządzającej użytkownikami,
+ * umożliwiającej zarządzanie ich profilami, interakcjami oraz powiązanymi
+ * danymi w kontekście społeczności ogrodniczej.</p>
+ */
 public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> {
-
-
     @Query("""
         MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(u:Uzytkownik{uzytId: $uzytId})
         RETURN u, collect(NODES(path)), collect(RELATIONSHIPS(path))

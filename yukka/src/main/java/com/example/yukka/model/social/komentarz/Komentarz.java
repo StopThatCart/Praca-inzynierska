@@ -23,6 +23,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Klasa reprezentująca komentarz.
+ * <ul>
+ *   <li><strong>id</strong>: Unikalny identyfikator komentarza.</li>
+ *   <li><strong>komentarzId</strong>: Identyfikator komentarza jako String.</li>
+ *   <li><strong>opis</strong>: Treść komentarza.</li>
+ *   <li><strong>obraz</strong>: Ścieżka do obrazu związanego z komentarzem.</li>
+ *   <li><strong>edytowany</strong>: Flaga oznaczająca, czy komentarz został edytowany.</li>
+ *   <li><strong>dataUtworzenia</strong>: Data utworzenia komentarza.</li>
+ *   <li><strong>rozmowaPrywatna</strong>: Relacja do prywatnej rozmowy, w której znajduje się komentarz.</li>
+ *   <li><strong>wPoscie</strong>: Relacja do posta, w którym znajduje się komentarz.</li>
+ *   <li><strong>post</strong>: Relacja do posta, do którego odnosi się komentarz.</li>
+ *   <li><strong>odpowiadaKomentarzowi</strong>: Relacja do komentarza, na który odpowiada ten komentarz.</li>
+ *   <li><strong>odpowiedzi</strong>: Lista odpowiedzi na ten komentarz.</li>
+ *   <li><strong>uzytkownik</strong>: Użytkownik, który dodał komentarz.</li>
+ * </ul>
+ */
 @Node
 @Getter
 @Setter
@@ -88,8 +105,8 @@ public class Komentarz extends Oceniany {
                 "id=" + id +
                 ", komentarzId='" + komentarzId + '\'' +
                 ", opis='" + opis + '\'' +
-                ", polubienia='" + getOcenyLubiButGood() + '\'' +
-                ", niepolubienia='" + getOcenyNieLubiButGood() + '\'' +
+                ", polubienia='" + getOcenyLubi() + '\'' +
+                ", niepolubienia='" + getOcenyNieLubi() + '\'' +
                 ", edytowany=" + edytowany +
                 ", dataUtworzenia=" + dataUtworzenia +
                 ", postId=" + (post != null ? post.getPostId() : "null") +

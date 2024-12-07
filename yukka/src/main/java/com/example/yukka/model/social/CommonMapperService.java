@@ -28,15 +28,35 @@ import com.example.yukka.model.uzytkownik.requests.UstawieniaRequest;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Serwis mapujący różne obiekty na odpowiedzi API.
+ * <ul>
+ * <li><strong>toSimpleAvatar</strong> - Mapuje obiekt Uzytkownik na UzytkownikResponse z prostym avatarem.</li>
+ * <li><strong>toUzytkownikResponse</strong> - Mapuje obiekt Uzytkownik na pełną odpowiedź UzytkownikResponse.</li>
+ * <li><strong>toUstawienia</strong> - Mapuje obiekt UstawieniaRequest na Ustawienia.</li>
+ * <li><strong>mapToPostResponse</strong> - Mapuje obiekt Post na PostResponse.</li>
+ * <li><strong>toKomentarzResponse</strong> - Mapuje obiekt Komentarz na KomentarzResponse.</li>
+ * <li><strong>rozmowaPrywatnaPagetoPageRozmowaPrywatnaResponse</strong> - Mapuje stronę obiektów RozmowaPrywatna na PageResponse z RozmowaPrywatnaResponse.</li>
+ * <li><strong>toRozmowaPrywatnaResponse</strong> - Mapuje obiekt RozmowaPrywatna na RozmowaPrywatnaResponse.</li>
+ * <li><strong>toUzytkownikSimpleResponse</strong> - Mapuje obiekt Uzytkownik na uproszczoną odpowiedź UzytkownikResponse.</li>
+ * <li><strong>toKomentarzSimpleResponse</strong> - Mapuje obiekt Komentarz na uproszczoną odpowiedź KomentarzSimpleResponse.</li>
+ * <li><strong>mapPostForKomentarzResponse</strong> - Mapuje obiekt Post na uproszczoną odpowiedź PostResponse dla KomentarzResponse.</li>
+ * <li><strong>mapOdpowiadaKomentarzowiForKomentarzResponse</strong> - Mapuje obiekt Komentarz na odpowiedź KomentarzResponse dla odpowiedzi na komentarz.</li>
+ * <li><strong>timeAgo</strong> - Formatuje datę na tekst w stylu "czas temu" w języku polskim.</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
 public class CommonMapperService {
     private final FileUtils fileUtils;
 
     
-    /** 
-     * @param uzytkownik
-     * @return UzytkownikResponse
+
+    /**
+     * Konwertuje obiekt Uzytkownik na obiekt UzytkownikResponse zawierający tylko avatar.
+     *
+     * @param uzytkownik obiekt Uzytkownik, który ma być przekształcony
+     * @return obiekt UzytkownikResponse zawierający avatar lub null, jeśli uzytkownik jest null
      */
     public UzytkownikResponse toSimpleAvatar(Uzytkownik uzytkownik) {
         if (uzytkownik == null) {
@@ -47,6 +67,12 @@ public class CommonMapperService {
             .build();
     }
 
+    /**
+     * Konwertuje obiekt Uzytkownik na obiekt UzytkownikResponse.
+     *
+     * @param uzytkownik obiekt Uzytkownik, który ma być przekształcony
+     * @return obiekt UzytkownikResponse lub null, jeśli uzytkownik jest null
+     */
     public UzytkownikResponse toUzytkownikResponse(Uzytkownik uzytkownik) {
         if (uzytkownik == null) {
             return null;
@@ -75,6 +101,12 @@ public class CommonMapperService {
             .build();
     }
 
+    /**
+     * Konwertuje obiekt UstawieniaRequest na obiekt Ustawienia.
+     *
+     * @param ustawieniaRequest obiekt UstawieniaRequest, który ma być przekształcony
+     * @return obiekt Ustawienia lub null, jeśli ustawieniaRequest są null
+     */
     public Ustawienia toUstawienia(UstawieniaRequest ustawieniaRequest) {
         if (ustawieniaRequest == null) {
             return null;
@@ -89,7 +121,12 @@ public class CommonMapperService {
     }
 
     
-    
+    /**
+     * Konwertuje obiekt Post na obiekt PostResponse.
+     *
+     * @param post obiekt Post, który ma być przekształcony
+     * @return obiekt PostResponse lub null, jeśli post jest null
+     */
     public PostResponse mapToPostResponse(Post post) {
         return PostResponse.builder()
                 .id(post.getId())
@@ -97,8 +134,8 @@ public class CommonMapperService {
                 .tytul(post.getTytul())
                 .opis(post.getOpis())
                 .dataUtworzenia(timeAgo(post.getDataUtworzenia()))
-                .ocenyLubi(post.getOcenyLubiButGood())
-                .ocenyNieLubi(post.getOcenyNieLubiButGood())
+                .ocenyLubi(post.getOcenyLubi())
+                .ocenyNieLubi(post.getOcenyNieLubi())
                 .liczbaKomentarzy(post.getKomentarzeWPoscie().size())
                 .komentarze(post.getKomentarze().stream()
                    .map(this::toKomentarzResponse)
@@ -110,6 +147,12 @@ public class CommonMapperService {
     }
 
 
+    /**
+     * Konwertuje obiekt Komentarz na obiekt KomentarzResponse.
+     *
+     * @param komentarz obiekt Komentarz, który ma być przekształcony
+     * @return obiekt KomentarzResponse lub null, jeśli komentarz jest null
+     */
     public KomentarzResponse toKomentarzResponse(Komentarz komentarz) {
         if (komentarz == null) {
             return null;
@@ -131,8 +174,8 @@ public class CommonMapperService {
             .post(post != null ? mapPostForKomentarzResponse(post) : null)
             .opis(komentarz.getOpis())
             .edytowany(komentarz.isEdytowany())
-            .ocenyLubi(komentarz.getOcenyLubiButGood())
-            .ocenyNieLubi(komentarz.getOcenyNieLubiButGood())
+            .ocenyLubi(komentarz.getOcenyLubi())
+            .ocenyNieLubi(komentarz.getOcenyNieLubi())
             .dataUtworzenia(timeAgo(komentarz.getDataUtworzenia()))
             .odpowiadaKomentarzowi(mapOdpowiadaKomentarzowiForKomentarzResponse(komentarz.getOdpowiadaKomentarzowi()))
             .odpowiedzi(komentarz.getOdpowiedzi().stream()
@@ -145,6 +188,12 @@ public class CommonMapperService {
             .build();
     }
 
+    /**
+     * Konwertuje stronę obiektów RozmowaPrywatna na obiekt PageResponse z RozmowaPrywatnaResponse.
+     *
+     * @param rozmowyPrywatne strona obiektów RozmowaPrywatna, która ma być przekształcona
+     * @return obiekt PageResponse z RozmowaPrywatnaResponse
+     */
     public PageResponse<RozmowaPrywatnaResponse> rozmowaPrywatnaPagetoPageRozmowaPrywatnaResponse(
         Page<RozmowaPrywatna> rozmowyPrywatne) {
             List<RozmowaPrywatnaResponse> rozmowyPrywatneResponse = rozmowyPrywatne.getContent().stream()
@@ -164,7 +213,12 @@ public class CommonMapperService {
 
     // pomocnicze
 
-
+    /**
+     * Konwertuje obiekt RozmowaPrywatna na obiekt RozmowaPrywatnaResponse.
+     *
+     * @param rozmowaPrywatna obiekt RozmowaPrywatna, który ma być przekształcony
+     * @return obiekt RozmowaPrywatnaResponse lub null, jeśli rozmowaPrywatna jest null
+     */
     public RozmowaPrywatnaResponse toRozmowaPrywatnaResponse(RozmowaPrywatna rozmowaPrywatna) {
         if (rozmowaPrywatna == null) {
             return null;
@@ -184,6 +238,12 @@ public class CommonMapperService {
             .build();
     }
 
+    /**
+     * Konwertuje obiekt Uzytkownik na uproszczoną odpowiedź UzytkownikResponse.
+     *
+     * @param uzytkownik obiekt Uzytkownik, który ma być przekształcony
+     * @return uproszczona odpowiedź UzytkownikResponse lub null, jeśli uzytkownik jest null
+     */
     private UzytkownikResponse toUzytkownikSimpleResponse(Uzytkownik uzytkownik) {
         return UzytkownikResponse.builder()
             .id(uzytkownik.getId())
@@ -194,6 +254,12 @@ public class CommonMapperService {
     }
 
 
+    /**
+     * Konwertuje obiekt Komentarz na uproszczoną odpowiedź KomentarzSimpleResponse.
+     *
+     * @param komentarz obiekt Komentarz, który ma być przekształcony
+     * @return uproszczona odpowiedź KomentarzSimpleResponse lub null, jeśli komentarz jest null
+     */
     private KomentarzSimpleResponse toKomentarzSimpleResponse(Komentarz komentarz) {
         if (komentarz == null) {
             return null;
@@ -223,6 +289,12 @@ public class CommonMapperService {
     }
 
 
+    /**
+     * Mapuje obiekt typu <strong>Post</strong> na obiekt typu <strong>PostResponse</strong> dla odpowiedzi komentarza.
+     *
+     * @param post obiekt typu <strong>Post</strong>, który ma być zmapowany
+     * @return obiekt typu <strong>PostResponse</strong> lub <strong>null</strong>, jeśli post jest <strong>null</strong>
+     */
     private PostResponse mapPostForKomentarzResponse(Post post) {
         if (post == null) {
             return null;
@@ -234,6 +306,12 @@ public class CommonMapperService {
             .build();
     }
 
+    /**
+     * Mapuje obiekt typu <strong>Komentarz</strong> na obiekt typu <strong>KomentarzResponse</strong> dla odpowiedzi na komentarz.
+     *
+     * @param kom obiekt typu <strong>Komentarz</strong>, który ma być zmapowany
+     * @return obiekt typu <strong>KomentarzResponse</strong> lub <strong>null</strong>, jeśli kom jest <strong>null</strong>
+     */
     private KomentarzResponse mapOdpowiadaKomentarzowiForKomentarzResponse(Komentarz kom) {
         if (kom == null) {
             return null;
@@ -256,6 +334,12 @@ public class CommonMapperService {
             .build();
     }
 
+    /**
+     * Formatuje datę na tekst w stylu "czas temu" w języku polskim.
+     *
+     * @param dateTime data, która ma być sformatowana
+     * @return sformatowana data
+     */
     public static String timeAgo(LocalDateTime dateTime) {
         PrettyTime p = new PrettyTime(Locale.forLanguageTag("pl"));
         return p.format(Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));

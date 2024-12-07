@@ -8,6 +8,14 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 import lombok.Builder;
 import lombok.Getter;
 
+/**
+ * Klasa reprezentująca relację między użytkownikiem a jego ustawieniami.
+ * 
+ * <ul>
+ *   <li><strong>id</strong>: Unikalny identyfikator relacji.</li>
+ *   <li><strong>ustawienia</strong>: Obiekt ustawień powiązany z użytkownikiem.</li>
+ * </ul>
+ */
 @RelationshipProperties
 @Getter
 @Builder

@@ -12,6 +12,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * Reprezentuje żądanie zgłoszenia użytkownika.
+ * 
+ * <ul>
+ * <li><strong>zglaszany</strong> - Nazwa zgłaszanego użytkownika. Musi być niepusta i nie dłuższa niż 200 znaków.</li>
+ * <li><strong>opis</strong> - Powód zgłoszenia. Musi być niepusty i nie dłuższy niż 200 znaków.</li>
+ * <li><strong>typPowiadomienia</strong> - Typ zgłoszenia. Musi być niepusty i zgodny z wartościami wyliczenia TypPowiadomienia.</li>
+ * <li><strong>odnosnik</strong> - Odnośnik do zgłoszenia. Musi być niepusty.</li>
+ * </ul>
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

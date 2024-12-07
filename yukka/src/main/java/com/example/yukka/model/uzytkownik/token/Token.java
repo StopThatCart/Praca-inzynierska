@@ -17,6 +17,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Reprezentuje token używany do walidacji użytkownika.
+ * 
+ * <ul>
+ *   <li><strong>id</strong>: Unikalny identyfikator tokena.</li>
+ *   <li><strong>token</strong>: Wartość tokena.</li>
+ *   <li><strong>typ</strong>: Typ tokena.</li>
+ *   <li><strong>nowyEmail</strong>: Nowy adres email powiązany z tokenem.</li>
+ *   <li><strong>dataUtworzenia</strong>: Data utworzenia tokena.</li>
+ *   <li><strong>dataWygasniecia</strong>: Data wygaśnięcia tokena.</li>
+ *   <li><strong>dataWalidacji</strong>: Data walidacji tokena.</li>
+ *   <li><strong>uzytkownik</strong>: Użytkownik powiązany z tokenem.</li>
+ * </ul>
+ */
 @Node
 @Getter
 @Setter

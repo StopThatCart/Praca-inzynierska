@@ -7,6 +7,31 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * Repozytorium dla operacji na encji Token w bazie danych Neo4j.
+ * 
+ * <p>Interfejs ten rozszerza Neo4jRepository i zapewnia metody do wykonywania
+ * zapytań Cypher na bazie danych Neo4j. Metody te umożliwiają sprawdzanie,
+ * pobieranie, zapisywanie oraz aktualizowanie danych dotyczących tokenów
+ * i użytkowników powiązanych z tymi tokenami.</p>
+ * 
+ * <p>Metody w tym repozytorium wykorzystują adnotacje @Query do definiowania
+ * zapytań Cypher, które są wykonywane na bazie danych. Parametry zapytań
+ * są przekazywane za pomocą adnotacji @Param.</p>
+ * 
+ * <p>Przykładowe operacje obejmują:</p>
+ * <ul>
+ *   <li>Wyszukiwanie tokenu na podstawie jego wartości.</li>
+ *   <li>Wyszukiwanie tokenu na podstawie jego wartości i typu.</li>
+ *   <li>Wyszukiwanie tokenu na podstawie adresu email użytkownika i typu tokenu.</li>
+ *   <li>Dodawanie nowego tokenu i powiązanie go z użytkownikiem.</li>
+ *   <li>Walidowanie tokenu poprzez ustawienie daty walidacji i wyczyszczenie nowego adresu email.</li>
+ *   <li>Usuwanie tokenu powiązanego z użytkownikiem na podstawie adresu email i wartości tokenu.</li>
+ * </ul>
+ * 
+ * <p>Repozytorium to jest częścią aplikacji zarządzającej użytkownikami i ich tokenami,
+ * umożliwiającej zarządzanie procesami uwierzytelniania i autoryzacji.</p>
+ */
 public interface TokenRepository extends Neo4jRepository<Token, Long> {
     
     @Query("""

@@ -28,53 +28,66 @@ public class Neo4jHealthCheck {
     private int timeBetweenDBDrops;
 
 
-    /* 
-    @SuppressWarnings("deprecation")
-    public void installTriggers() {
-        Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
-        try (Session session = driver.session(SessionConfig.forDatabase("system"))) {
-            session.writeTransaction(tx -> {
-                tx.run("CALL apoc.trigger.install(" +
-                        "'" + dbName + "', " +
-                        "'setDataUtworzenia', " +
-                        "'UNWIND {createdNodes} AS n " +
-                        "SET n.dataUtworzenia = localdatetime()', " +
-                        "{phase:'after'})");
-                return null;
-            });
-        } catch (Exception e) {
-            log.error("Błąd podczas instalacji wyzwalacza", e);
-        } finally {
-            driver.close();
-        }
-    }
-*/
+    /**
+     * Metoda służy do usunięcia i ponownego utworzenia bazy danych o podanej nazwie.
+     *
+     * <ul>
+     *   <li><strong>databaseName</strong> - nazwa bazy danych, która ma zostać usunięta i utworzona na nowo</li>
+     * </ul>
+     *
+     * Metoda wykonuje następujące kroki:
+     * <ul>
+     *   <li>Łączy się z bazą danych Neo4j przy użyciu podanych poświadczeń</li>
+     *   <li>Wykonuje zapytanie do usunięcia bazy danych, jeśli istnieje</li>
+     *   <li>Wykonuje zapytanie do utworzenia nowej bazy danych z odpowiednimi ograniczeniami</li>
+     *   <li>Czeka przez określony czas po wykonaniu operacji</li>
+     * </ul>
+     *
+     * W przypadku przerwania wątku podczas oczekiwania, metoda ustawia flagę przerwania wątku i loguje błąd.
+     *
+     * @param databaseName nazwa bazy danych do usunięcia i ponownego utworzenia
+     */
     public void dropAndCreateDatabase(String databaseName) {
         log.info("Czyszczenie bazy danych...");
         Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
         Neo4jClient client = Neo4jClient.create(driver);
-        String dropQuery = "DROP DATABASE " + databaseName +" IF EXISTS";
-        String createQuery = "CREATE DATABASE " + databaseName +" IF NOT EXISTS";
+        String dropQuery = "DROP DATABASE $databaseName IF EXISTS";
+        String createQuery = """
+            CREATE DATABASE $databaseName IF NOT EXISTS;
+            CREATE CONSTRAINT unikalnaLacinskaNazwa FOR (ros:Roslina) REQUIRE ros.nazwaLacinska IS UNIQUE;
+            CREATE CONSTRAINT unikalnyEmail FOR (u:Uzytkownik) REQUIRE u.email IS UNIQUE;
+            CREATE CONSTRAINT unikalnaNazwaUzytkownika FOR (u:Uzytkownik) REQUIRE u.nazwa IS UNIQUE;
+                """;
+
         client
         .query(dropQuery)
         .in("system")
+        .bind(databaseName).to("databaseName")
         .run();
 
         client
         .query(createQuery)
         .in("system")
+        .bind(databaseName).to("databaseName")
         .run();
 
         try {
             Thread.sleep(timeBetweenDBDrops);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Wątek został zatrzymany podczas resetowania bazy danych", e);
         }
         log.info("Wyczyszczono bazę danych.");
     }
 
-    
-    /** 
-     * @return boolean
+
+    /**
+     * Sprawdza, czy baza danych jest wypełniona.
+     *
+     * @return <ul>
+     *            <li><strong>true</strong> - jeśli baza danych zawiera co najmniej jeden węzeł</li>
+     *            <li><strong>false</strong> - jeśli baza danych jest pusta</li>
+     *         </ul>
      */
     public boolean checkIfDatabaseIsPopulated() {
         Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
@@ -91,6 +104,17 @@ public class Neo4jHealthCheck {
             .orElse(false);
     }
 
+    /**
+     * Sprawdza dostępność bazy danych Neo4j.
+     * 
+     * <ul>
+     *   <li><strong>attempts</strong>: Liczba prób sprawdzenia dostępności bazy danych.</li>
+     *   <li><strong>maxRetries</strong>: Maksymalna liczba prób sprawdzenia dostępności bazy danych.</li>
+     *   <li><strong>timeBetweenDBDrops</strong>: Czas oczekiwania między próbami sprawdzenia dostępności bazy danych.</li>
+     * </ul>
+     * 
+     * @return <code>true</code> jeśli baza danych jest dostępna, <code>false</code> w przeciwnym razie.
+     */
     public boolean isItActuallyAvailable() {
         int attempts = 0;
         while (attempts < maxRetries) {
@@ -101,16 +125,24 @@ public class Neo4jHealthCheck {
                 Thread.sleep(timeBetweenDBDrops);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                log.error("Interrupted while waiting for database availability", e);
+                log.error("Wątek został zatrzymany podczas sprawdzania dostępności bazy danych", e);
                 return false;
             }
             attempts++;
         }
-        log.error("Unable to access the database after {} attempts", maxRetries);
+        log.error("Nie udało się nawiązać połączenia z bazą danych Neo4j po {} próbach.", maxRetries);
         return false;
     }
 
 
+    /**
+     * Sprawdza połączenie z bazą danych Neo4j.
+     *
+     * @return <ul>
+     *   <li><strong>true</strong> - jeśli połączenie z bazą danych zostało nawiązane pomyślnie</li>
+     *   <li><strong>false</strong> - jeśli wystąpił błąd podczas nawiązywania połączenia</li>
+     * </ul>
+     */
     public boolean checkDatabase() {
         Driver driver = null;
         Neo4jClient client = null;

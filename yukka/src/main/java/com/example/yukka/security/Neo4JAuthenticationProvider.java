@@ -23,19 +23,20 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 //@Configuration
 public class Neo4JAuthenticationProvider implements AuthenticationProvider {
-   // private final Driver driver;
-
-  //  @Value("${spring.data.neo4j.database}")
-  //  private String dbName;
-    
     private final UzytkownikRepository uzytkownikRepository;
     private final PasswordEncoder passwordEncoder;
 
-    
-    /** 
-     * @param authentication
-     * @return Authentication
-     * @throws AuthenticationException
+    /**
+     * Metoda <strong>authenticate</strong> służy do uwierzytelniania użytkownika na podstawie podanych danych logowania.
+     *
+     * @param authentication obiekt <strong>Authentication</strong> zawierający dane logowania użytkownika
+     * @return obiekt <strong>Authentication</strong> reprezentujący uwierzytelnionego użytkownika
+     * @throws AuthenticationException w przypadku niepowodzenia uwierzytelnienia
+     * <ul>
+     *   <li><strong>BadCredentialsException</strong> - gdy login lub hasło są niepoprawne</li>
+     *   <li><strong>IllegalArgumentException</strong> - gdy konto użytkownika nie zostało aktywowane</li>
+     *   <li><strong>BannedUzytkownikException</strong> - gdy konto użytkownika jest zbanowane</li>
+     * </ul>
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -69,6 +70,16 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
         }
     }
 
+
+    /**
+     * Sprawdza, czy dostarczona klasa uwierzytelniania jest obsługiwana przez ten dostawcę uwierzytelniania.
+     *
+     * @param authentication klasa uwierzytelniania do sprawdzenia
+     * @return <ul>
+     *             <li><strong>true</strong> - jeśli dostarczona klasa uwierzytelniania jest UsernamePasswordAuthenticationToken</li>
+     *             <li><strong>false</strong> - w przeciwnym razie</li>
+     *         </ul>
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);

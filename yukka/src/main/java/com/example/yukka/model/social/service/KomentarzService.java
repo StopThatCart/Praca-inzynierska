@@ -38,6 +38,32 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * <strong>KomentarzService</strong> - Serwis odpowiedzialny za operacje na komentarzach.
+ * 
+ * <strong>Metody:</strong>
+ * <ul>
+ * <li><strong>findByKomentarzIdWithOdpowiedzi</strong> - Znajduje komentarz po ID wraz z odpowiedziami.</li>
+ * <li><strong>findKomentarzeOfUzytkownik</strong> - Znajduje komentarze użytkownika.</li>
+ * <li><strong>addOcenaToKomentarz</strong> - Dodaje ocenę do komentarza.</li>
+ * <li><strong>removeOcenaFromKomentarz</strong> - Usuwa ocenę z komentarza.</li>
+ * <li><strong>addKomentarzToWiadomoscPrywatna</strong> - Dodaje komentarz do wiadomości prywatnej.</li>
+ * <li><strong>addKomentarzToPost</strong> - Dodaje komentarz do posta.</li>
+ * <li><strong>addOdpowiedzToKomentarz</strong> - Dodaje odpowiedź do komentarza.</li>
+ * <li><strong>updateKomentarz</strong> - Aktualizuje komentarz.</li>
+ * <li><strong>deleteKomentarz</strong> - Usuwa komentarz.</li>
+ * <li><strong>deleteKomentarzFromPost</strong> - Usuwa komentarz z posta.</li>
+ * <li><strong>seedRemoveKomentarzeObrazy</strong> - Usuwa obrazy z komentarzy.</li>
+ * </ul>
+ * 
+ * <strong>Metody pomocnicze:</strong>
+ * <ul>
+ * <li><strong>createKomentarz</strong> - Tworzy nowy komentarz.</li>
+ * <li><strong>createKomentarzId</strong> - Tworzy unikalne ID dla komentarza.</li>
+ * <li><strong>saveKomentarzFile</strong> - Zapisuje plik komentarza.</li>
+ * <li><strong>checkTimeSinceLastKomentarz</strong> - Sprawdza czas od ostatniego komentarza.</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -53,8 +79,6 @@ public class KomentarzService {
     private final FileStoreService fileStoreService;
     private final FileUtils fileUtils;
     private final PowiadomienieService powiadomienieService;
-
-   // PostMapper postMapper;
     private final KomentarzMapper komentarzMapper;
 
     
@@ -65,6 +89,13 @@ public class KomentarzService {
     // Przysięgam, potem poprawię te funkcje, ale teraz nie mam czasu
     // No poprawiłem delikatnie
                 
+    /**
+     * Znajduje komentarz na podstawie jego ID wraz z odpowiedziami.
+     *
+     * @param komentarzId ID komentarza do znalezienia.
+     * @return KomentarzResponse zawierający znaleziony komentarz oraz jego odpowiedzi.
+     * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
+     */
     @Transactional(readOnly = true)
     public KomentarzResponse findByKomentarzIdWithOdpowiedzi(String komentarzId) {
         return  komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
@@ -72,6 +103,16 @@ public class KomentarzService {
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
     }
 
+    /**
+     * Znajduje komentarze użytkownika.
+     *
+     * @param page numer strony.
+     * @param size rozmiar strony.
+     * @param nazwa nazwa użytkownika, którego komentarze mają zostać znalezione.
+     * @param connectedUser zalogowany użytkownik.
+     * @return PageResponse zawierający znalezione komentarze użytkownika.
+     * @throws ForbiddenException jeśli zalogowany użytkownik nie ma uprawnień do przeglądania komentarzy użytkownika.
+     */
     @Transactional(readOnly = true)
     public PageResponse<KomentarzResponse> findKomentarzeOfUzytkownik(int page, int size, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
@@ -85,6 +126,14 @@ public class KomentarzService {
         return komentarzMapper.komentarzResponsetoPageResponse(komentarze);
     }
 
+    /**
+     * Dodaje ocenę do komentarza.
+     *
+     * @param request obiekt OcenaRequest zawierający dane oceny.
+     * @param connectedUser zalogowany użytkownik.
+     * @return KomentarzResponse zawierający zaktualizowany komentarz.
+     * @throws BannedUzytkownikException jeśli zalogowany użytkownik jest zbanowany.
+     */
     public KomentarzResponse addOcenaToKomentarz(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
@@ -95,6 +144,16 @@ public class KomentarzService {
         return addOcenaToKomentarz(request, uzyt);
     }
 
+    /**
+     * Dodaje ocenę do komentarza.
+     *
+     * @param request obiekt OcenaRequest zawierający dane oceny.
+     * @param connectedUser zalogowany użytkownik.
+     * @return KomentarzResponse zawierający zaktualizowany komentarz.
+     * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
+     * @throws IllegalArgumentException jeśli użytkownik próbuje ocenić własny komentarz.
+     * @throws IllegalArgumentException jeśli użytkownik próbuje ocenić komentarz w rozmowie prywatnej.
+     */
     public KomentarzResponse addOcenaToKomentarz(OcenaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
 
@@ -118,6 +177,15 @@ public class KomentarzService {
     }
 
 
+    /**
+     * Usuwa ocenę z komentarza.
+     *
+     * @param request obiekt OcenaRequest zawierający dane oceny.
+     * @param connectedUser zalogowany użytkownik.
+     * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
+     * @throws IllegalArgumentException jeśli użytkownik próbuje ocenić własny komentarz.
+     * @throws IllegalArgumentException jeśli użytkownik próbuje ocenić komentarz w rozmowie prywatnej.
+     */
     public void removeOcenaFromKomentarz(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(request.getOcenialnyId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
@@ -133,15 +201,33 @@ public class KomentarzService {
         uzytkownikService.sprawdzBlokowanie(komentarz.getUzytkownik().getNazwa(), uzyt);
 
         komentarzRepository.removeOcenaFromKomentarz(uzyt.getEmail(), komentarz.getKomentarzId());
-     //   komentarzRepository.updateOcenyCountOfKomentarz(komentarz.getKomentarzId());
     }
 
 
+    /**
+     * Dodaje komentarz do wiadomości prywatnej.
+     *
+     * @param request obiekt KomentarzRequest zawierający dane komentarza.
+     * @param file plik do załączenia do komentarza.
+     * @param connectedUser zalogowany użytkownik.
+     * @return KomentarzResponse zawierający dodany komentarz.
+     * @throws IllegalArgumentException jeśli użytkownik próbuje rozmawiać sam ze sobą.
+     */
     public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik nadawca = ((Uzytkownik) connectedUser.getPrincipal());
         return addKomentarzToWiadomoscPrywatna(request, file, nadawca);
     }
 
+
+    /**
+     * Dodaje komentarz do wiadomości prywatnej.
+     *
+     * @param request obiekt KomentarzRequest zawierający dane komentarza.
+     * @param file plik do załączenia do komentarza.
+     * @param connectedUser zalogowany użytkownik.
+     * @return KomentarzResponse zawierający dodany komentarz.
+     * @throws IllegalArgumentException jeśli użytkownik próbuje rozmawiać sam ze sobą.
+     */
     public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request,
         MultipartFile file, Uzytkownik connectedUser) {
 
@@ -162,13 +248,18 @@ public class KomentarzService {
         Komentarz response = komentarzRepository.addKomentarzToRozmowaPrywatna(nadawca.getNazwa(), odbiorca.getNazwa(), 
         kom, LocalDateTime.now());
 
-        
-
         powiadomienieService.sendPowiadomienieOfRozmowa(nadawca, odbiorca, rozmowa);
-
         return komentarzMapper.toKomentarzResponse(response);
     }
 
+    /**
+     * Dodaje komentarz do posta.
+     *
+     * @param request obiekt KomentarzRequest zawierający dane komentarza.
+     * @param file plik do załączenia do komentarza.
+     * @param connectedUser zalogowany użytkownik.
+     * @return KomentarzResponse zawierający dodany komentarz.
+     */
     public KomentarzResponse addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
@@ -178,6 +269,14 @@ public class KomentarzService {
         return komentarzMapper.toKomentarzResponse(addKomentarzToPost(request, file, uzyt));
     }
 
+    /**
+     * Dodaje komentarz do posta.
+     *
+     * @param request obiekt KomentarzRequest zawierający dane komentarza.
+     * @param file plik do załączenia do komentarza.
+     * @param connectedUser zalogowany użytkownik.
+     * @return Komentarz zawierający dodany komentarz.
+     */
     public Komentarz addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Uzytkownik connectedUser)  {
         Uzytkownik uzyt = connectedUser;
 
@@ -195,6 +294,14 @@ public class KomentarzService {
         return response;
     }
 
+    /**
+     * Dodaje odpowiedź do komentarza.
+     *
+     * @param request obiekt KomentarzRequest zawierający dane komentarza.
+     * @param file plik do załączenia do komentarza.
+     * @param connectedUser zalogowany użytkownik.
+     * @return KomentarzResponse zawierający dodaną odpowiedź.
+     */
     public KomentarzResponse addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
@@ -208,6 +315,14 @@ public class KomentarzService {
 
     }
 
+    /**
+     * Dodaje odpowiedź do komentarza.
+     *
+     * @param request obiekt KomentarzRequest zawierający dane komentarza.
+     * @param file plik do załączenia do komentarza.
+     * @param connectedUser zalogowany użytkownik.
+     * @return Komentarz zawierający dodaną odpowiedź.
+     */
     public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Uzytkownik connectedUser) {
         Uzytkownik nadawca = connectedUser;
         Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByKomentarzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
@@ -233,6 +348,16 @@ public class KomentarzService {
         return response;
     }
 
+    /**
+     * Aktualizuje komentarz.
+     *
+     * @param komentarzId ID komentarza do aktualizacji.
+     * @param request obiekt KomentarzRequest zawierający dane komentarza.
+     * @param connectedUser zalogowany użytkownik.
+     * @return KomentarzResponse zawierający zaktualizowany komentarz.
+     * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
+     * @throws ForbiddenException jeśli zalogowany użytkownik nie ma uprawnień do aktualizacji komentarza.
+     */
     public KomentarzResponse updateKomentarz(String komentarzId, KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Komentarz kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
@@ -246,6 +371,13 @@ public class KomentarzService {
     }
 
 
+    /**
+     * Usuwa komentarz.
+     *
+     * @param komentarzId ID komentarza do usunięcia.
+     * @param connectedUser zalogowany użytkownik.
+     * @throws ForbiddenException jeśli zalogowany użytkownik nie ma uprawnień do usunięcia komentarza.
+     */
     public void deleteKomentarz(String komentarzId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());        
         Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
@@ -265,6 +397,15 @@ public class KomentarzService {
         }
     }
 
+    /**
+     * Usuwa komentarz z posta oraz wszystkie odpowiedzi na ten komentarz.
+     *
+     * @param postId ID posta, z którego ma zostać usunięty komentarz.
+     * @param komentarzId ID komentarza, który ma zostać usunięty.
+     * @param connectedUser Użytkownik, który jest aktualnie zalogowany i wykonuje operację.
+     * @throws EntityNotFoundException jeśli post o podanym ID nie zostanie znaleziony.
+     * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
+     */
     public void deleteKomentarzFromPost(String postId, String komentarzId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         postRepository.findPostByPostId(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
@@ -282,6 +423,16 @@ public class KomentarzService {
         komentarzRepository.removeKomentarz(kom.getKomentarzId());
     }
 
+
+    /**
+     * Usuwa komentarz z posta oraz wszystkie odpowiedzi na ten komentarz.
+     *
+     * @param postId ID posta, z którego ma zostać usunięty komentarz.
+     * @param komentarzId ID komentarza, który ma zostać usunięty.
+     * @param connectedUser Użytkownik, który jest aktualnie zalogowany i wykonuje operację.
+     * @throws EntityNotFoundException jeśli post o podanym ID nie zostanie znaleziony.
+     * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
+     */
     public void deleteKomentarzFromPost(String postId, String komentarzId, Uzytkownik connectedUser) {
         postRepository.findPostByPostId(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
         Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
@@ -296,7 +447,14 @@ public class KomentarzService {
         komentarzRepository.removeKomentarz(kom.getKomentarzId());
     }
 
-    // Seedowane bo trzeba usuwać obrazy
+
+    /**
+     * Metoda seedRemoveKomentarzeObrazy usuwa obrazy powiązane z komentarzami.
+     * Pobiera wszystkie komentarze z repozytorium, a następnie dla każdego komentarza
+     * usuwa powiązany obraz, korzystając z metody deleteObraz z klasy fileUtils.
+     * 
+     * Wypisuje na konsolę informacje o procesie usuwania obrazów.
+     */
     public void seedRemoveKomentarzeObrazy() {
         List<Komentarz> komentarze = komentarzRepository.findAll();
         System.out.println("Usuwanie obrazów komentarzy");
@@ -308,12 +466,23 @@ public class KomentarzService {
 
     // Pomocnicze
    
+    /**
+     * Tworzy nowy komentarz.
+     *
+     * @param request obiekt KomentarzRequest zawierający dane komentarza.
+     * @return Komentarz zawierający nowy komentarz.
+     */
     private Komentarz createKomentarz(KomentarzRequest request) {
         Komentarz kom = komentarzMapper.toKomentarz(request);
         kom.setKomentarzId(createKomentarzId());
         return kom;
     }
 
+    /**
+     * Tworzy unikalne ID dla komentarza.
+     *
+     * @return unikalne ID dla komentarza.
+     */
     String createKomentarzId() {
         String resultId = UUID.randomUUID().toString();
         do { 
@@ -326,6 +495,13 @@ public class KomentarzService {
         return resultId;
     }
 
+    /**
+     * Zapisuje plik komentarza.
+     *
+     * @param file plik do zapisania.
+     * @param kom komentarz, do którego ma zostać zapisany plik.
+     * @param uzyt użytkownik, który dodaje komentarz.
+     */
     private void saveKomentarzFile(MultipartFile file, Komentarz kom, Uzytkownik uzyt) {
         if (file != null) {
             String leObraz = fileStoreService.saveKomentarz(file, kom.getKomentarzId(), uzyt.getUzytId());
@@ -336,6 +512,11 @@ public class KomentarzService {
         }
     }
 
+    /**
+     * Sprawdza czas od ostatniego komentarza.
+     *
+     * @param newestKomentarz najnowszy komentarz.
+     */
     private void checkTimeSinceLastKomentarz(Optional<Komentarz> newestKomentarz) {
         if (newestKomentarz.isPresent()) {
             LocalDateTime lastKomentarzTime = newestKomentarz.get().getDataUtworzenia();

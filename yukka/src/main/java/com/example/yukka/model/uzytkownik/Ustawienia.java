@@ -12,6 +12,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Klasa reprezentująca ustawienia użytkownika.
+ * 
+ * <ul>
+ * <li><strong>id</strong>: Unikalny identyfikator ustawień.</li>
+ * <li><strong>statystykiProfilu</strong>: Flaga określająca, czy statystyki profilu są włączone.</li>
+ * <li><strong>ogrodPokaz</strong>: Flaga określająca, czy ogród jest pokazany.</li>
+ * <li><strong>powiadomieniaKomentarzeOdpowiedz</strong>: Flaga określająca, czy powiadomienia o odpowiedziach na komentarze są włączone.</li>
+ * <li><strong>powiadomieniaOgrodKwitnienie</strong>: Flaga określająca, czy powiadomienia o kwitnieniu w ogrodzie są włączone.</li>
+ * <li><strong>powiadomieniaOgrodOwocowanie</strong>: Flaga określająca, czy powiadomienia o owocowaniu w ogrodzie są włączone.</li>
+ * </ul>
+ */
 @ToString
 @Getter
 @Setter

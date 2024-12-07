@@ -25,27 +25,46 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Serwis odpowiedzialny za zarządzanie rozmowami prywatnymi.
+ * 
+ * <ul>
+ * <li><strong>RozmowaPrywatnaRepository</strong> - repozytorium do zarządzania rozmowami prywatnymi</li>
+ * <li><strong>UzytkownikRepository</strong> - repozytorium do zarządzania użytkownikami</li>
+ * <li><strong>CommonMapperService</strong> - serwis do mapowania obiektów</li>
+ * <li><strong>PowiadomienieService</strong> - serwis do zarządzania powiadomieniami</li>
+ * </ul>
+ * 
+ * <ul>
+ * <li><strong>findRozmowyPrywatneOfUzytkownik</strong> - Znajduje rozmowy prywatne użytkownika</li>
+ * <li><strong>findRozmowaPrywatna</strong> - Znajduje rozmowę prywatną na podstawie ID odbiorcy</li>
+ * <li><strong>findRozmowaPrywatnaByNazwa</strong> - Znajduje rozmowę prywatną na podstawie nazwy odbiorcy</li>
+ * <li><strong>findRozmowaPrywatnaById</strong> - Znajduje rozmowę prywatną na podstawie ID rozmowy</li>
+ * <li><strong>inviteToRozmowaPrywatna</strong> - Zaprasza użytkownika do rozmowy prywatnej</li>
+ * <li><strong>acceptRozmowaPrywatna</strong> - Akceptuje zaproszenie do rozmowy prywatnej</li>
+ * <li><strong>rejectRozmowaPrywatna</strong> - Odrzuca zaproszenie do rozmowy prywatnej</li>
+ * </ul>
+ * 
+ * <ul>
+ * <li><strong>createPowiadomienie</strong> - Tworzy powiadomienie o określonym typie</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
 public class RozmowaPrywatnaService {
-
-    @Autowired
     private final RozmowaPrywatnaRepository rozmowaPrywatnaRepository;
-
-    @Autowired
     private final UzytkownikRepository uzytkownikRepository;
-
-    @Autowired
     private final CommonMapperService commonMapperService;
-
-    @Autowired
     private final PowiadomienieService powiadomienieService;
 
 
-    
-    /** 
-     * @param currentUser
-     * @return PageResponse<RozmowaPrywatnaResponse>
+    /**
+     * Znajduje prywatne rozmowy użytkownika.
+     *
+     * @param page numer strony do pobrania, domyślnie 0
+     * @param size rozmiar strony, domyślnie 10
+     * @param currentUser aktualnie zalogowany użytkownik
+     * @return odpowiedź zawierająca stronę z prywatnymi rozmowami użytkownika
      */
     public PageResponse<RozmowaPrywatnaResponse> findRozmowyPrywatneOfUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -58,6 +77,15 @@ public class RozmowaPrywatnaService {
         return commonMapperService.rozmowaPrywatnaPagetoPageRozmowaPrywatnaResponse(rozmowy);
     }
 
+    /**
+     * Znajduje rozmowę prywatną pomiędzy zalogowanym użytkownikiem a odbiorcą.
+     *
+     * @param odbiorcaId Identyfikator użytkownika odbiorcy.
+     * @param connectedUser Obiekt uwierzytelnienia zalogowanego użytkownika.
+     * @return Obiekt RozmowaPrywatnaResponse zawierający szczegóły rozmowy prywatnej.
+     * @throws EntityNotFoundException Jeśli użytkownik odbiorca lub rozmowa prywatna nie zostaną znalezione.
+     * @throws IllegalArgumentException Jeśli zalogowany użytkownik próbuje rozmawiać sam ze sobą.
+     */
     public RozmowaPrywatnaResponse findRozmowaPrywatna(String odbiorcaId, Authentication connectedUser) {
         Uzytkownik nadawca = (Uzytkownik) connectedUser.getPrincipal();
 
@@ -74,6 +102,15 @@ public class RozmowaPrywatnaService {
         return commonMapperService.toRozmowaPrywatnaResponse(rozmowa);
     }
 
+    /**
+     * Znajduje rozmowę prywatną na podstawie nazwy użytkownika odbiorcy.
+     *
+     * @param nazwa Nazwa użytkownika odbiorcy.
+     * @param connectedUser Aktualnie zalogowany użytkownik.
+     * @return Odpowiedź zawierająca szczegóły rozmowy prywatnej.
+     * @throws EntityNotFoundException Jeśli użytkownik odbiorca lub rozmowa prywatna nie zostaną znalezione.
+     * @throws IllegalArgumentException Jeśli użytkownik próbuje znaleźć rozmowę ze sobą samym.
+     */
     public RozmowaPrywatnaResponse findRozmowaPrywatnaByNazwa(String nazwa, Authentication connectedUser) {
         Uzytkownik nadawca = (Uzytkownik) connectedUser.getPrincipal();
 
@@ -90,6 +127,15 @@ public class RozmowaPrywatnaService {
         return commonMapperService.toRozmowaPrywatnaResponse(rozmowa);
     }
 
+    /**
+     * Znajduje rozmowę prywatną na podstawie podanego identyfikatora.
+     *
+     * @param id identyfikator rozmowy prywatnej
+     * @param connectedUser aktualnie zalogowany użytkownik
+     * @return odpowiedź zawierająca szczegóły rozmowy prywatnej
+     * @throws EntityNotFoundException jeśli rozmowa prywatna o podanym identyfikatorze nie istnieje
+     * @throws IllegalArgumentException jeśli zalogowany użytkownik nie ma dostępu do rozmowy
+     */
     public RozmowaPrywatnaResponse findRozmowaPrywatnaById(Long id, Authentication connectedUser) {
         Uzytkownik nadawca = (Uzytkownik) connectedUser.getPrincipal();
 
@@ -104,12 +150,26 @@ public class RozmowaPrywatnaService {
         return commonMapperService.toRozmowaPrywatnaResponse(rozmowa);
     }
 
+    /**
+     * Zaprasza użytkownika do rozmowy prywatnej.
+     *
+     * @param odbiorcaNazwa Nazwa użytkownika odbiorcy.
+     * @param currentUser Aktualnie zalogowany użytkownik.
+     * @return Odpowiedź zawierająca szczegóły rozmowy prywatnej.
+     */
     public RozmowaPrywatnaResponse inviteToRozmowaPrywatna(String odbiorcaNazwa, Authentication currentUser) {
         Uzytkownik nadawca = (Uzytkownik) currentUser.getPrincipal();
 
         return commonMapperService.toRozmowaPrywatnaResponse(inviteToRozmowaPrywatna(odbiorcaNazwa, nadawca));
     }
 
+    /**
+     * Zaprasza użytkownika do rozmowy prywatnej.
+     *
+     * @param odbiorcaNazwa Nazwa użytkownika odbiorcy.
+     * @param currentUser Aktualnie zalogowany użytkownik.
+     * @return Odpowiedź zawierająca szczegóły rozmowy prywatnej.
+     */
     public RozmowaPrywatna inviteToRozmowaPrywatna(String odbiorcaNazwa, Uzytkownik currentUser) {
         Uzytkownik nadawca = currentUser;
         Uzytkownik odbiorca = uzytkownikRepository.findByNazwa(odbiorcaNazwa)
@@ -130,12 +190,26 @@ public class RozmowaPrywatnaService {
         return rozmowaPrywatna;
     }
 
+    /**
+     * Akceptuje zaproszenie do rozmowy prywatnej.
+     *
+     * @param uzytkownikNazwa Nazwa użytkownika, który zaprosił do rozmowy.
+     * @param currentUser Aktualnie zalogowany użytkownik.
+     * @return Odpowiedź zawierająca szczegóły rozmowy prywatnej.
+     */
     public RozmowaPrywatna acceptRozmowaPrywatna(String nazwa, Authentication currentUser) {
         Uzytkownik odbiorca = (Uzytkownik) currentUser.getPrincipal();
 
         return acceptRozmowaPrywatna(nazwa, odbiorca);
     }
 
+    /**
+     * Akceptuje zaproszenie do rozmowy prywatnej.
+     *
+     * @param uzytkownikNazwa Nazwa użytkownika, który zaprosił do rozmowy.
+     * @param currentUser Aktualnie zalogowany użytkownik.
+     * @return Odpowiedź zawierająca szczegóły rozmowy prywatnej.
+     */
     public RozmowaPrywatna acceptRozmowaPrywatna(String nazwa, Uzytkownik currentUser) {
         Uzytkownik odbiorca = currentUser;
         Uzytkownik nadawca = uzytkownikRepository.findByNazwa(nazwa)
@@ -164,6 +238,12 @@ public class RozmowaPrywatnaService {
         return rozmowa;
     }
 
+    /**
+     * Odrzuca zaproszenie do rozmowy prywatnej.
+     *
+     * @param uzytkownikNazwa Nazwa użytkownika, który zaprosił do rozmowy.
+     * @param currentUser Aktualnie zalogowany użytkownik.
+     */
     public void rejectRozmowaPrywatna(String uzytkownikNazwa, Authentication currentUser) {
         Uzytkownik odbiorca = (Uzytkownik) currentUser.getPrincipal();
         Uzytkownik nadawca = uzytkownikRepository.findByNazwa(uzytkownikNazwa)
@@ -186,6 +266,13 @@ public class RozmowaPrywatnaService {
         createPowiadomienie(TypPowiadomienia.ZAPROSZENIE_ODRUCONE, nadawca, odbiorca);
     }
 
+    /**
+     * Tworzy powiadomienie o określonym typie.
+     *
+     * @param typ Typ powiadomienia.
+     * @param nadawca Użytkownik, który wysłał powiadomienie.
+     * @param odbiorca Użytkownik, który otrzymał powiadomienie.
+     */
     private void createPowiadomienie(TypPowiadomienia typ, Uzytkownik nadawca, Uzytkownik odbiorca) {
         PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(typ.name())
@@ -195,6 +282,4 @@ public class RozmowaPrywatnaService {
             .build();
         powiadomienieService.addPowiadomienie(powiadomienie, odbiorca);
     }
-
-
 }

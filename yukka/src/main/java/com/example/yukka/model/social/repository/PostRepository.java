@@ -15,7 +15,36 @@ import com.example.yukka.model.social.post.Post;
 import jakarta.annotation.Nonnull;
 
 
-
+/**
+ * Repozytorium dla operacji na encji Post w bazie danych Neo4j.
+ * 
+ * <p>Interfejs ten rozszerza Neo4jRepository i zapewnia metody do wykonywania
+ * zapytań Cypher na bazie danych Neo4j. Metody te umożliwiają sprawdzanie,
+ * pobieranie, zapisywanie oraz aktualizowanie danych dotyczących postów
+ * i powiązanych z nimi użytkowników oraz komentarzy.</p>
+ * 
+ * <p>Metody w tym repozytorium wykorzystują adnotacje @Query do definiowania
+ * zapytań Cypher, które są wykonywane na bazie danych. Parametry zapytań
+ * są przekazywane za pomocą adnotacji @Param.</p>
+ * 
+ * <p>Przykładowe operacje obejmują:</p>
+ * <ul>
+ *   <li>Pobieranie wszystkich postów.</li>
+ *   <li>Pobieranie najnowszego postu.</li>
+ *   <li>Pobieranie postu na podstawie jego identyfikatora.</li>
+ *   <li>Pobieranie najnowszego postu użytkownika na podstawie jego adresu email.</li>
+ *   <li>Wyszukiwanie postów z możliwością paginacji i sortowania.</li>
+ *   <li>Dodawanie oceny do postu przez użytkownika.</li>
+ *   <li>Usuwanie oceny z postu przez użytkownika.</li>
+ *   <li>Dodawanie nowego postu przez użytkownika.</li>
+ *   <li>Aktualizowanie obrazu postu.</li>
+ *   <li>Usuwanie postu wraz z powiązanymi komentarzami.</li>
+ *   <li>Usuwanie wszystkich postów.</li>
+ * </ul>
+ * 
+ * <p>Repozytorium to jest częścią aplikacji społecznościowej, umożliwiającej
+ * użytkownikom tworzenie, ocenianie oraz komentowanie postów.</p>
+ */
 public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @SuppressWarnings("null")

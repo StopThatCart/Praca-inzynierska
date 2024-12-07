@@ -43,6 +43,31 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Serwis zarządzający użytkownikami w aplikacji.
+ * 
+ * Metody:
+ * <ul>
+ * <li><strong>loadUserByUsername</strong>: Ładuje szczegóły użytkownika na podstawie nazwy użytkownika lub emaila.</li>
+ * <li><strong>findAll</strong>: Zwraca listę wszystkich użytkowników.</li>
+ * <li><strong>findByEmail</strong>: Znajduje użytkownika na podstawie emaila i zwraca jego odpowiedź.</li>
+ * <li><strong>findByNazwa</strong>: Znajduje użytkownika na podstawie nazwy i zwraca jego odpowiedź.</li>
+ * <li><strong>getLoggedInAvatar</strong>: Pobiera avatar zalogowanego użytkownika.</li>
+ * <li><strong>getBlokowaniAndBlokujacy</strong>: Pobiera listę blokowanych i blokujących użytkowników.</li>
+ * <li><strong>getUstawienia</strong>: Pobiera ustawienia zalogowanego użytkownika.</li>
+ * <li><strong>updateUstawienia</strong>: Aktualizuje ustawienia zalogowanego użytkownika.</li>
+ * <li><strong>getStatystykiOfUzytkownik</strong>: Pobiera statystyki użytkownika na podstawie nazwy.</li>
+ * <li><strong>updateProfil</strong>: Aktualizuje profil zalogowanego użytkownika.</li>
+ * <li><strong>sendChangeEmail</strong>: Wysyła email z prośbą o zmianę adresu email użytkownika.</li>
+ * <li><strong>updateUzytkownikAvatar</strong>: Aktualizuje avatar zalogowanego użytkownika.</li>
+ * <li><strong>setBlokUzytkownik</strong>: Blokuje lub odblokowuje użytkownika na podstawie nazwy.</li>
+ * <li><strong>addUzytkownik</strong>: Dodaje nowego użytkownika (do seedowania).</li>
+ * <li><strong>addPracownik</strong>: Dodaje nowego pracownika (do seedowania).</li>
+ * <li><strong>removeSelf</strong>: Usuwa konto zalogowanego użytkownika.</li>
+ * <li><strong>sprawdzBlokowanie</strong>: Sprawdza, czy użytkownik jest zablokowany przez innego użytkownika.</li>
+ * <li><strong>seedRemoveUzytkownicyObrazy</strong>: Usuwa obrazy użytkowników (do seedowania).</li>
+ * </ul>
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -51,18 +76,20 @@ public class UzytkownikService implements  UserDetailsService {
     @Value("${application.file.uploads.photos-output-path}")
     String fileUploadPath;
 
-    @Autowired
     private final UzytkownikRepository uzytkownikRepository;
     private final FileUtils fileUtils;
     private final FileStoreService fileStoreService;
     private final CommonMapperService commonMapperService;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-
     
-    /** 
-     * @param nazwa
-     * @return UserDetails
+
+    /**
+     * Ładuje szczegóły użytkownika na podstawie nazwy użytkownika lub adresu e-mail.
+     *
+     * @param nazwa nazwa użytkownika lub adres e-mail
+     * @return szczegóły użytkownika
+     * @throws UsernameNotFoundException jeśli użytkownik o podanej nazwie nie zostanie znaleziony
      */
     @Override
     @Transactional(readOnly = true)
@@ -71,11 +98,23 @@ public class UzytkownikService implements  UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
     }
 
+    /**
+     * Metoda zwracająca listę wszystkich użytkowników.
+     * 
+     * @return lista wszystkich użytkowników
+     */
     @Transactional(readOnly = true)
     public List<Uzytkownik> findAll(){
         return uzytkownikRepository.findAll();
     }
 
+    /**
+     * Znajduje użytkownika na podstawie adresu email.
+     *
+     * @param userEmail adres email użytkownika, którego chcemy znaleźć
+     * @return UzytkownikResponse obiekt zawierający dane znalezionego użytkownika
+     * @throws EntityNotFoundException jeśli użytkownik o podanym adresie email nie zostanie znaleziony
+     */
     @Transactional(readOnly = true)
     public UzytkownikResponse findByEmail(String userEmail){
         Uzytkownik uzyt = uzytkownikRepository.findByEmail(userEmail)
@@ -84,6 +123,13 @@ public class UzytkownikService implements  UserDetailsService {
         return commonMapperService.toUzytkownikResponse(uzyt);
     }
 
+    /**
+     * Znajduje użytkownika na podstawie nazwy.
+     *
+     * @param nazwa nazwa użytkownika do znalezienia
+     * @return odpowiedź zawierająca dane użytkownika
+     * @throws EntityNotFoundException jeśli użytkownik o podanej nazwie nie zostanie znaleziony
+     */
     @Transactional(readOnly = true)
     public UzytkownikResponse findByNazwa(String nazwa){
         Uzytkownik uzyt = uzytkownikRepository.findByNazwa(nazwa)
@@ -92,6 +138,13 @@ public class UzytkownikService implements  UserDetailsService {
         return commonMapperService.toUzytkownikResponse(uzyt);
     }
 
+    /**
+     * Pobiera awatar zalogowanego użytkownika.
+     *
+     * @param currentUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return FileResponse zawierający dane awatara użytkownika.
+     * @throws EntityNotFoundException jeśli użytkownik o podanym emailu nie zostanie znaleziony.
+     */
     @Transactional(readOnly = true)
     public FileResponse getLoggedInAvatar(Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
@@ -102,18 +155,29 @@ public class UzytkownikService implements  UserDetailsService {
         return FileResponse.builder().content(fileUtils.readFile(uzyt2.getAvatar(), DefaultImage.AVATAR)).build();
     }
 
+    /**
+     * Metoda pobiera listę użytkowników blokowanych oraz blokujących aktualnie zalogowanego użytkownika.
+     *
+     * @param currentUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return Obiekt UzytkownikResponse zawierający informacje o blokowanych i blokujących użytkownikach.
+     */
     @Transactional(readOnly = true)
     public UzytkownikResponse getBlokowaniAndBlokujacy(Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
 
         System.out.println("Pobieranie blokowanych i blokujących użytkowników");
         Uzytkownik uzyt2 = uzytkownikRepository.getBlokowaniAndBlokujacy(uzyt.getNazwa()).orElse(null);
-      //  System.out.println("Użyt: " + uzyt2.getNazwa());
-    //.orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + uzyt.getNazwa()));
 
         return commonMapperService.toUzytkownikResponse(uzyt2);
     }
 
+    /**
+     * Pobiera ustawienia użytkownika na podstawie bieżącego uwierzytelnionego użytkownika.
+     *
+     * @param currentUser bieżący uwierzytelniony użytkownik
+     * @return odpowiedź zawierająca ustawienia użytkownika
+     * @throws EntityNotFoundException jeśli użytkownik o podanej nazwie nie zostanie znaleziony
+     */
     @Transactional(readOnly = true)
     public UzytkownikResponse getUstawienia(Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
@@ -125,6 +189,13 @@ public class UzytkownikService implements  UserDetailsService {
         return  commonMapperService.toUzytkownikResponse(uzytus);
     }
 
+    /**
+     * Aktualizuje ustawienia użytkownika.
+     *
+     * @param ustawienia Obiekt zawierający nowe ustawienia użytkownika.
+     * @param currentUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return Obiekt UzytkownikResponse zawierający zaktualizowane dane użytkownika.
+     */
     public UzytkownikResponse updateUstawienia(UstawieniaRequest ustawienia, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         log.info("Zmiana ustawień użytkownika: " + uzyt.getNazwa());
@@ -135,6 +206,14 @@ public class UzytkownikService implements  UserDetailsService {
         return commonMapperService.toUzytkownikResponse(uzytkownik);
     }
 
+    /**
+     * Pobiera statystyki użytkownika na podstawie jego nazwy.
+     *
+     * @param nazwa Nazwa użytkownika, którego statystyki mają zostać pobrane.
+     * @param currentUser Aktualnie zalogowany użytkownik, używany do sprawdzenia uprawnień.
+     * @return Statystyki użytkownika w postaci obiektu StatystykiDTO lub null, jeśli użytkownik nie ma uprawnień do przeglądania statystyk.
+     * @throws EntityNotFoundException Jeśli użytkownik o podanej nazwie nie istnieje.
+     */
     public StatystykiDTO getStatystykiOfUzytkownik(String nazwa, Authentication currentUser) {
         log.info("Pobieranie statystyk użytkownika: " + nazwa);
 
@@ -166,6 +245,13 @@ public class UzytkownikService implements  UserDetailsService {
         return statystyki;
     }
 
+    /**
+     * Aktualizuje profil użytkownika na podstawie przekazanego żądania.
+     *
+     * @param request       Obiekt ProfilRequest zawierający dane do aktualizacji profilu.
+     * @param currentUser   Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return              Obiekt UzytkownikResponse zawierający zaktualizowane dane użytkownika.
+     */
     public UzytkownikResponse updateProfil(ProfilRequest request, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         log.info("Zmiana prfilu użytkownika: " + uzyt.getNazwa());
@@ -175,6 +261,17 @@ public class UzytkownikService implements  UserDetailsService {
         return commonMapperService.toUzytkownikResponse(uzytkownik);
     }
 
+    /**
+     * Wysyła email weryfikacyjny w celu zmiany adresu email użytkownika.
+     *
+     * @param request       obiekt zawierający nowy adres email oraz hasło użytkownika
+     * @param currentUser   aktualnie zalogowany użytkownik
+     * @throws MessagingException           jeśli wystąpi problem z wysłaniem emaila
+     * @throws IllegalArgumentException     jeśli nowy adres email jest taki sam jak obecny,
+     *                                      lub jeśli podane hasło jest nieprawidłowe
+     * @throws EntityNotFoundException      jeśli użytkownik z podanym adresem email nie zostanie znaleziony
+     * @throws EntityAlreadyExistsException jeśli użytkownik z nowym adresem email już istnieje
+     */
     public void sendChangeEmail(EmailRequest request, Authentication currentUser) throws MessagingException {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         log.info("Zmiana emaila użytkownika: " + uzyt.getEmail() + " na " + request.getNowyEmail());
@@ -195,11 +292,27 @@ public class UzytkownikService implements  UserDetailsService {
         emailService.sendValidationEmail(uzyt, request.getNowyEmail(), EmailTemplateName.ZMIANA_EMAIL);
     }
 
+    /**
+     * Aktualizuje awatar użytkownika.
+     *
+     * @param file        Plik zawierający nowy awatar użytkownika.
+     * @param currentUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return Obiekt UzytkownikResponse zawierający zaktualizowane dane użytkownika.
+     */
     public UzytkownikResponse updateUzytkownikAvatar(MultipartFile file, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         return commonMapperService.toUzytkownikResponse(updateUzytkownikAvatar(file, uzyt));
     }
 
+    /**
+     * Aktualizuje avatar użytkownika.
+     *
+     * @param file Plik zawierający nowy avatar użytkownika.
+     * @param currentUser Aktualnie zalogowany użytkownik.
+     * @return Zaktualizowany obiekt użytkownika z nowym avatarem.
+     * @throws EntityNotFoundException Jeśli użytkownik o podanym emailu nie zostanie znaleziony.
+     * @throws IllegalArgumentException Jeśli plik nie zostanie podany.
+     */
     public Uzytkownik updateUzytkownikAvatar(MultipartFile file, Uzytkownik currentUser) {
         Uzytkownik uzyt = currentUser;
         Uzytkownik uzytkownik = uzytkownikRepository.findByEmail(uzyt.getEmail())
@@ -218,6 +331,19 @@ public class UzytkownikService implements  UserDetailsService {
     }
 
 
+    /**
+     * Ustawia blokadę na użytkownika o podanej nazwie.
+     *
+     * @param nazwa          Nazwa użytkownika, który ma być zablokowany lub odblokowany.
+     * @param currentUser    Aktualnie zalogowany użytkownik wykonujący operację.
+     * @param blok           Flaga określająca, czy użytkownik ma być zablokowany (true) czy odblokowany (false).
+     * @return               Zwraca true, jeśli operacja zakończyła się sukcesem, w przeciwnym razie false.
+     * @throws EntityNotFoundException  Jeśli użytkownik o podanej nazwie nie istnieje.
+     * @throws IllegalArgumentException Jeśli użytkownik próbuje zablokować samego siebie, 
+     *                                  jeśli użytkownik jest administratorem lub pracownikiem,
+     *                                  jeśli użytkownik jest już zablokowany,
+     *                                  lub jeśli nie znaleziono blokowanych użytkowników podczas próby odblokowania.
+     */
     public Boolean setBlokUzytkownik(String nazwa, Authentication currentUser, boolean blok){
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
 
@@ -255,12 +381,24 @@ public class UzytkownikService implements  UserDetailsService {
     }
 
     // Bez zabezpieczeń bo to tylko do seedowania
+    /**
+     * Dodaje nowego użytkownika do repozytorium.
+     * Jest to metoda pomocnicza, która służy do seedowania danych.
+     *
+     * @param uzytkownik obiekt użytkownika, który ma zostać dodany
+     */
     public void addUzytkownik(Uzytkownik uzytkownik){
         Ustawienia ust = Ustawienia.builder().build();
         uzytkownikRepository.addUzytkownik(uzytkownik, ust);
     }
 
     // Bez zabezpieczeń bo to tylko do seedowania
+    /**
+     * Dodaje nowego pracownika do repozytorium.
+     * Jest to metoda pomocnicza, która służy do seedowania danych.
+     *
+     * @param uzytkownik obiekt użytkownika, który ma zostać dodany
+     */
     public void addPracownik(Uzytkownik uzytkownik){
         Ustawienia ust = Ustawienia.builder().build();
         
@@ -273,6 +411,20 @@ public class UzytkownikService implements  UserDetailsService {
     }
 
 
+    /**
+     * Usuwa konto użytkownika, który wykonuje operację.
+     * 
+     * @param request Obiekt zawierający dane potrzebne do usunięcia konta, w tym hasło użytkownika.
+     * @param currentUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @throws IllegalArgumentException Jeśli użytkownik jest administratorem lub pracownikiem, lub jeśli podane hasło jest nieprawidłowe.
+     * 
+     * Operacja wykonuje następujące kroki:
+     * 1. Sprawdza, czy użytkownik jest administratorem lub pracownikiem i rzuca wyjątek, jeśli tak.
+     * 2. Weryfikuje, czy podane hasło jest poprawne.
+     * 3. Wylogowuje użytkownika.
+     * 4. Usuwa konto użytkownika z bazy danych.
+     * 5. Usuwa folder użytkownika z systemu plików.
+     */
     public void removeSelf(UsunKontoRequest request, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
         log.info("Użytkownika o emailu: " + uzyt.getEmail() + " usuwa się sam");
@@ -285,12 +437,9 @@ public class UzytkownikService implements  UserDetailsService {
             throw new IllegalArgumentException("Podane hasło jest nieprawidłowe");
         }
 
-
-
         // Wylogowanie
         SecurityContextHolder.clearContext();
 
-        //uzytkownikRepository.removeUzytkownik(uzyt.getEmail());
         removeUzytkownikQueries(uzyt.getEmail());
 
         Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUzytId());
@@ -298,10 +447,12 @@ public class UzytkownikService implements  UserDetailsService {
         fileUtils.deleteDirectory(path);
     }
 
-
     // Pomocnicze
-
-
+    /**
+     * Seria zapytań do usunięcia użytkownika.
+     *
+     * @param email Email użytkownika, który ma zostać usunięty.
+     */
     private void removeUzytkownikQueries(String email) {
         uzytkownikRepository.removePostyOfUzytkownik(email);
         uzytkownikRepository.removeKomentarzeOfUzytkownik(email);
@@ -309,6 +460,16 @@ public class UzytkownikService implements  UserDetailsService {
         uzytkownikRepository.removeUzytkownik(email);
     }
     
+
+    /**
+     * Sprawdza, czy użytkownik jest zablokowany przez innego użytkownika lub czy sam zablokował innego użytkownika.
+     *
+     * @param nazwaUzytkownika Nazwa użytkownika, który ma być sprawdzony.
+     * @param connectedUser Użytkownik, który wykonuje sprawdzenie.
+     * @return Użytkownik, który został sprawdzony.
+     * @throws EntityNotFoundException Jeśli użytkownik o podanej nazwie nie istnieje.
+     * @throws BlockedUzytkownikException Jeśli użytkownik jest zablokowany przez innego użytkownika lub sam zablokował innego użytkownika.
+     */
     public Uzytkownik sprawdzBlokowanie(String nazwaUzytkownika, Uzytkownik connectedUser) {
         Uzytkownik odbiorca = uzytkownikRepository.getBlokowaniAndBlokujacy(nazwaUzytkownika)
             .orElse(null);
@@ -332,6 +493,17 @@ public class UzytkownikService implements  UserDetailsService {
         return odbiorca;
     }
 
+    /**
+     * Metoda seedRemoveUzytkownicyObrazy usuwa obrazy użytkowników z systemu.
+     * 
+     * <p>Metoda pobiera wszystkich użytkowników z repozytorium, a następnie dla każdego użytkownika
+     * usuwa odpowiedni folder z obrazami znajdujący się w ścieżce określonej przez zmienną 
+     * fileUploadPath. Ścieżka do folderu jest tworzona na podstawie identyfikatora użytkownika.
+     * 
+     * <p>Przykładowa ścieżka do folderu: fileUploadPath/uzytkownicy/{uzytId}
+     * 
+     * <p>Metoda wykorzystuje klasę fileUtils do usunięcia folderu.
+     */
     public void seedRemoveUzytkownicyObrazy() {
         
         List<Uzytkownik> uzytkownicy = uzytkownikRepository.findAll();

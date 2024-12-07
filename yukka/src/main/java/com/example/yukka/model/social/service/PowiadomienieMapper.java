@@ -21,6 +21,17 @@ import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Klasa <strong>PowiadomienieMapper</strong> jest odpowiedzialna za mapowanie obiektów typu <strong>Powiadomienie</strong> na różne formaty odpowiedzi.
+ * 
+ * Metody:
+ * <ul>
+ * <li><strong>toPowiadomienieResponse</strong>: Mapuje obiekt <strong>Powiadomienie</strong> na <strong>PowiadomienieResponse</strong>.</li>
+ * <li><strong>toPowiadomienieDTO</strong>: Mapuje obiekt <strong>Powiadomienie</strong> na <strong>PowiadomienieDTO</strong>.</li>
+ * <li><strong>PowiadomieniePageToPagePowiadomienieResponse</strong>: Mapuje stronę obiektów <strong>Powiadomienie</strong> na stronę odpowiedzi <strong>PowiadomienieResponse</strong>.</li>
+ * <li><strong>timeAgo</strong>: Formatuje datę na tekst w stylu "czas temu".</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
 public class PowiadomienieMapper {
@@ -30,9 +41,12 @@ public class PowiadomienieMapper {
 
 
     
-    /** 
-     * @param powiadomienie
-     * @return PowiadomienieResponse
+
+    /**
+     * Konwertuje obiekt typu <code>Powiadomienie</code> na obiekt typu <code>PowiadomienieResponse</code>.
+     *
+     * @param powiadomienie obiekt typu <code>Powiadomienie</code> do konwersji
+     * @return obiekt typu <code>PowiadomienieResponse</code> lub <code>null</code>, jeśli <code>powiadomienie</code> jest <code>null</code>
      */
     public PowiadomienieResponse toPowiadomienieResponse(Powiadomienie powiadomienie) {
         if (powiadomienie == null) {
@@ -62,6 +76,12 @@ public class PowiadomienieMapper {
     }
 
 
+    /**
+     * Konwertuje obiekt typu Powiadomienie na obiekt typu PowiadomienieDTO.
+     *
+     * @param powiadomienie obiekt typu Powiadomienie, który ma zostać przekonwertowany
+     * @return obiekt typu PowiadomienieDTO lub null, jeśli powiadomienie jest null
+     */
     public PowiadomienieDTO toPowiadomienieDTO(Powiadomienie powiadomienie) {
         if (powiadomienie == null) {
             return null;
@@ -85,6 +105,12 @@ public class PowiadomienieMapper {
             .build();
     }
 
+    /**
+     * Konwertuje stronę obiektów typu Powiadomienie na stronę odpowiedzi typu PowiadomienieResponse.
+     *
+     * @param powiadomienia strona obiektów typu Powiadomienie do konwersji
+     * @return strona odpowiedzi typu PowiadomienieResponse
+     */
     public PageResponse<PowiadomienieResponse> PowiadomieniePageToPagePowiadomienieResponse(Page<Powiadomienie> powiadomienia) {
             List<PowiadomienieResponse> powiadomieniaResponse = powiadomienia.getContent().stream()
             .map(this::toPowiadomienieResponse)
@@ -101,7 +127,12 @@ public class PowiadomienieMapper {
         );
     }
 
-
+    /**
+     * Formatuje datę na tekst w stylu "czas temu".
+     *
+     * @param dateTime data do sformatowania
+     * @return sformatowana data
+     */
     public static String timeAgo(LocalDateTime dateTime) {
         PrettyTime p = new PrettyTime(Locale.forLanguageTag("pl"));
         return p.format(Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));

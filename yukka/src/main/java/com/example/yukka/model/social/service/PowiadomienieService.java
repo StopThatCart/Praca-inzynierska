@@ -38,6 +38,7 @@ import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,9 +61,11 @@ public class PowiadomienieService {
     private String powiadomienieAvatar;
 
     
-    /** 
-     * @param connectedUser
-     * @return Integer
+    /**
+     * Metoda zwraca liczbę nieprzeczytanych powiadomień dla zalogowanego użytkownika.
+     *
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     * @return liczba nieprzeczytanych powiadomień dla użytkownika
      */
     @Transactional(readOnly = true)
     public Integer getNieprzeczytaneCountOfUzytkownik(Authentication connectedUser) {
@@ -73,6 +76,14 @@ public class PowiadomienieService {
         return powiadomienia;
     }
 
+    /**
+     * Metoda zwraca listę powiadomień użytkownika z paginacją.
+     *
+     * @param page numer strony
+     * @param size rozmiar strony
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     * @return lista powiadomień użytkownika z paginacją
+     */
     @Transactional(readOnly = true)
     public PageResponse<PowiadomienieResponse> findPowiadomieniaOfUzytkownik(int page, int size, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
@@ -83,13 +94,26 @@ public class PowiadomienieService {
         return powiadomienieMapper.PowiadomieniePageToPagePowiadomienieResponse(powiadomienia);
     }
 
-    
+
+    /**
+     * <p>Metoda sprawdzająca okresy powiadomień dla użytkowników.</p>
+     * <p>Sprawdza okresy owocowania i kwitnienia roślin w działkach użytkowników i tworzy powiadomienia o tych okresach.</p>
+    */
     @Scheduled(cron = "0 0 0 1 * ?")  // Na początku każdego miesiąca
     //@Scheduled(fixedDelay=2000L)  // Test co 2 sekundy
     public void checkOkresyPowiadomienia() {
-        if (!YukkaApplication.isApplicationReady()) {
-            System.out.println("Aplikacja nie jest gotowa do sprawdzania okresów powiadomień");
-            return; 
+        while (!YukkaApplication.isApplicationReady()) {
+            log.info("Aplikacja nie jest gotowa do sprawdzania okresów powiadomień, czekanie 5 sekund...");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+        if (LocalDate.now().getDayOfMonth() != 1) {
+            log.info("Dzisiaj nie jest pierwszy dzień miesiąca, pomijanie sprawdzania okresów powiadomień");
+            return;
         }
         System.out.println("Sprawdzanie okresów powiadomień");
         List<Uzytkownik> uzytkownicy = uzytkownikRepository.getUzytkownicyWithRoslinyInDzialki();
@@ -115,11 +139,29 @@ public class PowiadomienieService {
         }
     }
 
+    /**
+     * <p>Metoda sprawdzająca okresy powiadomień dla użytkowników.</p>
+     * <p>Sprawdza okresy owocowania i kwitnienia roślin w działkach użytkowników i tworzy powiadomienia o tych okresach.</p>
+    */
+    @PostConstruct
+    public void checkOkresyPowiadomieniaOnStartup() {
+        checkOkresyPowiadomienia();
+    }
+
+    /**
+     * Metoda sprawdzająca codziennie, którzy użytkownicy powinni zostać odbanowani.
+     */
     @Scheduled(cron = "0 0 0 * * ?")  // Codziennie
     public void checkUnban() {
-        if (!YukkaApplication.isApplicationReady()) {
-            System.out.println("Aplikacja nie jest gotowa do sprawdzania okresów powiadomień");
-            return; 
+        log.info("Sprawdzanie zbanowanych użytkowników");
+        while (!YukkaApplication.isApplicationReady()) {
+            log.info("Aplikacja nie jest gotowa do sprawdzania zbanowanych użytkowników, czekanie 5 sekund...");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
         }
         System.out.println("Sprawdzanie zbanowanych użytkowników");
         List<Uzytkownik> uzytkownicy = uzytkownikRepository.getZbanowaniUzytkownicy();
@@ -133,17 +175,42 @@ public class PowiadomienieService {
         }
     }
 
+    /**
+     * Metoda sprawdzająca codziennie, którzy użytkownicy powinni zostać odbanowani.
+     */
+    @PostConstruct
+    public void checkUnbanOnStartup() {
+        checkUnban();
+    }
+
+
+    /**
+     * Dodaje specjalne powiadomienie na podstawie przekazanego obiektu PowiadomienieDTO.
+     *
+     * @param powiadomienieRequest obiekt zawierający dane powiadomienia do dodania
+     */
     public void addSpecjalnePowiadomienie(PowiadomienieDTO powiadomienieRequest) {
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest, null);
         powiadomienieRepository.addGlobalCustomPowiadomienie(powiadomienie);
 
     }
 
+    /**
+     * Dodaje specjalne powiadomienie dla pracowników na podstawie przekazanego obiektu PowiadomienieDTO.
+     *
+     * @param powiadomienieRequest obiekt zawierający dane powiadomienia do dodania
+     */
     public void addSpecjalnePowiadomienieToPracownicy(PowiadomienieDTO powiadomienieRequest) {
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest, null);
         powiadomienieRepository.addCustomPowiadomienieToPracownicy(powiadomienie);
     }
 
+    /**
+     * Wysyła zgłoszenie do pracownika na podstawie przekazanego obiektu ZgloszenieRequest.
+     *
+     * @param request obiekt zawierający dane zgłoszenia
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     */
     public void sendZgloszenie(ZgloszenieRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         if (checkIfUzytkownikSentZgloszenieBeforeCooldown(connectedUser)) {
@@ -153,6 +220,12 @@ public class PowiadomienieService {
         sendZgloszenie(request, uzyt);
     }
 
+    /**
+     * Wysyła zgłoszenie do pracownika na podstawie przekazanego obiektu ZgloszenieRequest.
+     *
+     * @param request obiekt zawierający dane zgłoszenia
+     * @param uzyt obiekt Uzytkownik reprezentujący aktualnie zalogowanego użytkownika
+     */
     public void sendZgloszenie(ZgloszenieRequest request, Uzytkownik uzyt) {
         log.info("Zgłoszenie użytkownika: " + request.getZglaszany() + " przez użytkownika: " + uzyt.getNazwa());
         Uzytkownik zglaszany = uzytkownikRepository.findByNameOrEmail(request.getZglaszany())
@@ -181,6 +254,12 @@ public class PowiadomienieService {
 
     }
 
+    /**
+     * Wysyła zgłoszenie do pracownika na podstawie przekazanego obiektu ZgloszenieRequest.
+     *
+     * @param request obiekt zawierający dane zgłoszenia
+     * @param uzyt obiekt Uzytkownik reprezentujący aktualnie zalogowanego użytkownika
+     */
     public Powiadomienie addPowiadomienie(PowiadomienieDTO request, Uzytkownik uzytkownik) {
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.valueOf(request.getTyp()), request, uzytkownik);
 
@@ -195,6 +274,12 @@ public class PowiadomienieService {
         }
     }
 
+    /**
+     * Wysyła zgłoszenie do pracownika na podstawie przekazanego obiektu ZgloszenieRequest.
+     *
+     * @param request obiekt zawierający dane zgłoszenia
+     * @param uzyt obiekt Uzytkownik reprezentujący aktualnie zalogowanego użytkownika
+     */
     public Powiadomienie createPowiadomienie(TypPowiadomienia typ, PowiadomienieDTO request, Uzytkownik uzytkownik) {
         String opis = generatePowiadomienieOpis(typ, request);
 
@@ -217,7 +302,14 @@ public class PowiadomienieService {
                 .build();
     }
 
-    // TODO: Jakoś to połączyć jak mnie już głowa przestanie boleć
+    
+    /**
+     * Wysyła powiadomienie o nowej rozmowie prywatnej.
+     *
+     * @param nadawca   Użytkownik, który wysyła powiadomienie.
+     * @param odbiorca  Użytkownik, który otrzymuje powiadomienie.
+     * @param rozmowa   Rozmowa prywatna, której dotyczy powiadomienie.
+     */
     public void sendPowiadomienieOfRozmowa(Uzytkownik nadawca, Uzytkownik odbiorca, RozmowaPrywatna rozmowa) {
         PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.WIADOMOSC_PRYWATNA.name())
@@ -229,6 +321,12 @@ public class PowiadomienieService {
         addPowiadomienie(powiadomienie, odbiorca);
     }
 
+    /**
+     * Wysyła powiadomienie o nałożeniu bana na użytkownika.
+     *
+     * @param odbiorca Użytkownik, który otrzymuje powiadomienie.
+     * @param request Obiekt zawierający szczegóły bana, takie jak okres i powód.
+     */
     public void sendPowiadomienieOfBan(Uzytkownik odbiorca, BanRequest request) {
         PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.BAN.name())
@@ -238,6 +336,11 @@ public class PowiadomienieService {
         addPowiadomienie(powiadomienie, odbiorca);
     }
 
+    /**
+     * Wysyła powiadomienie o zdjęciu bana z użytkownika.
+     *
+     * @param odbiorca Użytkownik, który otrzymuje powiadomienie.
+     */
     public void sendPowiadomienieOfUnban(Uzytkownik odbiorca) {
         PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.ODBANOWANIE.name())
@@ -246,6 +349,13 @@ public class PowiadomienieService {
     }
 
 
+    /**
+     * Wysyła powiadomienie o nowym komentarzu.
+     *
+     * @param nadawca   Użytkownik, który wysyła powiadomienie.
+     * @param odbiorca  Użytkownik, który otrzymuje powiadomienie.
+     * @param komentarz Komentarz, który dotyczy powiadomienia.
+     */
     public void sendPowiadomienieOfKomentarz(Uzytkownik nadawca, Uzytkownik odbiorca, Komentarz komentarz) {
         if(komentarz.getUzytkownik().getUzytId().equals(nadawca.getUzytId())) {
             return;
@@ -271,6 +381,14 @@ public class PowiadomienieService {
         addPowiadomienie(powiadomienie, komentarz.getUzytkownik());
     }
 
+
+    /**
+     * Ustawia powiadomienie jako przeczytane dla zalogowanego użytkownika.
+     *
+     * @param id ID powiadomienia, które ma zostać oznaczone jako przeczytane.
+     * @param connectedUser Obiekt Authentication reprezentujący zalogowanego użytkownika.
+     * @return Obiekt PowiadomienieResponse zawierający zaktualizowane dane powiadomienia.
+     */
     public PowiadomienieResponse setPrzeczytane(Long id, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         Powiadomienie powiadomienie = powiadomienieRepository.setPrzeczytane(uzyt.getEmail(), id).orElse(null);;
@@ -278,12 +396,23 @@ public class PowiadomienieService {
         return powiadomienieMapper.toPowiadomienieResponse(powiadomienie);
     }
 
+    /**
+     * Ustawia wszystkie powiadomienia użytkownika jako przeczytane.
+     *
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     */
     public void setAllPrzeczytane(Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         powiadomienieRepository.setAllPrzeczytane(uzyt.getEmail());
     }
 
     
+    /**
+     * Usuwa powiadomienie o podanym identyfikatorze.
+     *
+     * @param id            identyfikator powiadomienia do usunięcia
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     */
     public void remove(Long id, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         Optional<Powiadomienie> pow = powiadomienieRepository.findById(id);
@@ -293,6 +422,12 @@ public class PowiadomienieService {
         powiadomienieRepository.remove(uzyt.getEmail(), id);
     }
 
+    /**
+     * Sprawdza, czy użytkownik wysłał zgłoszenie w ciągu ostatnich 15 minut.
+     *
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     * @return true, jeśli użytkownik wysłał zgłoszenie w ciągu ostatnich 15 minut, w przeciwnym razie false
+     */
     @Transactional(readOnly = true)
     private Boolean checkIfUzytkownikSentZgloszenieBeforeCooldown(Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
@@ -310,6 +445,13 @@ public class PowiadomienieService {
         return true;
     }
 
+    /**
+     * Generuje opis powiadomienia na podstawie przekazanego obiektu PowiadomienieDTO.
+     *
+     * @param typ     typ powiadomienia
+     * @param request obiekt zawierający dane powiadomienia
+     * @return opis powiadomienia
+     */
     private String generatePowiadomienieOpis(TypPowiadomienia typ, PowiadomienieDTO request) {
         String template = typ.getTemplate();
         template = template.replace("{tytul}", request.getTytul() != null ? request.getTytul() : "");
@@ -333,12 +475,28 @@ public class PowiadomienieService {
     }
 
 
+    /**
+     * Przetwarza zestaw okresów, filtrując je na podstawie nazwy aktualnego miesiąca,
+     * a następnie dodaje nazwę rośliny do zestawu nazw roślin, jeśli okres pasuje do aktualnego miesiąca.
+     *
+     * @param okresy        Zestaw obiektów typu Wlasciwosc reprezentujących okresy.
+     * @param aktualnyMiesiac Aktualny miesiąc, który jest używany do filtrowania okresów.
+     * @param nazwyRoslin   Zestaw nazw roślin, do którego dodawana jest nazwa rośliny, jeśli okres pasuje do aktualnego miesiąca.
+     * @param nazwaRosliny  Nazwa rośliny, która jest dodawana do zestawu nazw roślin, jeśli okres pasuje do aktualnego miesiąca.
+     */
     private void przetworzOkresy(Set<Wlasciwosc> okresy, Miesiac aktualnyMiesiac, Set<String> nazwyRoslin, String nazwaRosliny) {
         okresy.stream()
               .filter(okres -> okres.getNazwa().equalsIgnoreCase(aktualnyMiesiac.name()))
               .forEach(okres -> nazwyRoslin.add(nazwaRosliny));
     }
 
+    /**
+     * Tworzy powiadomienie okresowe dla podanych nazw roślin, typu powiadomienia i użytkownika.
+     *
+     * @param nazwyRoslin Zbiór nazw roślin, dla których ma zostać utworzone powiadomienie.
+     * @param typ Typ powiadomienia, który ma zostać utworzony.
+     * @param uzytkownik Użytkownik, dla którego ma zostać utworzone powiadomienie.
+     */
     private void utworzOkresPowiadomienie(Set<String> nazwyRoslin, TypPowiadomienia typ, Uzytkownik uzytkownik) {
         if (!nazwyRoslin.isEmpty()) {
             PowiadomienieDTO powiadomienieRequest = PowiadomienieDTO.builder()

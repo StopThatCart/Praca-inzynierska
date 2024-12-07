@@ -14,8 +14,35 @@ import com.example.yukka.model.social.komentarz.Komentarz;
 
 import io.micrometer.common.lang.NonNull;
 
-
-
+/**
+ * Repozytorium dla operacji na encji Komentarz w bazie danych Neo4j.
+ * 
+ * <p>Interfejs ten rozszerza Neo4jRepository i zapewnia metody do wykonywania
+ * zapytań Cypher na bazie danych Neo4j. Metody te umożliwiają sprawdzanie,
+ * pobieranie, zapisywanie oraz aktualizowanie danych dotyczących komentarzy
+ * i powiązanych z nimi użytkowników, postów oraz rozmów prywatnych.</p>
+ * 
+ * <p>Metody w tym repozytorium wykorzystują adnotacje @Query do definiowania
+ * zapytań Cypher, które są wykonywane na bazie danych. Parametry zapytań
+ * są przekazywane za pomocą adnotacji @Param.</p>
+ * 
+ * <p>Przykładowe operacje obejmują:</p>
+ * <ul>
+ *   <li>Pobieranie wszystkich komentarzy.</li>
+ *   <li>Wyszukiwanie komentarza na podstawie jego identyfikatora.</li>
+ *   <li>Wyszukiwanie komentarzy użytkownika na podstawie jego nazwy lub adresu email.</li>
+ *   <li>Dodawanie oceny do komentarza.</li>
+ *   <li>Usuwanie oceny z komentarza.</li>
+ *   <li>Dodawanie odpowiedzi do komentarza w poście.</li>
+ *   <li>Dodawanie komentarza do postu.</li>
+ *   <li>Dodawanie komentarza do rozmowy prywatnej.</li>
+ *   <li>Aktualizowanie treści komentarza.</li>
+ *   <li>Usuwanie komentarza oraz jego odpowiedzi.</li>
+ * </ul>
+ * 
+ * <p>Repozytorium to jest częścią aplikacji społecznościowej, umożliwiającej
+ * użytkownikom interakcję poprzez komentarze, oceny oraz prywatne wiadomości.</p>
+ */
 public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
     @SuppressWarnings("null")
