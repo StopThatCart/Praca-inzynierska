@@ -11,6 +11,18 @@ import org.springframework.data.repository.query.Param;
 import com.example.yukka.model.ogrod.Ogrod;
 
 
+/**
+ * Interfejs OgrodRepository rozszerza Neo4jRepository i zapewnia metody do operacji na encjach Ogrod.
+ * 
+ * <p>Interfejs ten zawiera niestandardowe zapytania do bazy danych Neo4j, które umożliwiają wyszukiwanie,
+ * pobieranie oraz aktualizowanie danych dotyczących ogrodów i powiązanych z nimi encji.</p>
+ * 
+ * <p>Metody w tym interfejsie wykorzystują adnotację @Query do definiowania zapytań Cypher, które są wykonywane
+ * na bazie danych Neo4j.</p>
+ * 
+ * <p>Interfejs ten jest częścią warstwy dostępu do danych aplikacji i jest używany do komunikacji z bazą danych
+ * w celu wykonywania operacji CRUD na encjach Ogrod.</p>
+ */
 public interface OgrodRepository  extends Neo4jRepository<Ogrod, Long> {
 
         @Query(value = """

@@ -9,6 +9,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Klasa reprezentująca pozycję na płaszczyźnie z współrzędnymi x i y.
+ * 
+ * <ul>
+ *   <li><strong>x</strong> - współrzędna x</li>
+ *   <li><strong>y</strong> - współrzędna y</li>
+ * </ul>
+ * 
+ * Klasa zawiera metody do porównywania obiektów oraz generowania hash kodu.
+ * 
+ * <ul>
+ *   <li><strong>equals</strong> - porównuje obiekty na podstawie współrzędnych x i y</li>
+ *   <li><strong>hashCode</strong> - generuje hash kod na podstawie współrzędnych x i y</li>
+ * </ul>
+ */
 @ToString
 @Getter
 @Setter
@@ -19,11 +34,6 @@ public class Pozycja {
     int x;
     int y;
 
-    
-    /** 
-     * @param o
-     * @return boolean
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

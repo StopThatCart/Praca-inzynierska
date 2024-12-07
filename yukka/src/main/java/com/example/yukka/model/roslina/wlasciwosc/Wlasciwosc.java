@@ -1,20 +1,33 @@
-    package com.example.yukka.model.roslina.wlasciwosc;
+package com.example.yukka.model.roslina.wlasciwosc;
 
-    import java.util.List;
+import java.util.List;
 import java.util.Objects;
 
-    import org.springframework.data.neo4j.core.schema.DynamicLabels;
-    import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.DynamicLabels;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-    import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Property;
 
-    import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-    import lombok.Getter;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca właściwość rośliny.
+ * 
+ * <ul>
+ * <li><strong>labels</strong>: Lista etykiet dynamicznych właściwości.</li>
+ * <li><strong>id</strong>: Unikalny identyfikator właściwości.</li>
+ * <li><strong>nazwa</strong>: Nazwa właściwości.</li>
+ * </ul>
+ * 
+ * <p>Klasa zawiera również metody do porównywania obiektów oraz generowania hashCode i reprezentacji tekstowej.</p>
+ * 
+ * @author Autor
+ */
 @Node
 @Getter
 @Setter

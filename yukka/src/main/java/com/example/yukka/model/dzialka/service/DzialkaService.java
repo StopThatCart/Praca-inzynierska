@@ -30,6 +30,26 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Serwis zarządzający działkami użytkowników.
+ * 
+ * <ul>
+ * <li><strong>getDzialki</strong> - Pobiera listę działek zalogowanego użytkownika.</li>
+ * <li><strong>getDzialkiOfUzytkownik</strong> - Pobiera listę działek innego użytkownika, jeśli ten na to pozwala.</li>
+ * <li><strong>getPozycjeInDzialki</strong> - Pobiera pozycje w działkach zalogowanego użytkownika.</li>
+ * <li><strong>getDzialkaOfUzytkownikByNumer</strong> - Pobiera działkę innego użytkownika po numerze, jeśli ten na to pozwala.</li>
+ * <li><strong>getDzialkaByNumer</strong> - Pobiera własną działkę po numerze.</li>
+ * <li><strong>saveRoslinaToDzialka</strong> - Zapisuje roślinę na działce użytkownika.</li>
+ * <li><strong>updateRoslinaPozycjaInDzialka</strong> - Aktualizuje pozycję rośliny na działce użytkownika.</li>
+ * <li><strong>updateRoslinaKolorInDzialka</strong> - Aktualizuje kolor rośliny na działce użytkownika.</li>
+ * <li><strong>updateRoslinaWyswietlanieInDzialka</strong> - Aktualizuje sposób wyświetlania rośliny na działce użytkownika.</li>
+ * <li><strong>updateRoslinaNotatkaInDzialka</strong> - Aktualizuje notatkę rośliny na działce użytkownika.</li>
+ * <li><strong>updateRoslinaObrazInDzialka</strong> - Aktualizuje obraz rośliny na działce użytkownika.</li>
+ * <li><strong>deleteRoslinaObrazInDzialka</strong> - Usuwa obraz rośliny z działki użytkownika.</li>
+ * <li><strong>deleteRoslinaTeksturaInDzialka</strong> - Usuwa teksturę rośliny z działki użytkownika.</li>
+ * <li><strong>deleteRoslinaFromDzialka</strong> - Usuwa roślinę z działki użytkownika.</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -44,9 +64,11 @@ public class DzialkaService {
     private final RoslinaMapper roslinaMapper;
 
     
-    /** 
-     * @param connectedUser
-     * @return List<DzialkaResponse>
+    /**
+     * Metoda zwraca listę działek powiązanych z zalogowanym użytkownikiem.
+     *
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return lista obiektów DzialkaResponse reprezentujących działki użytkownika
      */
     @Transactional(readOnly = true)
     public List<DzialkaResponse> getDzialki(Authentication connectedUser) {
@@ -59,6 +81,13 @@ public class DzialkaService {
         return dzialkiResponse;
     }
 
+    /**
+     * Metoda zwraca listę działek powiązanych z użytkownikiem o podanej nazwie.
+     *
+     * @param nazwa nazwa użytkownika, którego działki mają być zwrócone
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return lista obiektów DzialkaResponse reprezentujących działki użytkownika
+     */
     @Transactional(readOnly = true)
     public List<DzialkaResponse> getDzialkiOfUzytkownik(String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
@@ -78,6 +107,12 @@ public class DzialkaService {
         return dzialkiResponse;
     }
 
+    /**
+     * Metoda zwraca listę pozycji w działkach powiązanych z zalogowanym użytkownikiem.
+     *
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return lista obiektów DzialkaResponse reprezentujących pozycje w działkach użytkownika
+     */
     @Transactional(readOnly = true)
     public List<DzialkaResponse> getPozycjeInDzialki(Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
@@ -97,7 +132,14 @@ public class DzialkaService {
         return dzialkiResponse;
     }
 
-    // Pobiera działki jakiegoś użytkownika, o ile on na to pozwala
+    /**
+     * Metoda zwraca działkę powiązaną z użytkownikiem o podanej nazwie i numerze.
+     *
+     * @param numer numer działki
+     * @param nazwa nazwa użytkownika, którego działka ma być zwrócona
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     @Transactional(readOnly = true)
     public DzialkaResponse getDzialkaOfUzytkownikByNumer(int numer, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = null;
@@ -115,7 +157,13 @@ public class DzialkaService {
         return roslinaMapper.toDzialkaResponse(dzialka);
     }
 
-    // Pobiera WŁASNĄ działkę
+    /**
+     * Metoda zwraca działkę powiązaną z zalogowanym użytkownikiem po numerze.
+     *
+     * @param numer numer działki
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     @Transactional(readOnly = true)
     public DzialkaResponse getDzialkaByNumer(int numer, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
@@ -129,6 +177,15 @@ public class DzialkaService {
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono działki " + numer + " dla użytkownika " + uzyt.getNazwa()));
     }
 
+    /**
+     * Metoda zapisuje roślinę na działce użytkownika.
+     *
+     * @param request obiekt DzialkaRoslinaRequest reprezentujący żądanie zapisania rośliny na działce
+     * @param file obiekt MultipartFile reprezentujący obraz rośliny
+     * @param tekstura obiekt MultipartFile reprezentujący teksturę rośliny
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     public DzialkaResponse saveRoslinaToDzialka(DzialkaRoslinaRequest request, 
     MultipartFile file, MultipartFile tekstura, 
     Authentication connectedUser) {
@@ -137,6 +194,15 @@ public class DzialkaService {
         return saveRoslinaToDzialka(request, file, tekstura, uzyt);
     }
 
+    /**
+     * Metoda zapisuje roślinę na działce użytkownika.
+     *
+     * @param request obiekt DzialkaRoslinaRequest reprezentujący żądanie zapisania rośliny na działce
+     * @param obraz obiekt MultipartFile reprezentujący obraz rośliny
+     * @param tekstura obiekt MultipartFile reprezentujący teksturę rośliny
+     * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     public DzialkaResponse saveRoslinaToDzialka(DzialkaRoslinaRequest request, 
     MultipartFile obraz, MultipartFile tekstura, 
     Uzytkownik connectedUser) {
@@ -156,6 +222,13 @@ public class DzialkaService {
         return roslinaMapper.toDzialkaResponse(dzialkaZRoslina);
     }
 
+    /**
+     * Metoda aktualizuje pozycję rośliny na działce użytkownika.
+     *
+     * @param request obiekt MoveRoslinaRequest reprezentujący żądanie aktualizacji pozycji rośliny na działce
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     private Dzialka saveToDzialka(@Valid DzialkaRoslinaRequest request, MultipartFile obraz, MultipartFile tekstura, Uzytkownik uzyt) {
         String nazwaLacinskaOrId;
 
@@ -194,13 +267,26 @@ public class DzialkaService {
         request.getObraz(), nazwaLacinskaOrId);
     }
 
-
+    /**
+     * Metoda aktualizuje pozycję rośliny na działce użytkownika.
+     *
+     * @param request obiekt MoveRoslinaRequest reprezentujący żądanie aktualizacji pozycji rośliny na działce
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     public DzialkaResponse updateRoslinaPozycjaInDzialka(MoveRoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         return updateRoslinaPozycjaInDzialka(request, uzyt);
     }
 
 
+    /**
+     * Metoda aktualizuje pozycję rośliny na działce użytkownika.
+     *
+     * @param request obiekt MoveRoslinaRequest reprezentujący żądanie aktualizacji pozycji rośliny na działce
+     * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     public DzialkaResponse updateRoslinaPozycjaInDzialka(MoveRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
@@ -221,6 +307,13 @@ public class DzialkaService {
         return moveRoslinaWithinSameDzialka(request, uzyt, dzialka);
     }
 
+    /**
+     * Metoda przenosi roślinę na inną działkę użytkownika.
+     * UWAGA: Ta metoda jest nieużywana na frontendzie, gdyż ze względu na limity czasowe nie zdążono jej zaimplementować.
+     * @param request obiekt MoveRoslinaRequest reprezentujący żądanie przeniesienia rośliny na inną działkę
+     * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     private DzialkaResponse moveRoslinaToDifferentDzialka(MoveRoslinaRequest request, Uzytkownik uzyt) {
         Dzialka dzialka2 = getDzialkaByNumer(request.getNumerDzialkiNowy(), uzyt);
     
@@ -236,6 +329,12 @@ public class DzialkaService {
         return roslinaMapper.toDzialkaResponse(res);
     }
     
+    /**
+     * Metoda przenosi roślinę na tę samą działkę użytkownika.
+     * @param request obiekt MoveRoslinaRequest reprezentujący żądanie przeniesienia rośliny na tę samą działkę
+     * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     private DzialkaResponse moveRoslinaWithinSameDzialka(MoveRoslinaRequest request, Uzytkownik uzyt, Dzialka dzialka) {
         ZasadzonaNaReverse zasadzonaRoslina = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
         ZasadzonaNaReverse zasadzonaRoslinaNowa = dzialka.getZasadzonaNaByCoordinates(request.getXNowy(), request.getYNowy());
@@ -249,7 +348,7 @@ public class DzialkaService {
             }
         }
 
-        List<Pozycja> zajetePozycje = dzialka.isPozycjeOccupied(request);
+        List<Pozycja> zajetePozycje = dzialka.arePozycjeOccupied(request);
         if (!zajetePozycje.isEmpty()) {
             throw new IllegalArgumentException("Pozycje są zajęte przez inne rośliny: " + zajetePozycje);
         }
@@ -264,12 +363,25 @@ public class DzialkaService {
         return roslinaMapper.toDzialkaResponse(res);
     }
 
-
+    /**
+     * Metoda aktualizuje kolor rośliny na działce użytkownika.
+     *
+     * @param request obiekt DzialkaRoslinaRequest reprezentujący żądanie aktualizacji koloru rośliny na działce
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     public DzialkaResponse updateRoslinaKolorInDzialka(DzialkaRoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         return updateRoslinaKolorInDzialka(request, uzyt);
     }
 
+    /**
+     * Metoda aktualizuje kolor rośliny na działce użytkownika.
+     *
+     * @param request obiekt DzialkaRoslinaRequest reprezentujący żądanie aktualizacji koloru rośliny na działce
+     * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     public DzialkaResponse updateRoslinaKolorInDzialka(DzialkaRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
@@ -288,12 +400,25 @@ public class DzialkaService {
             return roslinaMapper.toDzialkaResponse(dzialkaZRoslina);
         } else return null;
     }
-
+    /**
+     * Metoda aktualizuje sposób wyświetlania rośliny na działce użytkownika.
+     *
+     * @param request obiekt DzialkaRoslinaRequest reprezentujący żądanie aktualizacji sposobu wyświetlania rośliny na działce
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     public DzialkaResponse updateRoslinaWyswietlanieInDzialka(DzialkaRoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         return updateRoslinaWyswietlanieInDzialka(request, uzyt);
     }
 
+    /**
+     * Metoda aktualizuje sposób wyświetlania rośliny na działce użytkownika.
+     *
+     * @param request obiekt DzialkaRoslinaRequest reprezentujący żądanie aktualizacji sposobu wyświetlania rośliny na działce
+     * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     public DzialkaResponse updateRoslinaWyswietlanieInDzialka(DzialkaRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         log.info("Aktualizacja wyświetlania rośliny na pozycji: [" 
@@ -320,11 +445,25 @@ public class DzialkaService {
         }
     }
 
+    /**
+     * Metoda aktualizuje notatkę rośliny na działce użytkownika.
+     *
+     * @param request obiekt DzialkaRoslinaRequest reprezentujący żądanie aktualizacji notatki rośliny na działce
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     public DzialkaResponse updateRoslinaNotatkaInDzialka(DzialkaRoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         return updateRoslinaNotatkaInDzialka(request, uzyt);
     }
 
+    /**
+     * Metoda aktualizuje notatkę rośliny na działce użytkownika.
+     *
+     * @param request obiekt DzialkaRoslinaRequest reprezentujący żądanie aktualizacji notatki rośliny na działce
+     * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
+     * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
+     */
     public DzialkaResponse updateRoslinaNotatkaInDzialka(DzialkaRoslinaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
@@ -341,12 +480,29 @@ public class DzialkaService {
         }
     }
 
-
+    /**
+     * Metoda aktualizuje obraz rośliny na działce użytkownika.
+     *
+     * @param request obiekt DzialkaRoslinaRequest reprezentujący żądanie aktualizacji obrazu rośliny na działce
+     * @param obraz obiekt MultipartFile reprezentujący obraz rośliny
+     * @param tekstura obiekt MultipartFile reprezentujący teksturę rośliny
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     * @return obiekt FileResponse reprezentujący obraz rośliny
+     */
     public FileResponse updateRoslinaObrazInDzialka(DzialkaRoslinaRequest request, MultipartFile obraz, MultipartFile tekstura, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         return updateRoslinaObrazInDzialka(request, obraz, tekstura, uzyt);
     }
 
+    /**
+     * Metoda aktualizuje obraz rośliny na działce użytkownika.
+     *
+     * @param request obiekt DzialkaRoslinaRequest reprezentujący żądanie aktualizacji obrazu rośliny na działce
+     * @param obraz obiekt MultipartFile reprezentujący obraz rośliny
+     * @param tekstura obiekt MultipartFile reprezentujący teksturę rośliny
+     * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
+     * @return obiekt FileResponse reprezentujący obraz rośliny
+     */
     public FileResponse updateRoslinaObrazInDzialka(DzialkaRoslinaRequest request, MultipartFile obraz, MultipartFile tekstura, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
@@ -383,11 +539,23 @@ public class DzialkaService {
         return null;
     }
 
+    /**
+     * Metoda usuwa obraz rośliny na działce użytkownika.
+     *
+     * @param request obiekt BaseDzialkaRequest reprezentujący żądanie usunięcia obrazu rośliny na działce
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     */
     public void deleteRoslinaObrazInDzialka(BaseDzialkaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         deleteRoslinaObrazInDzialka(request, uzyt);
     }
 
+    /**
+     * Metoda usuwa obraz rośliny na działce użytkownika.
+     *
+     * @param request obiekt BaseDzialkaRequest reprezentujący żądanie usunięcia obrazu rośliny na działce
+     * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
+     */
     public void deleteRoslinaObrazInDzialka(BaseDzialkaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         // Zawsze zwróci działkę zalogowanego użytkownika
@@ -407,12 +575,23 @@ public class DzialkaService {
         }
     }
 
-
+    /**
+     * Metoda usuwa teksturę rośliny na działce użytkownika.
+     *
+     * @param request obiekt BaseDzialkaRequest reprezentujący żądanie usunięcia tekstury rośliny na działce
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     */
     public void deleteRoslinaTeksturaInDzialka(BaseDzialkaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         deleteRoslinaTeksturaInDzialka(request, uzyt);
     }
 
+    /**
+     * Metoda usuwa teksturę rośliny na działce użytkownika.
+     *
+     * @param request obiekt BaseDzialkaRequest reprezentujący żądanie usunięcia tekstury rośliny na działce
+     * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
+     */
     public void deleteRoslinaTeksturaInDzialka(BaseDzialkaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
@@ -430,6 +609,12 @@ public class DzialkaService {
         }
     }
 
+    /**
+     * Metoda usuwa roślinę z działki użytkownika.
+     *
+     * @param request obiekt BaseDzialkaRequest reprezentujący żądanie usunięcia rośliny z działki
+     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
+     */
     public void deleteRoslinaFromDzialka(BaseDzialkaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
@@ -454,6 +639,4 @@ public class DzialkaService {
 
         dzialkaRepository.removeRoslinaFromDzialka(uzyt.getEmail(), request.getNumerDzialki(), request.getX(), request.getY());
     }
-    
-   
 }

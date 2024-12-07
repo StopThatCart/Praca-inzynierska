@@ -6,6 +6,38 @@ import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Enum RoslinaEtykietyFrontend reprezentuje etykiety używane w aplikacji frontendowej dla roślin.
+ * Każda etykieta ma odpowiadającą jej wartość backendową.
+ * 
+ * <ul>
+ * <li><strong>GRUPA</strong> - Grupa</li>
+ * <li><strong>PODGRUPA</strong> - Podgrupa</li>
+ * <li><strong>FORMA</strong> - Forma</li>
+ * <li><strong>SILA_WZROSTU</strong> - SilaWzrostu</li>
+ * <li><strong>POKROJ</strong> - Pokroj</li>
+ * <li><strong>KOLOR_LISCI</strong> - Kolor</li>
+ * <li><strong>KOLOR_KWIATOW</strong> - Kolor</li>
+ * <li><strong>ZIMOZIELONOSC</strong> - Zimozielonosc</li>
+ * <li><strong>OWOC</strong> - Owoc</li>
+ * <li><strong>STANOWISKO</strong> - Stanowisko</li>
+ * <li><strong>WILGOTNOSC</strong> - Wilgotnosc</li>
+ * <li><strong>ODCZYN</strong> - Odczyn</li>
+ * <li><strong>GLEBA</strong> - Gleba</li>
+ * <li><strong>WALOR</strong> - Walor</li>
+ * <li><strong>ZASTOSOWANIE</strong> - Zastosowanie</li>
+ * <li><strong>KWIAT</strong> - Kwiat</li>
+ * <li><strong>OKRES_KWITNIENIA</strong> - Okres</li>
+ * <li><strong>OKRES_OWOCOWANIA</strong> - Okres</li>
+ * </ul>
+ * 
+ * Metody:
+ * <ul>
+ * <li><strong>getBackendValue</strong> - Zwraca wartość backendową etykiety.</li>
+ * <li><strong>fromString</strong> - Zwraca opcjonalną wartość enum na podstawie podanego ciągu znaków.</li>
+ * <li><strong>toBackend</strong> - Zwraca wartość backendową na podstawie podanego ciągu znaków lub rzuca wyjątek, jeśli etykieta nie istnieje.</li>
+ * </ul>
+ */
 @RequiredArgsConstructor
 public enum RoslinaEtykietyFrontend {
     GRUPA("Grupa"),

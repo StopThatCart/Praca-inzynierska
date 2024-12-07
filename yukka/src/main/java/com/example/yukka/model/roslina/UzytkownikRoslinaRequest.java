@@ -28,13 +28,35 @@ import lombok.experimental.SuperBuilder;
 
 
 
+/**
+ * Klasa reprezentująca żądanie użytkownika dotyczące rośliny.
+ * <ul>
+ * <li><strong>roslinaId</strong>: Identyfikator rośliny.</li>
+ * <li><strong>nazwa</strong>: Nazwa rośliny. Wymagana.</li>
+ * <li><strong>opis</strong>: Opis rośliny. Wymagany.</li>
+ * <li><strong>obrazDefault</strong>: Domyślna nazwa obrazu rośliny. Ignorowane podczas serializacji JSON.</li>
+ * <li><strong>obraz</strong>: Nazwa obrazu rośliny.</li>
+ * <li><strong>wysokoscMin</strong>: Minimalna wysokość rośliny. Wymagana. Musi być między 0 a 200.</li>
+ * <li><strong>wysokoscMax</strong>: Maksymalna wysokość rośliny. Wymagana. Musi być między 0 a 200.</li>
+ * <li><strong>wlasciwosci</strong>: Lista właściwości rośliny. Wymagana. Maksymalnie 100 elementów.</li>
+ * </ul>
+ * <p>Metody walidacyjne:</p>
+ * <ul>
+ * <li><strong>isValidWysokosc</strong>: Sprawdza, czy minimalna wysokość nie jest większa niż maksymalna wysokość.</li>
+ * <li><strong>areWlasciwosciEmpty</strong>: Sprawdza, czy nazwy właściwości zawierają od 1 do 100 znaków.</li>
+ * <li><strong>isValidEtykiety</strong>: Sprawdza, czy etykiety w liście właściwości są poprawne.</li>
+ * </ul>
+ * <p>Metody pomocnicze:</p>
+ * <ul>
+ * <li><strong>getWlasciwosciAsMap</strong>: Zwraca listę właściwości jako mapę.</li>
+ * </ul>
+ */
 @Getter
 @Setter
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-// Z rośliną stworzoną przez użytkownika jest większa swawolka
 public class UzytkownikRoslinaRequest {
     private String roslinaId;
 
@@ -61,9 +83,6 @@ public class UzytkownikRoslinaRequest {
     private Double wysokoscMax;
 
     
-    /** 
-     * @return boolean
-     */
     @JsonIgnore
     @AssertTrue(message = "Wysokość minimalna nie może być większa niż wysokości maksymalnej")
     private boolean isValidWysokosc() {

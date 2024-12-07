@@ -19,6 +19,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca relację zasadzoną na odwrocie.
+ * 
+ * <ul>
+ *   <li><strong>id</strong>: Unikalny identyfikator relacji.</li>
+ *   <li><strong>x</strong>: Współrzędna X.</li>
+ *   <li><strong>y</strong>: Współrzędna Y.</li>
+ *   <li><strong>kolor</strong>: Kolor rośliny.</li>
+ *   <li><strong>tekstura</strong>: Tekstura rośliny.</li>
+ *   <li><strong>wyswietlanie</strong>: Sposób wyświetlania rośliny.</li>
+ *   <li><strong>notatka</strong>: Notatka dotycząca rośliny.</li>
+ *   <li><strong>obraz</strong>: Obraz rośliny.</li>
+ *   <li><strong>tabX</strong>: Tablica współrzędnych X.</li>
+ *   <li><strong>tabY</strong>: Tablica współrzędnych Y.</li>
+ *   <li><strong>roslina</strong>: Obiekt rośliny powiązany z relacją.</li>
+ *   <li><strong>pozycje</strong>: Zbiór pozycji rośliny.</li>
+ * </ul>
+ * 
+ * Metody:
+ * <ul>
+ *   <li><strong>initPozycje</strong>: Inicjalizuje zbiór pozycji na podstawie tablic współrzędnych.</li>
+ *   <li><strong>equalsRoslina(Roslina roslina)</strong>: Sprawdza, czy podana roślina jest równa roślinie w relacji.</li>
+ *   <li><strong>equalsRoslina(String roslinaId)</strong>: Sprawdza, czy podane ID rośliny jest równe ID rośliny w relacji.</li>
+ *   <li><strong>equalsRoslina(ZasadzonaNaReverse zasadzinaNaReverse)</strong>: Sprawdza, czy roślina w podanej relacji jest równa roślinie w tej relacji.</li>
+ * </ul>
+ */
 @RelationshipProperties
 @Getter
 @Setter
@@ -74,11 +100,6 @@ public class ZasadzonaNaReverse {
     }
 
 
-    
-    /** 
-     * @param roslina
-     * @return boolean
-     */
     @JsonIgnore
     public boolean equalsRoslina(Roslina roslina) {
         return this.roslina.getRoslinaId().equals(roslina.getRoslinaId());

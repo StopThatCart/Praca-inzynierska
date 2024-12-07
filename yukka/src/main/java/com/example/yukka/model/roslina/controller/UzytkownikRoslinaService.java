@@ -26,6 +26,29 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Serwis zarządzający roślinami użytkowników.
+ * 
+ * <ul>
+ * <li><strong>UzytkownikRepository</strong> - repozytorium użytkowników</li>
+ * <li><strong>UzytkownikRoslinaRepository</strong> - repozytorium roślin użytkowników</li>
+ * <li><strong>RoslinaService</strong> - serwis roślin</li>
+ * <li><strong>FileUtils</strong> - narzędzia do obsługi plików</li>
+ * <li><strong>FileStoreService</strong> - serwis przechowywania plików</li>
+ * <li><strong>RoslinaMapper</strong> - mapper roślin</li>
+ * <li><strong>CommonMapperService</strong> - wspólny serwis mapperów</li>
+ * </ul>
+ * 
+ * Metody:
+ * 
+ * <ul>
+ * <li><strong>findByRoslinaId</strong> - Znajduje roślinę po jej identyfikatorze</li>
+ * <li><strong>findRoslinyOfUzytkownik</strong> - Znajduje rośliny użytkownika</li>
+ * <li><strong>save</strong> - Zapisuje roślinę użytkownika</li>
+ * <li><strong>update</strong> - Aktualizuje roślinę użytkownika</li>
+ * <li><strong>uploadUzytkownikRoslinaObraz</strong> - Przesyła obraz rośliny użytkownika</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -43,15 +66,26 @@ public class UzytkownikRoslinaService {
     private final CommonMapperService commonMapperService;
 
     
-    /** 
-     * @param roslinaId
-     * @return Optional<Roslina>
+    /**
+     * Znajduje roślinę po jej identyfikatorze.
+     * 
+     * @param roslinaId Identyfikator rośliny
+     * @return Zwraca roślinę
      */
     public Optional<Roslina> findByRoslinaId(String roslinaId) {
         return uzytkownikRoslinaRepository.findByRoslinaIdWithRelations(roslinaId);
     }
 
-
+    /**
+     * Znajduje rośliny użytkownika.
+     * 
+     * @param page Numer strony wyników
+     * @param size Rozmiar strony wyników
+     * @param request Żądanie zawierające kryteria wyszukiwania
+     * @param nazwa Nazwa użytkownika
+     * @param connectedUser Aktualnie zalogowany użytkownik
+     * @return Zwraca stronę z roślinami użytkownika
+     */
     public PageResponse<RoslinaResponse> findRoslinyOfUzytkownik(int page, int size, UzytkownikRoslinaRequest request, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         log.info(nazwa + " próbuje pobrać rośliny użytkownika: " + nazwa);
@@ -66,14 +100,24 @@ public class UzytkownikRoslinaService {
         return findRoslinyOfUzytkownik(page, size, request, nazwa, uzyt);
     }
 
+    /**
+     * Znajduje rośliny użytkownika.
+     * 
+     * @param page Numer strony wyników
+     * @param size Rozmiar strony wyników
+     * @param request Żądanie zawierające kryteria wyszukiwania
+     * @param nazwa Nazwa użytkownika
+     * @param uzyt Użytkownik
+     * @return Zwraca stronę z roślinami użytkownika
+     */
     public PageResponse<RoslinaResponse> findRoslinyOfUzytkownik(int page, int size, UzytkownikRoslinaRequest request, String nazwa, Uzytkownik uzyt) {
         if (request == null) {
             System.out.println("Request is null");
             request = UzytkownikRoslinaRequest.builder().build();
         }
-        
+        log.info(nazwa + " próbuje pobrać rośliny użytkownika: " + nazwa);
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").descending());
-        //Page<Roslina> rosliny = uzytkownikRoslinaRepository.findRoslinyOfUzytkownik(nazwa, pageable);
+
         Roslina ros = roslinaMapper.toRoslina(request);
         Page<Roslina> rosliny = uzytkownikRoslinaRepository.findAllRoslinyOfUzytkownikWithParameters(
             nazwa,
@@ -99,11 +143,26 @@ public class UzytkownikRoslinaService {
         );
     }
 
+    /**
+     * Zapisuje roślinę użytkownika.
+     * 
+     * @param request Żądanie zawierające dane rośliny
+     * @param file Plik obrazu rośliny
+     * @param connectedUser Aktualnie zalogowany użytkownik
+     * @return Zwraca zapisaną roślinę
+     */
     public Roslina save(UzytkownikRoslinaRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         return save(request, file, uzyt);
     }
 
+    /**
+     * Aktualizuje roślinę użytkownika.
+     * 
+     * @param request Żądanie zawierające nowe dane rośliny
+     * @param connectedUser Aktualnie zalogowany użytkownik
+     * @return Zwraca zaktualizowaną roślinę
+     */
     public Roslina save(UzytkownikRoslinaRequest request, MultipartFile file, Uzytkownik connectedUser) {
         log.info("Zapisywanie rośliny użytkownika: " + connectedUser.getNazwa());
         Uzytkownik uzyt = connectedUser;
@@ -133,20 +192,27 @@ public class UzytkownikRoslinaService {
         return ros;
     }
 
-
-    public Roslina update(UzytkownikRoslinaRequest request, Authentication connectedUser) {
+    /**
+     * Aktualizuje roślinę użytkownika.
+     * 
+     * @param request Żądanie zawierające nowe dane rośliny
+     * @param connectedUser Aktualnie zalogowany użytkownik
+     * @return Zwraca zaktualizowaną roślinę
+     */
+    public RoslinaResponse update(UzytkownikRoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         log.info("Aktualizacja rośliny " + request.getRoslinaId() + " przez użytkownika: " + uzyt.getNazwa());
 
         uzytkownikRoslinaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), request.getRoslinaId())
-            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + request.getRoslinaId()));
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + request.getRoslinaId() + " dla użytkownika " + uzyt.getNazwa()));
 
         System.out.println("Właściwości: " + request.getWlasciwosciAsMap());
         if(request.areWlasciwosciEmpty()) {
-            return uzytkownikRoslinaRepository.updateRoslina(
-            request.getRoslinaId(), request.getNazwa(), 
-            request.getOpis(), request.getObraz(), 
-            request.getWysokoscMin(), request.getWysokoscMax());
+            Roslina ros = uzytkownikRoslinaRepository.updateRoslina(
+                request.getRoslinaId(), request.getNazwa(), 
+                request.getOpis(), request.getObraz(), 
+                request.getWysokoscMin(), request.getWysokoscMax());
+            return roslinaMapper.toRoslinaResponse(ros);
         }
         
         Roslina ros = uzytkownikRoslinaRepository.updateRoslina(
@@ -156,9 +222,16 @@ public class UzytkownikRoslinaService {
             request.getWlasciwosciAsMap());
         uzytkownikRoslinaRepository.removeLeftoverUzytkownikWlasciwosci();
 
-        return ros;
+        return  roslinaMapper.toRoslinaResponse(ros);
     }
 
+    /**
+     * Przesyła obraz rośliny użytkownika.
+     * 
+     * @param file Nowy plik obrazu rośliny
+     * @param connectedUser Aktualnie zalogowany użytkownik
+     * @param roslinaId Identyfikator rośliny
+     */
     public void uploadUzytkownikRoslinaObraz(MultipartFile file, Authentication connectedUser, String roslinaId) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         log.info("Zmiana obrazu rośliny " + roslinaId + " przez użytkownika: " + uzyt.getNazwa());

@@ -9,6 +9,30 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.yukka.model.dzialka.Dzialka;
 
+/**
+ * Repozytorium dla operacji na encji Dzialka w bazie danych Neo4j.
+ * 
+ * <p>Interfejs ten rozszerza Neo4jRepository i zapewnia metody do wykonywania
+ * zapytań Cypher na bazie danych Neo4j. Metody te umożliwiają sprawdzanie,
+ * pobieranie, zapisywanie oraz aktualizowanie danych dotyczących działek
+ * i roślin na nich zasadzonych.</p>
+ * 
+ * <p>Metody w tym repozytorium wykorzystują adnotacje @Query do definiowania
+ * zapytań Cypher, które są wykonywane na bazie danych. Parametry zapytań
+ * są przekazywane za pomocą adnotacji @Param.</p>
+ * 
+ * <p>Przykładowe operacje obejmują:</p>
+ * <ul>
+ *   <li>Sprawdzanie, czy dane współrzędne są zajęte przez roślinę.</li>
+ *   <li>Pobieranie działki na podstawie numeru działki i adresu email użytkownika.</li>
+ *   <li>Zapisywanie rośliny na działce.</li>
+ *   <li>Aktualizowanie pozycji rośliny na działce.</li>
+ *   <li>Usuwanie rośliny z działki.</li>
+ * </ul>
+ * 
+ * <p>Repozytorium to jest częścią aplikacji zarządzającej ogrodami i działkami,
+ * umożliwiającej użytkownikom zarządzanie roślinami na ich działkach.</p>
+ */
 public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})

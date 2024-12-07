@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,35 +33,46 @@ import com.example.yukka.model.uzytkownik.Uzytkownik;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Serwis do zarządzania roślinami.
+ * 
+ * <ul>
+ * <li><strong>findAllRosliny</strong>: Znajduje wszystkie rośliny z paginacją.</li>
+ * <li><strong>findAllRoslinyWithParameters</strong>: Znajduje wszystkie rośliny z paginacją i filtrami.</li>
+ * <li><strong>findByRoslinaId</strong>: Znajduje roślinę po jej identyfikatorze.</li>
+ * <li><strong>findByNazwaLacinska</strong>: Znajduje roślinę po jej nazwie łacińskiej.</li>
+ * <li><strong>getWlasciwosciWithRelations</strong>: Pobiera właściwości roślin z relacjami.</li>
+ * <li><strong>save</strong>: Zapisuje nową roślinę.</li>
+ * <li><strong>saveSeededRoslina</strong>: Zapisuje nową roślinę z plikiem obrazu.</li>
+ * <li><strong>update</strong>: Aktualizuje istniejącą roślinę.</li>
+ * <li><strong>uploadRoslinaObraz</strong>: Aktualizuje obraz rośliny.</li>
+ * <li><strong>deleteByNazwaLacinska</strong>: Usuwa roślinę po jej nazwie łacińskiej.</li>
+ * <li><strong>deleteByRoslinaId</strong>: Usuwa roślinę po jej identyfikatorze.</li>
+ * <li><strong>createRoslinaId</strong>: Tworzy unikalny identyfikator dla rośliny.</li>
+ * </ul>
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class RoslinaService {
-    @Autowired
-    RoslinaRepository roslinaRepository;
-
-    @Autowired
-    WlasciwoscRepository wlasciwoscRepository;
-
-    @Autowired
-    FileStoreService fileStoreService;
-    @Autowired
-    FileUtils fileUtils;
-
-
-
-    @Autowired
-    RoslinaMapper roslinaMapper;
+    private final RoslinaRepository roslinaRepository;
+    private final WlasciwoscRepository wlasciwoscRepository;
+    private final FileStoreService fileStoreService;
+    private final FileUtils fileUtils;
+    private final RoslinaMapper roslinaMapper;
 
     @Value("${roslina.obraz.default.name}")
     private String defaultRoslinaObrazName;
 
     
-    /** 
-     * @param page
-     * @param size
-     * @return PageResponse<RoslinaResponse>
+
+    /**
+     * Znajduje wszystkie rośliny z paginacją i sortowaniem.
+     *
+     * @param page numer strony do pobrania (0-indexed)
+     * @param size liczba elementów na stronie
+     * @return PageResponse<RoslinaResponse> zawierający listę roślin oraz informacje o paginacji
      */
     @Transactional(readOnly = true)
     public PageResponse<RoslinaResponse> findAllRosliny(int page, int size) {
@@ -82,6 +92,15 @@ public class RoslinaService {
         );
     }
 
+    
+    /**
+     * Znajduje wszystkie rośliny z parametrami.
+     *
+     * @param page numer strony do pobrania.
+     * @param size rozmiar strony.
+     * @param request obiekt zawierający parametry wyszukiwania roślin.
+     * @return PageResponse<RoslinaResponse> zawierający listę roślin spełniających kryteria wyszukiwania oraz informacje o paginacji.
+     */
     @Transactional(readOnly = true)
     public PageResponse<RoslinaResponse> findAllRoslinyWithParameters(int page, int size, RoslinaRequest request) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").ascending());
@@ -120,6 +139,12 @@ public class RoslinaService {
     //     return roslinaMapper.toRoslinaResponse(ros);
     // }
 
+    /**
+     * Znajduje roślinę po jej identyfikatorze.
+     *
+     * @param id identyfikator rośliny.
+     * @return RoslinaResponse zawierający informacje o roślinie.
+     */
     @Transactional(readOnly = true)
     public RoslinaResponse findByRoslinaId(String id) {
         Roslina ros = roslinaRepository.findByRoslinaId(id)
@@ -127,6 +152,12 @@ public class RoslinaService {
         return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
+    /**
+     * Znajduje roślinę po jej nazwie łacińskiej.
+     *
+     * @param nazwaLacinska nazwa łacińska rośliny.
+     * @return RoslinaResponse zawierający informacje o roślinie.
+     */
     @Transactional(readOnly = true)
     public RoslinaResponse findByNazwaLacinska(String nazwaLacinska) {
         Roslina ros = roslinaRepository.findByNazwaLacinskaWithWlasciwosci(nazwaLacinska)
@@ -136,6 +167,11 @@ public class RoslinaService {
         return res;
     }
 
+    /**
+     * Pobiera właściwości roślin wraz z ich relacjami.
+     *
+     * @return zbiór obiektów WlasciwoscResponse.
+     */
     @Transactional(readOnly = true)
     public Set<WlasciwoscResponse> getWlasciwosciWithRelations() {
         Set<WlasciwosciRodzaje> responses = wlasciwoscRepository.getWlasciwosciWithRelacje();
@@ -147,6 +183,13 @@ public class RoslinaService {
             .collect(Collectors.toSet());
     }
 
+    /**
+     * Zapisuje nową roślinę.
+     *
+     * @param request obiekt zawierający dane nowej rośliny.
+     * @param file obiekt MultipartFile zawierający obraz rośliny, opcjonalny.
+     * @return Roslina zawierający informacje o zapisanej roślinie.
+     */
     public Roslina save(RoslinaRequest request, MultipartFile file) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
         request.setRoslinaId(createRoslinaId());
@@ -176,6 +219,13 @@ public class RoslinaService {
         return ros;
     }
 
+    /**
+     * Zapisuje nową roślinę z plikiem obrazu.
+     *
+     * @param request obiekt zawierający dane nowej rośliny.
+     * @param file obiekt MultipartFile zawierający obraz rośliny.
+     * @return Roslina zawierający informacje o zapisanej roślinie.
+     */
     public Roslina saveSeededRoslina(RoslinaRequest request, MultipartFile file) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
         request.setRoslinaId(createRoslinaId());
@@ -197,6 +247,13 @@ public class RoslinaService {
         return ros;
     }
 
+    /**
+     * Aktualizuje istniejącą roślinę.
+     *
+     * @param staraNazwaLacinska stara nazwa łacińska rośliny.
+     * @param request obiekt zawierający nowe dane rośliny.
+     * @return Roslina zawierający informacje o zaktualizowanej roślinie.
+     */
     public RoslinaResponse update(String staraNazwaLacinska, RoslinaRequest request) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
         roslinaRepository.findByNazwaLacinska(staraNazwaLacinska)
@@ -232,6 +289,13 @@ public class RoslinaService {
         return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
+    /**
+     * Aktualizuje obraz rośliny.
+     *
+     * @param nazwaLacinska nazwa łacińska rośliny.
+     * @param file obiekt MultipartFile zawierający obraz rośliny.
+     * @return Roslina zawierający informacje o zaktualizowanej roślinie.
+     */
     // Uwaga: to jest do głównej rośliny, nie customowej
     public RoslinaResponse uploadRoslinaObraz(String nazwaLacinska, MultipartFile file) {
         log.info("Aktualizacja obrazu rośliny: " + nazwaLacinska);
@@ -251,9 +315,11 @@ public class RoslinaService {
 
 
     // Usuwanie po ID zajmuje ogromną ilość czasu i wywołuje HeapOverflow, więc lepiej jest użyć UNIQUE atrybutu jak nazwaLacinska
+
     /**
-     * Usuwa roślinę o podanej nazwie łacińskiej, a także te właściwości, które po usunięciu rośliny nie są już przypisane do żadnej innej rośliny.
-     * @param nazwaLacinska
+     * Usuwa roślinę po jej nazwie łacińskiej.
+     *
+     * @param nazwaLacinska nazwa łacińska rośliny.
      */
     public void deleteByNazwaLacinska(String nazwaLacinska) {
         roslinaRepository.findByNazwaLacinska(nazwaLacinska).ifPresent(
@@ -264,6 +330,12 @@ public class RoslinaService {
         );
     }
 
+    /**
+     * Usuwa roślinę po jej identyfikatorze.
+     *
+     * @param roslinaId identyfikator rośliny.
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     */
     public void deleteByRoslinaId(String roslinaId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
@@ -289,6 +361,12 @@ public class RoslinaService {
         roslinaRepository.deleteByRoslinaId(roslinaId);
     }
 
+    /**
+     * Usuwa roślinę po jej identyfikatorze.
+     *
+     * @param roslinaId identyfikator rośliny.
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     */
     public void deleteByRoslinaId(String roslinaId, Uzytkownik uzyt) {
         Roslina roslina = roslinaRepository.findByRoslinaId(roslinaId)
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId));
@@ -298,6 +376,11 @@ public class RoslinaService {
     }
 
 
+    /**
+     * Tworzy unikalny identyfikator dla rośliny.
+     *
+     * @return unikalny identyfikator rośliny.
+     */
     public String createRoslinaId() {
         String resultId = UUID.randomUUID().toString();
         do { 
@@ -309,6 +392,4 @@ public class RoslinaService {
         } while (true);
         return resultId;
     }
-
-
 }

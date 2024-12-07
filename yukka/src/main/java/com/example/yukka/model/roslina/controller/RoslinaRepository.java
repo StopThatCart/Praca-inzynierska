@@ -14,6 +14,33 @@ import org.springframework.data.repository.query.Param;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 
+
+/**
+ * Repozytorium dla operacji na encji Roslina w bazie danych Neo4j.
+ * 
+ * <p>Interfejs ten rozszerza Neo4jRepository i zapewnia metody do wykonywania
+ * zapytań Cypher na bazie danych Neo4j. Metody te umożliwiają sprawdzanie,
+ * pobieranie, zapisywanie oraz aktualizowanie danych dotyczących roślin.</p>
+ * 
+ * <p>Metody w tym repozytorium wykorzystują adnotacje @Query do definiowania
+ * zapytań Cypher, które są wykonywane na bazie danych. Parametry zapytań
+ * są przekazywane za pomocą adnotacji @Param.</p>
+ * 
+ * <p>Przykładowe operacje obejmują:</p>
+ * <ul>
+ *   <li>Sprawdzanie, czy roślina o podanej nazwie łacińskiej istnieje.</li>
+ *   <li>Pobieranie rośliny na podstawie nazwy łacińskiej wraz z jej właściwościami.</li>
+ *   <li>Pobieranie rośliny na podstawie jej identyfikatora.</li>
+ *   <li>Pobieranie wszystkich roślin z możliwością paginacji.</li>
+ *   <li>Dodawanie nowej rośliny do bazy danych.</li>
+ *   <li>Aktualizowanie danych rośliny, w tym jej relacji z innymi węzłami.</li>
+ *   <li>Usuwanie rośliny na podstawie nazwy łacińskiej lub identyfikatora.</li>
+ *   <li>Usuwanie niepowiązanych węzłów właściwości.</li>
+ * </ul>
+ * 
+ * <p>Repozytorium to jest częścią aplikacji zarządzającej danymi roślin,
+ * umożliwiającej użytkownikom zarządzanie informacjami o roślinach.</p>
+ */
 public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
     @Query("""
@@ -415,35 +442,35 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
 
     // Czas wykonania testu: 462ms, 330ms
-    @Query("""
-            MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina
-            SET p.nazwa = $name, p.opis = $description,
-                p.obraz = COALESCE($imageFilename, 'default_plant.jpg'),
-                p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
+    // @Query("""
+    //         MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina
+    //         SET p.nazwa = $name, p.opis = $description,
+    //             p.obraz = COALESCE($imageFilename, 'default_plant.jpg'),
+    //             p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
 
-            WITH p
-            OPTIONAL MATCH (p)-[r]->(w:Wlasciwosc)
-            DELETE r
+    //         WITH p
+    //         OPTIONAL MATCH (p)-[r]->(w:Wlasciwosc)
+    //         DELETE r
 
-            WITH p, $relatLump AS relatLump
-            UNWIND relatLump AS relat
-            WITH p, relat, [ relat.labels, 'Wlasciwosc' ] AS labels 
-            CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
-            WITH p, w, relat
-            CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
+    //         WITH p, $relatLump AS relatLump
+    //         UNWIND relatLump AS relat
+    //         WITH p, relat, [ relat.labels, 'Wlasciwosc' ] AS labels 
+    //         CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
+    //         WITH p, w, relat
+    //         CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
 
-            WITH p OPTIONAL MATCH path=(p)-[r]->(w)
-            RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
-          """)
-    Roslina updateRoslinaRelationshipsButEasierAndSlower(
-        @Param("name") String name,
-        @Param("latinName") String latinName,
-        @Param("description") String description,
-        @Param("imageFilename") String imageFilename,
-        @Param("heightMin") Double heightMin,
-        @Param("heightMax") Double heightMax,
-        @Param("relatLump") List<Map<String, String>> relatLump
-    );
+    //         WITH p OPTIONAL MATCH path=(p)-[r]->(w)
+    //         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
+    //       """)
+    // Roslina updateRoslinaRelationshipsButEasierAndSlower(
+    //     @Param("name") String name,
+    //     @Param("latinName") String latinName,
+    //     @Param("description") String description,
+    //     @Param("imageFilename") String imageFilename,
+    //     @Param("heightMin") Double heightMin,
+    //     @Param("heightMax") Double heightMax,
+    //     @Param("relatLump") List<Map<String, String>> relatLump
+    // );
     
     @Query("""
             MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina

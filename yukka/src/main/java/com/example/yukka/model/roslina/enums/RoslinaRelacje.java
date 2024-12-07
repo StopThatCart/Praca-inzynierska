@@ -10,6 +10,35 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 
 
+/**
+ * Enum RoslinaRelacje reprezentuje różne relacje i właściwości roślin.
+ * Każda wartość enum posiada odpowiadającą jej właściwość, która jest używana do
+ * pobierania i ustawiania odpowiednich właściwości rośliny.
+ *
+ * <ul>
+ *   <li><strong>MA_FORME</strong> - formy</li>
+ *   <li><strong>MA_GLEBE</strong> - gleby</li>
+ *   <li><strong>MA_GRUPE</strong> - grupy</li>
+ *   <li><strong>MA_KOLOR_LISCI</strong> - kolory liści</li>
+ *   <li><strong>MA_KOLOR_KWIATOW</strong> - kolory kwiatów</li>
+ *   <li><strong>MA_KWIAT</strong> - kwiaty</li>
+ *   <li><strong>MA_ODCZYNY</strong> - odczyny</li>
+ *   <li><strong>MA_OKRES_KWITNIENIA</strong> - okresy kwitnienia</li>
+ *   <li><strong>MA_OKRES_OWOCOWANIA</strong> - okresy owocowania</li>
+ *   <li><strong>MA_OWOC</strong> - owoce</li>
+ *   <li><strong>MA_PODGRUPE</strong> - podgrupa</li>
+ *   <li><strong>MA_POKROJ</strong> - pokroje</li>
+ *   <li><strong>MA_SILE_WZROSTU</strong> - siły wzrostu</li>
+ *   <li><strong>MA_STANOWISKO</strong> - stanowiska</li>
+ *   <li><strong>MA_WALOR</strong> - walory</li>
+ *   <li><strong>MA_WILGOTNOSC</strong> - wilgotności</li>
+ *   <li><strong>MA_ZASTOSOWANIE</strong> - zastosowania</li>
+ *   <li><strong>MA_ZIMOZIELONOSC_LISCI</strong> - zimozieloności</li>
+ * </ul>
+ *
+ * Enum zawiera również mapy getterów i setterów, które są używane do pobierania i ustawiania
+ * odpowiednich właściwości rośliny na podstawie wartości enum.
+ */
 public enum RoslinaRelacje {
   //  MA_WLASCIWOSC("wlasciwosci"),
     MA_FORME("formy"),

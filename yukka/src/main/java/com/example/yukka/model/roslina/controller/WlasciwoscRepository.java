@@ -8,6 +8,14 @@ import org.springframework.data.neo4j.repository.query.Query;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwosciRodzaje;
 
+/**
+ * Interfejs WlasciwoscRepository rozszerza Neo4jRepository i zapewnia
+ * metody do operacji na encjach typu Wlasciwosc w bazie danych Neo4j.
+ * 
+ * <p>Interfejs ten definiuje niestandardowe zapytania do pobierania
+ * właściwości z relacjami, które nie są powiązane z użytkownikiem.</p>
+ * 
+ */
 public interface WlasciwoscRepository extends Neo4jRepository<Wlasciwosc, Long> {
 
     @Query("""

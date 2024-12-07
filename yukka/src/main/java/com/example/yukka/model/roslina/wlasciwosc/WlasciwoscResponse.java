@@ -7,6 +7,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Reprezentuje odpowiedź zawierającą właściwości rośliny.
+ * 
+ * <ul>
+ *   <li><strong>etykieta</strong> - Etykieta właściwości.</li>
+ *   <li><strong>nazwy</strong> - Zbiór nazw związanych z właściwością.</li>
+ * </ul>
+ */
 @Getter
 @Setter
 @Builder

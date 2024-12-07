@@ -8,6 +8,17 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Klasa RoslinaRequest reprezentuje żądanie dotyczące rośliny.
+ * <ul>
+ *   <li><strong>nazwaLacinska</strong> - Łacińska nazwa rośliny. Jest wymagana i nie może być pusta.</li>
+ * </ul>
+ * 
+ * Metody:
+ * <ul>
+ *   <li><strong>getNazwaLacinska()</strong> - Zwraca łacińską nazwę rośliny w małych literach, jeśli jest ustawiona.</li>
+ * </ul>
+ */
 @Getter
 @Setter
 @SuperBuilder(toBuilder = true)
@@ -18,10 +29,6 @@ public class RoslinaRequest extends UzytkownikRoslinaRequest{
     @NotEmpty(message = "Nazwa łacińska jest wymagana")
     private String nazwaLacinska;
 
-    
-    /** 
-     * @return String
-     */
     public String getNazwaLacinska() {
         if (nazwaLacinska == null || nazwaLacinska.isEmpty()) {
             return nazwaLacinska;

@@ -31,10 +31,22 @@ import lombok.RequiredArgsConstructor;
 public class RoslinaMapper {
     private final FileUtils fileUtils;
 
-    
-    /** 
-     * @param ogrody
-     * @return PageResponse<OgrodResponse>
+
+        /**
+     * Konwertuje obiekt @see OgrodResponse na PageResponse<OgrodResponse>.
+     *
+     * @param ogrody obiekt Page zawierający listę obiektów Ogrod
+     * @return obiekt PageResponse zawierający listę obiektów OgrodResponse
+     * 
+     * <ul>
+     *   <li><strong>postyResponse</strong> - lista obiektów OgrodResponse</li>
+     *   <li><strong>ogrody.getNumber()</strong> - numer bieżącej strony</li>
+     *   <li><strong>ogrody.getSize()</strong> - rozmiar strony</li>
+     *   <li><strong>ogrody.getTotalElements()</strong> - całkowita liczba elementów</li>
+     *   <li><strong>ogrody.getTotalPages()</strong> - całkowita liczba stron</li>
+     *   <li><strong>ogrody.isFirst()</strong> - czy jest to pierwsza strona</li>
+     *   <li><strong>ogrody.isLast()</strong> - czy jest to ostatnia strona</li>
+     * </ul>
      */
     public PageResponse<OgrodResponse> ogrodResponsetoPageResponse(Page<Ogrod> ogrody) {
         List<OgrodResponse> postyResponse = ogrody.stream()
@@ -51,6 +63,13 @@ public class RoslinaMapper {
         );
     }
 
+    /**
+     * Konwertuje obiekt typu <strong>Ogrod</strong> na obiekt typu <strong>OgrodResponse</strong>.
+     *
+     * @param ogrod obiekt typu <strong>Ogrod</strong>, który ma być skonwertowany
+     * @return obiekt typu <strong>OgrodResponse</strong> lub <strong>null</strong>, jeśli wejściowy obiekt <strong>Ogrod</strong> jest <strong>null</strong>
+     * 
+     */
     public OgrodResponse toOgrodResponse(Ogrod ogrod) {
         if (ogrod == null) {
             return null;
@@ -65,6 +84,14 @@ public class RoslinaMapper {
             .build();
     }
 
+
+    /**
+     * Konwertuje obiekt typu <strong>Dzialka</strong> na obiekt typu <strong>DzialkaResponse</strong>.
+     *
+     * @param dzialka obiekt typu <strong>Dzialka</strong>, który ma być skonwertowany
+     * @return obiekt typu <strong>DzialkaResponse</strong> lub <strong>null</strong>, jeśli wejściowy obiekt <strong>Dzialka</strong> jest <strong>null</strong>
+     *
+     */
     public DzialkaResponse toDzialkaResponse(Dzialka dzialka) {
         if (dzialka == null) {
             return null;
@@ -88,6 +115,13 @@ public class RoslinaMapper {
             .build();
     }
 
+    /**
+     * Konwertuje obiekt typu <strong>ZasadzonaNa</strong> na obiekt typu <strong>ZasadzonaRoslinaResponse</strong>.
+     *
+     * @param zasadzonaNa obiekt typu <strong>ZasadzonaNa</strong>, który ma być skonwertowany
+     * @return obiekt typu <strong>ZasadzonaRoslinaResponse</strong> lub <strong>null</strong>, jeśli wejściowy obiekt <strong>ZasadzonaNa</strong> jest <strong>null</strong>
+     *
+     */
     private ZasadzonaRoslinaResponse toZasadzonaRoslinaResponse(ZasadzonaNaReverse zasadzonaNaReverse) {
         if (zasadzonaNaReverse == null || zasadzonaNaReverse.getRoslina() == null) {
             return null;
@@ -123,6 +157,12 @@ public class RoslinaMapper {
             .build();
     }
 
+    /**
+     * Konwertuje obiekt typu <strong>Roslina</strong> na obiekt typu <strong>UzytkownikRoslinaRequest</strong>.
+     *
+     * @param roslina obiekt typu <strong>Roslina</strong>, który ma zostać przekonwertowany
+     * @return obiekt typu <strong>UzytkownikRoslinaRequest</strong> lub <strong>null</strong>, jeśli przekazany obiekt <strong>Roslina</strong> jest <strong>null</strong>
+     */
     public UzytkownikRoslinaRequest toUzytkownikRoslinaRequest(Roslina roslina) {
         if (roslina == null) {
             return null;
@@ -139,6 +179,12 @@ public class RoslinaMapper {
     }
 
     
+    /**
+     * Konwertuje obiekt typu <strong>Roslina</strong> na obiekt typu <strong>RoslinaRequest</strong>.
+     *
+     * @param roslina obiekt typu <strong>Roslina</strong>, który ma zostać przekonwertowany
+     * @return obiekt typu <strong>RoslinaRequest</strong> lub <strong>null</strong>, jeśli przekazany obiekt <strong>Roslina</strong> jest <strong>null</strong>
+     */
     public RoslinaResponse toRoslinaResponseWithoutWlasciwosci(Roslina roslina) {
         if (roslina == null) {
             return null;
@@ -158,7 +204,12 @@ public class RoslinaMapper {
     }
 
     
-
+    /**
+     * Konwertuje obiekt typu <strong>Roslina</strong> na obiekt typu <strong>RoslinaRequest</strong>.
+     *
+     * @param roslina obiekt typu <strong>Roslina</strong>, który ma zostać przekonwertowany
+     * @return obiekt typu <strong>RoslinaRequest</strong> lub <strong>null</strong>, jeśli przekazany obiekt <strong>Roslina</strong> jest <strong>null</strong>
+     */
     public RoslinaRequest toRoslinaRequest(Roslina roslina) {
         if (roslina == null) {
             return null;
@@ -175,6 +226,12 @@ public class RoslinaMapper {
             .build();
     }
 
+    /**
+     * Konwertuje obiekt typu <strong>UzytkownikRoslinaRequest</strong> na obiekt typu <strong>Roslina</strong>.
+     *
+     * @param request obiekt typu <strong>UzytkownikRoslinaRequest</strong>, który ma zostać przekonwertowany
+     * @return obiekt typu <strong>Roslina</strong> lub <strong>null</strong>, jeśli przekazany obiekt <strong>UzytkownikRoslinaRequest</strong> jest <strong>null</strong>
+     */
     public Roslina toRoslina(@Valid UzytkownikRoslinaRequest request) {
         if (request == null) {
             return null;
@@ -193,7 +250,12 @@ public class RoslinaMapper {
         return roslina;
     }
 
-
+    /**
+     * Konwertuje obiekt typu <strong>RoslinaRequest</strong> na obiekt typu <strong>Roslina</strong>.
+     *
+     * @param request obiekt typu <strong>RoslinaRequest</strong>, który ma zostać przekonwertowany
+     * @return obiekt typu <strong>Roslina</strong> lub <strong>null</strong>, jeśli przekazany obiekt <strong>RoslinaRequest</strong> jest <strong>null</strong>
+     */
     public Roslina toRoslina(@Valid RoslinaRequest request) {
         if (request == null) {
             return null;
@@ -216,6 +278,12 @@ public class RoslinaMapper {
         return roslina;
     }
 
+    /**
+     * Konwertuje obiekt typu <strong>Roslina</strong> na obiekt typu <strong>RoslinaResponse</strong>.
+     *
+     * @param roslina obiekt typu <strong>Roslina</strong>, który ma zostać przekonwertowany
+     * @return obiekt typu <strong>RoslinaResponse</strong> lub <strong>null</strong>, jeśli przekazany obiekt <strong>Roslina</strong> jest <strong>null</strong>
+     */
     public RoslinaResponse toRoslinaResponse(Roslina roslina) {
         if (roslina == null) {
             return null;
@@ -240,6 +308,12 @@ public class RoslinaMapper {
                 .build();
     }
 
+    /**
+     * Konwertuje obiekt typu <strong>Roslina</strong> na obiekt typu <strong>RoslinaResponse</strong>.
+     *
+     * @param roslina obiekt typu <strong>Roslina</strong>, który ma zostać przekonwertowany
+     * @return obiekt typu <strong>RoslinaResponse</strong> lub <strong>null</strong>, jeśli przekazany obiekt <strong>Roslina</strong> jest <strong>null</strong>
+     */
     public RoslinaResponse roslinaToRoslinaResponseWithWlasciwosci(Roslina roslina) {
         if (roslina == null) {
             return null;
@@ -288,6 +362,12 @@ public class RoslinaMapper {
                           .collect(Collectors.toSet());
     }
 
+    /**
+     * Konwertuje obiekt typu <strong>Roslina</strong> na obiekt typu <strong>List<WlasciwoscWithRelations></strong>.
+     *
+     * @param roslina obiekt typu <strong>Roslina</strong>, który ma zostać przekonwertowany
+     * @return obiekt typu <strong>List<WlasciwoscWithRelations></strong>
+     */
     private List<WlasciwoscWithRelations> mapWlasciwosciWithRelationsToMap(Roslina roslina) {
         return Arrays.stream(RoslinaRelacje.values())
             .map(relacja -> mapWlasciwosciRelationToMap(relacja.getWlasciwosci(roslina), relacja))
@@ -295,6 +375,13 @@ public class RoslinaMapper {
             .collect(Collectors.toList());
     }
     
+    /**
+     * Konwertuje obiekt typu <strong>Set<Wlasciwosc></strong> na obiekt typu <strong>List<WlasciwoscWithRelations></strong>.
+     *
+     * @param wlasciwosci obiekt typu <strong>Set<Wlasciwosc></strong>, który ma zostać przekonwertowany
+     * @param relacja obiekt typu <strong>RoslinaRelacje</strong>, który określa relację właściwości
+     * @return obiekt typu <strong>List<WlasciwoscWithRelations></strong>
+     */
     private List<WlasciwoscWithRelations> mapWlasciwosciRelationToMap(Set<Wlasciwosc> wlasciwosci, RoslinaRelacje relacja) {
         return wlasciwosci.stream()
             .map(w -> {
@@ -305,6 +392,12 @@ public class RoslinaMapper {
     }
 
 
+    /**
+     * Mapuje właściwości z obiektu <strong>UzytkownikRoslinaRequest</strong> na właściwości obiektu <strong>Roslina</strong>.
+     *
+     * @param roslina obiekt typu <strong>Roslina</strong>, do którego mają zostać przypisane właściwości
+     * @param wlasciwosci lista obiektów <strong>WlasciwoscWithRelations</strong>, które mają zostać przypisane do obiektu <strong>Roslina</strong>
+     */
     private void mapWlasciwosciToRoslina(Roslina roslina, List<WlasciwoscWithRelations> wlasciwosci) {
         for (WlasciwoscWithRelations w : wlasciwosci) {
             Wlasciwosc wlasciwosc = new Wlasciwosc();

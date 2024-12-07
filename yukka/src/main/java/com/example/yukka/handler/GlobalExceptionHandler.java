@@ -33,15 +33,38 @@ import com.example.yukka.handler.exceptions.ForbiddenException;
 
 import jakarta.mail.MessagingException;
 
+/**
+ * GlobalExceptionHandler obsługuje różne wyjątki rzucane przez aplikację i zwraca odpowiednie odpowiedzi HTTP.
+ * 
+ * <ul>
+ * <li><strong>handleIllegalArgumentException</strong>: Obsługuje wyjątek IllegalArgumentException i zwraca odpowiedź z kodem statusu BAD_REQUEST.</li>
+ * <li><strong>handleException (LockedException)</strong>: Obsługuje wyjątek LockedException i zwraca odpowiedź z kodem statusu UNAUTHORIZED.</li>
+ * <li><strong>handleException (BannedUzytkownikException)</strong>: Obsługuje wyjątek BannedUzytkownikException i zwraca odpowiedź z kodem statusu UNAUTHORIZED.</li>
+ * <li><strong>handleException (ForbiddenException)</strong>: Obsługuje wyjątek ForbiddenException i zwraca odpowiedź z kodem statusu FORBIDDEN.</li>
+ * <li><strong>handleException (BlockedUzytkownikException)</strong>: Obsługuje wyjątek BlockedUzytkownikException i zwraca odpowiedź z kodem statusu UNAUTHORIZED.</li>
+ * <li><strong>handleException (DisabledException)</strong>: Obsługuje wyjątek DisabledException i zwraca odpowiedź z kodem statusu UNAUTHORIZED.</li>
+ * <li><strong>handleException (EntityNotFoundException)</strong>: Obsługuje wyjątek EntityNotFoundException i zwraca odpowiedź z kodem statusu NOT_FOUND.</li>
+ * <li><strong>handleException (EntityAlreadyExistsException)</strong>: Obsługuje wyjątek EntityAlreadyExistsException i zwraca odpowiedź z kodem statusu BAD_REQUEST.</li>
+ * <li><strong>handleException (BadCredentialsException)</strong>: Obsługuje wyjątek BadCredentialsException i zwraca odpowiedź z kodem statusu UNAUTHORIZED.</li>
+ * <li><strong>handleException (HttpMessageNotReadableException)</strong>: Obsługuje wyjątek HttpMessageNotReadableException i zwraca odpowiedź z kodem statusu BAD_REQUEST.</li>
+ * <li><strong>handleException (IllegalStateException)</strong>: Obsługuje wyjątek IllegalStateException i zwraca odpowiedź z kodem statusu TOO_EARLY.</li>
+ * <li><strong>handleException (MessagingException)</strong>: Obsługuje wyjątek MessagingException i zwraca odpowiedź z kodem statusu INTERNAL_SERVER_ERROR.</li>
+ * <li><strong>handleMethodArgumentNotValidException</strong>: Obsługuje wyjątek MethodArgumentNotValidException i zwraca odpowiedź z kodem statusu BAD_REQUEST, zawierającą błędy walidacji.</li>
+ * <li><strong>handleException (Exception)</strong>: Obsługuje wszystkie inne wyjątki i zwraca odpowiedź z kodem statusu INTERNAL_SERVER_ERROR.</li>
+ * </ul>
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     
-    /** 
-     * @param ex
-     * @param request
-     * @return ResponseEntity<?>
-     */
+
+        /**
+         * Metoda obsługująca wyjątki typu IllegalArgumentException.
+         *
+         * @param ex wyjątek typu IllegalArgumentException, który został rzucony
+         * @param request obiekt WebRequest zawierający szczegóły żądania
+         * @return obiekt ResponseEntity z kodem statusu BAD_REQUEST oraz treścią zawierającą wiadomość wyjątku
+         */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
         return ResponseEntity
@@ -51,6 +74,13 @@ public class GlobalExceptionHandler {
                 );
     }
 
+
+    /**
+     * Metoda obsługująca wyjątek typu LockedException.
+     *
+     * @param exp wyjątek typu LockedException, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu UNAUTHORIZED oraz treścią zawierającą wiadomość wyjątku
+     */
     @ExceptionHandler(LockedException.class)
     public ResponseEntity<ExceptionResponse> handleException(LockedException exp) {
         return ResponseEntity
@@ -64,6 +94,12 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    /**
+     * Metoda obsługująca wyjątek typu BannedUzytkownikException.
+     *
+     * @param exp wyjątek typu BannedUzytkownikException, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu UNAUTHORIZED oraz treścią zawierającą wiadomość wyjątku
+     */
     @ExceptionHandler(BannedUzytkownikException.class)
     public ResponseEntity<ExceptionResponse> handleException(BannedUzytkownikException exp) {
         return ResponseEntity
@@ -77,6 +113,12 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    /**
+     * Metoda obsługująca wyjątek typu ForbiddenException.
+     *
+     * @param exp wyjątek typu ForbiddenException, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu FORBIDDEN oraz treścią zawierającą wiadomość wyjątku
+     */
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<ExceptionResponse> handleException(ForbiddenException exp) {
         return ResponseEntity
@@ -90,7 +132,12 @@ public class GlobalExceptionHandler {
                 );
     }
 
-
+    /**
+     * Metoda obsługująca wyjątek typu BlockedUzytkownikException.
+     *
+     * @param exp wyjątek typu BlockedUzytkownikException, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu UNAUTHORIZED oraz treścią zawierającą wiadomość wyjątku
+     */
     @ExceptionHandler(BlockedUzytkownikException.class)
     public ResponseEntity<ExceptionResponse> handleException(BlockedUzytkownikException exp) {
         return ResponseEntity
@@ -105,6 +152,12 @@ public class GlobalExceptionHandler {
     }
 
 
+    /**
+     * Metoda obsługująca wyjątek typu DisabledException.
+     *
+     * @param exp wyjątek typu DisabledException, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu UNAUTHORIZED oraz treścią zawierającą wiadomość wyjątku
+     */
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<ExceptionResponse> handleException(DisabledException exp) {
         return ResponseEntity
@@ -118,6 +171,12 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    /**
+     * Metoda obsługująca wyjątek typu EntityNotFoundException.
+     *
+     * @param exp wyjątek typu EntityNotFoundException, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu NOT_FOUND oraz treścią zawierającą wiadomość wyjątku
+     */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleException(EntityNotFoundException exp) {
         return ResponseEntity
@@ -131,6 +190,12 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    /**
+     * Metoda obsługująca wyjątek typu EntityAlreadyExistsException.
+     *
+     * @param exp wyjątek typu EntityAlreadyExistsException, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu BAD_REQUEST oraz treścią zawierającą wiadomość wyjątku
+     */
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<ExceptionResponse> handleException(EntityAlreadyExistsException exp) {
                 return ResponseEntity
@@ -144,6 +209,11 @@ public class GlobalExceptionHandler {
                         );
         }
 
+        /**
+         * Metoda obsługująca wyjątek typu BadCredentialsException.
+         *
+         * @return obiekt ResponseEntity z kodem statusu UNAUTHORIZED oraz treścią zawierającą wiadomość wyjątku
+         */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ExceptionResponse> handleException() {
         return ResponseEntity
@@ -157,6 +227,12 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    /**
+     * Metoda obsługująca wyjątek typu HttpMessageNotReadableException.
+     *
+     * @param exp wyjątek typu HttpMessageNotReadableException, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu BAD_REQUEST oraz treścią zawierającą wiadomość wyjątku
+     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionResponse> handleException(HttpMessageNotReadableException exp) {
         return ResponseEntity
@@ -168,6 +244,12 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    /**
+     * Metoda obsługująca wyjątek typu IllegalStateException.
+     *
+     * @param exp wyjątek typu IllegalStateException, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu TOO_EARLY oraz treścią zawierającą wiadomość wyjątku
+     */
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ExceptionResponse> handleException(IllegalStateException exp) {
         return ResponseEntity
@@ -179,7 +261,12 @@ public class GlobalExceptionHandler {
                 );
     }
 
-     
+        /**
+         * Metoda obsługująca wyjątek typu MessagingException.
+         *
+         * @param exp wyjątek typu MessagingException, który został rzucony
+         * @return obiekt ResponseEntity z kodem statusu INTERNAL_SERVER_ERROR oraz treścią zawierającą wiadomość wyjątku
+         */
     @ExceptionHandler(MessagingException.class)
     public ResponseEntity<ExceptionResponse> handleException(MessagingException exp) {
         return ResponseEntity
@@ -190,35 +277,18 @@ public class GlobalExceptionHandler {
                                 .build()
                 );
     }
- /*
-    @ExceptionHandler(ActivationTokenException.class)
-    public ResponseEntity<ExceptionResponse> handleException(ActivationTokenException exp) {
-        return ResponseEntity
-                .status(BAD_REQUEST)
-                .body(
-                        ExceptionResponse.builder()
-                                .error(exp.getMessage())
-                                .build()
-                );
-    }
 
-    @ExceptionHandler(OperationNotPermittedException.class)
-    public ResponseEntity<ExceptionResponse> handleException(OperationNotPermittedException exp) {
-        return ResponseEntity
-                .status(BAD_REQUEST)
-                .body(
-                        ExceptionResponse.builder()
-                                .error(exp.getMessage())
-                                .build()
-                );
-    }
-*/
+    /**
+     * Metoda obsługująca wyjątek typu MethodArgumentNotValidException.
+     *
+     * @param exp wyjątek typu MethodArgumentNotValidException, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu BAD_REQUEST oraz treścią zawierającą błędy walidacji
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exp) {
         Set<String> errors = new HashSet<>();
         exp.getBindingResult().getAllErrors()
                 .forEach(error -> {
-                    //var fieldName = ((FieldError) error).getField();
                     var errorMessage = error.getDefaultMessage();
                     errors.add(errorMessage);
                 });
@@ -232,6 +302,13 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    /**
+     * Metoda obsługująca wyjątek typu Exception. 
+     * Jest ona wywoływana do wyjątków, które nie są obsługiwane przez handlera.
+     *
+     * @param exp wyjątek typu Exception, który został rzucony
+     * @return obiekt ResponseEntity z kodem statusu INTERNAL_SERVER_ERROR oraz treścią zawierającą wiadomość wyjątku
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exp) {
         exp.printStackTrace();
@@ -239,7 +316,7 @@ public class GlobalExceptionHandler {
                 .status(INTERNAL_SERVER_ERROR)
                 .body(
                         ExceptionResponse.builder()
-                                .businessErrorDescription("Internal error, please contact the admin")
+                                .businessErrorDescription("Wystąpił błąd wewnętrzny serwera. Spróbuj ponownie później.")
                                 .error(exp.getMessage())
                                 .build()
                 );

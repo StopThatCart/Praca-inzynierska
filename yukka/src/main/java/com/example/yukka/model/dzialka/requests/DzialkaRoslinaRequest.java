@@ -17,17 +17,30 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 
+/**
+ * Reprezentuje żądanie dotyczące rośliny na działce.
+ * 
+ * <ul>
+ * <li><strong>roslinaId</strong>: Id rośliny, wymagane.</li>
+ * <li><strong>kolor</strong>: Kolor w formacie hex, wymagany.</li>
+ * <li><strong>wyswietlanie</strong>: Sposób wyświetlania, wymagany.</li>
+ * <li><strong>notatka</strong>: Dodatkowa notatka, opcjonalna.</li>
+ * <li><strong>tekstura</strong>: Tekstura, opcjonalna.</li>
+ * <li><strong>obraz</strong>: Obraz, opcjonalny. Null, jeśli nie dopina się żadnego obrazu.</li>
+ * </ul>
+ * 
+ * <p>Metody:</p>
+ * <ul>
+ * <li><strong>isValidDzialkaRoslinaRequest</strong>: Sprawdza, czy żądanie jest prawidłowe.</li>
+ * <li><strong>isValid</strong>: Sprawdza, czy pozycja rośliny jest w przydzielonych kafelkach.</li>
+ * </ul>
+ */
 @Getter
 @Setter
 @SuperBuilder(toBuilder = true)
-
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
-
-//@ValidPozycje
-//@YetAnotherConstraint
 public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
     @NotEmpty(message = "Id rośliny jest wymagane")
     private String roslinaId;
@@ -46,10 +59,7 @@ public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
     // Null jak nie dopina się żadnego obrazu
     private String obraz;
 
-    
-    /** 
-     * @return boolean
-     */
+
     @JsonIgnore
     public boolean isValidDzialkaRoslinaRequest() {
         if (this.getX() == null || this.getY() == null) {

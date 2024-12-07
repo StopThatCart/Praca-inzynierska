@@ -19,6 +19,22 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 
+/**
+ * Klasa reprezentująca podstawowe żądanie dotyczące działki.
+ * 
+ * <ul>
+ * <li><strong>numerDzialki</strong> - Numer działki, musi być większy od 0 i mniejszy lub równy 10, wymagane pole.</li>
+ * <li><strong>x</strong> - Pozycja x, musi być większa lub równa 0 i mniejsza lub równa 19, wymagane pole.</li>
+ * <li><strong>y</strong> - Pozycja y, musi być większa lub równa 0 i mniejsza lub równa 19, wymagane pole.</li>
+ * <li><strong>pozycje</strong> - Zbiór pozycji, ilość kafelków dla rośliny powinna wynosić od 1 do 400, wymagane pole.</li>
+ * </ul>
+ * 
+ * Metody:
+ * <ul>
+ * <li><strong>getPozycjeX</strong> - Zwraca tablicę współrzędnych x dla pozycji.</li>
+ * <li><strong>getPozycjeY</strong> - Zwraca tablicę współrzędnych y dla pozycji.</li>
+ * </ul>
+ */
 @Data
 @Getter
 @Setter
@@ -26,8 +42,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-//@ValidPozycje
-//@YetAnotherConstraint
 public class BaseDzialkaRequest {
 
     @Min(value = 1, message = "Numer działki musi być > 0")
@@ -50,9 +64,7 @@ public class BaseDzialkaRequest {
     Set<Pozycja> pozycje;
 
     
-    /** 
-     * @return int[]
-     */
+
     @JsonIgnore
     public int[] getPozycjeX() {
         int[] tabX = new int[pozycje.size()];
@@ -72,6 +84,4 @@ public class BaseDzialkaRequest {
         }
         return tabY;
     }
-
-    
 }

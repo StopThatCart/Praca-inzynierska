@@ -15,6 +15,43 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 
 
+/**
+ * Interfejs UzytkownikRoslinaRepository rozszerza Neo4jRepository i zapewnia metody do zarządzania węzłami typu Roslina w bazie danych Neo4j.
+ * 
+ * Metody tego interfejsu umożliwiają:
+ * - Wyszukiwanie roślin użytkownika na podstawie różnych parametrów.
+ * - Dodawanie nowych roślin do bazy danych.
+ * - Aktualizowanie istniejących roślin.
+ * - Usuwanie roślin z bazy danych.
+ * - Usuwanie niepowiązanych węzłów typu UzytkownikWlasciwosc.
+ * 
+ * Każda metoda jest opatrzona odpowiednią adnotacją @Query, która definiuje zapytanie Cypher do wykonania w bazie danych Neo4j.
+ */
+/**
+ * Repozytorium dla operacji na encji UzytkownikRoslina w bazie danych Neo4j.
+ * 
+ * <p>Interfejs ten rozszerza Neo4jRepository i zapewnia metody do wykonywania
+ * zapytań Cypher na bazie danych Neo4j. Metody te umożliwiają sprawdzanie,
+ * pobieranie, zapisywanie oraz aktualizowanie danych dotyczących roślin
+ * użytkowników.</p>
+ * 
+ * <p>Metody w tym repozytorium wykorzystują adnotacje @Query do definiowania
+ * zapytań Cypher, które są wykonywane na bazie danych. Parametry zapytań
+ * są przekazywane za pomocą adnotacji @Param.</p>
+ * 
+ * <p>Przykładowe operacje obejmują:</p>
+ * <ul>
+ *   <li>Wyszukiwanie roślin użytkownika na podstawie różnych parametrów.</li>
+ *   <li>Pobieranie rośliny użytkownika wraz z jej relacjami.</li>
+ *   <li>Dodawanie nowej rośliny użytkownika.</li>
+ *   <li>Aktualizowanie danych rośliny użytkownika.</li>
+ *   <li>Usuwanie rośliny użytkownika.</li>
+ *   <li>Usuwanie niepowiązanych właściwości użytkownika.</li>
+ * </ul>
+ * 
+ * <p>Repozytorium to jest częścią aplikacji zarządzającej roślinami użytkowników,
+ * umożliwiającej użytkownikom zarządzanie ich roślinami w bazie danych Neo4j.</p>
+ */
 public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, Long> {
 
          // To jest okropne, ale nie mogłem znaleźć optymalnego sposobu na to, by porównywało właściwości węzła rośliny.

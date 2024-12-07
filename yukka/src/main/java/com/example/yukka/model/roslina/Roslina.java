@@ -24,6 +24,48 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+/**
+ * Klasa reprezentująca roślinę.
+ * 
+ * <ul>
+ * <li><strong>labels</strong>: dynamiczne etykiety rośliny</li>
+ * <li><strong>id</strong>: unikalny identyfikator rośliny</li>
+ * <li><strong>roslinaId</strong>: identyfikator rośliny</li>
+ * <li><strong>nazwa</strong>: nazwa rośliny</li>
+ * <li><strong>nazwaLacinska</strong>: łacińska nazwa rośliny</li>
+ * <li><strong>opis</strong>: opis rośliny</li>
+ * <li><strong>wysokoscMin</strong>: minimalna wysokość rośliny</li>
+ * <li><strong>wysokoscMax</strong>: maksymalna wysokość rośliny</li>
+ * <li><strong>obraz</strong>: ścieżka do obrazu rośliny</li>
+ * <li><strong>dzialki</strong>: lista działek, na których roślina jest zasadzona</li>
+ * <li><strong>uzytkownik</strong>: użytkownik, który stworzył roślinę</li>
+ * <li><strong>formy</strong>: zestaw form rośliny</li>
+ * <li><strong>gleby</strong>: zestaw typów gleby odpowiednich dla rośliny</li>
+ * <li><strong>grupy</strong>: zestaw grup rośliny</li>
+ * <li><strong>koloryLisci</strong>: zestaw kolorów liści rośliny</li>
+ * <li><strong>koloryKwiatow</strong>: zestaw kolorów kwiatów rośliny</li>
+ * <li><strong>kwiaty</strong>: zestaw kwiatów rośliny</li>
+ * <li><strong>odczyny</strong>: zestaw odczynów gleby odpowiednich dla rośliny</li>
+ * <li><strong>okresyKwitnienia</strong>: zestaw okresów kwitnienia rośliny</li>
+ * <li><strong>okresyOwocowania</strong>: zestaw okresów owocowania rośliny</li>
+ * <li><strong>owoce</strong>: zestaw owoców rośliny</li>
+ * <li><strong>podgrupa</strong>: zestaw podgrup rośliny</li>
+ * <li><strong>pokroje</strong>: zestaw pokrojów rośliny</li>
+ * <li><strong>silyWzrostu</strong>: zestaw sił wzrostu rośliny</li>
+ * <li><strong>stanowiska</strong>: zestaw stanowisk odpowiednich dla rośliny</li>
+ * <li><strong>walory</strong>: zestaw walorów rośliny</li>
+ * <li><strong>wilgotnosci</strong>: zestaw poziomów wilgotności odpowiednich dla rośliny</li>
+ * <li><strong>zastosowania</strong>: zestaw zastosowań rośliny</li>
+ * <li><strong>zimozielonosci</strong>: zestaw cech zimozieloności rośliny</li>
+ * </ul>
+ * 
+ * Metody:
+ * <ul>
+ * <li><strong>isUzytkownikRoslina</strong>: sprawdza, czy roślina jest użytkownika</li>
+ * <li><strong>areWlasciwosciEqual</strong>: porównuje dwa zestawy właściwości</li>
+ * <li><strong>extractNazwy</strong>: wyodrębnia nazwy z zestawu właściwości</li>
+ * </ul>
+ */
 @Node
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,7 +73,6 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-@SuppressWarnings("all")
 public class Roslina {
     @DynamicLabels
     @Builder.Default
@@ -61,7 +102,7 @@ public class Roslina {
     private String obraz ="default_plant.jpg";
 
 
-    // Ogrod
+
     @JsonIgnore
     @Relationship(type = "ZASADZONA_NA", direction = Relationship.Direction.OUTGOING)
     private List<ZasadzonaNa> dzialki;
@@ -145,9 +186,7 @@ public class Roslina {
     private Set<Wlasciwosc> zimozielonosci = new HashSet<>();
 
     
-    /** 
-     * @return boolean
-     */
+
     public boolean isUzytkownikRoslina() {
         return labels.contains("UzytkownikRoslina");
     }
@@ -164,30 +203,5 @@ public class Roslina {
                           .collect(Collectors.toSet());
     }
 
-    // Może się przydać
-    /* 
-    public void setWlasciwosci(Set<Wlasciwosc> wlasciwosci, RoslinaRelacje relacja) {
-        switch (relacja) {
-            case MA_FORME -> setFormy(wlasciwosci);
-            case MA_GLEBE -> setGleby(wlasciwosci);
-            case MA_GRUPE -> setGrupy(wlasciwosci);
-            case MA_KOLOR_LISCI -> setKoloryLisci(wlasciwosci);
-            case MA_KOLOR_KWIATOW -> setKoloryKwiatow(wlasciwosci);
-            case MA_KWIAT -> setKwiaty(wlasciwosci);
-            case MA_ODCZYNY -> setOdczyny(wlasciwosci);
-            case MA_OKRES_KWITNIENIA -> setOkresyKwitnienia(wlasciwosci);
-            case MA_OKRES_OWOCOWANIA -> setOkresyOwocowania(wlasciwosci);
-            case MA_OWOC -> setOwoce(wlasciwosci);
-            case MA_PODGRUPE -> setPodgrupa(wlasciwosci);
-            case MA_POKROJ -> setPokroje(wlasciwosci);
-            case MA_SILE_WZROSTU -> setSilyWzrostu(wlasciwosci);
-            case MA_STANOWISKO -> setStanowiska(wlasciwosci);
-            case MA_WALOR -> setWalory(wlasciwosci);
-            case MA_WILGOTNOSC -> setWilgotnosci(wlasciwosci);
-            case MA_ZASTOSOWANIE -> setZastosowania(wlasciwosci);
-            case MA_ZIMOZIELONOSC_LISCI -> setZimozielonosci(wlasciwosci);
-            default -> throw new IllegalArgumentException("Relacja nie występuje w " + RoslinaRelacje.class);
-        }
-    }
-   */
+
 }

@@ -22,6 +22,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca działkę.
+ * 
+ * <ul>
+ * <li><strong>id</strong>: Unikalny identyfikator działki.</li>
+ * <li><strong>nazwa</strong>: Nazwa działki.</li>
+ * <li><strong>numer</strong>: Numer działki.</li>
+ * <li><strong>ogrod</strong>: Ogród, do którego należy działka.</li>
+ * <li><strong>zasadzoneRosliny</strong>: Lista roślin zasadzonych na działce.</li>
+ * </ul>
+ * 
+ * Metody:
+ * <ul>
+ * <li><strong>getZasadzonaNaByCoordinates</strong>: Zwraca roślinę zasadzoną na działce na podstawie współrzędnych.</li>
+ * <li><strong>isRoslinaInDzialka</strong>: Sprawdza, czy dana roślina znajduje się na działce.</li>
+ * <li><strong>isRoslinaInDzialka</strong>: Sprawdza, czy roślina z żądania znajduje się na działce.</li>
+ * <li><strong>isPozycjeOccupied</strong>: Sprawdza, czy pozycje z żądania są zajęte przez inne rośliny na działce.</li>
+ * <li><strong>toString</strong>: Zwraca reprezentację tekstową obiektu działki.</li>
+ * </ul>
+ */
 @Setter
 @Getter
 @Builder
@@ -49,14 +69,14 @@ public class Dzialka {
     
 
     
-    /** 
-     * @param x
-     * @param y
-     * @return ZasadzonaNaReverse
+    /**
+     * Metoda zwraca obiekt ZasadzonaNaReverse na podstawie podanych współrzędnych.
+     *
+     * @param x współrzędna x do wyszukania
+     * @param y współrzędna y do wyszukania
+     * @return obiekt ZasadzonaNaReverse znajdujący się na podanych współrzędnych,
+     *         lub null, jeśli nie znaleziono obiektu na tych współrzędnych
      */
-    // Customowa roslina
-
-
     public ZasadzonaNaReverse getZasadzonaNaByCoordinates(int x, int y) {
         for (ZasadzonaNaReverse zasadzonaNa : zasadzoneRosliny) {
             if (zasadzonaNa.getX() == x && zasadzonaNa.getY() == y) {
@@ -66,6 +86,12 @@ public class Dzialka {
         return null;
     }
 
+    /**
+     * Metoda sprawdza, czy dana roślina znajduje się na działce.
+     *
+     * @param roslina roślina do sprawdzenia
+     * @return true, jeśli roślina znajduje się na działce, w przeciwnym wypadku false
+     */
     public boolean isRoslinaInDzialka(Roslina roslina) {
         for (ZasadzonaNaReverse zasadzonaNa : zasadzoneRosliny) {
             Roslina roslinaZasadzona = zasadzonaNa.getRoslina();
@@ -76,6 +102,12 @@ public class Dzialka {
         return false;
     }
 
+    /**
+     * Metoda sprawdza, czy roślina z żądania znajduje się na działce.
+     *
+     * @param request żądanie z danymi rośliny
+     * @return true, jeśli roślina znajduje się na działce, w przeciwnym wypadku false
+     */
     public boolean isRoslinaInDzialka(DzialkaRoslinaRequest request) {
         for (ZasadzonaNaReverse zasadzonaNa : zasadzoneRosliny) {
             Roslina roslinaZasadzona = zasadzonaNa.getRoslina();
@@ -87,7 +119,13 @@ public class Dzialka {
         return false;
     }
 
-    public List<Pozycja> isPozycjeOccupied(BaseDzialkaRequest request) {
+    /**
+     * Metoda sprawdza, czy pozycje z żądania są zajęte przez inne rośliny na działce.
+     *
+     * @param request żądanie z danymi rośliny
+     * @return lista zajętych pozycji
+     */
+    public List<Pozycja> arePozycjeOccupied(BaseDzialkaRequest request) {
         List<ZasadzonaNaReverse> zasadzoneRosliny = this.getZasadzoneRosliny();
         ZasadzonaNaReverse zasadzonaRoslina = getZasadzonaNaByCoordinates(request.getX(), request.getY());
         List<Pozycja> zajetePozycje = new ArrayList<>();

@@ -18,6 +18,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca relację "ZasadzonaNa" w modelu danych.
+ * 
+ * <ul>
+ * <li><strong>id</strong>: Unikalny identyfikator relacji.</li>
+ * <li><strong>x</strong>: Współrzędna x.</li>
+ * <li><strong>y</strong>: Współrzędna y.</li>
+ * <li><strong>kolor</strong>: Kolor obiektu.</li>
+ * <li><strong>tekstura</strong>: Tekstura obiektu.</li>
+ * <li><strong>wyswietlanie</strong>: Sposób wyświetlania obiektu.</li>
+ * <li><strong>notatka</strong>: Dodatkowa notatka dotycząca obiektu.</li>
+ * <li><strong>obraz</strong>: Ścieżka do obrazu obiektu.</li>
+ * <li><strong>tabX</strong>: Tablica współrzędnych x.</li>
+ * <li><strong>tabY</strong>: Tablica współrzędnych y.</li>
+ * <li><strong>dzialka</strong>: Obiekt klasy Dzialka, do którego odnosi się relacja.</li>
+ * <li><strong>pozycje</strong>: Zbiór obiektów klasy Pozycja, reprezentujących pozycje na działce.</li>
+ * </ul>
+ * 
+ * Metoda <strong>initPozycje</strong> jest wywoływana po załadowaniu obiektu i inicjalizuje zbiór pozycje na podstawie tablic tabX i tabY.
+ */
 @RelationshipProperties
 @Getter
 @Setter

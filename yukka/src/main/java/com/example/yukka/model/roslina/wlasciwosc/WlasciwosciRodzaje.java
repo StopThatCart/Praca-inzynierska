@@ -7,6 +7,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Klasa reprezentująca rodzaje właściwości roślin.
+ * 
+ * <ul>
+ *   <li><strong>etykieta</strong> - Etykieta właściwości.</li>
+ *   <li><strong>nazwy</strong> - Zbiór nazw właściwości.</li>
+ * </ul>
+ */
 @Getter
 @Setter
 @Builder

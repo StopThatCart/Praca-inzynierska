@@ -7,6 +7,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Klasa reprezentująca właściwość z relacjami. Używane głównie przy tworzeniu requestów wyszukiwania, tworzenia i aktualizacji rośliny.
+ * 
+ * <ul>
+ *   <li><strong>etykieta</strong> - etykieta właściwości</li>
+ *   <li><strong>nazwa</strong> - nazwa właściwości</li>
+ *   <li><strong>relacja</strong> - relacja właściwości</li>
+ * </ul>
+ */
 @ToString
 @Builder
 @AllArgsConstructor

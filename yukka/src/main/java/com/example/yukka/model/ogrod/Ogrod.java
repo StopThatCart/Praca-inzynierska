@@ -18,6 +18,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca ogród.
+ * <ul>
+ *   <li><strong>id</strong>: Unikalny identyfikator ogrodu.</li>
+ *   <li><strong>nazwa</strong>: Nazwa ogrodu.</li>
+ *   <li><strong>uzytkownik</strong>: Użytkownik, który posiada ogród.</li>
+ *   <li><strong>dzialki</strong>: Lista działek w ogrodzie.</li>
+ * </ul>
+ */
 @Setter
 @Getter
 @Builder
