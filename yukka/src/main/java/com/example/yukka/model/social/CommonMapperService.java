@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.example.yukka.common.PageResponse;
+import com.example.yukka.file.DefaultImage;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.komentarz.KomentarzResponse;
@@ -42,7 +43,7 @@ public class CommonMapperService {
             return null;
         }
         return UzytkownikResponse.builder()
-            .avatar(fileUtils.readFile(uzytkownik.getAvatar()))
+            .avatar(fileUtils.readFile(uzytkownik.getAvatar(), DefaultImage.AVATAR))
             .build();
     }
 
@@ -56,7 +57,7 @@ public class CommonMapperService {
             .labels(uzytkownik.getLabels())
             .nazwa(uzytkownik.getNazwa())
             .email(uzytkownik.getEmail())
-            .avatar(fileUtils.readFile(uzytkownik.getAvatar()))
+            .avatar(fileUtils.readFile(uzytkownik.getAvatar(), DefaultImage.AVATAR))
             .dataUtworzenia(uzytkownik.getDataUtworzenia())
             .ban(uzytkownik.isBan())
             .banDo(uzytkownik.getBanDo())
@@ -103,8 +104,8 @@ public class CommonMapperService {
                    .map(this::toKomentarzResponse)
                    .collect(Collectors.toList()))
                 .uzytkownik(post.getAutor() != null ? post.getAutor().getNazwa() : null)
-                .avatar(fileUtils.readFile(post.getAutor() != null ? post.getAutor().getAvatar(): null))
-                .obraz(fileUtils.readFile(post.getObraz()))
+                .avatar(fileUtils.readFile(post.getAutor() != null ? post.getAutor().getAvatar(): null, DefaultImage.AVATAR))
+                .obraz(fileUtils.readFile(post.getObraz(), null))
                 .build();
     }
 
@@ -138,8 +139,8 @@ public class CommonMapperService {
                 .map(this::toKomentarzResponse)
                 .collect(Collectors.toList()))
             .uzytkownikNazwa(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getNazwa() : null)
-            .obraz(fileUtils.readFile(komentarz.getObraz()))
-            .avatar(fileUtils.readFile(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getAvatar() : null))
+            .obraz(fileUtils.readFile(komentarz.getObraz(), null))
+            .avatar(fileUtils.readFile(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getAvatar() : null, DefaultImage.AVATAR))
         //    .rozmowaPrywatna(komentarz.getRozmowaPrywatna() != null ? toRozmowaPrywatnaResponse(komentarz.getRozmowaPrywatna()) : null) // New mapping
             .build();
     }
@@ -188,7 +189,7 @@ public class CommonMapperService {
             .id(uzytkownik.getId())
             .uzytId(uzytkownik.getUzytId())
             .nazwa(uzytkownik.getNazwa())
-            .avatar(fileUtils.readFile(uzytkownik.getAvatar()))
+            .avatar(fileUtils.readFile(uzytkownik.getAvatar(), DefaultImage.AVATAR))
             .build();
     }
 
@@ -215,8 +216,8 @@ public class CommonMapperService {
             .dataUtworzenia(timeAgo(komentarz.getDataUtworzenia()))
             .postId(post != null ? post.getPostId() : null)
             .uzytkownikNazwa(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getNazwa() : null)
-            .avatar(fileUtils.readFile(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getAvatar() : null))
-            .obraz(fileUtils.readFile(komentarz.getObraz()))
+            .avatar(fileUtils.readFile(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getAvatar() : null, DefaultImage.AVATAR))
+            .obraz(fileUtils.readFile(komentarz.getObraz(), null))
             
             .build();
     }

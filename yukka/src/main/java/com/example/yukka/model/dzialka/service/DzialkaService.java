@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.FileResponse;
+import com.example.yukka.file.DefaultImage;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
@@ -533,7 +534,8 @@ public class DzialkaService {
                 dzialkaZRoslina = dzialkaRepository.updateRoslinaTeksturaInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
                  request.getX(), request.getY(), pfp);
             }
-            if (dzialkaZRoslina != null) return FileResponse.builder().content(fileUtils.readRoslinaObrazFile(pfp)).build();
+            if (dzialkaZRoslina != null) 
+            return FileResponse.builder().content(fileUtils.readFile(pfp, DefaultImage.ROSLINA)).build();
         }
 
         return null;

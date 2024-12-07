@@ -8,13 +8,13 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { PowiadomienieResponse } from '../../../../services/models';
 import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powiadomienia-sync.service';
 import { TokenService } from '../../../../services/token/token.service';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbTooltip, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingComponent } from "../../../../components/loading/loading.component";
 
 @Component({
   selector: 'app-powiadomienia-dropdown',
   standalone: true,
-  imports: [CommonModule, NgbDropdownModule, PowiadomienieCardComponent, InfiniteScrollModule, LoadingComponent],
+  imports: [CommonModule, NgbDropdownModule, PowiadomienieCardComponent, InfiniteScrollModule, LoadingComponent, NgbTooltipModule],
   templateUrl: './powiadomienia-dropdown.component.html',
   styleUrl: './powiadomienia-dropdown.component.css'
 })

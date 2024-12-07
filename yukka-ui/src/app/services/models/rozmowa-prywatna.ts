@@ -6,7 +6,6 @@ export interface RozmowaPrywatna {
   aktywna?: boolean;
   dataUtworzenia?: string;
   id?: number;
-  liczbaWiadomosci?: number;
   nadawca?: string;
   ostatnioAktualizowana?: string;
   uzytkownicy?: Array<Uzytkownik>;

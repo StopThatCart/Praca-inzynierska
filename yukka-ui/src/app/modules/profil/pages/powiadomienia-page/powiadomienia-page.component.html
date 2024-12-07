@@ -12,6 +12,12 @@
                 <div class="card mb-5" style="background: var(--bs-secondary);">
                   <div class="card-body">
                     <h3 class="text-center mb-4">Powiadomienia</h3>
+                    <div class="d-flex align-items-center justify-content-center">
+                      <button (click)="setAllPowiadomieniaPrzeczytane()"  class="btn btn-primary me-1 " placement="left"  ngbTooltip="Przejdź do powiadomień">
+                        <span>Ustaw wszystkie powiadomienia jako przeczytane</span>
+                      </button>
+                    </div>
+
 
                     <app-powiadomienie-card
                     *ngFor="let pow of powiadomienia?.content"

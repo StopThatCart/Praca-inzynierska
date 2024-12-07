@@ -40,7 +40,7 @@ export class ZmianaHaslaComponent {
     this.errorMsg = [];
     this.message = '';
 
-    this.authService.zmianaHasla({
+    this.authService.changePassword({
       body: this.request
     }).subscribe({
       next: () => {

@@ -102,12 +102,11 @@ public class UzytkownikRoslinaController {
      * @param connectedUser obiekt uwierzytelnionego użytkownika
      * @return ResponseEntity zawierające odpowiedź z informacją o zapisaniu rośliny
      */
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<?> saveRoslina(@Valid @RequestPart("request") UzytkownikRoslinaRequest request, 
+    @PostMapping(consumes = "multipart/form-data", produces="application/json")
+    public ResponseEntity<RoslinaResponse> saveRoslina(@Valid @RequestPart("request") UzytkownikRoslinaRequest request, 
     @Parameter() @RequestPart(value = "file", required = false) MultipartFile file,
     Authentication connectedUser) {
-        uzytkownikRoslinaService.save(request, file, connectedUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Roślina została pomyślnie dodana.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(uzytkownikRoslinaService.save(request, file, connectedUser));
     }
 
     /**

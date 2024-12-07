@@ -201,6 +201,8 @@ public class RoslinaService {
         
         if (file != null) {
             request.setObraz(fileStoreService.saveRoslina(file, request.getNazwaLacinska()));
+        } else {
+            request.setObraz(defaultRoslinaObrazName);
         }
 
         if(request.areWlasciwosciEmpty()) {

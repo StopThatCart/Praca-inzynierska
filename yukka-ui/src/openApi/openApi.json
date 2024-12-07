@@ -325,9 +325,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/RoslinaResponse"
                 }
               }
             }
@@ -355,7 +355,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/RoslinaResponse"
                 }
               }
             }
@@ -1031,7 +1031,7 @@
         "tags": [
           "Authentication"
         ],
-        "operationId": "zmianaHasla",
+        "operationId": "changePassword",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1061,7 +1061,7 @@
         "tags": [
           "Authentication"
         ],
-        "operationId": "zmianaHaslaEmail",
+        "operationId": "sendResetPasswordEmail",
         "parameters": [
           {
             "name": "email",
@@ -1091,7 +1091,7 @@
         "tags": [
           "Authentication"
         ],
-        "operationId": "zmianaEmail",
+        "operationId": "changeEmail",
         "parameters": [
           {
             "name": "token",
@@ -2140,37 +2140,6 @@
         }
       }
     },
-    "/rosliny/id/{id}": {
-      "get": {
-        "tags": [
-          "Roslina"
-        ],
-        "operationId": "findById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/powiadomienia": {
       "get": {
         "tags": [
@@ -2770,44 +2739,6 @@
         }
       }
     },
-    "/komentarze/{komentarz-id}/posty/{post-id}": {
-      "delete": {
-        "tags": [
-          "Komentarz"
-        ],
-        "operationId": "removeKomentarzFromPost",
-        "parameters": [
-          {
-            "name": "post-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "komentarz-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/dzialki/rosliny/tekstura": {
       "delete": {
         "tags": [
@@ -2852,20 +2783,6 @@
       "Komentarz": {
         "type": "object",
         "properties": {
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenil": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Ocenil"
-            }
-          },
           "id": {
             "type": "integer",
             "format": "int64"
@@ -2906,17 +2823,25 @@
           },
           "wposcie": {
             "$ref": "#/components/schemas/Post"
+          },
+          "ocenyLubiButGood": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ocenyNieLubiButGood": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
       "Oceniany": {
         "type": "object",
         "properties": {
-          "ocenyLubi": {
+          "ocenyLubiButGood": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubi": {
+          "ocenyNieLubiButGood": {
             "type": "integer",
             "format": "int32"
           }
@@ -2937,6 +2862,21 @@
           }
         }
       },
+      "OcenilReverse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lubi": {
+            "type": "boolean"
+          },
+          "uzytkownik": {
+            "$ref": "#/components/schemas/Uzytkownik"
+          }
+        }
+      },
       "Ogrod": {
         "type": "object",
         "properties": {
@@ -2952,18 +2892,10 @@
       "Post": {
         "type": "object",
         "properties": {
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
           "ocenil": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Ocenil"
+              "$ref": "#/components/schemas/OcenilReverse"
             }
           },
           "id": {
@@ -2994,6 +2926,20 @@
             "items": {
               "$ref": "#/components/schemas/Komentarz"
             }
+          },
+          "komentarzeWPoscie": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Komentarz"
+            }
+          },
+          "ocenyLubiButGood": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ocenyNieLubiButGood": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3009,10 +2955,6 @@
           },
           "nadawca": {
             "type": "string"
-          },
-          "liczbaWiadomosci": {
-            "type": "integer",
-            "format": "int32"
           },
           "dataUtworzenia": {
             "type": "string",
@@ -3162,6 +3104,9 @@
           "name": {
             "type": "string"
           },
+          "password": {
+            "type": "string"
+          },
           "admin": {
             "type": "boolean"
           },
@@ -3171,17 +3116,14 @@
           "username": {
             "type": "string"
           },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
-          },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "password": {
-            "type": "string"
           },
           "enabled": {
             "type": "boolean"

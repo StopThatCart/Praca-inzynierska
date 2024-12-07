@@ -250,12 +250,6 @@ public class KomentarzService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());        
         Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
             .orElseThrow();
-
-        System.out.println("Uzytkownik: " + uzyt.getNazwa());
-        System.out.println("Komentarz: " + komentarz.getKomentarzId());
-        System.out.println("Komentarz uzytkownik: " + komentarz.getUzytkownik().getNazwa());
-       // System.out.println("Komentarz ale co." + komentarz.getPost);
-        System.out.println("Role: " + uzyt.getAuthorities());
         
         if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik(), connectedUser)) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");

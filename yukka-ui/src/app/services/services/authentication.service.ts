@@ -10,6 +10,10 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
 import { AuthenticationResponse } from '../models/authentication-response';
+import { changeEmail } from '../fn/authentication/change-email';
+import { ChangeEmail$Params } from '../fn/authentication/change-email';
+import { changePassword } from '../fn/authentication/change-password';
+import { ChangePassword$Params } from '../fn/authentication/change-password';
 import { confirm } from '../fn/authentication/confirm';
 import { Confirm$Params } from '../fn/authentication/confirm';
 import { login } from '../fn/authentication/login';
@@ -18,12 +22,8 @@ import { refreshToken } from '../fn/authentication/refresh-token';
 import { RefreshToken$Params } from '../fn/authentication/refresh-token';
 import { register } from '../fn/authentication/register';
 import { Register$Params } from '../fn/authentication/register';
-import { zmianaEmail } from '../fn/authentication/zmiana-email';
-import { ZmianaEmail$Params } from '../fn/authentication/zmiana-email';
-import { zmianaHasla } from '../fn/authentication/zmiana-hasla';
-import { ZmianaHasla$Params } from '../fn/authentication/zmiana-hasla';
-import { zmianaHaslaEmail } from '../fn/authentication/zmiana-hasla-email';
-import { ZmianaHaslaEmail$Params } from '../fn/authentication/zmiana-hasla-email';
+import { sendResetPasswordEmail } from '../fn/authentication/send-reset-password-email';
+import { SendResetPasswordEmail$Params } from '../fn/authentication/send-reset-password-email';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService extends BaseService {
@@ -31,87 +31,87 @@ export class AuthenticationService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `zmianaHasla()` */
-  static readonly ZmianaHaslaPath = '/api/auth/zmiana-hasla';
+  /** Path part for operation `changePassword()` */
+  static readonly ChangePasswordPath = '/api/auth/zmiana-hasla';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `zmianaHasla()` instead.
+   * To access only the response body, use `changePassword()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  zmianaHasla$Response(params: ZmianaHasla$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  changePassword$Response(params: ChangePassword$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 }>> {
-    return zmianaHasla(this.http, this.rootUrl, params, context);
+    return changePassword(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `zmianaHasla$Response()` instead.
+   * To access the full response (for headers, for example), `changePassword$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  zmianaHasla(params: ZmianaHasla$Params, context?: HttpContext): Observable<{
+  changePassword(params: ChangePassword$Params, context?: HttpContext): Observable<{
 }> {
-    return this.zmianaHasla$Response(params, context).pipe(
+    return this.changePassword$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)
     );
   }
 
-  /** Path part for operation `zmianaHaslaEmail()` */
-  static readonly ZmianaHaslaEmailPath = '/api/auth/zmiana-hasla-email/{email}';
+  /** Path part for operation `sendResetPasswordEmail()` */
+  static readonly SendResetPasswordEmailPath = '/api/auth/zmiana-hasla-email/{email}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `zmianaHaslaEmail()` instead.
+   * To access only the response body, use `sendResetPasswordEmail()` instead.
    *
    * This method doesn't expect any request body.
    */
-  zmianaHaslaEmail$Response(params: ZmianaHaslaEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  sendResetPasswordEmail$Response(params: SendResetPasswordEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 }>> {
-    return zmianaHaslaEmail(this.http, this.rootUrl, params, context);
+    return sendResetPasswordEmail(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `zmianaHaslaEmail$Response()` instead.
+   * To access the full response (for headers, for example), `sendResetPasswordEmail$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  zmianaHaslaEmail(params: ZmianaHaslaEmail$Params, context?: HttpContext): Observable<{
+  sendResetPasswordEmail(params: SendResetPasswordEmail$Params, context?: HttpContext): Observable<{
 }> {
-    return this.zmianaHaslaEmail$Response(params, context).pipe(
+    return this.sendResetPasswordEmail$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)
     );
   }
 
-  /** Path part for operation `zmianaEmail()` */
-  static readonly ZmianaEmailPath = '/api/auth/zmiana-email';
+  /** Path part for operation `changeEmail()` */
+  static readonly ChangeEmailPath = '/api/auth/zmiana-email';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `zmianaEmail()` instead.
+   * To access only the response body, use `changeEmail()` instead.
    *
    * This method doesn't expect any request body.
    */
-  zmianaEmail$Response(params: ZmianaEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  changeEmail$Response(params: ChangeEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 }>> {
-    return zmianaEmail(this.http, this.rootUrl, params, context);
+    return changeEmail(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `zmianaEmail$Response()` instead.
+   * To access the full response (for headers, for example), `changeEmail$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  zmianaEmail(params: ZmianaEmail$Params, context?: HttpContext): Observable<{
+  changeEmail(params: ChangeEmail$Params, context?: HttpContext): Observable<{
 }> {
-    return this.zmianaEmail$Response(params, context).pipe(
+    return this.changeEmail$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)

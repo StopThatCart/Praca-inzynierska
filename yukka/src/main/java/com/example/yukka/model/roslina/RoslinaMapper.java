@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.example.yukka.common.PageResponse;
+import com.example.yukka.file.DefaultImage;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaResponse;
@@ -129,7 +130,7 @@ public class RoslinaMapper {
     
         byte[] obraz = null;
         if (zasadzonaNaReverse.getObraz() != null) {
-            obraz = fileUtils.readRoslinaObrazFile(zasadzonaNaReverse.getObraz());
+            obraz = fileUtils.readFile(zasadzonaNaReverse.getObraz(), DefaultImage.ROSLINA);
         } 
         // else if (zasadzonaNaReverse.getRoslina().getObraz() != null) {
         //     obraz = fileUtils.readRoslinaObrazFile(zasadzonaNaReverse.getRoslina().getObraz());
@@ -137,7 +138,7 @@ public class RoslinaMapper {
 
         byte[] tekstura = null;
         if (zasadzonaNaReverse.getTekstura() != null) {
-            tekstura = fileUtils.readRoslinaObrazFile(zasadzonaNaReverse.getTekstura());
+            tekstura = fileUtils.readFile(zasadzonaNaReverse.getTekstura(), null);
         } else  {
           
         }
@@ -198,7 +199,7 @@ public class RoslinaMapper {
                 .wysokoscMin(roslina.getWysokoscMin())
                 .wysokoscMax(roslina.getWysokoscMax())
                 .roslinaUzytkownika(roslina.isUzytkownikRoslina())
-                .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
+                .obraz(fileUtils.readFile(roslina.getObraz(), DefaultImage.ROSLINA))
                 .autor(roslina.getUzytkownik() != null ? roslina.getUzytkownik().getNazwa() : null)
                 .build();
     }
@@ -302,7 +303,7 @@ public class RoslinaMapper {
                 .opis(roslina.getOpis())
                 .wysokoscMin(roslina.getWysokoscMin())
                 .wysokoscMax(roslina.getWysokoscMax())
-                .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
+                .obraz(fileUtils.readFile(roslina.getObraz(), DefaultImage.ROSLINA))
                 .autor(roslina.getUzytkownik() != null ? roslina.getUzytkownik().getNazwa() : null)
                 .roslinaUzytkownika(isRoslinaUzytkownika)
                 .build();
@@ -330,7 +331,7 @@ public class RoslinaMapper {
                 .opis(roslina.getOpis())
                 .wysokoscMin(roslina.getWysokoscMin())
                 .wysokoscMax(roslina.getWysokoscMax())
-                .obraz(fileUtils.readRoslinaObrazFile(roslina.getObraz()))
+                .obraz(fileUtils.readFile(roslina.getObraz(), DefaultImage.ROSLINA))
 
                 .autor(roslina.getUzytkownik() != null ? roslina.getUzytkownik().getNazwa() : null)
                 .roslinaUzytkownika(roslina.isUzytkownikRoslina())

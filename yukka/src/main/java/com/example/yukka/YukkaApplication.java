@@ -266,7 +266,7 @@ public class YukkaApplication {
 
 		Path adachiPath = Paths.get(obrazSeedPath, "adachi.jpg");
 		MockMultipartFile obrazAvatar1 = new MockMultipartFile("tempFileName", "adachi.jpg", 
-		"image/png", fileUtils.readFileFromLocation(adachiPath));
+		"image/png", fileUtils.readFileFromLocation(adachiPath, null));
 
 		uzytkownikService.updateUzytkownikAvatar(obrazAvatar1, usPiotr);
 		
@@ -320,7 +320,7 @@ public class YukkaApplication {
 
 		Path peppinoPath = Paths.get(obrazSeedPath, "peppino.png");
 		MockMultipartFile obraz2 = new MockMultipartFile("tempFileName", "peppino.png", 
-		"image/png", fileUtils.readFileFromLocation(peppinoPath));
+		"image/png", fileUtils.readFileFromLocation(peppinoPath, null));
 		
 		DzialkaRoslinaRequest req = DzialkaRoslinaRequest.builder()
 		.numerDzialki(1)
@@ -483,10 +483,10 @@ public class YukkaApplication {
 			// Losowe dodawanie obrazka z postem
 			if (Math.random() < 0.5) {
 				Path cheezyPath = Paths.get(obrazSeedPath, "cheezy.jpg");
-				byte[] fileContent = fileUtils.readFileFromLocation(cheezyPath);
+				byte[] fileContent = fileUtils.readFileFromLocation(cheezyPath, null);
 				if (fileContent != null) {
 					MockMultipartFile obrazPost = new MockMultipartFile("tempFileName", "cheezy.jpg", 
-					"image/png", fileUtils.readFileFromLocation(cheezyPath));
+					"image/png", fileUtils.readFileFromLocation(cheezyPath, null));
 					post = postService.save(postReq, obrazPost, uzytkownicy.get(rand));
 				} 
 			} else {
@@ -519,12 +519,12 @@ public class YukkaApplication {
 				if (Math.random() < 0.5) {
 					Path kotPath = Paths.get(obrazSeedPath, "kot.png");
 
-					byte[] fileContent = fileUtils.readFileFromLocation(kotPath);
+					byte[] fileContent = fileUtils.readFileFromLocation(kotPath, null);
 					if (fileContent == null) {
 						kom = komentarzService.addKomentarzToPost(komReq, null, uzytkownicy.get(rand));
 					} else {
 						MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
-						"image/png", fileUtils.readFileFromLocation(kotPath));
+						"image/png", fileUtils.readFileFromLocation(kotPath, null));
 						kom = komentarzService.addKomentarzToPost(komReq, obrazKom, uzytkownicy.get(rand));
 					}
 				} else {
@@ -558,12 +558,12 @@ public class YukkaApplication {
 				if (Math.random() < 0.5) {
 					Path kotPath = Paths.get(obrazSeedPath, "kot.png");
 
-					byte[] fileContent = fileUtils.readFileFromLocation(kotPath);
+					byte[] fileContent = fileUtils.readFileFromLocation(kotPath, null);
 					if (fileContent == null) {
 						nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, null, uzytkownicy.get(rand));
 					} else {
 						MockMultipartFile obrazKom = new MockMultipartFile("tempFileName", "kot.png", 
-					"image/png", fileUtils.readFileFromLocation(kotPath));
+					"image/png", fileUtils.readFileFromLocation(kotPath, null));
 						nowaOdp = komentarzService.addOdpowiedzToKomentarz(odp, obrazKom, uzytkownicy.get(rand));
 					}
 					

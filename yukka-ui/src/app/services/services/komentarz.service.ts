@@ -25,8 +25,6 @@ import { KomentarzResponse } from '../models/komentarz-response';
 import { PageResponseKomentarzResponse } from '../models/page-response-komentarz-response';
 import { removeKomentarz } from '../fn/komentarz/remove-komentarz';
 import { RemoveKomentarz$Params } from '../fn/komentarz/remove-komentarz';
-import { removeKomentarzFromPost } from '../fn/komentarz/remove-komentarz-from-post';
-import { RemoveKomentarzFromPost$Params } from '../fn/komentarz/remove-komentarz-from-post';
 import { removeOcenaFromKomentarz } from '../fn/komentarz/remove-ocena-from-komentarz';
 import { RemoveOcenaFromKomentarz$Params } from '../fn/komentarz/remove-ocena-from-komentarz';
 import { updateKomentarz } from '../fn/komentarz/update-komentarz';
@@ -260,31 +258,6 @@ export class KomentarzService extends BaseService {
   findKomentarzeOfUzytkownik(params: FindKomentarzeOfUzytkownik$Params, context?: HttpContext): Observable<PageResponseKomentarzResponse> {
     return this.findKomentarzeOfUzytkownik$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageResponseKomentarzResponse>): PageResponseKomentarzResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `removeKomentarzFromPost()` */
-  static readonly RemoveKomentarzFromPostPath = '/komentarze/{komentarz-id}/posty/{post-id}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `removeKomentarzFromPost()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  removeKomentarzFromPost$Response(params: RemoveKomentarzFromPost$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return removeKomentarzFromPost(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `removeKomentarzFromPost$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  removeKomentarzFromPost(params: RemoveKomentarzFromPost$Params, context?: HttpContext): Observable<string> {
-    return this.removeKomentarzFromPost$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 

@@ -18,6 +18,7 @@ export type { MoveRoslinaRequest } from './models/move-roslina-request';
 export type { OcenaRequest } from './models/ocena-request';
 export type { Oceniany } from './models/oceniany';
 export type { Ocenil } from './models/ocenil';
+export type { OcenilReverse } from './models/ocenil-reverse';
 export type { Ogrod } from './models/ogrod';
 export type { OgrodResponse } from './models/ogrod-response';
 export type { PageResponseKomentarzResponse } from './models/page-response-komentarz-response';

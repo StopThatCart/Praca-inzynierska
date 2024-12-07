@@ -81,32 +81,18 @@ public class FileUtils {
      *                Jeśli URL jest równy domyślnej nazwie obrazu rośliny, odczytuje plik z domyślnej ścieżki.
      * @return Tablica bajtów reprezentująca zawartość pliku obrazu rośliny.
      */
-    public  byte[] readRoslinaObrazFile(String fileUrl) {
-        if (StringUtils.isBlank(fileUrl)) {
-            return null;
-        }
+    // public  byte[] readRoslinaObrazFile(String fileUrl) {
+    //     if (StringUtils.isBlank(fileUrl)) {
+    //         return null;
+    //     }
 
-        if (fileUrl.equals(defaultRoslinaObrazName)) {
-            Path imagePath = new File(defaultRoslinaObrazPath).toPath();
-            return readFileFromLocation(imagePath);
-        }
-        Path imagePath = Paths.get(fileUrl);
-        return readFileFromLocation(imagePath);
-    }
-
-    /**
-     * Odczytuje plik obrazu posta z podanego URL.
-     *
-     * @param fileUrl URL pliku obrazu posta. Jeśli jest pusty lub null, zwraca null.
-     * @return Tablica bajtów reprezentująca zawartość pliku obrazu posta.
-     */
-    public byte[] readPostObrazFile(String fileUrl) {
-        if (StringUtils.isBlank(fileUrl)) {
-            return null;
-        }
-        Path imagePath = Paths.get(fileUrl);
-        return readFileFromLocation(imagePath);
-    }
+    //     if (fileUrl.equals(defaultRoslinaObrazName)) {
+    //         Path imagePath = new File(defaultRoslinaObrazPath).toPath();
+    //         return readFileFromLocation(imagePath);
+    //     }
+    //     Path imagePath = Paths.get(fileUrl);
+    //     return readFileFromLocation(imagePath);
+    // }
 
     /**
      * Odczytuje plik z podanego URL, uwzględniając domyślne ścieżki.
@@ -115,9 +101,9 @@ public class FileUtils {
      *                Jeśli URL jest równy domyślnej nazwie obrazu rośliny, odczytuje plik z domyślnej ścieżki.
      * @return Tablica bajtów reprezentująca zawartość pliku.
      */
-    public byte[] readFile(String fileUrl) {
+    public byte[] readFile(String fileUrl, DefaultImage defaultImage) {
         if (StringUtils.isBlank(fileUrl)) {
-            return null;
+            return readDefaultImage(defaultImage);
         }
         Path imagePath = null;
 
@@ -133,7 +119,7 @@ public class FileUtils {
             imagePath = Paths.get(fileUrl);
         }
 
-        return readFileFromLocation(imagePath);
+        return readFileFromLocation(imagePath, defaultImage);
     }
 
     /**
@@ -142,24 +128,47 @@ public class FileUtils {
      * @param path Ścieżka pliku. Jeśli jest null, zwraca null.
      * @return Tablica bajtów reprezentująca zawartość pliku.
      */
-    public byte[] readFileFromLocation(Path path) {
-        if(path == null) {
+    public byte[] readFileFromLocation(Path path, DefaultImage defaultImage) {
+        if(path == null || path.toString().isEmpty()) {
             System.out.println("No jest null");
-            return null;
+            return readDefaultImage(defaultImage);
         }
+        
         try {
             File imageFile = new File(path.toString());
             if(imageFile.exists()) {
                 return Files.readAllBytes(path);
             } else {
                 System.out.println("No jest null2");
-                return Files.readAllBytes(Paths.get(defaultRoslinaObrazPath));
+                return readDefaultImage(defaultImage);
             }
         } catch (IOException e) {
             log.warn("Nie znaleziono pliku w ścieżce {}", path.toString());
         }
         return null;
     }
+
+    private byte[] readDefaultImage(DefaultImage defaultImage) {
+        try {
+            if (defaultImage == null) {
+                return null;
+            }
+            switch (defaultImage) {
+                case AVATAR:
+                    return Files.readAllBytes(Paths.get(defaultAvatarObrazPath));
+                case POWIADOMIENIA:
+                    return Files.readAllBytes(Paths.get(powiadomieniaAvatarObrazPath));
+                case ROSLINA:
+                    return Files.readAllBytes(Paths.get(defaultRoslinaObrazPath));
+                default:
+                    return null;
+            }
+        } catch (IOException e) {
+            log.warn("Nie znaleziono pliku domyślnego obrazu");
+            return null;
+        }
+    }
+
 
     /**
      * Ładuje plik obrazu jako MultipartFile.

@@ -1,4 +1,6 @@
 package com.example.yukka.model.social.controller;
+import static org.springframework.http.HttpStatus.CREATED;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Kontroler obsługujący operacje związane z postami.
+ * 
+ * <ul>
+ * <li><strong>findPostById:</strong> Znajduje post na podstawie identyfikatora.</li>
+ * <li><strong>findAllPosty:</strong> Znajduje wszystkie posty z opcjonalnym filtrem wyszukiwania.</li>
+ * <li><strong>findAllPostyByConnectedUzytkownik:</strong> Znajduje wszystkie posty powiązane z zalogowanym użytkownikiem.</li>
+ * <li><strong>findAllPostyByUzytkownik:</strong> Znajduje wszystkie posty użytkownika na podstawie jego nazwy.</li>
+ * <li><strong>addPost:</strong> Dodaje nowy post z opcjonalnym plikiem.</li>
+ * <li><strong>addOcenaToPost:</strong> Dodaje ocenę do postu.</li>
+ * <li><strong>removeOcenaFromPost:</strong> Usuwa ocenę z postu.</li>
+ * <li><strong>removePost:</strong> Usuwa post na podstawie identyfikatora.</li>
+ * </ul>
+ */
 @RestController
 @RequestMapping("posty")
 @RequiredArgsConstructor
@@ -33,15 +49,36 @@ public class PostController {
     private final PostService postService;
 
     
-    /** 
-     * @param postId
-     * @return ResponseEntity<PostResponse>
+
+    /**
+     * Metoda obsługująca żądanie GET do wyszukania posta po jego identyfikatorze.
+     *
+     * @param postId identyfikator posta
+     * @return ResponseEntity zawierające obiekt PostResponse
+     * <ul>
+     *   <li><strong>postId</strong> - identyfikator posta</li>
+     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt PostResponse</li>
+     * </ul>
      */
     @GetMapping(value = "/{post-id}", produces="application/json")
     public ResponseEntity<PostResponse> findPostById(@PathVariable("post-id") String postId) {
         return ResponseEntity.ok(postService.findByPostId(postId));
     }
 
+    /**
+     * Metoda obsługująca żądanie GET do wyszukania wszystkich postów z opcjonalnym filtrem wyszukiwania.
+     *
+     * @param page numer strony wyników, domyślnie 0
+     * @param size rozmiar strony wyników, domyślnie 10
+     * @param szukaj opcjonalny filtr wyszukiwania
+     * @return ResponseEntity zawierające stronę wyników z postami
+     * <ul>
+     *   <li><strong>page</strong> - numer strony wyników</li>
+     *   <li><strong>size</strong> - rozmiar strony wyników</li>
+     *   <li><strong>szukaj</strong> - opcjonalny filtr wyszukiwania</li>
+     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca stronę wyników z postami</li>
+     * </ul>
+     */
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPosty(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -50,6 +87,20 @@ public class PostController {
         return ResponseEntity.ok(postService.findAllPosts(page, size, szukaj));
     }
 
+    /**
+     * Metoda obsługująca żądanie GET do wyszukania wszystkich postów powiązanych z zalogowanym użytkownikiem.
+     *
+     * @param page numer strony wyników, domyślnie 0
+     * @param size rozmiar strony wyników, domyślnie 10
+     * @param connectedUser obiekt uwierzytelnionego użytkownika
+     * @return ResponseEntity zawierające stronę wyników z postami
+     * <ul>
+     *   <li><strong>page</strong> - numer strony wyników</li>
+     *   <li><strong>size</strong> - rozmiar strony wyników</li>
+     *   <li><strong>connectedUser</strong> - obiekt uwierzytelnionego użytkownika</li>
+     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca stronę wyników z postami</li>
+     * </ul>
+     */
     @GetMapping(value = "/uzytkownik", produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPostyByConnectedUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -58,6 +109,22 @@ public class PostController {
         return ResponseEntity.ok(postService.findAllPostyByConnectedUzytkownik(page, size, connectedUser));
     }
 
+    /**
+     * Metoda obsługująca żądanie GET do wyszukania wszystkich postów użytkownika na podstawie jego nazwy.
+     *
+     * @param page numer strony wyników, domyślnie 0
+     * @param size rozmiar strony wyników, domyślnie 10
+     * @param nazwa nazwa użytkownika
+     * @param connectedUser obiekt uwierzytelnionego użytkownika
+     * @return ResponseEntity zawierające stronę wyników z postami
+     * <ul>
+     *   <li><strong>page</strong> - numer strony wyników</li>
+     *   <li><strong>size</strong> - rozmiar strony wyników</li>
+     *   <li><strong>nazwa</strong> - nazwa użytkownika</li>
+     *   <li><strong>connectedUser</strong> - obiekt uwierzytelnionego użytkownika</li>
+     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca stronę wyników z postami</li>
+     * </ul>
+     */
     @GetMapping(value = "/uzytkownik/{nazwa}", produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPostyByUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
@@ -67,29 +134,73 @@ public class PostController {
         return ResponseEntity.ok(postService.findAllPostyByUzytkownik(page, size, nazwa, connectedUser));
     }
 
-    // @GetMapping(value = "/uzytkownik/{nazwa}/count", produces="application/json")
-    // public ResponseEntity<Integer> findAllPostyCountOfUzytkownik(
-    //         @PathVariable("nazwa") String nazwa) {
-    //     return ResponseEntity.ok(postService.findAllPostyCountOfUzytkownik(nazwa));
-    // }
-
+    /**
+     * Metoda obsługująca żądanie POST do dodania nowego posta z opcjonalnym plikiem.
+     *
+     * @param request obiekt żądania zawierający dane posta
+     * @param file obiekt MultipartFile zawierający plik obrazu posta, opcjonalny
+     * @param connectedUser obiekt uwierzytelnionego użytkownika
+     * @return ResponseEntity zawierające obiekt Post
+     * <ul>
+     *   <li><strong>request</strong> - obiekt żądania zawierający dane posta</li>
+     *   <li><strong>file</strong> - obiekt MultipartFile zawierający plik obrazu posta</li>
+     *   <li><strong>connectedUser</strong> - obiekt uwierzytelnionego użytkownika</li>
+     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt Post</li>
+     * </ul>
+     */
     @PostMapping(consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<Post> addPost(@Valid @RequestPart("request") PostRequest request, 
     @Parameter() @RequestPart(value = "file", required = false) MultipartFile file, Authentication connectedUser) {
-        return ResponseEntity.ok(postService.save(request, file, connectedUser));
+        return ResponseEntity.status(CREATED).body(postService.save(request, file, connectedUser));
     }
 
+    /**
+     * Metoda obsługująca żądanie PUT do dodania oceny do posta.
+     *
+     * @param request obiekt żądania zawierający ocenę
+     * @param connectedUser obiekt uwierzytelnionego użytkownika
+     * @return ResponseEntity zawierające obiekt PostResponse
+     * <ul>
+     *   <li><strong>request</strong> - obiekt żądania zawierający ocenę</li>
+     *   <li><strong>connectedUser</strong> - obiekt uwierzytelnionego użytkownika</li>
+     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt PostResponse</li>
+     * </ul>
+     */
     @PutMapping(value = "/oceny", produces="application/json")
     public ResponseEntity<PostResponse> addOcenaToPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
-        return ResponseEntity.ok(postService.addOcenaToPost(request, connectedUser));
+        return ResponseEntity.status(CREATED).body(postService.addOcenaToPost(request, connectedUser));
     }
 
+    /**
+     * Metoda obsługująca żądanie DELETE do usunięcia oceny z posta.
+     *
+     * @param request obiekt żądania zawierający ocenę
+     * @param connectedUser obiekt uwierzytelnionego użytkownika
+     * @return ResponseEntity zawierające informację o usunięciu oceny z posta
+     * <ul>
+     *   <li><strong>request</strong> - obiekt żądania zawierający ocenę</li>
+     *   <li><strong>connectedUser</strong> - obiekt uwierzytelnionego użytkownika</li>
+     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca informację o usunięciu oceny z posta</li>
+     * </ul>
+     */
     @DeleteMapping(value = "/oceny", produces="application/json")
     public ResponseEntity<String> removeOcenaFromPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         postService.removeOcenaFromPost(request, connectedUser);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Metoda obsługująca żądanie DELETE do usunięcia posta na podstawie identyfikatora.
+     *
+     * @param postId identyfikator posta
+     * @param currentUser obiekt uwierzytelnionego użytkownika
+     * @return ResponseEntity zawierające informację o usunięciu posta
+     * <ul>
+     *   <li><strong>postId</strong> - identyfikator posta</li>
+     *   <li><strong>currentUser</strong> - obiekt uwierzytelnionego użytkownika</li>
+     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca informację o usunięciu posta</li>
+     * </ul>
+     */
     @DeleteMapping(value = "/{post-id}", produces="application/json")
     public ResponseEntity<String> removePost(
                     @PathVariable("post-id") String postId,

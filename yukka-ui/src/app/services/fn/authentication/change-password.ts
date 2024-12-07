@@ -6,16 +6,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { RoslinaResponse } from '../../models/roslina-response';
+import { HasloRequest } from '../../models/haslo-request';
 
-export interface FindById$Params {
-  id: number;
+export interface ChangePassword$Params {
+      body: HasloRequest
 }
 
-export function findById(http: HttpClient, rootUrl: string, params: FindById$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
-  const rb = new RequestBuilder(rootUrl, findById.PATH, 'get');
+export function changePassword(http: HttpClient, rootUrl: string, params: ChangePassword$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+  const rb = new RequestBuilder(rootUrl, changePassword.PATH, 'post');
   if (params) {
-    rb.path('id', params.id, {});
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -23,9 +24,10 @@ export function findById(http: HttpClient, rootUrl: string, params: FindById$Par
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<RoslinaResponse>;
+      return r as StrictHttpResponse<{
+      }>;
     })
   );
 }
 
-findById.PATH = '/rosliny/id/{id}';
+changePassword.PATH = '/api/auth/zmiana-hasla';

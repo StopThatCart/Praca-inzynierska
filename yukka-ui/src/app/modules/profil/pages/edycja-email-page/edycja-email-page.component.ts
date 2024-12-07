@@ -61,7 +61,7 @@ export class EdycjaEmailPageComponent {
     this.errorMsg = [];
     this.message = '';
 
-    this.authService.zmianaEmail({
+    this.authService.changeEmail({
       token: this.token
     }).subscribe({
       next: () => {

@@ -25,6 +25,7 @@ import com.example.yukka.auth.email.EmailTemplateName;
 import com.example.yukka.auth.requests.EmailRequest;
 import com.example.yukka.auth.requests.UsunKontoRequest;
 import com.example.yukka.common.FileResponse;
+import com.example.yukka.file.DefaultImage;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
@@ -98,7 +99,7 @@ public class UzytkownikService implements  UserDetailsService {
         Uzytkownik uzyt2 = uzytkownikRepository.findByEmail(uzyt.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + uzyt.getEmail()));
                 
-        return FileResponse.builder().content(fileUtils.readFile(uzyt2.getAvatar())).build();
+        return FileResponse.builder().content(fileUtils.readFile(uzyt2.getAvatar(), DefaultImage.AVATAR)).build();
     }
 
     @Transactional(readOnly = true)

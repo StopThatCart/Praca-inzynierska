@@ -13,8 +13,6 @@ import { deleteRoslina } from '../fn/roslina/delete-roslina';
 import { DeleteRoslina$Params } from '../fn/roslina/delete-roslina';
 import { findAllRoslinyWithParameters } from '../fn/roslina/find-all-rosliny-with-parameters';
 import { FindAllRoslinyWithParameters$Params } from '../fn/roslina/find-all-rosliny-with-parameters';
-import { findById } from '../fn/roslina/find-by-id';
-import { FindById$Params } from '../fn/roslina/find-by-id';
 import { findByNazwaLacinska } from '../fn/roslina/find-by-nazwa-lacinska';
 import { FindByNazwaLacinska$Params } from '../fn/roslina/find-by-nazwa-lacinska';
 import { findByRoslinaId } from '../fn/roslina/find-by-roslina-id';
@@ -208,31 +206,6 @@ export class RoslinaService extends BaseService {
    */
   findByNazwaLacinska(params: FindByNazwaLacinska$Params, context?: HttpContext): Observable<RoslinaResponse> {
     return this.findByNazwaLacinska$Response(params, context).pipe(
-      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `findById()` */
-  static readonly FindByIdPath = '/rosliny/id/{id}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findById()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findById$Response(params: FindById$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
-    return findById(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findById$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findById(params: FindById$Params, context?: HttpContext): Observable<RoslinaResponse> {
-    return this.findById$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
     );
   }

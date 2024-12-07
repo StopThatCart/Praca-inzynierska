@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PaginationComponent } from "../../../../components/pagination/pagination.component";
 import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powiadomienia-sync.service';
 import { LoadingComponent } from "../../../../components/loading/loading.component";
+import { setAllPowiadomieniaPrzeczytane } from '../../../../services/fn/powiadomienie/set-all-powiadomienia-przeczytane';
 
 @Component({
   selector: 'app-powiadomienia-page',
@@ -102,6 +103,18 @@ export class PowiadomieniaPageComponent implements OnInit {
     if (this.powiadomienia.content) {
       this.powiadomienia.content = this.powiadomienia.content.filter(p => p.id !== pow.id);
     }
+  }
+
+  setAllPowiadomieniaPrzeczytane() {
+    this.powService.setAllPowiadomieniaPrzeczytane().subscribe({
+      next: () => {
+        window.location.reload();
+      },
+      error: (error) => {
+        console.error('Error setting all powiadomienia as read:', error);
+        this.message = 'Wystąpił błąd podczas ustawiania wszystkich powiadomień jako przeczytane.';
+      }
+    });
   }
 
   // Paginacja

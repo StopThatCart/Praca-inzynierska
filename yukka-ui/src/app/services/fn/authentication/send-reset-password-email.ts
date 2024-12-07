@@ -6,17 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { HasloRequest } from '../../models/haslo-request';
 
-export interface ZmianaHasla$Params {
-      body: HasloRequest
+export interface SendResetPasswordEmail$Params {
+  email: string;
 }
 
-export function zmianaHasla(http: HttpClient, rootUrl: string, params: ZmianaHasla$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function sendResetPasswordEmail(http: HttpClient, rootUrl: string, params: SendResetPasswordEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 }>> {
-  const rb = new RequestBuilder(rootUrl, zmianaHasla.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, sendResetPasswordEmail.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.path('email', params.email, {});
   }
 
   return http.request(
@@ -30,4 +29,4 @@ export function zmianaHasla(http: HttpClient, rootUrl: string, params: ZmianaHas
   );
 }
 
-zmianaHasla.PATH = '/api/auth/zmiana-hasla';
+sendResetPasswordEmail.PATH = '/api/auth/zmiana-hasla-email/{email}';

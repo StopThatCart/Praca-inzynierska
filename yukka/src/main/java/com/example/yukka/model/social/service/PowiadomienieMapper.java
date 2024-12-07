@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.example.yukka.common.PageResponse;
+import com.example.yukka.file.DefaultImage;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.social.CommonMapperService;
 import com.example.yukka.model.social.powiadomienie.Powiadomienie;
@@ -52,7 +53,7 @@ public class PowiadomienieMapper {
             .odnosnik(powiadomienie.getOdnosnik())
             .opis(powiadomienie.getOpis())
             .nazwyRoslin(powiadomienie.getNazwyRoslin())
-            .avatar(fileUtils.readFile(powiadomienie.getAvatar()))
+            .avatar(fileUtils.readFile(powiadomienie.getAvatar(), DefaultImage.POWIADOMIENIA))
             .uzytkownikNazwa(powiadomienie.getUzytkownikNazwa())
             .iloscPolubien(powiadomienie.getIloscPolubien())
             .data(powiadomienie.getData())

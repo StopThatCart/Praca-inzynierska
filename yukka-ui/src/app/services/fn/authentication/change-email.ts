@@ -7,15 +7,15 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface ZmianaHaslaEmail$Params {
-  email: string;
+export interface ChangeEmail$Params {
+  token: string;
 }
 
-export function zmianaHaslaEmail(http: HttpClient, rootUrl: string, params: ZmianaHaslaEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function changeEmail(http: HttpClient, rootUrl: string, params: ChangeEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 }>> {
-  const rb = new RequestBuilder(rootUrl, zmianaHaslaEmail.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, changeEmail.PATH, 'post');
   if (params) {
-    rb.path('email', params.email, {});
+    rb.query('token', params.token, {});
   }
 
   return http.request(
@@ -29,4 +29,4 @@ export function zmianaHaslaEmail(http: HttpClient, rootUrl: string, params: Zmia
   );
 }
 
-zmianaHaslaEmail.PATH = '/api/auth/zmiana-hasla-email/{email}';
+changeEmail.PATH = '/api/auth/zmiana-email';

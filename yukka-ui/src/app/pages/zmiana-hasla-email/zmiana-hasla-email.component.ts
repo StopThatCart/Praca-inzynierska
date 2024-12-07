@@ -32,7 +32,7 @@ export class ZmianaHaslaEmailComponent {
     this.errorMsg = [];
     this.message = '';
 
-    this.authService.zmianaHaslaEmail({
+    this.authService.sendResetPasswordEmail({
       email: this.email
     }).subscribe({
       next: () => {

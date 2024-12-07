@@ -12,6 +12,7 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { findAllRoslinyOfUzytkownik } from '../fn/uzytkownik-roslina/find-all-rosliny-of-uzytkownik';
 import { FindAllRoslinyOfUzytkownik$Params } from '../fn/uzytkownik-roslina/find-all-rosliny-of-uzytkownik';
 import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
+import { RoslinaResponse } from '../models/roslina-response';
 import { saveRoslina } from '../fn/uzytkownik-roslina/save-roslina';
 import { SaveRoslina$Params } from '../fn/uzytkownik-roslina/save-roslina';
 import { updateRoslina1 } from '../fn/uzytkownik-roslina/update-roslina-1';
@@ -34,8 +35,7 @@ export class UzytkownikRoslinaService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslina$Response(params?: SaveRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-}>> {
+  saveRoslina$Response(params?: SaveRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
     return saveRoslina(this.http, this.rootUrl, params, context);
   }
 
@@ -45,12 +45,9 @@ export class UzytkownikRoslinaService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslina(params?: SaveRoslina$Params, context?: HttpContext): Observable<{
-}> {
+  saveRoslina(params?: SaveRoslina$Params, context?: HttpContext): Observable<RoslinaResponse> {
     return this.saveRoslina$Response(params, context).pipe(
-      map((r: StrictHttpResponse<{
-}>): {
-} => r.body)
+      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
     );
   }
 
@@ -63,7 +60,7 @@ export class UzytkownikRoslinaService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateRoslina1$Response(params: UpdateRoslina1$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  updateRoslina1$Response(params: UpdateRoslina1$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
     return updateRoslina1(this.http, this.rootUrl, params, context);
   }
 
@@ -73,9 +70,9 @@ export class UzytkownikRoslinaService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateRoslina1(params: UpdateRoslina1$Params, context?: HttpContext): Observable<string> {
+  updateRoslina1(params: UpdateRoslina1$Params, context?: HttpContext): Observable<RoslinaResponse> {
     return this.updateRoslina1$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
     );
   }
 

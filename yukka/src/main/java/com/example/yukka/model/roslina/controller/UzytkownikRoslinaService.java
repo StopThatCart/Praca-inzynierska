@@ -3,6 +3,7 @@ package com.example.yukka.model.roslina.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -64,6 +65,9 @@ public class UzytkownikRoslinaService {
     private final RoslinaMapper roslinaMapper;
     @SuppressWarnings("unused")
     private final CommonMapperService commonMapperService;
+
+    @Value("${roslina.obraz.default.name}")
+    private String defaultRoslinaObrazName;
 
     
     /**
@@ -151,9 +155,9 @@ public class UzytkownikRoslinaService {
      * @param connectedUser Aktualnie zalogowany użytkownik
      * @return Zwraca zapisaną roślinę
      */
-    public Roslina save(UzytkownikRoslinaRequest request, MultipartFile file, Authentication connectedUser) {
+    public RoslinaResponse save(UzytkownikRoslinaRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        return save(request, file, uzyt);
+        return  roslinaMapper.toRoslinaResponse(save(request, file, uzyt));
     }
 
     /**
@@ -170,6 +174,8 @@ public class UzytkownikRoslinaService {
         
         if (file != null) {
             request.setObraz(fileStoreService.saveUzytkownikRoslinaObraz(file, request.getRoslinaId(), uzyt.getUzytId()));
+        } else {
+            request.setObraz(defaultRoslinaObrazName);
         }
 
         if(request.areWlasciwosciEmpty()) {

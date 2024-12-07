@@ -1,6 +1,8 @@
 package com.example.yukka.model.social.controller;
 
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +26,19 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 
+/**
+ * Kontroler REST dla zarządzania powiadomieniami.
+ * <ul>
+ * <li><strong>getPowiadomienia</strong> - Pobiera stronę powiadomień użytkownika.</li>
+ * <li><strong>getNieprzeczytaneCountOfUzytkownik</strong> - Pobiera liczbę nieprzeczytanych powiadomień użytkownika.</li>
+ * <li><strong>sendSpecjalnePowiadomienieToPracownicy</strong> - Wysyła specjalne powiadomienie do pracowników.</li>
+ * <li><strong>sendSpecjalnePowiadomienie</strong> - Wysyła specjalne powiadomienie.</li>
+ * <li><strong>sendZgloszenie</strong> - Wysyła zgłoszenie.</li>
+ * <li><strong>setPowiadomieniePrzeczytane</strong> - Ustawia powiadomienie jako przeczytane.</li>
+ * <li><strong>setAllPowiadomieniaPrzeczytane</strong> - Ustawia wszystkie powiadomienia jako przeczytane.</li>
+ * <li><strong>remove</strong> - Usuwa powiadomienie.</li>
+ * </ul>
+ */
 @RestController
 @RequestMapping("powiadomienia")
 @RequiredArgsConstructor
@@ -32,9 +47,14 @@ public class PowiadomienieController {
     private final PowiadomienieService powiadomienieService;
 
     
-    /** 
-     * @param connectedUser
-     * @return ResponseEntity<PageResponse<PowiadomienieResponse>>
+
+    /**
+     * Pobiera powiadomienia użytkownika.
+     *
+     * @param page <ul><li><strong>page</strong> - numer strony do pobrania, domyślnie 0</li></ul>
+     * @param size <ul><li><strong>size</strong> - liczba elementów na stronie, domyślnie 10</li></ul>
+     * @param connectedUser <ul><li><strong>connectedUser</strong> - uwierzytelniony użytkownik</li></ul>
+     * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź zawierająca stronę z powiadomieniami użytkownika</li></ul>
      */
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<PowiadomienieResponse>> getPowiadomienia(
@@ -44,40 +64,85 @@ public class PowiadomienieController {
         return ResponseEntity.ok(powiadomienieService.findPowiadomieniaOfUzytkownik(page, size, connectedUser));
     }
 
+    /**
+     * Pobiera liczbę nieprzeczytanych powiadomień użytkownika.
+     *
+     * @param connectedUser <ul><li><strong>connectedUser</strong> - uwierzytelniony użytkownik</li></ul>
+     * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź zawierająca liczbę nieprzeczytanych powiadomień użytkownika</li></ul>
+     */
     @GetMapping(value = "/nieprzeczytane/count", produces="application/json")
     public ResponseEntity<Integer> getNieprzeczytaneCountOfUzytkownik(Authentication connectedUser) {
         return ResponseEntity.ok(powiadomienieService.getNieprzeczytaneCountOfUzytkownik(connectedUser));
     }
 
+    /**
+     * Wysyła specjalne powiadomienie do pracowników.
+     *
+     * @param powiadomienieDTO <ul><li><strong>powiadomienieDTO</strong> - obiekt zawierający dane powiadomienia</li></ul>
+     * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź z kodem HTTP 201</li></ul>
+     */
     @PostMapping(value = "/admin", produces="application/json")
     public ResponseEntity<?> sendSpecjalnePowiadomienieToPracownicy(@RequestBody PowiadomienieDTO powiadomienieDTO) {
         powiadomienieService.addSpecjalnePowiadomienieToPracownicy(powiadomienieDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(CREATED).build();
     }   
 
+    /**
+     * Wysyła specjalne powiadomienie.
+     *
+     * @param powiadomienieDTO <ul><li><strong>powiadomienieDTO</strong> - obiekt zawierający dane powiadomienia</li></ul>
+     * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź z kodem HTTP 201</li></ul>
+     */
     @PostMapping(value = "/pracownik", produces="application/json")
     public ResponseEntity<?> sendSpecjalnePowiadomienie(@RequestBody PowiadomienieDTO powiadomienieDTO) {
         powiadomienieService.addSpecjalnePowiadomienie(powiadomienieDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(CREATED).build();
     }
 
+    /**
+     * Wysyła zgłoszenie.
+     *
+     * @param request <ul><li><strong>request</strong> - obiekt zawierający dane zgłoszenia</li></ul>
+     * @param connectedUser <ul><li><strong>connectedUser</strong> - uwierzytelniony użytkownik</li></ul>
+     * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź z kodem HTTP 201</li></ul>
+     */
     @PostMapping(value = "/zgloszenie", produces="application/json")
     public ResponseEntity<?> sendZgloszenie(@Valid @RequestBody ZgloszenieRequest request, Authentication connectedUser) {
         powiadomienieService.sendZgloszenie(request, connectedUser);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(CREATED).build();
     }
 
+    /**
+     * Ustawia powiadomienie jako przeczytane.
+     *
+     * @param id <ul><li><strong>id</strong> - identyfikator powiadomienia</li></ul>
+     * @param connectedUser <ul><li><strong>connectedUser</strong> - uwierzytelniony użytkownik</li></ul>
+     * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź z obiektem PowiadomienieResponse w formacie JSON</li></ul>
+     */
     @PatchMapping(value = "/{id}/przeczytane", produces="application/json")
     public ResponseEntity<PowiadomienieResponse> setPowiadomieniePrzeczytane(@PathVariable("id") Long id, Authentication connectedUser) {
         return ResponseEntity.ok(powiadomienieService.setPrzeczytane(id, connectedUser));
     }
 
+    /**
+     * Ustawia wszystkie powiadomienia danego użytkownika jako przeczytane.
+     *
+     * @param connectedUser <ul><li><strong>connectedUser</strong> - uwierzytelniony użytkownik</li></ul>
+     * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź z kodem HTTP 202</li></ul>
+     */
     @PatchMapping(value = "/przeczytane", produces="application/json")
     public ResponseEntity<?> setAllPowiadomieniaPrzeczytane(Authentication connectedUser) {
         powiadomienieService.setAllPrzeczytane(connectedUser);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.accepted().build();
     }
 
+    /**
+     * Usuwa powiadomienie.
+     *
+     * @param id <ul><li><strong>id</strong> - identyfikator powiadomienia</li></ul>
+     * @param connectedUser <ul><li><strong>connectedUser</strong> - uwierzytelniony użytkownik</li></ul>
+     * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź z kodem HTTP 204</li></ul>
+     */
     @DeleteMapping(value = "/{id}", produces="application/json")
     public ResponseEntity<?> remove(@PathVariable("id") Long id, Authentication connectedUser) {
         powiadomienieService.remove(id, connectedUser);
