@@ -43,6 +43,10 @@ public class UzytkownikController {
     @Autowired
     PowiadomienieService powiadomienieService;
 
+    
+    /** 
+     * @return List<Uzytkownik>
+     */
     // dodawanie użytkowników jest w authorization. Za to dodawanie pracowników będzie u admina
     @GetMapping(produces="application/json")
     public List<Uzytkownik> findAllUzytkownicy() {

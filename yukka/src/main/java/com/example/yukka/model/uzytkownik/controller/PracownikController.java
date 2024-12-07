@@ -24,6 +24,12 @@ public class PracownikController {
     //private final UzytkownikService uzytkownikService;
     private final PracownikService pracownikService;
 
+    
+    /** 
+     * @param request
+     * @param currentUser
+     * @return ResponseEntity<Boolean>
+     */
     @PatchMapping(value = "/ban", consumes="multipart/form-data", produces="application/json")
     public ResponseEntity<Boolean> setBanUzytkownik(@Valid @RequestPart("request") BanRequest request, 
     Authentication currentUser) {

@@ -29,6 +29,11 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UzytkownikService userDetailsService;
 
+    
+    /** 
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     @SuppressWarnings("null")
     protected void doFilterInternal(

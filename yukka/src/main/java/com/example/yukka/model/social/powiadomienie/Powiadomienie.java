@@ -84,6 +84,10 @@ public class Powiadomienie {
 
 
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean isZgloszenie() {
         return labels.contains("Zgloszenie");
     }

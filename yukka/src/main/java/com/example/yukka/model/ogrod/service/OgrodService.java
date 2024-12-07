@@ -33,6 +33,13 @@ public class OgrodService {
     private final RoslinaMapper roslinaMapper;
 
 
+    
+    /** 
+     * @param page
+     * @param size
+     * @param szukaj
+     * @return PageResponse<OgrodResponse>
+     */
     @Transactional(readOnly = true)
     public PageResponse<OgrodResponse> findAllOgrody(int page, int size, String szukaj) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("ogrod.nazwa").descending());

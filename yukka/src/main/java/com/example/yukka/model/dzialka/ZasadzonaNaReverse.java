@@ -74,6 +74,11 @@ public class ZasadzonaNaReverse {
     }
 
 
+    
+    /** 
+     * @param roslina
+     * @return boolean
+     */
     @JsonIgnore
     public boolean equalsRoslina(Roslina roslina) {
         return this.roslina.getRoslinaId().equals(roslina.getRoslinaId());

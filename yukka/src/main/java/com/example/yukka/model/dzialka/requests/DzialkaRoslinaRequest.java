@@ -46,6 +46,10 @@ public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
     // Null jak nie dopina się żadnego obrazu
     private String obraz;
 
+    
+    /** 
+     * @return boolean
+     */
     @JsonIgnore
     public boolean isValidDzialkaRoslinaRequest() {
         if (this.getX() == null || this.getY() == null) {

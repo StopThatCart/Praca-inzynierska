@@ -49,6 +49,10 @@ public class BaseDzialkaRequest {
     @Size(min = 1, max = 400, message = "Ilość kafelków dla rośliny powinna wynosić od 1 do 400")
     Set<Pozycja> pozycje;
 
+    
+    /** 
+     * @return int[]
+     */
     @JsonIgnore
     public int[] getPozycjeX() {
         int[] tabX = new int[pozycje.size()];

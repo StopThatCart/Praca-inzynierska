@@ -37,6 +37,10 @@ public class Wlasciwosc {
     
 
     
+    
+    /** 
+     * @return String
+     */
     public String getLabels() {
         if(labels.isEmpty()) return null;
         return  labels.get(0);

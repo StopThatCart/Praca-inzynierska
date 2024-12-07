@@ -4,7 +4,6 @@ import static java.io.File.separator;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,6 +58,11 @@ public class UzytkownikService implements  UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
+    
+    /** 
+     * @param nazwa
+     * @return UserDetails
+     */
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String nazwa) {
@@ -205,7 +209,7 @@ public class UzytkownikService implements  UserDetailsService {
         }
         fileUtils.deleteObraz(uzytkownik.getAvatar());
 
-        String leObraz = fileStoreService.saveAvatar(file, uzyt.getUzytId());
+        String leObraz = fileStoreService.saveAvatar(file);
         System.out.println("Zapisano avatar: " + leObraz);
 
         uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);

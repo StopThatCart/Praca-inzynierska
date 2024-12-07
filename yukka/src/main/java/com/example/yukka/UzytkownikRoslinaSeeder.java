@@ -29,7 +29,12 @@ public class UzytkownikRoslinaSeeder {
 
     Roslina roslina1;
 
-	PageResponse<RoslinaResponse> seedUzytkownikRosliny(Uzytkownik uzyt) {
+	
+    /** 
+     * @param uzyt
+     * @return PageResponse<RoslinaResponse>
+     */
+    PageResponse<RoslinaResponse> seedUzytkownikRosliny(Uzytkownik uzyt) {
         String roslinaNazwa = "pierwsza roślina użytkownika";
         String roslinaOpis = "To jest dramat.";
        // String roslinaObraz = "tilia_henryana.jpg";

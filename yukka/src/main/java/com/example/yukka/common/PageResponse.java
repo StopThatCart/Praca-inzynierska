@@ -8,6 +8,11 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * Klasa generyczna reprezentująca odpowiedź stronicowaną.
+ *
+ * @param <T> typ zawartości na stronie
+ */
 @Getter
 @Setter
 @Builder

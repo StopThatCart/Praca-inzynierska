@@ -41,6 +41,12 @@ public class SecurityConfig {
 
     private final com.example.yukka.security.rateLimiter.RateLimitFilter rateLimitFilter;
 
+    
+    /** 
+     * @param http
+     * @return AuthenticationManager
+     * @throws Exception
+     */
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = 

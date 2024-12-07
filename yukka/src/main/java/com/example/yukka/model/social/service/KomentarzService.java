@@ -57,6 +57,11 @@ public class KomentarzService {
    // PostMapper postMapper;
     private final KomentarzMapper komentarzMapper;
 
+    
+    /** 
+     * @param komentarzId
+     * @return KomentarzResponse
+     */
     // Przysięgam, potem poprawię te funkcje, ale teraz nie mam czasu
     // No poprawiłem delikatnie
                 

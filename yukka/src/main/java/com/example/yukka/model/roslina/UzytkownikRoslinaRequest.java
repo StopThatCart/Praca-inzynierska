@@ -60,6 +60,10 @@ public class UzytkownikRoslinaRequest {
     @Max(value = 200, message = "Wysokość maksymalna nie może być większa niż 200")
     private Double wysokoscMax;
 
+    
+    /** 
+     * @return boolean
+     */
     @JsonIgnore
     @AssertTrue(message = "Wysokość minimalna nie może być większa niż wysokości maksymalnej")
     private boolean isValidWysokosc() {

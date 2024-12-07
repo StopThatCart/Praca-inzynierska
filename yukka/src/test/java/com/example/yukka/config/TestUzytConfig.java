@@ -12,6 +12,12 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
 @TestConfiguration
 public class TestUzytConfig {
+    
+    /** 
+     * @param uzytkownikRepository
+     * @param passwordEncoder
+     * @return List<Uzytkownik>
+     */
     @Bean
     @Primary
     public List<Uzytkownik> createTestUsers(UzytkownikRepository uzytkownikRepository, PasswordEncoder passwordEncoder) {

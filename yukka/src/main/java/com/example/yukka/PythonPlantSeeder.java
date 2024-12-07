@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 public class PythonPlantSeeder {
     private static final Logger LOGGER = Logger.getLogger(PythonPlantSeeder.class.getName());
 
+    
+    /** 
+     * @return String
+     */
     public String runPythonScript() {
         //System.out.println("Current Working Directory: " + System.getProperty("user.dir"));
         String scriptPath = Paths.get("Scrapper", "import_to_neo4j.py").toAbsolutePath().toString();

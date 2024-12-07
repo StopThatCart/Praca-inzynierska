@@ -132,6 +132,10 @@ public class YukkaApplication {
 
 	List<Uzytkownik> uzytkownicy;
 
+	
+	/** 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(YukkaApplication.class, args);
        

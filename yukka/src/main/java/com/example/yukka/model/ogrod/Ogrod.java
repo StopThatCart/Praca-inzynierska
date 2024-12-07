@@ -40,6 +40,10 @@ public class Ogrod {
     private List<Dzialka> dzialki;
 
 
+    
+    /** 
+     * @return String
+     */
     @Override
     public String toString() {
         return "Ogrod{" +

@@ -152,6 +152,10 @@ public class RozmowaPrywatnaControllerTest {
         };
     }
 
+  
+  /** 
+   * @throws Exception
+   */
   //  @Test
     void testFindRozmowyPrywatneOfUzytkownikAsAdmin() throws Exception {
         Authentication bb = SecurityContextHolder.getContext().getAuthentication();

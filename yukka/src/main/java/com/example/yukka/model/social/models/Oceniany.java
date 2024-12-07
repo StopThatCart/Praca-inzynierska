@@ -2,7 +2,6 @@ package com.example.yukka.model.social.models;
 
 import java.util.List;
 
-import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +22,10 @@ public class Oceniany {
     @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
     private List<OcenilReverse> ocenil;
 
+    
+    /** 
+     * @return int
+     */
     public int getOcenyLubiButGood() {
         return (int) ocenil.stream().filter(OcenilReverse::isLubi).count();
     }

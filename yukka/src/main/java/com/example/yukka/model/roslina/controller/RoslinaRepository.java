@@ -29,17 +29,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     """)
     Optional<Roslina> findByNazwaLacinskaWithWlasciwosci(@Param("latinName") String latinName);
 
-    /**
-     *  No elo
-     */
-    @Query("""
-        MATCH (roslina:Roslina) WHERE id(roslina) = $id
-        OPTIONAL MATCH (roslina)-[r:STWORZONA_PRZEZ]->(u:Uzytkownik)
-        RETURN roslina, r, u
-    """)
-    @Override
-    Optional<Roslina> findById(@Param("id") Long id);
-
     @Query("""
         MATCH (roslina:Roslina {roslinaId: $roslinaId})
         OPTIONAL MATCH (roslina)-[r1:STWORZONA_PRZEZ]->(u:Uzytkownik)

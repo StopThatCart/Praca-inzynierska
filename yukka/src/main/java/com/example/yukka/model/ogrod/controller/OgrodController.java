@@ -25,6 +25,11 @@ import lombok.RequiredArgsConstructor;
 public class OgrodController {
     private final OgrodService ogrodService;
 
+    
+    /** 
+     * @param findAllOgrody(
+     * @return ResponseEntity<PageResponse<OgrodResponse>>
+     */
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<OgrodResponse>> findAllOgrody(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,

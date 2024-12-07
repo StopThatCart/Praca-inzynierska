@@ -18,6 +18,10 @@ public class RoslinaRequest extends UzytkownikRoslinaRequest{
     @NotEmpty(message = "Nazwa łacińska jest wymagana")
     private String nazwaLacinska;
 
+    
+    /** 
+     * @return String
+     */
     public String getNazwaLacinska() {
         if (nazwaLacinska == null || nazwaLacinska.isEmpty()) {
             return nazwaLacinska;

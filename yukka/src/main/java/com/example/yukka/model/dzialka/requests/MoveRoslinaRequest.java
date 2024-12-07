@@ -37,6 +37,10 @@ public class MoveRoslinaRequest extends BaseDzialkaRequest {
     @NotNull(message = "Pozycja nowego y jest wymagana")
     private Integer yNowy;
 
+    
+    /** 
+     * @return boolean
+     */
     // @JsonIgnore
     // public boolean isValidMoveRoslinaRequest() {
     //     if (this.xNowy == null || this.yNowy == null) {

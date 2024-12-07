@@ -25,6 +25,11 @@ public class PostMapper {
     private final CommonMapperService commonMapperService;
 
     
+    
+    /** 
+     * @param post
+     * @return PostRequest
+     */
     public PostRequest toPostRequest(Post post) {
         return PostRequest.builder()
             .tytul(post.getTytul())

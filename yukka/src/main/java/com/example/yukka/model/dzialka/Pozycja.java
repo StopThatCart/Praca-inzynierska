@@ -19,6 +19,11 @@ public class Pozycja {
     int x;
     int y;
 
+    
+    /** 
+     * @param o
+     * @return boolean
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

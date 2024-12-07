@@ -31,6 +31,12 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
     private final UzytkownikRepository uzytkownikRepository;
     private final PasswordEncoder passwordEncoder;
 
+    
+    /** 
+     * @param authentication
+     * @return Authentication
+     * @throws AuthenticationException
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String nameOrEmail = authentication.getName();

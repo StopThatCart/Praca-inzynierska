@@ -35,6 +35,11 @@ public class DzialkaController {
 @Autowired
     private DzialkaService dzialkaService;
 
+    
+    /** 
+     * @param connectedUser
+     * @return ResponseEntity<List<DzialkaResponse>>
+     */
     @GetMapping(produces="application/json")
     public ResponseEntity<List<DzialkaResponse>> getDzialki(Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getDzialki(connectedUser));

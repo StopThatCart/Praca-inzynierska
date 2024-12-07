@@ -42,6 +42,11 @@ public class RozmowaPrywatnaService {
     private final PowiadomienieService powiadomienieService;
 
 
+    
+    /** 
+     * @param currentUser
+     * @return PageResponse<RozmowaPrywatnaResponse>
+     */
     public PageResponse<RozmowaPrywatnaResponse> findRozmowyPrywatneOfUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,    

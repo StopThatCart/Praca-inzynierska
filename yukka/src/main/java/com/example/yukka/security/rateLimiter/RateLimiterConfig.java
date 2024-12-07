@@ -13,6 +13,10 @@ import io.github.bucket4j.Refill;
 @Configuration
 public class RateLimiterConfig {
 
+        
+        /** 
+         * @return Bucket
+         */
         /*
      *  - W zwykłych stronach wali 10 requestów na refresh
 	    - Przy przejściu do innych stron tylko wymagane komponenty są aktualizowane/pobierane(3-5 razy)

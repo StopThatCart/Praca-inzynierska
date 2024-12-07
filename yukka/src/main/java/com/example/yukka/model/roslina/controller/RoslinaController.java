@@ -39,6 +39,10 @@ public class RoslinaController {
     private final RoslinaService roslinaService;
     private final RoslinaMapper roslinaMapper;
 
+    
+    /** 
+     * @return ResponseEntity<PageResponse<RoslinaResponse>>
+     */
     /*
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllRosliny(
@@ -69,10 +73,10 @@ public class RoslinaController {
         return ResponseEntity.ok(roslinaService.findByNazwaLacinska(nazwaLacinska.toLowerCase()));
     }
 
-    @GetMapping(value = "/id/{id}", produces="application/json")
-    public ResponseEntity<RoslinaResponse> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(roslinaService.findById(id));
-    }
+    // @GetMapping(value = "/id/{id}", produces="application/json")
+    // public ResponseEntity<RoslinaResponse> findById(@PathVariable("id") Long id) {
+    //     return ResponseEntity.ok(roslinaService.findById(id));
+    // }
 
     @GetMapping(value = "/roslina-id/{roslina-id}", produces="application/json")
     public ResponseEntity<RoslinaResponse> findByRoslinaId(@PathVariable("roslina-id") String id) {

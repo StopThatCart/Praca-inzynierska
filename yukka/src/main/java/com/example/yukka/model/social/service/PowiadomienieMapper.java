@@ -28,6 +28,11 @@ public class PowiadomienieMapper {
     private final CommonMapperService commonMapperService;
 
 
+    
+    /** 
+     * @param powiadomienie
+     * @return PowiadomienieResponse
+     */
     public PowiadomienieResponse toPowiadomienieResponse(Powiadomienie powiadomienie) {
         if (powiadomienie == null) {
             return null;

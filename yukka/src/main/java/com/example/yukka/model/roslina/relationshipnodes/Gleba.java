@@ -22,6 +22,10 @@ public class Gleba {
     public Gleba() {
     }
 
+    
+    /** 
+     * @return List<Roslina>
+     */
     public List<Roslina> getRosliny() {
         return plants;
     }

@@ -32,6 +32,11 @@ import lombok.RequiredArgsConstructor;
 public class CommonMapperService {
     private final FileUtils fileUtils;
 
+    
+    /** 
+     * @param uzytkownik
+     * @return UzytkownikResponse
+     */
     public UzytkownikResponse toSimpleAvatar(Uzytkownik uzytkownik) {
         if (uzytkownik == null) {
             return null;

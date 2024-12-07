@@ -32,6 +32,14 @@ public class BanCheckFilter extends OncePerRequestFilter {
 
     private static final Set<String> PROTECTED_METHODS = Set.of("POST", "PATCH", "PUT", "DELETE");
 
+    
+    /** 
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @SuppressWarnings("null")
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

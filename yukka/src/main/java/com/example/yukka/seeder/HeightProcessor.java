@@ -5,6 +5,11 @@ import java.util.List;
 
 public class HeightProcessor {
 
+    
+    /** 
+     * @param heights
+     * @return Wysokosc
+     */
     public static Wysokosc getWysokosc(String heights) {
         return calculateOverallHeight(processHeights(heights));
     }

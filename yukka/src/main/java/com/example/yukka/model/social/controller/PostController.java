@@ -32,6 +32,11 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
     private final PostService postService;
 
+    
+    /** 
+     * @param postId
+     * @return ResponseEntity<PostResponse>
+     */
     @GetMapping(value = "/{post-id}", produces="application/json")
     public ResponseEntity<PostResponse> findPostById(@PathVariable("post-id") String postId) {
         return ResponseEntity.ok(postService.findByPostId(postId));

@@ -28,6 +28,11 @@ public class RozmowaPrywatnaController {
     private RozmowaPrywatnaService rozmowaPrywatnaService;
     
 
+    
+    /** 
+     * @param connectedUser
+     * @return ResponseEntity<PageResponse<RozmowaPrywatnaResponse>>
+     */
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<RozmowaPrywatnaResponse>> findRozmowyPrywatneOfUzytkownik(
         @RequestParam(name = "page", defaultValue = "0", required = false) int page,

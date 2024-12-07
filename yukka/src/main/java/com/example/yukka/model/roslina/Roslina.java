@@ -144,6 +144,10 @@ public class Roslina {
     @Builder.Default
     private Set<Wlasciwosc> zimozielonosci = new HashSet<>();
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean isUzytkownikRoslina() {
         return labels.contains("UzytkownikRoslina");
     }

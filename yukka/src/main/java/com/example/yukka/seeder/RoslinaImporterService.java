@@ -89,6 +89,10 @@ public class RoslinaImporterService {
        
     }
 
+    
+    /** 
+     * @param requests
+     */
     public void importRoslinyIntoDatabase(List<RoslinaRequest> requests) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();

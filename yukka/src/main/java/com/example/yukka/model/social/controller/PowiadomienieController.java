@@ -31,6 +31,11 @@ import lombok.RequiredArgsConstructor;
 public class PowiadomienieController {
     private final PowiadomienieService powiadomienieService;
 
+    
+    /** 
+     * @param connectedUser
+     * @return ResponseEntity<PageResponse<PowiadomienieResponse>>
+     */
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<PowiadomienieResponse>> getPowiadomienia(
         @RequestParam(name = "page", defaultValue = "0", required = false) int page,

@@ -48,6 +48,12 @@ public class Dzialka {
     private List<ZasadzonaNaReverse> zasadzoneRosliny;
     
 
+    
+    /** 
+     * @param x
+     * @param y
+     * @return ZasadzonaNaReverse
+     */
     // Customowa roslina
 
 

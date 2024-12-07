@@ -10,6 +10,10 @@ import jakarta.validation.ConstraintValidatorContext;
 public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, CharSequence>  {
     private List<String> acceptedValues;
 
+    
+    /** 
+     * @param annotation
+     */
     @Override
     public void initialize(ValueOfEnum annotation) {
         acceptedValues = Stream.of(annotation.enumClass().getEnumConstants())

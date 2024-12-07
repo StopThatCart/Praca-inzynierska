@@ -59,6 +59,11 @@ public class PowiadomienieService {
     @Value("${powiadomienia.obraz.default.name}")
     private String powiadomienieAvatar;
 
+    
+    /** 
+     * @param connectedUser
+     * @return Integer
+     */
     @Transactional(readOnly = true)
     public Integer getNieprzeczytaneCountOfUzytkownik(Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());

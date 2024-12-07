@@ -111,6 +111,10 @@ public class LeMvcTest {
         }
     }
 
+    
+    /** 
+     * @throws Exception
+     */
     @Test
     public void testGetCurrentUser() throws Exception {
         authentication = Mockito.mock(Authentication.class);

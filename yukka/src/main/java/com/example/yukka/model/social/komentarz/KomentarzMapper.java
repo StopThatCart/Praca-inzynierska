@@ -18,6 +18,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KomentarzMapper {
     private final CommonMapperService commonMapperService;
+    
+    /** 
+     * @param post
+     * @return KomentarzRequest
+     */
     public KomentarzRequest toKomentarzRequest(Komentarz post) {
         return KomentarzRequest.builder()
             .opis(post.getOpis())

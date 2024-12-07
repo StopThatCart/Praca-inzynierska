@@ -25,7 +25,6 @@ import static com.example.yukka.handler.YukkaErrorCodes.BAD_CREDENTIALS;
 import static com.example.yukka.handler.YukkaErrorCodes.BLOCKED_UZYTKOWNIK;
 import static com.example.yukka.handler.YukkaErrorCodes.ENTITY_NOT_FOUND;
 import static com.example.yukka.handler.YukkaErrorCodes.FORBIDDEN_EXCEPTION;
-
 import com.example.yukka.handler.exceptions.BannedUzytkownikException;
 import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
 import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
@@ -37,6 +36,12 @@ import jakarta.mail.MessagingException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    
+    /** 
+     * @param ex
+     * @param request
+     * @return ResponseEntity<?>
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
         return ResponseEntity

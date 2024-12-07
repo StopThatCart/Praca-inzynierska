@@ -35,6 +35,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UzytkownikRoslinaController {
     private final UzytkownikRoslinaService uzytkownikRoslinaService;
+  
+  /** 
+   * @param connectedUser
+   * @return ResponseEntity<PageResponse<RoslinaResponse>>
+   */
   //  private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
 
     @PostMapping(value = "/szukaj", produces="application/json")

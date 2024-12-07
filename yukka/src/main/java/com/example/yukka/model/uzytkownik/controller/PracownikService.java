@@ -34,6 +34,12 @@ public class PracownikService {
     @Value("${application.file.uploads.photos-output-path}")
     String fileUploadPath;
 
+    
+    /** 
+     * @param nazwa
+     * @param currentUser
+     * @return Boolean
+     */
     public Boolean unbanUzytkownik(String nazwa, Authentication currentUser) {
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
 

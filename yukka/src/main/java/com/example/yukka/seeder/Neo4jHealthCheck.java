@@ -72,6 +72,10 @@ public class Neo4jHealthCheck {
         log.info("Wyczyszczono bazę danych.");
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean checkIfDatabaseIsPopulated() {
         Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
         Neo4jClient client = Neo4jClient.create(driver);

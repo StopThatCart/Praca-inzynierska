@@ -31,6 +31,11 @@ import lombok.RequiredArgsConstructor;
 public class RoslinaMapper {
     private final FileUtils fileUtils;
 
+    
+    /** 
+     * @param ogrody
+     * @return PageResponse<OgrodResponse>
+     */
     public PageResponse<OgrodResponse> ogrodResponsetoPageResponse(Page<Ogrod> ogrody) {
         List<OgrodResponse> postyResponse = ogrody.stream()
                 .map(this::toOgrodResponse)

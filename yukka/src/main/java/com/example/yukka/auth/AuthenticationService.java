@@ -38,6 +38,46 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Klasa serwisowa do obsługi uwierzytelniania i rejestracji użytkowników.
+ * Klasa ta zapewnia metody do rejestracji użytkowników, uwierzytelniania, odświeżania tokenów,
+ * aktywacji konta, resetowania hasła oraz zmiany adresu e-mail.
+ * 
+ * Zależności:
+ * <ul>
+ *   <li><strong>UzytkownikRepository</strong>: Repozytorium danych użytkowników.</li>
+ *   <li><strong>UzytkownikService</strong>: Serwis do operacji związanych z użytkownikami.</li>
+ *   <li><strong>PasswordEncoder</strong>: Koder haseł użytkowników.</li>
+ *   <li><strong>JwtService</strong>: Serwis do obsługi tokenów JWT.</li>
+ *   <li><strong>EmailService</strong>: Serwis do wysyłania e-maili.</li>
+ *   <li><strong>TokenRepository</strong>: Repozytorium danych tokenów.</li>
+ *   <li><strong>Neo4JAuthenticationProvider</strong>: Niestandardowy dostawca uwierzytelniania.</li>
+ * </ul>
+ * 
+ * Konfiguracja:
+ * <ul>
+ *   <li><strong>defaultAvatarObrazName</strong>: Domyślna nazwa obrazu awatara dla nowych użytkowników.</li>
+ * </ul>
+ * 
+ * Metody:
+ * <ul>
+ *   <li><strong>register(RegistrationRequest request)</strong>: Rejestruje nowego użytkownika i wysyła e-mail weryfikacyjny.</li>
+ *   <li><strong>authenticate(AuthRequest request)</strong>: Uwierzytelnia użytkownika i zwraca odpowiedź uwierzytelniającą z tokenem JWT.</li>
+ *   <li><strong>refreshToken(String token)</strong>: Odświeża wygasły token JWT i zwraca nową odpowiedź uwierzytelniającą.</li>
+ *   <li><strong>activateAccount(String token)</strong>: Aktywuje konto użytkownika za pomocą podanego tokena.</li>
+ *   <li><strong>sendResetPasswordEmail(String email)</strong>: Wysyła e-mail resetowania hasła do użytkownika.</li>
+ *   <li><strong>changePassword(HasloRequest request)</strong>: Zmienia hasło użytkownika za pomocą podanego tokena.</li>
+ *   <li><strong>changeEmail(String token)</strong>: Zmienia adres e-mail użytkownika za pomocą podanego tokena.</li>
+ * </ul>
+ * 
+ * Wyjątki:
+ * <ul>
+ *   <li><strong>IllegalArgumentException</strong>: Rzucany, gdy podano nieprawidłowy argument.</li>
+ *   <li><strong>EntityNotFoundException</strong>: Rzucany, gdy nie znaleziono encji w repozytorium.</li>
+ *   <li><strong>EntityAlreadyExistsException</strong>: Rzucany, gdy encja już istnieje w repozytorium.</li>
+ *   <li><strong>MessagingException</strong>: Rzucany, gdy wystąpił błąd podczas wysyłania e-maila.</li>
+ * </ul>
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -57,6 +97,14 @@ public class AuthenticationService {
     @Value("${uzytkownik.obraz.default.name}")
     private  String defaultAvatarObrazName;
 
+    
+    /**
+     * Rejestruje nowego użytkownika na podstawie podanych danych rejestracyjnych.
+     *
+     * @param request obiekt zawierający dane rejestracyjne użytkownika
+     * @throws MessagingException jeśli wystąpi problem z wysłaniem wiadomości e-mail
+     * @throws IllegalArgumentException jeśli użytkownik o podanej nazwie lub adresie e-mail już istnieje i jest aktywny
+     */
     public void register(RegistrationRequest request)  throws MessagingException {
         log.info("Rejestracja użytkownika: " + request.getNazwa());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.checkIfUzytkownikExists(request.getNazwa(), request.getEmail());
@@ -81,6 +129,12 @@ public class AuthenticationService {
         emailService.sendValidationEmail(uzyt, EmailTemplateName.AKTYWACJA_KONTA);
     }
 
+    /**
+     * Autoryzuje użytkownika na podstawie podanych danych uwierzytelniających.
+     *
+     * @param request obiekt zawierający dane uwierzytelniające użytkownika (email i hasło)
+     * @return obiekt AuthenticationResponse zawierający wygenerowany token JWT
+     */
     public AuthenticationResponse authenticate(AuthRequest request) {
         log.info("Logowanie użytkownika: " + request.getEmail());
 
@@ -104,6 +158,13 @@ public class AuthenticationService {
                 .build();
     }
 
+    /**
+     * Odświeża token JWT, jeśli nie wygasł.
+     *
+     * @param token token JWT do odświeżenia
+     * @return obiekt AuthenticationResponse zawierający nowy token JWT
+     * @throws IllegalArgumentException jeśli token JWT wygasł
+     */
     public AuthenticationResponse refreshToken(String token) {
     if (jwtService.isTokenExpired(token)) {
         throw new IllegalArgumentException("Token JWT wygasł.");
@@ -116,7 +177,11 @@ public class AuthenticationService {
             .build();
     }
 
-
+    /**
+     * Tworzy unikalny identyfikator użytkownika.
+     *
+     * @return unikalny identyfikator użytkownika
+     */
     String createUzytkownikId() {
         String resultId = UUID.randomUUID().toString();
         do { 
@@ -129,6 +194,13 @@ public class AuthenticationService {
         return resultId;
     }
 
+    /**
+     * Aktywuje konto użytkownika za pomocą podanego tokenu.
+     *
+     * @param token token aktywacyjny
+     * @throws MessagingException jeśli wystąpi problem z wysłaniem wiadomości e-mail
+     * @throws IllegalArgumentException jeśli token jest nieprawidłowy, wygasł lub konto zostało już aktywowane
+     */
     @Transactional
     public void activateAccount(String token) throws MessagingException {
         log.info("Aktywacja konta tokenem: " + token);
@@ -154,16 +226,28 @@ public class AuthenticationService {
         tokenRepository.validate(token, LocalDateTime.now());
     }
 
-
-    public void sendResetHasloEmail(String email) throws MessagingException {
+    /**
+     * Wysyła e-mail resetowania hasła do użytkownika.
+     *
+     * @param email adres e-mail użytkownika
+     * @throws MessagingException jeśli wystąpi problem z wysłaniem wiadomości e-mail
+     */
+    public void sendResetPasswordEmail(String email) throws MessagingException {
         log.info("Wysyłanie e-maila resetowania hasła do: " + email);
         var uzyt = uzytkownikRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika z podanym adresem email"));
         emailService.sendValidationEmail(uzyt, EmailTemplateName.RESET_HASLO);
     }
 
+    /**
+     * Zmienia hasło użytkownika za pomocą podanego tokenu.
+     *
+     * @param request obiekt zawierający token resetowania hasła i nowe hasło
+     * @throws MessagingException jeśli wystąpi problem z wysłaniem wiadomości e-mail
+     * @throws IllegalArgumentException jeśli token jest nieprawidłowy, wygasł lub hasło jest takie samo jak stare hasło
+     */
     @Transactional
-    public void changeHaslo(HasloRequest request) throws MessagingException {
+    public void changePassword(HasloRequest request) throws MessagingException {
         log.info("Zmiana hasła tokenem: " + request.getToken());
         Token savedToken = tokenRepository.findByToken(request.getToken())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono tokenu aktywacyjnego"));
@@ -188,6 +272,13 @@ public class AuthenticationService {
         //tokenRepository.removeToken(uzyt.getEmail(), request.getToken());
     }
 
+    /**
+     * Zmienia adres e-mail użytkownika za pomocą podanego tokenu.
+     *
+     * @param token token aktywacyjny
+     * @throws MessagingException jeśli wystąpi problem z wysłaniem wiadomości e-mail
+     * @throws IllegalArgumentException jeśli token jest nieprawidłowy, wygasł lub adres e-mail jest już zajęty
+     */
     public void changeEmail(String token) throws MessagingException {
         log.info("Zmiana adresu e-mail tokenem: " + token);
         Token savedToken = tokenRepository.findByToken(token, EmailTemplateName.ZMIANA_EMAIL.getName())

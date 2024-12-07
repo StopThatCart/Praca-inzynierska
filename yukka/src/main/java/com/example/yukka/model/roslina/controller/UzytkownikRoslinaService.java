@@ -42,6 +42,11 @@ public class UzytkownikRoslinaService {
     @SuppressWarnings("unused")
     private final CommonMapperService commonMapperService;
 
+    
+    /** 
+     * @param roslinaId
+     * @return Optional<Roslina>
+     */
     public Optional<Roslina> findByRoslinaId(String roslinaId) {
         return uzytkownikRoslinaRepository.findByRoslinaIdWithRelations(roslinaId);
     }

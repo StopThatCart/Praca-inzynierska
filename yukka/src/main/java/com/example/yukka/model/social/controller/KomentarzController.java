@@ -34,6 +34,11 @@ public class KomentarzController {
     private final KomentarzService komentarzService;
     
 
+    
+    /** 
+     * @param komentarzId
+     * @return ResponseEntity<KomentarzResponse>
+     */
     @GetMapping(value = "/{komentarz-id}", produces="application/json")
     public ResponseEntity<KomentarzResponse> findKomentarzById(@PathVariable("komentarz-id") String komentarzId) {
         

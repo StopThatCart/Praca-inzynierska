@@ -78,6 +78,10 @@ public class Komentarz extends Oceniany {
     @Relationship(type = "SKOMENTOWAL", direction = Relationship.Direction.INCOMING)
     private Uzytkownik uzytkownik;
 
+    
+    /** 
+     * @return String
+     */
     @Override
     public String toString() {
         return "Komentarz{" +

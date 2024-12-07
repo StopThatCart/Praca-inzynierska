@@ -53,6 +53,10 @@ public class RozmowaPrywatna {
     @Relationship(type = "MA_WIADOMOSC", direction = Relationship.Direction.OUTGOING)
     private List<Komentarz> wiadomosci;
 
+    
+    /** 
+     * @return String
+     */
     @Override
     public String toString() {
         List<String> nazwyUzytkownikow = uzytkownicy.stream()

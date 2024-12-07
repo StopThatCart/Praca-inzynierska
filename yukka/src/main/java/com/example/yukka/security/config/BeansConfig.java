@@ -12,6 +12,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BeansConfig {
     
+ 
+ /** 
+  * @return PasswordEncoder
+  */
  /* 
     private final UserDetailsService userDetailsService;
 

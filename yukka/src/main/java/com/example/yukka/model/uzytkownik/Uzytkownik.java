@@ -135,6 +135,10 @@ public class Uzytkownik implements UserDetails, Principal{
         this.labels = List.of(label);
     }
 
+    
+    /** 
+     * @return String
+     */
     @Override
     public String getName() {
         return nazwa;

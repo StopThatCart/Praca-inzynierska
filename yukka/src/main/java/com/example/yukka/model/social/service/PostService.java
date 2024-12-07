@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +25,6 @@ import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
 import com.example.yukka.model.social.post.PostMapper;
 import com.example.yukka.model.social.post.PostResponse;
-
 import com.example.yukka.model.social.repository.PostRepository;
 import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
@@ -51,32 +49,17 @@ public class PostService {
     private final FileUtils fileUtils;
     private final PostMapper postMapper;
 
+    
+    /** 
+     * @param postId
+     * @return PostResponse
+     */
     @Transactional(readOnly = true)
     public PostResponse findByPostId(String postId) {
-        Optional<Post> postOpt = postRepository.findPostByPostId(postId);
-        Post post = postOpt.orElseThrow(
-            () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId)
-        );
+        Post post = postRepository.findPostByPostId(postId)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
 
-        // System.out.println("\n" + post.getAutor().getNazwa());
-        // System.out.println("Rozmiar komentarzy: " + post.getKomentarze().size());
-        // System.out.println("Rozmiar komentarzyWPoscie: " + post.getKomentarzeWPoscie().size());
-
-        // for (Komentarz kom : post.getKomentarze()) {
-        //     System.out.println("\nKomentarz: " + kom.getKomentarzId());
-        //     System.out.println("Ilość oceniających: " + kom.getOcenil().size());
-
-        //     System.out.println("Rozmiar odpowiedzi: " + kom.getOdpowiedzi().size());
-
-        //     for (Komentarz odp : kom.getOdpowiedzi()) {
-        //         System.out.println("Odpowiedź: " + odp.getKomentarzId());
-        //         System.out.println("Ilość oceniających: " + odp.getOcenil().size());
-        //     }
-        // }
-
-        return postOpt
-                .map(postMapper::toPostResponse)
-                .orElseThrow();
+        return postMapper.toPostResponse(post);
     }
 
     @Transactional(readOnly = true)

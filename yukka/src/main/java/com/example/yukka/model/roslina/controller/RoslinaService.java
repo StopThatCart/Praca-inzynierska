@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -59,6 +58,12 @@ public class RoslinaService {
     @Value("${roslina.obraz.default.name}")
     private String defaultRoslinaObrazName;
 
+    
+    /** 
+     * @param page
+     * @param size
+     * @return PageResponse<RoslinaResponse>
+     */
     @Transactional(readOnly = true)
     public PageResponse<RoslinaResponse> findAllRosliny(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").descending());
@@ -108,12 +113,12 @@ public class RoslinaService {
         );
     }
 
-    @Transactional(readOnly = true)
-    public RoslinaResponse findById(Long id) {
-        Roslina ros = roslinaRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id: " + id));
-        return roslinaMapper.toRoslinaResponse(ros);
-    }
+    // @Transactional(readOnly = true)
+    // public RoslinaResponse findById(Long id) {
+    //     Roslina ros = roslinaRepository.findById(id)
+    //         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id: " + id));
+    //     return roslinaMapper.toRoslinaResponse(ros);
+    // }
 
     @Transactional(readOnly = true)
     public RoslinaResponse findByRoslinaId(String id) {
