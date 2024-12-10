@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:yukka-ui": "node dist/yukka-ui/server/server.mjs",
-    "api-gen": "ng-openapi-gen --input ./src/openApi/openApi.json --output ./src/app/services"
+    "api-gen": "ng-openapi-gen --input ./src/openApi/openApi.json --output ./src/app/services  && node ./src/openApi/exportChanger.js"
   },
   "private": true,
   "dependencies": {
