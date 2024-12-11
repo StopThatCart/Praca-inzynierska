@@ -77,6 +77,13 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         List<Dzialka> getPozycjeInDzialki(@Param("nazwa") String nazwa);
 
         @Query("""
+        MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})
+        SET d.nazwa = $nazwa
+        RETURN d
+                """)
+        Dzialka renameDzialka(@Param("email") String email, @Param("numerDzialki") int numerDzialki, @Param("nazwa") String nazwa);
+
+        @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->
               (:Ogrod)-[:MA_DZIALKE]->
               (d:Dzialka{numer: $numerDzialki})

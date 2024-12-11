@@ -178,6 +178,31 @@ public class DzialkaService {
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono działki " + numer + " dla użytkownika " + uzyt.getNazwa()));
     }
 
+
+    /**
+     * Zmienia nazwę działki o podanym numerze.
+     *
+     * @param numer numer działki, której nazwa ma zostać zmieniona
+     * @param nazwa nowa nazwa działki
+     * @param connectedUser aktualnie zalogowany użytkownik
+     * @return nowa nazwa działki
+     * @throws IllegalArgumentException jeśli nazwa działki jest pusta lub dłuższa niż 150 znaków
+     */
+    public String renameDzialka(int numer, String nazwa, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+
+        if(nazwa == null || nazwa.isBlank()) {
+            throw new IllegalArgumentException("Nazwa działki nie może być pusta");
+        } else if (nazwa.length() > 150) {
+            throw new IllegalArgumentException("Nazwa działki nie może być dłuższa niż 150 znaków");
+        }
+
+        Dzialka dzialka = getDzialkaByNumer(numer, uzyt);
+        dzialka = dzialkaRepository.renameDzialka(uzyt.getEmail(), numer, nazwa);
+
+        return dzialka.getNazwa();
+    }
+
     /**
      * Metoda zapisuje roślinę na działce użytkownika.
      *

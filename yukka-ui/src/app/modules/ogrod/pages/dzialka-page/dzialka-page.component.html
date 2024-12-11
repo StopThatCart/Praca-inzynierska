@@ -3,7 +3,12 @@
   <!-- cdkDropList cdkScrollable -->
   <div class="row mb-5 pt-1">
     <div class="">
-        <h3 class="text-uppercase text-primary"> {{ dzialka.nazwa }} </h3>
+        <app-rename-icon
+        [nazwa]="dzialka.nazwa"
+        [numer]="dzialka.numer"
+        [zmieniany]="RenameIconModes.DZIALKA"
+        (nazwaEdit)="onNazwaEdit($event)"
+        ></app-rename-icon>
 
         <div *ngIf="editMode !== DzialkaModes.BrakEdycji"
         class="mb-2">
@@ -24,7 +29,6 @@
         </div>
 
         <div>
-          <h3 class="text-primary">Aktualny stan: <span class="text-danger">{{ mode }}</span></h3>
           <app-scale-slider
           [(scale)]="scale"
           [disabled]="isSaving"

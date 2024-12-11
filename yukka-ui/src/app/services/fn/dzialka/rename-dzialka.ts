@@ -7,18 +7,20 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface Remove$Params {
-  'uzytkownik-nazwa': string;
+export interface RenameDzialka$Params {
+  numer: number;
+  nazwa: string;
 }
 
-export function remove(http: HttpClient, rootUrl: string, params: Remove$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, remove.PATH, 'delete');
+export function renameDzialka(http: HttpClient, rootUrl: string, params: RenameDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  const rb = new RequestBuilder(rootUrl, renameDzialka.PATH, 'patch');
   if (params) {
-    rb.path('uzytkownik-nazwa', params['uzytkownik-nazwa'], {});
+    rb.path('numer', params.numer, {});
+    rb.path('nazwa', params.nazwa, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
@@ -27,4 +29,4 @@ export function remove(http: HttpClient, rootUrl: string, params: Remove$Params,
   );
 }
 
-remove.PATH = '/pracownicy/{uzytkownik-nazwa}';
+renameDzialka.PATH = '/dzialki/{numer}/{nazwa}';

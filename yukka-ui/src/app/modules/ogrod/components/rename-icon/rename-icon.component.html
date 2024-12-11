@@ -1,0 +1,47 @@
+<div>
+
+  <div style="max-width: 80%; " *ngIf="zmieniany === RenameIconModes.DZIALKA; else ogrodNazwa">
+    <h3 class="text-primary wrap-text" *ngIf="!isEditing; else rename">
+      <span class="me-2" *ngIf="!isEditing">{{ nazwa }}</span>
+      <i *ngIf="isCurrentUzytkownik() && !isEditing"
+      (click)="isEditing = true; oldNazwa = nazwa;"
+      class="fa fa-edit fa-sm text-secondary"
+      style="cursor: pointer;"></i>
+    </h3>
+  </div>
+
+  <ng-template #ogrodNazwa>
+    <h2 class="text-center text-primary wrap-text" *ngIf="!isEditing; else rename">
+      <span class="me-2" *ngIf="!isEditing">{{ nazwa }}</span>
+      <i *ngIf="isCurrentUzytkownik() && !isEditing"
+      (click)="isEditing = true; oldNazwa = nazwa;"
+      class="fa fa-edit fa-sm text-secondary"
+      style="cursor: pointer;"></i>
+    </h2>
+  </ng-template>
+
+  <ng-template #rename>
+    <h5 class="text-uppercase text-primary">Zmień nazwę</h5>
+    <form class="form">
+      <app-error-msg [errorMsg]="errorMsg"></app-error-msg>
+      <input *ngIf="isEditing"
+      class="form-control text-black mb-2"
+      name="nazwa"
+      [(ngModel)]="nazwa" />
+
+      <div class="btn-group">
+        <button class="btn btn-warning" (click)="onCancel()">Anuluj</button>
+        <button class="btn btn-primary" (click)="onSave()">Zapisz</button>
+      </div>
+    </form>
+
+
+  </ng-template>
+
+</div>
+
+
+
+
+
+

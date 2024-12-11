@@ -117,6 +117,22 @@ public class DzialkaController {
         return ResponseEntity.ok(dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa, connectedUser));
     }
 
+
+
+    /**
+     * Zmienia nazwę działki o podanym numerze.
+     *
+     * @param numer numer działki, której nazwa ma zostać zmieniona
+     * @param nazwa nowa nazwa dla działki
+     * @param connectedUser uwierzytelniony użytkownik wykonujący operację
+     * @return ResponseEntity z kodem statusu HTTP 202 (Accepted) w przypadku powodzenia
+     */
+    @PatchMapping(value = "/{numer}/{nazwa}", produces="application/json")
+    public ResponseEntity<String> renameDzialka(@PathVariable int numer, @PathVariable String nazwa, Authentication connectedUser) {
+        dzialkaService.renameDzialka(numer, nazwa, connectedUser);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
     /**
      * Metoda obsługująca żądanie POST do zapisania rośliny do działki.
      *

@@ -68,11 +68,22 @@ public class OgrodService {
 
 
 
+    /**
+     * Ustawia nazwę ogrodu dla zalogowanego użytkownika.
+     *
+     * @param ogrodNazwa nowa nazwa ogrodu
+     * @param connectedUser aktualnie zalogowany użytkownik
+     * @return zaktualizowana nazwa ogrodu
+     * @throws IllegalArgumentException jeśli nazwa ogrodu jest pusta lub przekracza 150 znaków
+     * @throws EntityNotFoundException jeśli nie znaleziono ogrodu dla użytkownika
+     */
     public String setOgrodNazwa(String ogrodNazwa, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
 
         if(ogrodNazwa.isEmpty() || ogrodNazwa.isBlank()) {
             throw new IllegalArgumentException("Nazwa ogrodu nie może być pusta");
+        } else if(ogrodNazwa.length() > 150) {
+            throw new IllegalArgumentException("Nazwa ogrodu nie może być dłuższa niż 150 znaków");
         }
 
         Ogrod ogrod = ogrodRepository.setOgrodNazwa(uzyt.getNazwa(), ogrodNazwa)

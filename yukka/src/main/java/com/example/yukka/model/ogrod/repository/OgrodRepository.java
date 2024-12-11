@@ -55,7 +55,7 @@ public interface OgrodRepository  extends Neo4jRepository<Ogrod, Long> {
     @Query("""
         MATCH path = (u:Uzytkownik{nazwa: $uzytkownikNazwa})-[:MA_OGROD]->(ogrod:Ogrod)
         SET ogrod.nazwa = $ogrodNazwa
-        RETURN ogrod, collect(nodes(path)), collect(relationships(path))
+        RETURN ogrod
         """)
     Optional<Ogrod> setOgrodNazwa(@Param("uzytkownikNazwa") String uzytkownikNazwa, @Param("ogrodNazwa") String ogrodNazwa);
 

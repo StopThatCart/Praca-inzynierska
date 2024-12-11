@@ -15,7 +15,6 @@ import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.ogrod.OgrodResponse;
 import com.example.yukka.model.ogrod.service.OgrodService;
 
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -71,10 +70,11 @@ public class OgrodController {
      * @param connectedUser uwierzytelniony użytkownik wykonujący żądanie
      * @return odpowiedź HTTP z nową nazwą ogrodu w formacie JSON
      */
-    @PatchMapping(value = "/{ogrod-nazwa}", produces="application/json")
-    public ResponseEntity<String> setOgrodNazwa(@PathVariable("ogrod-nazwa") String ogrodNazwa, 
+    @PatchMapping(value = "/{nazwa}", produces="application/json")
+    public ResponseEntity<String> setOgrodNazwa(@PathVariable("nazwa") String ogrodNazwa, 
     Authentication connectedUser) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ogrodService.setOgrodNazwa(ogrodNazwa, connectedUser));
+        ogrodService.setOgrodNazwa(ogrodNazwa, connectedUser);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
 }

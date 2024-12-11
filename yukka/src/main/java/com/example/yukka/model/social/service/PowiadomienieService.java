@@ -7,8 +7,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +23,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.yukka.YukkaApplication;
 import com.example.yukka.auth.requests.BanRequest;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
@@ -38,7 +41,6 @@ import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,6 +62,7 @@ public class PowiadomienieService {
     @Value("${powiadomienia.obraz.default.name}")
     private String powiadomienieAvatar;
 
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     
     /**
      * Metoda zwraca liczbę nieprzeczytanych powiadomień dla zalogowanego użytkownika.
@@ -102,20 +105,11 @@ public class PowiadomienieService {
     @Scheduled(cron = "0 0 0 1 * ?")  // Na początku każdego miesiąca
     //@Scheduled(fixedDelay=2000L)  // Test co 2 sekundy
     public void checkOkresyPowiadomienia() {
-        while (!YukkaApplication.isApplicationReady()) {
-            log.info("Aplikacja nie jest gotowa do sprawdzania okresów powiadomień, czekanie 5 sekund...");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return;
-            }
-        }
+        log.info("Sprawdzanie okresów powiadomień");
         if (LocalDate.now().getDayOfMonth() != 1) {
             log.info("Dzisiaj nie jest pierwszy dzień miesiąca, pomijanie sprawdzania okresów powiadomień");
             return;
         }
-        System.out.println("Sprawdzanie okresów powiadomień");
         List<Uzytkownik> uzytkownicy = uzytkownikRepository.getUzytkownicyWithRoslinyInDzialki();
         if(uzytkownicy.isEmpty()) return;
         
@@ -143,7 +137,8 @@ public class PowiadomienieService {
      * <p>Metoda sprawdzająca okresy powiadomień dla użytkowników.</p>
      * <p>Sprawdza okresy owocowania i kwitnienia roślin w działkach użytkowników i tworzy powiadomienia o tych okresach.</p>
     */
-    @PostConstruct
+   // @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void checkOkresyPowiadomieniaOnStartup() {
         checkOkresyPowiadomienia();
     }
@@ -154,16 +149,6 @@ public class PowiadomienieService {
     @Scheduled(cron = "0 0 0 * * ?")  // Codziennie
     public void checkUnban() {
         log.info("Sprawdzanie zbanowanych użytkowników");
-        while (!YukkaApplication.isApplicationReady()) {
-            log.info("Aplikacja nie jest gotowa do sprawdzania zbanowanych użytkowników, czekanie 5 sekund...");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return;
-            }
-        }
-        System.out.println("Sprawdzanie zbanowanych użytkowników");
         List<Uzytkownik> uzytkownicy = uzytkownikRepository.getZbanowaniUzytkownicy();
         if(uzytkownicy.isEmpty()) return;
         
@@ -175,10 +160,11 @@ public class PowiadomienieService {
         }
     }
 
+    
     /**
      * Metoda sprawdzająca codziennie, którzy użytkownicy powinni zostać odbanowani.
      */
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void checkUnbanOnStartup() {
         checkUnban();
     }

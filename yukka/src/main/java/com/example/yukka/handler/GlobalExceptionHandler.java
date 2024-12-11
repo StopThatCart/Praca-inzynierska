@@ -66,11 +66,13 @@ public class GlobalExceptionHandler {
          * @return obiekt ResponseEntity z kodem statusu BAD_REQUEST oraz treścią zawierającą wiadomość wyjątku
          */
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException exp, WebRequest request) {
         return ResponseEntity
                 .status(BAD_REQUEST)
                 .body(
-                        ex.getMessage()
+                        ExceptionResponse.builder()
+                                .error(exp.getMessage())
+                                .build()
                 );
     }
 

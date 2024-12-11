@@ -6,11 +6,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OgrodResponse } from '../../../../services/models';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
+import { RenameIconComponent } from "../../components/rename-icon/rename-icon.component";
+import { RenameIconModes } from '../../components/rename-icon/rename-icon-mode';
 
 @Component({
   selector: 'app-dzialki-list',
   standalone: true,
-  imports: [CommonModule, ErrorMsgComponent],
+  imports: [CommonModule, ErrorMsgComponent, RenameIconComponent],
   templateUrl: './dzialki-list.component.html',
   styleUrl: './dzialki-list.component.css'
 })
@@ -20,6 +22,8 @@ export class DzialkiListComponent implements OnInit {
   uzytNazwa: string | undefined;
 
   errorMsg: Array<string> = [];
+  RenameIconModes = RenameIconModes;
+
   constructor(private ogrodService : OgrodService,
     private dzialkaService: DzialkaService,
     private router: Router,
@@ -62,6 +66,10 @@ export class DzialkiListComponent implements OnInit {
           this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
         }
       });
+  }
+
+  onNazwaEdit(nazwa: String) {
+    if(nazwa) this.ogrodResponse.nazwa = nazwa.toString();
   }
 
   goToDzialkaPage(numer: number | undefined) {

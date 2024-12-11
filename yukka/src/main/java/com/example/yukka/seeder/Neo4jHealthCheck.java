@@ -2,6 +2,8 @@ package com.example.yukka.seeder;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Session;
+import org.neo4j.driver.SessionConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.stereotype.Service;
@@ -52,12 +54,7 @@ public class Neo4jHealthCheck {
         Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
         Neo4jClient client = Neo4jClient.create(driver);
         String dropQuery = "DROP DATABASE $databaseName IF EXISTS";
-        String createQuery = """
-            CREATE DATABASE $databaseName IF NOT EXISTS;
-            CREATE CONSTRAINT unikalnaLacinskaNazwa FOR (ros:Roslina) REQUIRE ros.nazwaLacinska IS UNIQUE;
-            CREATE CONSTRAINT unikalnyEmail FOR (u:Uzytkownik) REQUIRE u.email IS UNIQUE;
-            CREATE CONSTRAINT unikalnaNazwaUzytkownika FOR (u:Uzytkownik) REQUIRE u.nazwa IS UNIQUE;
-                """;
+        String createQuery = "CREATE DATABASE $databaseName IF NOT EXISTS";
 
         client
         .query(dropQuery)
@@ -80,6 +77,46 @@ public class Neo4jHealthCheck {
         log.info("Wyczyszczono bazę danych.");
     }
 
+    /**
+     * Metoda instalująca ograniczenia w bazie danych Neo4j.
+     * Tworzy unikalne ograniczenia dla różnych właściwości węzłów takich jak:
+     * - nazwa łacińska rośliny
+     * - email użytkownika
+     * - nazwa użytkownika
+     * - ID rośliny
+     * - ID użytkownika
+     * - ID posta
+     * - ID komentarza
+     * 
+     * @throws Exception w przypadku błędu podczas instalacji ograniczeń
+     */
+    @SuppressWarnings("deprecation")
+    public void installConstraints() {
+        log.info("Instalacja ograniczeń...");
+        Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
+        String[] constraintQueries = {
+            "CREATE CONSTRAINT unikalnaLacinskaNazwa FOR (ros:Roslina) REQUIRE ros.nazwaLacinska IS UNIQUE",
+            "CREATE CONSTRAINT unikalnyEmail FOR (u:Uzytkownik) REQUIRE u.email IS UNIQUE",
+            "CREATE CONSTRAINT unikalnaNazwaUzytkownika FOR (u:Uzytkownik) REQUIRE u.nazwa IS UNIQUE",
+            "CREATE CONSTRAINT unikalneRoslinaId FOR (ros:Roslina) REQUIRE ros.roslinaId IS UNIQUE",
+            "CREATE CONSTRAINT unikalneUzytkownikId FOR (u:Uzytkownik) REQUIRE u.uzytId IS UNIQUE",
+            "CREATE CONSTRAINT unikalnePostId FOR (p:Post) REQUIRE p.postId IS UNIQUE",
+            "CREATE CONSTRAINT unikalneKomentarzId FOR (k:Komentarz) REQUIRE k.komentarzId IS UNIQUE",
+        };
+
+        try (Session session = driver.session(SessionConfig.forDatabase("test"))) {
+            session.writeTransaction(tx -> {
+                for (String query : constraintQueries) {
+                    tx.run(query);
+                }
+                return null;
+            });
+        } catch (Exception e) {
+            log.error("Błąd podczas instalacji ograniczeń", e);
+        } finally {
+            driver.close();
+        }
+    }
 
     /**
      * Sprawdza, czy baza danych jest wypełniona.

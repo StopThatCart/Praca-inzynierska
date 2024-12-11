@@ -27,6 +27,8 @@ import { getDzialkiOfUzytkownik } from '../fn/dzialka/get-dzialki-of-uzytkownik'
 import { GetDzialkiOfUzytkownik$Params } from '../fn/dzialka/get-dzialki-of-uzytkownik';
 import { getPozycjeInDzialki } from '../fn/dzialka/get-pozycje-in-dzialki';
 import { GetPozycjeInDzialki$Params } from '../fn/dzialka/get-pozycje-in-dzialki';
+import { renameDzialka } from '../fn/dzialka/rename-dzialka';
+import { RenameDzialka$Params } from '../fn/dzialka/rename-dzialka';
 import { saveRoslinaToDzialka } from '../fn/dzialka/save-roslina-to-dzialka';
 import { SaveRoslinaToDzialka$Params } from '../fn/dzialka/save-roslina-to-dzialka';
 import { updateRoslinaKolorInDzialka } from '../fn/dzialka/update-roslina-kolor-in-dzialka';
@@ -92,6 +94,31 @@ export class DzialkaService extends BaseService {
    */
   deleteRoslinaFromDzialka(params: DeleteRoslinaFromDzialka$Params, context?: HttpContext): Observable<string> {
     return this.deleteRoslinaFromDzialka$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
+    );
+  }
+
+  /** Path part for operation `renameDzialka()` */
+  static readonly RenameDzialkaPath = '/dzialki/{numer}/{nazwa}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `renameDzialka()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  renameDzialka$Response(params: RenameDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+    return renameDzialka(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `renameDzialka$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  renameDzialka(params: RenameDzialka$Params, context?: HttpContext): Observable<string> {
+    return this.renameDzialka$Response(params, context).pipe(
       map((r: StrictHttpResponse<string>): string => r.body)
     );
   }

@@ -82,8 +82,7 @@ public class RoslinaImporterService {
                 healthCheck.dropAndCreateDatabase(dbName);
                 List<RoslinaRequest> bep = parseCsvToRoslinaRequests(CSV_FILE, limit);
                 if (healthCheck.isItActuallyAvailable()) {
-                 //   System.out.println("Installing trigger");
-                  // healthCheck.installTriggers();
+                    healthCheck.installConstraints();
                     log.info("Importowanie roślin...");
                     importRoslinyIntoDatabase(bep);
                 }
@@ -135,7 +134,6 @@ public class RoslinaImporterService {
                 return;
             }
             roslinaService.saveSeededRoslina(request, file);
-           // roslinaService.save(request);
             number++;
         }
 

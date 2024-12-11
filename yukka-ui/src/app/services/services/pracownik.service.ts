@@ -81,7 +81,7 @@ export class PracownikService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  remove$Response(params: Remove$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  remove$Response(params: Remove$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
     return remove(this.http, this.rootUrl, params, context);
   }
 
@@ -91,9 +91,9 @@ export class PracownikService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  remove(params: Remove$Params, context?: HttpContext): Observable<void> {
+  remove(params: Remove$Params, context?: HttpContext): Observable<string> {
     return this.remove$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
+      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 

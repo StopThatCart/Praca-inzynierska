@@ -42,7 +42,13 @@ body { margin: 0;
   height: 100%;
 }
 
-
+.limit-to-3-lines {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 
 .komentarz-avatar {

@@ -9,8 +9,8 @@ export interface Komentarz {
   id?: number;
   komentarzId?: string;
   obraz?: string;
-  ocenyLubiButGood?: number;
-  ocenyNieLubiButGood?: number;
+  ocenyLubi?: number;
+  ocenyNieLubi?: number;
   odpowiadaKomentarzowi?: Komentarz;
   odpowiedzi?: Array<Komentarz>;
   opis?: string;

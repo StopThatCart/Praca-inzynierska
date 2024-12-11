@@ -8,13 +8,13 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface SetOgrodNazwa$Params {
-  'ogrod-nazwa': string;
+  nazwa: string;
 }
 
 export function setOgrodNazwa(http: HttpClient, rootUrl: string, params: SetOgrodNazwa$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
   const rb = new RequestBuilder(rootUrl, setOgrodNazwa.PATH, 'patch');
   if (params) {
-    rb.path('ogrod-nazwa', params['ogrod-nazwa'], {});
+    rb.path('nazwa', params.nazwa, {});
   }
 
   return http.request(
@@ -27,4 +27,4 @@ export function setOgrodNazwa(http: HttpClient, rootUrl: string, params: SetOgro
   );
 }
 
-setOgrodNazwa.PATH = '/ogrody/{ogrod-nazwa}';
+setOgrodNazwa.PATH = '/ogrody/{nazwa}';

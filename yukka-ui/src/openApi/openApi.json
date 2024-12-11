@@ -1510,7 +1510,7 @@
         }
       }
     },
-    "/ogrody/{ogrod-nazwa}": {
+    "/ogrody/{nazwa}": {
       "patch": {
         "tags": [
           "Ogród"
@@ -1518,7 +1518,7 @@
         "operationId": "setOgrodNazwa",
         "parameters": [
           {
-            "name": "ogrod-nazwa",
+            "name": "nazwa",
             "in": "path",
             "required": true,
             "schema": {
@@ -1629,6 +1629,45 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/KomentarzResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dzialki/{numer}/{nazwa}": {
+      "patch": {
+        "tags": [
+          "Dzialka"
+        ],
+        "operationId": "renameDzialka",
+        "parameters": [
+          {
+            "name": "numer",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "nazwa",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2703,7 +2742,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
@@ -2824,11 +2870,11 @@
           "wposcie": {
             "$ref": "#/components/schemas/Post"
           },
-          "ocenyLubiButGood": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubiButGood": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -2837,11 +2883,11 @@
       "Oceniany": {
         "type": "object",
         "properties": {
-          "ocenyLubiButGood": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubiButGood": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -2933,11 +2979,11 @@
               "$ref": "#/components/schemas/Komentarz"
             }
           },
-          "ocenyLubiButGood": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubiButGood": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3104,8 +3150,11 @@
           "name": {
             "type": "string"
           },
-          "password": {
-            "type": "string"
+          "authorities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedAuthority"
+            }
           },
           "admin": {
             "type": "boolean"
@@ -3119,11 +3168,8 @@
           "normalUzytkownik": {
             "type": "boolean"
           },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
+          "password": {
+            "type": "string"
           },
           "enabled": {
             "type": "boolean"
@@ -4256,11 +4302,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           }

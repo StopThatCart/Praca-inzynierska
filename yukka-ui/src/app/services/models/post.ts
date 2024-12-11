@@ -11,8 +11,8 @@ export interface Post {
   komentarzeWPoscie?: Array<Komentarz>;
   obraz?: string;
   ocenil?: Array<OcenilReverse>;
-  ocenyLubiButGood?: number;
-  ocenyNieLubiButGood?: number;
+  ocenyLubi?: number;
+  ocenyNieLubi?: number;
   opis?: string;
   postId?: string;
   tytul?: string;

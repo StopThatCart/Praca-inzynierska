@@ -25,7 +25,7 @@ export class OgrodService extends BaseService {
   }
 
   /** Path part for operation `setOgrodNazwa()` */
-  static readonly SetOgrodNazwaPath = '/ogrody/{ogrod-nazwa}';
+  static readonly SetOgrodNazwaPath = '/ogrody/{nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

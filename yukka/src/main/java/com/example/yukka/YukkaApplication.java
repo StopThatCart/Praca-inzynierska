@@ -25,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
-
 import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
@@ -34,7 +33,6 @@ import com.example.yukka.model.dzialka.service.DzialkaService;
 import com.example.yukka.model.enums.Wyswietlanie;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
-
 import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaRepository;
 import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
@@ -91,9 +89,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class YukkaApplication {
-	// Potrzebne żeby funkcje Scheduled nie działały przed załadowaniem aplikacji
-	private static boolean isApplicationReady = false;
-
 	@Value("${obraz.seed.path}")
     private String obrazSeedPath;
 
@@ -161,25 +156,15 @@ public class YukkaApplication {
 	 */
 	public static void main(String[] args) {
 		SpringApplication.run(YukkaApplication.class, args);
-       
-		// PythonPlantSeeder scriptRunner = context.getBean(PythonPlantSeeder.class);
-       // String scriptOutput = scriptRunner.runPythonScript();
-       // System.out.println(scriptOutput);
-	   isApplicationReady = true;
-
-
 	}
-
-	public static boolean isApplicationReady() {
-        return isApplicationReady;
-    }
 
 	@Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
-			//roslinaImporterService.seedRosliny();
-			// unseed();
-			// seed();
+		//	roslinaImporterService.seedRosliny();
+		//	unseed();
+		//	seed();
+			 
 		//roslinaSearchTest();
         };
     }

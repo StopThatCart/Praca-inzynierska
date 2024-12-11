@@ -16,15 +16,18 @@ import { OffcanvasRoslinaComponent } from "../../components/offcanvas-roslina/of
 import { DzialkaModes } from '../../models/dzialka-modes';
 import { DzialkaRoslinaRequest } from '../../../../services/models/dzialka-roslina-request';
 import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { RenameIconComponent } from "../../components/rename-icon/rename-icon.component";
+import { RenameIconModes } from '../../components/rename-icon/rename-icon-mode';
 
 @Component({
   selector: 'app-dzialka-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, PostCardComponent, LulekComponent, ScaleSliderComponent, OffcanvasRoslinaComponent],
+  imports: [CommonModule, FormsModule, PostCardComponent, LulekComponent, ScaleSliderComponent, OffcanvasRoslinaComponent, RenameIconComponent],
   templateUrl: './dzialka-page.component.html',
   styleUrl: './dzialka-page.component.css'
 })
 export class DzialkaPageComponent implements OnInit  {
+
   dzialka: DzialkaResponse = {};
   dzialkaBackup: DzialkaResponse = {};
 
@@ -66,6 +69,7 @@ export class DzialkaPageComponent implements OnInit  {
 
 
   DzialkaModes = DzialkaModes;
+  RenameIconModes = RenameIconModes;
 
   constructor(
     private route: ActivatedRoute,
@@ -255,6 +259,9 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
 
+  onNazwaEdit(nazwa: String) {
+    if(nazwa) this.dzialka.nazwa = nazwa.toString();
+  }
 
   onRoslinaDelete() {
     console.log('onRoslinaDelete');

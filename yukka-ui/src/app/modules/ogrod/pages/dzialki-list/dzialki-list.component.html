@@ -1,5 +1,11 @@
 <div class="container mt-5">
-  <h1 class="text-center text-primary">Nazwa Ogrodu</h1>
+
+  <app-rename-icon
+  [nazwa]="ogrodResponse.nazwa"
+  [zmieniany]="RenameIconModes.OGROD"
+  (nazwaEdit)="onNazwaEdit($event)">
+  </app-rename-icon>
+
   <app-error-msg [errorMsg]="errorMsg"></app-error-msg>
   <div class="d-flex overflow-auto mt-4 mb-2">
 
@@ -8,7 +14,7 @@
 
     class="card bg-secondary">
       <div class="card-body">
-        <h5 class="card-title">{{ dzialka.nazwa }}</h5>
+        <h5 class="card-title limit-to-3-lines">{{ dzialka.nazwa }}</h5>
         <h5 class="card-title">Nr: {{ dzialka.numer }}</h5>
         <p class="card-text">Liczba roślin: {{ dzialka.liczbaRoslin }}</p>
         <button (click)="goToDzialkaPage(dzialka?.numer)" class="btn btn-primary">Zobacz</button>
