@@ -158,14 +158,29 @@ public class YukkaApplication {
 		SpringApplication.run(YukkaApplication.class, args);
 	}
 
+	@Value("${spring.data.neo4j.seed-mode}")
+    private String seedMode;
+
+    @Value("${seed.database}")
+    private boolean seedDatabase;
+
+
+	/**
+	 * Metoda seedDatabase tworzy i zwraca CommandLineRunner, który jest uruchamiany przy starcie aplikacji.
+	 * 
+	 * @return CommandLineRunner, który loguje tryb seedowania i, jeśli jest włączone seedowanie bazy danych,
+	 *         wykonuje operacje seedowania i unseedowania. Na razie pomija rośliny, gdyż jest ich dużo.
+	 */
 	@Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
-		//	roslinaImporterService.seedRosliny();
-		//	unseed();
-		//	seed();
-			 
-		//roslinaSearchTest();
+			log.info("Seed mode: " + seedMode);
+			if (seedDatabase) {
+                log.info("Seedowanie bazy danych...");
+				// roslinaImporterService.seedRosliny();
+				unseed();
+				seed();
+            }
         };
     }
 	

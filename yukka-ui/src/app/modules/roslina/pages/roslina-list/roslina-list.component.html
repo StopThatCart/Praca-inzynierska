@@ -1,6 +1,6 @@
 <section>
   <div class="container">
-    <h2 class="text-uppercase text-center text-primary mt-3">Katalog RoŚlin</h2>
+    <h1 class="text-uppercase text-center text-primary mt-3">Katalog RoŚlin</h1>
     <div class="row">
       <div class="col"></div>
     </div>
@@ -12,11 +12,11 @@
     <div class="row w-100 justify-content-center align-items-center"
       style="background: var(--bs-primary-border-subtle);">
 
-      <div class="col d-flex justify-content-center align-items-center mx-auto">
+      <div class="col d-flex justify-content-center align-items-center mx-auto border border-2 border-secondary-subtle">
         <div class="vstack">
           <div class="d-flex justify-content-center align-items-center input-group p-4 ">
-            <input [(ngModel)]="request.nazwa" type="text" class="form-control rounded-start text-black" placeholder="Wyszukaj roślinę">
-            <input [(ngModel)]="request.nazwaLacinska" type="text" class="form-control rounded-start text-black" placeholder="Nazwa łacińska rośliny">
+            <input [(ngModel)]="request.nazwa" type="text" class="form-control rounded-start text-black" placeholder="Nazwa rośliny">
+            <input [(ngModel)]="request.nazwaLacinska" type="text" class="form-control text-black" placeholder="Nazwa łacińska rośliny">
             <button (click)="onSearch()" class="btn text-uppercase btn-primary input-group-append" type="button">
               <i class="fas fa-search" style="font-size: 1em; color: currentColor;"></i>
             </button>
@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="row gx-5 gy-2 h-100 mx-auto my-auto">
-      <div class="col-md-3 d-flex flex-column justify-content-between p-1 rounded" style="background: var(--bs-primary-border-subtle);" >
+      <div class="col-md-3 d-flex flex-column justify-content-between p-1 rounded  border border-2 border-secondary-subtle" style="background: var(--bs-primary-border-subtle);" >
         <div class="offcanvas-body d-flex flex-column justify-content-between p-2 rounded">
           <app-wlasciwosc-dropdown
           [wlasciwosciResponse]="wlasciwosciResponse"

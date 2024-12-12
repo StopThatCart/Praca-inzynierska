@@ -36,8 +36,8 @@ public class RoslinaImporterService {
     @Value("${spring.data.neo4j.database}")
     private String dbName;
 
-    @Value("${spring.data.neo4j.seed-mode}")
-    private String seedMode;
+    @Value("${seed.database}")
+    private boolean seedDatabase;
     
     @Value("${application.seeder.csv-file-path}")
     private String CSV_FILE;
@@ -77,7 +77,7 @@ public class RoslinaImporterService {
      */
     public void seedRosliny() {
         try {
-            if(seedMode.equals("create")){
+            if(seedDatabase){
                 log.info("Tworzenie bazy danych...");
                 healthCheck.dropAndCreateDatabase(dbName);
                 List<RoslinaRequest> bep = parseCsvToRoslinaRequests(CSV_FILE, limit);
@@ -86,13 +86,6 @@ public class RoslinaImporterService {
                     log.info("Importowanie roślin...");
                     importRoslinyIntoDatabase(bep);
                 }
-            }else{
-              //  if(!healthCheck.checkIfDatabaseIsPopulated()) {
-                //    healthCheck.dropAndCreateDatabase(dbName);
-               //     if (healthCheck.isItActuallyAvailable()) {
-               //         importRoslinyIntoDatabase(bep);
-               //     }
-             //   }
             }
         } catch (IOException | CsvException e) {
             log.error("Błąd podczas odczytywania pliku " + CSV_FILE + ".csv", e);

@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row mb-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
-                <h2 style="color: var(--bs-link-color);">Zaloguj się</h2>
+                <h1 class="text-primary">Zaloguj się</h1>
             </div>
             <hr>
             <app-error-msg [errorMsg]="errorMsg"></app-error-msg>
@@ -17,13 +17,13 @@
                           </div>
                           <form class="text-center" id="login-form" method="post">
                               <div class="mb-3">
-                                  <input [(ngModel)]="authRequest.email" class="form-control" type="email" name="Email" id="email" placeholder="login albo email" value="jan@email.pl"
-                                      style="color: #000000;--bs-light: #f8f9fa;--bs-light-rgb: 248,249,250;">
+                                  <input [(ngModel)]="authRequest.email" class="form-control text-black"
+                                  type="email" name="Email" placeholder="login albo email">
                               </div>
                               <div class="mb-3">
-                                  <input [(ngModel)]="authRequest.haslo" class="form-control" type="password" name="password" id="haslo" placeholder="haslo" value="jan12345678"
-                                  style="color: #000000;">
-                                  <a (click)="redirectToZmianaHasla()" class="link" style="color: black;">Zapomniałeś hasła?</a>
+                                  <input [(ngModel)]="authRequest.haslo" class="form-control text-black mb-2"
+                                  type="password" name="password" placeholder="haslo">
+                                  <a [routerLink]="'/zmiana-hasla-email'"  class="link">Zapomniałeś hasła?</a>
                               </div>
 
                               <div class="mb-3">
@@ -31,7 +31,7 @@
                               </div>
 
                               <div class="mb-3">
-                                <label class="form-label" style="color: black;">Nie masz jeszcze konta?</label>
+                                <label class="form-label text-black">Nie masz jeszcze konta?</label>
                                 <a  (click)="register()" class="btn btn-primary d-block w-100" role="button">Zarejestruj się</a>
                               </div>
 

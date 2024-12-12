@@ -146,7 +146,7 @@ public class RoslinaControllerTest {
             .build();   
         roslina = lipaHenryego;
 
-        System.out.println("\n\n\nUSUWANKOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n");
+        System.out.println("\nUsuwanie rośliny testowej\n");
         roslinaService.deleteByNazwaLacinska(nazwaLacinska);
     }
 
@@ -254,7 +254,7 @@ public class RoslinaControllerTest {
         ResponseEntity<RoslinaResponse> response = roslinaController.updateRoslina(roslinaRequest.getNazwaLacinska(), roslinaRequest);
 
         // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
         Roslina roslina2 = roslinaRepository.findByNazwaLacinskaWithWlasciwosci(nazwaLacinska).get();
         
         Assertions.assertThat(roslina2).isNotNull();
