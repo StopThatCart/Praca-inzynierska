@@ -95,7 +95,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, L
 
         WITH roslina, $odczyny AS wezly
         WHERE size(wezly) = 0 OR ALL(wezel IN wezly WHERE EXISTS {
-            MATCH (roslina)-[:MA_ODCZYNY]->(:Wlasciwosc {nazwa: wezel.__properties__.nazwa})
+            MATCH (roslina)-[:MA_ODCZYN]->(:Wlasciwosc {nazwa: wezel.__properties__.nazwa})
         })
 
         WITH roslina, $okresyKwitnienia AS wezly
@@ -195,7 +195,7 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, L
 
         WITH roslina, $odczyny AS wezly
         WHERE size(wezly) = 0 OR ALL(wezel IN wezly WHERE EXISTS {
-            MATCH (roslina)-[:MA_ODCZYNY]->(:Wlasciwosc {nazwa: wezel.__properties__.nazwa})
+            MATCH (roslina)-[:MA_ODCZYN]->(:Wlasciwosc {nazwa: wezel.__properties__.nazwa})
         })
 
         WITH roslina, $okresyKwitnienia AS wezly

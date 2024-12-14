@@ -309,9 +309,9 @@ public class RoslinaImporterService {
            
             String meh = label;
             if(meh.contains("Okres")) {
-                label = "Okres";
+                label = RoslinaEtykietyFrontend.OKRES_KWITNIENIA.toString();
             }else if(meh.contains("Kolor")) {
-                label = "Kolor";
+                label = RoslinaEtykietyFrontend.KOLOR_KWIATOW.toString();
             }
 
             // Regex to match values with commas inside parentheses
@@ -346,7 +346,7 @@ public class RoslinaImporterService {
      *   <li><strong>Zimozielonosc</strong> -> MA_ZIMOZIELONOSC_LISCI</li>
      *   <li><strong>Stanowisko</strong> -> MA_STANOWISKO</li>
      *   <li><strong>Wilgotnosc</strong> -> MA_WILGOTNOSC</li>
-     *   <li><strong>Odczyn</strong> -> MA_ODCZYNY</li>
+     *   <li><strong>Odczyn</strong> -> MA_ODCZYN</li>
      *   <li><strong>Gleba</strong> -> MA_GLEBE</li>
      *   <li><strong>OkresKwitnienia</strong> -> MA_OKRES_KWITNIENIA</li>
      *   <li><strong>Owoc</strong> -> MA_OWOC</li>
@@ -370,7 +370,7 @@ public class RoslinaImporterService {
             case "Zimozielonosc" -> "MA_ZIMOZIELONOSC_LISCI";
             case "Stanowisko" -> "MA_STANOWISKO";
             case "Wilgotnosc" -> "MA_WILGOTNOSC";
-            case "Odczyn" -> "MA_ODCZYNY";
+            case "Odczyn" -> "MA_ODCZYN";
             case "Gleba" -> "MA_GLEBE";
             //
             case "OkresKwitnienia" -> "MA_OKRES_KWITNIENIA";

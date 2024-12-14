@@ -118,10 +118,8 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
         WITH uzyt,  $powiadomienie.__properties__ as pp
         CREATE (pow:Powiadomienie{  
                                     typ:  pp.typ, odnosnik: pp.odnosnik, 
-                                    tytul: pp.tytul, uzytkownikNazwa: pp.uzytkownikNazwa, 
-                                    opis: pp.opis, avatar: pp.avatar, 
-                                    nazwyRoslin: pp.nazwyRoslin, iloscPolubien: pp.iloscPolubien, 
-                                    data: pp.data, dataUtworzenia: pp.dataUtworzenia}
+                                    opis: pp.opis, avatar: pp.avatar,
+                                    dataUtworzenia: pp.dataUtworzenia}
                 )-[r1:POWIADAMIA{przeczytane: false}]->(uzyt)
         RETURN pow, r1, uzyt
         """)

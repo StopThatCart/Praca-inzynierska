@@ -18,10 +18,6 @@
     {
       "url": "http://localhost:8081",
       "description": "Local ENV"
-    },
-    {
-      "url": "http://localhost:8082",
-      "description": "Godot ENV"
     }
   ],
   "security": [
@@ -3150,16 +3146,13 @@
           "name": {
             "type": "string"
           },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
-          },
-          "admin": {
-            "type": "boolean"
+          "password": {
+            "type": "string"
           },
           "pracownik": {
+            "type": "boolean"
+          },
+          "admin": {
             "type": "boolean"
           },
           "username": {
@@ -3168,16 +3161,19 @@
           "normalUzytkownik": {
             "type": "boolean"
           },
-          "password": {
-            "type": "string"
+          "authorities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedAuthority"
+            }
           },
           "enabled": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           },
           "accountNonLocked": {
@@ -4302,11 +4298,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           }

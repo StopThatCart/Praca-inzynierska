@@ -22,7 +22,7 @@ import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
  *   <li><strong>MA_KOLOR_LISCI</strong> - kolory liści</li>
  *   <li><strong>MA_KOLOR_KWIATOW</strong> - kolory kwiatów</li>
  *   <li><strong>MA_KWIAT</strong> - kwiaty</li>
- *   <li><strong>MA_ODCZYNY</strong> - odczyny</li>
+ *   <li><strong>MA_ODCZYN</strong> - odczyny</li>
  *   <li><strong>MA_OKRES_KWITNIENIA</strong> - okresy kwitnienia</li>
  *   <li><strong>MA_OKRES_OWOCOWANIA</strong> - okresy owocowania</li>
  *   <li><strong>MA_OWOC</strong> - owoce</li>
@@ -40,14 +40,13 @@ import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
  * odpowiednich właściwości rośliny na podstawie wartości enum.
  */
 public enum RoslinaRelacje {
-  //  MA_WLASCIWOSC("wlasciwosci"),
     MA_FORME("formy"),
     MA_GLEBE("gleby"),
     MA_GRUPE("grupy"),
     MA_KOLOR_LISCI("koloryLisci"),
     MA_KOLOR_KWIATOW("koloryKwiatow"),
     MA_KWIAT("kwiaty"),
-    MA_ODCZYNY("odczyny"),
+    MA_ODCZYN("odczyny"),
     MA_OKRES_KWITNIENIA("okresyKwitnienia"),
     MA_OKRES_OWOCOWANIA("okresyOwocowania"),
     MA_OWOC("owoce"),

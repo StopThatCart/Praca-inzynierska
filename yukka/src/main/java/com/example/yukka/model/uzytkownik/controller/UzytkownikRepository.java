@@ -128,19 +128,6 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         """)
     List<Uzytkownik> getConnectedUzytkownicyFromPostButBetter(@Param("postId") String postId);
 
-
-    // Nie działa, gdyż "Records with more than one value cannot be converted without a mapper", a mapowanie nic tu nie dało
-    // @Query("""
-    //     MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
-    //     OPTIONAL MATCH (uzyt)-[:MA_POST]->(post:Post)
-    //     OPTIONAL MATCH (uzyt)-[:SKOMENTOWAL]->(kom:Komentarz)
-    //     OPTIONAL MATCH (uzyt)<-[:STWORZONA_PRZEZ]-(ros:UzytkownikRoslina)
-    //     RETURN count(post) as posty, count(kom) as komentarze, ount(ros) as rosliny
-    //     LIMIT 1
-    //         """)
-    // StatystykiDTO getStatystykiOfUzytkownik(@Param("nazwa") String nazwa);
-
-
     @Query("""
         MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
         OPTIONAL MATCH (uzyt)-[:MA_POST]->(post:Post)
@@ -159,18 +146,6 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         RETURN count(ros) as rosliny
                 """)
     Integer getRoslinyCountOfUzytkownik(@Param("nazwa") String nazwa);
-
-    // @Query("""
-    //     MATCH (oceniany:Uzytkownik{nazwa: $nazwa})
-    //     OPTIONAL MATCH (oceniany)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
-    //         WHERE oceniany <> uzyt
-    //     WITH oceniany,  
-    //         COUNT(CASE WHEN r2.lubi = true THEN 1 ELSE NULL END) AS ocenyPozytywne,
-    //         COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
-    //     RETURN max(0, (ocenyPozytywne - ocenyNegatywne)) as komentarzeOceny
-    //             """)
-    // Integer getKomentarzeOcenyOfUzytkownik(@Param("nazwa") String nazwa);
-
     @Query("""
         MATCH (oceniany:Uzytkownik{nazwa: $nazwa})
         OPTIONAL MATCH (oceniany)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
@@ -218,29 +193,6 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         RETURN ocenyNegatywne
                 """)
     Integer getPostyOcenyNegatywneOfUzytkownik(@Param("nazwa") String nazwa);
-
-
-
-    
-
-    /* 
-    @Query("""
-        CREATE (u:Uzytkownik {nazwa: $nazwa, 
-                              email: $email, haslo: $haslo, 
-                              data_utworzenia: localdatetime(), 
-                              ban: false
-                })-[:MA_USTAWIENIA]->(ust:Ustawienia {
-                                    statystyki_profilu: true, galeria_pokaz: true,
-                                    galeria_ocena_komentarze: true, ogrod_pokaz: true,
-                                    ogrod_ocena_komentarze: true, powiadomienia_komentarze_odpowiedz: true,
-                                    powiadomienia_komentarze_ogrod: true, powiadomienia_komentarze_galeria: true,
-                                    powiadomienia_ogrod_podlewanie: true, powiadomienia_ogrod_kwitnienie: true,
-                                    powiadomienia_ogrod_owocowanie: true
-                                    })
-            """
-            )
-    void addNewUzytkownikButBadLikeVeryBad(@Param("nazwa") String nazwa, @Param("email") String email, @Param("haslo") String haslo);
-*/
 
     /*
  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠤⢤⣄⡤⠤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀

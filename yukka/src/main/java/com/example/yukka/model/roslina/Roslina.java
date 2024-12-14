@@ -137,7 +137,7 @@ public class Roslina {
     @Builder.Default
     private Set<Wlasciwosc> kwiaty = new HashSet<>();
 
-    @Relationship(type = "MA_ODCZYNY", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "MA_ODCZYN", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
     private Set<Wlasciwosc> odczyny = new HashSet<>();
 

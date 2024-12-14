@@ -28,6 +28,7 @@ import com.example.yukka.authorities.ROLE;
 import com.example.yukka.model.roslina.controller.RoslinaController;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.controller.RoslinaService;
+import com.example.yukka.model.roslina.enums.RoslinaEtykietyFrontend;
 import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
@@ -88,36 +89,36 @@ public class RoslinaControllerTest {
         Mockito.when(mockAuth.getPrincipal()).thenReturn(uzyt);
 
 
-        Wlasciwosc formaDrzewo = new Wlasciwosc(Collections.singletonList("Forma"), "TAKA TESTOWA");
+        Wlasciwosc formaDrzewo = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.FORMA.getBackendValue()), "TAKA TESTOWA");
 
-        Wlasciwosc glebaPrzecietna = new Wlasciwosc(Collections.singletonList("Gleba"),"TEŻ TESTOWA");
-        Wlasciwosc glebaProchniczna = new Wlasciwosc(Collections.singletonList("Gleba"),"próchniczna");
-        Wlasciwosc glebaGliniasta = new Wlasciwosc(Collections.singletonList("Gleba"),"gliniasta");
-
-        Wlasciwosc grupaLisciaste = new Wlasciwosc(Collections.singletonList("Grupa"), "liściaste");
-
-        Wlasciwosc kolorLisciCiemnozielone = new Wlasciwosc(Collections.singletonList("Kolor"),"ciemnozielone");
-        Wlasciwosc kolorKwiatowKremowy = new Wlasciwosc(Collections.singletonList("Kolor"),"kremowe");
-
-        Wlasciwosc kwiatPojedynczy = new Wlasciwosc(Collections.singletonList("Kwiat"),"pojedyncze");
-        Wlasciwosc kwiatPachnace = new Wlasciwosc(Collections.singletonList("Kwiat"),"pachnące");
-
-        Wlasciwosc okresKwitnieniaWrzesien = new Wlasciwosc(Collections.singletonList("Okres"),"wrzesień");
-        Wlasciwosc okresOwocowaniaPazdziernik = new Wlasciwosc(Collections.singletonList("Okres"),"październik");
-        Wlasciwosc okresOwocowaniaListopad = new Wlasciwosc(Collections.singletonList("Okres"),"listopad");
-
-        Wlasciwosc owocBrazowy = new Wlasciwosc(Collections.singletonList("Owoc"),"brązowe");
-
-        Wlasciwosc podgrupaLiscisteDrzewa = new Wlasciwosc(Collections.singletonList("Podgrupa"),"liściaste drzewa");
-
-        Wlasciwosc pokrojDrzewiastyRozlozysty = new Wlasciwosc(Collections.singletonList("Pokroj"),"drzewiasty rozłożysty");
-        Wlasciwosc pokrojSzerokostoszkowy = new Wlasciwosc(Collections.singletonList("Pokroj"),"szerokostożkowy");
-
-        Wlasciwosc silaWzrostuTypowa = new Wlasciwosc(Collections.singletonList("Silawzrostu"),"wzrost typowy dla gatunku");
-        Wlasciwosc stanowiskoSloneczne = new Wlasciwosc(Collections.singletonList("Stanowisko"),"stanowisko słoneczne");
-
-        Wlasciwosc walorPachnaceKwiaty = new Wlasciwosc(Collections.singletonList("Walor"),"pachnące kwiaty");
-        Wlasciwosc walorRoslinaMiododajna = new Wlasciwosc(Collections.singletonList("Walor"),"roślina miododajna");
+        Wlasciwosc glebaPrzecietna = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.GLEBA.getBackendValue()), "TEŻ TESTOWA");
+        Wlasciwosc glebaProchniczna = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.GLEBA.getBackendValue()), "próchniczna");
+        Wlasciwosc glebaGliniasta = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.GLEBA.getBackendValue()), "gliniasta");
+        
+        Wlasciwosc grupaLisciaste = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.GRUPA.getBackendValue()), "liściaste");
+        
+        Wlasciwosc kolorLisciCiemnozielone = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.KOLOR_LISCI.getBackendValue()), "ciemnozielone");
+        Wlasciwosc kolorKwiatowKremowy = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.KOLOR_KWIATOW.getBackendValue()), "kremowe");
+        
+        Wlasciwosc kwiatPojedynczy = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.KWIAT.getBackendValue()), "pojedyncze");
+        Wlasciwosc kwiatPachnace = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.KWIAT.getBackendValue()), "pachnące");
+        
+        Wlasciwosc okresKwitnieniaWrzesien = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.OKRES_KWITNIENIA.getBackendValue()), "wrzesień");
+        Wlasciwosc okresOwocowaniaPazdziernik = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.OKRES_OWOCOWANIA.getBackendValue()), "październik");
+        Wlasciwosc okresOwocowaniaListopad = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.OKRES_OWOCOWANIA.getBackendValue()), "listopad");
+        
+        Wlasciwosc owocBrazowy = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.OWOC.getBackendValue()), "brązowe");
+        
+        Wlasciwosc podgrupaLiscisteDrzewa = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.PODGRUPA.getBackendValue()), "liściaste drzewa");
+        
+        Wlasciwosc pokrojDrzewiastyRozlozysty = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.POKROJ.getBackendValue()), "drzewiasty rozłożysty");
+        Wlasciwosc pokrojSzerokostoszkowy = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.POKROJ.getBackendValue()), "szerokostożkowy");
+        
+        Wlasciwosc silaWzrostuTypowa = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.SILA_WZROSTU.getBackendValue()), "wzrost typowy dla gatunku");
+        Wlasciwosc stanowiskoSloneczne = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.STANOWISKO.getBackendValue()), "stanowisko słoneczne");
+        
+        Wlasciwosc walorPachnaceKwiaty = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.WALOR.getBackendValue()), "pachnące kwiaty");
+        Wlasciwosc walorRoslinaMiododajna = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.WALOR.getBackendValue()), "roślina miododajna");
         // Resztę właściwości zostawia się pustą.
 
         Roslina lipaHenryego = Roslina.builder()
@@ -232,8 +233,8 @@ public class RoslinaControllerTest {
         roslinaService.save(roslinaRequestOld, null);
 
         String nazwa2 = "Zmieniona nazwa";
-        Set<Wlasciwosc> grupa2 = new HashSet<>(Arrays.asList(new Wlasciwosc(Collections.singletonList("Grupa"), "owocowe")));
-        Wlasciwosc owoc22 = new Wlasciwosc(Collections.singletonList("Owoc"),"rzułte");
+        Set<Wlasciwosc> grupa2 = new HashSet<>(Arrays.asList(new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.GRUPA.getBackendValue()), "owocowe")));
+        Wlasciwosc owoc22 = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.OWOC.getBackendValue()),"rzułte");
 
         // Zmiana nazwy
         roslina.setNazwa(nazwa2);

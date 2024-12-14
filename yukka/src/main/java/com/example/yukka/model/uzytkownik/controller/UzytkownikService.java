@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -492,6 +493,25 @@ public class UzytkownikService implements  UserDetailsService {
         
         return odbiorca;
     }
+
+
+        /**
+     * Tworzy unikalny identyfikator użytkownika.
+     *
+     * @return unikalny identyfikator użytkownika
+     */
+    public String createUzytkownikId() {
+        String resultId = UUID.randomUUID().toString();
+        do { 
+            Optional<Uzytkownik> uzyt = uzytkownikRepository.findByUzytId(resultId);
+            if(uzyt.isEmpty()){
+                break;
+            }
+            resultId = UUID.randomUUID().toString();
+        } while (true);
+        return resultId;
+    }
+
 
     /**
      * Metoda seedRemoveUzytkownicyObrazy usuwa obrazy użytkowników z systemu.

@@ -158,8 +158,6 @@ public class YukkaApplication {
 		SpringApplication.run(YukkaApplication.class, args);
 	}
 
-	@Value("${spring.data.neo4j.seed-mode}")
-    private String seedMode;
 
     @Value("${seed.database}")
     private boolean seedDatabase;
@@ -174,12 +172,11 @@ public class YukkaApplication {
 	@Bean
     public CommandLineRunner seedDatabase() {
         return args -> {
-			log.info("Seed mode: " + seedMode);
 			if (seedDatabase) {
                 log.info("Seedowanie bazy danych...");
-				// roslinaImporterService.seedRosliny();
-				unseed();
-				seed();
+				//roslinaImporterService.seedRosliny();
+				//unseed();
+				//seed();
             }
         };
     }
@@ -234,7 +231,8 @@ public class YukkaApplication {
 		log.info("Seedowanie uzytkownikow...");
 
 		Uzytkownik usJan = Uzytkownik.builder()
-		.uzytId("jasiuId")
+		// .uzytId("jasiuId")
+		.uzytId(uzytkownikService.createUzytkownikId())
         .nazwa("Jan Kowalski").email("jan@email.pl")
         .haslo(passwordEncoder.encode("jan12345678"))
 		.labels(List.of("Admin", "Pracownik"))
@@ -242,7 +240,8 @@ public class YukkaApplication {
         .build();
 
 		Uzytkownik usPrac = Uzytkownik.builder()
-		.uzytId("annaJakasId")
+		//.uzytId("annaJakasId")
+		.uzytId(uzytkownikService.createUzytkownikId())
 		.labels(List.of("Pracownik")).nazwa("Anna Nowak")
 		.email("anna@email.pl")
 		.haslo(passwordEncoder.encode("anna12345678"))
@@ -251,7 +250,8 @@ public class YukkaApplication {
 
 
 		Uzytkownik usPiotr = Uzytkownik.builder()
-		.uzytId("piotrekId")
+		// .uzytId("piotrekId")
+		.uzytId(uzytkownikService.createUzytkownikId())
         .nazwa("Piotr Wiśniewski").email(piotrEmail)
         .haslo(passwordEncoder.encode("piotr12345678"))
 		.aktywowany(true)
@@ -259,7 +259,8 @@ public class YukkaApplication {
 
 
 		Uzytkownik usKatarzyna = Uzytkownik.builder()
-		.uzytId("jakasKatarzynaId")
+		// .uzytId("jakasKatarzynaId")
+		.uzytId(uzytkownikService.createUzytkownikId())
 		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
         .haslo(passwordEncoder.encode("katarzyna12345678"))
 		.aktywowany(true)
@@ -267,14 +268,16 @@ public class YukkaApplication {
 
 
 		Uzytkownik usMichal = Uzytkownik.builder()
-		.uzytId("michalekId")
+		// .uzytId("michalekId")
+		.uzytId(uzytkownikService.createUzytkownikId())
         .nazwa("Michał Zieliński").email(michalEmail)
         .haslo(passwordEncoder.encode("michal12345678"))
 		.aktywowany(true)
         .build();
 
 		Uzytkownik usNiegrzeczny = Uzytkownik.builder()
-		.uzytId("niegrzecznyId")
+		// .uzytId("niegrzecznyId")
+		.uzytId(uzytkownikService.createUzytkownikId())
 		.nazwa("Niegrzeczny Użytkownik").email(niegrzecznyEmail)
 		.haslo(passwordEncoder.encode("bad12345678"))
 		.aktywowany(true)
@@ -312,7 +315,7 @@ public class YukkaApplication {
 		
 		ZgloszenieRequest request = ZgloszenieRequest.builder()
 		.zglaszany(usNiegrzeczny.getNazwa())
-		.opis(faker.witcher().character())
+		.opis(faker.lorem().sentence())
 		.typPowiadomienia(TypPowiadomienia.ZGLOSZENIE.name())
 		.build();
 		

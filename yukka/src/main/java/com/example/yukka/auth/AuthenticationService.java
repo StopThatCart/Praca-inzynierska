@@ -92,12 +92,9 @@ public class AuthenticationService {
     //private final AuthenticationManager authenticationManager;
     private final Neo4JAuthenticationProvider neo4jAuthenticationProvider;
 
-
-
     @Value("${uzytkownik.obraz.default.name}")
     private  String defaultAvatarObrazName;
 
-    
     /**
      * Rejestruje nowego użytkownika na podstawie podanych danych rejestracyjnych.
      *
@@ -116,9 +113,9 @@ public class AuthenticationService {
                 return;
             }
         }
-        System.out.println("\n\n\n Request: " + request.toString() + "\n\n\n");
+
         Uzytkownik uzyt = Uzytkownik.builder()
-                .uzytId(createUzytkownikId())
+                .uzytId(uzytkownikService.createUzytkownikId())
                 .nazwa(request.getNazwa())
                 .email(request.getEmail())
                 .haslo(passwordEncoder.encode(request.getHaslo()))
@@ -177,22 +174,6 @@ public class AuthenticationService {
             .build();
     }
 
-    /**
-     * Tworzy unikalny identyfikator użytkownika.
-     *
-     * @return unikalny identyfikator użytkownika
-     */
-    String createUzytkownikId() {
-        String resultId = UUID.randomUUID().toString();
-        do { 
-            Optional<Uzytkownik> uzyt = uzytkownikRepository.findByUzytId(resultId);
-            if(uzyt.isEmpty()){
-                break;
-            }
-            resultId = UUID.randomUUID().toString();
-        } while (true);
-        return resultId;
-    }
 
     /**
      * Aktywuje konto użytkownika za pomocą podanego tokenu.

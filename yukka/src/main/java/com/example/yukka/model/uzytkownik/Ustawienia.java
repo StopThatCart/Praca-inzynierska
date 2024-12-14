@@ -35,27 +35,24 @@ public class Ustawienia {
     @Id @GeneratedValue
     private Long id;
 
-    @Property("statystyki_profilu")
+    @Property("statystykiProfilu")
     @Builder.Default
     private boolean statystykiProfilu = true;
 
-    @Property("ogrod_pokaz")
+    @Property("ogrodPokaz")
     @Builder.Default
     private boolean ogrodPokaz = true;
 
-    @Property("powiadomienia_komentarze_odpowiedz")
+    @Property("powiadomieniaKomentarzeOdpowiedz")
     @Builder.Default
     private boolean powiadomieniaKomentarzeOdpowiedz = true;
 
-    @Property("powiadomienia_ogrod_kwitnienie")
+    @Property("powiadomieniaOgrodKwitnienie")
     @Builder.Default
     private boolean powiadomieniaOgrodKwitnienie = true;
 
-    @Property("powiadomienia_ogrod_owocowanie")
+    @Property("powiadomieniaOgrodOwocowanie")
     @Builder.Default
     private boolean powiadomieniaOgrodOwocowanie = true;
-
-   // @Relationship(type = "MA_USTAWIENIA", direction = Relationship.Direction.INCOMING)
-   // private List<Uzytkownik> uzytkownik;
 
 }
