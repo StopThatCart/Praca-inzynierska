@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
 import { MoveRoslinaRequest, Pozycja, RoslinaResponse, UzytkownikResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
 import { PostCardComponent } from "../../../post/components/post-card/post-card.component";
-import { LulekComponent } from "../../components/lulek/lulek.component";
 import { DzialkaResponse } from '../../../../services/models/dzialka-response';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DzialkaService, UzytkownikService } from '../../../../services/services';
 import { Tile, TileUtils } from '../../models/Tile';
 import { FormsModule } from '@angular/forms';
@@ -18,11 +17,14 @@ import { DzialkaRoslinaRequest } from '../../../../services/models/dzialka-rosli
 import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
 import { RenameIconComponent } from "../../components/rename-icon/rename-icon.component";
 import { RenameIconModes } from '../../components/rename-icon/rename-icon-mode';
+import { LoadingComponent } from "../../../../components/loading/loading.component";
+import { TokenService } from '../../../../services/token/token.service';
+import { RoslinaTileCircleComponent } from '../../components/roslina-tile-circle/roslina-tile-circle.component';
 
 @Component({
   selector: 'app-dzialka-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, PostCardComponent, LulekComponent, ScaleSliderComponent, OffcanvasRoslinaComponent, RenameIconComponent],
+  imports: [CommonModule, FormsModule, RoslinaTileCircleComponent, ScaleSliderComponent, OffcanvasRoslinaComponent, RenameIconComponent, LoadingComponent],
   templateUrl: './dzialka-page.component.html',
   styleUrl: './dzialka-page.component.css'
 })
@@ -73,12 +75,15 @@ export class DzialkaPageComponent implements OnInit  {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
+    private tokenService: TokenService,
     private dzialkaService: DzialkaService,
     private canvasService: CanvasService,
     private uzytService: UzytkownikService
   ) {}
 
 
+  isLoading: boolean = true;
   ngOnInit() {
     // TODO: Dodawanie ładowania
     this.initializeTiles();
@@ -91,7 +96,13 @@ export class DzialkaPageComponent implements OnInit  {
 
       if (this.numer && this.uzytNazwa) {
         this.getUzytkownikByNazwa(this.uzytNazwa);
-        this.getDzialkaByNumer( this.numer, this.uzytNazwa);
+        this.getDzialkaByNumer( this.numer, this.uzytNazwa).then(() => {
+          console.log('Działka załadowana');
+          this.isLoading = false;
+        }).catch((err) => {
+          console.log(err);
+          this.isLoading = false;
+        });
         this.route.snapshot.data['numer'] = this.numer;
         this.route.snapshot.data['uzytkownik-nazwa'] = this.uzytNazwa;
       }
@@ -524,6 +535,8 @@ export class DzialkaPageComponent implements OnInit  {
       });
     }
   }
+
+
 
 
 }

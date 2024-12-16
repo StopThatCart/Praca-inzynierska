@@ -1,0 +1,17 @@
+
+.form-label {
+  font-weight: bold;
+}
+
+input,
+select,
+textarea {
+  --bs-bg-opacity: 1;
+  background-color: rgba(248, 249, 250, 1) ;
+}
+
+.form button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}

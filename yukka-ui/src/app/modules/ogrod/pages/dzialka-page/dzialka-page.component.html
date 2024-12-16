@@ -1,7 +1,9 @@
 <div class="container">
-
-  <!-- cdkDropList cdkScrollable -->
-  <div class="row mb-5 pt-1">
+  <app-loading [isLoading]="isLoading"></app-loading>
+  <div
+  class="row mb-5 pt-1"
+  [hidden]="isLoading"
+  >
     <div class="">
         <app-rename-icon
         [nazwa]="dzialka.nazwa"
@@ -37,9 +39,6 @@
 
         </div>
 
-
-
-
         <div class="toolbar">
           <button (click)="setMode(DzialkaModes.Pan)" [class.active]="mode === DzialkaModes.Pan">
             <i class="fa-solid fa-lg fa-hand"></i>
@@ -67,8 +66,6 @@
 
         </app-offcanvas-roslina>
 
-
-
         <div  #canvasContainer class="canvas-container border border-3 border-success-subtle "
         (mousedown)="onMouseDown($event)"
         >
@@ -86,29 +83,14 @@
             (mouseover)="onTileHover(tile, true)"
             (mouseout)="onTileHover(tile, false)"
             class="tile-overlay">
-              <app-lulek
+              <app-roslina-tile-circle
               *ngIf="tile.zasadzonaRoslina" [zasadzonaRoslina]="tile.zasadzonaRoslina ? tile.zasadzonaRoslina : {}"
               (roslinaClick)="onRoslinaClick($event)"
               [mode]="mode"
               [editMode]="editMode"
-              ></app-lulek>
+              ></app-roslina-tile-circle>
             </div>
           </div>
-          <!--
-
-          <div class="tileSet" #tileSet>
-            <div class="tile" *ngFor="let tile of tiles"
-            [ngStyle]="{'background-image': 'url(' + tile.image + ')', 'background-color': tile.backgroundColor}"
-            [class.clickable]="tile.clickable"
-            (click)="tile.clickable ? onTileClick(tile) : null"
-            >
-              <app-lulek *ngIf="tile.roslina"
-              [roslina]="tile.roslina ? tile.roslina : {}"
-              >
-              </app-lulek>
-            </div>
-          </div>    -->
-
         </div>
     </div>
   </div>

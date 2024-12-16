@@ -296,19 +296,15 @@ export class OffcanvasRoslinaComponent {
     }
   }
 
-  // Tymczasowe rozwiązanie
   goToMoveRoslina() {
     this.router.navigate(['ogrod', this.tokenService.nazwa,
       'dzialka', this.numerDzialki,
       'przenoszenie', this.zasadzonaRoslina?.roslina?.roslinaId])
-      .then(() => {
-        window.location.reload();
-      });
+      // .then(() => {
+      //   window.location.reload();
+      // })
+      ;
   }
-
-  // routeToMoveRoslina() {
-  //   return ['/ogrod', this.tokenService.nazwa, 'dzialka', this.numerDzialki, 'przenoszenie', this.zasadzonaRoslina?.roslina?.roslinaId];
-  // }
 
 
   private makeDzialkaRoslinaRequest(): DzialkaRoslinaRequest {

@@ -5,13 +5,13 @@ import bootstrap, { Offcanvas } from 'bootstrap';
 import { DzialkaModes } from '../../models/dzialka-modes';
 
 @Component({
-  selector: 'app-lulek',
+  selector: 'app-roslina-tile-circle',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './lulek.component.html',
-  styleUrl: './lulek.component.css'
+  templateUrl: './roslina-tile-circle.component.html',
+  styleUrl: './roslina-tile-circle.component.css'
 })
-export class LulekComponent {
+export class RoslinaTileCircleComponent {
   @Input() zasadzonaRoslina: ZasadzonaRoslinaResponse = {};
   @Input() offcanvasId: string = '';
   @Input() mode: string = '';
