@@ -12,11 +12,14 @@ import { ModalWyswietlanieRoslinyPickComponent } from "../modal-wyswietlanie-ros
 import { ModalNotatkaPickComponent } from "../modal-notatka-pick/modal-notatka-pick.component";
 import { NgbCollapseModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TokenService } from '../../../../services/token/token.service';
+import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-offcanvas-roslina',
   standalone: true,
   imports: [CommonModule,
+    RouterModule,
     ColorPickerModule,
     NgbCollapseModule,
     NgbTooltipModule,
@@ -37,7 +40,6 @@ export class OffcanvasRoslinaComponent {
 
   @Output() roslinaPozycjaEdit = new EventEmitter<ZasadzonaRoslinaResponse>();
   @Output() roslinaKafelkiEdit = new EventEmitter<ZasadzonaRoslinaResponse>();
- // @Output() roslinaKolorChange = new EventEmitter<string>();
   @Output() roslinaSmolChange = new EventEmitter<ZasadzonaRoslinaResponse>();
   @Output() roslinaBaseChange = new EventEmitter<ZasadzonaRoslinaResponse>();
 
@@ -60,6 +62,8 @@ export class OffcanvasRoslinaComponent {
   constructor(
     private dzialkaService: DzialkaService,
     private wlasciwoscProcessService: WlasciwoscProcessService,
+    private router: Router,
+    private route: ActivatedRoute,
     private tokenService: TokenService
   ) { }
 
@@ -106,6 +110,16 @@ export class OffcanvasRoslinaComponent {
       return this.tokenService.isCurrentUzytkownik(this.uzyt);
     }
     return false;
+  }
+
+  getWyswietlanie(): string {
+    if (this.zasadzonaRoslina?.wyswietlanie === WyswietlanieRosliny.KOLOR) {
+      return 'Kolor';
+    } else if (this.zasadzonaRoslina?.wyswietlanie === WyswietlanieRosliny.TEKSTURA) {
+      return 'Tekstura';
+    } else {
+      return 'Tekstura z kolorem';
+    }
   }
 
 
@@ -218,7 +232,6 @@ export class OffcanvasRoslinaComponent {
 
     this.dzialkaService .updateRoslinaWyswietlanieInDzialka( { body: request }).subscribe({
       next: () => {
-        console.log('wyswietlanie yeeeeeey');
         this.zasadzonaRoslina!.wyswietlanie = newWyswietlanie;
         this.roslinaSmolChange.emit(this.zasadzonaRoslina);
       },
@@ -282,6 +295,20 @@ export class OffcanvasRoslinaComponent {
       });
     }
   }
+
+  // Tymczasowe rozwiązanie
+  goToMoveRoslina() {
+    this.router.navigate(['ogrod', this.tokenService.nazwa,
+      'dzialka', this.numerDzialki,
+      'przenoszenie', this.zasadzonaRoslina?.roslina?.roslinaId])
+      .then(() => {
+        window.location.reload();
+      });
+  }
+
+  // routeToMoveRoslina() {
+  //   return ['/ogrod', this.tokenService.nazwa, 'dzialka', this.numerDzialki, 'przenoszenie', this.zasadzonaRoslina?.roslina?.roslinaId];
+  // }
 
 
   private makeDzialkaRoslinaRequest(): DzialkaRoslinaRequest {

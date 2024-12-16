@@ -12,6 +12,7 @@ import { DzialkaResolverService } from './services/dzialka-resolver/dzialka-reso
 import { AddRoslinaToDzialkaComponent } from './pages/add-roslina-to-dzialka/add-roslina-to-dzialka.component';
 import { RoslinyUzytkownikaPageComponent } from './pages/rosliny-uzytkownika-page/rosliny-uzytkownika-page.component';
 import { NotFoundComponent } from '../../components/not-found/not-found.component';
+import { MoveRoslinaToOtherDzialkaComponent } from './pages/move-roslina-to-other-dzialka/move-roslina-to-other-dzialka.component';
 
 const routes: Routes = [
   {
@@ -41,10 +42,21 @@ const routes: Routes = [
               },
               {
                 path: ':numer',
-                component: DzialkaPageComponent,
-              // canActivate: [pracownikGuard],
                 data: { breadcrumb: (data: any) =>`nr. ${data.dzialka.numer}` },
                 resolve: { dzialka: DzialkaResolverService },
+                children: [
+                  {
+                    path: '',
+                    component: DzialkaPageComponent,
+                  },
+                  {
+                    path: 'przenoszenie/:roslinaId',
+                    component: MoveRoslinaToOtherDzialkaComponent,
+                    data: { breadcrumb: 'Przenoszenie rośliny' }
+                  },
+                ]
+              // canActivate: [pracownikGuard],
+
               }
             ]
           },

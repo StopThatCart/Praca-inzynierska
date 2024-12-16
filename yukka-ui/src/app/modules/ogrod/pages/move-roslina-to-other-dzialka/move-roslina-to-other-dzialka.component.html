@@ -1,20 +1,19 @@
 <div class="m-auto py-5" style="max-width: 800px;" >
   <div class="card bg-secondary" >
     <div class="card-header" id="card-header">
-      <h4 class="card-title">Dodaj roślinę do działki</h4>
+      <h4 class="card-title">Przenieś roślinę do innej działki</h4>
       <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
     </div>
     <div class="card-body">
       <form class="my-2 d-flex flex-column">
-        <label class="form-label">Wybrana roślina:</label>
         <div class="row gy-4 mb-2">
           <div class="col-md-6">
             <div><img [src]="getRoslinaObraz()" alt="..." class="rounded img-fluid w-100"></div>
           </div>
           <div class="col-md-6 d-md-flex align-items-md-center">
             <div>
-              <h3 class="roslina-nazwa-color">{{roslina?.nazwa}}</h3>
-              <h5 class="roslina-nazwa-lacinska-color">{{roslina?.nazwaLacinska}}</h5>
+              <h3 class="roslina-nazwa-color">{{zasadzonaRoslina?.roslina?.nazwa}}</h3>
+              <h5 class="roslina-nazwa-lacinska-color">{{zasadzonaRoslina?.roslina?.nazwaLacinska}}</h5>
             </div>
           </div>
         </div>
@@ -50,33 +49,18 @@
           </div>
         </div>
 
-        <app-wyswietlanie-rosliny-opcje
-        [wyswietlanie]="request.wyswietlanie"
-        (wyswietlanieChange)="onWyswietlanieChange($event)"
-        ></app-wyswietlanie-rosliny-opcje>
-
 
         <app-dzialka-tile-picker
-        [roslina]="roslina"
+        [roslina]="zasadzonaRoslina?.roslina"
         [tiles]="tiles"
         [request]="request"
+        [isMove]="true"
         [mode]="mode"
         >
 
         </app-dzialka-tile-picker>
 
-        <label class="form-label">Wybierz obraz rośliny(opcjonalnie):</label>
-        <app-image-upload
-        (fileSelected)="onFileSelected($event)"
-        (clearImageEvent)="clearImage()"></app-image-upload>
-
-        <label class="form-label">Wybierz teksturę kafelków rośliny(opcjonalnie):</label>
-        <app-image-upload
-        (fileSelected)="onTeksturaSelected($event)"
-        (clearImageEvent)="clearTekstura()"></app-image-upload>
-
-
-        <button (click)="addRoslinaToDzialka()" class="btn btn-primary text-uppercase" type="submit">Dodaj roślinę</button>
+        <button (click)="moveRoslinaToOtherDzialka()" class="btn btn-primary text-uppercase" type="submit">Dodaj roślinę</button>
       </form>
     </div>
   </div>

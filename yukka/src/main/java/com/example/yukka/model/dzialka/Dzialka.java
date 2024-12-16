@@ -12,6 +12,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
+import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
 import com.example.yukka.model.ogrod.Ogrod;
 import com.example.yukka.model.roslina.Roslina;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -89,6 +90,24 @@ public class Dzialka {
     /**
      * Metoda sprawdza, czy dana roślina znajduje się na działce.
      *
+     * @param innaRoslina roślina do sprawdzenia
+     * @return true, jeśli roślina znajduje się na działce, w przeciwnym wypadku false
+     */
+    public boolean isRoslinaInDzialka(ZasadzonaNaReverse innaRoslina) {
+        if(innaRoslina == null || innaRoslina.getRoslina() == null) return false;
+
+        for (ZasadzonaNaReverse zasadzonaNa : zasadzoneRosliny) {
+            Roslina roslinaZasadzona = zasadzonaNa.getRoslina();
+            if (roslinaZasadzona.getRoslinaId().equals(innaRoslina.getRoslina().getRoslinaId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Metoda sprawdza, czy dana roślina znajduje się na działce.
+     *
      * @param roslina roślina do sprawdzenia
      * @return true, jeśli roślina znajduje się na działce, w przeciwnym wypadku false
      */
@@ -119,27 +138,53 @@ public class Dzialka {
         return false;
     }
 
+    // public List<Pozycja> arePozycjeOccupied(BaseDzialkaRequest request) {
+    //     List<Pozycja> zajetePozycje = new ArrayList<>();
+    //     Set<Pozycja> nowePozycje = request.getPozycje();
+
+    //     ZasadzonaNaReverse zasadzonaRoslina = getZasadzonaNaByCoordinates(request.getX(), request.getY());
+    //     if(zasadzonaRoslina == null) return zajetePozycje;
+        
+    //     for (ZasadzonaNaReverse zasadzona : zasadzoneRosliny) {
+    //         if (zasadzona.equalsRoslina(zasadzonaRoslina.getRoslina())) {
+    //             continue;
+    //         }
+    
+    //         Set<Pozycja> pozycje = zasadzona.getPozycje();
+    //         for (Pozycja pozycja : pozycje) {
+    //             if (nowePozycje.contains(pozycja)) {
+    //                 zajetePozycje.add(pozycja);
+    //             }
+    //         }
+    //     }
+    //     return zajetePozycje;
+    // }
+
     /**
      * Metoda sprawdza, czy pozycje z żądania są zajęte przez inne rośliny na działce.
-     *
      * @param request żądanie z danymi rośliny
      * @return lista zajętych pozycji
      */
-    public List<Pozycja> arePozycjeOccupied(BaseDzialkaRequest request) {
-        List<ZasadzonaNaReverse> zasadzoneRosliny = this.getZasadzoneRosliny();
-        ZasadzonaNaReverse zasadzonaRoslina = getZasadzonaNaByCoordinates(request.getX(), request.getY());
+    public List<Pozycja> arePozycjeOccupied(MoveRoslinaRequest request) {
         List<Pozycja> zajetePozycje = new ArrayList<>();
+        Set<Pozycja> nowePozycje = request.getPozycje();
+        ZasadzonaNaReverse zasadzonaRoslina = null;
+        boolean sameDzialka = true;
 
-        if(zasadzonaRoslina == null) return zajetePozycje;
-        
+        if (request.getNumerDzialkiNowy() != null && !request.getNumerDzialki().equals(request.getNumerDzialkiNowy())) {
+            sameDzialka = false;
+        }
+
+        if (sameDzialka) {
+            zasadzonaRoslina = getZasadzonaNaByCoordinates(request.getX(), request.getY());
+            if(zasadzonaRoslina == null) return zajetePozycje;
+        }
+
         for (ZasadzonaNaReverse zasadzona : zasadzoneRosliny) {
-            if (zasadzona.equalsRoslina(zasadzonaRoslina.getRoslina())) {
+            if (sameDzialka && zasadzonaRoslina != null && zasadzona.equalsRoslina(zasadzonaRoslina.getRoslina())) {
                 continue;
             }
-    
             Set<Pozycja> pozycje = zasadzona.getPozycje();
-            Set<Pozycja> nowePozycje = request.getPozycje();
-    
             for (Pozycja pozycja : pozycje) {
                 if (nowePozycje.contains(pozycja)) {
                     zajetePozycje.add(pozycja);

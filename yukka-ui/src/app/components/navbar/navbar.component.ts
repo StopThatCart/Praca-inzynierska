@@ -146,8 +146,11 @@ export class NavbarComponent implements OnInit {
   }
 
 
-
-
+  // Nie ma errora, chyba że przenosi się ze strony z działką
+  testReferenceErrors() {
+    //this.router.navigate(['ogrod/Piotr%20Wiśniewski/dzialka/2/przenoszenie/2732c898-a990-47b0-a48b-9d380c23a4e8']);
+    this.router.navigate(['ogrod', this.tokenService.nazwa, 'dzialka', 2, 'przenoszenie', "2732c898-a990-47b0-a48b-9d380c23a4e8"]);
+  }
 
 
 }

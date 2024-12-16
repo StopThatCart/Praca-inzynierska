@@ -20,21 +20,6 @@
   text-align: right;
 }
 
-
-
-.roslina-nazwa-color {
-  text-transform: uppercase;
-  font-weight: bold;
-  color: var(--bs-link-color);
-}
-
-.roslina-nazwa-lacinska-color {
-  text-transform: uppercase;
-  font-weight: bold;
-  color: var(--bs-primary-border-subtle);
-}
-
-
 .roslina-opis {
   color: inherit;
   --bs-body-bg: #fff;

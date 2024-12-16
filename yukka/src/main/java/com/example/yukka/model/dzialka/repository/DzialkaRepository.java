@@ -60,6 +60,22 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         Optional<Dzialka> getDzialkaByNumer(@Param("email") String email, @Param("numerDzialki") int numerDzialki);
 
         @Query("""
+        MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki}) 
+        OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(roslina:Roslina)-[r]-(w:Wlasciwosc)
+        WHERE r1.x = $x AND r1.y = $y
+        RETURN d, collect(r1), collect(roslina), collect(r), collect(w), collect(nodes(path)), collect(relationships(path))
+        """)
+        Optional<Dzialka> getRoslinaInDzialka(@Param("email") String email, @Param("numerDzialki") int numerDzialki, int x, int y);
+
+        
+        @Query("""
+        MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki}) 
+        OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(roslina:Roslina{ roslinaId: $roslinaId })-[r]-(w:Wlasciwosc)
+        RETURN d, collect(r1), collect(roslina), collect(r), collect(w), collect(nodes(path)), collect(relationships(path))
+        """)
+        Optional<Dzialka> getRoslinaInDzialka(@Param("email") String email, @Param("numerDzialki") int numerDzialki, String roslinaId);
+
+        @Query("""
         MATCH path = (u:Uzytkownik{nazwa: $nazwa})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka) 
         RETURN d, collect(nodes(path)), collect(relationships(path))
         ORDER BY d.numer
@@ -150,9 +166,9 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
                 existing.notatka AS notatka
         DELETE existing
   
-        MERGE (d2)<-[existing2:ZASADZONA_NA {
+        CREATE (d2)<-[existing2:ZASADZONA_NA {
                                 x: $xNowy, y: $yNowy, 
-                                tabX = $tabX, tabY = $tabY, 
+                                tabX: $tabX, tabY: $tabY, 
                                 obraz: obrazek, tekstura: tex, kolor: klr,
                                 wyswietlanie: wyswietlanie,
                                 notatka: notatka
@@ -166,25 +182,25 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         Dzialka changeRoslinaPozycjaInDzialka(@Param("email") String email, 
         @Param("numerDzialkiStary") int numerDzialki, @Param("numerDzialkiNowy") int numerDzialkiNowy, 
         @Param("xStary") int xStary, @Param("yStary") int yStary,
-        @Param("nowyX") int nowyX, @Param("nowyY") int nowyY,
+        @Param("xNowy") int xNowy, @Param("yNowy") int yNowy,
         @Param("tabX") int[] tabX, @Param("tabY") int[] tabY);
 
 
         @Query("""
-                MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})
-                        
-                MATCH (d)<-[existing:ZASADZONA_NA {x: $x, y: $y}]-(existingRoslina)
-                SET existing.notatka = $notatka
-        
-                WITH d
-                MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
-                        
-                RETURN d, collect(nodes(path)), collect(relationships(path))
-                        """)
-                Dzialka updateRoslinaNotatkaInDzialka(@Param("email") String email,
-                        @Param("numerDzialki") int numerDzialki, 
-                        @Param("x") int x, @Param("y") int y, 
-                        @Param("notatka") String notatka);
+        MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})
+                
+        MATCH (d)<-[existing:ZASADZONA_NA {x: $x, y: $y}]-(existingRoslina)
+        SET existing.notatka = $notatka
+
+        WITH d
+        MATCH path = (d)<-[zasadzone:ZASADZONA_NA]-(rosliny)
+                
+        RETURN d, collect(nodes(path)), collect(relationships(path))
+                """)
+        Dzialka updateRoslinaNotatkaInDzialka(@Param("email") String email,
+                @Param("numerDzialki") int numerDzialki, 
+                @Param("x") int x, @Param("y") int y, 
+                @Param("notatka") String notatka);
         
         @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki})

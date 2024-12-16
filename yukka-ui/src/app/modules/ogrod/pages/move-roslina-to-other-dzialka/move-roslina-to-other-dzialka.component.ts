@@ -1,29 +1,28 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ColorPickerModule } from 'ngx-color-picker';
-import { DzialkaResponse, DzialkaRoslinaRequest, Pozycja, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
-import { DzialkaService, RoslinaService } from '../../../../services/services';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Tile, TileUtils } from '../../models/Tile';
-import { DzialkaModes } from '../../models/dzialka-modes';
-import { TokenService } from '../../../../services/token/token.service';
-import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
-import { ErrorMsgComponent } from '../../../../components/error-msg/error-msg.component';
-import { ImageUploadComponent } from "../../../../components/image-upload/image-upload.component";
-import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { Component } from '@angular/core';
+import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
 import { WyswietlanieRoslinyOpcjeComponent } from "../../components/wyswietlanie-rosliny-opcje/wyswietlanie-rosliny-opcje.component";
 import { DzialkaTilePickerComponent } from "../../components/dzialka-tile-picker/dzialka-tile-picker.component";
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DzialkaResponse, DzialkaRoslinaRequest, MoveRoslinaRequest, Pozycja, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
+import { Tile, TileUtils } from '../../models/Tile';
+import { DzialkaModes } from '../../models/dzialka-modes';
+import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { DzialkaService, RoslinaService } from '../../../../services/services';
+import { TokenService } from '../../../../services/token/token.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
-  selector: 'app-add-roslina-to-dzialka',
+  selector: 'app-move-roslina-to-other-dzialka',
   standalone: true,
-  imports: [CommonModule, FormsModule, ErrorMsgComponent, ImageUploadComponent, WyswietlanieRoslinyOpcjeComponent, DzialkaTilePickerComponent],
-  templateUrl: './add-roslina-to-dzialka.component.html',
-  styleUrl: './add-roslina-to-dzialka.component.css'
+  imports: [CommonModule, FormsModule, ErrorMsgComponent,  DzialkaTilePickerComponent],
+  templateUrl: './move-roslina-to-other-dzialka.component.html',
+  styleUrl: './move-roslina-to-other-dzialka.component.css'
 })
-export class AddRoslinaToDzialkaComponent implements OnInit {
-  roslina: RoslinaResponse | undefined;
+export class MoveRoslinaToOtherDzialkaComponent {
+ // roslina: RoslinaResponse | undefined;
+  zasadzonaRoslina: ZasadzonaRoslinaResponse | undefined;
   private _roslinaObraz: string | undefined;
   dzialki: DzialkaResponse[] = [];
 
@@ -31,11 +30,18 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
 
   message = '';
   errorMsg: Array<string> = [];
+  moveRequest : MoveRoslinaRequest = {
+      numerDzialki: -1,
+      pozycje: [],
+      x: -1,
+      y: -1,
+      xnowy: -1,
+      ynowy: -1
+  };
 
-  wyswietlanieOpcje = WyswietlanieRosliny;
   request : DzialkaRoslinaRequest = {
     roslinaId: '',
-    numerDzialki: 1,
+    numerDzialki: -1,
     pozycje: [],
     x: -1,
     y: -1,
@@ -43,8 +49,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     wyswietlanie: WyswietlanieRosliny.TEKSTURA_KOLOR
   };
 
-  wybranyPlik: any = null;
-  wybranaTekstura: any = null;
 
   tiles: Tile[] = [];
   rowColls = 20;
@@ -67,23 +71,47 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     this.initializeTiles();
     this.route.params.subscribe(params => {
       const roslinaId = params['roslinaId'];
-      if (roslinaId) {
-        this.getRoslinaByRoslinaId(roslinaId);
+      const numerDzialki = Number(params['numer']);
+      if (roslinaId && numerDzialki) {
+        this.getRoslinaInDzialka(numerDzialki, roslinaId);
         this.route.snapshot.data['roslinaId'] = roslinaId;
+        this.route.snapshot.data['numer'] = numerDzialki;
 
-        this.getPozycjeInDzialki();
+        this.request.numerDzialki = numerDzialki;
+        this.moveRequest.numerDzialki = numerDzialki;
+
+        this.getPozycjeInDzialki(numerDzialki);
       }
     });
   }
 
-  getPozycjeInDzialki() {
+  getRoslinaInDzialka(numerDzialki: number, roslinaId: string): void {
+    this.errorMsg = [];
+    if(!numerDzialki || !roslinaId) return;
+    this.dzialkaService.getRoslinaInDzialkaByRoslinaId({ numer: numerDzialki, 'roslina-id': roslinaId }).subscribe({
+      next: (zasadzonaRoslina) => {
+        this.zasadzonaRoslina = zasadzonaRoslina;
+        if (zasadzonaRoslina.x && zasadzonaRoslina.y) {
+          this.moveRequest.x = zasadzonaRoslina!.x;
+          this.moveRequest.y = zasadzonaRoslina!.y;
+        }
+        console.log(zasadzonaRoslina);
+      },
+      error: (err) => {
+        console.log(err);
+        this.errorMsg.push('Nie znaleziono rośliny o podanym id.');
+      }
+    });
+  }
+
+  getPozycjeInDzialki(numerDzialki: number) {
     this.dzialkaService.getPozycjeInDzialki().subscribe({
       next: (dzialki) => {
-        this.dzialki = dzialki;
-
+        this.dzialki = dzialki.filter(dzialka => dzialka.numer !== numerDzialki);
+        if (this.dzialki.length > 0 && this.dzialki[0].numer) {
+          this.request.numerDzialki = this.dzialki[0].numer;
+        }
         this.loadDzialka();
-
-        console.log(dzialki);
       },
       error: (err) => {
         this.dzialki = [];
@@ -92,11 +120,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
         this.scrollToErrorHeader();
       }
     });
-  }
-
-  onWyswietlanieChange($event: String) {
-    this.request.wyswietlanie = $event.toString();
-    console.log('Wyswietlanie:', this.request.wyswietlanie);
   }
 
   onDzialkaChange(numerDzialki: number) {
@@ -110,14 +133,15 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     this.request.pozycje = [];
     this.request.x = -1;
     this.request.y = -1;
+    this.moveRequest.numerDzialkiNowy = this.request.numerDzialki;
 
     this.dzialka = this.dzialki.find(d => d.numer === this.request.numerDzialki);
     if (this.dzialka) {
+
       this.updateTilesWithRoslina(this.dzialka.zasadzoneRosliny);
 
       const existingRoslina = this.dzialka.zasadzoneRosliny?.find(roslina =>
-       (this.roslina?.roslinaId && roslina.roslina?.roslinaId === this.roslina?.roslinaId)
-        || (this.roslina?.nazwaLacinska && roslina.roslina?.nazwaLacinska === this.roslina?.nazwaLacinska));
+       (this.zasadzonaRoslina?.roslina?.roslinaId && roslina.roslina?.roslinaId === this.zasadzonaRoslina?.roslina?.roslinaId));
 
       if (existingRoslina) {
         this.errorMsg.push('Roślina już istnieje w tej działce.');
@@ -130,28 +154,15 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     }
   }
 
-  getRoslinaByRoslinaId(roslinaId: string): void {
-    this.errorMsg = [];
-    if(!roslinaId) return;
-    this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId }).subscribe({
-      next: (roslina) => {
-        this.roslina = roslina;
-        if (roslina.roslinaId) {
-          this.request.roslinaId = roslina.roslinaId;
-        }
-        console.log(roslina);
-      },
-      error: (err) => {
-        this.roslina = undefined;
-        console.log(err);
-        this.errorMsg.push('Nie znaleziono rośliny o podanym roslinaId.');
-      }
-    });
-  }
 
   getRoslinaObraz(): string | undefined {
-    if(this.roslina && this.roslina.obraz) {
-      return 'data:image/jpeg;base64,' + this.roslina.obraz;
+    let baza = 'data:image/jpeg;base64,';
+    if(this.zasadzonaRoslina) {
+      if(this.zasadzonaRoslina.obraz) {
+        return baza + this.zasadzonaRoslina.obraz
+      }else if(this.zasadzonaRoslina.roslina && this.zasadzonaRoslina.roslina.obraz) {
+        return baza + this.zasadzonaRoslina.roslina.obraz
+      }
     }
     return this._roslinaObraz;
   }
@@ -191,7 +202,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     });
   }
 
-  addRoslinaToDzialka() {
+  moveRoslinaToOtherDzialka() {
     if(this.mode === DzialkaModes.BrakEdycji) return;
     console.log(this.request);
 
@@ -207,10 +218,17 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
       return;
     }
 
+    this.moveRequest.xnowy = this.request.x;
+    this.moveRequest.ynowy = this.request.y;
+    this.moveRequest.pozycje = this.request.pozycje;
+
     this.message = '';
     this.errorMsg = [];
 
-    this.dzialkaService.saveRoslinaToDzialka({ body: { request: this.request, obraz: this.wybranyPlik, tekstura: this.wybranaTekstura } }).subscribe({
+    // console.log(this.moveRequest);
+    // console.log(this.request);
+
+    this.dzialkaService.updateRoslinaPozycjaInDzialka({ body: this.moveRequest }).subscribe({
       next: () => {
         this.goToDzialka();
       },
@@ -226,7 +244,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
 
   goToDzialka() {
     const nazwa = this.tokenService.nazwa;
-    this.router.navigate(['ogrod', this.tokenService.nazwa, 'dzialka', this.request.numerDzialki]);
+    this.router.navigate(['ogrod', this.tokenService.nazwa, 'dzialka', this.moveRequest.numerDzialkiNowy]);
   }
 
   changeEditMode(mode: DzialkaModes): void {
@@ -234,21 +252,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     console.log('pozycje:', this.request.pozycje);
   }
 
-  onFileSelected(file: File) {
-    this.wybranyPlik = file;
-  }
-
-  clearImage() {
-    this.wybranyPlik = null;
-  }
-
-  onTeksturaSelected(file: File) {
-    this.wybranaTekstura = file;
-  }
-
-  clearTekstura() {
-    this.wybranaTekstura = null;
-  }
 
   scrollToErrorHeader(): void {
     const element = document.getElementById('card-header');
@@ -256,5 +259,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
+
 
 }

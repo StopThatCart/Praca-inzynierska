@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { ZasadzonaRoslinaResponse } from '../../../../services/models';
 
 @Component({
   selector: 'app-wyswietlanie-rosliny-opcje',
@@ -13,7 +14,15 @@ import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
 export class WyswietlanieRoslinyOpcjeComponent {
 
   @Input() wyswietlanie : string | undefined;
+  @Input() selectedRoslina: ZasadzonaRoslinaResponse | undefined;
 
   wyswietlanieOpcje = WyswietlanieRosliny;
+
+  @Output() wyswietlanieChange = new EventEmitter<String>();
+
+  onWyswietlanieChange(event: Event): void {
+    console.log('Wybrano opcję:', this.wyswietlanie);
+    this.wyswietlanieChange.emit(this.wyswietlanie);
+  }
 
 }

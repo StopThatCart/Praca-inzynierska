@@ -15,8 +15,9 @@
                 <li class="nav-item"><a [routerLink]="'rosliny'" routerLinkActive="active" class="nav-link">Przeglądaj katalog</a></li>
                 <li class="nav-item"><a [routerLink]="['ogrod', getUzytkownikNazwa()]" routerLinkActive="active" class="nav-link" >Mój ogród</a></li>
                 <li class="nav-item"><a [routerLink]="'posty'" routerLinkActive="active" class="nav-link" >Społeczność</a></li>
-              </ul>
 
+              </ul>
+              <button class="nav-item btn btn-primary"><a (click)="testReferenceErrors()"  >TEST</a></button>
             <ng-template #loggedOut>
               <a  [routerLink]="'login'" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</a>
             </ng-template>

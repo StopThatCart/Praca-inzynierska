@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.FileResponse;
 import com.example.yukka.model.dzialka.DzialkaResponse;
+import com.example.yukka.model.dzialka.ZasadzonaRoslinaResponse;
 import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
@@ -99,8 +100,19 @@ public class DzialkaController {
      * @return ResponseEntity zawierające obiekt DzialkaResponse w formacie JSON
      */
     @GetMapping(value = "/{numer}", produces="application/json")
-    public ResponseEntity<DzialkaResponse> getDzialkaByNumer(@PathVariable("numer") int numer, Authentication connectedUser) {
+    public ResponseEntity<DzialkaResponse> getDzialkaByNumer(@PathVariable int numer, Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getDzialkaByNumer(numer, connectedUser));
+    }
+
+
+    @GetMapping(value = "/{numer}/{x}/{y}", produces="application/json")
+    public ResponseEntity<ZasadzonaRoslinaResponse> getRoslinaInDzialka(@PathVariable int numer, @PathVariable int x, @PathVariable int y, Authentication connectedUser) {
+        return ResponseEntity.ok(dzialkaService.getRoslinaInDzialka(numer, x, y, connectedUser));
+    }
+
+    @GetMapping(value = "/{numer}/{roslina-id}", produces="application/json")
+    public ResponseEntity<ZasadzonaRoslinaResponse> getRoslinaInDzialkaByRoslinaId(@PathVariable int numer, @PathVariable("roslina-id") String roslinaId, Authentication connectedUser) {
+        return ResponseEntity.ok(dzialkaService.getRoslinaInDzialka(numer, roslinaId, connectedUser));
     }
 
     /**

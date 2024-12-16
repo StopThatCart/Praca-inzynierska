@@ -17,11 +17,12 @@
         </div>
         <div class="col-md-6 d-md-flex align-items-md-center">
           <div>
-            <h3 class="roslina-nazwa-color">{{zasadzonaRoslina.roslina?.nazwa}}</h3>
-            <h5 class="roslina-nazwa-lacinska-color">{{zasadzonaRoslina.roslina?.nazwaLacinska}}</h5>
+            <h2 class="text-primary fw-bold text-uppercase">{{zasadzonaRoslina.roslina?.nazwa}}</h2>
+            <h5 class="text-secondary fw-bold text-uppercase">{{zasadzonaRoslina.roslina?.nazwaLacinska}}</h5>
 
-            <div class="d-flex mb-2">
-              <span class="roslina-nazwa-lacinska-color me-2">Kolor kafelków:</span>
+
+            <div *ngIf="isCurrentUzytkownik()" class="d-flex mb-2 fs-5">
+              <span class="text-secondary fw-bold me-2">Kolor kafelków:</span>
 
               <input [value]="zasadzonaRoslina.kolor"
               type="color"
@@ -29,8 +30,10 @@
               value="#CCCCCC" disabled>
             </div>
 
-            <div class="d-flex mb-2">
-              <span class="roslina-nazwa-lacinska-color me-2">Tryb wyświetlania: {{ zasadzonaRoslina.wyswietlanie }}</span>
+            <div *ngIf="isCurrentUzytkownik()" class="d-flex mb-2">
+              <span class="text-secondary fw-bold fs-5">Tryb wyświetlania: &nbsp;
+                <span class="text-black">{{ getWyswietlanie() }}</span>
+              </span>
             </div>
 
           </div>
@@ -51,6 +54,11 @@
           type="button" class="btn btn-warning"
           placement="bottom" ngbTooltip="Zmień pozycję rośliny"
           data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+
+          <button (click)="goToMoveRoslina()"
+          type="button" class="btn btn-warning"
+          placement="bottom" ngbTooltip="Przenieś roślinę na inną działkę"
+          ><i class="fa-solid fa-arrow-right"></i></button>
 
           <button (click)="openColorPickerModal()"
           placement="bottom" ngbTooltip="Zmień kolor kafelków"

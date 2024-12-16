@@ -123,24 +123,19 @@ public class RoslinaMapper {
      * @return obiekt typu <strong>ZasadzonaRoslinaResponse</strong> lub <strong>null</strong>, jeśli wejściowy obiekt <strong>ZasadzonaNa</strong> jest <strong>null</strong>
      *
      */
-    private ZasadzonaRoslinaResponse toZasadzonaRoslinaResponse(ZasadzonaNaReverse zasadzonaNaReverse) {
+    public ZasadzonaRoslinaResponse toZasadzonaRoslinaResponse(ZasadzonaNaReverse zasadzonaNaReverse) {
         if (zasadzonaNaReverse == null || zasadzonaNaReverse.getRoslina() == null) {
             return null;
         }
     
         byte[] obraz = null;
-        if (zasadzonaNaReverse.getObraz() != null) {
+        if (zasadzonaNaReverse.getObraz() != null && !zasadzonaNaReverse.getObraz().isEmpty()) {
             obraz = fileUtils.readFile(zasadzonaNaReverse.getObraz(), DefaultImage.ROSLINA);
-        } 
-        // else if (zasadzonaNaReverse.getRoslina().getObraz() != null) {
-        //     obraz = fileUtils.readRoslinaObrazFile(zasadzonaNaReverse.getRoslina().getObraz());
-        // }
+        }
 
         byte[] tekstura = null;
-        if (zasadzonaNaReverse.getTekstura() != null) {
+        if (zasadzonaNaReverse.getTekstura() != null && !zasadzonaNaReverse.getTekstura().isEmpty()) {
             tekstura = fileUtils.readFile(zasadzonaNaReverse.getTekstura(), null);
-        } else  {
-          
         }
     
         return ZasadzonaRoslinaResponse.builder()

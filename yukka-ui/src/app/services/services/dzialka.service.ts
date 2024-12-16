@@ -27,6 +27,10 @@ import { getDzialkiOfUzytkownik } from '../fn/dzialka/get-dzialki-of-uzytkownik'
 import { GetDzialkiOfUzytkownik$Params } from '../fn/dzialka/get-dzialki-of-uzytkownik';
 import { getPozycjeInDzialki } from '../fn/dzialka/get-pozycje-in-dzialki';
 import { GetPozycjeInDzialki$Params } from '../fn/dzialka/get-pozycje-in-dzialki';
+import { getRoslinaInDzialka } from '../fn/dzialka/get-roslina-in-dzialka';
+import { GetRoslinaInDzialka$Params } from '../fn/dzialka/get-roslina-in-dzialka';
+import { getRoslinaInDzialkaByRoslinaId } from '../fn/dzialka/get-roslina-in-dzialka-by-roslina-id';
+import { GetRoslinaInDzialkaByRoslinaId$Params } from '../fn/dzialka/get-roslina-in-dzialka-by-roslina-id';
 import { renameDzialka } from '../fn/dzialka/rename-dzialka';
 import { RenameDzialka$Params } from '../fn/dzialka/rename-dzialka';
 import { saveRoslinaToDzialka } from '../fn/dzialka/save-roslina-to-dzialka';
@@ -41,6 +45,7 @@ import { updateRoslinaPozycjaInDzialka } from '../fn/dzialka/update-roslina-pozy
 import { UpdateRoslinaPozycjaInDzialka$Params } from '../fn/dzialka/update-roslina-pozycja-in-dzialka';
 import { updateRoslinaWyswietlanieInDzialka } from '../fn/dzialka/update-roslina-wyswietlanie-in-dzialka';
 import { UpdateRoslinaWyswietlanieInDzialka$Params } from '../fn/dzialka/update-roslina-wyswietlanie-in-dzialka';
+import { ZasadzonaRoslinaResponse } from '../models/zasadzona-roslina-response';
 
 @Injectable({ providedIn: 'root' })
 export class DzialkaService extends BaseService {
@@ -320,6 +325,56 @@ export class DzialkaService extends BaseService {
   getDzialkaByNumer(params: GetDzialkaByNumer$Params, context?: HttpContext): Observable<DzialkaResponse> {
     return this.getDzialkaByNumer$Response(params, context).pipe(
       map((r: StrictHttpResponse<DzialkaResponse>): DzialkaResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `getRoslinaInDzialka()` */
+  static readonly GetRoslinaInDzialkaPath = '/dzialki/{numer}/{x}/{y}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getRoslinaInDzialka()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getRoslinaInDzialka$Response(params: GetRoslinaInDzialka$Params, context?: HttpContext): Observable<StrictHttpResponse<ZasadzonaRoslinaResponse>> {
+    return getRoslinaInDzialka(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getRoslinaInDzialka$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getRoslinaInDzialka(params: GetRoslinaInDzialka$Params, context?: HttpContext): Observable<ZasadzonaRoslinaResponse> {
+    return this.getRoslinaInDzialka$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ZasadzonaRoslinaResponse>): ZasadzonaRoslinaResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `getRoslinaInDzialkaByRoslinaId()` */
+  static readonly GetRoslinaInDzialkaByRoslinaIdPath = '/dzialki/{numer}/{roslina-id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getRoslinaInDzialkaByRoslinaId()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getRoslinaInDzialkaByRoslinaId$Response(params: GetRoslinaInDzialkaByRoslinaId$Params, context?: HttpContext): Observable<StrictHttpResponse<ZasadzonaRoslinaResponse>> {
+    return getRoslinaInDzialkaByRoslinaId(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getRoslinaInDzialkaByRoslinaId$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getRoslinaInDzialkaByRoslinaId(params: GetRoslinaInDzialkaByRoslinaId$Params, context?: HttpContext): Observable<ZasadzonaRoslinaResponse> {
+    return this.getRoslinaInDzialkaByRoslinaId$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ZasadzonaRoslinaResponse>): ZasadzonaRoslinaResponse => r.body)
     );
   }
 

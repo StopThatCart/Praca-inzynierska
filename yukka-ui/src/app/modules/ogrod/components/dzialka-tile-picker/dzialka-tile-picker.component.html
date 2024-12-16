@@ -1,0 +1,21 @@
+<div *ngIf="!isMove" class="mb-2">
+  <label for="exampleColorInput" class="form-label">Wybierz kolor kafelków rośliny(Wymagane)</label>
+  <input
+  [(colorPicker)]="request.kolor"
+  [style.background]="request.kolor"
+  [cpOutputFormat]="'hex'"
+  [value]="request.kolor"
+  class="form-control form-control-color text-black"
+  />
+
+</div>
+
+<div class="le-kontener mb-2">
+  <div class="tileSet" #tileSet>
+    <div class="tile" *ngFor="let tile of tiles"
+    [ngStyle]="{'background-color': tile.backgroundColor}"
+    (click)="onTileClick(tile)"
+    >
+    </div>
+  </div>
+</div>

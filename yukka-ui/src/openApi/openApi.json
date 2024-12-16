@@ -2572,6 +2572,94 @@
         }
       }
     },
+    "/dzialki/{numer}/{x}/{y}": {
+      "get": {
+        "tags": [
+          "Dzialka"
+        ],
+        "operationId": "getRoslinaInDzialka",
+        "parameters": [
+          {
+            "name": "numer",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "x",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "y",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ZasadzonaRoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dzialki/{numer}/{roslina-id}": {
+      "get": {
+        "tags": [
+          "Dzialka"
+        ],
+        "operationId": "getRoslinaInDzialkaByRoslinaId",
+        "parameters": [
+          {
+            "name": "numer",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "roslina-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ZasadzonaRoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/dzialki/{numer}/uzytkownicy/{uzytkownik-nazwa}": {
       "get": {
         "tags": [
@@ -2866,11 +2954,11 @@
           "wposcie": {
             "$ref": "#/components/schemas/Post"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -2879,11 +2967,11 @@
       "Oceniany": {
         "type": "object",
         "properties": {
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -2975,11 +3063,11 @@
               "$ref": "#/components/schemas/Komentarz"
             }
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3146,9 +3234,6 @@
           "name": {
             "type": "string"
           },
-          "password": {
-            "type": "string"
-          },
           "pracownik": {
             "type": "boolean"
           },
@@ -3161,6 +3246,9 @@
           "normalUzytkownik": {
             "type": "boolean"
           },
+          "password": {
+            "type": "string"
+          },
           "authorities": {
             "type": "array",
             "items": {
@@ -3170,10 +3258,10 @@
           "enabled": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
           "accountNonLocked": {

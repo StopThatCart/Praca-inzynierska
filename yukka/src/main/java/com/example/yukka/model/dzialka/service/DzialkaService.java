@@ -17,6 +17,7 @@ import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
+import com.example.yukka.model.dzialka.ZasadzonaRoslinaResponse;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
@@ -179,6 +180,39 @@ public class DzialkaService {
     }
 
 
+    @Transactional(readOnly = true)
+    public ZasadzonaRoslinaResponse getRoslinaInDzialka(int numer, int x, int y, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+
+        Dzialka dzialka = dzialkaRepository.getRoslinaInDzialka(uzyt.getEmail(), numer, x, y)
+        .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny na pozycji (" + x + ", " + y + ") na działce " + numer));
+
+        for (ZasadzonaNaReverse zasadzonaNa : dzialka.getZasadzoneRosliny()) {
+            System.out.println("Zasadzona na: " + zasadzonaNa.getX() + ", " + zasadzonaNa.getY());
+        }
+
+        if (dzialka.getZasadzoneRosliny().isEmpty()) {
+            throw new EntityNotFoundException("Nie znaleziono rośliny na pozycji (" + x + ", " + y + ") na działce " + numer);
+        }
+        
+        return roslinaMapper.toZasadzonaRoslinaResponse(dzialka.getZasadzoneRosliny().get(0));
+    }
+
+    @Transactional(readOnly = true)
+    public ZasadzonaRoslinaResponse getRoslinaInDzialka(int numer, String roslinaId, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+
+        Dzialka dzialka = dzialkaRepository.getRoslinaInDzialka(uzyt.getEmail(), numer, roslinaId)
+        .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId + " na działce " + numer));
+
+        if (dzialka.getZasadzoneRosliny().isEmpty()) {
+            throw new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId + " na działce " + numer);
+        }
+        
+        return roslinaMapper.toZasadzonaRoslinaResponse(dzialka.getZasadzoneRosliny().get(0));
+    }
+
+
     /**
      * Zmienia nazwę działki o podanym numerze.
      *
@@ -278,10 +312,14 @@ public class DzialkaService {
             request.setTekstura(fileStoreService.saveRoslinaObrazInDzialka(tekstura, uzyt.getUzytId()));    
         } else if(request.getWyswietlanie().equals(Wyswietlanie.TEKSTURA.toString())) {
             throw new IllegalArgumentException("Nie można wybrać wyświetlania samej tekstury bez podania tekstury");
+        } else {
+            request.setTekstura(null);
         }
 
         if(obraz != null) {
             request.setObraz(fileStoreService.saveRoslinaObrazInDzialka(obraz, uzyt.getUzytId()));    
+        } else {
+            request.setObraz(null);
         }
         
 
@@ -289,7 +327,7 @@ public class DzialkaService {
         request.getX(), request.getY(), 
         request.getPozycjeX(), request.getPozycjeY(),
         request.getKolor(), request.getTekstura(), 
-        request.getWyswietlanie().toString(),
+        request.getWyswietlanie(),
         request.getObraz(), nazwaLacinskaOrId);
     }
 
@@ -326,8 +364,8 @@ public class DzialkaService {
             throw new IllegalArgumentException("Nie znaleziono rośliny na pozycji (" + request.getX() + ", " + request.getY() + ")");
         }
 
-        if (request.getNumerDzialkiNowy() != null && request.getNumerDzialki() != request.getNumerDzialkiNowy()) {
-            return moveRoslinaToDifferentDzialka(request, uzyt);
+        if (request.getNumerDzialkiNowy() != null && !request.getNumerDzialki().equals(request.getNumerDzialkiNowy())) {
+            return moveRoslinaToDifferentDzialka(request, zasadzonaRoslina, uzyt);
         }
     
         return moveRoslinaWithinSameDzialka(request, uzyt, dzialka);
@@ -335,16 +373,25 @@ public class DzialkaService {
 
     /**
      * Metoda przenosi roślinę na inną działkę użytkownika.
-     * UWAGA: Ta metoda jest nieużywana na frontendzie, gdyż ze względu na limity czasowe nie zdążono jej zaimplementować.
      * @param request obiekt MoveRoslinaRequest reprezentujący żądanie przeniesienia rośliny na inną działkę
      * @param connectedUser obiekt Uzytkownik reprezentujący zalogowanego użytkownika
      * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
      */
-    private DzialkaResponse moveRoslinaToDifferentDzialka(MoveRoslinaRequest request, Uzytkownik uzyt) {
+    private DzialkaResponse moveRoslinaToDifferentDzialka(MoveRoslinaRequest request, ZasadzonaNaReverse zasadzonaRoslina, Uzytkownik uzyt) {
+        log.info("Przenoszenie rośliny do innej działki" );
         Dzialka dzialka2 = getDzialkaByNumer(request.getNumerDzialkiNowy(), uzyt);
+
+        if(dzialka2.isRoslinaInDzialka(zasadzonaRoslina)) {
+            throw new IllegalArgumentException("Podana roślina już znajduje się na działce " + request.getNumerDzialki());
+        }
     
         if (dzialka2.getZasadzonaNaByCoordinates(request.getXNowy(), request.getYNowy()) != null) {
             throw new IllegalArgumentException("Pozycja (" + request.getXNowy() + ", " + request.getYNowy() + ") jest zajęta");
+        }
+
+        List<Pozycja> zajetePozycje = dzialka2.arePozycjeOccupied(request);
+        if (!zajetePozycje.isEmpty()) {
+            throw new IllegalArgumentException("Pozycje są zajęte przez inne rośliny: " + zajetePozycje);
         }
     
         Dzialka res = dzialkaRepository.changeRoslinaPozycjaInDzialka(uzyt.getEmail(),
@@ -362,6 +409,7 @@ public class DzialkaService {
      * @return obiekt DzialkaResponse reprezentujący działkę użytkownika
      */
     private DzialkaResponse moveRoslinaWithinSameDzialka(MoveRoslinaRequest request, Uzytkownik uzyt, Dzialka dzialka) {
+        log.info("Przenoszenie rośliny na tę samą działkę" );
         ZasadzonaNaReverse zasadzonaRoslina = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
         ZasadzonaNaReverse zasadzonaRoslinaNowa = dzialka.getZasadzonaNaByCoordinates(request.getXNowy(), request.getYNowy());
         if(zasadzonaRoslina == null || zasadzonaRoslina.getRoslina() == null) {
