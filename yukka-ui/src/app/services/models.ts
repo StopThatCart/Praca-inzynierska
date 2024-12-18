@@ -30,7 +30,6 @@ export type { PageResponseRozmowaPrywatnaResponse } from './models/page-response
 export type { Post } from './models/post';
 export type { PostRequest } from './models/post-request';
 export type { PostResponse } from './models/post-response';
-export type { PowiadomienieDto } from './models/powiadomienie-dto';
 export type { PowiadomienieResponse } from './models/powiadomienie-response';
 export type { Pozycja } from './models/pozycja';
 export type { ProfilRequest } from './models/profil-request';
@@ -39,6 +38,7 @@ export type { RoslinaRequest } from './models/roslina-request';
 export type { RoslinaResponse } from './models/roslina-response';
 export type { RozmowaPrywatna } from './models/rozmowa-prywatna';
 export type { RozmowaPrywatnaResponse } from './models/rozmowa-prywatna-response';
+export type { SpecjalnePowiadomienieRequest } from './models/specjalne-powiadomienie-request';
 export type { StatystykiDto } from './models/statystyki-dto';
 export type { Ustawienia } from './models/ustawienia';
 export type { UstawieniaRequest } from './models/ustawienia-request';

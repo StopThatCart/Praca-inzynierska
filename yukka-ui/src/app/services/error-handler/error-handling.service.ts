@@ -11,16 +11,38 @@ export class ErrorHandlingService {
   handleErrors(err: any, errorMsg : string[]): string[] {
     console.log(err);
     errorMsg = [];
-    if(err.error.validationErrors) {
-      errorMsg = err.error.validationErrors
-    } else if (err.error.error) {
-      errorMsg.push(err.error.error);
-    } else if (err.error.businessErrorDescription) {
-      errorMsg.push(err.error.businessErrorDescription);
-    } else if (err.error) {
-      errorMsg.push(err.error);
-    } else {
+
+    if (err == null) {
+      errorMsg.push('Wystąpił nieznany błąd');
+      return errorMsg;
+    }
+
+    if (err.error) {
+      if(err.error.validationErrors) {
+        errorMsg = err.error.validationErrors
+      } else if (err.error.error) {
+        errorMsg.push(err.error.error);
+      } else if (err.error.businessErrorDescription) {
+        errorMsg.push(err.error.businessErrorDescription);
+      }else {
+        errorMsg.push(err.error);
+      }
+    } else if (err.status) {
+      if(err.status === 403) {
+        errorMsg.push('Status 403 - Brak uprawnień do wykonania tej operacji');
+      } else if (err.status === 401) {
+        errorMsg.push('Status 401 - Brak autoryzacji');
+      } else if (err.status === 404) {
+        errorMsg.push('Status 404 - Nie znaleziono zasobu');
+      } else if (err.status === 500) {
+        errorMsg.push('Status 500 - Błąd serwera');
+      } else {
+        errorMsg.push(err.status);
+      }
+    }else if (err.message) {
       errorMsg.push(err.message);
+    } else {
+      errorMsg.push(err);
     }
     //console.log("Error message: " + errorMsg);
     return errorMsg;

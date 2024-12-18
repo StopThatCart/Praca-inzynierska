@@ -21,6 +21,7 @@ import lombok.Setter;
  * <ul>
  *   <li><strong>id</strong>: Unikalny identyfikator powiadomienia.</li>
  *   <li><strong>przeczytane</strong>: Flaga oznaczająca, czy powiadomienie zostało przeczytane.</li>
+ *   <li><strong>ukryte</strong>: Flaga oznaczająca, czy powiadomienie zostało ukryte.</li>
  *   <li><strong>oceniany</strong>: Użytkownik, który jest oceniany w powiadomieniu.</li>
  * </ul>
  */
@@ -36,6 +37,9 @@ public class Powiadamia {
 
     @Property("przeczytane")
     private Boolean przeczytane;
+
+    @Property("ukryte")
+    private Boolean ukryte;
 
     @TargetNode
     private Uzytkownik oceniany;

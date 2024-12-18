@@ -15,8 +15,8 @@ import { getPowiadomienia } from '../fn/powiadomienie/get-powiadomienia';
 import { GetPowiadomienia$Params } from '../fn/powiadomienie/get-powiadomienia';
 import { PageResponsePowiadomienieResponse } from '../models/page-response-powiadomienie-response';
 import { PowiadomienieResponse } from '../models/powiadomienie-response';
-import { remove1 } from '../fn/powiadomienie/remove-1';
-import { Remove1$Params } from '../fn/powiadomienie/remove-1';
+import { removePowiadomienie } from '../fn/powiadomienie/remove-powiadomienie';
+import { RemovePowiadomienie$Params } from '../fn/powiadomienie/remove-powiadomienie';
 import { sendSpecjalnePowiadomienie } from '../fn/powiadomienie/send-specjalne-powiadomienie';
 import { SendSpecjalnePowiadomienie$Params } from '../fn/powiadomienie/send-specjalne-powiadomienie';
 import { sendSpecjalnePowiadomienieToPracownicy } from '../fn/powiadomienie/send-specjalne-powiadomienie-to-pracownicy';
@@ -27,6 +27,8 @@ import { setAllPowiadomieniaPrzeczytane } from '../fn/powiadomienie/set-all-powi
 import { SetAllPowiadomieniaPrzeczytane$Params } from '../fn/powiadomienie/set-all-powiadomienia-przeczytane';
 import { setPowiadomieniePrzeczytane } from '../fn/powiadomienie/set-powiadomienie-przeczytane';
 import { SetPowiadomieniePrzeczytane$Params } from '../fn/powiadomienie/set-powiadomienie-przeczytane';
+import { ukryjPowiadomienie } from '../fn/powiadomienie/ukryj-powiadomienie';
+import { UkryjPowiadomienie$Params } from '../fn/powiadomienie/ukryj-powiadomienie';
 
 @Injectable({ providedIn: 'root' })
 export class PowiadomienieService extends BaseService {
@@ -115,6 +117,35 @@ export class PowiadomienieService extends BaseService {
   sendSpecjalnePowiadomienieToPracownicy(params: SendSpecjalnePowiadomienieToPracownicy$Params, context?: HttpContext): Observable<{
 }> {
     return this.sendSpecjalnePowiadomienieToPracownicy$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
+  }
+
+  /** Path part for operation `ukryjPowiadomienie()` */
+  static readonly UkryjPowiadomieniePath = '/powiadomienia/{id}/ukryte';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `ukryjPowiadomienie()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  ukryjPowiadomienie$Response(params: UkryjPowiadomienie$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return ukryjPowiadomienie(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `ukryjPowiadomienie$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  ukryjPowiadomienie(params: UkryjPowiadomienie$Params, context?: HttpContext): Observable<{
+}> {
+    return this.ukryjPowiadomienie$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)
@@ -225,29 +256,29 @@ export class PowiadomienieService extends BaseService {
     );
   }
 
-  /** Path part for operation `remove1()` */
-  static readonly Remove1Path = '/powiadomienia/{id}';
+  /** Path part for operation `removePowiadomienie()` */
+  static readonly RemovePowiadomieniePath = '/powiadomienia/{id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `remove1()` instead.
+   * To access only the response body, use `removePowiadomienie()` instead.
    *
    * This method doesn't expect any request body.
    */
-  remove1$Response(params: Remove1$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  removePowiadomienie$Response(params: RemovePowiadomienie$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 }>> {
-    return remove1(this.http, this.rootUrl, params, context);
+    return removePowiadomienie(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `remove1$Response()` instead.
+   * To access the full response (for headers, for example), `removePowiadomienie$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  remove1(params: Remove1$Params, context?: HttpContext): Observable<{
+  removePowiadomienie(params: RemovePowiadomienie$Params, context?: HttpContext): Observable<{
 }> {
-    return this.remove1$Response(params, context).pipe(
+    return this.removePowiadomienie$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)

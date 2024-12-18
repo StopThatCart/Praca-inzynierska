@@ -45,6 +45,13 @@ import com.example.yukka.model.social.powiadomienie.Powiadomienie;
  * w systemie.</p>
  */
 public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, Long> {
+
+    @Query(value = """
+        MATCH (powiadomienie:Powiadomienie)
+        WHERE id(powiadomienie) = $id
+        RETURN powiadomienie
+        """)
+    Optional<Powiadomienie> findPowiadomienieById(@Param("id") Long id);
     @Query(value = """
         MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
         WHERE powiadomienie.typ = $typ AND powiadomienie.opis = $opis
@@ -91,7 +98,9 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
     void setAllPrzeczytane(@Param("email") String email);
 
     @Query(value = """
-        MATCH path=(powiadomienie:Powiadomienie)-[:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+        MATCH path=(powiadomienie:Powiadomienie)-[powiadamia:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+        WHERE powiadamia.ukryte = false
+
         OPTIONAL MATCH (zglaszajacy:Uzytkownik)-[r1:ZGLASZA]->(powiadomienie)
 
         RETURN powiadomienie, zglaszajacy, r1, collect(nodes(path)), collect(relationships(path))
@@ -120,39 +129,42 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
                                     typ:  pp.typ, odnosnik: pp.odnosnik, 
                                     opis: pp.opis, avatar: pp.avatar,
                                     dataUtworzenia: pp.dataUtworzenia}
-                )-[r1:POWIADAMIA{przeczytane: false}]->(uzyt)
+                )-[r1:POWIADAMIA{przeczytane: false, ukryte: false}]->(uzyt)
         RETURN pow, r1, uzyt
         """)
     Powiadomienie addPowiadomienieToUzytkownik(@Param("email") String email, @Param("powiadomienie") Powiadomienie powiadomienie);
 
     @Query("""
-        WITH $powiadomienie.__properties__ as pp
+        MATCH (nadawca:Uzytkownik{nazwa: $nazwa})
+        WITH nadawca, $powiadomienie.__properties__ as pp
         CREATE (pow:Powiadomienie{      
                                     typ:  pp.typ,
-                                    tytul: pp.tytul,  
                                     opis: pp.opis, avatar: pp.avatar, 
                                     dataUtworzenia: pp.dataUtworzenia}
                 )
+        WITH nadawca, pow
+        MERGE (nadawca)-[:WYSYLA_POWIADOMIENIE]->(pow)
         WITH pow
         MATCH (uzyt:Uzytkownik)
-        CREATE (pow)-[:POWIADAMIA{przeczytane: false}]->(uzyt)
-        
+        CREATE (pow)-[:POWIADAMIA{przeczytane: false, ukryte: false}]->(uzyt)
         """)
-    void addGlobalCustomPowiadomienie(@Param("powiadomienie") Powiadomienie powiadomienie);
+    void addGlobalCustomPowiadomienie(@Param("powiadomienie") Powiadomienie powiadomienie, @Param("nazwa") String nazwa);
 
     @Query("""
-        WITH $powiadomienie.__properties__ as pp
+        MATCH (nadawca:Uzytkownik{nazwa: $nazwa})
+        WITH nadawca, $powiadomienie.__properties__ as pp
         CREATE (pow:Powiadomienie{      
                                     typ:  pp.typ,
-                                    tytul: pp.tytul,  
                                     opis: pp.opis, avatar: pp.avatar, 
                                     dataUtworzenia: pp.dataUtworzenia}
                 )
+        WITH nadawca, pow
+        MERGE (nadawca)-[:WYSYLA_POWIADOMIENIE]->(pow)
         WITH pow
-        MATCH (uzyt:Uzytkownik:Pracownik)
-        CREATE (pow)-[:POWIADAMIA{przeczytane: false}]->(uzyt)
+        MATCH (uzyt:Pracownik)
+        CREATE (pow)-[:POWIADAMIA{przeczytane: false, ukryte: false}]->(uzyt)
         """)
-    void addCustomPowiadomienieToPracownicy(@Param("powiadomienie") Powiadomienie powiadomienie);
+    void addCustomPowiadomienieToPracownicy(@Param("powiadomienie") Powiadomienie powiadomienie, @Param("nazwa") String nazwa);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
@@ -165,7 +177,7 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
                                     typ:  pp.typ, odnosnik: pp.odnosnik, 
                                     opis: pp.opis, avatar: pp.avatar,
                                     dataUtworzenia: pp.dataUtworzenia}
-                )-[r1:POWIADAMIA{przeczytane: false}]->(prac)
+                )-[r1:POWIADAMIA{przeczytane: false, ukryte: false}]->(prac)
 
         RETURN pow, r1, prac
         """)
@@ -174,11 +186,22 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
 
     @Query("""
         MATCH (uzyt:Uzytkownik{nazwa: $nazwa})-[r1:ZGLASZA]->(pow:Zgloszenie)
+        WHERE r1.ukryte = false
+        
         RETURN pow, r1, uzyt
         ORDER BY pow.dataUtworzenia DESC
         LIMIT 1
         """)
     Optional<Powiadomienie> getNajnowszeZgloszenieUzytkownika(@Param("nazwa") String nazwa);
+
+
+    @Query(value = """
+        MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+        WHERE id(powiadomienie) = $id
+        SET r1.ukryte = true, r1.przeczytane = true
+        """)
+    void ukryjPowiadomienie(@Param("email") String email, @Param("id") Long id);
+
 
 
     @Query(value = """
@@ -193,6 +216,6 @@ public interface PowiadomienieRepository extends Neo4jRepository<Powiadomienie, 
 
         DETACH DELETE powiadomienie
         """)
-    void remove(@Param("email") String email, @Param("id") Long id);
+    void removePowiadomienie(@Param("email") String email, @Param("id") Long id);
 
 }

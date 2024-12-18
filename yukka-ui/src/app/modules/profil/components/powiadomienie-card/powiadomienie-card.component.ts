@@ -104,6 +104,10 @@ export class PowiadomienieCardComponent {
       this.powiadomienieService.setPowiadomieniePrzeczytane({ id: this.pow.id }).subscribe({
         next: (pow) => {
           if(pow) {
+            if( pow === null) {
+              console.error('Powiadomienie nie istnieje');
+              return;
+            }
             console.log('Powiadomienie set: ', pow);
             this.pow.przeczytane = pow.przeczytane;
             this.powiadomieniePrzeczytane.emit(this.pow);
@@ -123,18 +127,32 @@ export class PowiadomienieCardComponent {
     this.errorMsg = [];
     event.stopPropagation();
     if (this.pow.id) {
-      this.powiadomienieService.remove1({ id: this.pow.id }).subscribe({
-        next: () => {
-          this.powiadomienieUsuniete.emit(this.pow);
-          this.powiadomieniaSyncService.notifyPowiadomienieUsuniete(this.pow);
-        },
-        error: (error) => {
-
-          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
-          alert(this.errorMsg);
-          console.error('Error removing powiadomienie:', error);
-        }
-      });
+      if(this.pow.typ === TypPowiadomienia.SPECJALNE || this.pow.typ === TypPowiadomienia.ZGLOSZENIE) {
+        console.log('Nie można usunąć powiadomienia specjalnego');
+        this.powiadomienieService.ukryjPowiadomienie({ id: this.pow.id }).subscribe({
+          next: () => {
+            this.powiadomienieUsuniete.emit(this.pow);
+            this.powiadomieniaSyncService.notifyPowiadomienieUsuniete(this.pow);
+          },
+          error: (error) => {
+            this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
+            alert(this.errorMsg);
+            console.error('Error :', error);
+          }
+        });
+      } else {
+        this.powiadomienieService.removePowiadomienie({ id: this.pow.id }).subscribe({
+          next: () => {
+            this.powiadomienieUsuniete.emit(this.pow);
+            this.powiadomieniaSyncService.notifyPowiadomienieUsuniete(this.pow);
+          },
+          error: (error) => {
+            this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
+            alert(this.errorMsg);
+            console.error('Error :', error);
+          }
+        });
+      }
     }
   }
 

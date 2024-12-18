@@ -36,6 +36,7 @@ import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
 import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.PowiadomienieRepository;
+import com.example.yukka.model.social.request.SpecjalnePowiadomienieRequest;
 import com.example.yukka.model.social.request.ZgloszenieRequest;
 import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
@@ -173,22 +174,44 @@ public class PowiadomienieService {
     /**
      * Dodaje specjalne powiadomienie na podstawie przekazanego obiektu PowiadomienieDTO.
      *
-     * @param powiadomienieRequest obiekt zawierający dane powiadomienia do dodania
+     * @param request obiekt zawierający dane powiadomienia do dodania
      */
-    public void addSpecjalnePowiadomienie(PowiadomienieDTO powiadomienieRequest) {
-        Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest, null);
-        powiadomienieRepository.addGlobalCustomPowiadomienie(powiadomienie);
+    public void addSpecjalnePowiadomienie(SpecjalnePowiadomienieRequest request, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        addSpecjalnePowiadomienie(request, uzyt);
+    }
 
+    /**
+     * Dodaje specjalne powiadomienie na podstawie przekazanego obiektu PowiadomienieDTO.
+     *
+     * @param request obiekt zawierający dane powiadomienia do dodania
+     */
+    public void addSpecjalnePowiadomienie(SpecjalnePowiadomienieRequest request, Uzytkownik uzyt) {
+        log.info("Użytkownik: " + uzyt.getNazwa() + " dodaje specjalne powiadomienie: " + request.getOpis());
+
+        PowiadomienieDTO powiadomienieRequest = PowiadomienieDTO.builder()
+            .typ(TypPowiadomienia.SPECJALNE.name())
+            .tytul(request.getOpis())
+            .build();
+        Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest, null);
+        powiadomienieRepository.addGlobalCustomPowiadomienie(powiadomienie, uzyt.getNazwa());
     }
 
     /**
      * Dodaje specjalne powiadomienie dla pracowników na podstawie przekazanego obiektu PowiadomienieDTO.
      *
-     * @param powiadomienieRequest obiekt zawierający dane powiadomienia do dodania
+     * @param request obiekt zawierający dane powiadomienia do dodania
      */
-    public void addSpecjalnePowiadomienieToPracownicy(PowiadomienieDTO powiadomienieRequest) {
+    public void addSpecjalnePowiadomienieToPracownicy(SpecjalnePowiadomienieRequest request, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        log.info("Użytkownik: " + uzyt.getNazwa() + " dodaje specjalne powiadomienie dla pracowników: " + request.getOpis());
+
+        PowiadomienieDTO powiadomienieRequest = PowiadomienieDTO.builder()
+        .typ(TypPowiadomienia.SPECJALNE.name())
+        .tytul(request.getOpis())
+        .build();
         Powiadomienie powiadomienie = createPowiadomienie(TypPowiadomienia.SPECJALNE, powiadomienieRequest, null);
-        powiadomienieRepository.addCustomPowiadomienieToPracownicy(powiadomienie);
+        powiadomienieRepository.addCustomPowiadomienieToPracownicy(powiadomienie, uzyt.getNazwa());
     }
 
     /**
@@ -377,7 +400,13 @@ public class PowiadomienieService {
      */
     public PowiadomienieResponse setPrzeczytane(Long id, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
-        Powiadomienie powiadomienie = powiadomienieRepository.setPrzeczytane(uzyt.getEmail(), id).orElse(null);;
+        Powiadomienie pow = powiadomienieRepository.findPowiadomienieById(id)
+        .orElse(null);
+        if(pow == null) {
+            return null;
+        }
+
+        Powiadomienie powiadomienie = powiadomienieRepository.setPrzeczytane(uzyt.getEmail(), id).orElse(null);
 
         return powiadomienieMapper.toPowiadomienieResponse(powiadomienie);
     }
@@ -389,7 +418,27 @@ public class PowiadomienieService {
      */
     public void setAllPrzeczytane(Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        log.info("Użytkownik: " + uzyt.getNazwa() + " oznacza wszystkie swoje powiadomienia jako przeczytane");
+
         powiadomienieRepository.setAllPrzeczytane(uzyt.getEmail());
+    }
+
+
+     /**
+     * Ukrywa powiadomienie o podanym identyfikatorze.
+     *
+     * @param id            identyfikator powiadomienia do ukrycia
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     */
+    public void ukryjPowiadomienie(Long id, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+        log.info("Użytkownik: " + uzyt.getNazwa() + " ukrywa powiadomienie o id: " + id);
+
+        Optional<Powiadomienie> pow = powiadomienieRepository.findPowiadomienieById(id);
+        if(pow.isPresent() ) {
+            powiadomienieRepository.ukryjPowiadomienie(uzyt.getEmail(), id);
+        }
+
     }
 
     
@@ -399,13 +448,19 @@ public class PowiadomienieService {
      * @param id            identyfikator powiadomienia do usunięcia
      * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
      */
-    public void remove(Long id, Authentication connectedUser) {
+    public void removePowiadomienie(Long id, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
-        Optional<Powiadomienie> pow = powiadomienieRepository.findById(id);
-        if(pow.isPresent() && pow.get().getTyp().equals(TypPowiadomienia.ZGLOSZENIE.name())) {
-            throw new IllegalArgumentException("Nie można usunąć zgłoszenia");
+        log.info("Użytkownik: " + uzyt.getNazwa() + " usuwa powiadomienie o id: " + id);
+        
+        Optional<Powiadomienie> pow = powiadomienieRepository.findPowiadomienieById(id);
+        if(pow.isPresent() ) {
+            if(pow.get().getTyp().equals(TypPowiadomienia.ZGLOSZENIE.name())) {
+                throw new IllegalArgumentException("Nie można usunąć zgłoszenia");
+            } else if (pow.get().getTyp().equals(TypPowiadomienia.SPECJALNE.name())) {
+                throw new IllegalArgumentException("Nie można usunąć specjalnego powiadomienia");
+            }
+            powiadomienieRepository.removePowiadomienie(uzyt.getEmail(), id);
         }
-        powiadomienieRepository.remove(uzyt.getEmail(), id);
     }
 
     /**

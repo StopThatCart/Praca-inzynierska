@@ -1,13 +1,21 @@
+
 .notification-dropdown-menu {
   padding-bottom: 0;
   min-width: 528px;
   left: auto;
-  transform: translateX(-70%);
-  top: 100%;
+
   max-height: 300px;
   overflow-y: auto;
 }
 
+
+@media (max-width: 900px) {
+  .notification-dropdown-menu {
+    min-width:fit-content;
+  }
+}
+
+/*
 @media (max-width: 768px) {
   .notification-dropdown-menu {
     left: auto;
@@ -23,3 +31,5 @@
     transform: translateX(-50%);
   }
 }
+
+*/

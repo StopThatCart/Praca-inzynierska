@@ -16,6 +16,10 @@
                       <button (click)="setAllPowiadomieniaPrzeczytane()"  class="btn btn-primary me-1 " placement="left"  ngbTooltip="Przejdź do powiadomień">
                         <span>Ustaw wszystkie powiadomienia jako przeczytane</span>
                       </button>
+                      <app-add-powiadomienie-modal
+                      (powiadomienieDodane)="onPowiadomienieDodane($event)">
+
+                      </app-add-powiadomienie-modal>
                     </div>
 
 

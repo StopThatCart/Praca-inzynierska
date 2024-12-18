@@ -9,10 +9,11 @@ import { UzytkownikService } from '../../services/services';
 import { UzytkownikResponse } from '../../services/models';
 
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { BellNotifComponent } from "../../modules/profil/components/bell-notif/bell-notif.component";
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgbDropdownModule, PowiadomieniaDropdownComponent],
+  imports: [CommonModule, RouterModule, NgbDropdownModule, PowiadomieniaDropdownComponent, BellNotifComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

@@ -9,15 +9,17 @@ import { PaginationComponent } from "../../../../components/pagination/paginatio
 import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powiadomienia-sync.service';
 import { LoadingComponent } from "../../../../components/loading/loading.component";
 import { setAllPowiadomieniaPrzeczytane } from '../../../../services/fn/powiadomienie/set-all-powiadomienia-przeczytane';
+import { AddPowiadomienieModalComponent } from "../../components/add-powiadomienie-modal/add-powiadomienie-modal.component";
 
 @Component({
   selector: 'app-powiadomienia-page',
   standalone: true,
-  imports: [CommonModule, EdycjaNavComponent, PowiadomienieCardComponent, PaginationComponent, LoadingComponent],
+  imports: [CommonModule, EdycjaNavComponent, PowiadomienieCardComponent, PaginationComponent, LoadingComponent, AddPowiadomienieModalComponent],
   templateUrl: './powiadomienia-page.component.html',
   styleUrl: './powiadomienia-page.component.css'
 })
 export class PowiadomieniaPageComponent implements OnInit {
+
   powiadomienia: PageResponsePowiadomienieResponse = {};
   nazwa : string | undefined;
   isLoading = false;
@@ -94,6 +96,11 @@ export class PowiadomieniaPageComponent implements OnInit {
     }
   }
 
+  onPowiadomienieDodane($event: String) {
+    this.findAllPowiadomienia();
+    this.powiadomieniaSyncService.notifyUnreadCountUpdated();
+  }
+
   onPowiadomieniePrzeczytane(pow: PowiadomienieResponse) {
     this.powiadomieniaSyncService.notifyUnreadCountUpdated();
     this.powiadomieniaSyncService.notifyPowiadomieniePrzeczytane(pow);
@@ -115,6 +122,10 @@ export class PowiadomieniaPageComponent implements OnInit {
         this.message = 'Wystąpił błąd podczas ustawiania wszystkich powiadomień jako przeczytane.';
       }
     });
+  }
+
+  goToStworzPowiadomienie() {
+    this.router.navigate([`/profil/${this.nazwa}/powiadomienia/stworz`]);
   }
 
   // Paginacja

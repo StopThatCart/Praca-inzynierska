@@ -3,7 +3,6 @@ package com.example.yukka.security;
 import java.util.Arrays;
 import java.util.List;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -142,8 +141,12 @@ public class SecurityConfig {
                                     "/swagger-ui/**",
                                     "/webjars/**",
                                     "/swagger-ui.html").permitAll()
-                    .requestMatchers("/admin/**").hasAuthority(ROLE.Admin.toString())
-                    .requestMatchers("/pracownik/**").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
+                    .requestMatchers("/admin/**",
+                                    "powiadomienia/admin")
+                                    .hasAuthority(ROLE.Admin.toString())
+                    .requestMatchers("/pracownik/**",
+                                    "powiadomienia/pracownik")
+                                    .hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers( "/favicon.ico").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

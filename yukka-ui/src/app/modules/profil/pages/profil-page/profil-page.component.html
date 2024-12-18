@@ -45,7 +45,15 @@
     </div>
       <div class="col-auto col-md-7">
           <h1 id="username-heading">{{ uzyt.nazwa }}</h1>
-          <h5 *ngIf="uzyt.ban" class="text-danger">Zbanowany(a) do: <b>{{ uzyt.banDo }}</b> </h5>
+            <ng-container *ngIf="isProfilUzytkownikAdmin(); else pracownik">
+            <h5 class="text-info fw-bold">Admin</h5>
+            </ng-container>
+            <ng-template #pracownik>
+            <h5 *ngIf="isProfilUzytkownikPracownik()" class="text-info fw-bold">Pracownik</h5>
+            </ng-template>
+
+
+
           <ul class="list-unstyled fs-5 list-custom">
               <li id="list-username" *ngIf="uzyt.imie">Imię:&nbsp;
                 <span class="text-break">{{ uzyt.imie }}</span>

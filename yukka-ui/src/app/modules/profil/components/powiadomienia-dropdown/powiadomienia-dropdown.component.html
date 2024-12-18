@@ -1,5 +1,5 @@
-<div class="powiadomienia">
-  <div ngbDropdown class="d-inline-block" #myDrop="ngbDropdown">
+
+  <li ngbDropdown class="nav-item" #myDrop="ngbDropdown">
     <button
     (click)="$event.stopPropagation(); myDrop.open()"
     type="button"
@@ -11,7 +11,7 @@
       </span>
     </button>
     <div ngbDropdownMenu aria-labelledby="dropdownBasic1"
-      class="notification-dropdown-menu  bg-secondary"
+      class="notification-dropdown-menu  bg-secondary  dropdown-menu dropdown-menu-end"
       infiniteScroll
       [infiniteScrollDistance]="2"
       [infiniteScrollThrottle]="500"
@@ -43,11 +43,4 @@
 
       <app-loading [isLoading]="isLoading"></app-loading>
     </div>
-  </div>
-
-
-
-
-
-
-</div>
+  </li>

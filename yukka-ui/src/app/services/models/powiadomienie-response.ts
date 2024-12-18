@@ -13,6 +13,7 @@ export interface PowiadomienieResponse {
   przeczytane?: boolean;
   typ?: string;
   tytul?: string;
+  ukryte?: boolean;
   uzytkownikNazwa?: string;
   zglaszajacy?: UzytkownikResponse;
   zgloszenie?: boolean;

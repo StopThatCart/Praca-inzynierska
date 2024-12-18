@@ -135,6 +135,22 @@ export class ProfilPageComponent implements OnInit {
     return false;
   }
 
+  isProfilUzytkownikPracownik(): boolean {
+    if(this.uzyt && this.uzyt.labels?.includes('Pracownik')) {
+      return true;
+    }
+    return false;
+  }
+
+  isProfilUzytkownikAdmin(): boolean {
+    if(this.uzyt && this.uzyt.labels?.includes('Admin')) {
+      return true;
+    }
+    return false;
+  }
+
+
+
 
   checkIfZaproszony(): void {
     if(this.zaproszony) {

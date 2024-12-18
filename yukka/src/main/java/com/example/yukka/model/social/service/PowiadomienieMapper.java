@@ -53,10 +53,12 @@ public class PowiadomienieMapper {
             return null;
         }
         Boolean przeczytane = null;
+        Boolean ukryte = null;
         if (powiadomienie.getPowiadamia() != null) {
             przeczytane = powiadomienie.getPowiadamia().getPrzeczytane();
+            ukryte = powiadomienie.getPowiadamia().getUkryte();
         }
-        
+
         return PowiadomienieResponse.builder()
             .id(powiadomienie.getId())
             .typ(powiadomienie.getTyp())
@@ -64,6 +66,7 @@ public class PowiadomienieMapper {
             .zglaszajacy(commonMapperService.toUzytkownikResponse(powiadomienie.getZglaszajacy()))
             .tytul(powiadomienie.getTytul())
             .przeczytane(przeczytane)
+            .ukryte(ukryte)
             .odnosnik(powiadomienie.getOdnosnik())
             .opis(powiadomienie.getOpis())
             .nazwyRoslin(powiadomienie.getNazwyRoslin())

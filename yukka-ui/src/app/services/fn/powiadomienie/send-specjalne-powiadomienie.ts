@@ -6,10 +6,10 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { PowiadomienieDto } from '../../models/powiadomienie-dto';
+import { SpecjalnePowiadomienieRequest } from '../../models/specjalne-powiadomienie-request';
 
 export interface SendSpecjalnePowiadomienie$Params {
-      body: PowiadomienieDto
+      body: SpecjalnePowiadomienieRequest
 }
 
 export function sendSpecjalnePowiadomienie(http: HttpClient, rootUrl: string, params: SendSpecjalnePowiadomienie$Params, context?: HttpContext): Observable<StrictHttpResponse<{

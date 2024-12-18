@@ -687,7 +687,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PowiadomienieDTO"
+                "$ref": "#/components/schemas/SpecjalnePowiadomienieRequest"
               }
             }
           },
@@ -717,7 +717,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PowiadomienieDTO"
+                "$ref": "#/components/schemas/SpecjalnePowiadomienieRequest"
               }
             }
           },
@@ -1448,6 +1448,37 @@
               "application/json": {
                 "schema": {
                   "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/powiadomienia/{id}/ukryte": {
+      "patch": {
+        "tags": [
+          "Powiadomienie"
+        ],
+        "operationId": "ukryjPowiadomienie",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -2843,7 +2874,7 @@
         "tags": [
           "Powiadomienie"
         ],
-        "operationId": "remove_1",
+        "operationId": "removePowiadomienie",
         "parameters": [
           {
             "name": "id",
@@ -2954,11 +2985,11 @@
           "wposcie": {
             "$ref": "#/components/schemas/Post"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -2967,11 +2998,11 @@
       "Oceniany": {
         "type": "object",
         "properties": {
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3063,11 +3094,11 @@
               "$ref": "#/components/schemas/Komentarz"
             }
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3234,6 +3265,9 @@
           "name": {
             "type": "string"
           },
+          "password": {
+            "type": "string"
+          },
           "pracownik": {
             "type": "boolean"
           },
@@ -3246,9 +3280,6 @@
           "normalUzytkownik": {
             "type": "boolean"
           },
-          "password": {
-            "type": "string"
-          },
           "authorities": {
             "type": "array",
             "items": {
@@ -3258,13 +3289,13 @@
           "enabled": {
             "type": "boolean"
           },
+          "accountNonLocked": {
+            "type": "boolean"
+          },
           "accountNonExpired": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
-            "type": "boolean"
-          },
-          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -3877,65 +3908,16 @@
           }
         }
       },
-      "PowiadomienieDTO": {
+      "SpecjalnePowiadomienieRequest": {
+        "required": [
+          "opis"
+        ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "typ": {
-            "type": "string"
-          },
-          "zglaszajacy": {
-            "$ref": "#/components/schemas/Uzytkownik"
-          },
-          "przeczytane": {
-            "type": "boolean"
-          },
-          "tytul": {
-            "type": "string"
-          },
-          "odnosnik": {
-            "type": "string"
-          },
           "opis": {
+            "maxLength": 1000,
+            "minLength": 0,
             "type": "string"
-          },
-          "nazwyRoslin": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "avatar": {
-            "type": "string"
-          },
-          "uzytkownikNazwa": {
-            "type": "string"
-          },
-          "zglaszany": {
-            "type": "string"
-          },
-          "iloscPolubien": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "data": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "okres": {
-            "type": "string",
-            "format": "date"
-          },
-          "zgloszenie": {
-            "type": "boolean"
           }
         }
       },
@@ -4302,6 +4284,9 @@
             "type": "string"
           },
           "przeczytane": {
+            "type": "boolean"
+          },
+          "ukryte": {
             "type": "boolean"
           },
           "tytul": {

@@ -43,7 +43,8 @@ public enum TypPowiadomienia {
     ZGLOSZENIE("{uzytkownikNazwa} wysłał(a) zgłoszenie na {zglaszany}: {tytul}"),
     ZGLOSZENIE_POST("{uzytkownikNazwa} zgłosił(a) post {zglaszany} z powodu: {tytul}"),
     ZGLOSZENIE_KOMENTARZ("{uzytkownikNazwa} zgłosił(a) komentarz {zglaszany} pod postem z powodu: {tytul}"),
-    SPECJALNE("{tytul}");
+    SPECJALNE("{tytul}"),
+    SPECJALNE_PRACOWNICY("{tytul}");
 
     private final String template;
 

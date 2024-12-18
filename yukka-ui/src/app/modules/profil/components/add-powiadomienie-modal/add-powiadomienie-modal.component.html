@@ -1,0 +1,42 @@
+<button
+(click)="open(content)"
+class="btn btn-info rounded text-white" type="button" placement="bottom" ngbTooltip="Zgłoś">
+  Stwórz powiadomienie
+</button>
+
+
+<ng-template #content let-modal class="bg-secondary">
+	<div class="modal-header bg-secondary">
+      <h4 class="modal-title" id="modal-basic-title">Stwórz specjalne powiadomienie</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body bg-secondary" >
+    <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
+		<form>
+      <div class="mb-3">
+				<label for="dateOfBirth">Wybierz, do kogo skierować te powiadomienie</label>
+				<div class="input-group">
+          <select [(ngModel)]="doKogo"
+          class="form-select text-black"
+          name="target" aria-label="Default select example">
+            <option [ngValue]="'uzytkownik'" selected>Do użytkowników</option>
+            <option *ngIf="isAdmin()" [ngValue]="'pracownik'">Do wszystkich pracowników</option>
+          </select>
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="dateOfBirth">Podaj treść powiadomienia</label>
+				<div class="input-group">
+          <textarea [(ngModel)]="request.opis"
+          class="form-control text-black"
+          name="opis" type="text" placeholder="Powód zgłoszenia">
+
+          </textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer bg-secondary">
+		<button type="submit" class="btn btn-primary text-uppercase" (click)="onSubmit()">Wyślij</button>
+	</div>
+</ng-template>

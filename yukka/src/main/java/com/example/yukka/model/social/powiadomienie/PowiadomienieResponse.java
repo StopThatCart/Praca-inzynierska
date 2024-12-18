@@ -43,6 +43,7 @@ public class PowiadomienieResponse {
     private String typ;
     private boolean isZgloszenie;
     private Boolean przeczytane;
+    private Boolean ukryte;
     private String tytul;
     private String odnosnik;
     private String opis;

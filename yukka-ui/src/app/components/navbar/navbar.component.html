@@ -1,69 +1,70 @@
-  <!-- Start: Navbar Centered Links -->
-  <nav class="navbar navbar-expand-md py-3" style="background: var(--bs-secondary);">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center  text-center" [routerLink]="['']">
-        <img class="d-flex justify-content-center align-items-center me-2 filter" src="ico.svg" alt="a" width="48" height="48" style="background: var(--bs-primary);border-radius: 5px;">
-        <h3 class="pt-2 text-white">Wirtualny ogród Yukka</h3>
-      </a>
-
-      <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-3">
-        <span class="visually-hidden">Przełącz nawigację</span>
-        <span class="navbar-toggler-icon"></span>
-      </button>
-        <div class="collapse navbar-collapse" id="navcol-3">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item"><a [routerLink]="'rosliny'" routerLinkActive="active" class="nav-link">Przeglądaj katalog</a></li>
-                <li class="nav-item"><a [routerLink]="['ogrod', getUzytkownikNazwa()]" routerLinkActive="active" class="nav-link" >Mój ogród</a></li>
-                <li class="nav-item"><a [routerLink]="'posty'" routerLinkActive="active" class="nav-link" >Społeczność</a></li>
-
-              </ul>
-            <ng-template #loggedOut>
-              <a  [routerLink]="'login'" class="btn btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</a>
-            </ng-template>
-
+<nav class="navbar navbar-expand-lg py-3" style="background: var(--bs-secondary);">
+  <div class="container">
+    <button
+    data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-3">
+      <span class="visually-hidden">Przełącz nawigację</span>
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand d-flex align-items-center  text-center" [routerLink]="['']">
+      <img class="d-flex justify-content-center align-items-center me-2 filter" src="ico.svg" alt="a" width="48" height="48" style="background: var(--bs-primary);border-radius: 5px;">
+      <h2 class="pt-2 text-white d-none d-lg-block">Wirtualny ogród Yukka</h2>
+      <h5 class="pt-2 text-white d-block d-lg-none">Wirtualny ogród Yukka</h5>
+    </a>
+    <div class="collapse navbar-collapse" id="navcol-3">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a [routerLink]="'rosliny'" routerLinkActive="active" class="nav-link">Przeglądaj katalog</a></li>
+            <li class="nav-item"><a [routerLink]="['ogrod', getUzytkownikNazwa()]" routerLinkActive="active" class="nav-link" >Mój ogród</a></li>
+            <li class="nav-item"><a [routerLink]="'posty'" routerLinkActive="active" class="nav-link" >Społeczność</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <ul class="navbar-nav">
+            <ng-container *ngIf="isLogged()">
+              <app-powiadomienia-dropdown></app-powiadomienia-dropdown>
+            </ng-container>
             <ng-container *ngIf="isLogged(); else loggedOut">
-              <div class="hstack nav-item" ngbDropdown>
-                <app-powiadomienia-dropdown></app-powiadomienia-dropdown>
-
-                <button class="btn btn-primary dropdown-toggle d-flex align-items-center" ngbDropdownToggle
-                type="button"
-
-                id="navbarLeDropdown">
+              <li class="nav-item" ngbDropdown>
+                <button class="btn btn-primary dropdown-toggle nav-link bg-primary" tabindex="0" ngbDropdownToggle
+                type="button" id="navbarLeDropdown">
                   <img [src]="getUzytAvatar()"  class="rounded-circle me-2" alt="ico.svg" width="30" height="30">
-                  <span>{{ getUzytkownikNazwa()}}</span>
+                  <span>{{ getUzytkownikNazwa() }}</span>
                 </button>
 
-                <div class="bg-primary" ngbDropdownMenu aria-labelledby="navbarLeDropdown">
-                  <button ngbDropdownItem (click)="goToProfil()" class="text-black btn btn-primary">
-                    <span><i class="fas text-secondary-emphasis fa-house"></i>&nbsp;Profil</span>
-                  </button>
-                  <button ngbDropdownItem (click)="goToRozmowy()" class="text-black">
-                    <span><i class="fa-solid text-secondary-emphasis fa-envelope"></i>&nbsp;Wiadomości prywatne</span>
-                  </button>
-                  <button ngbDropdownItem (click)="goToUstawienia()" class="text-black">
-                    <span><i class="fa-solid text-secondary-emphasis fa-gear"></i>&nbsp;Ustawienia</span>
-                  </button>
-                  <button ngbDropdownItem (click)="goToPosty()" class="text-black">
-                    <span><i class="fa-solid text-secondary-emphasis fa-signs-post"></i>&nbsp;Moje posty</span>
-                  </button>
-                  <button ngbDropdownItem (click)="goToKomentarze()" class="text-black">
-                    <span><i class="fa-solid text-secondary-emphasis fa-comment"></i>&nbsp;Moje komentarze</span>
-                  </button>
-                  <button ngbDropdownItem (click)="logout()" class="text-black">
-                    <span><i class="fa-solid text-secondary-emphasis fa-arrow-right-from-bracket"></i>&nbsp;Wyloguj się</span>
-                  </button>
-                </div>
-              </div>
+                  <div ngbDropdownMenu aria-labelledby="navbarLeDropdown" class="bg-primary dropdown-menu dropdown-menu-end">
+                    <button ngbDropdownItem (click)="goToProfil()" class="text-black btn btn-primary">
+                      <span><i class="fas text-secondary-emphasis fa-house"></i>&nbsp;Profil</span>
+                    </button>
+                    <button ngbDropdownItem (click)="goToRozmowy()" class="text-black">
+                      <span><i class="fa-solid text-secondary-emphasis fa-envelope"></i>&nbsp;Wiadomości prywatne</span>
+                    </button>
+                    <button ngbDropdownItem (click)="goToUstawienia()" class="text-black">
+                      <span><i class="fa-solid text-secondary-emphasis fa-gear"></i>&nbsp;Ustawienia</span>
+                    </button>
+                    <button ngbDropdownItem (click)="goToPosty()" class="text-black">
+                      <span><i class="fa-solid text-secondary-emphasis fa-signs-post"></i>&nbsp;Moje posty</span>
+                    </button>
+                    <button ngbDropdownItem (click)="goToKomentarze()" class="text-black">
+                      <span><i class="fa-solid text-secondary-emphasis fa-comment"></i>&nbsp;Moje komentarze</span>
+                    </button>
+                    <button ngbDropdownItem (click)="logout()" class="text-black">
+                      <span><i class="fa-solid text-secondary-emphasis fa-arrow-right-from-bracket"></i>&nbsp;Wyloguj się</span>
+                    </button>
+                  </div>
+              </li>
             </ng-container>
+            <ng-template #loggedOut>
+              <li class="nav-item  nav-link ">
+                <a  [routerLink]="'login'" class="btn  nav-link btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</a>
+              </li>
 
-        </div>
-
-
-
-
-
+            </ng-template>
+          </ul>
+        </li>
+      </ul>
     </div>
-
-
+  </div>
 </nav>
-<!-- End: Navbar Centered Links -->

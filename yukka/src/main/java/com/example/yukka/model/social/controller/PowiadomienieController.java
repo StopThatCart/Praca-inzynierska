@@ -2,7 +2,6 @@ package com.example.yukka.model.social.controller;
 
 
 import static org.springframework.http.HttpStatus.CREATED;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.PowiadomienieResponse;
+import com.example.yukka.model.social.request.SpecjalnePowiadomienieRequest;
 import com.example.yukka.model.social.request.ZgloszenieRequest;
 import com.example.yukka.model.social.service.PowiadomienieService;
 
@@ -78,24 +77,24 @@ public class PowiadomienieController {
     /**
      * Wysyła specjalne powiadomienie do pracowników.
      *
-     * @param powiadomienieDTO <ul><li><strong>powiadomienieDTO</strong> - obiekt zawierający dane powiadomienia</li></ul>
+     * @param request <ul><li><strong>powiadomienieDTO</strong> - obiekt zawierający dane powiadomienia</li></ul>
      * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź z kodem HTTP 201</li></ul>
      */
     @PostMapping(value = "/admin", produces="application/json")
-    public ResponseEntity<?> sendSpecjalnePowiadomienieToPracownicy(@RequestBody PowiadomienieDTO powiadomienieDTO) {
-        powiadomienieService.addSpecjalnePowiadomienieToPracownicy(powiadomienieDTO);
+    public ResponseEntity<?> sendSpecjalnePowiadomienieToPracownicy(@RequestBody SpecjalnePowiadomienieRequest request, Authentication connectedUser) {
+        powiadomienieService.addSpecjalnePowiadomienieToPracownicy(request, connectedUser);
         return ResponseEntity.status(CREATED).build();
     }   
 
     /**
      * Wysyła specjalne powiadomienie.
      *
-     * @param powiadomienieDTO <ul><li><strong>powiadomienieDTO</strong> - obiekt zawierający dane powiadomienia</li></ul>
+     * @param request <ul><li><strong>powiadomienieDTO</strong> - obiekt zawierający dane powiadomienia</li></ul>
      * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź z kodem HTTP 201</li></ul>
      */
     @PostMapping(value = "/pracownik", produces="application/json")
-    public ResponseEntity<?> sendSpecjalnePowiadomienie(@RequestBody PowiadomienieDTO powiadomienieDTO) {
-        powiadomienieService.addSpecjalnePowiadomienie(powiadomienieDTO);
+    public ResponseEntity<?> sendSpecjalnePowiadomienie(@RequestBody SpecjalnePowiadomienieRequest request, Authentication connectedUser) {
+        powiadomienieService.addSpecjalnePowiadomienie(request, connectedUser);
         return ResponseEntity.status(CREATED).build();
     }
 
@@ -136,6 +135,21 @@ public class PowiadomienieController {
         return ResponseEntity.accepted().build();
     }
 
+    
+    /**
+     * Ukrywa powiadomienie.
+     *
+     * @param id <ul><li><strong>id</strong> - identyfikator powiadomienia</li></ul>
+     * @param connectedUser <ul><li><strong>connectedUser</strong> - uwierzytelniony użytkownik</li></ul>
+     * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź z kodem HTTP 204</li></ul>
+     */
+    @PatchMapping(value = "/{id}/ukryte", produces="application/json")
+    public ResponseEntity<?> ukryjPowiadomienie(@PathVariable("id") Long id, Authentication connectedUser) {
+        powiadomienieService.ukryjPowiadomienie(id, connectedUser);
+        return ResponseEntity.noContent().build();
+    }
+
+
     /**
      * Usuwa powiadomienie.
      *
@@ -144,8 +158,8 @@ public class PowiadomienieController {
      * @return <ul><li><strong>ResponseEntity</strong> - odpowiedź z kodem HTTP 204</li></ul>
      */
     @DeleteMapping(value = "/{id}", produces="application/json")
-    public ResponseEntity<?> remove(@PathVariable("id") Long id, Authentication connectedUser) {
-        powiadomienieService.remove(id, connectedUser);
+    public ResponseEntity<?> removePowiadomienie(@PathVariable("id") Long id, Authentication connectedUser) {
+        powiadomienieService.removePowiadomienie(id, connectedUser);
         return ResponseEntity.noContent().build();
     }
 

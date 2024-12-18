@@ -117,7 +117,7 @@ export class PowiadomieniaDropdownComponent implements OnInit {
     this.appendPow();
    }
 
-   toggleDropdown() {
+  toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
     if (this.isDropdownOpen) {
       this.loadPowiadomienia();

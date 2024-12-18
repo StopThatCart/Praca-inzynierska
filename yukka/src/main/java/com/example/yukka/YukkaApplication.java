@@ -39,7 +39,6 @@ import com.example.yukka.model.roslina.controller.UzytkownikRoslinaService;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.example.yukka.model.social.komentarz.Komentarz;
 import com.example.yukka.model.social.post.Post;
-import com.example.yukka.model.social.powiadomienie.PowiadomienieDTO;
 import com.example.yukka.model.social.powiadomienie.TypPowiadomienia;
 import com.example.yukka.model.social.repository.KomentarzRepository;
 import com.example.yukka.model.social.repository.PostRepository;
@@ -47,6 +46,7 @@ import com.example.yukka.model.social.repository.RozmowaPrywatnaRepository;
 import com.example.yukka.model.social.request.KomentarzRequest;
 import com.example.yukka.model.social.request.OcenaRequest;
 import com.example.yukka.model.social.request.PostRequest;
+import com.example.yukka.model.social.request.SpecjalnePowiadomienieRequest;
 import com.example.yukka.model.social.request.ZgloszenieRequest;
 import com.example.yukka.model.social.service.KomentarzService;
 import com.example.yukka.model.social.service.PostService;
@@ -175,8 +175,8 @@ public class YukkaApplication {
 			if (seedDatabase) {
                 log.info("Seedowanie bazy danych...");
 				//roslinaImporterService.seedRosliny();
-				//unseed();
-				//seed();
+				unseed();
+				seed();
             }
         };
     }
@@ -309,6 +309,7 @@ public class YukkaApplication {
 		return this.uzytkownicy;
 	}
 
+	
 	private void seedZgloszenia() {
 		log.info("Seedowanie zgłoszeń...");
 		Faker faker = new Faker(new Locale("pl"));
@@ -328,13 +329,14 @@ public class YukkaApplication {
 
 
 		log.info("Dodawanie specjalnego powiadomienia...");
-		PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
-		.tytul("""
-				Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
-				Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
-				Ten komunikat został wygenerowany.
-				""").build();
-		powiadomienieService.addSpecjalnePowiadomienie(pow1);
+		SpecjalnePowiadomienieRequest specjalnePowiadomienieRequest = SpecjalnePowiadomienieRequest.builder().opis(faker.lorem().sentence()).build();
+		// PowiadomienieDTO  pow1 = PowiadomienieDTO.builder()
+		// .tytul("""
+		// 		Uwaga, mam ważny komunikat. Mianowicie, chciałbym poinformować, że jestem bardzo ważny i mam ważne rzeczy do powiedzenia.
+		// 		Dodatkowo, zapomniałem, co dokładnie chciałem powiedzieć, ale to nie ma znaczenia, bo i tak jestem ważny.
+		// 		Ten komunikat został wygenerowany.
+		// 		""").build();
+		powiadomienieService.addSpecjalnePowiadomienie(specjalnePowiadomienieRequest, usJan);
 
 
 	}
