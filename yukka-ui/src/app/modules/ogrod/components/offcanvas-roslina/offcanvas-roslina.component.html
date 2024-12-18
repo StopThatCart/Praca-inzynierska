@@ -1,9 +1,9 @@
 <div #offcanvasBottom class="offcanvas offcanvas-bottom bg-info-subtle h-auto" tabindex="-1" id="offcanvasBottom"
   aria-labelledby="offcanvasBottomLabel">
-  <div class="offcanvas-header">
+  <div class="offcanvas-header" style="background-color: #e5ffee;">
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  <div class="offcanvas-body small">
+  <div class="offcanvas-body small " style="background-color: #e5ffee;">
     <div *ngIf="zasadzonaRoslina" class="container py-4">
       <div class="row gy-4 mb-2">
         <div class="col-md-6 position-relative">
@@ -82,7 +82,7 @@
 
       <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
         <div class="card mt-2 border-5 border-primary-subtle"  style="background: var(--bs-secondary);">
-          <div class="card-body roslina-opis">
+          <div class="card-body fs-4 text-white">
             <pre *ngIf="zasadzonaRoslina.notatka; else noText">{{ zasadzonaRoslina.notatka }}</pre>
             <ng-template #noText>brak tekstu</ng-template>
           </div>
@@ -95,24 +95,15 @@
         </div>
       </div>
 
-      <div class="card border-5 border-primary-subtle mt-2" style="background: var(--bs-secondary);">
+      <div class="card bg-secondary border-5 border-primary-subtle mt-2">
         <div class="card-body">
-          <p class="my-3 roslina-opis">{{zasadzonaRoslina.roslina?.opis}}</p>
+          <p class="my-3 fs-4 text-white">{{zasadzonaRoslina.roslina?.opis}}</p>
         </div>
       </div>
 
-      <div class="container properties-container p-4 my-5" id="properties">
-        <div *ngFor="let pair of getRoslinaWlasciwoscPary(); let index = index; trackBy: trackByIndex" class="row justify-content-between py-2 my-2">
-          <div class="col property-item mx-2">
-            <span class="property-name">{{ pair[0].name }}:</span>
-            <span class="property-value">{{ pair[0].value }}</span>
-          </div>
-          <div *ngIf="pair[1]" class="col property-item mx-2">
-            <span class="property-name">{{ pair[1].name }}:</span>
-            <span class="property-value">{{ pair[1].value }}</span>
-          </div>
-        </div>
-      </div>
+      <app-roslina-wlasciwosci-container
+      [roslina]="zasadzonaRoslina.roslina">
+      </app-roslina-wlasciwosci-container>
 
     </div>
   </div>

@@ -13,6 +13,7 @@ import { AddRoslinaToDzialkaComponent } from './pages/add-roslina-to-dzialka/add
 import { RoslinyUzytkownikaPageComponent } from './pages/rosliny-uzytkownika-page/rosliny-uzytkownika-page.component';
 import { NotFoundComponent } from '../../components/not-found/not-found.component';
 import { MoveRoslinaToOtherDzialkaComponent } from './pages/move-roslina-to-other-dzialka/move-roslina-to-other-dzialka.component';
+import { RoslinaResolverService } from '../roslina/services/roslina-resolver.service';
 
 const routes: Routes = [
   {
@@ -38,7 +39,8 @@ const routes: Routes = [
               {
                 path: 'dodawanie/:roslinaId',
                 component: AddRoslinaToDzialkaComponent,
-                data: { breadcrumb: 'Dodawanie rośliny' }
+                data: { breadcrumb: (data: any) => `Dodawanie rośliny ${data.roslina.nazwa}` },
+                resolve: { roslina: RoslinaResolverService }
               },
               {
                 path: ':numer',
@@ -52,7 +54,8 @@ const routes: Routes = [
                   {
                     path: 'przenoszenie/:roslinaId',
                     component: MoveRoslinaToOtherDzialkaComponent,
-                    data: { breadcrumb: 'Przenoszenie rośliny' }
+                    data: { breadcrumb: (data: any) => `Przenoszenie rośliny ${data.roslina.nazwa}` },
+                    resolve: { roslina: RoslinaResolverService }
                   },
                 ]
               // canActivate: [pracownikGuard],

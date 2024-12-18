@@ -1,0 +1,10 @@
+
+.property-name {
+  color: var(--bs-secondary);
+  font-size: 20px;
+  text-transform: uppercase;
+  text-align: left;
+  margin-right: 2rem;
+}
+
+

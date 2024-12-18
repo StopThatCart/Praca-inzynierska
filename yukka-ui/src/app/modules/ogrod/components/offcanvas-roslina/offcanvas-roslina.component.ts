@@ -14,6 +14,7 @@ import { NgbCollapseModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap'
 import { TokenService } from '../../../../services/token/token.service';
 import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { RoslinaWlasciwosciContainerComponent } from "../../../roslina/components/roslina-wlasciwosci-container/roslina-wlasciwosci-container.component";
 
 @Component({
   selector: 'app-offcanvas-roslina',
@@ -27,7 +28,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
     ModalObrazPickComponent,
     WyswietlanieRoslinyOpcjeComponent,
     ModalWyswietlanieRoslinyPickComponent,
-    ModalNotatkaPickComponent],
+    ModalNotatkaPickComponent, RoslinaWlasciwosciContainerComponent],
   templateUrl: './offcanvas-roslina.component.html',
   styleUrl: './offcanvas-roslina.component.css'
 })
@@ -53,10 +54,6 @@ export class OffcanvasRoslinaComponent {
   @ViewChild(ModalObrazPickComponent) obrazPickerModal!: ModalObrazPickComponent;
 
   isTextureMode = false;
-
-
-
-  roslinaWlasciwosci: { name: string, value: string }[] = [];
   private _roslinaObraz: string | undefined;
 
   constructor(
@@ -71,11 +68,6 @@ export class OffcanvasRoslinaComponent {
    @Input()
    set zasadzonaRoslina(roslina: ZasadzonaRoslinaResponse | undefined) {
      this._zasadzonaRoslina = roslina;
-     if (roslina && roslina.roslina) {
-       this.roslinaWlasciwosci = this.wlasciwoscProcessService.setRoslinaWlasciwosci(roslina.roslina);
-     } else {
-       this.roslinaWlasciwosci = [];
-     }
    }
 
   get zasadzonaRoslina(): ZasadzonaRoslinaResponse | undefined {
@@ -92,17 +84,6 @@ export class OffcanvasRoslinaComponent {
       }
     }
     return this._roslinaObraz;
-  }
-
-  getRoslinaWlasciwoscPary(): { name: string, value: string }[][] {
-    if(!this.roslinaWlasciwosci && this.zasadzonaRoslina?.roslina) {
-      this.roslinaWlasciwosci = this.wlasciwoscProcessService.setRoslinaWlasciwosci(this.zasadzonaRoslina?.roslina);
-    }
-    return this.wlasciwoscProcessService.getRoslinaWlasciwoscPary(this.roslinaWlasciwosci);
-  }
-
-  trackByIndex(index: number, item: any): number {
-    return index;
   }
 
   isCurrentUzytkownik(): boolean {

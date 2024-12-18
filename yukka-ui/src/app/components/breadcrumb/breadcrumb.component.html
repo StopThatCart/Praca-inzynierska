@@ -2,7 +2,7 @@
   <ol class="breadcrumb">
     <ng-container *ngFor="let breadcrumb of breadcrumbs; let last = last">
       <li class="breadcrumb-item">
-        <a [routerLink]="breadcrumb.url">{{ breadcrumb.label }}</a>
+        <a class="link link-primary" [routerLink]="breadcrumb.url">{{ breadcrumb.label }}</a>
       </li>
       <li *ngIf="!last" class="breadcrumb-separator">></li>
     </ng-container>
