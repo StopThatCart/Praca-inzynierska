@@ -12,14 +12,15 @@
             width="30" height="30">
           </a>
           <span (click)="goToProfil()" class="fw-medium">{{ komentarz.uzytkownikNazwa }}&nbsp;</span>
-          <span class="komentarz-date">{{ komentarz.dataUtworzenia }}</span>
+
+          <span class="komentarz-date"><i class="fas fa-clock me-1"></i>{{ komentarz.dataUtworzenia }}</span>
           <ng-container *ngIf="komentarz.edytowany">
             <span class="komentarz-date">&nbsp; (edytowany)</span>
           </ng-container>
         </p>
     </div>
     <ng-container *ngIf="komentarz.odpowiadaKomentarzowi">
-        <a class="komentarz-option">{{ komentarz.odpowiadaKomentarzowi.uzytkownikNazwa  }}:</a>
+        <a class="komentarz-option text-info">{{ komentarz.odpowiadaKomentarzowi.uzytkownikNazwa  }}:</a>
     </ng-container>
     <ng-container *ngIf="!isEditing">
       <p class="text-break small">{{ komentarz.opis }}</p>
@@ -53,7 +54,7 @@
         <div class="hstack gap-3">
           <a (click)="addOcenaToKomentarz(komentarz.komentarzId, true)"
               class="komentarz-option justify-content-center">
-            <i class="fas fa-thumbs-up text-info"></i><span>{{ komentarz.ocenyLubi }}</span>
+            <i class="fas fa-thumbs-up text-primary"></i><span>&nbsp;{{ komentarz.ocenyLubi }}</span>
           </a>
           <a (click)="addOcenaToKomentarz(komentarz.komentarzId, false)"
               class="komentarz-option">

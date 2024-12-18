@@ -4,11 +4,11 @@
       <p *ngFor="let msg of errorMsg">{{ msg }}</p>
     </div>
     <img
-    (click)="goToProfil()"
+    [routerLink]="['/profil/', post.uzytkownik]"
     [src]="getPostAvatar()" alt="..." class="rounded-circle flex-shrink-0 me-3 fit-cover"
     width="50" height="50">
     <div>
-      <a (click)="goToProfil()" class="fw-bold mb-0 link-underline link-underline-opacity-0">{{post.uzytkownik}}</a>
+      <a [routerLink]="['/profil/', post.uzytkownik]" class="fw-bold mb-0 text-white link-underline link-underline-opacity-0">{{post.uzytkownik}}</a>
       <div class="text-muted">
         <i class="fas fa-clock me-1"></i>
         <span>{{post.dataUtworzenia}}</span>
@@ -33,11 +33,11 @@
     <div class="btn-toolbar justify-content-between">
       <div class="btn-group" role="group">
         <a (click)="addOcenaToPost(post.postId, true)" class="link-light link-underline link-underline-opacity-0">
-          <i class="fas fs-5 fa-thumbs-up"></i>
+          <i class="fas fs-5 fa-thumbs-up text-primary"></i>
           <span>&nbsp;{{post.ocenyLubi}}</span>
         </a>
         <a (click)="addOcenaToPost(post.postId, false)" class="link-light mx-3 link-underline link-underline-opacity-0">
-          <i class="fas fs-5 fa-thumbs-down"></i>
+          <i class="fas fs-5 fa-thumbs-down text-danger"></i>
           <span>&nbsp;{{post.ocenyNieLubi}}</span>
         </a>
       </div>

@@ -72,13 +72,6 @@ export class PostCardComponent implements OnInit {
     }
   }
 
-  goToProfil() {
-    if (this.post.uzytkownik) {
-      this.router.navigate([`/profil/${this.post.uzytkownik}`]);
-    }
-  }
-
-
   addOcenaToPost(postId: string | undefined, ocena: boolean) {
     if (postId && this.tokenService) {
 

@@ -2,7 +2,7 @@
   <ul class="pagination pagination-lg ">
     <li class="page-item">
       <a (click)="goToFirstPage()"
-        class="page-link"
+        class="page-link link-primary"
         aria-label="Previous"
         href="javascript:void(0)"
         [class.disabled]="page === 1">
@@ -11,7 +11,7 @@
     </li>
     <li class="page-item">
       <a (click)="goToPreviousPage()"
-        class="page-link"
+        class="page-link link-primary"
         aria-label="Previous"
         href="javascript:void(0)"
         [class.disabled]="page === 1">
@@ -22,13 +22,13 @@
     <li class="page-item" *ngFor="let pageIndex of pages">
       <a
         (click)="goToPage(pageIndex)"
-        class="page-link"
+        class="page-link link-primary"
         [class.active]="page === pageIndex"
         href="javascript:void(0)">{{ pageIndex }}</a>
     </li>
     <li class="page-item">
       <a (click)="goToNextPage()"
-        class="page-link"
+        class="page-link link-primary"
         href="javascript:void(0)"
         aria-label="Next"
         [class.disabled]="isLastPage">
@@ -37,7 +37,7 @@
     </li>
     <li class="page-item">
       <a (click)="goToLastPage()"
-        class="page-link"
+        class="page-link  link-primary"
         href="javascript:void(0)"
         aria-label="Next"
         [class.disabled]="isLastPage">

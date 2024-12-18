@@ -1,2 +1,355 @@
 2024-12-18T14:30:12.255+01:00  INFO 35184 --- [yukka] [main] com.example.yukka.YukkaApplication       : Starting YukkaApplication using Java 17.0.10 with PID 35184 (F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka\target\classes started by Toshi in F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka)
 2024-12-18T14:30:12.260+01:00  INFO 35184 --- [yukka] [main] com.example.yukka.YukkaApplication       : No active profile set, falling back to 1 default profile: "default"
+2024-12-18T14:30:13.315+01:00  INFO 35184 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-12-18T14:30:13.450+01:00  INFO 35184 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 128 ms. Found 0 Neo4j repository interfaces.
+2024-12-18T14:30:13.462+01:00  INFO 35184 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-12-18T14:30:13.503+01:00  INFO 35184 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 40 ms. Found 11 Neo4j repository interfaces.
+2024-12-18T14:30:14.172+01:00  INFO 35184 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-12-18T14:30:14.197+01:00  INFO 35184 --- [yukka] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-12-18T14:30:14.198+01:00  INFO 35184 --- [yukka] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.26]
+2024-12-18T14:30:14.308+01:00  INFO 35184 --- [yukka] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-12-18T14:30:14.310+01:00  INFO 35184 --- [yukka] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1999 ms
+2024-12-18T14:30:14.829+01:00  INFO 35184 --- [yukka] [main] o.neo4j.driver.internal.DriverFactory    : Direct driver instance 2005675644 created for server address localhost:7687
+2024-12-18T14:30:15.081+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Ustawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.161+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.167+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.models.OcenilReverse is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.170+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.komentarz.Komentarz is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.172+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.post.Post is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.200+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNa is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.205+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.215+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.Roslina is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.221+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNaReverse is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.222+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.Dzialka is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.223+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.ogrod.Ogrod is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.227+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Uzytkownik is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.231+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.models.Ocenil is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.235+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.token.Token is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.245+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadamia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.247+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.powiadomienie.Powiadomienie is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:15.253+01:00  WARN 35184 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.MaUstawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-18T14:30:16.391+01:00  INFO 35184 --- [yukka] [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name neo4JAuthenticationProvider
+2024-12-18T14:30:16.393+01:00  WARN 35184 --- [yukka] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2024-12-18T14:30:16.490+01:00  INFO 35184 --- [yukka] [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-12-18T14:30:17.037+01:00  INFO 35184 --- [yukka] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2024-12-18T14:30:17.673+01:00  INFO 35184 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-12-18T14:30:17.696+01:00  INFO 35184 --- [yukka] [main] com.example.yukka.YukkaApplication       : Started YukkaApplication in 5.789 seconds (process running for 6.287)
+2024-12-18T14:30:17.708+01:00  INFO 35184 --- [yukka] [main] com.example.yukka.YukkaApplication       : Seedowanie bazy danych...
+2024-12-18T14:30:18.031+01:00  INFO 35184 --- [yukka] [main] c.e.y.m.s.service.PowiadomienieService   : Sprawdzanie zbanowanych użytkowników
+2024-12-18T14:30:18.152+01:00  INFO 35184 --- [yukka] [main] c.e.y.m.s.service.PowiadomienieService   : Sprawdzanie okresów powiadomień
+2024-12-18T14:30:18.153+01:00  INFO 35184 --- [yukka] [main] c.e.y.m.s.service.PowiadomienieService   : Dzisiaj nie jest pierwszy dzień miesiąca, pomijanie sprawdzania okresów powiadomień
+2024-12-18T14:30:18.261+01:00  INFO 35184 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18T14:30:18.262+01:00  INFO 35184 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-12-18T14:30:18.264+01:00  INFO 35184 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-12-18T14:43:47.150+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-5] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: piotr@email.pl
+2024-12-18T14:43:47.297+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-5] c.e.y.s.Neo4JAuthenticationProvider      : login [piotr@email.pl] udany
+2024-12-18T16:10:40.393+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-1] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: piotr@email.pl
+2024-12-18T16:10:40.454+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-1] c.e.y.s.Neo4JAuthenticationProvider      : login [piotr@email.pl] udany
+2024-12-18T16:10:56.863+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-3] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET r1.przeczytane = true
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-18T16:11:41.548+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-6] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET r1.przeczytane = true
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-18T16:11:42.255+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-8] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET r1.przeczytane = true
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-18T16:11:42.444+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-6] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET r1.przeczytane = true
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-18T16:11:43.931+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-3] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET r1.przeczytane = true
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-18T16:11:43.975+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-1] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET r1.przeczytane = true
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-18T16:13:33.686+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-6] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:13:38.177+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-6] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:14:18.442+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-10] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:14:45.887+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-8] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:14:49.326+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-2] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:15:01.677+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-3] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:15:06.059+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-4] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:15:11.921+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-8] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:15:16.365+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-2] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:15:40.190+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-7] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:15:50.857+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-8] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:16:10.955+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-1] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:16:21.963+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-9] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:16:29.708+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-9] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:16:32.819+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-10] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:16:45.706+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-9] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:16:59.011+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-7] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:17:16.920+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-3] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:17:28.830+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-7] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:17:45.654+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-9] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:17:51.234+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-7] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:18:06.648+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-5] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:18:23.196+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-8] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:18:35.212+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-8] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:18:42.721+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-7] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:18:54.350+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-7] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:19:00.649+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-8] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:19:08.344+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-5] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:19:47.786+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-6] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:20:01.858+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-3] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:21:40.493+01:00  WARN 35184 --- [yukka] [http-nio-8081-exec-3] o.s.data.neo4j.cypher.unrecognized       : Neo.ClientNotification.Statement.UnknownRelationshipTypeWarning: The provided relationship type is not in the database.
+	MATCH p = (:Ustawienia)<-[:MA_USTAWIENIA]-(blokujacy:Uzytkownik{nazwa: $nazwa})
+	OPTIONAL MATCH p2 = (blokujacy)-[r:BLOKUJE]->(blokowany:Uzytkownik)-[:MA_USTAWIENIA]->(:Ustawienia)
+	                                   ^
+	
+	RETURN blokujacy,
+	collect(nodes(p)), collect(relationships(p)),
+	collect(nodes(p2)), collect(relationships(p2))
+One of the relationship types in your query is not available in the database, make sure you didn't misspell it or that the label is available when you run this statement in your application (the missing relationship type is: BLOKUJE)
+2024-12-18T16:21:41.342+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-1] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:22:18.888+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-4] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:22:25.385+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-1] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:23:26.676+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-1] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:23:34.368+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-10] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:23:44.130+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-3] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:23:48.452+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-2] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:23:54.025+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-1] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:23:58.309+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-8] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:24:02.343+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:26:03.127+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-10] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:26:10.452+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-4] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:26:18.487+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-6] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:26:28.148+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:26:33.846+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-3] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:26:54.355+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:27:05.404+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-6] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Piotr Wiśniewski
+2024-12-18T16:45:57.336+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-10] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Jan Kowalski
+2024-12-18T16:46:01.002+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-3] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Katarzyna Mazur
+2024-12-18T16:47:04.326+01:00  INFO 35184 --- [yukka] [http-nio-8081-exec-7] c.e.y.m.u.controller.UzytkownikService   : Pobieranie statystyk użytkownika: Katarzyna Mazur
