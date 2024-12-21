@@ -30,6 +30,7 @@ import io.jsonwebtoken.security.Keys;
  *   <li><strong>extractClaim</strong>: Wyodrębnia określone roszczenie z tokenu JWT.</li>
  *   <li><strong>generateToken</strong>: Generuje token JWT dla podanych danych użytkownika.</li>
  *   <li><strong>buildToken</strong>: Buduje token JWT z dodatkowymi roszczeniami i czasem wygaśnięcia.</li>
+ *   <li><strong>buildRefreshToken</strong>: Buduje token odświeżający JWT z czasem wygaśnięcia.</li>
  *   <li><strong>isTokenValid</strong>: Sprawdza, czy token JWT jest ważny dla podanych danych użytkownika.</li>
  *   <li><strong>isTokenExpired</strong>: Sprawdza, czy token JWT wygasł.</li>
  *   <li><strong>extractExpiration</strong>: Wyodrębnia datę wygaśnięcia z tokenu JWT.</li>
@@ -69,8 +70,8 @@ public class JwtService {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
-    public String generateRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtRefreshExpiration);
+    public String generateRefreshToken(UserDetails userDetails) {
+        return buildRefreshToken(userDetails, jwtRefreshExpiration);
     }
 
     @SuppressWarnings("deprecation")
@@ -83,6 +84,17 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .claim("authorities", authorities)
+                .signWith(getSignInKey())
+                .compact();
+    }
+
+
+    @SuppressWarnings("deprecation")
+    private String buildRefreshToken(UserDetails userDetails, long expiration) {
+        return Jwts
+                .builder()
+                .setSubject(userDetails.getUsername())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey())
                 .compact();
     }

@@ -8,7 +8,6 @@ package com.example.yukka.auth;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.security.authentication.AuthenticationManager;
@@ -145,12 +144,11 @@ public class AuthenticationService {
         claims.put("UzytId", uzyt.getUzytId());
         claims.put("Nazwa", uzyt.getUsername());
         claims.put("Email", uzyt.getEmail());
-        claims.put("Avatar", uzyt.getAvatar());
         
        // claims.put("authorities", user.getAuthorities()); // To już jest robione w JwtService
 
         var jwtToken = jwtService.generateToken(claims, (Uzytkownik) auth.getPrincipal());
-        var refreshToken = jwtService.generateRefreshToken(claims, (Uzytkownik) auth.getPrincipal());
+        var refreshToken = jwtService.generateRefreshToken((Uzytkownik) auth.getPrincipal());
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .refreshToken(refreshToken)
@@ -160,7 +158,7 @@ public class AuthenticationService {
     /**
      * Odświeża token JWT, jeśli nie wygasł.
      *
-     * @param token token JWT do odświeżenia
+     * @param token token odświeżający
      * @return obiekt AuthenticationResponse zawierający nowy token JWT
      * @throws IllegalArgumentException jeśli token JWT wygasł
      */
@@ -180,11 +178,9 @@ public class AuthenticationService {
     claims.put("UzytId", uzyt.getUzytId());
     claims.put("Nazwa", uzyt.getUsername());
     claims.put("Email", uzyt.getEmail());
-    claims.put("Avatar", uzyt.getAvatar());
-
 
     String newToken = jwtService.generateToken(claims, uzyt);
-    String newRefreshToken = jwtService.generateRefreshToken(claims, uzyt);
+    String newRefreshToken = jwtService.generateRefreshToken(uzyt);
     
     return AuthenticationResponse.builder()
             .token(newToken)

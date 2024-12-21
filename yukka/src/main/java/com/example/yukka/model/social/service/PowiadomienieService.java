@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -63,8 +61,6 @@ public class PowiadomienieService {
     @Value("${powiadomienia.obraz.default.name}")
     private String powiadomienieAvatar;
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    
     /**
      * Metoda zwraca liczbę nieprzeczytanych powiadomień dla zalogowanego użytkownika.
      *
@@ -478,12 +474,7 @@ public class PowiadomienieService {
             return false;
         }
         System.out.println("Data utworzenia zgłoszenia: " + pow.get().getDataUtworzenia());
-        if (pow.get().getDataUtworzenia().plusMinutes(15).isBefore(LocalDateTime.now())) {
-            return false;
-        }
-
-
-        return true;
+        return !pow.get().getDataUtworzenia().plusMinutes(15).isBefore(LocalDateTime.now());
     }
 
     /**

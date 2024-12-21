@@ -67,7 +67,6 @@ public class RateLimitFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         if (bucket.tryConsume(1)) {
             filterChain.doFilter(request, response);
-            return;
         } else {
             ExceptionResponse exceptionResponse = ExceptionResponse.builder()
                         .businessErrorCode(HttpStatus.TOO_MANY_REQUESTS.value())
@@ -80,8 +79,6 @@ public class RateLimitFilter extends OncePerRequestFilter {
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             response.setContentType("application/json");
             response.getWriter().write(jsonResponse);
-
-            return;
         }
     }
 }
