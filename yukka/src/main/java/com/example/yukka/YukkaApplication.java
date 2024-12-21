@@ -175,8 +175,8 @@ public class YukkaApplication {
 			if (seedDatabase) {
                 log.info("Seedowanie bazy danych...");
 				//roslinaImporterService.seedRosliny();
-				unseed();
-				seed();
+				// unseed();
+				// seed();
             }
         };
     }

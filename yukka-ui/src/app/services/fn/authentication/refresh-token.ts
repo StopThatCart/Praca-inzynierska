@@ -9,13 +9,13 @@ import { RequestBuilder } from '../../request-builder';
 import { AuthenticationResponse } from '../../models/authentication-response';
 
 export interface RefreshToken$Params {
-  token: string;
+  'X-Refresh-Token': string;
 }
 
 export function refreshToken(http: HttpClient, rootUrl: string, params: RefreshToken$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResponse>> {
   const rb = new RequestBuilder(rootUrl, refreshToken.PATH, 'post');
   if (params) {
-    rb.query('token', params.token, {});
+    rb.header('X-Refresh-Token', params['X-Refresh-Token'], {});
   }
 
   return http.request(

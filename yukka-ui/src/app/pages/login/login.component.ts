@@ -34,7 +34,6 @@ export class LoginComponent {
     private errorHandlingService: ErrorHandlingService,
     @Inject(PLATFORM_ID) platformId: Object) {
       this.isServer = isPlatformServer(platformId);
-      console.log('aqui')
 
       const userToken = this.tokenService.token;
       if(userToken){
@@ -50,6 +49,7 @@ export class LoginComponent {
         next: (res) => {
           console.log(res);
           this.tokenService.token = res.token as string;
+          this.tokenService.refreshToken = res.refreshToken as string;
           this.router.navigate(['']);
 
         },

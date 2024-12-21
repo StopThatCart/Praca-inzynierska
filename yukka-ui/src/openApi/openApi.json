@@ -1150,8 +1150,8 @@
         "operationId": "refreshToken",
         "parameters": [
           {
-            "name": "token",
-            "in": "query",
+            "name": "X-Refresh-Token",
+            "in": "header",
             "required": true,
             "schema": {
               "type": "string"
@@ -3265,13 +3265,16 @@
           "name": {
             "type": "string"
           },
-          "password": {
-            "type": "string"
-          },
-          "pracownik": {
-            "type": "boolean"
+          "authorities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedAuthority"
+            }
           },
           "admin": {
+            "type": "boolean"
+          },
+          "pracownik": {
             "type": "boolean"
           },
           "username": {
@@ -3280,11 +3283,8 @@
           "normalUzytkownik": {
             "type": "boolean"
           },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
+          "password": {
+            "type": "string"
           },
           "enabled": {
             "type": "boolean"
@@ -4177,6 +4177,9 @@
         "properties": {
           "token": {
             "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
           }
         }
       },
@@ -4371,11 +4374,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           }

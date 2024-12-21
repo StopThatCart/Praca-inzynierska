@@ -6,7 +6,7 @@ export const loggedInGuard: CanActivateFn = (route, state) => {
   const tokenService = inject(TokenService);
   const router = inject(Router);
 
-  if (tokenService.isTokenValid()) {
+  if (tokenService.isTokenValid() || tokenService.isRefreshTokenValid()) {
     router.navigate(['/']);
     return false;
   }

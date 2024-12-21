@@ -9,22 +9,21 @@ import { UzytkownikService } from '../../services/services';
 import { UzytkownikResponse } from '../../services/models';
 
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { BellNotifComponent } from "../../modules/profil/components/bell-notif/bell-notif.component";
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgbDropdownModule, PowiadomieniaDropdownComponent, BellNotifComponent],
+  imports: [CommonModule, RouterModule, NgbDropdownModule, PowiadomieniaDropdownComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit {
   private _avatar: string | undefined;
-  loggedIn: boolean = false;
+
+  uzytNazwa: string | undefined;
 
   constructor(private router: Router,
     private tokenService: TokenService,
     private uzytService: UzytkownikService) {
-    this.loggedIn = this.tokenService.isTokenValid();
   }
 
   ngOnInit(): void {
@@ -32,10 +31,10 @@ export class NavbarComponent implements OnInit {
     this.loadAvatar();
 
 
-    if (!this.tokenService.isTokenValid()) {
-      this.loggedIn = false;
-      this._avatar = undefined;
-    }
+    // if (!this.tokenService.isTokenValid()) {
+    //   this._avatar = undefined;
+    //   this.uzytNazwa = undefined;
+    // }
   }
 
   public loadAvatar() {
@@ -44,14 +43,15 @@ export class NavbarComponent implements OnInit {
       this.uzytService.getAvatar().subscribe({
         next: (file) => {
           this._avatar = file.content;
+          this.uzytNazwa = this.tokenService.nazwa;
         }
       });
     }
   }
 
   getUzytkownikNazwa(): string {
-    if(this.tokenService.nazwa) {
-    return this.tokenService.nazwa;
+    if(this.uzytNazwa) {
+    return this.uzytNazwa;
     } else {
       return 'Brak nazwy';
     }
@@ -68,16 +68,15 @@ export class NavbarComponent implements OnInit {
   }
 
   toLogin() {
-    this.router.navigate(['login']);
+    this.router.navigate(['/login']);
   }
 
   toKatalog() {
-    this.router.navigate(['rosliny']);
+    this.router.navigate(['/rosliny']);
   }
 
   toOgrod() {
-    const nazwa = this.tokenService.nazwa;
-    if (nazwa) {
+    if (this.uzytNazwa) {
       //this.router.navigate([`ogrod/${nazwa}/dzialka/2`]);
       //this.router.navigate([`ogrod/${nazwa}`]);
     }
@@ -87,7 +86,7 @@ export class NavbarComponent implements OnInit {
   }
 
   toSpolecznosc() {
-    this.router.navigate(['spolecznosc']);
+    this.router.navigate(['/spolecznosc']);
   }
 
   isLogged() {
@@ -96,53 +95,49 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this._avatar = undefined;
+    this.uzytNazwa = undefined;
     this.tokenService.clearToken();
-    this.router.navigate(['login']);
+    this.tokenService.clearRefreshToken();
+    this.router.navigate(['/login']);
   }
 
 
   // Routing
   goToProfil() {
-    const nazwa = this.tokenService.nazwa;
-    if (nazwa) {
-      this.router.navigate([`/profil/${nazwa}`]);
+    if (this.uzytNazwa) {
+      this.router.navigate([`/profil/${this.uzytNazwa}`]);
     }
   }
 
   goToPowiadomieniaPage() {
-    const nazwa = this.tokenService.nazwa;
-    if (nazwa) {
+    if (this.uzytNazwa) {
       console.log('goToPowiadomieniaPage - start');
-      this.router.navigate([`/profil/${nazwa}/powiadomienia`]);
+      this.router.navigate([`/profil/${this.uzytNazwa}/powiadomienia`]);
     }
 
   }
 
   goToRozmowy() {
-    const nazwa = this.tokenService.nazwa;
-    if (nazwa) {
-      this.router.navigate([`profil/${nazwa}/rozmowy`]);
+    if (this.uzytNazwa) {
+      this.router.navigate([`/profil/${this.uzytNazwa}/rozmowy`]);
     }
   }
 
   goToUstawienia() {
-    const nazwa = this.tokenService.nazwa;
-    if (nazwa) {
-      this.router.navigate([`profil/${nazwa}/ustawienia`]);
+    if (this.uzytNazwa) {
+      this.router.navigate([`/profil/${this.uzytNazwa}/ustawienia`]);
     }
   }
 
   goToPosty() {
-    const nazwa = this.tokenService.nazwa;
-    if (nazwa) {
-      this.router.navigate([`profil/${nazwa}/posty`]);
+    if (this.uzytNazwa) {
+      this.router.navigate([`/profil/${this.uzytNazwa}/posty`]);
     }
   }
 
   goToKomentarze() {
-    const nazwa = this.tokenService.nazwa;
-    if (nazwa) {
-      this.router.navigate([`profil/${nazwa}/komentarze`]);
+    if (this.uzytNazwa) {
+      this.router.navigate([`/profil/${this.uzytNazwa}/komentarze`]);
     }
   }
 
@@ -150,7 +145,7 @@ export class NavbarComponent implements OnInit {
   // Nie ma errora, chyba że przenosi się ze strony z działką
   testReferenceErrors() {
     //this.router.navigate(['ogrod/Piotr%20Wiśniewski/dzialka/2/przenoszenie/2732c898-a990-47b0-a48b-9d380c23a4e8']);
-    this.router.navigate(['ogrod', this.tokenService.nazwa, 'dzialka', 2, 'przenoszenie', "2732c898-a990-47b0-a48b-9d380c23a4e8"]);
+    this.router.navigate(['ogrod', this.uzytNazwa, 'dzialka', 2, 'przenoszenie', "2732c898-a990-47b0-a48b-9d380c23a4e8"]);
   }
 
 

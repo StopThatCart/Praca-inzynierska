@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -98,12 +99,12 @@ public class AuthController {
     /**
      * Obsługuje odświeżanie tokena dostępu.
      *
-     * @param token token dostępu do odświeżenia
+     * @param refreshToken nagłówek X-Refresh-Token do odświeżenia
      * @return ResponseEntity zwracający odświeżony token dostępu
      */
     @PostMapping(value = "/refresh-token", produces="application/json")
-    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestParam String token) {
-        return ResponseEntity.ok(service.refreshToken(token));
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestHeader("X-Refresh-Token") String refreshToken) {
+        return ResponseEntity.ok(service.refreshToken(refreshToken));
     }
 
 

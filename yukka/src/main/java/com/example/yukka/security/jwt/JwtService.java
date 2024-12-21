@@ -44,6 +44,9 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
+    @Value("${jwt-refresh.expiration}")
+    private long jwtRefreshExpiration;
+
     
     /** 
      * @param token
@@ -64,6 +67,10 @@ public class JwtService {
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return buildToken(extraClaims, userDetails, jwtExpiration);
+    }
+
+    public String generateRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        return buildToken(extraClaims, userDetails, jwtRefreshExpiration);
     }
 
     @SuppressWarnings("deprecation")

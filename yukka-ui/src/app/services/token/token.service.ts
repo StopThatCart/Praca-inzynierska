@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Uzytkownik, UzytkownikResponse } from '../models';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
+import { AuthenticationService } from '../services';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
+
+  constructor(private authService: AuthenticationService) { }
+
   private isLocalStorageAvailable(): boolean {
     return typeof localStorage !== 'undefined';
   }
@@ -24,28 +28,111 @@ export class TokenService {
     return null;
   }
 
+
+
+  set refreshToken(token: string) {
+    if (this.isLocalStorageAvailable()) {
+      localStorage.setItem('refreshToken', token);
+    }
+  }
+
+  get refreshToken(): string | null {
+    if (this.isLocalStorageAvailable()) {
+      return localStorage.getItem('refreshToken');
+    }
+    return null;
+  }
+
   clearToken() {
     if (this.isLocalStorageAvailable()) {
       localStorage.removeItem('token');
     }
   }
 
+  clearRefreshToken() {
+    if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem('refreshToken');
+    }
+  }
+
   isTokenValid() {
     const token = this.token;
-    if (!token) {
-      return false;
-    }
+    const refreshToken = this.refreshToken;
+
     const jwtHelper = new JwtHelperService();
     const isTokenExpired = jwtHelper.isTokenExpired(token);
-    if (isTokenExpired) {
+    const isRefreshTokenExpired = jwtHelper.isTokenExpired(refreshToken);
+
+
+    if (!refreshToken) {
       this.clearToken();
       return false;
     }
+
+    if (!token) {
+      if (isRefreshTokenExpired) {
+        this.clearRefreshToken();
+      }
+      return false;
+    }
+
+
+    if (isRefreshTokenExpired) {
+      this.clearRefreshToken();
+      this.clearToken();
+      return false;
+    }
+
+    if (isTokenExpired) {
+      this.clearToken();
+      if (!isRefreshTokenExpired) {
+        return this.getNewToken();
+      }
+    }
+
+
     return true;
+  }
+
+  private getNewToken() : boolean {
+    const jwtHelper = new JwtHelperService();
+    if(!this.refreshToken || jwtHelper.isTokenExpired(this.refreshToken)) {
+      return false;
+    }
+    //debugger;//
+    this.authService.refreshToken({ 'X-Refresh-Token': this.refreshToken }).subscribe({
+      next: (res) => {
+        this.token = res.token as string;
+        this.refreshToken = res.refreshToken as string;
+        return true;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+
+    return false;
   }
 
   isTokenNotValid() {
     return !this.isTokenValid();
+  }
+
+  isRefreshTokenValid() {
+    const refreshToken = this.refreshToken;
+    if (!refreshToken) {
+      return false;
+    }
+
+    const jwtHelper = new JwtHelperService();
+    const isRefreshTokenExpired = jwtHelper.isTokenExpired(refreshToken);
+
+    if (isRefreshTokenExpired) {
+      this.clearRefreshToken();
+      return false;
+    }
+
+    return true;
   }
 
   get userRoles(): string[] {
@@ -112,15 +199,6 @@ export class TokenService {
   isNormalUzytkownik() {
     return !this.isAdmin() && !this.isPracownik();
   }
-
-  // isCurrentUser(nazwa : string): boolean {
-  //   if(this.tokenService) {
-  //     if(this.tokenService.nazwa === nazwa) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
 
   isCurrentUzytkownik(targetUzyt: UzytkownikResponse): boolean {
     let hasRights = false;

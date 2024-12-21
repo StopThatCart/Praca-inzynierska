@@ -130,7 +130,7 @@ export class RenameIconComponent implements OnInit {
   }
 
   isCurrentUzytkownik(): boolean {
-    if(this.tokenService && this.uzyt) {
+    if(this.tokenService.isTokenValid() && this.uzyt) {
       return this.tokenService.isCurrentUzytkownik(this.uzyt);
     }
     return false;

@@ -21,6 +21,7 @@ import lombok.Setter;
  * Pola:
  * <ul>
  *   <li>{@code token} - Token uwierzytelniający jako {@code String}.</li>
+ *   <li>{@code refreshToken} - Token odświeżający jako {@code String}.</li>
  * </ul>
  * </p>
  */
@@ -29,4 +30,5 @@ import lombok.Setter;
 @Builder
 public class AuthenticationResponse {
     private String token;
+    private String refreshToken;
 }

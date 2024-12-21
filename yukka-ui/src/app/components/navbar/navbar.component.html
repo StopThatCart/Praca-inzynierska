@@ -28,7 +28,7 @@
             </ng-container>
             <ng-container *ngIf="isLogged(); else loggedOut">
               <li class="nav-item" ngbDropdown>
-                <button class="btn btn-primary dropdown-toggle nav-link bg-primary" tabindex="0" ngbDropdownToggle
+                <button class="btn btn-primary dropdown-toggle bg-primary" tabindex="0" ngbDropdownToggle
                 type="button" id="navbarLeDropdown">
                   <img [src]="getUzytAvatar()"  class="rounded-circle me-2" alt="ico.svg" width="30" height="30">
                   <span>{{ getUzytkownikNazwa() }}</span>
@@ -57,8 +57,8 @@
               </li>
             </ng-container>
             <ng-template #loggedOut>
-              <li class="nav-item  nav-link ">
-                <a  [routerLink]="'login'" class="btn  nav-link btn-secondary" type="button" style="background: var(--bs-primary);border-color: var(--bs-primary);">Zaloguj się</a>
+              <li class="nav-item">
+                <button  [routerLink]="'/login'" class="btn btn-primary text-white" type="button">Zaloguj się</button>
               </li>
 
             </ng-template>

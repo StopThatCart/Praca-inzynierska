@@ -150,8 +150,10 @@ public class AuthenticationService {
        // claims.put("authorities", user.getAuthorities()); // To już jest robione w JwtService
 
         var jwtToken = jwtService.generateToken(claims, (Uzytkownik) auth.getPrincipal());
+        var refreshToken = jwtService.generateRefreshToken(claims, (Uzytkownik) auth.getPrincipal());
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -162,15 +164,31 @@ public class AuthenticationService {
      * @return obiekt AuthenticationResponse zawierający nowy token JWT
      * @throws IllegalArgumentException jeśli token JWT wygasł
      */
-    public AuthenticationResponse refreshToken(String token) {
-    if (jwtService.isTokenExpired(token)) {
+    public AuthenticationResponse refreshToken(String refreshToken) {
+    log.info("Odświeżanie tokena JWT...");
+
+    if (jwtService.isTokenExpired(refreshToken)) {
+        log.error("Token JWT wygasł.");
         throw new IllegalArgumentException("Token JWT wygasł.");
     }
-    String username = jwtService.extractUsername(token);
+    String username = jwtService.extractUsername(refreshToken);
     UserDetails userDetails = uzytkownikService.loadUserByUsername(username);
-    String newToken = jwtService.generateToken(userDetails);
+
+    var claims = new HashMap<String, Object>();
+    Uzytkownik uzyt = ((Uzytkownik) userDetails);
+
+    claims.put("UzytId", uzyt.getUzytId());
+    claims.put("Nazwa", uzyt.getUsername());
+    claims.put("Email", uzyt.getEmail());
+    claims.put("Avatar", uzyt.getAvatar());
+
+
+    String newToken = jwtService.generateToken(claims, uzyt);
+    String newRefreshToken = jwtService.generateRefreshToken(claims, uzyt);
+    
     return AuthenticationResponse.builder()
             .token(newToken)
+            .refreshToken(newRefreshToken)
             .build();
     }
 
