@@ -3,7 +3,7 @@ import { WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../service
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { WlasciwoscEtykiety } from '../../enums/wlasciwosc-etykiety';
+import { WlasciwoscEtykiety } from '../../models/wlasciwosc-etykiety';
 
 @Component({
   selector: 'app-add-custom-wlasciwosc',

@@ -4,10 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { KomentarzRequest } from '../../../../services/models/komentarz-request';
 import { KomentarzService } from '../../../../services/services';
 import { Router } from '@angular/router';
-import { TypKomentarza } from '../../enums/TypKomentarza';
+import { TypKomentarza } from '../../models/TypKomentarza';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
-import { cp } from 'fs';
 
 @Component({
   selector: 'app-add-komentarz-card',
@@ -110,7 +109,9 @@ export class AddKomentarzCardComponent implements OnInit {
         next: (res) => {
           window.location.reload();
         },
-        error: (err) => {  this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg); }
+        error: (err) => {
+          this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
+        }
     });
   }
 
@@ -124,7 +125,9 @@ export class AddKomentarzCardComponent implements OnInit {
       body: { request: this.request, file: leFile }
     }).subscribe( {
         next: (res) => { window.location.reload(); },
-        error: (err) => {  this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg); }
+        error: (err) => {
+          this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
+        }
     });
   }
 

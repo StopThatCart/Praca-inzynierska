@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { WlasciwoscWithRelations } from '../../../../services/models';
-import { RoslinaRelacje } from '../../enums/roslina-relacje';
-import { WlasciwoscEtykiety } from '../../enums/wlasciwosc-etykiety';
+import { RoslinaRelacje } from '../../models/roslina-relacje';
+import { WlasciwoscEtykiety } from '../../models/wlasciwosc-etykiety';
 
 @Component({
   selector: 'app-wlasciwosc-tag',

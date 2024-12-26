@@ -3,7 +3,7 @@ import { DzialkaRoslinaRequest, MoveRoslinaRequest, RoslinaRequest, RoslinaRespo
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { WyswietlanieRosliny } from '../../../post/models/WyswietlanieRosliny';
 import { Tile, TileUtils } from '../../models/Tile';
 import { DzialkaModes } from '../../models/dzialka-modes';
 

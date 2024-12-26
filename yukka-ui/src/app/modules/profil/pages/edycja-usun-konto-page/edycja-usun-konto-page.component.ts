@@ -46,20 +46,13 @@ export class EdycjaUsunKontoPageComponent {
     this.uzytkownikService.removeSelf({ body: this.request }).subscribe({
       next: () => {
         this.tokenService.clearToken();
+        this.tokenService.clearRefreshToken();
         this.router.navigate(['/']);
       },
       error: (error) => {
         this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
       }
     });
-
-    // try {
-    //   await this.uzytkownikService.removeSelf({ body: this.request }).toPromise();
-    //   // this.tokenService.clearToken();
-    //   // this.router.navigate(['/']);
-    // } catch (error) {
-    //   this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
-    // }
   }
 
 

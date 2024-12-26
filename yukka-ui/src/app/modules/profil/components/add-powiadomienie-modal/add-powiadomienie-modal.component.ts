@@ -9,7 +9,7 @@ import { TokenService } from '../../../../services/token/token.service';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
+import { TypPowiadomienia } from '../../models/TypPowiadomienia';
 import { SpecjalnePowiadomienieRequest, ZgloszenieRequest } from '../../../../services/models';
 
 @Component({

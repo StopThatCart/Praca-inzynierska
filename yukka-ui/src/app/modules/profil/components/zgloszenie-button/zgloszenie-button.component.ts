@@ -6,7 +6,7 @@ import { ErrorHandlingService } from '../../../../services/error-handler/error-h
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
-import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
+import { TypPowiadomienia } from '../../models/TypPowiadomienia';
 import { Router } from '@angular/router';
 
 @Component({

@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasciwosc/add-custom-wlasciwosc.component';
 import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
 import { UzytkownikRoslinaService } from '../../../../services/services/uzytkownik-roslina.service';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-update-roslina-page',
@@ -57,6 +58,7 @@ export class UpdateRoslinaPageComponent {
     private roslinaService: RoslinaService,
     private uzytkownikRoslinaService: UzytkownikRoslinaService,
     private wlasciwoscProcessService: WlasciwoscProcessService,
+    private errorHandlingService: ErrorHandlingService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -150,7 +152,7 @@ export class UpdateRoslinaPageComponent {
         },
         error: (error) => {
           this.message = 'Błąd podczas aktualizacji rośliny';
-          this.handleErrors(error);
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
         }
       });
   }
@@ -177,20 +179,9 @@ export class UpdateRoslinaPageComponent {
         },
         error: (error) => {
           this.message = 'Błąd podczas aktualizacji rośliny';
-          this.handleErrors(error);
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
         }
       });
-  }
-
-  private handleErrors(err: any) {
-    console.log(err);
-    if(err.error.validationErrors) {
-      this.errorMsg = err.error.validationErrors
-    } else if (err.error.error) {
-      this.errorMsg.push(err.error.error);
-    } else {
-      this.errorMsg.push(err.message);
-    }
   }
 
 }

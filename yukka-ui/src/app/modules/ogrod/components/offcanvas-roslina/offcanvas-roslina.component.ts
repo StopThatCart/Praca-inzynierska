@@ -12,7 +12,7 @@ import { ModalWyswietlanieRoslinyPickComponent } from "../modal-wyswietlanie-ros
 import { ModalNotatkaPickComponent } from "../modal-notatka-pick/modal-notatka-pick.component";
 import { NgbCollapseModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TokenService } from '../../../../services/token/token.service';
-import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { WyswietlanieRosliny } from '../../../post/models/WyswietlanieRosliny';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RoslinaWlasciwosciContainerComponent } from "../../../roslina/components/roslina-wlasciwosci-container/roslina-wlasciwosci-container.component";
 

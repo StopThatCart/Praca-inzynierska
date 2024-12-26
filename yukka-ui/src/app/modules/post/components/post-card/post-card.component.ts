@@ -9,8 +9,9 @@ import { removeOcenaFromPost } from '../../../../services/fn/post/remove-ocena-f
 import { HttpErrorResponse } from '@angular/common/http';
 import { TokenService } from '../../../../services/token/token.service';
 import { ZgloszenieButtonComponent } from "../../../profil/components/zgloszenie-button/zgloszenie-button.component";
-import { TypPowiadomienia } from '../../../profil/enums/TypPowiadomienia';
+import { TypPowiadomienia } from '../../../profil/models/TypPowiadomienia';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-post-card',
@@ -26,9 +27,12 @@ export class PostCardComponent implements OnInit {
 
   errorMsg: Array<string> = [];
   typPowiadomienia = TypPowiadomienia;
-  constructor(private router: Router,
-              private postService: PostService,
-              private tokenService: TokenService) {}
+  constructor(
+    private router: Router,
+    private postService: PostService,
+    private tokenService: TokenService,
+    private errorHandlingService: ErrorHandlingService
+  ) {}
 
   ngOnInit(): void {
 
@@ -127,23 +131,11 @@ export class PostCardComponent implements OnInit {
             //console.log('Post usunięty');
             this.router.navigate(['/posty']);
           },
-          error: (err) => {
-            this.handleErrors(err);
+          error: (error) => {
+            this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
           }
         });
       }
-    }
-  }
-
-
-  private handleErrors(err: any) {
-    console.log(err);
-    if(err.error.validationErrors) {
-      this.errorMsg = err.error.validationErrors
-    } else if (err.error.error) {
-      this.errorMsg.push(err.error.error);
-    } else {
-      this.errorMsg.push(err.message);
     }
   }
 

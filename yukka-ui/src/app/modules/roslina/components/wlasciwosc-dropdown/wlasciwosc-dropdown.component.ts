@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
-import { getRelacjaByEtykieta } from '../../enums/roslina-relacje';
+import { getRelacjaByEtykieta } from '../../models/roslina-relacje';
 import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 

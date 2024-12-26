@@ -96,7 +96,6 @@ export class RozmowaCardComponent implements OnInit {
     }
   }
 
-  // TODO: Blokowanie użytkownika
   rejectRozmowaPrywatna(event : Event) {
     event.stopPropagation();
     if(this.selectedUzyt && this.selectedUzyt.nazwa) {

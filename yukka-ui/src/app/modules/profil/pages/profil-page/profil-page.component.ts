@@ -6,7 +6,7 @@ import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule } from '@angular/common';
 import { RozmowaPrywatnaService } from '../../../../services/services/rozmowa-prywatna.service';
 import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zgloszenie-button.component";
-import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
+import { TypPowiadomienia } from '../../models/TypPowiadomienia';
 import { BanButtonComponent } from "../../components/ban-button/ban-button.component";
 import { getStatystykiOfUzytkownik } from '../../../../services/fn/uzytkownik/get-statystyki-of-uzytkownik';
 import { UsunKontoButtonComponent } from "../../components/usun-konto-button/usun-konto-button.component";

@@ -12,6 +12,7 @@ import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwo
 import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasciwosc/add-custom-wlasciwosc.component';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
 import { TokenService } from '../../../../services/token/token.service';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-add-roslina-page',
@@ -52,6 +53,7 @@ export class AddRoslinaPageComponent implements OnInit {
     private roslinaService: RoslinaService,
     private uzytkownikRoslinaService: UzytkownikRoslinaService,
     private wlasciwoscProcessService: WlasciwoscProcessService,
+    private errorHandlingService : ErrorHandlingService,
     private tokenService: TokenService,
     private router: Router,
     private route : ActivatedRoute
@@ -167,7 +169,7 @@ export class AddRoslinaPageComponent implements OnInit {
       },
       error: (error) => {
         this.message = 'Błąd podczas dodawania rośliny';
-        this.handleErrors(error);
+        this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
       }
     });
   }
@@ -187,12 +189,12 @@ export class AddRoslinaPageComponent implements OnInit {
     this.uzytkownikRoslinaService.saveRoslina({ body: { request: uzytRequest, file: leFile } }).subscribe({
       next: (roslina) => {
         //this.afterAddRoslina();
-        console.log("roslinka", roslina);
+       // console.log("roslinka", roslina);
         this.router.navigate(['rosliny', roslina.roslinaId]);
       },
       error: (error) => {
         this.message = 'Błąd podczas dodawania rośliny';
-        this.handleErrors(error);
+        this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
       }
     });
   }
@@ -210,17 +212,4 @@ export class AddRoslinaPageComponent implements OnInit {
     };
     this.clearImage();
   }
-
-  private handleErrors(err: any) {
-    console.log(err);
-    if(err.error.validationErrors) {
-      this.errorMsg = err.error.validationErrors
-    } else if (err.error.error) {
-      this.errorMsg.push(err.error.error);
-    } else {
-      this.errorMsg.push(err.message);
-    }
-  }
-
-
 }

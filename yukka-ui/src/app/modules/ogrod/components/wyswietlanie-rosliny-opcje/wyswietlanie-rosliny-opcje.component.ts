@@ -1,7 +1,7 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { WyswietlanieRosliny } from '../../../post/models/WyswietlanieRosliny';
 import { ZasadzonaRoslinaResponse } from '../../../../services/models';
 
 @Component({

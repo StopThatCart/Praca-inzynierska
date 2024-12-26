@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PostService } from '../../../../services/services';
 import { Router } from '@angular/router';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-add-post-card',
@@ -25,7 +26,11 @@ export class AddPostCardComponent {
 
   errorMsg: Array<string> = [];
 
-  constructor(private postService : PostService, private router : Router) { }
+  constructor(
+    private postService : PostService,
+    private router : Router,
+    private errorHandlingService: ErrorHandlingService
+  ) { }
 
 
   onFileSelected(event: any) {
@@ -61,7 +66,7 @@ export class AddPostCardComponent {
       body: { request: this.request, file: leFile }
     }).subscribe( {
         next: (res) => { this.goToPost(res.postId); },
-        error: (err) => { this.handleErrors(err); }
+        error: (error) => {  this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg); }
     });
 
   }
@@ -71,18 +76,6 @@ export class AddPostCardComponent {
       this.router.navigate(['/posty', postId]);
     } else {
       console.log('Error: Brak postId w response');
-    }
-  }
-
-
-   private handleErrors(err: any) {
-    console.log(err);
-    if(err.error.validationErrors) {
-      this.errorMsg = err.error.validationErrors
-    } else if (err.error.error) {
-      this.errorMsg.push(err.error.error);
-    } else {
-      this.errorMsg.push(err.message);
     }
   }
 

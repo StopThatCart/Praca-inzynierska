@@ -14,7 +14,7 @@ import { Offcanvas } from 'bootstrap';
 import { OffcanvasRoslinaComponent } from "../../components/offcanvas-roslina/offcanvas-roslina.component";
 import { DzialkaModes } from '../../models/dzialka-modes';
 import { DzialkaRoslinaRequest } from '../../../../services/models/dzialka-roslina-request';
-import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { WyswietlanieRosliny } from '../../../post/models/WyswietlanieRosliny';
 import { RenameIconComponent } from "../../components/rename-icon/rename-icon.component";
 import { RenameIconModes } from '../../components/rename-icon/rename-icon-mode';
 import { LoadingComponent } from "../../../../components/loading/loading.component";

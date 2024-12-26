@@ -6,6 +6,7 @@ import { KomentarzService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-wiadomosc-card',
@@ -35,7 +36,9 @@ export class WiadomoscCardComponent implements OnInit {
   constructor(
     private router: Router,
     private komentarzService: KomentarzService,
-    private tokenService: TokenService) {}
+    private tokenService: TokenService,
+    private errorHandlingService: ErrorHandlingService
+  ) {}
 
   ngOnInit() {
     if(this.tokenService.isTokenValid()) {
@@ -128,7 +131,7 @@ export class WiadomoscCardComponent implements OnInit {
           this.isEditing = false;
         },
         error: (err) => {
-          this.handleErrors(err);
+          this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
           this.cancelEditing();
         }
       });
@@ -146,21 +149,10 @@ export class WiadomoscCardComponent implements OnInit {
             this.onRemove.emit(this.wiadomosc.komentarzId);
           },
           error: (err) => {
-            this.handleErrors(err);
+            this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
           }
         });
       }
-    }
-  }
-
-  private handleErrors(err: any) {
-    console.log(err);
-    if(err.error.validationErrors) {
-      this.errorMsg = err.error.validationErrors
-    } else if (err.error.error) {
-      this.errorMsg.push(err.error.error);
-    } else {
-      this.errorMsg.push(err.message);
     }
   }
 

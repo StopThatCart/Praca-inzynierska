@@ -7,7 +7,7 @@ import { RozmowaPrywatnaService, UzytkownikService } from '../../../../services/
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { TypKomentarza } from '../../../post/enums/TypKomentarza';
+import { TypKomentarza } from '../../../post/models/TypKomentarza';
 import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zgloszenie-button.component";
 
 @Component({

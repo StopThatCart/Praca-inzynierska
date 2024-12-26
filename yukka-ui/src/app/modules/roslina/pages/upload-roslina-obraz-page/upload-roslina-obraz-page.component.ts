@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { RoslinaRequest, RoslinaResponse, UzytkownikRoslinaRequest } from '../../../../services/models';
 import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
 import { UzytkownikRoslinaService } from '../../../../services/services';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-upload-roslina-obraz-page',
@@ -32,6 +33,7 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
   constructor(
     private roslinaService: RoslinaService,
     private uzytkownikRoslinaService: UzytkownikRoslinaService,
+    private errorHandlingService: ErrorHandlingService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -108,7 +110,7 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
         },
         error: (error) => {
           this.message = 'Błąd podczas aktualizacji rośliny';
-          this.handleErrors(error);
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
         }
       });
   }
@@ -126,20 +128,9 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
         },
         error: (error) => {
           this.message = 'Błąd podczas aktualizacji rośliny';
-          this.handleErrors(error);
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
         }
       });
-  }
-
-  private handleErrors(err: any) {
-    console.log(err);
-    if(err.error.validationErrors) {
-      this.errorMsg = err.error.validationErrors
-    } else if (err.error.error) {
-      this.errorMsg.push(err.error.error);
-    } else {
-      this.errorMsg.push(err.message);
-    }
   }
 
 }

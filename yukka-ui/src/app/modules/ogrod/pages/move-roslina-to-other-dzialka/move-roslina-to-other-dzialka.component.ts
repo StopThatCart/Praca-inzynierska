@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { DzialkaResponse, DzialkaRoslinaRequest, MoveRoslinaRequest, Pozycja, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
 import { Tile, TileUtils } from '../../models/Tile';
 import { DzialkaModes } from '../../models/dzialka-modes';
-import { WyswietlanieRosliny } from '../../../post/enums/WyswietlanieRosliny';
+import { WyswietlanieRosliny } from '../../../post/models/WyswietlanieRosliny';
 import { DzialkaService, RoslinaService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
 import { ActivatedRoute, Router } from '@angular/router';

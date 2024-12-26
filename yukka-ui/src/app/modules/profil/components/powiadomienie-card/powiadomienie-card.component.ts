@@ -4,7 +4,7 @@ import { PowiadomienieService } from '../../../../services/services';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { PowiadomieniaDropdownComponent } from '../powiadomienia-dropdown/powiadomienia-dropdown.component';
-import { TypPowiadomienia } from '../../enums/TypPowiadomienia';
+import { TypPowiadomienia } from '../../models/TypPowiadomienia';
 import { PowiadomieniaSyncService } from '../../services/powiadomieniaSync/powiadomienia-sync.service';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TokenService } from '../../../../services/token/token.service';

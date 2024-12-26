@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RoslinaRequest, RoslinaResponse, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
-import { getRelacjaByEtykieta } from '../../enums/roslina-relacje';
-import { WlasciwoscEtykiety } from '../../enums/wlasciwosc-etykiety';
+import { getRelacjaByEtykieta } from '../../models/roslina-relacje';
+import { WlasciwoscEtykiety } from '../../models/wlasciwosc-etykiety';
 
 @Injectable({
   providedIn: 'root'

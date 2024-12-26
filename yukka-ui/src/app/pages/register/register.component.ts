@@ -47,38 +47,7 @@ export class RegisterComponent {
         error: (err) => {
           console.log(err);
           this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
-          //  if (err.error.validationErrors) {
-          //   this.errorMsg = err.error.validationErrors;
-          // } else if (typeof err.error === 'string') {
-          //   this.errorMsg.push(err.error);
-          // } else if (err.error.error) {
-          //   this.errorMsg.push(err.error.error);
-          // } else {
-          //   this.errorMsg.push(err.message);
-          // }
         }
-    });
-  }
-
-  login() {
-    this.authService.login({
-      body: { email: this.registerRequest.email, haslo: this.registerRequest.haslo }
-    }).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.tokenService.token = res.token as string;
-        this.router.navigate(['aktywacja-konta']);
-      },
-      error: (err) => {
-        console.log(err);
-        if (err.error.validationErrors) {
-          this.errorMsg = err.error.validationErrors;
-        } else if (err.error.error) {
-          this.errorMsg.push(err.error.error);
-        } else {
-          this.errorMsg.push(err.message);
-        }
-      }
     });
   }
 

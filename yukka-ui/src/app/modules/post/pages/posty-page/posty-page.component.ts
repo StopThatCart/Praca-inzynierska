@@ -6,7 +6,7 @@ import { PostService } from '../../../../services/services';
 import { PostCardComponent } from "../../components/post-card/post-card.component";
 import { KomentarzCardComponent } from '../../components/komentarz-card/komentarz-card.component';
 import { AddKomentarzCardComponent } from '../../components/add-komentarz-card/add-komentarz-card.component';
-import { TypKomentarza } from '../../enums/TypKomentarza';
+import { TypKomentarza } from '../../models/TypKomentarza';
 import { error } from 'console';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 

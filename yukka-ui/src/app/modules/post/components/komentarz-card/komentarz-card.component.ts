@@ -9,10 +9,11 @@ import { TokenService } from '../../../../services/token/token.service';
 import { FormsModule } from '@angular/forms';
 import { AddKomentarzCardComponent } from "../add-komentarz-card/add-komentarz-card.component";
 import {TimeAgoPipe} from 'time-ago-pipe';
-import { TypKomentarza } from '../../enums/TypKomentarza';
+import { TypKomentarza } from '../../models/TypKomentarza';
 import { ZgloszenieButtonComponent } from "../../../profil/components/zgloszenie-button/zgloszenie-button.component";
-import { TypPowiadomienia } from '../../../profil/enums/TypPowiadomienia';
+import { TypPowiadomienia } from '../../../profil/models/TypPowiadomienia';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-komentarz-card',
@@ -51,7 +52,9 @@ export class KomentarzCardComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private komentarzService: KomentarzService,
-    private tokenService: TokenService) {}
+    private tokenService: TokenService,
+    private errorHandlingService: ErrorHandlingService
+  ) {}
 
   ngOnInit() {
     if(this.tokenService.isTokenValid()) {
@@ -131,11 +134,11 @@ export class KomentarzCardComponent implements OnInit {
           this.komentarz.ocenyLubi = komentarz.ocenyLubi;
           this.komentarz.ocenyNieLubi = komentarz.ocenyNieLubi;
         },
-        error: (err: HttpErrorResponse) => {
-          if (err.status === 403) {
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 403) {
             this.router.navigate(['/login']);
           } else {
-            this.handleErrors(err);
+            this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);;
           }
         }
       });
@@ -174,8 +177,8 @@ export class KomentarzCardComponent implements OnInit {
           this.komentarz.edytowany = res.edytowany;
           this.isEditing = false;
         },
-        error: (err) => {
-          this.handleErrors(err);
+        error: (error) => {
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
           this.cancelEditing();
         }
       });
@@ -192,8 +195,8 @@ export class KomentarzCardComponent implements OnInit {
             console.log(res);
             window.location.reload();
           },
-          error: (err) => {
-            this.handleErrors(err);
+          error: (error) => {
+            this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
           }
         });
       }
@@ -211,14 +214,4 @@ export class KomentarzCardComponent implements OnInit {
     this.showOdpowiedzi = !this.showOdpowiedzi;
   }
 
-  private handleErrors(err: any) {
-    console.log(err);
-    if(err.error.validationErrors) {
-      this.errorMsg = err.error.validationErrors
-    } else if (err.error.error) {
-      this.errorMsg.push(err.error.error);
-    } else {
-      this.errorMsg.push(err.message);
-    }
-  }
 }
