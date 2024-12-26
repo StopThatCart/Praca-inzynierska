@@ -187,10 +187,10 @@ public class FileStoreService {
      * @return Ścieżka do zapisanego pliku.
      * @throws IllegalArgumentException Jeśli plik obrazu jest nieprawidłowy.
      */
-    public String saveAvatar(@Nonnull MultipartFile sourceFile) {
+    public String saveAvatar(@Nonnull MultipartFile sourceFile, @Nonnull String uzytId) {
         validateImage(sourceFile, false);
 
-        String fileUploadSubPath = "uzytkownicy" + separator + "avatar";
+        String fileUploadSubPath = "uzytkownicy"+ separator + uzytId + separator + "avatar";
         String fileName = "avatar";
         String avatar = uploadFile(sourceFile, fileUploadSubPath, fileName);
         if(avatar == null) {

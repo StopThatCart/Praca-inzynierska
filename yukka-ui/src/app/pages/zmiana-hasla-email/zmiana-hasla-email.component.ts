@@ -28,7 +28,7 @@ export class ZmianaHaslaEmailComponent {
   ) {}
 
 
-  sendZmianaHaslaEmail() {
+  sendResetPasswordEmail() {
     this.errorMsg = [];
     this.message = '';
 

@@ -26,8 +26,8 @@ import { getUstawienia } from '../fn/uzytkownik/get-ustawienia';
 import { GetUstawienia$Params } from '../fn/uzytkownik/get-ustawienia';
 import { removeSelf } from '../fn/uzytkownik/remove-self';
 import { RemoveSelf$Params } from '../fn/uzytkownik/remove-self';
-import { sendZmianaEmail } from '../fn/uzytkownik/send-zmiana-email';
-import { SendZmianaEmail$Params } from '../fn/uzytkownik/send-zmiana-email';
+import { sendChangeEmail } from '../fn/uzytkownik/send-change-email';
+import { SendChangeEmail$Params } from '../fn/uzytkownik/send-change-email';
 import { setBlokUzytkownik } from '../fn/uzytkownik/set-blok-uzytkownik';
 import { SetBlokUzytkownik$Params } from '../fn/uzytkownik/set-blok-uzytkownik';
 import { StatystykiDto } from '../models/statystyki-dto';
@@ -46,29 +46,29 @@ export class UzytkownikService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `sendZmianaEmail()` */
-  static readonly SendZmianaEmailPath = '/uzytkownicy/send-zmiana-email';
+  /** Path part for operation `sendChangeEmail()` */
+  static readonly SendChangeEmailPath = '/uzytkownicy/send-zmiana-email';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `sendZmianaEmail()` instead.
+   * To access only the response body, use `sendChangeEmail()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  sendZmianaEmail$Response(params: SendZmianaEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  sendChangeEmail$Response(params: SendChangeEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 }>> {
-    return sendZmianaEmail(this.http, this.rootUrl, params, context);
+    return sendChangeEmail(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `sendZmianaEmail$Response()` instead.
+   * To access the full response (for headers, for example), `sendChangeEmail$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  sendZmianaEmail(params: SendZmianaEmail$Params, context?: HttpContext): Observable<{
+  sendChangeEmail(params: SendChangeEmail$Params, context?: HttpContext): Observable<{
 }> {
-    return this.sendZmianaEmail$Response(params, context).pipe(
+    return this.sendChangeEmail$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)

@@ -43,7 +43,7 @@ export class EdycjaEmailPageComponent {
     this.errorMsg = [];
     this.message = '';
 
-    this.uzytService.sendZmianaEmail({
+    this.uzytService.sendChangeEmail({
       body: this.request
     }).subscribe({
       next: () => {

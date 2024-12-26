@@ -190,7 +190,7 @@ public class UzytkownikController {
      * @throws MessagingException w przypadku problemów z wysyłaniem wiadomości e-mail
      */
     @PostMapping(value = "/send-zmiana-email", produces="application/json")
-    public ResponseEntity<?> sendZmianaEmail(@Valid @RequestBody EmailRequest request, Authentication currentUser) throws MessagingException {
+    public ResponseEntity<?> sendChangeEmail(@Valid @RequestBody EmailRequest request, Authentication currentUser) throws MessagingException {
         uzytkownikService.sendChangeEmail(request, currentUser);
         return ResponseEntity.accepted().build();
     }

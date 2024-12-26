@@ -8,13 +8,13 @@ import { RequestBuilder } from '../../request-builder';
 
 import { EmailRequest } from '../../models/email-request';
 
-export interface SendZmianaEmail$Params {
+export interface SendChangeEmail$Params {
       body: EmailRequest
 }
 
-export function sendZmianaEmail(http: HttpClient, rootUrl: string, params: SendZmianaEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function sendChangeEmail(http: HttpClient, rootUrl: string, params: SendChangeEmail$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 }>> {
-  const rb = new RequestBuilder(rootUrl, sendZmianaEmail.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, sendChangeEmail.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -30,4 +30,4 @@ export function sendZmianaEmail(http: HttpClient, rootUrl: string, params: SendZ
   );
 }
 
-sendZmianaEmail.PATH = '/uzytkownicy/send-zmiana-email';
+sendChangeEmail.PATH = '/uzytkownicy/send-zmiana-email';

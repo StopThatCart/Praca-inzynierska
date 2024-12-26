@@ -320,7 +320,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         MATCH (u:Uzytkownik{email: $email})
         WITH u
 
-        MATCH (u)-[:MA_USTAWIENIA]->(ust:Ustawienia)
+        OPTIONAL MATCH (u)-[:MA_USTAWIENIA]->(ust:Ustawienia)
         DETACH DELETE ust
 
         WITH u
@@ -331,10 +331,6 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         OPTIONAL MATCH (u)-[:JEST_W_ROZMOWIE]->(rozmowa:RozmowaPrywatna)
         OPTIONAL MATCH (rozmowa)-[:MA_WIADOMOSC]->(kom:Komentarz)
         DETACH DELETE kom, rozmowa
-        
-        WITH u
-        MATCH (u)<-[:POWIADAMIA]-(powiadomienie:Powiadomienie)
-        DETACH DELETE powiadomienie
 
         WITH u
         DETACH DELETE u 
@@ -359,6 +355,18 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         DETACH DELETE odpowiedz
         """)
     void removeKomentarzeOfUzytkownik(@Param("email") String email);
+
+    @Query("""
+        MATCH (u:Uzytkownik{email: $email})
+        OPTIONAL MATCH (u)<-[r1:POWIADAMIA]-(powiadomienie:Powiadomienie)
+        DELETE r1
+
+        WITH u
+        MATCH (powiadomienie:Powiadomienie) 
+        WHERE NOT (powiadomienie)--()
+        DELETE powiadomienie
+        """)
+    void removePowiadomieniaOfUzytkownik(@Param("email") String email);
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
         OPTIONAL MATCH (u)<-[:STWORZONA_PRZEZ]-(roslina:UzytkownikRoslina)

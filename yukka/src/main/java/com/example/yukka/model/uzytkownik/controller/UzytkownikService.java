@@ -281,6 +281,7 @@ public class UzytkownikService implements  UserDetailsService {
         }
         Uzytkownik uzyt2 = uzytkownikRepository.findByEmail(uzyt.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika z podanym adresem email"));
+        
         if(!passwordEncoder.matches(request.getHaslo(), uzyt2.getHaslo())) {
             throw new IllegalArgumentException("Podane hasło jest nieprawidłowe");
         }
@@ -323,7 +324,7 @@ public class UzytkownikService implements  UserDetailsService {
         }
         fileUtils.deleteObraz(uzytkownik.getAvatar());
 
-        String leObraz = fileStoreService.saveAvatar(file);
+        String leObraz = fileStoreService.saveAvatar(file, uzyt.getUzytId());
         System.out.println("Zapisano avatar: " + leObraz);
 
         uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
@@ -432,7 +433,6 @@ public class UzytkownikService implements  UserDetailsService {
         if(uzyt.isAdmin() || uzyt.isPracownik()) {
             throw new IllegalArgumentException("Nie można usuwać konta admina lub pracownika");
         }
-
         if(!passwordEncoder.matches(request.getHaslo(), uzyt.getHaslo())) {
             throw new IllegalArgumentException("Podane hasło jest nieprawidłowe");
         }
@@ -454,9 +454,11 @@ public class UzytkownikService implements  UserDetailsService {
      * @param email Email użytkownika, który ma zostać usunięty.
      */
     private void removeUzytkownikQueries(String email) {
+        log.info("Usuwanie użytkownika o emailu: " + email);
         uzytkownikRepository.removePostyOfUzytkownik(email);
         uzytkownikRepository.removeKomentarzeOfUzytkownik(email);
         uzytkownikRepository.removeRoslinyOfUzytkownik(email);
+        uzytkownikRepository.removePowiadomieniaOfUzytkownik(email);
         uzytkownikRepository.removeUzytkownik(email);
     }
     

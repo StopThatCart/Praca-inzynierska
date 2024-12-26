@@ -206,7 +206,8 @@ export class AuthenticationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  confirm$Response(params: Confirm$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  confirm$Response(params: Confirm$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
     return confirm(this.http, this.rootUrl, params, context);
   }
 
@@ -216,9 +217,12 @@ export class AuthenticationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  confirm(params: Confirm$Params, context?: HttpContext): Observable<void> {
+  confirm(params: Confirm$Params, context?: HttpContext): Observable<{
+}> {
     return this.confirm$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
     );
   }
 

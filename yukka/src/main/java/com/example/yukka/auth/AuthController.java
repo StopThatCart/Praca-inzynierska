@@ -66,23 +66,22 @@ public class AuthController {
      */
     @PostMapping(value = "/register", produces="application/json")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> register(
-            @RequestBody 
-             @Valid
-            RegistrationRequest request) throws MessagingException {
+    public ResponseEntity<?> register(@RequestBody @Valid RegistrationRequest request) throws MessagingException {
         //return ResponseEntity.ok().build();
         service.register(request);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
     *  Obsługuję aktywację konta użytkownika za pomocą tokena.
     * @param token token aktywacyjny wysłany na e-mail użytkownika
+    * @return ResponseEntity wskazujący, czy konto zostało aktywowane
     * @throws MessagingException jeśli wystąpi błąd podczas wysyłania e-maila aktywacyjnego
     */
     @GetMapping(value = "/aktywacja-konta")
-    public void confirm(@RequestParam String token) throws MessagingException {
+    public ResponseEntity<?> confirm(@RequestParam String token) throws MessagingException {
         service.activateAccount(token);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     /**
