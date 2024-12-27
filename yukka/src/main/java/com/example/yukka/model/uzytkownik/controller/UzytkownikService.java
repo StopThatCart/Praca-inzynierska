@@ -460,6 +460,8 @@ public class UzytkownikService implements  UserDetailsService {
         uzytkownikRepository.removeRoslinyOfUzytkownik(email);
         uzytkownikRepository.removePowiadomieniaOfUzytkownik(email);
         uzytkownikRepository.removeUzytkownik(email);
+
+        
     }
     
 

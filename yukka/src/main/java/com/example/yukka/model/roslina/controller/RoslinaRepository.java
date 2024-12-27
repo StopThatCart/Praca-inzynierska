@@ -71,6 +71,16 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     """)
     Optional<Roslina> findByNazwaLacinska(@Param("latinName") String latinName);
 
+
+    
+    @Query("""
+        MATCH (roslina:Roslina) WHERE NOT roslina:UzytkownikRoslina
+        WITH COUNT(roslina) AS totalCount, COLLECT(roslina) AS rosliny
+        WITH rosliny[toInteger(rand() * totalCount)] AS randomRoslina
+        RETURN randomRoslina
+    """)
+    Optional<Roslina> getRandomRoslina();
+
     @Query(value = """
         MATCH (roslina:Roslina) WHERE NOT roslina:UzytkownikRoslina
         OPTIONAL MATCH path=(roslina)-[r]->(w:Wlasciwosc)
@@ -83,34 +93,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         """)
     Page<Roslina> findAllRosliny(Pageable pageable);
 
-    // relatLump nie działa. Poza tym zaktualizuj potem count
-
-    /*
-     * 
-     * """
-        WITH $roslina.__properties__ AS rp 
-        MATCH (roslina:Roslina) WHERE NOT roslina:UzytkownikRoslina
-            AND (rp.nazwa IS NULL OR roslina.nazwa CONTAINS rp.nazwa) 
-            AND (rp.nazwaLacinska IS NULL OR roslina.nazwaLacinska CONTAINS rp.nazwaLacinska)
-            AND (rp.wysokoscMin IS NULL OR roslina.wysokoscMin >= rp.wysokoscMin)
-            AND (rp.wysokoscMax IS NULL OR roslina.wysokoscMax <= rp.wysokoscMax)
-        MATCH (roslina)-[rel]->(relatedNode)
-        WHERE  (size($relatLump) = 0 OR 
-                    ANY(relat IN $relatLump WHERE 
-                        (relatedNode.nazwa = relat.nazwa) AND
-                        (type(rel) = relat.relacja) AND
-                        ANY(label IN labels(relatedNode) WHERE label = relat.etykieta)
-                    )
-        )
-        RETURN DISTINCT roslina
-        :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
-        """
-     * 
-     * 
-     */
-
-     // To jest okropne, ale nie mogłem znaleźć optymalnego sposobu na to, by porównywało właściwości węzła rośliny.
-     // Dodatkowo, byłoby więcej problemów z dynamicznymi etykietami bo Neo4j na to nie pozwala, a APOC jest mocno nieczytelny
     @Query(value = """
         WITH $roslina.__properties__ AS rp
         MATCH (roslina:Roslina) WHERE NOT roslina:UzytkownikRoslina
@@ -440,38 +422,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     @Param("obraz") String obraz
     );
 
-
-    // Czas wykonania testu: 462ms, 330ms
-    // @Query("""
-    //         MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina
-    //         SET p.nazwa = $name, p.opis = $description,
-    //             p.obraz = COALESCE($imageFilename, 'default_plant.jpg'),
-    //             p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
-
-    //         WITH p
-    //         OPTIONAL MATCH (p)-[r]->(w:Wlasciwosc)
-    //         DELETE r
-
-    //         WITH p, $relatLump AS relatLump
-    //         UNWIND relatLump AS relat
-    //         WITH p, relat, [ relat.labels, 'Wlasciwosc' ] AS labels 
-    //         CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
-    //         WITH p, w, relat
-    //         CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
-
-    //         WITH p OPTIONAL MATCH path=(p)-[r]->(w)
-    //         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
-    //       """)
-    // Roslina updateRoslinaRelationshipsButEasierAndSlower(
-    //     @Param("name") String name,
-    //     @Param("latinName") String latinName,
-    //     @Param("description") String description,
-    //     @Param("imageFilename") String imageFilename,
-    //     @Param("heightMin") Double heightMin,
-    //     @Param("heightMax") Double heightMax,
-    //     @Param("relatLump") List<Map<String, String>> relatLump
-    // );
-    
     @Query("""
             MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina
             DETACH DELETE p

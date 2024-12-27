@@ -73,7 +73,7 @@ export class MoveRoslinaToOtherDzialkaComponent {
       const roslinaId = params['roslinaId'];
       const numerDzialki = Number(params['numer']);
       if (roslinaId && numerDzialki) {
-        this.getRoslinaInDzialka(numerDzialki, roslinaId);
+        this.getRoslinaInDzialkaByRoslinaId(numerDzialki, roslinaId);
         this.route.snapshot.data['roslinaId'] = roslinaId;
         this.route.snapshot.data['numer'] = numerDzialki;
 
@@ -85,7 +85,7 @@ export class MoveRoslinaToOtherDzialkaComponent {
     });
   }
 
-  getRoslinaInDzialka(numerDzialki: number, roslinaId: string): void {
+  getRoslinaInDzialkaByRoslinaId(numerDzialki: number, roslinaId: string): void {
     this.errorMsg = [];
     if(!numerDzialki || !roslinaId) return;
     this.dzialkaService.getRoslinaInDzialkaByRoslinaId({ numer: numerDzialki, 'roslina-id': roslinaId }).subscribe({

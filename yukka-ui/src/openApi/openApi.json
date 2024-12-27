@@ -2549,60 +2549,6 @@
         }
       }
     },
-    "/dzialki": {
-      "get": {
-        "tags": [
-          "Dzialka"
-        ],
-        "operationId": "getDzialki_1",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DzialkaResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/dzialki/{numer}": {
-      "get": {
-        "tags": [
-          "Dzialka"
-        ],
-        "operationId": "getDzialkaByNumer",
-        "parameters": [
-          {
-            "name": "numer",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DzialkaResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/dzialki/{numer}/{x}/{y}": {
       "get": {
         "tags": [
@@ -2723,39 +2669,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DzialkaResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/dzialki/uzytkownicy/{uzytkownik-nazwa}": {
-      "get": {
-        "tags": [
-          "Dzialka"
-        ],
-        "operationId": "getDzialkiOfUzytkownik",
-        "parameters": [
-          {
-            "name": "uzytkownik-nazwa",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DzialkaResponse"
-                  }
                 }
               }
             }
@@ -2992,11 +2905,11 @@
           "wposcie": {
             "$ref": "#/components/schemas/Post"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3005,11 +2918,11 @@
       "Oceniany": {
         "type": "object",
         "properties": {
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3101,11 +3014,11 @@
               "$ref": "#/components/schemas/Komentarz"
             }
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3275,13 +3188,16 @@
           "normalUzytkownik": {
             "type": "boolean"
           },
+          "username": {
+            "type": "string"
+          },
           "pracownik": {
             "type": "boolean"
           },
           "admin": {
             "type": "boolean"
           },
-          "username": {
+          "password": {
             "type": "string"
           },
           "authorities": {
@@ -3290,19 +3206,16 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "password": {
-            "type": "string"
-          },
           "enabled": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonLocked": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
-          "accountNonLocked": {
+          "credentialsNonExpired": {
             "type": "boolean"
           }
         }

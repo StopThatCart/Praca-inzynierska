@@ -1,7 +1,8 @@
-package com.example.yukka.model.dzialka;
+package com.example.yukka.model.dzialka.response;
 
 import java.util.Set;
 
+import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.roslina.RoslinaResponse;
 
 import lombok.AllArgsConstructor;

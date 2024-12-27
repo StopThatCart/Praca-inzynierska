@@ -96,7 +96,7 @@ export class DzialkaPageComponent implements OnInit  {
 
       if (this.numer && this.uzytNazwa) {
         this.getUzytkownikByNazwa(this.uzytNazwa);
-        this.getDzialkaByNumer( this.numer, this.uzytNazwa).then(() => {
+        this.getDzialkaOfUzytkownikByNumer( this.numer, this.uzytNazwa).then(() => {
           console.log('Działka załadowana');
           this.isLoading = false;
         }).catch((err) => {
@@ -250,9 +250,9 @@ export class DzialkaPageComponent implements OnInit  {
     });
   }
 
-  getDzialkaByNumer(numer: number, uzytkownikNazwa: string): Promise<void> {
+  getDzialkaOfUzytkownikByNumer(numer: number, uzytkownikNazwa: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log('getDzialkaByNumer');
+      console.log('getDzialkaOfUzytkownikByNumer');
       this.dzialkaService.getDzialkaOfUzytkownikByNumer({ numer: numer, 'uzytkownik-nazwa': uzytkownikNazwa }).subscribe({
         next: (dzialka) => {
           this.dzialka = dzialka;
@@ -278,14 +278,14 @@ export class DzialkaPageComponent implements OnInit  {
     console.log('onRoslinaDelete');
     this.initializeTiles();
     this.drawChessboard();
-    this.getDzialkaByNumer(this.numer!, this.uzytNazwa!);
+    this.getDzialkaOfUzytkownikByNumer(this.numer!, this.uzytNazwa!);
   }
 
   async onRoslinaUpdate(selectedRoslina : ZasadzonaRoslinaResponse) {
     console.log('onRoslinaUpdate');
     this.initializeTiles();
     this.drawChessboard();
-    await this.getDzialkaByNumer(this.numer!, this.uzytNazwa!);
+    await this.getDzialkaOfUzytkownikByNumer(this.numer!, this.uzytNazwa!);
 
     if (this.selectedRoslina) {
         let ros = this.dzialka.zasadzoneRosliny?.find(roslina => roslina.x === this.selectedRoslina!.x && roslina.y === this.selectedRoslina!.y);

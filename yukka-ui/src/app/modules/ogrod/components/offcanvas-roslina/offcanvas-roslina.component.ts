@@ -26,7 +26,6 @@ import { RoslinaWlasciwosciContainerComponent } from "../../../roslina/component
     NgbTooltipModule,
     ModalColorPickComponent,
     ModalObrazPickComponent,
-    WyswietlanieRoslinyOpcjeComponent,
     ModalWyswietlanieRoslinyPickComponent,
     ModalNotatkaPickComponent, RoslinaWlasciwosciContainerComponent],
   templateUrl: './offcanvas-roslina.component.html',
@@ -108,7 +107,7 @@ export class OffcanvasRoslinaComponent {
     if(!confirm('Czy na pewno chcesz usunąć roślinę z działki?')) {
       return;
     }
-    console.log('getDzialkaByNumer');
+
     if(!this.zasadzonaRoslina || this.zasadzonaRoslina.x == undefined || this.zasadzonaRoslina.y == undefined) {
       console.error('Nie można usunąć rośliny z działki, brak pozycji');
       console.log("sprawdzanie")

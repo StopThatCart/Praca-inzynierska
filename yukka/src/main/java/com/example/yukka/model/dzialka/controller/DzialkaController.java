@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.FileResponse;
-import com.example.yukka.model.dzialka.DzialkaResponse;
-import com.example.yukka.model.dzialka.ZasadzonaRoslinaResponse;
 import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
+import com.example.yukka.model.dzialka.response.DzialkaResponse;
+import com.example.yukka.model.dzialka.response.ZasadzonaRoslinaResponse;
 import com.example.yukka.model.dzialka.service.DzialkaService;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,10 +33,7 @@ import jakarta.validation.Valid;
  * Kontroler REST dla zasobów Działka.
  * 
  * <ul>
- * <li><strong>getDzialki</strong> - Pobiera listę działek dla zalogowanego użytkownika.</li>
- * <li><strong>getDzialkiOfUzytkownik</strong> - Pobiera listę działek dla określonego użytkownika.</li>
  * <li><strong>getPozycjeInDzialki</strong> - Pobiera listę pozycji w działkach dla zalogowanego użytkownika.</li>
- * <li><strong>getDzialkaByNumer</strong> - Pobiera działkę na podstawie numeru.</li>
  * <li><strong>getDzialkaOfUzytkownikByNumer</strong> - Pobiera działkę określonego użytkownika na podstawie numeru.</li>
  * <li><strong>saveRoslinaToDzialka</strong> - Zapisuje roślinę do działki.</li>
  * <li><strong>updateRoslinaPozycjaInDzialka</strong> - Aktualizuje pozycję rośliny w działce.</li>
@@ -56,33 +53,8 @@ public class DzialkaController {
 @Autowired
     private DzialkaService dzialkaService;
 
-    
     /**
-     * Metoda obsługująca żądanie GET do pobrania listy działek.
-     *
-     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
-     * @return ResponseEntity zawierające listę obiektów DzialkaResponse w formacie JSON
-     */
-    @GetMapping(produces="application/json")
-    public ResponseEntity<List<DzialkaResponse>> getDzialki(Authentication connectedUser) {
-        return ResponseEntity.ok(dzialkaService.getDzialki(connectedUser));
-    }
-
-    /**
-     * Metoda obsługująca żądanie GET do pobrania listy działek dla określonego użytkownika.
-     *
-     * @param nazwa nazwa użytkownika
-     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
-     * @return ResponseEntity zawierające listę obiektów DzialkaResponse w formacie JSON
-     */
-    @GetMapping(value = "/uzytkownicy/{uzytkownik-nazwa}", produces="application/json")
-    public ResponseEntity<List<DzialkaResponse>> getDzialkiOfUzytkownik(@PathVariable("uzytkownik-nazwa") String nazwa, 
-    Authentication connectedUser) {
-        return ResponseEntity.ok(dzialkaService.getDzialkiOfUzytkownik(nazwa, connectedUser));
-    }
-
-    /**
-     * Metoda obsługująca żądanie GET do pobrania listy pozycji w działkach.
+     * Metoda obsługująca żądanie GET do pobrania listy pozycji w działkach. Używana podczas dodawania rośliny do działki i przenoszenia na inną.
      *
      * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
      * @return ResponseEntity zawierające listę obiektów DzialkaResponse w formacie JSON
@@ -91,27 +63,34 @@ public class DzialkaController {
     public ResponseEntity<List<DzialkaResponse>> getPozycjeInDzialki(Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getPozycjeInDzialki(connectedUser));
     }
-    
+
     /**
-     * Metoda obsługująca żądanie GET do pobrania działki na podstawie numeru.
+     * Metoda obsługująca żądanie GET do pobrania zasadzonej rośliny w określonej działce.
      *
      * @param numer numer działki
-     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
-     * @return ResponseEntity zawierające obiekt DzialkaResponse w formacie JSON
+     * @param x współrzędna x rośliny w działce
+     * @param y współrzędna y rośliny w działce
+     * @param connectedUser uwierzytelniony użytkownik
+     * @return ResponseEntity zawierające odpowiedź z zasadzoną rośliną
      */
-    @GetMapping(value = "/{numer}", produces="application/json")
-    public ResponseEntity<DzialkaResponse> getDzialkaByNumer(@PathVariable int numer, Authentication connectedUser) {
-        return ResponseEntity.ok(dzialkaService.getDzialkaByNumer(numer, connectedUser));
-    }
-
-
     @GetMapping(value = "/{numer}/{x}/{y}", produces="application/json")
-    public ResponseEntity<ZasadzonaRoslinaResponse> getRoslinaInDzialka(@PathVariable int numer, @PathVariable int x, @PathVariable int y, Authentication connectedUser) {
+    public ResponseEntity<ZasadzonaRoslinaResponse> getRoslinaInDzialka(@PathVariable int numer, @PathVariable int x, 
+    @PathVariable int y, Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getRoslinaInDzialka(numer, x, y, connectedUser));
     }
 
+
+    /**
+     * Metoda obsługująca żądanie GET do pobrania zasadzonej roślinę w działce na podstawie numeru działki i id rośliny.
+     *
+     * @param numer numer działki
+     * @param roslinaId id rośliny
+     * @param connectedUser uwierzytelniony użytkownik
+     * @return ResponseEntity zawierające odpowiedź z zasadzoną rośliną
+     */
     @GetMapping(value = "/{numer}/{roslina-id}", produces="application/json")
-    public ResponseEntity<ZasadzonaRoslinaResponse> getRoslinaInDzialkaByRoslinaId(@PathVariable int numer, @PathVariable("roslina-id") String roslinaId, Authentication connectedUser) {
+    public ResponseEntity<ZasadzonaRoslinaResponse> getRoslinaInDzialkaByRoslinaId(@PathVariable int numer, @PathVariable("roslina-id") String roslinaId, 
+    Authentication connectedUser) {
         return ResponseEntity.ok(dzialkaService.getRoslinaInDzialka(numer, roslinaId, connectedUser));
     }
 
@@ -119,14 +98,14 @@ public class DzialkaController {
      * Metoda obsługująca żądanie GET do pobrania działki określonego użytkownika na podstawie numeru.
      *
      * @param numer numer działki
-     * @param nazwa nazwa użytkownika
+     * @param uzytkownikNazwa nazwa użytkownika
      * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
      * @return ResponseEntity zawierające obiekt DzialkaResponse w formacie JSON
      */
     @GetMapping(value = "/{numer}/uzytkownicy/{uzytkownik-nazwa}", produces="application/json")
     public ResponseEntity<DzialkaResponse> getDzialkaOfUzytkownikByNumer(@PathVariable("numer") int numer, 
-    @PathVariable("uzytkownik-nazwa") String nazwa, Authentication connectedUser) {
-        return ResponseEntity.ok(dzialkaService.getDzialkaOfUzytkownikByNumer(numer, nazwa, connectedUser));
+    @PathVariable("uzytkownik-nazwa") String uzytkownikNazwa, Authentication connectedUser) {
+        return ResponseEntity.ok(dzialkaService.getDzialkaOfUzytkownikByNumer(numer, uzytkownikNazwa, connectedUser));
     }
 
 
@@ -135,13 +114,13 @@ public class DzialkaController {
      * Zmienia nazwę działki o podanym numerze.
      *
      * @param numer numer działki, której nazwa ma zostać zmieniona
-     * @param nazwa nowa nazwa dla działki
+     * @param nowaNazwa nowa nazwa dla działki
      * @param connectedUser uwierzytelniony użytkownik wykonujący operację
      * @return ResponseEntity z kodem statusu HTTP 202 (Accepted) w przypadku powodzenia
      */
     @PatchMapping(value = "/{numer}/{nazwa}", produces="application/json")
-    public ResponseEntity<String> renameDzialka(@PathVariable int numer, @PathVariable String nazwa, Authentication connectedUser) {
-        dzialkaService.renameDzialka(numer, nazwa, connectedUser);
+    public ResponseEntity<String> renameDzialka(@PathVariable int numer, @PathVariable("nazwa") String nowaNazwa, Authentication connectedUser) {
+        dzialkaService.renameDzialka(numer, nowaNazwa, connectedUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
@@ -189,7 +168,7 @@ public class DzialkaController {
     }
 
     /**
-     * Metoda obsługująca żądanie PATCH do aktualizacji obrazu rośliny w działce.
+     * Metoda obsługująca żądanie PATCH do aktualizacji obrazu albo tekstury rośliny w działce.
      *
      * @param request obiekt DzialkaRoslinaRequest reprezentujący dane rośliny
      * @param obraz obiekt MultipartFile reprezentujący obraz rośliny
@@ -198,7 +177,7 @@ public class DzialkaController {
      * @return ResponseEntity zawierające obiekt FileResponse w formacie JSON
      */
     @PatchMapping(value = "/rosliny/obraz", consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<FileResponse> updateRoslinaObrazInDzialka(@Valid@RequestPart("request") DzialkaRoslinaRequest request,
+    public ResponseEntity<FileResponse> updateRoslinaObrazInDzialka(@Valid @RequestPart("request") DzialkaRoslinaRequest request,
         @Parameter() @RequestPart(value = "obraz", required = false) MultipartFile obraz,
         @Parameter() @RequestPart(value = "tekstura", required = false)  MultipartFile tekstura,
         Authentication connectedUser) {

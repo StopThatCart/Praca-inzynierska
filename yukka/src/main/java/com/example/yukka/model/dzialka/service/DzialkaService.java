@@ -14,14 +14,14 @@ import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.dzialka.Dzialka;
-import com.example.yukka.model.dzialka.DzialkaResponse;
 import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
-import com.example.yukka.model.dzialka.ZasadzonaRoslinaResponse;
 import com.example.yukka.model.dzialka.repository.DzialkaRepository;
 import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
+import com.example.yukka.model.dzialka.response.DzialkaResponse;
+import com.example.yukka.model.dzialka.response.ZasadzonaRoslinaResponse;
 import com.example.yukka.model.enums.Wyswietlanie;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
@@ -66,22 +66,7 @@ public class DzialkaService {
     private final RoslinaMapper roslinaMapper;
 
     
-    /**
-     * Metoda zwraca listę działek powiązanych z zalogowanym użytkownikiem.
-     *
-     * @param connectedUser obiekt Authentication reprezentujący zalogowanego użytkownika
-     * @return lista obiektów DzialkaResponse reprezentujących działki użytkownika
-     */
-    @Transactional(readOnly = true)
-    public List<DzialkaResponse> getDzialki(Authentication connectedUser) {
-        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
 
-        List<Dzialka> dzialki = dzialkaRepository.getDzialkiOfUzytkownikByNazwa(uzyt.getNazwa());
-        List<DzialkaResponse> dzialkiResponse = dzialki.stream()
-                .map(roslinaMapper::toDzialkaResponse)
-                .toList();
-        return dzialkiResponse;
-    }
 
     /**
      * Metoda zwraca listę działek powiązanych z użytkownikiem o podanej nazwie.
@@ -598,7 +583,9 @@ public class DzialkaService {
                 if(pfp == null) return null;
                 dzialkaZRoslina = dzialkaRepository.updateRoslinaObrazInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
                  request.getX(), request.getY(), pfp);
-            } else if (tekstura != null) {
+            }
+            
+            if (tekstura != null) {
                 if (pozycja.getTekstura() != null) fileUtils.deleteObraz(pozycja.getTekstura());
 
                 log.info("Zapisywanie tekstury rośliny na działce[" + request.getNumerDzialki() + "]");
@@ -607,6 +594,7 @@ public class DzialkaService {
                 dzialkaZRoslina = dzialkaRepository.updateRoslinaTeksturaInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
                  request.getX(), request.getY(), pfp);
             }
+
             if (dzialkaZRoslina != null) 
             return FileResponse.builder().content(fileUtils.readFile(pfp, DefaultImage.ROSLINA)).build();
         }

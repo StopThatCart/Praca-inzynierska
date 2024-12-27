@@ -1,4 +1,4 @@
-package com.example.yukka.model.dzialka;
+package com.example.yukka.model.dzialka.response;
 
 import java.util.List;
 

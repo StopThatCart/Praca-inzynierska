@@ -2,7 +2,7 @@ package com.example.yukka.model.ogrod;
 
 import java.util.List;
 
-import com.example.yukka.model.dzialka.DzialkaResponse;
+import com.example.yukka.model.dzialka.response.DzialkaResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

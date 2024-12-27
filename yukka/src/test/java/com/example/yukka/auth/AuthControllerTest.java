@@ -3,14 +3,12 @@ package com.example.yukka.auth;
 import java.util.Collections;
 import java.util.Optional;
 
-import org.checkerframework.checker.units.qual.h;
 import org.junit.jupiter.api.AfterAll;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -32,7 +30,6 @@ import com.example.yukka.auth.requests.HasloRequest;
 import com.example.yukka.auth.requests.RegistrationRequest;
 import com.example.yukka.auth.requests.UsunKontoRequest;
 import com.example.yukka.authorities.ROLE;
-import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikController;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
@@ -49,7 +46,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-//@RequiredArgsConstructor
 public class AuthControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
