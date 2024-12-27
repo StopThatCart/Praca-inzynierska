@@ -31,7 +31,7 @@ import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
 import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
-import com.example.yukka.model.social.CommonMapperService;
+import com.example.yukka.model.social.mappers.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;

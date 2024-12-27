@@ -23,7 +23,6 @@ import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.response.DzialkaResponse;
 import com.example.yukka.model.dzialka.response.ZasadzonaRoslinaResponse;
-import com.example.yukka.model.dzialka.service.DzialkaService;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

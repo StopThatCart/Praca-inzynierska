@@ -20,11 +20,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.social.komentarz.Komentarz;
-
-import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
-import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatnaResponse;
-import com.example.yukka.model.social.service.RozmowaPrywatnaService;
+import com.example.yukka.model.social.models.komentarz.Komentarz;
+import com.example.yukka.model.social.models.rozmowaPrywatna.RozmowaPrywatna;
+import com.example.yukka.model.social.models.rozmowaPrywatna.RozmowaPrywatnaResponse;
+import com.example.yukka.model.social.models.rozmowaPrywatna.controller.RozmowaPrywatnaController;
+import com.example.yukka.model.social.models.rozmowaPrywatna.controller.RozmowaPrywatnaService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;

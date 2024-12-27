@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.ogrod.OgrodResponse;
-import com.example.yukka.model.ogrod.service.OgrodService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

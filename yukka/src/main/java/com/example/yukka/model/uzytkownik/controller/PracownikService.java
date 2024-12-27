@@ -15,7 +15,7 @@ import com.example.yukka.auth.requests.BanRequest;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.handler.exceptions.ForbiddenException;
-import com.example.yukka.model.social.service.PowiadomienieService;
+import com.example.yukka.model.social.models.powiadomienie.controller.PowiadomienieService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.RequiredArgsConstructor;

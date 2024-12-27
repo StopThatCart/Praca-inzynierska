@@ -20,7 +20,7 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
-import com.example.yukka.model.social.CommonMapperService;
+import com.example.yukka.model.social.mappers.CommonMapperService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 

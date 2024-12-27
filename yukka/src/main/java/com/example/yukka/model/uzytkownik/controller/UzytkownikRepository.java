@@ -314,8 +314,6 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             """)
     Boolean banUzytkownik(String nazwa, boolean ban, LocalDate banDo);
 
-
-    // TODO: Zmień jak będą kolejne komponenty dodawane
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
         WITH u

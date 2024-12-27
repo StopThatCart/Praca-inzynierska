@@ -23,11 +23,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.yukka.authorities.ROLE;
 import com.example.yukka.model.ogrod.Ogrod;
-import com.example.yukka.model.social.komentarz.Komentarz;
-import com.example.yukka.model.social.models.Ocenil;
-import com.example.yukka.model.social.post.Post;
-
-import com.example.yukka.model.social.rozmowaPrywatna.RozmowaPrywatna;
+import com.example.yukka.model.social.models.komentarz.Komentarz;
+import com.example.yukka.model.social.models.ocenil.Ocenil;
+import com.example.yukka.model.social.models.post.Post;
+import com.example.yukka.model.social.models.rozmowaPrywatna.RozmowaPrywatna;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
