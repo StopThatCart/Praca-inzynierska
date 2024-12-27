@@ -66,10 +66,10 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
   ngOnInit(): void {
     this.initializeTiles();
     this.route.params.subscribe(params => {
-      const roslinaId = params['roslinaId'];
+      const roslinaId = params['roslina-id'];
       if (roslinaId) {
         this.getRoslinaByRoslinaId(roslinaId);
-        this.route.snapshot.data['roslinaId'] = roslinaId;
+        this.route.snapshot.data['roslina-id'] = roslinaId;
 
         this.getPozycjeInDzialki();
       }
@@ -144,7 +144,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
       error: (err) => {
         this.roslina = undefined;
         console.log(err);
-        this.errorMsg.push('Nie znaleziono rośliny o podanym roslinaId.');
+        this.errorMsg.push('Nie znaleziono rośliny o podanym roslina-id.');
       }
     });
   }

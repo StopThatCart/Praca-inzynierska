@@ -24,7 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import com.example.yukka.authorities.ROLE;
+import com.example.yukka.auth.authorities.ROLE;
 import com.example.yukka.model.roslina.controller.RoslinaController;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.controller.RoslinaService;

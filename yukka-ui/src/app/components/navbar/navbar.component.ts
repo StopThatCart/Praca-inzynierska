@@ -1,12 +1,9 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TokenService } from '../../services/token/token.service';
 import { CommonModule } from '@angular/common';
-import e from 'express';
-import { PowiadomienieCardComponent } from "../../modules/profil/components/powiadomienie-card/powiadomienie-card.component";
 import { PowiadomieniaDropdownComponent } from "../../modules/profil/components/powiadomienia-dropdown/powiadomienia-dropdown.component";
 import { UzytkownikService } from '../../services/services';
-import { UzytkownikResponse } from '../../services/models';
 
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RoslinaResponse } from '../../../../services/models';
 import { RoslinaService, UzytkownikRoslinaService } from '../../../../services/services';
 import { switchMap } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { RoslinaWlasciwosciContainerComponent } from "../../components/roslina-w
 @Component({
   selector: 'app-roslina-page',
   standalone: true,
-  imports: [CommonModule, BreadcrumbComponent, RoslinaWlasciwosciContainerComponent],
+  imports: [CommonModule, RouterModule, BreadcrumbComponent, RoslinaWlasciwosciContainerComponent],
   templateUrl: './roslina-page.component.html',
   styleUrl: './roslina-page.component.css'
 })
@@ -56,20 +56,24 @@ export class RoslinaPageComponent implements OnInit {
 
   goToUpdateRoslina() {
     if ((this.isPracownik() || this.isAutor()) && this.roslina?.roslinaId) {
-      this.router.navigate(['rosliny', this.roslina.roslinaId ,'aktualizuj']);
+      return ['/rosliny', this.roslina.roslinaId ,'aktualizuj'];
     }
+    return undefined;
   }
 
   goToUploadRoslinaObraz() {
     if ((this.isPracownik() || this.isAutor()) && this.roslina?.roslinaId) {
-      this.router.navigate(['rosliny', this.roslina.roslinaId ,'obraz']);
+      return ['/rosliny', this.roslina.roslinaId ,'obraz'];
     }
+    return undefined;
   }
 
   goToAddRoslinaToDzialka() {
     if (this.roslina?.roslinaId) {
-      this.router.navigate(['ogrod', this.tokenService.nazwa, 'dzialka', 'dodawanie', this.roslina.roslinaId]);
+      return ['/ogrod', this.tokenService.nazwa, 'dzialka', 'dodawanie', this.roslina.roslinaId];
     }
+    return undefined;
+    
   }
 
   removeRoslina() {

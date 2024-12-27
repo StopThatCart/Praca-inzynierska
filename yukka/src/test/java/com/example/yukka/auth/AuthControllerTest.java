@@ -23,13 +23,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.example.yukka.auth.authorities.ROLE;
 import com.example.yukka.auth.email.EmailTemplateName;
 import com.example.yukka.auth.requests.AuthRequest;
 import com.example.yukka.auth.requests.EmailRequest;
 import com.example.yukka.auth.requests.HasloRequest;
 import com.example.yukka.auth.requests.RegistrationRequest;
 import com.example.yukka.auth.requests.UsunKontoRequest;
-import com.example.yukka.authorities.ROLE;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikController;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;

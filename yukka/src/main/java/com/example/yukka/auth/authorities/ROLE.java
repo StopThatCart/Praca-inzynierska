@@ -1,5 +1,5 @@
 
-package com.example.yukka.authorities;
+package com.example.yukka.auth.authorities;
 
 /**
 * <ul>

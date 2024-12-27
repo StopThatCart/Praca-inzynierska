@@ -37,7 +37,7 @@ const routes: Routes = [
             data: { breadcrumb: (data: any) =>`Działka` },
             children: [
               {
-                path: 'dodawanie/:roslinaId',
+                path: 'dodawanie/:roslina-id',
                 component: AddRoslinaToDzialkaComponent,
                 data: { breadcrumb: (data: any) => `Dodawanie rośliny ${data.roslina.nazwa}` },
                 resolve: { roslina: RoslinaResolverService }

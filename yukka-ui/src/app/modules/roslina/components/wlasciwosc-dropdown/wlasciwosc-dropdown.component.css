@@ -23,6 +23,12 @@
   margin-right: 0.25rem;
 }
 
+.dropdown-item .form-check-input,
+.dropdown-item .form-label {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .vstack .form-label {
   color: #000;
 }

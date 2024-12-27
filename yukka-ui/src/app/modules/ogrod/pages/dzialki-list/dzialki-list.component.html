@@ -11,19 +11,18 @@
 
     <div
     *ngFor="let dzialka of ogrodResponse?.dzialki"
-
     class="card bg-secondary">
       <div class="card-body">
         <h5 class="card-title limit-to-3-lines">{{ dzialka.nazwa }}</h5>
         <h5 class="card-title">Nr: {{ dzialka.numer }}</h5>
         <p class="card-text">Liczba roślin: {{ dzialka.liczbaRoslin }}</p>
-        <button (click)="goToDzialkaPage(dzialka?.numer)" class="btn btn-primary">Zobacz</button>
+        <a  [routerLink]="['dzialka', dzialka.numer]"  class="btn btn-primary">Zobacz</a>
       </div>
     </div>
   </div>
   <div class="">
     <h3 class="text-center text-primary">Moje rośliny</h3>
-    <button (click)="goToRoslinyUzytkownikaPage()" class="btn btn-primary">Zobacz</button>
+    <a [routerLink]="['rosliny']"  class="btn btn-primary">Zobacz</a>
 
   </div>
 </div>

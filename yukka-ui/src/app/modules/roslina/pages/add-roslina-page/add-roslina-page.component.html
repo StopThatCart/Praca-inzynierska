@@ -1,5 +1,5 @@
 <div class="add-roslina-page py-5" >
-  <div class="card add-roslina-card " >
+  <div class="card bg-secondary" >
     <div class="card-header">
       <h4 class="card-title">Dodaj roślinę</h4>
 
@@ -25,6 +25,7 @@
         </div>
         <div class="my-2">
           <app-wysokosc-input
+          [textColor]="'white'"
           (wysokoscMinChange)="onWysokoscMinChange($event)"
           (wysokoscMaxChange)="onWysokoscMaxChange($event)"
           >
@@ -74,6 +75,7 @@
             <div class="col-md-4" *ngFor="let wlasciwosc of wlasciwosciResponse">
               <app-wlasciwosc-dropdown
                 [wlasciwosciResponse]="[wlasciwosc]"
+                [textColor]="'white'"
                 [(selectedWlasciwosci)]="request.wlasciwosci"
                 (selectedWlasciwosciChange)="onWlasciwoscToggled($event)">
               </app-wlasciwosc-dropdown>

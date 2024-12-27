@@ -1,4 +1,4 @@
-package com.example.yukka;
+package com.example.yukka.seeder;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +49,7 @@ public class UzytkownikRoslinaSeeder {
      * @param uzyt
      * @return PageResponse<RoslinaResponse>
      */
-    PageResponse<RoslinaResponse> seedUzytkownikRosliny(Uzytkownik uzyt) {
+    public PageResponse<RoslinaResponse> seedUzytkownikRosliny(Uzytkownik uzyt) {
         String roslinaNazwa = "pierwsza roślina użytkownika";
         String roslinaOpis = "To jest dramat.";
        // String roslinaObraz = "tilia_henryana.jpg";

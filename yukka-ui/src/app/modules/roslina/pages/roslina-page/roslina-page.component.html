@@ -11,14 +11,17 @@
                 <h5 class="text-secondary fw-bold text-uppercase">{{roslina?.nazwaLacinska}}</h5>
 
                 <div *ngIf="isPracownik() || isAutor()" class="btn-group">
-                    <button (click)="goToUpdateRoslina()" class="btn btn-warning text-uppercase">edytuj</button>
-                    <button (click)="goToUploadRoslinaObraz()" class="btn btn-info text-uppercase">zmień obraz</button>
+                    <a [routerLink]="goToUpdateRoslina()" class="btn btn-warning text-uppercase">edytuj</a>
+                    <a [routerLink]="goToUploadRoslinaObraz()" class="btn btn-info text-uppercase">zmień obraz</a>
                     <button (click)="removeRoslina()" class="btn btn-danger text-uppercase">usuń</button>
                 </div>
 
                 <div *ngIf="isLoggedIn()" class="mt-2">
-                  <button (click)="goToAddRoslinaToDzialka()"
-                  class="btn btn-primary text-uppercase">Dodaj do działki</button>
+                  <a 
+                  [routerLink]="goToAddRoslinaToDzialka()"
+
+                  
+                  class="btn btn-primary text-uppercase">Dodaj do działki</a>
                 </div>
 
             </div>

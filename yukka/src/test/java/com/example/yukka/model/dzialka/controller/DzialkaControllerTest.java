@@ -29,8 +29,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.example.yukka.auth.authorities.ROLE;
 import com.example.yukka.auth.requests.UsunKontoRequest;
-import com.example.yukka.authorities.ROLE;
 import com.example.yukka.common.FileResponse;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.dzialka.Pozycja;

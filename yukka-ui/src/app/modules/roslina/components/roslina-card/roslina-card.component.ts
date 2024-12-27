@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-roslina-card',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, RouterModule],
   templateUrl: './roslina-card.component.html',
   styleUrl: './roslina-card.component.css'
 })
@@ -30,18 +30,4 @@ export class RoslinaCardComponent {
     }
     return this._roslinaObraz;
   }
-
-  goToRoslina() {
-    let doKatalogu = true;
-    if (this.roslina.roslinaUzytkownika) {
-      doKatalogu = false;
-    }
-    if (this.roslina.roslinaId) {
-      this.router.navigate(
-        ['/rosliny', this.roslina.roslinaId]
-      );
-    }
-  }
-
-
 }

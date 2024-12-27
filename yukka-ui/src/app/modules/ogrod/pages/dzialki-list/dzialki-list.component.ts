@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DzialkaService, OgrodService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { OgrodResponse } from '../../../../services/models';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
@@ -12,7 +12,7 @@ import { RenameIconModes } from '../../components/rename-icon/rename-icon-mode';
 @Component({
   selector: 'app-dzialki-list',
   standalone: true,
-  imports: [CommonModule, ErrorMsgComponent, RenameIconComponent],
+  imports: [CommonModule, RouterModule, ErrorMsgComponent, RenameIconComponent],
   templateUrl: './dzialki-list.component.html',
   styleUrl: './dzialki-list.component.css'
 })
@@ -45,9 +45,6 @@ export class DzialkiListComponent implements OnInit {
 
   }
 
-
-
-
   getOgrod() {
     console.log('getOgrod');
 
@@ -70,11 +67,6 @@ export class DzialkiListComponent implements OnInit {
 
   onNazwaEdit(nazwa: String) {
     if(nazwa) this.ogrodResponse.nazwa = nazwa.toString();
-  }
-
-  goToDzialkaPage(numer: number | undefined) {
-    if(!numer) return;
-    this.router.navigate(['dzialka', numer], { relativeTo: this.route });
   }
 
   goToRoslinyUzytkownikaPage() {

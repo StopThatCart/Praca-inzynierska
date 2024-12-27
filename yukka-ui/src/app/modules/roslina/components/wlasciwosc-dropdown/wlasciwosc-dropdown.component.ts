@@ -17,6 +17,7 @@ export class WlasciwoscDropdownComponent {
   @Input() wlasciwosciResponse: WlasciwoscResponse[] = [];
 
   @Input() selectedWlasciwosci: WlasciwoscWithRelations[] = [];
+  @Input() textColor: string = 'black';
 
   wysokoscMin: number = 0.0;
   wysokoscMax: number = 100.0;

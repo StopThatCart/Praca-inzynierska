@@ -13,7 +13,7 @@ export class RoslinaResolverService implements Resolve<RoslinaResponse> {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RoslinaResponse> {
     const roslinaId = route.paramMap.get('roslina-id');
-    console.log("RoslinaResolverService:resolve: roslinaId: ", roslinaId);
+    console.log("RoslinaResolverService:resolve: roslina-id: ", roslinaId);
     //return this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId as string });
     //return this.roslinaService.findByNazwaLacinska({ 'nazwa-lacinska': nazwaLacinska as string } );
     return this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId as string }).pipe(

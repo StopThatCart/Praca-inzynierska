@@ -1,6 +1,6 @@
-<div class="mb-2 p-4">
+<div class="mb-2 p-4" >
   <div class="vstack">
-    <label class="form-label fs-4 d-flex align-items-center text-dark">Min. Wysokość:
+    <label class="form-label fs-4 d-flex align-items-center" [ngStyle]="{'color': textColor}">Min. Wysokość:
       <input (ngModelChange)="onWysokoscMinChange()"
       [(ngModel)]="wysokoscMin"
       class="form-control text-black ms-1" style="width: 100px;"
@@ -9,7 +9,7 @@
     <input (ngModelChange)="onWysokoscMinChange()" [(ngModel)]="wysokoscMin" class="form-range" type="range" step="0.1" >
 
 
-    <label class="form-label fs-4 d-flex align-items-center text-dark">Max. Wysokość:
+    <label class="form-label fs-4 d-flex align-items-center " [ngStyle]="{'color': textColor}">Max. Wysokość:
       <input (ngModelChange)="onWysokoscMaxChange()"
       [(ngModel)]="wysokoscMax"
       class="form-control text-dark ms-1" style="width: 100px;"

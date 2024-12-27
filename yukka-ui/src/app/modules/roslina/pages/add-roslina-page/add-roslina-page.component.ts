@@ -144,6 +144,11 @@ export class AddRoslinaPageComponent implements OnInit {
   }
 
   isAddingDoKatalogu(): boolean {
+    if (this.doKatalogu && this.tokenService.isNormalUzytkownik()) {
+      this.doKatalogu = false;
+      this.route.snapshot.data['doKatalogu'] = 'false';
+    }
+
     return this.doKatalogu && !this.tokenService.isNormalUzytkownik();
   }
 

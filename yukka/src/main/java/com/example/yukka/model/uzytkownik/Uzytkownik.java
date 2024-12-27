@@ -21,7 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.yukka.authorities.ROLE;
+import com.example.yukka.auth.authorities.ROLE;
 import com.example.yukka.model.ogrod.Ogrod;
 import com.example.yukka.model.social.models.komentarz.Komentarz;
 import com.example.yukka.model.social.models.ocenil.Ocenil;

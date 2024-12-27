@@ -110,9 +110,10 @@ canvas, #overlay, #backgroundCanvas {
 
 .toolbar button {
 
-
   cursor: pointer;
   padding: 5px;
+  width: 35px;
+  height: 35px;
 }
 
 .toolbar button.active {

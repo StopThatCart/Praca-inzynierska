@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 export class WysokoscInputComponent {
   @Input() wysokoscMin: number = 0.0;
   @Input() wysokoscMax: number = 100.0;
+  @Input() textColor: string = 'black';
   wysokoscMinLimit: number = 0.0;
   wysokoscMaxLimit: number = 100.0;
 

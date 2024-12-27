@@ -21,7 +21,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.example.yukka.authorities.ROLE;
+import com.example.yukka.auth.authorities.ROLE;
 import com.example.yukka.security.jwt.JwtFilter;
 
 import lombok.RequiredArgsConstructor;

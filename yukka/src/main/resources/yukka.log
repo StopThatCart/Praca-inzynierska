@@ -860,3 +860,288 @@
 2024-12-27T13:48:14.076+01:00  INFO 32276 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2024-12-27T13:48:14.077+01:00  INFO 32276 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2024-12-27T13:48:14.079+01:00  INFO 32276 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-12-27T14:23:42.319+01:00  INFO 22304 --- [yukka] [main] com.example.yukka.YukkaApplication       : Starting YukkaApplication using Java 17.0.10 with PID 22304 (F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka\target\classes started by Toshi in F:\Lukasz\notatki\Dyplomowe sprawy\Praca inzynierska\yukka)
+2024-12-27T14:23:42.321+01:00  INFO 22304 --- [yukka] [main] com.example.yukka.YukkaApplication       : No active profile set, falling back to 1 default profile: "default"
+2024-12-27T14:23:43.342+01:00  INFO 22304 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-12-27T14:23:43.469+01:00  INFO 22304 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 122 ms. Found 0 Neo4j repository interfaces.
+2024-12-27T14:23:43.475+01:00  INFO 22304 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2024-12-27T14:23:43.513+01:00  INFO 22304 --- [yukka] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 37 ms. Found 11 Neo4j repository interfaces.
+2024-12-27T14:23:44.075+01:00  INFO 22304 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-12-27T14:23:44.088+01:00  INFO 22304 --- [yukka] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-12-27T14:23:44.089+01:00  INFO 22304 --- [yukka] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.26]
+2024-12-27T14:23:44.172+01:00  INFO 22304 --- [yukka] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-12-27T14:23:44.173+01:00  INFO 22304 --- [yukka] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1813 ms
+2024-12-27T14:23:44.628+01:00  INFO 22304 --- [yukka] [main] o.neo4j.driver.internal.DriverFactory    : Direct driver instance 382697424 created for server address localhost:7687
+2024-12-27T14:23:44.898+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.models.rozmowaPrywatna.RozmowaPrywatna is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.924+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.models.ocenil.OcenilReverse is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.926+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.models.komentarz.Komentarz is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.929+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.models.post.Post is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.935+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.models.ocenil.Ocenil is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.941+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Ustawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.944+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.Uzytkownik is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.947+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.ogrod.Ogrod is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.948+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.Dzialka is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.956+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNa is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.959+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.965+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.roslina.Roslina is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.967+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.dzialka.ZasadzonaNaReverse is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.973+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.MaUstawienia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.982+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.models.powiadomienie.Powiadamia is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.984+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.social.models.powiadomienie.Powiadomienie is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:44.989+01:00  WARN 22304 --- [yukka] [main] o.s.d.n.c.mapping.Neo4jPersistentEntity  : The entity com.example.yukka.model.uzytkownik.token.Token is using a Long value for storing internally generated Neo4j ids. The Neo4j internal Long Ids are deprecated, please consider using an external ID generator.
+2024-12-27T14:23:45.979+01:00  INFO 22304 --- [yukka] [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name neo4JAuthenticationProvider
+2024-12-27T14:23:45.981+01:00  WARN 22304 --- [yukka] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2024-12-27T14:23:46.063+01:00  INFO 22304 --- [yukka] [main] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2024-12-27T14:23:46.506+01:00  INFO 22304 --- [yukka] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2024-12-27T14:23:47.088+01:00  INFO 22304 --- [yukka] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-12-27T14:23:47.110+01:00  INFO 22304 --- [yukka] [main] com.example.yukka.YukkaApplication       : Started YukkaApplication in 5.099 seconds (process running for 5.551)
+2024-12-27T14:23:47.124+01:00  INFO 22304 --- [yukka] [main] com.example.yukka.YukkaApplication       : Seedowanie bazy danych...
+2024-12-27T14:23:47.125+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Czyszczenie bazy danych(oprocz roslin)...
+2024-12-27T14:23:47.125+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Usuwanie obrazow uzytkownika
+2024-12-27T14:23:47.560+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Usuwanie rozmow prywatnych
+2024-12-27T14:23:47.562+01:00  INFO 22304 --- [yukka] [main] tionInformation$PropertyDescriptorSource : Couldn't read class metadata for void. Input property calculation might fail
+2024-12-27T14:23:47.643+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Usuwanie komentarzy
+2024-12-27T14:23:47.644+01:00  INFO 22304 --- [yukka] [main] tionInformation$PropertyDescriptorSource : Couldn't read class metadata for void. Input property calculation might fail
+2024-12-27T14:23:47.718+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Usuwanie postow
+2024-12-27T14:23:47.719+01:00  INFO 22304 --- [yukka] [main] tionInformation$PropertyDescriptorSource : Couldn't read class metadata for void. Input property calculation might fail
+2024-12-27T14:23:47.756+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Usuwanie powiadomien
+2024-12-27T14:23:47.757+01:00  INFO 22304 --- [yukka] [main] tionInformation$PropertyDescriptorSource : Couldn't read class metadata for void. Input property calculation might fail
+2024-12-27T14:23:47.787+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Usuwanie roslin uzytkownikow
+2024-12-27T14:23:47.854+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Usuwanie uzytkownikow
+2024-12-27T14:23:47.999+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Seedowanie bazy danych...
+2024-12-27T14:23:48.000+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Seedowanie uzytkownikow...
+2024-12-27T14:23:48.240+01:00  INFO 22304 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-27T14:23:48.241+01:00  INFO 22304 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-12-27T14:23:48.242+01:00  INFO 22304 --- [yukka] [RMI TCP Connection(2)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-12-27T14:23:48.752+01:00  WARN 22304 --- [yukka] [main] com.example.yukka.file.FileUtils         : Plik nie istnieje: default_avatar.png
+2024-12-27T14:23:48.792+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\1ec3ca11-03cf-4c3a-8b2a-abd27c2302e3\avatar\avatar.jpg
+2024-12-27T14:23:48.860+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.PostSeederService       : Dodawanie postów testowych...
+2024-12-27T14:23:49.575+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\f9efb4f4-1629-43ef-b148-04df489bc1db\komentarze\tempFileName__1735305829574.png
+2024-12-27T14:23:50.222+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\1ec3ca11-03cf-4c3a-8b2a-abd27c2302e3\komentarze\tempFileName__1735305830221.png
+2024-12-27T14:23:50.272+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\4dc085e8-0a5f-4a68-afb1-b28298b12957\komentarze\tempFileName__1735305830270.png
+2024-12-27T14:23:50.681+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\094c7834-6ae1-4a32-b8a4-78aef57ad1e4\komentarze\tempFileName__1735305830680.png
+2024-12-27T14:23:50.770+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\094c7834-6ae1-4a32-b8a4-78aef57ad1e4\komentarze\tempFileName__1735305830769.png
+2024-12-27T14:23:51.090+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:51.662+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\f9efb4f4-1629-43ef-b148-04df489bc1db\komentarze\tempFileName__1735305831661.png
+2024-12-27T14:23:51.696+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:52.220+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\04c4b882-36db-43b2-80e9-be4ac34d43fd\komentarze\tempFileName__1735305832219.png
+2024-12-27T14:23:52.297+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\51deaf49-ad5e-4743-ae75-f728dae37024\komentarze\tempFileName__1735305832296.png
+2024-12-27T14:23:52.833+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\04c4b882-36db-43b2-80e9-be4ac34d43fd\komentarze\tempFileName__1735305832832.png
+2024-12-27T14:23:54.102+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\1ec3ca11-03cf-4c3a-8b2a-abd27c2302e3\posty\tempFileName_1735305834101.jpg
+2024-12-27T14:23:54.532+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\f9efb4f4-1629-43ef-b148-04df489bc1db\komentarze\tempFileName__1735305834531.png
+2024-12-27T14:23:54.659+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\04c4b882-36db-43b2-80e9-be4ac34d43fd\komentarze\tempFileName__1735305834658.png
+2024-12-27T14:23:54.944+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\4dc085e8-0a5f-4a68-afb1-b28298b12957\posty\tempFileName_1735305834944.jpg
+2024-12-27T14:23:55.043+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\1ec3ca11-03cf-4c3a-8b2a-abd27c2302e3\komentarze\tempFileName__1735305835043.png
+2024-12-27T14:23:55.243+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:55.589+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\f9efb4f4-1629-43ef-b148-04df489bc1db\komentarze\tempFileName__1735305835588.png
+2024-12-27T14:23:55.615+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\4dc085e8-0a5f-4a68-afb1-b28298b12957\komentarze\tempFileName__1735305835614.png
+2024-12-27T14:23:55.917+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.PostSeederService       : Seedowanie rozmow prywatnych...
+2024-12-27T14:23:56.038+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.PostSeederService       : Dodawanie komentarzy do rozmowy prywatnej
+2024-12-27T14:23:56.166+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.192+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.213+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.234+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.255+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.276+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.300+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.336+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.381+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.403+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.424+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.445+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.465+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.491+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.516+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.536+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.557+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.579+01:00  WARN 22304 --- [yukka] [main] o.s.data.neo4j.cypher.deprecation        : Neo.ClientNotification.Statement.FeatureDeprecationWarning: This feature is deprecated and will be removed in future versions.
+	MATCH path=(powiadomienie:Powiadomienie)-[r1:POWIADAMIA]->(uzyt:Uzytkownik{email: $email})
+	WHERE id(powiadomienie) = $id
+	      ^
+	SET powiadomienie.dataUtworzenia = 	$time, powiadomienie.avatar = $avatar, r1.przeczytane = false
+	RETURN powiadomienie, collect(nodes(path)), collect(relationships(path))
+The query used a deprecated function: `id`.
+2024-12-27T14:23:56.892+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Seedowanie zgłoszeń...
+2024-12-27T14:23:56.910+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.s.m.p.c.PowiadomienieService     : Zgłoszenie użytkownika: Niegrzeczny Użytkownik przez użytkownika: Michał Zieliński
+2024-12-27T14:23:57.057+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.s.m.p.c.PowiadomienieService     : Zgłoszenie użytkownika: Niegrzeczny Użytkownik przez użytkownika: Piotr Wiśniewski
+2024-12-27T14:23:57.077+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.s.m.p.c.PowiadomienieService     : Zgłoszenie użytkownika: Niegrzeczny Użytkownik przez użytkownika: Katarzyna Mazur
+2024-12-27T14:23:57.093+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Dodawanie specjalnego powiadomienia...
+2024-12-27T14:23:57.094+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.s.m.p.c.PowiadomienieService     : Użytkownik: Jan Kowalski dodaje specjalne powiadomienie: Eum tempore totam dolorem. Maxime hic esse autem magni corrupti necessitatibus eos. Perspiciatis veniam minima in velit sequi est iste. Repudiandae dolor aliquid quia consequatur vel ut. Laborum quia est sed vel.
+2024-12-27T14:23:57.096+01:00  INFO 22304 --- [yukka] [main] tionInformation$PropertyDescriptorSource : Couldn't read class metadata for void. Input property calculation might fail
+2024-12-27T14:23:57.173+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Seedowanie dzialek...
+2024-12-27T14:23:57.262+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Dodawanie rosliny 1 do dzialek
+2024-12-27T14:23:57.263+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.d.controller.DzialkaService      : Zapisywanie rośliny na działce [1] użytkownika Piotr Wiśniewski
+2024-12-27T14:23:57.405+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Dodawanie rosliny 2 do dzialek
+2024-12-27T14:23:57.407+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.d.controller.DzialkaService      : Zapisywanie rośliny na działce [2] użytkownika Piotr Wiśniewski
+2024-12-27T14:23:57.490+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Seedowanie roslin uzytkownika[TESTOWE]...
+2024-12-27T14:23:57.498+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.r.c.UzytkownikRoslinaService     : Zapisywanie rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T14:23:57.502+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.r.c.UzytkownikRoslinaService     : Zapisywanie rośliny z właściwościami
+2024-12-27T14:23:58.264+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.r.c.UzytkownikRoslinaService     : Piotr Wiśniewski próbuje pobrać rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T14:23:58.876+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.d.controller.DzialkaService      : Zapisywanie rośliny na działce [2] użytkownika Piotr Wiśniewski
+2024-12-27T14:23:58.908+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Aktualizacja obrazu rosliny w dzialce
+2024-12-27T14:23:58.915+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.d.controller.DzialkaService      : Aktualizacja obrazu/tesktury rośliny na pozycji: [12, 11] na działce: [2] użytkownika Piotr Wiśniewski
+2024-12-27T14:23:58.915+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.d.controller.DzialkaService      : Zapisywanie obrazu rośliny na działce[2]
+2024-12-27T14:23:58.951+01:00  INFO 22304 --- [yukka] [main] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\1ec3ca11-03cf-4c3a-8b2a-abd27c2302e3\dzialki\rosliny\_ec_ca_cf_c_a_b_a_abd_c_e__1735305838949.png
+2024-12-27T14:23:59.009+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Zmienianie pozycji rosliny w dzialce
+2024-12-27T14:23:59.016+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.d.controller.DzialkaService      : Zmiana pozycji rośliny z [12, 11] na [3, 4] na działce [2] użytkownika Piotr Wiśniewski
+2024-12-27T14:23:59.016+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.d.controller.DzialkaService      : Przenoszenie rośliny na tę samą działkę
+2024-12-27T14:23:59.148+01:00  INFO 22304 --- [yukka] [main] c.e.yukka.seeder.GeneralSeederService    : Dodawanie rosliny dla anny do dzialek
+2024-12-27T14:23:59.149+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.d.controller.DzialkaService      : Zapisywanie rośliny na działce [2] użytkownika Anna Nowak
+2024-12-27T14:23:59.177+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.s.m.p.c.PowiadomienieService     : Sprawdzanie okresów powiadomień
+2024-12-27T14:23:59.177+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.s.m.p.c.PowiadomienieService     : Dzisiaj nie jest pierwszy dzień miesiąca, pomijanie sprawdzania okresów powiadomień
+2024-12-27T14:23:59.179+01:00  INFO 22304 --- [yukka] [main] c.e.y.m.s.m.p.c.PowiadomienieService     : Sprawdzanie zbanowanych użytkowników
+2024-12-27T14:24:47.645+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1400 ms
+2024-12-27T14:25:31.360+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-4] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: piotr@email.pl
+2024-12-27T14:25:31.426+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-4] c.e.y.s.Neo4JAuthenticationProvider      : login [piotr@email.pl] udany
+2024-12-27T14:38:52.876+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-8] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: jan@email.pl
+2024-12-27T14:38:52.937+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-8] c.e.y.s.Neo4JAuthenticationProvider      : login [jan@email.pl] udany
+2024-12-27T15:03:55.283+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-4] c.e.y.m.r.c.UzytkownikRoslinaService     : Jan Kowalski próbuje pobrać rośliny użytkownika: Jan Kowalski
+2024-12-27T15:03:55.286+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-4] c.e.y.m.r.c.UzytkownikRoslinaService     : Jan Kowalski próbuje pobrać rośliny użytkownika: Jan Kowalski
+2024-12-27T15:17:12.878+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-5] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: piotr@email.pl
+2024-12-27T15:17:12.945+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-5] c.e.y.s.Neo4JAuthenticationProvider      : login [piotr@email.pl] udany
+2024-12-27T15:17:46.515+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-7] c.e.y.m.d.controller.DzialkaService      : Aktualizacja obrazu/tesktury rośliny na pozycji: [3, 4] na działce: [2] użytkownika Piotr Wiśniewski
+2024-12-27T15:17:46.516+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-7] com.example.yukka.file.FileUtils         : Plik został usunięty: ..\uploads\uzytkownicy\1ec3ca11-03cf-4c3a-8b2a-abd27c2302e3\dzialki\rosliny\_ec_ca_cf_c_a_b_a_abd_c_e__1735305838949.png
+2024-12-27T15:17:46.516+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-7] c.e.y.m.d.controller.DzialkaService      : Zapisywanie obrazu rośliny na działce[2]
+2024-12-27T15:17:46.558+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-7] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\1ec3ca11-03cf-4c3a-8b2a-abd27c2302e3\dzialki\rosliny\_ec_ca_cf_c_a_b_a_abd_c_e__1735309066555.png
+2024-12-27T15:18:46.809+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-8] c.e.y.m.d.controller.DzialkaService      : Zapisywanie rośliny na działce [2] użytkownika Piotr Wiśniewski
+2024-12-27T15:18:46.901+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-8] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\1ec3ca11-03cf-4c3a-8b2a-abd27c2302e3\dzialki\rosliny\_ec_ca_cf_c_a_b_a_abd_c_e__1735309126898.png
+2024-12-27T15:18:46.996+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-8] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\1ec3ca11-03cf-4c3a-8b2a-abd27c2302e3\dzialki\rosliny\_ec_ca_cf_c_a_b_a_abd_c_e__1735309126993.png
+2024-12-27T15:19:35.124+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-7] c.e.y.m.d.controller.DzialkaService      : Aktualizacja obrazu/tesktury rośliny na pozycji: [9, 9] na działce: [2] użytkownika Piotr Wiśniewski
+2024-12-27T15:19:35.124+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-7] c.e.y.m.d.controller.DzialkaService      : Zapisywanie obrazu rośliny na działce[2]
+2024-12-27T15:19:35.205+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-7] c.example.yukka.file.FileStoreService    : Zapisano plik do: ..\uploads\uzytkownicy\1ec3ca11-03cf-4c3a-8b2a-abd27c2302e3\dzialki\rosliny\_ec_ca_cf_c_a_b_a_abd_c_e__1735309175202.png
+2024-12-27T15:23:30.646+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.r.c.UzytkownikRoslinaService     : Piotr Wiśniewski próbuje pobrać rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T15:23:30.648+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.r.c.UzytkownikRoslinaService     : Piotr Wiśniewski próbuje pobrać rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T15:23:36.394+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-1] c.e.y.m.r.c.UzytkownikRoslinaService     : Piotr Wiśniewski próbuje pobrać rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T15:23:36.396+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-1] c.e.y.m.r.c.UzytkownikRoslinaService     : Piotr Wiśniewski próbuje pobrać rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T15:32:43.161+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-5] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: piotr@email.pl
+2024-12-27T15:32:43.227+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-5] c.e.y.s.Neo4JAuthenticationProvider      : login [piotr@email.pl] udany
+2024-12-27T15:32:45.022+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.r.c.UzytkownikRoslinaService     : Piotr Wiśniewski próbuje pobrać rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T15:32:45.024+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.r.c.UzytkownikRoslinaService     : Piotr Wiśniewski próbuje pobrać rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T15:39:24.629+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.r.c.UzytkownikRoslinaService     : Zapisywanie rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T15:39:24.631+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-9] c.e.y.m.r.c.UzytkownikRoslinaService     : Zapisywanie rośliny z właściwościami
+2024-12-27T15:39:35.096+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-8] c.e.y.m.r.c.UzytkownikRoslinaService     : Piotr Wiśniewski próbuje pobrać rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T15:39:35.099+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-8] c.e.y.m.r.c.UzytkownikRoslinaService     : Piotr Wiśniewski próbuje pobrać rośliny użytkownika: Piotr Wiśniewski
+2024-12-27T15:42:16.451+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-6] c.e.yukka.auth.AuthenticationService     : Logowanie użytkownika: jan@email.pl
+2024-12-27T15:42:16.510+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-6] c.e.y.s.Neo4JAuthenticationProvider      : login [jan@email.pl] udany
+2024-12-27T15:46:34.670+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-10] c.e.y.m.r.c.UzytkownikRoslinaService     : Jan Kowalski próbuje pobrać rośliny użytkownika: Jan Kowalski
+2024-12-27T15:46:34.672+01:00  INFO 22304 --- [yukka] [http-nio-8081-exec-10] c.e.y.m.r.c.UzytkownikRoslinaService     : Jan Kowalski próbuje pobrać rośliny użytkownika: Jan Kowalski

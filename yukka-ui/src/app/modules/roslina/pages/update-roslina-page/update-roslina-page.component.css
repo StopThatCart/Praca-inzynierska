@@ -3,15 +3,9 @@
   margin: 0 auto;
 }
 
-.add-roslina-card {
-  background: var(--bs-primary-border-subtle);
-
-}
-
 .add-roslina-page form {
   display: flex;
   flex-direction: column;
-
 }
 
 .add-roslina-page form div {
