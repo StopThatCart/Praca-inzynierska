@@ -1,4 +1,4 @@
-package com.example.yukka.model.enums;
+package com.example.yukka.model.dzialka.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

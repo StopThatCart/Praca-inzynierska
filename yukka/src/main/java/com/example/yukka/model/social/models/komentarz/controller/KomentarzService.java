@@ -117,7 +117,7 @@ public class KomentarzService {
     public PageResponse<KomentarzResponse> findKomentarzeOfUzytkownik(int page, int size, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
-        if (targetUzyt.isEmpty() || !uzyt.hasAuthenticationRights(targetUzyt.get(), connectedUser)) {
+        if (targetUzyt.isEmpty() || !uzyt.hasAuthenticationRights(targetUzyt.get(), uzyt)) {
            throw new ForbiddenException("Nie masz uprawnień do przeglądania komentarzy tego użytkownika");
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("komentarz.dataUtworzenia").descending());
@@ -361,7 +361,7 @@ public class KomentarzService {
     public KomentarzResponse updateKomentarz(String komentarzId, KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Komentarz kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
-                .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik(), connectedUser))
+                .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik(), uzyt))
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
 
         kom = komentarzRepository.updateKomentarz(komentarzId, request.getOpis())
@@ -383,7 +383,7 @@ public class KomentarzService {
         Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
             .orElseThrow();
         
-        if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik(), connectedUser)) {
+        if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik(), uzyt)) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
         }
 
@@ -412,7 +412,7 @@ public class KomentarzService {
         Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
         
-        if (!uzyt.hasAuthenticationRights(kom.getUzytkownik(), connectedUser)) {
+        if (!uzyt.hasAuthenticationRights(kom.getUzytkownik(), uzyt)) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
         }
 

@@ -22,6 +22,7 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscKatalogResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -78,8 +79,15 @@ public class RoslinaController {
      */
     @GetMapping(value = "/wlasciwosci", produces="application/json")
     public ResponseEntity<Set<WlasciwoscResponse>> getWlasciwosciWithRelations() {
-        Set<WlasciwoscResponse> response = roslinaService.getWlasciwosciWithRelations();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(roslinaService.getWlasciwosciWithRelations());
+    }
+
+    @PostMapping(value = "/wlasciwosciQuery", produces="application/json")
+    public ResponseEntity<Set<WlasciwoscKatalogResponse>> getWlasciwosciCountFromQuery(
+        @RequestBody(required = false) RoslinaRequest request
+    ) {
+
+        return ResponseEntity.ok(roslinaService.getWlasciwosciCountFromQuery(request));
     }
 
     /**
@@ -102,11 +110,12 @@ public class RoslinaController {
      * Metoda obsługująca żądanie HTTP GET do wyszukiwania rośliny na podstawie identyfikatora rośliny.
      *
      * @param id identyfikator rośliny
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika. Używany jeśli roślina jest użytkownika.
      * @return ResponseEntity zawierające odpowiedź z rośliną w formacie JSON
      */
     @GetMapping(value = "/roslina-id/{roslina-id}", produces="application/json")
-    public ResponseEntity<RoslinaResponse> findByRoslinaId(@PathVariable("roslina-id") String id) {
-        return ResponseEntity.ok(roslinaService.findByRoslinaId(id));
+    public ResponseEntity<RoslinaResponse> findByRoslinaId(@PathVariable("roslina-id") String id, Authentication connectedUser) {
+        return ResponseEntity.ok(roslinaService.findByRoslinaId(id, connectedUser));
     }
 
     /**

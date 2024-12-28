@@ -16,12 +16,12 @@ import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.dzialka.Pozycja;
 import com.example.yukka.model.dzialka.ZasadzonaNaReverse;
+import com.example.yukka.model.dzialka.enums.Wyswietlanie;
 import com.example.yukka.model.dzialka.requests.BaseDzialkaRequest;
 import com.example.yukka.model.dzialka.requests.DzialkaRoslinaRequest;
 import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
 import com.example.yukka.model.dzialka.response.DzialkaResponse;
 import com.example.yukka.model.dzialka.response.ZasadzonaRoslinaResponse;
-import com.example.yukka.model.enums.Wyswietlanie;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
@@ -683,7 +683,7 @@ public class DzialkaService {
         
         Uzytkownik wlasciciel = dzialka.getOgrod().getUzytkownik();
         
-        if(!uzyt.hasAuthenticationRights(wlasciciel, connectedUser)) {
+        if(!uzyt.hasAuthenticationRights(wlasciciel, uzyt)) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia rośliny z działki użytkownika " + dzialka.getOgrod().getUzytkownik().getNazwa());
         }
         ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());

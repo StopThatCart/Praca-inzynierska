@@ -2,22 +2,61 @@
 <nav class="navbar navbar-expand-md navbar-light ">
   <div class="container-fluid">
     <ul class="navbar-nav nav-pills flex-column text-truncate mb-auto">
-      <li *ngFor="let wlasciwosc of wlasciwosciResponse" class="nav-item my-1 w-100">
-        <div class="nav-item" ngbDropdown>
-          <a  ngbDropdownToggle
+      <ng-container *ngIf="wlasciwosciKatalogResponse.length > 0; else normalTemplate">
+        <li *ngFor="let wlasciwosc of wlasciwosciKatalogResponse" class="nav-item my-1 w-100">
+          <div class="nav-item" ngbDropdown>
+            <a  ngbDropdownToggle
             class="nav-link text-uppercase link-white w-100" [ngStyle]="{'color': textColor}"
             type="button">{{ wlasciwosc.etykieta }}</a>
-          <div ngbDropdownMenu class="dropdown-menu">
-            <div *ngFor="let nazwa of wlasciwosc.nazwy"
-              class="link-body-emphasis mb-1 px-3">
-                <input [checked]="isSelected(wlasciwosc, nazwa)"
-                  type="checkbox" class="form-check-input mx-1 link-body-emphasis"
-                  (change)="toggleWlasciwosc(wlasciwosc, nazwa)"/>
-                <label class="form-check-label" [ngStyle]="{'color': textColor}" style="white-space: normal;" >{{ nazwa }}</label>
+            <div ngbDropdownMenu class="dropdown-menu">
+                <div *ngFor="let nazwy of wlasciwosc.nazwyLiczbaRoslin"
+                class="link-body-emphasis mb-1 px-3">
+                  <input [checked]="isSelected(wlasciwosc, nazwy.nazwa)"
+                    type="checkbox" class="form-check-input mx-1 link-body-emphasis"
+                    (change)="toggleWlasciwosc(wlasciwosc, nazwy.nazwa)"/>
+                  <label class="form-check-label" [ngStyle]="{'color': textColor}" style="white-space: normal;" >
+                    {{ nazwy.nazwa }} 
+                    <span class="text-black-50">({{nazwy.liczbaRoslin}})</span>
+                  </label>
+                </div>
             </div>
           </div>
-        </div>
-      </li>
+        </li>
+      </ng-container>
+      <ng-template #normalTemplate>
+        <ng-container *ngIf="wlasciwosciResponse.length > 0; else emptyTemplate">
+          <li *ngFor="let wlasciwosc of wlasciwosciResponse" class="nav-item my-1 w-100">
+            <div class="nav-item" ngbDropdown>
+              <a  ngbDropdownToggle
+              class="nav-link text-uppercase link-white w-100" [ngStyle]="{'color': textColor}"
+              type="button">{{ wlasciwosc.etykieta }}</a>
+              <div ngbDropdownMenu class="dropdown-menu">
+                  <div *ngFor="let nazwa of wlasciwosc.nazwy"
+                  class="link-body-emphasis mb-1 px-3">
+                    <input [checked]="isSelected(wlasciwosc, nazwa)"
+                      type="checkbox" class="form-check-input mx-1 link-body-emphasis"
+                      (change)="toggleWlasciwosc(wlasciwosc, nazwa)"/>
+                    <label class="form-check-label" [ngStyle]="{'color': textColor}" style="white-space: normal;" >{{ nazwa }}</label>
+                  </div>
+              </div>
+            </div>
+          </li>
+        </ng-container>
+      </ng-template>
+      
+
+      <ng-template #emptyTemplate>
+        <li class="nav-item my-1 w-100">
+          <div class="nav-item">
+            <span class="nav-link text-uppercase link-white w-100" [ngStyle]="{'color': textColor}">
+              Brak właściwości
+            </span>
+          </div>
+        </li>
+      </ng-template>
+      
+
+
     </ul>
   </div>
 </nav>

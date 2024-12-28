@@ -134,7 +134,7 @@ public class PostService {
         if(targetUzyt.isEmpty()) {
             throw new EntityNotFoundException("Nie znaleziono użytkownika o podanej nazwie: " + nazwa);
         }
-        if(!uzyt.hasAuthenticationRights(targetUzyt.get(), connectedUser)){
+        if(!uzyt.hasAuthenticationRights(targetUzyt.get(), uzyt)){
             throw new ForbiddenException("Nie masz uprawnień do przeglądania postów tego użytkownika");
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
@@ -223,7 +223,7 @@ public class PostService {
     public void deletePost(String postId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
-        if(!uzyt.hasAuthenticationRights(post.getAutor(), connectedUser)) {
+        if(!uzyt.hasAuthenticationRights(post.getAutor(), uzyt)) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia tego posta");
         }
 

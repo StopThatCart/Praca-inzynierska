@@ -3,12 +3,17 @@ import { ActivatedRouteSnapshot, MaybeAsync, Resolve, Router, RouterStateSnapsho
 import { PostResponse } from '../../../services/models';
 import { PostService } from '../../../services/services/post.service';
 import { catchError, Observable } from 'rxjs';
+import { ErrorHandlingService } from '../../../services/error-handler/error-handling.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostResolverService implements Resolve<PostResponse> {
-  constructor(private postService : PostService, private router: Router) { }
+  constructor(
+    private postService : PostService, 
+    private router: Router,
+    private errorHandlingService: ErrorHandlingService
+  ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<PostResponse> {
     const postId = route.paramMap.get('postId');
@@ -16,7 +21,7 @@ export class PostResolverService implements Resolve<PostResponse> {
     //return this.postService.findPostById({ 'post-id': postId as string } );
     return this.postService.findPostById({ 'post-id': postId as string } ).pipe(
       catchError((error) => {
-        this.router.navigate(['/404']);
+        this.errorHandlingService.handleResolverErrors(error, this.router);
         throw error;
       })
     );

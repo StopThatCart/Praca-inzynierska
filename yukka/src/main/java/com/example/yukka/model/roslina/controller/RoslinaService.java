@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -26,8 +25,8 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscKatalogResponse;
 import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
-import com.example.yukka.model.roslina.wlasciwosc.WlasciwosciRodzaje;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.RequiredArgsConstructor;
@@ -105,6 +104,7 @@ public class RoslinaService {
     public PageResponse<RoslinaResponse> findAllRoslinyWithParameters(int page, int size, RoslinaRequest request) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").ascending());
         if(request == null) {
+            System.out.println("Request is null");
             return findAllRosliny(page, size);
         }
         Roslina ros = roslinaMapper.toRoslina(request);
@@ -132,13 +132,6 @@ public class RoslinaService {
         );
     }
 
-    // @Transactional(readOnly = true)
-    // public RoslinaResponse findById(Long id) {
-    //     Roslina ros = roslinaRepository.findById(id)
-    //         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id: " + id));
-    //     return roslinaMapper.toRoslinaResponse(ros);
-    // }
-
     /**
      * Znajduje roślinę po jej identyfikatorze.
      *
@@ -149,6 +142,33 @@ public class RoslinaService {
     public RoslinaResponse findByRoslinaId(String id) {
         Roslina ros = roslinaRepository.findByRoslinaId(id)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o roslinaId: " + id));
+        return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
+    }
+
+    /**
+     * Znajduje roślinę po jej identyfikatorze.
+     *
+     * @param id identyfikator rośliny.
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return RoslinaResponse zawierający informacje o roślinie.
+     */
+    @Transactional(readOnly = true)
+    public RoslinaResponse findByRoslinaId(String id, Authentication connectedUser) {
+        Roslina ros = roslinaRepository.findByRoslinaId(id)
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o roslinaId: " + id));
+        
+        if (ros.isUzytkownikRoslina()) {
+            Uzytkownik uzyt = null;
+            if (connectedUser == null) {
+                throw new ForbiddenException("Nie masz uprawnień do wyświetlenia tej rośliny.");
+            }
+            
+            uzyt = (Uzytkownik) connectedUser.getPrincipal();
+            if (!uzyt.hasAuthenticationRights(ros.getUzytkownik(), connectedUser)) {
+                throw new ForbiddenException("Nie masz uprawnień do wyświetlenia tej rośliny.");
+            }
+        }
+
         return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
     }
 
@@ -174,13 +194,24 @@ public class RoslinaService {
      */
     @Transactional(readOnly = true)
     public Set<WlasciwoscResponse> getWlasciwosciWithRelations() {
-        Set<WlasciwosciRodzaje> responses = wlasciwoscRepository.getWlasciwosciWithRelacje();
-        return responses.stream()
-            .map(response -> WlasciwoscResponse.builder()
-                .etykieta(response.getEtykieta())
-                .nazwy(response.getNazwy())
-                .build())
-            .collect(Collectors.toSet());
+        Set<WlasciwoscResponse> responses = wlasciwoscRepository.getWlasciwosciWithRelacje();
+        return responses;
+    }
+
+    @Transactional(readOnly = true)
+    public Set<WlasciwoscKatalogResponse> getWlasciwosciCountFromQuery(RoslinaRequest request) {
+        Roslina ros = roslinaMapper.toRoslina(request);
+
+        Set<WlasciwoscKatalogResponse> responses = wlasciwoscRepository.getWlasciwosciCountFromQuery(
+            ros, 
+            ros.getFormy(), ros.getGleby(), ros.getGrupy(), ros.getKoloryLisci(),
+            ros.getKoloryKwiatow(), ros.getKwiaty(), ros.getOdczyny(),
+            ros.getOkresyKwitnienia(), ros.getOkresyOwocowania(), ros.getOwoce(), ros.getPodgrupa(),
+            ros.getPokroje(), ros.getSilyWzrostu(), ros.getStanowiska(), ros.getWalory(),
+            ros.getWilgotnosci(), ros.getZastosowania(), ros.getZimozielonosci()
+        );
+        
+        return responses;
     }
 
     /**

@@ -7,7 +7,7 @@ import { WlasciwoscDropdownComponent } from '../../../roslina/components/wlasciw
 import { WlasciwoscTagComponent } from '../../../roslina/components/wlasciwosc-tag/wlasciwosc-tag.component';
 import { WysokoscInputComponent } from '../../../roslina/components/wysokosc-input/wysokosc-input.component';
 import { Convert } from '../../../../services/converts/wlasciwosc-with-relations-convert';
-import { PageResponseRoslinaResponse, RoslinaRequest, UzytkownikRoslinaRequest, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
+import { PageResponseRoslinaResponse, RoslinaRequest, UzytkownikRoslinaRequest, WlasciwoscKatalogResponse, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
 import { RoslinaService, UzytkownikRoslinaService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
@@ -26,7 +26,7 @@ export class RoslinyUzytkownikaPageComponent {
   uzytNazwa: string | undefined;
 
   roslinaResponse: PageResponseRoslinaResponse = {};
-  wlasciwosciResponse: WlasciwoscResponse[] = [];
+  wlasciwosciResponse: WlasciwoscKatalogResponse[] = [];
   isLoading = false;
   message = '';
 
@@ -120,7 +120,7 @@ export class RoslinyUzytkownikaPageComponent {
         }
       });
 
-    this.roslinaService.getWlasciwosciWithRelations()
+    this.uzytkownikRoslinaService.getUzytkownikWlasciwosciCountFromQuery({ body: this.request, 'uzytkownik-nazwa': this.uzytNazwa })
     .subscribe({
       next: (wlasciwosci) => {
         this.wlasciwosciResponse = this.wlasciwoscProcessService.processWlasciwosciResponse(wlasciwosci);

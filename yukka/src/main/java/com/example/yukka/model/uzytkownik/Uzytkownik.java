@@ -211,7 +211,10 @@ public class Uzytkownik implements UserDetails, Principal{
      * @return boolean
     */
     public boolean hasAuthenticationRights(Uzytkownik targetUzyt, Authentication connectedUser) {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        if (connectedUser == null) {
+            throw new IllegalArgumentException("Użytkownik nie jest zalogowany");
+        }
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
 
         if(uzyt.isAdmin()){
             return true;

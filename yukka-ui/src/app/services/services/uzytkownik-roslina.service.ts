@@ -11,6 +11,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { findAllRoslinyOfUzytkownik } from '../fn/uzytkownik-roslina/find-all-rosliny-of-uzytkownik';
 import { FindAllRoslinyOfUzytkownik$Params } from '../fn/uzytkownik-roslina/find-all-rosliny-of-uzytkownik';
+import { getUzytkownikWlasciwosciCountFromQuery } from '../fn/uzytkownik-roslina/get-uzytkownik-wlasciwosci-count-from-query';
+import { GetUzytkownikWlasciwosciCountFromQuery$Params } from '../fn/uzytkownik-roslina/get-uzytkownik-wlasciwosci-count-from-query';
 import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
 import { RoslinaResponse } from '../models/roslina-response';
 import { saveRoslina } from '../fn/uzytkownik-roslina/save-roslina';
@@ -19,6 +21,7 @@ import { updateRoslina1 } from '../fn/uzytkownik-roslina/update-roslina-1';
 import { UpdateRoslina1$Params } from '../fn/uzytkownik-roslina/update-roslina-1';
 import { updateRoslinaObraz1 } from '../fn/uzytkownik-roslina/update-roslina-obraz-1';
 import { UpdateRoslinaObraz1$Params } from '../fn/uzytkownik-roslina/update-roslina-obraz-1';
+import { WlasciwoscKatalogResponse } from '../models/wlasciwosc-katalog-response';
 
 @Injectable({ providedIn: 'root' })
 export class UzytkownikRoslinaService extends BaseService {
@@ -102,6 +105,31 @@ export class UzytkownikRoslinaService extends BaseService {
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)
+    );
+  }
+
+  /** Path part for operation `getUzytkownikWlasciwosciCountFromQuery()` */
+  static readonly GetUzytkownikWlasciwosciCountFromQueryPath = '/uzytkownikRosliny/wlasciwosciQuery';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getUzytkownikWlasciwosciCountFromQuery()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  getUzytkownikWlasciwosciCountFromQuery$Response(params?: GetUzytkownikWlasciwosciCountFromQuery$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WlasciwoscKatalogResponse>>> {
+    return getUzytkownikWlasciwosciCountFromQuery(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getUzytkownikWlasciwosciCountFromQuery$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  getUzytkownikWlasciwosciCountFromQuery(params?: GetUzytkownikWlasciwosciCountFromQuery$Params, context?: HttpContext): Observable<Array<WlasciwoscKatalogResponse>> {
+    return this.getUzytkownikWlasciwosciCountFromQuery$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<WlasciwoscKatalogResponse>>): Array<WlasciwoscKatalogResponse> => r.body)
     );
   }
 

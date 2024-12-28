@@ -2,7 +2,7 @@ package com.example.yukka.model.dzialka.requests;
 
 
 import com.example.yukka.model.dzialka.Pozycja;
-import com.example.yukka.model.enums.Wyswietlanie;
+import com.example.yukka.model.dzialka.enums.Wyswietlanie;
 import com.example.yukka.security.validations.valueOfEnum.ValueOfEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

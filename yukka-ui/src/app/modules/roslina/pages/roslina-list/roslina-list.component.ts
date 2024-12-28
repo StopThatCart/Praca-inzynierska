@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RoslinaService } from '../../../../services/services/roslina.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PageResponseRoslinaResponse, RoslinaRequest, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
+import { PageResponseRoslinaResponse, RoslinaRequest, WlasciwoscKatalogResponse, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
 import { CommonModule } from '@angular/common';
 import { RoslinaCardComponent } from "../../components/roslina-card/roslina-card.component";
 import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";
@@ -25,7 +25,7 @@ export class RoslinaListComponent implements OnInit{
   canAddRoslina: boolean = false;
 
   roslinaResponse: PageResponseRoslinaResponse = {};
-  wlasciwosciResponse: WlasciwoscResponse[] = [];
+  wlasciwosciResponse: WlasciwoscKatalogResponse[] = [];
   isLoading = false;
   message = '';
 
@@ -105,32 +105,7 @@ export class RoslinaListComponent implements OnInit{
     }
   }
 
-  /*
-  fetchWlasciwosciFromString(wlasciwosciString: string): WlasciwoscWithRelations[] {
-    let lel: WlasciwoscWithRelations[] = [];
-    let items = wlasciwosciString.substring(1, wlasciwosciString.length - 1).split('},{');
-    items = items.map((item: string) => (item[0] !== '{' ? '{' + item : item) + (item[item.length - 1] !== '}' ? '}' : ''));
-    for (let item of items) {
-      console.log("Item: " + item);
-      let w = { etykieta: '', relacja: '', nazwa: '' } as WlasciwoscWithRelations;
-
-      let etykietaMatch = item.match(/"etykieta":"(.*?)"/);
-      let relacjaMatch = item.match(/"relacja":"(.*?)"/);
-      let nazwaMatch = item.match(/"nazwa":"(.*?)"/);
-
-      if (etykietaMatch) w.etykieta = etykietaMatch[1];
-      if (relacjaMatch) w.relacja = relacjaMatch[1];
-      if (nazwaMatch) w.nazwa = nazwaMatch[1];
-
-      lel.push(w);
-    }
-    return lel;
-  }
-    */
-
-
   findAllRosliny() {
-   // console.log('Request:', this.request);
     this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 1;
 
     this.isLoading = true;
@@ -153,7 +128,7 @@ export class RoslinaListComponent implements OnInit{
         }
       });
 
-    this.roslinaService.getWlasciwosciWithRelations()
+    this.roslinaService.getWlasciwosciCountFromQuery({ body: this.request })
     .subscribe({
       next: (wlasciwosci) => {
         this.wlasciwosciResponse = this.wlasciwoscProcessService.processWlasciwosciResponse(wlasciwosci);

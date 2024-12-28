@@ -6,13 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.dzialka.Dzialka;
 import com.example.yukka.model.ogrod.Ogrod;
 import com.example.yukka.model.ogrod.OgrodResponse;
@@ -28,11 +28,9 @@ import lombok.RequiredArgsConstructor;
 public class OgrodService {
     private final OgrodRepository ogrodRepository;
     private final UzytkownikRepository uzytRepository;
-   
     private final RoslinaMapper roslinaMapper;
 
 
-    
     /** 
      * @param page
      * @param size
@@ -53,10 +51,10 @@ public class OgrodService {
         Uzytkownik targetUzyt = uzytRepository.findByNazwa(uzytkownikNazwa)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie " + uzytkownikNazwa));
 
-        if(!uzyt.hasAuthenticationRights(uzyt, connectedUser) && !targetUzyt.getUstawienia().isOgrodPokaz()) {
-            throw new AccessDeniedException("Nie masz uprawnień do przeglądania tego ogrodu");
+        if(!targetUzyt.getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+            throw new ForbiddenException("Nie masz uprawnień do przeglądania tego ogrodu");
         }
-            
+        
         Ogrod ogrod = ogrodRepository.getOgrodOfUzytkownikByNazwa(uzytkownikNazwa)
         .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono ogrodu użytkownika " + uzytkownikNazwa));
 
@@ -64,8 +62,6 @@ public class OgrodService {
         
         return roslinaMapper.toOgrodResponse(ogrod);
     }
-
-
 
     /**
      * Ustawia nazwę ogrodu dla zalogowanego użytkownika.
@@ -90,6 +86,4 @@ public class OgrodService {
 
         return ogrod.getNazwa();
     }
-
-
 }

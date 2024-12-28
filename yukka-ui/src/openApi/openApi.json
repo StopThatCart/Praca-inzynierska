@@ -407,6 +407,49 @@
         }
       }
     },
+    "/uzytkownikRosliny/wlasciwosciQuery": {
+      "post": {
+        "tags": [
+          "UzytkownikRoslina"
+        ],
+        "operationId": "getUzytkownikWlasciwosciCountFromQuery",
+        "parameters": [
+          {
+            "name": "uzytkownik-nazwa",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UzytkownikRoslinaRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "uniqueItems": true,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WlasciwoscKatalogResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/uzytkownikRosliny/szukaj": {
       "post": {
         "tags": [
@@ -589,6 +632,39 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rosliny/wlasciwosciQuery": {
+      "post": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "getWlasciwosciCountFromQuery",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoslinaRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "uniqueItems": true,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WlasciwoscKatalogResponse"
+                  }
                 }
               }
             }
@@ -2905,11 +2981,11 @@
           "wposcie": {
             "$ref": "#/components/schemas/Post"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -2918,11 +2994,11 @@
       "Oceniany": {
         "type": "object",
         "properties": {
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3014,11 +3090,11 @@
               "$ref": "#/components/schemas/Komentarz"
             }
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3188,10 +3264,10 @@
           "normalUzytkownik": {
             "type": "boolean"
           },
-          "admin": {
+          "pracownik": {
             "type": "boolean"
           },
-          "pracownik": {
+          "admin": {
             "type": "boolean"
           },
           "authorities": {
@@ -3200,10 +3276,10 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "password": {
+          "username": {
             "type": "string"
           },
-          "username": {
+          "password": {
             "type": "string"
           },
           "enabled": {
@@ -3610,6 +3686,32 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/WlasciwoscWithRelations"
+            }
+          }
+        }
+      },
+      "NazwaLiczbaRoslin": {
+        "type": "object",
+        "properties": {
+          "nazwa": {
+            "type": "string"
+          },
+          "liczbaRoslin": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "WlasciwoscKatalogResponse": {
+        "type": "object",
+        "properties": {
+          "etykieta": {
+            "type": "string"
+          },
+          "nazwyLiczbaRoslin": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NazwaLiczbaRoslin"
             }
           }
         }
@@ -4294,11 +4396,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           }

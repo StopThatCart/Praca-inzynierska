@@ -316,6 +316,8 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         @Param("zimozielonosci") Set<Wlasciwosc> zimozielonosci,
         Pageable pageable);
 
+
+
     @Query("""
         MERGE (p:Roslina {roslinaId: $roslinaId, nazwa: $name, nazwaLacinska: toLower($latinName), opis: $description, 
         obraz: COALESCE($obraz, 'default_plant.jpg'), wysokoscMin: $heightMin, wysokoscMax: $heightMax}) 

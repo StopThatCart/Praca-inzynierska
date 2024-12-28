@@ -1,6 +1,8 @@
 package com.example.yukka.model.roslina.controller;
 
 
+import java.util.Set;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
-
 import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscKatalogResponse;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -92,6 +94,16 @@ public class UzytkownikRoslinaController {
             @RequestParam(name = "uzytkownik-nazwa", required = false) String uzytkownikNazwa,
             Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikRoslinaService.findRoslinyOfUzytkownik(page, size, request, uzytkownikNazwa, connectedUser));
+    }
+
+    @PostMapping(value = "/wlasciwosciQuery", produces="application/json")
+    public ResponseEntity<Set<WlasciwoscKatalogResponse>> getUzytkownikWlasciwosciCountFromQuery(
+        @RequestBody(required = false) UzytkownikRoslinaRequest request,
+        @RequestParam(name = "uzytkownik-nazwa", required = false) String uzytkownikNazwa,
+        Authentication connectedUser
+    ) {
+
+        return ResponseEntity.ok(uzytkownikRoslinaService.getUzytkownikWlasciwosciCountFromQuery(request, uzytkownikNazwa, connectedUser));
     }
 
     /**

@@ -40,7 +40,6 @@ export class ProfilPageComponent implements OnInit {
     private tokenService: TokenService,
     private router: Router,
     private route: ActivatedRoute,
-    private postService: PostService,
     private uzytService: UzytkownikService,
     private rozService: RozmowaPrywatnaService
   ) {}
@@ -159,13 +158,11 @@ export class ProfilPageComponent implements OnInit {
   }
 
   isZaproszony(): boolean {
-   // console.log('Is zaproszony: ', this.zaproszony);
     if (this.isZaproszonyChecked) {
       return this.zaproszony || false;
     }
 
     if (this.zaproszony) {
-     // console.log('Zaproszony: ', this.zaproszony);
       this.isZaproszonyChecked = true;
       return this.zaproszony;
     }
@@ -173,12 +170,11 @@ export class ProfilPageComponent implements OnInit {
     if (this.tokenService.token && this.uzyt.nazwa
       && this.tokenService.nazwa !== this.uzyt.nazwa) {
 
-    //  console.log('Check if zaproszony');
       this.rozService.getRozmowaPrywatna({ 'uzytkownik-nazwa': this.uzyt.nazwa })
         .subscribe({
           next: (roz) => {
-           // console.log('Rozmowa: ', roz);
-            if (roz && !roz.aktywna) {
+            console.log('Rozmowa: ', roz);
+            if (roz) {
               this.zaproszony = true;
             }
             this.isZaproszonyChecked = true;
@@ -198,7 +194,6 @@ export class ProfilPageComponent implements OnInit {
     }
     return false;
   }
-
 
   zaprosDoRozmowaPrywatna() {
     if (this.uzyt.nazwa) {

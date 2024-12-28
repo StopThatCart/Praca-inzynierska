@@ -1,7 +1,7 @@
 package com.example.yukka.model.roslina.controller;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -10,7 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
@@ -20,7 +22,7 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.UzytkownikRoslinaRequest;
-import com.example.yukka.model.social.mappers.CommonMapperService;
+import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscKatalogResponse;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 
@@ -56,29 +58,16 @@ import lombok.extern.slf4j.Slf4j;
 public class UzytkownikRoslinaService {
     private final UzytkownikRepository uzytkownikRepository;
     private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
+    private final WlasciwoscRepository wlasciwoscRepository;
     private final RoslinaService roslinaService;
 
-    @SuppressWarnings("unused")
     private final FileUtils fileUtils;
     private final FileStoreService fileStoreService;
 
     private final RoslinaMapper roslinaMapper;
-    @SuppressWarnings("unused")
-    private final CommonMapperService commonMapperService;
 
     @Value("${roslina.obraz.default.name}")
     private String defaultRoslinaObrazName;
-
-    
-    /**
-     * Znajduje roślinę po jej identyfikatorze.
-     * 
-     * @param roslinaId Identyfikator rośliny
-     * @return Zwraca roślinę
-     */
-    public Optional<Roslina> findByRoslinaId(String roslinaId) {
-        return uzytkownikRoslinaRepository.findByRoslinaIdWithRelations(roslinaId);
-    }
 
     /**
      * Znajduje rośliny użytkownika.
@@ -96,8 +85,7 @@ public class UzytkownikRoslinaService {
         Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie " + nazwa));
 
-
-        if(!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+        if(!targetUzyt.getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
             throw new ForbiddenException("Brak uprawnień do przeglądania roślin użytkownika " + targetUzyt.getNazwa());
         }
 
@@ -145,6 +133,34 @@ public class UzytkownikRoslinaService {
                 rosliny.isFirst(),
                 rosliny.isLast()
         );
+    }
+
+
+    @Transactional(readOnly = true)
+    public Set<WlasciwoscKatalogResponse> getUzytkownikWlasciwosciCountFromQuery(UzytkownikRoslinaRequest request, String nazwa, Authentication connectedUser) {
+        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info(nazwa + " próbuje pobrać rośliny użytkownika: " + nazwa);
+        Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie " + nazwa));
+
+
+        if(!targetUzyt.getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+            throw new ForbiddenException("Brak uprawnień do przeglądania roślin użytkownika " + targetUzyt.getNazwa());
+        }
+        
+        Roslina ros = roslinaMapper.toRoslina(request);
+
+        Set<WlasciwoscKatalogResponse> responses = wlasciwoscRepository.getUzytkownikWlasciwosciCountFromQuery(
+            nazwa,
+            ros, 
+            ros.getFormy(), ros.getGleby(), ros.getGrupy(), ros.getKoloryLisci(),
+            ros.getKoloryKwiatow(), ros.getKwiaty(), ros.getOdczyny(),
+            ros.getOkresyKwitnienia(), ros.getOkresyOwocowania(), ros.getOwoce(), ros.getPodgrupa(),
+            ros.getPokroje(), ros.getSilyWzrostu(), ros.getStanowiska(), ros.getWalory(),
+            ros.getWilgotnosci(), ros.getZastosowania(), ros.getZimozielonosci()
+        );
+        
+        return responses;
     }
 
     /**

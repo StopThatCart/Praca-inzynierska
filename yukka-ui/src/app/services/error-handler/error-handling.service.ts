@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { error } from 'console';
 
 @Injectable({
@@ -46,5 +47,15 @@ export class ErrorHandlingService {
     }
     //console.log("Error message: " + errorMsg);
     return errorMsg;
+  }
+
+  handleResolverErrors(error: any, router : Router) {
+    if (error.status === 404) {
+      router.navigate(['/404']);
+    } else if (error.status === 403) {
+      router.navigate(['/403']);
+    } else {
+      router.navigate(['/404']);
+    }
   }
 }

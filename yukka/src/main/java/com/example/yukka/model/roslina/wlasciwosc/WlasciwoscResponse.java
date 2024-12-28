@@ -13,6 +13,7 @@ import lombok.ToString;
  * <ul>
  *   <li><strong>etykieta</strong> - Etykieta właściwości.</li>
  *   <li><strong>nazwy</strong> - Zbiór nazw związanych z właściwością.</li>
+ *  <li><strong>liczbaRoslin</strong> - Liczba roślin związanych z właściwością.</li>
  * </ul>
  */
 @Getter

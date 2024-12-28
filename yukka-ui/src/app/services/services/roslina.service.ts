@@ -17,6 +17,8 @@ import { findByNazwaLacinska } from '../fn/roslina/find-by-nazwa-lacinska';
 import { FindByNazwaLacinska$Params } from '../fn/roslina/find-by-nazwa-lacinska';
 import { findByRoslinaId } from '../fn/roslina/find-by-roslina-id';
 import { FindByRoslinaId$Params } from '../fn/roslina/find-by-roslina-id';
+import { getWlasciwosciCountFromQuery } from '../fn/roslina/get-wlasciwosci-count-from-query';
+import { GetWlasciwosciCountFromQuery$Params } from '../fn/roslina/get-wlasciwosci-count-from-query';
 import { getWlasciwosciWithRelations } from '../fn/roslina/get-wlasciwosci-with-relations';
 import { GetWlasciwosciWithRelations$Params } from '../fn/roslina/get-wlasciwosci-with-relations';
 import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
@@ -27,6 +29,7 @@ import { updateRoslina } from '../fn/roslina/update-roslina';
 import { UpdateRoslina$Params } from '../fn/roslina/update-roslina';
 import { updateRoslinaObraz } from '../fn/roslina/update-roslina-obraz';
 import { UpdateRoslinaObraz$Params } from '../fn/roslina/update-roslina-obraz';
+import { WlasciwoscKatalogResponse } from '../models/wlasciwosc-katalog-response';
 import { WlasciwoscResponse } from '../models/wlasciwosc-response';
 
 @Injectable({ providedIn: 'root' })
@@ -107,6 +110,31 @@ export class RoslinaService extends BaseService {
   saveRoslina1(params?: SaveRoslina1$Params, context?: HttpContext): Observable<RoslinaResponse> {
     return this.saveRoslina1$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `getWlasciwosciCountFromQuery()` */
+  static readonly GetWlasciwosciCountFromQueryPath = '/rosliny/wlasciwosciQuery';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getWlasciwosciCountFromQuery()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  getWlasciwosciCountFromQuery$Response(params?: GetWlasciwosciCountFromQuery$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<WlasciwoscKatalogResponse>>> {
+    return getWlasciwosciCountFromQuery(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getWlasciwosciCountFromQuery$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  getWlasciwosciCountFromQuery(params?: GetWlasciwosciCountFromQuery$Params, context?: HttpContext): Observable<Array<WlasciwoscKatalogResponse>> {
+    return this.getWlasciwosciCountFromQuery$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<WlasciwoscKatalogResponse>>): Array<WlasciwoscKatalogResponse> => r.body)
     );
   }
 
