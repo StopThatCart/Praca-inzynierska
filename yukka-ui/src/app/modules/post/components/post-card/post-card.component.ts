@@ -2,10 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PostResponse } from '../../../../services/models';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { addOcenaToPost } from '../../../../services/fn/post/add-ocena-to-post';
 import { PostService } from '../../../../services/services';
 import { OcenaRequest } from '../../../../services/models/ocena-request';
-import { removeOcenaFromPost } from '../../../../services/fn/post/remove-ocena-from-post';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TokenService } from '../../../../services/token/token.service';
 import { ZgloszenieButtonComponent } from "../../../profil/components/zgloszenie-button/zgloszenie-button.component";
@@ -98,29 +96,6 @@ export class PostCardComponent implements OnInit {
       });
     }
   }
-
-  removeOcenaFromPost(postId: string | undefined) {
-    if (postId) {
-      let ocenaRequest: OcenaRequest = { lubi: true, ocenialnyId: postId };
-      this.postService.removeOcenaFromPost({ body: ocenaRequest }).subscribe({
-        next: () => {
-          this.postService.findPostById({ 'post-id': postId }).subscribe({
-            next: (post) => {
-              this.post = post;
-            },
-            error: (err) => {
-              console.log(err);
-            }
-          });
-        },
-        error: (err) => {
-          console.log(err);
-        }
-      });
-
-    }
-  }
-
 
   deletePost() {
     this.errorMsg = [];

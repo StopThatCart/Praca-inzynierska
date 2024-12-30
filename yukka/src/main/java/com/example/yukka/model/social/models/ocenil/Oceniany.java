@@ -31,14 +31,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Oceniany {
-
     @Relationship(type = "OCENIL", direction = Relationship.Direction.INCOMING)
     private List<OcenilReverse> ocenil;
 
-    
-    /** 
-     * @return int
-     */
     public int getOcenyLubi() {
         return (int) ocenil.stream().filter(OcenilReverse::isLubi).count();
     }

@@ -176,34 +176,6 @@ public class KomentarzService {
             request.isLubi()));
     }
 
-
-    /**
-     * Usuwa ocenę z komentarza.
-     *
-     * @param request obiekt OcenaRequest zawierający dane oceny.
-     * @param connectedUser zalogowany użytkownik.
-     * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
-     * @throws IllegalArgumentException jeśli użytkownik próbuje ocenić własny komentarz.
-     * @throws IllegalArgumentException jeśli użytkownik próbuje ocenić komentarz w rozmowie prywatnej.
-     */
-    public void removeOcenaFromKomentarz(OcenaRequest request, Authentication connectedUser) {
-        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
-        Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(request.getOcenialnyId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
-
-        if(komentarz.getRozmowaPrywatna() != null) {
-            throw new IllegalArgumentException("Nie można oceniać wiadomości w rozmowach prywatnych"); 
-        }
-
-        if(komentarz.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
-            throw new IllegalArgumentException("Nie można oceniać własnych komentarzy");
-        }
-
-        uzytkownikService.sprawdzBlokowanie(komentarz.getUzytkownik().getNazwa(), uzyt);
-
-        komentarzRepository.removeOcenaFromKomentarz(uzyt.getEmail(), komentarz.getKomentarzId());
-    }
-
-
     /**
      * Dodaje komentarz do wiadomości prywatnej.
      *
@@ -217,7 +189,6 @@ public class KomentarzService {
         Uzytkownik nadawca = ((Uzytkownik) connectedUser.getPrincipal());
         return addKomentarzToWiadomoscPrywatna(request, file, nadawca);
     }
-
 
     /**
      * Dodaje komentarz do wiadomości prywatnej.

@@ -90,29 +90,13 @@ public class PostService {
      * @param page <ul><li><strong>int</strong>: Numer strony.</li></ul>
      * @param size <ul><li><strong>int</strong>: Rozmiar strony.</li></ul>
      * @param szukaj <ul><li><strong>String</strong>: Wartość, po której ma być filtrowana lista postów.</li></ul>
-     * @return <ul><li><strong>PageResponse&lt;PostResponse&gt;</strong>: Odpowiedź zawierająca listę postów oraz dane paginacji.</li></ul>
+     * @return <ul><li><strong>PageResponse(PostResponse)</strong>: Odpowiedź zawierająca listę postów oraz dane paginacji.</li></ul>
      */
     @Transactional(readOnly = true)
     public PageResponse<PostResponse> findAllPosts(int page, int size, String szukaj) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPosts(szukaj, pageable);
 
-        return postMapper.postResponsetoPageResponse(posts);
-    }
-
-    /**
-     * Znajduje wszystkie posty powiązane z zalogowanym użytkownikiem.
-     *
-     * @param page <ul><li><strong>int</strong>: Numer strony.</li></ul>
-     * @param size <ul><li><strong>int</strong>: Rozmiar strony.</li></ul>
-     * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
-     * @return <ul><li><strong>PageResponse&lt;PostResponse&gt;</strong>: Odpowiedź zawierająca listę postów oraz dane paginacji.</li></ul>
-     */
-    @Transactional(readOnly = true)
-    public PageResponse<PostResponse> findAllPostyByConnectedUzytkownik(int page, int size, Authentication connectedUser) {
-        Uzytkownik user = ((Uzytkownik) connectedUser.getPrincipal());
-        Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
-        Page<Post> posts = postRepository.findAllPostyByUzytkownik(user.getEmail(), pageable);
         return postMapper.postResponsetoPageResponse(posts);
     }
 
@@ -195,21 +179,6 @@ public class PostService {
 
         post =  postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
         return postMapper.toPostResponse(post);
-    }
-
-    /**
-     * Usuwa ocenę z posta.
-     *
-     * @param request <ul><li><strong>OcenaRequest</strong>: Dane oceny.</li></ul>
-     * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
-     */
-    public void removeOcenaFromPost(OcenaRequest request, Authentication connectedUser) {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(request.getOcenialnyId())
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getOcenialnyId()));
-        
-        uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
-        postRepository.removeOcenaFromPost(uzyt.getEmail(), post.getPostId());
     }
 
     /**

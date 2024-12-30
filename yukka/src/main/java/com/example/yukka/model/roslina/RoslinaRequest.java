@@ -1,6 +1,7 @@
 package com.example.yukka.model.roslina;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public class RoslinaRequest extends UzytkownikRoslinaRequest{
     @NotEmpty(message = "Nazwa łacińska jest wymagana")
+    @Size(min = 1, max = 255, message = "Nazwa łacińska musi zawierać od 1 do 255 znaków")
     private String nazwaLacinska;
 
     public String getNazwaLacinska() {

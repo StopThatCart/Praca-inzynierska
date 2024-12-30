@@ -25,8 +25,6 @@ import { KomentarzResponse } from '../models/komentarz-response';
 import { PageResponseKomentarzResponse } from '../models/page-response-komentarz-response';
 import { removeKomentarz } from '../fn/komentarz/remove-komentarz';
 import { RemoveKomentarz$Params } from '../fn/komentarz/remove-komentarz';
-import { removeOcenaFromKomentarz } from '../fn/komentarz/remove-ocena-from-komentarz';
-import { RemoveOcenaFromKomentarz$Params } from '../fn/komentarz/remove-ocena-from-komentarz';
 import { updateKomentarz } from '../fn/komentarz/update-komentarz';
 import { UpdateKomentarz$Params } from '../fn/komentarz/update-komentarz';
 
@@ -58,31 +56,6 @@ export class KomentarzService extends BaseService {
   addOcenaToKomentarz(params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<KomentarzResponse> {
     return this.addOcenaToKomentarz$Response(params, context).pipe(
       map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `removeOcenaFromKomentarz()` */
-  static readonly RemoveOcenaFromKomentarzPath = '/komentarze/oceny';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `removeOcenaFromKomentarz()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  removeOcenaFromKomentarz$Response(params: RemoveOcenaFromKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return removeOcenaFromKomentarz(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `removeOcenaFromKomentarz$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  removeOcenaFromKomentarz(params: RemoveOcenaFromKomentarz$Params, context?: HttpContext): Observable<string> {
-    return this.removeOcenaFromKomentarz$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 

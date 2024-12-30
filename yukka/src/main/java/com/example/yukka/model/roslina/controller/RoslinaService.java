@@ -231,7 +231,7 @@ public class RoslinaService {
         }
         
         if (file != null) {
-            request.setObraz(fileStoreService.saveRoslina(file, request.getNazwaLacinska()));
+            request.setObraz(fileStoreService.saveRoslina(file, request.getRoslinaId()));
         } else {
             request.setObraz(defaultRoslinaObrazName);
         }
@@ -299,9 +299,6 @@ public class RoslinaService {
             }           
         }
 
-        System.out.println("\n\n\n Nazwa: " + request.getNazwa() + "\n\n\n");
-
-
         if(request.areWlasciwosciEmpty()) {
             Roslina ros = roslinaRepository.updateRoslina(
                 request.getNazwa(), staraNazwaLacinska, 
@@ -325,7 +322,7 @@ public class RoslinaService {
     /**
      * Aktualizuje obraz rośliny.
      *
-     * @param nazwaLacinska nazwa łacińska rośliny.
+     * @param roslinaId nazwa łacińska rośliny.
      * @param file obiekt MultipartFile zawierający obraz rośliny.
      * @return Roslina zawierający informacje o zaktualizowanej roślinie.
      */
@@ -335,14 +332,15 @@ public class RoslinaService {
         Roslina roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
         
-        String pfp = fileStoreService.saveRoslina(file, nazwaLacinska);
+        String pfp = fileStoreService.saveRoslina(file, roslina.getRoslinaId());
         if(pfp == null){
             throw new EntityNotFoundException("Nie udało się załadować pliku obrazu");
         }
-        fileUtils.deleteObraz(roslina.getObraz());
 
+        if(roslina.getObraz() != null) fileUtils.deleteObraz(roslina.getObraz());
         roslina.setObraz(pfp);
-        Roslina ros = roslinaRepository.updateRoslinaObraz(roslina.getNazwaLacinska(), pfp);
+
+        Roslina ros = roslinaRepository.updateRoslinaObraz(roslina.getRoslinaId(), pfp);
         return roslinaMapper.toRoslinaResponse(ros);
    }
 

@@ -58,6 +58,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UzytkownikRoslinaService {
     private final UzytkownikRepository uzytkownikRepository;
     private final UzytkownikRoslinaRepository uzytkownikRoslinaRepository;
+    private final RoslinaRepository roslinaRepository;
     private final WlasciwoscRepository wlasciwoscRepository;
     private final RoslinaService roslinaService;
 
@@ -225,10 +226,14 @@ public class UzytkownikRoslinaService {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         log.info("Aktualizacja rośliny " + request.getRoslinaId() + " przez użytkownika: " + uzyt.getNazwa());
 
-        uzytkownikRoslinaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), request.getRoslinaId())
+        Roslina roslina = uzytkownikRoslinaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), request.getRoslinaId())
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + request.getRoslinaId() + " dla użytkownika " + uzyt.getNazwa()));
 
-        System.out.println("Właściwości: " + request.getWlasciwosciAsMap());
+        Uzytkownik targetUzyt = roslina.getUzytkownik();
+        if (!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+            throw new ForbiddenException("Brak uprawnień do zmiany rośliny " + request.getRoslinaId());
+        }
+        
         if(request.areWlasciwosciEmpty()) {
             Roslina ros = uzytkownikRoslinaRepository.updateRoslina(
                 request.getRoslinaId(), request.getNazwa(), 
@@ -254,20 +259,27 @@ public class UzytkownikRoslinaService {
      * @param connectedUser Aktualnie zalogowany użytkownik
      * @param roslinaId Identyfikator rośliny
      */
-    public void uploadUzytkownikRoslinaObraz(MultipartFile file, Authentication connectedUser, String roslinaId) {
-        Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+    public void uploadUzytkownikRoslinaObraz(MultipartFile file, String roslinaId, Authentication connectedUser) {
+        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
         log.info("Zmiana obrazu rośliny " + roslinaId + " przez użytkownika: " + uzyt.getNazwa());
 
         Roslina roslina = uzytkownikRoslinaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), roslinaId)
-            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId));
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId + " dla użytkownika " + uzyt.getNazwa()));
+
+        Uzytkownik targetUzyt = roslina.getUzytkownik();
+        System.out.println("Uzytkownik: " + targetUzyt.getNazwa());
+
+        if (!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+            throw new ForbiddenException("Brak uprawnień do zmiany obrazu rośliny " + roslinaId);
+        }
         
-        fileUtils.deleteObraz(roslina.getObraz());
-        String pfp = fileStoreService.saveUzytkownikRoslinaObraz(file, roslinaId, uzyt.getUsername());
+        if (roslina.getObraz() != null) fileUtils.deleteObraz(roslina.getObraz());
+        String pfp = fileStoreService.saveUzytkownikRoslinaObraz(file, roslinaId, uzyt.getUzytId());
         if(pfp == null) {
             return;
         }
        
         roslina.setObraz(pfp);
-        uzytkownikRoslinaRepository.updateRoslinaObraz(roslinaId, pfp);
+        roslinaRepository.updateRoslinaObraz(roslinaId, pfp);
     }
 }

@@ -116,13 +116,6 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
             """)
     Komentarz addOcenaToKomentarz(@Param("email") String email, @Param("komentarzId") String komentarzId, @Param("ocena") boolean ocena);
 
-
-    @Query("""
-        MATCH (uzyt:Uzytkownik{email: $email})-[relu:OCENIL]->(kom:Komentarz{komentarzId: $komentarzId})
-        DELETE relu
-        """)
-    void removeOcenaFromKomentarz(@Param("email") String email, @Param("komentarzId") String komentarzId);
-
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
         MATCH (kom2:Komentarz{komentarzId: $komentarzId})

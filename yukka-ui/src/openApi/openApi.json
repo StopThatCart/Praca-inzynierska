@@ -202,34 +202,6 @@
             }
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "Post"
-        ],
-        "operationId": "removeOcenaFromPost",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OcenaRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/komentarze/oceny": {
@@ -255,34 +227,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/KomentarzResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Komentarz"
-        ],
-        "operationId": "removeOcenaFromKomentarz",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OcenaRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -3261,37 +3205,37 @@
           "name": {
             "type": "string"
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "pracownik": {
-            "type": "boolean"
-          },
-          "admin": {
-            "type": "boolean"
-          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "username": {
-            "type": "string"
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
+          "admin": {
+            "type": "boolean"
+          },
+          "pracownik": {
+            "type": "boolean"
           },
           "password": {
             "type": "string"
           },
-          "enabled": {
-            "type": "boolean"
+          "username": {
+            "type": "string"
           },
-          "accountNonLocked": {
+          "enabled": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
+            "type": "boolean"
+          },
+          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -3340,6 +3284,8 @@
             }
           },
           "nazwaLacinska": {
+            "maxLength": 255,
+            "minLength": 1,
             "type": "string"
           }
         }

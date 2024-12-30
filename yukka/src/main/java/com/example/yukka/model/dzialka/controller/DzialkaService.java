@@ -496,7 +496,7 @@ public class DzialkaService {
             }
             
             Dzialka dzialkaZRoslina = dzialkaRepository.updateRoslinaWyswietlanieInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
-            request.getX(), request.getY(), request.getWyswietlanie().toString());
+            request.getX(), request.getY(), request.getWyswietlanie());
             return roslinaMapper.toDzialkaResponse(dzialkaZRoslina);
         } else {
             throw new IllegalArgumentException("Nie znaleziono rośliny na pozycji (" + request.getX() + ", " + request.getY() + ")");
@@ -530,7 +530,7 @@ public class DzialkaService {
         System.out.println("Le aktualizacja notatki rośliny na działce");
         if (pozycja != null) {
             Dzialka dzialkaZRoslina = dzialkaRepository.updateRoslinaNotatkaInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
-            request.getX(), request.getY(), request.getNotatka().toString());
+            request.getX(), request.getY(), request.getNotatka());
 
             return roslinaMapper.toDzialkaResponse(dzialkaZRoslina);
         } else {

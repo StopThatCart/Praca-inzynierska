@@ -64,18 +64,12 @@ public class PostController {
     }
 
     /**
-     * Metoda obsługująca żądanie GET do wyszukania wszystkich postów z opcjonalnym filtrem wyszukiwania.
+     * Metoda obsługująca żądanie GET do wyszukania wszystkich postów.
      *
      * @param page numer strony wyników, domyślnie 0
      * @param size rozmiar strony wyników, domyślnie 10
-     * @param szukaj opcjonalny filtr wyszukiwania
+     * @param szukaj nazwa lub opis postu
      * @return ResponseEntity zawierające stronę wyników z postami
-     * <ul>
-     *   <li><strong>page</strong> - numer strony wyników</li>
-     *   <li><strong>size</strong> - rozmiar strony wyników</li>
-     *   <li><strong>szukaj</strong> - opcjonalny filtr wyszukiwania</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca stronę wyników z postami</li>
-     * </ul>
      */
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<PostResponse>> findAllPosty(
@@ -83,28 +77,6 @@ public class PostController {
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             @RequestParam(name = "szukaj", required = false) String szukaj) {
         return ResponseEntity.ok(postService.findAllPosts(page, size, szukaj));
-    }
-
-    /**
-     * Metoda obsługująca żądanie GET do wyszukania wszystkich postów powiązanych z zalogowanym użytkownikiem.
-     *
-     * @param page numer strony wyników, domyślnie 0
-     * @param size rozmiar strony wyników, domyślnie 10
-     * @param connectedUser obiekt uwierzytelnionego użytkownika
-     * @return ResponseEntity zawierające stronę wyników z postami
-     * <ul>
-     *   <li><strong>page</strong> - numer strony wyników</li>
-     *   <li><strong>size</strong> - rozmiar strony wyników</li>
-     *   <li><strong>connectedUser</strong> - obiekt uwierzytelnionego użytkownika</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca stronę wyników z postami</li>
-     * </ul>
-     */
-    @GetMapping(value = "/uzytkownik", produces="application/json")
-    public ResponseEntity<PageResponse<PostResponse>> findAllPostyByConnectedUzytkownik(
-            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            Authentication connectedUser) {
-        return ResponseEntity.ok(postService.findAllPostyByConnectedUzytkownik(page, size, connectedUser));
     }
 
     /**
@@ -167,24 +139,6 @@ public class PostController {
     @PutMapping(value = "/oceny", produces="application/json")
     public ResponseEntity<PostResponse> addOcenaToPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.status(CREATED).body(postService.addOcenaToPost(request, connectedUser));
-    }
-
-    /**
-     * Metoda obsługująca żądanie DELETE do usunięcia oceny z posta.
-     *
-     * @param request obiekt żądania zawierający ocenę
-     * @param connectedUser obiekt uwierzytelnionego użytkownika
-     * @return ResponseEntity zawierające informację o usunięciu oceny z posta
-     * <ul>
-     *   <li><strong>request</strong> - obiekt żądania zawierający ocenę</li>
-     *   <li><strong>connectedUser</strong> - obiekt uwierzytelnionego użytkownika</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca informację o usunięciu oceny z posta</li>
-     * </ul>
-     */
-    @DeleteMapping(value = "/oceny", produces="application/json")
-    public ResponseEntity<String> removeOcenaFromPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
-        postService.removeOcenaFromPost(request, connectedUser);
-        return ResponseEntity.noContent().build();
     }
 
     /**

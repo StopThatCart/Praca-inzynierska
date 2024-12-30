@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { TokenService } from '../../../../services/token/token.service';
 import { FormsModule } from '@angular/forms';
 import { AddKomentarzCardComponent } from "../add-komentarz-card/add-komentarz-card.component";
-import {TimeAgoPipe} from 'time-ago-pipe';
 import { TypKomentarza } from '../../models/TypKomentarza';
 import { ZgloszenieButtonComponent } from "../../../profil/components/zgloszenie-button/zgloszenie-button.component";
 import { TypPowiadomienia } from '../../../profil/models/TypPowiadomienia';

@@ -415,14 +415,11 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     );
 
     @Query("""
-        MATCH (p:Roslina{nazwaLacinska: toLower($nazwaLacinska)}) WHERE NOT p:UzytkownikRoslina
+        MATCH (p:Roslina{roslinaId: $roslinaId})
         SET  p.obraz = $obraz
         RETURN p
     """)
-    Roslina updateRoslinaObraz(
-    @Param("nazwaLacinska") String nazwaLacinska,
-    @Param("obraz") String obraz
-    );
+    Roslina updateRoslinaObraz(@Param("roslinaId") String roslinaId, @Param("obraz") String obraz);
 
     @Query("""
             MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:UzytkownikRoslina

@@ -141,20 +141,17 @@ export class UpdateRoslinaPageComponent {
 
     this.request.nazwaLacinska = this.request.nazwaLacinska.toLowerCase();
 
-    this.roslinaService.updateRoslina({
-      'nazwa-lacinska':this.roslina.nazwaLacinska,
-      body: this.request })
-      .subscribe({
-        next: () => {
-          this.message = 'Roślina została zaaktualizowana';
-          //this.getRoslinaByNazwaLacinska(this.request.nazwaLacinska);
-          this.router.navigate(['/rosliny', this.roslina.roslinaId]);
-        },
-        error: (error) => {
-          this.message = 'Błąd podczas aktualizacji rośliny';
-          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
-        }
-      });
+    this.roslinaService.updateRoslina({ 'nazwa-lacinska':this.roslina.nazwaLacinska, body: this.request }).subscribe({
+      next: () => {
+        this.message = 'Roślina została zaaktualizowana';
+        //this.getRoslinaByNazwaLacinska(this.request.nazwaLacinska);
+        this.router.navigate(['/rosliny', this.roslina.roslinaId]);
+      },
+      error: (error) => {
+        this.message = 'Błąd podczas aktualizacji rośliny';
+        this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
+      }
+    });
   }
 
   updateUzytkownikRoslina(request: RoslinaRequest): void {
@@ -171,17 +168,16 @@ export class UpdateRoslinaPageComponent {
 
     console.log("Uzytkownik roslina request: ", uzytRequest);
 
-    this.uzytkownikRoslinaService.updateRoslina1({ body: uzytRequest })
-      .subscribe({
-        next: () => {
-          this.message = 'Roślina została zaaktualizowana';
-          this.router.navigate(['/rosliny', this.roslina.roslinaId]);
-        },
-        error: (error) => {
-          this.message = 'Błąd podczas aktualizacji rośliny';
-          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
-        }
-      });
+    this.uzytkownikRoslinaService.updateRoslina1({ body: uzytRequest }).subscribe({
+      next: () => {
+        this.message = 'Roślina została zaaktualizowana';
+        this.router.navigate(['/rosliny', this.roslina.roslinaId]);
+      },
+      error: (error) => {
+        this.message = 'Błąd podczas aktualizacji rośliny';
+        this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
+      }
+    });
   }
 
 }

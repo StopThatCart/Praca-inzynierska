@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class FileStoreService {
 
-    private String[] acceptableImageExtensions = {"jpg", "jpeg", "png", "gif"};
+    private final String[] acceptableImageExtensions = {"jpg", "jpeg", "png", "gif"};
 
     @Value("${application.file.uploads.photos-output-path}")
     private String fileUploadPath;
@@ -95,7 +95,7 @@ public class FileStoreService {
     public String saveUzytkownikRoslinaObraz(@Nonnull MultipartFile sourceFile, @Nonnull String roslinaId, @Nonnull String uzytId) {
         validateImage(sourceFile, false);
         String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "rosliny" + separator + roslinaId;
-        String fileName = roslinaId;
+        String fileName = generateFileName(sourceFile.getName()) + "_" + System.currentTimeMillis();
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 
@@ -128,7 +128,7 @@ public class FileStoreService {
     public String saveRoslinaObrazInDzialka(@Nonnull MultipartFile sourceFile, @Nonnull String uzytId) {
         validateImage(sourceFile, false);
         String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "dzialki" + separator + "rosliny";
-        String fileName = generateFileName(uzytId) + "_" + System.currentTimeMillis();
+        String fileName = generateFileName(sourceFile.getName()) + "_" + System.currentTimeMillis();
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
 

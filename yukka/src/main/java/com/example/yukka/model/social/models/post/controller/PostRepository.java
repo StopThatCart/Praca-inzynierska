@@ -35,7 +35,6 @@ import jakarta.annotation.Nonnull;
  *   <li>Pobieranie najnowszego postu użytkownika na podstawie jego adresu email.</li>
  *   <li>Wyszukiwanie postów z możliwością paginacji i sortowania.</li>
  *   <li>Dodawanie oceny do postu przez użytkownika.</li>
- *   <li>Usuwanie oceny z postu przez użytkownika.</li>
  *   <li>Dodawanie nowego postu przez użytkownika.</li>
  *   <li>Aktualizowanie obrazu postu.</li>
  *   <li>Usuwanie postu wraz z powiązanymi komentarzami.</li>
@@ -140,15 +139,11 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
             WITH post
             MATCH (autor:Uzytkownik)-[r1:MA_POST]->(post)
-            RETURN post, r1, autor
+            OPTIONAL MATCH path2 = (post)<-[:OCENIL]-(oceniajacy:Uzytkownik)
+
+            RETURN post, r1, autor, collect(nodes(path2)), collect(relationships(path2))
             """)
     Post addOcenaToPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
-
-    @Query("""
-        MATCH (uzyt:Uzytkownik{email: $email})-[relu:OCENIL]->(post:Post{postId: $postId})
-        DELETE relu
-        """)
-    void removeOcenaFromPost(@Param("email") String email, @Param("postId") String postId);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})

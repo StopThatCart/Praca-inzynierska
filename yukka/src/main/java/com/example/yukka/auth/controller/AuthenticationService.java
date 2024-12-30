@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-package com.example.yukka.auth;
+package com.example.yukka.auth.controller;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.yukka.auth.AuthenticationResponse;
 import com.example.yukka.auth.email.EmailService;
 import com.example.yukka.auth.email.EmailTemplateName;
 import com.example.yukka.auth.requests.AuthRequest;

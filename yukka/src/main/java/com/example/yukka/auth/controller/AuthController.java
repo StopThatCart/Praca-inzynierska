@@ -1,4 +1,4 @@
-package com.example.yukka.auth;
+package com.example.yukka.auth.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.yukka.auth.AuthenticationResponse;
 import com.example.yukka.auth.requests.AuthRequest;
 import com.example.yukka.auth.requests.HasloRequest;
 import com.example.yukka.auth.requests.RegistrationRequest;

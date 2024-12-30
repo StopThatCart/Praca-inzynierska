@@ -175,24 +175,6 @@ public class KomentarzController {
     }
 
     /**
-     * Metoda obsługująca żądanie DELETE do usunięcia oceny z komentarza.
-     *
-     * @param request obiekt żądania zawierający dane oceny
-     * @param connectedUser aktualnie zalogowany użytkownik
-     * @return ResponseEntity zawierające informację o usunięciu oceny
-     * <ul>
-     *   <li><strong>request</strong> - obiekt żądania zawierający dane oceny</li>
-     *   <li><strong>connectedUser</strong> - aktualnie zalogowany użytkownik</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca informację o usunięciu oceny</li>
-     * </ul>
-     */
-    @DeleteMapping(value = "/oceny")
-    public ResponseEntity<String> removeOcenaFromKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
-        komentarzService.removeOcenaFromKomentarz(request, connectedUser);
-        return ResponseEntity.noContent().build();
-    }
-
-    /**
      * Metoda obsługująca żądanie PATCH do aktualizacji komentarza.
      *
      * @param komentarzId identyfikator komentarza

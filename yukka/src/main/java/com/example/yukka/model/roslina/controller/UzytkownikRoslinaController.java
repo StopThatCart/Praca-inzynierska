@@ -147,7 +147,7 @@ public class UzytkownikRoslinaController {
             @Parameter() @RequestPart("file") 
             MultipartFile file, 
             Authentication connectedUser) {
-        uzytkownikRoslinaService.uploadUzytkownikRoslinaObraz(file, connectedUser, roslinaId);
+        uzytkownikRoslinaService.uploadUzytkownikRoslinaObraz(file, roslinaId, connectedUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     

@@ -24,8 +24,6 @@ import { FindPostById$Params } from '../fn/post/find-post-by-id';
 import { PageResponsePostResponse } from '../models/page-response-post-response';
 import { Post } from '../models/post';
 import { PostResponse } from '../models/post-response';
-import { removeOcenaFromPost } from '../fn/post/remove-ocena-from-post';
-import { RemoveOcenaFromPost$Params } from '../fn/post/remove-ocena-from-post';
 import { removePost } from '../fn/post/remove-post';
 import { RemovePost$Params } from '../fn/post/remove-post';
 
@@ -57,31 +55,6 @@ export class PostService extends BaseService {
   addOcenaToPost(params: AddOcenaToPost$Params, context?: HttpContext): Observable<PostResponse> {
     return this.addOcenaToPost$Response(params, context).pipe(
       map((r: StrictHttpResponse<PostResponse>): PostResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `removeOcenaFromPost()` */
-  static readonly RemoveOcenaFromPostPath = '/posty/oceny';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `removeOcenaFromPost()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  removeOcenaFromPost$Response(params: RemoveOcenaFromPost$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return removeOcenaFromPost(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `removeOcenaFromPost$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  removeOcenaFromPost(params: RemoveOcenaFromPost$Params, context?: HttpContext): Observable<string> {
-    return this.removeOcenaFromPost$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 

@@ -286,13 +286,6 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, L
     """)
     Optional<Roslina> findByRoslinaIdWithRelations(@Param("roslinaId") String roslinaId);
 
-
-    // @Query("""
-    //     MATCH (ros:UzytkownikRoslina{roslinaId: $roslinaId})
-    //     RETURN ros
-    // """)
-    // Optional<Roslina> findByRoslinaId(@Param("roslinaId") String roslinaId);
-
     @Query(value = """
         MATCH (roslina:UzytkownikRoslina)-[:STWORZONA_PRZEZ]->(uzytkownik:Uzytkownik{nazwa: $nazwa})
         RETURN roslina
@@ -305,8 +298,8 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, L
     Page<Roslina> findRoslinyOfUzytkownik(@Param("nazwa") String nazwa, Pageable pageable);
 
     @Query("""
-        MATCH (roslina:UzytkownikRoslina {roslinaId: $roslinaId})-[:STWORZONA_PRZEZ]->(uzytkownik:Uzytkownik{nazwa: $nazwa})
-        RETURN roslina
+        MATCH (roslina:UzytkownikRoslina {roslinaId: $roslinaId})-[r1:STWORZONA_PRZEZ]->(uzytkownik:Uzytkownik{nazwa: $nazwa})
+        RETURN roslina, r1, uzytkownik
         """)
     Optional<Roslina> findRoslinaOfUzytkownik(@Param("nazwa") String nazwa, String roslinaId);
 
@@ -398,16 +391,6 @@ public interface UzytkownikRoslinaRepository  extends Neo4jRepository<Roslina, L
     @Param("imageFilename") String imageFilename,
     @Param("heightMin") Double heightMin,
     @Param("heightMax") Double heightMax
-    );
-
-    @Query("""
-        MATCH (p:UzytkownikRoslina{roslinaId: $roslinaId}) 
-        SET  p.obraz = $obraz
-        RETURN p
-    """)
-    Roslina updateRoslinaObraz(
-    @Param("roslinaId") String roslinaId,
-    @Param("obraz") String obraz
     );
 
 

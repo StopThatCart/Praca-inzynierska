@@ -1,4 +1,4 @@
-package com.example.yukka.auth;
+package com.example.yukka.auth.controller;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.example.yukka.auth.AuthenticationResponse;
 import com.example.yukka.auth.authorities.ROLE;
 import com.example.yukka.auth.email.EmailTemplateName;
 import com.example.yukka.auth.requests.AuthRequest;

@@ -26,7 +26,7 @@ import lombok.ToString;
  * 
  * <ul>
  *   <li><strong>id</strong>: Unikalny identyfikator posta.</li>
- *   <li><strong>postId</strong>: Identyfikator posta jako String.</li>
+ *   <li><strong>postId</strong>: Identyfikator posta jako uuid.</li>
  *   <li><strong>tytul</strong>: Tytuł posta.</li>
  *   <li><strong>opis</strong>: Opis posta.</li>
  *   <li><strong>obraz</strong>: URL obrazu powiązanego z postem.</li>
@@ -66,11 +66,8 @@ public class Post extends Oceniany {
     private Uzytkownik autor;
     
     @Relationship(type = "MA_KOMENTARZ", direction = Relationship.Direction.OUTGOING)
-  //  @JsonBackReference
     private List<Komentarz> komentarze;
 
     @Relationship(type = "JEST_W_POSCIE", direction = Relationship.Direction.INCOMING)
-    //  @JsonBackReference
       private List<Komentarz> komentarzeWPoscie;
-
 }
