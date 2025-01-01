@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RegistrationRequest } from '../../services/models';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthenticationService } from '../../services/services/authentication.service';
 import { TokenService } from '../../services/token/token.service';
 import { register } from '../../services/fn/authentication/register';
@@ -12,7 +12,7 @@ import { ErrorMsgComponent } from "../../components/error-msg/error-msg.componen
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, ErrorMsgComponent],
+  imports: [CommonModule, FormsModule, RouterModule, ErrorMsgComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })

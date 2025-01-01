@@ -10,6 +10,7 @@ import { ZmianaHaslaComponent } from './pages/zmiana-hasla/zmiana-hasla.componen
 import { ZmianaHaslaEmailComponent } from './pages/zmiana-hasla-email/zmiana-hasla-email.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
+import { AktywacjaKontaRefreshComponent } from './pages/aktywacja-konta-refresh/aktywacja-konta-refresh.component';
 
 export const routes: Routes = [
   { path: '', component: IndeksusComponent },
@@ -30,6 +31,12 @@ export const routes: Routes = [
     component: AktywacjaKontaComponent,
     canActivate: [loggedInGuard],
     data: { breadcrumb: 'Aktywacja konta' }
+  },
+  {
+    path: 'aktywacja-konta-refresh',
+    component: AktywacjaKontaRefreshComponent,
+    canActivate: [loggedInGuard],
+    data: { breadcrumb: 'Ponowne wysyłanie emaila' }
   },
   {
     path: 'zmiana-hasla',

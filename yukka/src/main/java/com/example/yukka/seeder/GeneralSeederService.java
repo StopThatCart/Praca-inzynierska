@@ -119,13 +119,13 @@ public class GeneralSeederService {
 
 		uzytkownicy = seedUzytkownicy();
 		
-		postSeeder.addPostyWithKomentarze(uzytkownicy);
+		// postSeeder.addPostyWithKomentarze(uzytkownicy);
 
-		postSeeder.seedRozmowy(usKatarzyna, usPiotr, uzytkownicy);
+		// postSeeder.seedRozmowy(usKatarzyna, usPiotr, uzytkownicy);
 
-		seedZgloszenia();
+		// seedZgloszenia();
 
-		seedDzialka();
+		// seedDzialka();
 
 	}
 

@@ -7,15 +7,15 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface Confirm$Params {
-  token: string;
+export interface ConfirmResend$Params {
+  email: string;
 }
 
-export function confirm(http: HttpClient, rootUrl: string, params: Confirm$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function confirmResend(http: HttpClient, rootUrl: string, params: ConfirmResend$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 }>> {
-  const rb = new RequestBuilder(rootUrl, confirm.PATH, 'get');
+  const rb = new RequestBuilder(rootUrl, confirmResend.PATH, 'get');
   if (params) {
-    rb.query('token', params.token, {});
+    rb.query('email', params.email, {});
   }
 
   return http.request(
@@ -29,4 +29,4 @@ export function confirm(http: HttpClient, rootUrl: string, params: Confirm$Param
   );
 }
 
-confirm.PATH = '/api/auth/aktywacja-konta';
+confirmResend.PATH = '/api/auth/aktywacja-konta/resend';

@@ -2347,48 +2347,6 @@
         }
       }
     },
-    "/posty/uzytkownik": {
-      "get": {
-        "tags": [
-          "Post"
-        ],
-        "operationId": "findAllPostyByConnectedUzytkownik",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PageResponsePostResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/posty/uzytkownik/{nazwa}": {
       "get": {
         "tags": [
@@ -2739,7 +2697,37 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/aktywacja-konta/resend": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "confirmResend",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
                 "schema": {
                   "type": "object"
                 }
@@ -2925,11 +2913,11 @@
           "wposcie": {
             "$ref": "#/components/schemas/Post"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -2938,11 +2926,11 @@
       "Oceniany": {
         "type": "object",
         "properties": {
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3034,11 +3022,11 @@
               "$ref": "#/components/schemas/Komentarz"
             }
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3205,37 +3193,37 @@
           "name": {
             "type": "string"
           },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
+          "pracownik": {
+            "type": "boolean"
+          },
+          "admin": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
           "authorities": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "admin": {
-            "type": "boolean"
-          },
-          "pracownik": {
-            "type": "boolean"
-          },
-          "password": {
-            "type": "string"
-          },
-          "username": {
-            "type": "string"
-          },
           "enabled": {
+            "type": "boolean"
+          },
+          "accountNonLocked": {
             "type": "boolean"
           },
           "accountNonExpired": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
-            "type": "boolean"
-          },
-          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -4122,7 +4110,7 @@
           "nazwa": {
             "maxLength": 100,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$",
+            "pattern": "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+( [a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)*$",
             "type": "string"
           },
           "email": {

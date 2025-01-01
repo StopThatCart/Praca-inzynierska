@@ -49,7 +49,8 @@ import lombok.ToString;
 @AllArgsConstructor
 public class RegistrationRequest {
     //@JsonProperty("nazwa")
-    @Pattern(regexp = "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$", message = "Nazwa nie może zawierać znaków specjalnych")
+    @Pattern(regexp = "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+( [a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)*$", 
+    message = "Nazwa może zawierać tylko litery, cyfry, pojedyńcze spacje i polskie znaki")
     @Size(min = 3, max = 100, message = "Nazwa powinna mieć od 3 do 100 znaków")
     @NotEmpty(message = "nazwa jest wymagana")
     private String nazwa;

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import {AuthenticationService} from '../../services/services/authentication.service';
 import {skipUntil} from 'rxjs';
 
@@ -8,11 +8,12 @@ import { CommonModule } from '@angular/common';
 import { ErrorMsgComponent } from "../../components/error-msg/error-msg.component";
 import { error } from 'console';
 import { ErrorHandlingService } from '../../services/error-handler/error-handling.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-aktywacja-konta',
   standalone: true,
-  imports: [CommonModule, CodeInputModule, ErrorMsgComponent],
+  imports: [CommonModule, FormsModule, RouterModule, CodeInputModule, ErrorMsgComponent],
   templateUrl: './aktywacja-konta.component.html',
   styleUrl: './aktywacja-konta.component.css'
 })
@@ -22,6 +23,7 @@ export class AktywacjaKontaComponent {
   message = '';
   isOkay = true;
   submitted = false;
+
   constructor(
     private router: Router,
     private authService: AuthenticationService,

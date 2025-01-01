@@ -16,6 +16,8 @@ import { changePassword } from '../fn/authentication/change-password';
 import { ChangePassword$Params } from '../fn/authentication/change-password';
 import { confirm } from '../fn/authentication/confirm';
 import { Confirm$Params } from '../fn/authentication/confirm';
+import { confirmResend } from '../fn/authentication/confirm-resend';
+import { ConfirmResend$Params } from '../fn/authentication/confirm-resend';
 import { login } from '../fn/authentication/login';
 import { Login$Params } from '../fn/authentication/login';
 import { refreshToken } from '../fn/authentication/refresh-token';
@@ -220,6 +222,35 @@ export class AuthenticationService extends BaseService {
   confirm(params: Confirm$Params, context?: HttpContext): Observable<{
 }> {
     return this.confirm$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
+  }
+
+  /** Path part for operation `confirmResend()` */
+  static readonly ConfirmResendPath = '/api/auth/aktywacja-konta/resend';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `confirmResend()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  confirmResend$Response(params: ConfirmResend$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return confirmResend(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `confirmResend$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  confirmResend(params: ConfirmResend$Params, context?: HttpContext): Observable<{
+}> {
+    return this.confirmResend$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)

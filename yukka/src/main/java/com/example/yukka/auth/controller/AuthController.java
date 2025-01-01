@@ -74,14 +74,29 @@ public class AuthController {
     }
 
     /**
-    *  Obsługuję aktywację konta użytkownika za pomocą tokena.
+    *  Obsługuje aktywację konta użytkownika za pomocą tokena.
     * @param token token aktywacyjny wysłany na e-mail użytkownika
     * @return ResponseEntity wskazujący, czy konto zostało aktywowane
     * @throws MessagingException jeśli wystąpi błąd podczas wysyłania e-maila aktywacyjnego
     */
-    @GetMapping(value = "/aktywacja-konta")
+    @GetMapping(value = "/aktywacja-konta", produces="application/json")
     public ResponseEntity<?> confirm(@RequestParam String token) throws MessagingException {
         service.activateAccount(token);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
+
+    /**
+    *  Obsługuje ponowne wysłanie e-maila aktywacyjnego.
+    * @param email adres e-mail użytkownika
+    * @return ResponseEntity wskazujący, czy e-mail aktywacyjny został wysłany
+    * @throws MessagingException jeśli wystąpi błąd podczas wysyłania e-maila aktywacyjnego
+    */
+    
+    @GetMapping(value = "/aktywacja-konta/resend", produces="application/json")
+    public ResponseEntity<?> confirmResend(String email) throws MessagingException {
+        
+        service.resendActivationEmail(email);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 

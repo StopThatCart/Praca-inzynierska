@@ -1,0 +1,14 @@
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="text-center" style="width: 400px;">
+        <h3 class="text-primary mt-2">Podaj swój adres email, aby wysłać kod aktywacyjny ponownie</h3>
+        <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
+        <form class="text-center" (ngSubmit)="sendEmail()">
+            <input [(ngModel)]="email" type="email" name="email"  class="form-control text-dark mt-2" placeholder="Adres email"  required email>
+            <div class="mt-2">
+                <button class="btn btn-warning me-2" [routerLink]="'/aktywacja-konta'" >Wróć</button>
+                <button class="btn btn-primary">Wyślij</button>
+            </div>
+        </form>
+
+    </div>
+</div>

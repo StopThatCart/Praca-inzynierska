@@ -54,8 +54,8 @@ public class YukkaApplication {
 			if (seedDatabase) {
                 log.info("Seedowanie bazy danych...");
 				//roslinaImporterService.seedRosliny();
-				// generalSeeder.unseed();
-				// generalSeeder.seed();
+				generalSeeder.unseed();
+				generalSeeder.seed();
 				
             }
         };

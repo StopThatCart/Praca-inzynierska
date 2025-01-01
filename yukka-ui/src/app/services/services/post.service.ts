@@ -15,8 +15,6 @@ import { addPost } from '../fn/post/add-post';
 import { AddPost$Params } from '../fn/post/add-post';
 import { findAllPosty } from '../fn/post/find-all-posty';
 import { FindAllPosty$Params } from '../fn/post/find-all-posty';
-import { findAllPostyByConnectedUzytkownik } from '../fn/post/find-all-posty-by-connected-uzytkownik';
-import { FindAllPostyByConnectedUzytkownik$Params } from '../fn/post/find-all-posty-by-connected-uzytkownik';
 import { findAllPostyByUzytkownik } from '../fn/post/find-all-posty-by-uzytkownik';
 import { FindAllPostyByUzytkownik$Params } from '../fn/post/find-all-posty-by-uzytkownik';
 import { findPostById } from '../fn/post/find-post-by-id';
@@ -155,31 +153,6 @@ export class PostService extends BaseService {
   removePost(params: RemovePost$Params, context?: HttpContext): Observable<string> {
     return this.removePost$Response(params, context).pipe(
       map((r: StrictHttpResponse<string>): string => r.body)
-    );
-  }
-
-  /** Path part for operation `findAllPostyByConnectedUzytkownik()` */
-  static readonly FindAllPostyByConnectedUzytkownikPath = '/posty/uzytkownik';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findAllPostyByConnectedUzytkownik()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findAllPostyByConnectedUzytkownik$Response(params?: FindAllPostyByConnectedUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponsePostResponse>> {
-    return findAllPostyByConnectedUzytkownik(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findAllPostyByConnectedUzytkownik$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findAllPostyByConnectedUzytkownik(params?: FindAllPostyByConnectedUzytkownik$Params, context?: HttpContext): Observable<PageResponsePostResponse> {
-    return this.findAllPostyByConnectedUzytkownik$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PageResponsePostResponse>): PageResponsePostResponse => r.body)
     );
   }
 

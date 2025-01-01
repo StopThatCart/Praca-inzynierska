@@ -13,10 +13,11 @@
     </div>
   </ng-template>
 </div>
-<ng-template #codeForm>
+<ng-template #codeForm =>
   <div class="container d-flex justify-content-center align-items-center">
     <div class="text-center" style="width: 400px;">
-      <h2 class="text-primary mt-2">Wpisz swój kod aktywacyjny</h2>
+      <h4 class="text-primary mt-2">Na twój adres email został wysłany kod aktywacyjny.</h4>
+      <p class="text-dark fs-6 mt-2">Nie dostałeś wiadomości? <a [routerLink]="'/aktywacja-konta-refresh'"  class="link">Wyślij jeszcze raz</a></p>
       <code-input [isCodeHidden]="false"
                   [codeLength]="6"
                   [code]="'number'"

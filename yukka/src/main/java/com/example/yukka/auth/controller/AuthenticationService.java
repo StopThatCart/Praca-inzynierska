@@ -106,12 +106,12 @@ public class AuthenticationService {
         log.info("Rejestracja użytkownika: " + request.getNazwa());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.checkIfUzytkownikExists(request.getNazwa(), request.getEmail());
         if (targetUzyt.isPresent()) {
-            if(targetUzyt.get().isAktywowany()) {
+            // if(targetUzyt.get().isAktywowany()) {
                 throw new IllegalArgumentException("Aktywny użytkownik o podanej nazwie lub adresie e-mail już istnieje.");
-            } else {
-                emailService.sendValidationEmail(targetUzyt.get(), EmailTemplateName.AKTYWACJA_KONTA);
-                return;
-            }
+            // } else {
+                // emailService.sendValidationEmail(targetUzyt.get(), EmailTemplateName.AKTYWACJA_KONTA);
+                // return;
+            // }
         }
 
         Uzytkownik uzyt = Uzytkownik.builder()
@@ -201,17 +201,17 @@ public class AuthenticationService {
     public void activateAccount(String token) throws MessagingException {
         log.info("Aktywacja konta tokenem: " + token);
         Token savedToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono tokenu aktywacyjnego"));
+                .orElseThrow(() -> new EntityNotFoundException("Kod aktywacyjny jest nieprawidłowy"));
                 
         if (savedToken.getDataWalidacji() != null) {
-            throw new IllegalArgumentException("Token aktywacyjny został już użyty.");
+            throw new IllegalArgumentException("Kod aktywacyjny został już użyty.");
         } else if (LocalDateTime.now().isAfter(savedToken.getDataWygasniecia())) {
             emailService.sendValidationEmail(savedToken.getUzytkownik(), EmailTemplateName.AKTYWACJA_KONTA);
-            throw new IllegalArgumentException("Token aktywacyjny wygasł. Wysłano nowy token na ten adres email.");
+            throw new IllegalArgumentException("Kod aktywacyjny wygasł. Wysłano nowy na ten adres email.");
         }  
 
         var uzyt = uzytkownikRepository.findByEmail(savedToken.getUzytkownik().getEmail())
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika związanego z tokenem aktywacyjnym"));
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika związanego z kodem aktywacyjnym"));
         if (uzyt.isAktywowany()) {
             throw new IllegalArgumentException("Konto zostało już aktywowane.");
         }
@@ -220,6 +220,38 @@ public class AuthenticationService {
         uzytkownikRepository.activate(uzyt.getEmail());
 
         tokenRepository.validate(token, LocalDateTime.now());
+    }
+
+
+    /**
+     * Ponownie wysyła e-mail aktywacyjny na podany adres e-mail.
+     *
+     * @param email Adres e-mail użytkownika, do którego ma zostać wysłany e-mail aktywacyjny.
+     * @throws MessagingException Jeśli wystąpi błąd podczas wysyłania e-maila.
+     * @throws EntityNotFoundException Jeśli użytkownik o podanym adresie e-mail nie zostanie znaleziony.
+     * @throws IllegalArgumentException Jeśli konto zostało już aktywowane, kod aktywacyjny został już użyty,
+     *                                  lub kod aktywacyjny został wygenerowany mniej niż 30 sekund temu.
+     */
+    @Transactional
+    public void resendActivationEmail(String email) throws MessagingException {
+        log.info("Ponowne wysłanie e-maila aktywacyjnego na adres: " + email);
+        Uzytkownik uzyt = uzytkownikRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o podanym adresie email"));
+        
+        if(uzyt.isAktywowany()) {
+            throw new IllegalArgumentException("Konto zostało już aktywowane.");
+        }
+
+        Optional<Token> savedToken = tokenRepository.findByUzytkownikEmail(email, EmailTemplateName.AKTYWACJA_KONTA.getName());
+        if (savedToken.isPresent()) {
+            if (savedToken.get().getDataWalidacji() != null) {
+                throw new IllegalArgumentException("Kod aktywacyjny został już użyty.");
+            } else if (!LocalDateTime.now().isAfter(savedToken.get().getDataUtworzenia().plusSeconds(30))) {
+                throw new IllegalArgumentException("Kod aktywacyjny został wygenerowany mniej niż 30 sekund temu. Odczekaj chwilę przed ponownym wysłaniem.");
+            }
+        }
+
+         emailService.sendValidationEmail(uzyt, EmailTemplateName.AKTYWACJA_KONTA);
     }
 
     /**
