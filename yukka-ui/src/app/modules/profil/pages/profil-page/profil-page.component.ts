@@ -10,6 +10,7 @@ import { TypPowiadomienia } from '../../models/TypPowiadomienia';
 import { BanButtonComponent } from "../../components/ban-button/ban-button.component";
 import { getStatystykiOfUzytkownik } from '../../../../services/fn/uzytkownik/get-statystyki-of-uzytkownik';
 import { UsunKontoButtonComponent } from "../../components/usun-konto-button/usun-konto-button.component";
+import { error } from 'console';
 
 @Component({
   selector: 'app-profil-page',
@@ -79,6 +80,7 @@ export class ProfilPageComponent implements OnInit {
 
   getStatystykiOfUzytkownik(nazwa: string): void {
     //if(!this.tokenService.isTokenValid()) return;
+    if(!this.uzyt.aktywowany) return;
 
     console.log('Pobieranie statystyk: ', nazwa);
     this.uzytService.getStatystykiOfUzytkownik({ nazwa: nazwa }).subscribe({
@@ -158,6 +160,8 @@ export class ProfilPageComponent implements OnInit {
   }
 
   isZaproszony(): boolean {
+    if(!this.uzyt.aktywowany) return false;
+
     if (this.isZaproszonyChecked) {
       return this.zaproszony || false;
     }
@@ -196,6 +200,7 @@ export class ProfilPageComponent implements OnInit {
   }
 
   zaprosDoRozmowaPrywatna() {
+    if(!this.uzyt.aktywowany) return;
     if (this.uzyt.nazwa) {
       this.rozService.inviteToRozmowaPrywatna({ 'uzytkownik-nazwa': this.uzyt.nazwa })
         .subscribe({
@@ -206,6 +211,9 @@ export class ProfilPageComponent implements OnInit {
             } else {
               console.log('Coś poszło nie tak.');
             }
+          },
+          error: (err) => {
+            console.log('Error: ', err.error);
           }
         });
     }

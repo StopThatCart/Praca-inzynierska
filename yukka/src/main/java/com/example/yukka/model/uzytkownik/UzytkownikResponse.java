@@ -20,6 +20,7 @@ import lombok.Setter;
  * <li><strong>email</strong>: Adres email użytkownika.</li>
  * <li><strong>avatar</strong>: Awatar użytkownika w postaci tablicy bajtów.</li>
  * <li><strong>dataUtworzenia</strong>: Data utworzenia użytkownika.</li>
+ * <li><strong>aktywowany</strong>: Informacja, czy użytkownik jest aktywowany.</li>
  * <li><strong>ban</strong>: Informacja, czy użytkownik jest zbanowany.</li>
  * <li><strong>banDo</strong>: Data do kiedy użytkownik jest zbanowany.</li>
  * <li><strong>imie</strong>: Imię użytkownika.</li>
@@ -43,6 +44,7 @@ private Long id;
     private byte[] avatar;
     private LocalDateTime dataUtworzenia;
     
+    private boolean aktywowany;
     private boolean ban;
     public LocalDate banDo;
 

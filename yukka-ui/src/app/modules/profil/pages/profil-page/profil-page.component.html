@@ -31,26 +31,33 @@
 
 
         <ng-template #wyslijWiadomosc>
-          <ng-container *ngIf="isZaproszony() else wyslijZaproszenie">
-            <a (click)="goToRozmowa()" class="btn btn-primary btn-custom" role="button">Wyślij wiadomość</a>
-          </ng-container>
-          <ng-template #wyslijZaproszenie>
-            <a *ngIf="!zaproszenieWyslane; else zaproszenieWyslaneText"
-            (click)="zaprosDoRozmowaPrywatna()" class="btn btn-primary btn-custom" role="button">Zaproś</a>
-            <ng-template #zaproszenieWyslaneText>
-              <a class="btn btn-secondary btn-custom" role="button">Zaproszenie Wysłane!</a>
+          <ng-container *ngIf="uzyt.aktywowany">
+            <ng-container *ngIf="isZaproszony() else wyslijZaproszenie">
+              <a (click)="goToRozmowa()" class="btn btn-primary btn-custom" role="button">Wyślij wiadomość</a>
+            </ng-container>
+            <ng-template #wyslijZaproszenie>
+              <a *ngIf="!zaproszenieWyslane; else zaproszenieWyslaneText"
+              (click)="zaprosDoRozmowaPrywatna()" class="btn btn-primary btn-custom" role="button">Zaproś</a>
+              <ng-template #zaproszenieWyslaneText>
+                <a class="btn btn-secondary btn-custom" role="button">Zaproszenie Wysłane!</a>
+              </ng-template>
             </ng-template>
-          </ng-template>
+          </ng-container>
+
         </ng-template>
     </div>
       <div class="col-auto col-md-7">
           <h1 id="username-heading">{{ uzyt.nazwa }}</h1>
             <ng-container *ngIf="isProfilUzytkownikAdmin(); else pracownik">
-            <h5 class="text-info fw-bold">Admin</h5>
+              <h5 class="text-info fw-bold">Admin</h5>
             </ng-container>
             <ng-template #pracownik>
-            <h5 *ngIf="isProfilUzytkownikPracownik()" class="text-info fw-bold">Pracownik</h5>
+              <h5 *ngIf="isProfilUzytkownikPracownik()" class="text-info fw-bold">Pracownik</h5>
             </ng-template>
+            <ng-container *ngIf="!uzyt.aktywowany">
+              <h5 class="text-danger fw-bold">Konto nieaktywne</h5>
+            </ng-container>
+            
 
 
 
@@ -68,24 +75,21 @@
       </div>
     </div>
     <div class="row gx-2 gy-2 justify-content-center align-items-center">
-      <div class="col d-flex justify-content-center align-items-center mx-2">
-          <a class="btn btn-outline-primary active btn-outline-custom" role="button" href="profil.html">Profil</a>
-      </div>
       <div *ngIf="uzyt.ustawienia?.ogrodPokaz" class="col d-flex justify-content-center align-items-center">
-          <a (click)="goToOgrod()" class="btn btn-outline-primary btn-outline-custom" role="button">Ogród</a>
+          <a (click)="goToOgrod()" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Ogród</a>
       </div>
       <div *ngIf="isCurrentUser() || isPracownikOrAdmin()" class="col d-flex justify-content-center align-items-center">
-          <a (click)="goToPosty()" class="btn btn-outline-primary btn-outline-custom" role="button">Posty</a>
+          <a (click)="goToPosty()" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Posty</a>
       </div>
       <div *ngIf="isCurrentUser() || isPracownikOrAdmin()" class="col d-flex justify-content-center align-items-center">
-        <a (click)="goToKomentarze()" class="btn btn-outline-primary btn-outline-custom" role="button">Komentarze</a>
+        <a (click)="goToKomentarze()" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Komentarze</a>
       </div>
       <div *ngIf="isCurrentUser()" class="col d-flex justify-content-center align-items-center">
-          <a (click)="goToRozmowy()" class="btn btn-outline-primary btn-outline-custom" role="button">Rozmowy prywatne</a>
+          <a (click)="goToRozmowy()" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Rozmowy prywatne</a>
       </div>
-  </div>
+    </div>
 
-    <div *ngIf="uzyt.ustawienia?.statystykiProfilu" class="row gy-4 row-cols-2 row-cols-md-5 statystyki">
+    <div *ngIf="uzyt.ustawienia?.statystykiProfilu && uzyt.aktywowany" class="row gy-4 row-cols-2 row-cols-md-5 statystyki">
       <div class="col">
           <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon lg">
               <i class="fas fa-seedling"></i>

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
@@ -77,6 +79,24 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     @Override
     @Query("MATCH (u:Uzytkownik) RETURN u")
     @Nonnull List<Uzytkownik> findAll();
+
+
+        @Query(value = """
+        MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(uzyt:Uzytkownik)
+        WHERE $szukaj IS NULL OR toLower(uzyt.nazwa) CONTAINS toLower($szukaj)
+        AND ($aktywowany = true OR uzyt.aktywowany = true)
+
+        RETURN uzyt, collect(nodes(path)), collect(relationships(path))
+        :#{orderBy(#pageable)} SKIP $skip LIMIT $limit
+            """,
+            countQuery = """
+        MATCH (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(uzyt:Uzytkownik)
+        WHERE $szukaj IS NULL OR toLower(uzyt.nazwa) CONTAINS toLower($szukaj)
+        AND ($aktywowany = true OR uzyt.aktywowany = true)
+
+        RETURN count(uzyt)
+        """)
+    Page<Uzytkownik> findAllUzytkownicy(@Param("szukaj") String szukaj, boolean aktywowany, Pageable pageable);
 
     @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa OR u.email = $email RETURN u")
     Optional<Uzytkownik> checkIfUzytkownikExists(@Param("nazwa") String nazwa, @Param("email") String email);

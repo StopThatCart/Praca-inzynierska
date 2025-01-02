@@ -10,10 +10,10 @@ import { PostService } from './services/post.service';
 import { KomentarzService } from './services/komentarz.service';
 import { UzytkownikRoslinaService } from './services/uzytkownik-roslina.service';
 import { UzytkownikService } from './services/uzytkownik.service';
+import { PracownikService } from './services/pracownik.service';
 import { PowiadomienieService } from './services/powiadomienie.service';
 import { DzialkaService } from './services/dzialka.service';
 import { AuthenticationService } from './services/authentication.service';
-import { PracownikService } from './services/pracownik.service';
 import { OgrodService } from './services/ogrod.service';
 
 /**
@@ -30,10 +30,10 @@ import { OgrodService } from './services/ogrod.service';
     KomentarzService,
     UzytkownikRoslinaService,
     UzytkownikService,
+    PracownikService,
     PowiadomienieService,
     DzialkaService,
     AuthenticationService,
-    PracownikService,
     OgrodService,
     ApiConfiguration
   ],

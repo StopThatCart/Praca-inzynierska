@@ -6,14 +6,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.yukka.auth.requests.BanRequest;
+import com.example.yukka.auth.requests.RegistrationRequest;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +41,11 @@ public class PracownikController {
     //private final UzytkownikService uzytkownikService;
     private final PracownikService pracownikService;
 
-    
+    @PostMapping(consumes="multipart/form-data", produces="application/json")
+    public ResponseEntity<?> addPracownik(@RequestPart("request") @Valid RegistrationRequest request) throws MessagingException {
+        pracownikService.addPracownik(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
     /**
      * Ustawia ban dla użytkownika.

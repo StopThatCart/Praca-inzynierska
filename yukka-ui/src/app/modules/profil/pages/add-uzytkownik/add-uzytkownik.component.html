@@ -1,0 +1,39 @@
+<div class="py-5" style="max-width: 800px; margin: 0 auto;" >
+    <div class="card bg-secondary" >
+      <div class="card-header">
+        <h4 class="card-title">Dodaj pracownika</h4>
+  
+        <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="onSubmit()" class="my-2">
+          <div>
+            <label class="form-label">Nazwa:</label>
+            <input [(ngModel)]="request.nazwa"
+            class="mb-2 form-control" name="nazwa" placeholder="nazwa" required />
+          </div>
+          <div >
+            <label class="form-label">Email:</label>
+            <input
+            [(ngModel)]="request.email"
+            class="mb-2 form-control" name="email" placeholder="email" required />
+          </div>
+          <div>
+            <label class="form-label">Hasło(tymczasowe):</label>
+            <input
+            [(ngModel)]="request.haslo"
+            class="mb-2 form-control" name="haslo" type="password" placeholder="haslo" required />
+          </div>
+          <div>
+            <label class="form-label">Powtórz hasło:</label>
+            <input
+            [(ngModel)]="request.powtorzHaslo"
+            class="mb-2 form-control" name="powtorzHaslo" type="password" placeholder="powtorzHaslo" required />
+          </div>
+  
+          <button class="btn btn-primary text-uppercase" type="submit">Dodaj</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  

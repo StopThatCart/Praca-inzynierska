@@ -2,6 +2,7 @@
 /* eslint-disable */
 import { Ustawienia } from '../models/ustawienia';
 export interface UzytkownikResponse {
+  aktywowany?: boolean;
   avatar?: string;
   ban?: boolean;
   banDo?: string;

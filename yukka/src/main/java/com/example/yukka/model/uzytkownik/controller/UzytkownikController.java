@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.yukka.auth.requests.EmailRequest;
 import com.example.yukka.auth.requests.UsunKontoRequest;
 import com.example.yukka.common.FileResponse;
+import com.example.yukka.common.PageResponse;
+import com.example.yukka.model.social.models.post.PostResponse;
 import com.example.yukka.model.social.models.powiadomienie.controller.PowiadomienieService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
@@ -69,19 +72,24 @@ public class UzytkownikController {
     @Autowired
     PowiadomienieService powiadomienieService;
 
-    
-    
+
     /**
-     * Metoda zwracająca listę wszystkich użytkowników.
-     * 
-     * <ul>
-     *   <li><strong>produces:</strong> application/json</li>
-     *   <li><strong>returns:</strong> Lista obiektów typu Uzytkownik</li>
-     * </ul>
+     * Metoda obsługująca żądanie GET na endpoint "/szukaj", zwracająca stronę z użytkownikami w formacie JSON.
+     *
+     * @param page numer strony do pobrania, domyślnie 0
+     * @param size liczba elementów na stronie, domyślnie 10
+     * @param szukaj opcjonalny parametr wyszukiwania
+     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
+     * @return ResponseEntity zawierające stronę z użytkownikami w formacie JSON
      */
-    @GetMapping(produces="application/json")
-    public List<Uzytkownik> findAllUzytkownicy() {
-        return uzytkownikService.findAll();
+    @GetMapping(value = "/szukaj", produces="application/json")
+    public ResponseEntity<PageResponse<UzytkownikResponse>> findAllUzytkownicy(
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "10", required = false) int size,
+           // @RequestParam(name="sortBy", defaultValue = "10", required = false) String sortBy,
+            @RequestParam(name = "szukaj", required = false) String szukaj,
+            Authentication connectedUser) {
+        return ResponseEntity.ok(uzytkownikService.findAllUzytkownicy(page, size, szukaj, connectedUser));
     }
     
     

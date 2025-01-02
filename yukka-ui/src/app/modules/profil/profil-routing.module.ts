@@ -17,8 +17,15 @@ import { ProfilKomentarzePageComponent } from './pages/profil-komentarze-page/pr
 import { EdycjaEmailPageComponent } from './pages/edycja-email-page/edycja-email-page.component';
 import { profilGuard } from '../../services/guard/profil-guard/profil.guard';
 import { EdycjaUsunKontoPageComponent } from './pages/edycja-usun-konto-page/edycja-usun-konto-page.component';
+import { AddUzytkownikComponent } from './pages/add-uzytkownik/add-uzytkownik.component';
+import { adminAuthGuard } from '../../services/guard/adminAuth/admin-auth.guard';
 
 const routes: Routes = [
+  {
+    path: '',
+    redirectTo: '/404',
+    pathMatch: 'full'
+  },
   {
     path: '',
     data: { breadcrumb: 'Profil' },
@@ -110,7 +117,7 @@ const routes: Routes = [
           }
 
         ]
-      }
+      },
 
       /*,
       {

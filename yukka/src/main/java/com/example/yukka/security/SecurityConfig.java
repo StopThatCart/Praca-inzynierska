@@ -1,7 +1,5 @@
 package com.example.yukka.security;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,6 +9,7 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -128,6 +127,7 @@ public class SecurityConfig {
                     ).permitAll()
 
                     .requestMatchers("/pracownicy/**").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
+                    .requestMatchers(HttpMethod.POST, "/pracownicy").hasAuthority(ROLE.Admin.toString())
                     .requestMatchers(HttpMethod.DELETE, "/rosliny/{roslina-id}").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers(HttpMethod.POST, "/rosliny").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers(HttpMethod.PUT, "/rosliny/{nazwa-lacinska}/**").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())

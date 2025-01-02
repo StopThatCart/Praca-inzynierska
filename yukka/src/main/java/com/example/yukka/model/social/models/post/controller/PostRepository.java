@@ -96,10 +96,11 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @Query(value = """
         MATCH path = (post:Post)<-[:MA_POST]-(:Uzytkownik)
+        WHERE $szukaj IS NULL OR toLower(post.tytul) CONTAINS toLower($szukaj) OR toLower(post.opis) CONTAINS toLower($szukaj)
+
         OPTIONAL MATCH path2 = (post)-[:OCENIL]-(:Uzytkownik)
         OPTIONAL MATCH path3 = (post)<-[:JEST_W_POSCIE]-(kom:Komentarz)
 
-        WHERE $szukaj IS NULL OR post.tytul CONTAINS $szukaj OR post.opis CONTAINS $szukaj
         RETURN post, collect(nodes(path)), collect(relationships(path)),
                 collect(nodes(path2)), collect(relationships(path2)),
                 collect(nodes(path3)), collect(relationships(path3))
@@ -107,8 +108,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         """,
        countQuery = """
         MATCH (post:Post)<-[:MA_POST]-(:Uzytkownik)
-
-        WHERE $szukaj IS NULL OR post.tytul CONTAINS $szukaj OR post.opis CONTAINS $szukaj
+        WHERE $szukaj IS NULL OR toLower(post.tytul) CONTAINS toLower($szukaj) OR toLower(post.opis) CONTAINS toLower($szukaj)
         RETURN count(post)
         """)
     Page<Post> findAllPosts(@Param("szukaj") String szukaj, Pageable pageable);

@@ -66,7 +66,6 @@ public class AuthController {
      * @throws MessagingException jeśli wystąpi błąd podczas wysyłania e-maila potwierdzającego
      */
     @PostMapping(value = "/register", produces="application/json")
-    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> register(@RequestBody @Valid RegistrationRequest request) throws MessagingException {
         //return ResponseEntity.ok().build();
         service.register(request);

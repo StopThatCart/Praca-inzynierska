@@ -319,7 +319,6 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .businessErrorDescription("Wystąpił błąd wewnętrzny serwera. Spróbuj ponownie później.")
-                                .error(exp.getMessage())
                                 .build()
                 );
     }

@@ -10,6 +10,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,13 +29,17 @@ import com.example.yukka.auth.email.EmailTemplateName;
 import com.example.yukka.auth.requests.EmailRequest;
 import com.example.yukka.auth.requests.UsunKontoRequest;
 import com.example.yukka.common.FileResponse;
+import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.DefaultImage;
 import com.example.yukka.file.FileStoreService;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
 import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.social.mappers.CommonMapperService;
+import com.example.yukka.model.social.models.post.Post;
+import com.example.yukka.model.social.models.post.PostResponse;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
@@ -98,14 +106,29 @@ public class UzytkownikService implements  UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
     }
 
+
     /**
-     * Metoda zwracająca listę wszystkich użytkowników.
-     * 
-     * @return lista wszystkich użytkowników
+     * Pobiera stronę użytkowników na podstawie podanych parametrów.
+     *
+     * @param page numer strony do pobrania.
+     * @param size liczba elementów na stronie.
+     * @param szukaj fraza do wyszukiwania użytkowników.
+     * @param connectedUser aktualnie zalogowany użytkownik.
+     * @return PageResponse<UzytkownikResponse> zawierający stronę użytkowników.
      */
     @Transactional(readOnly = true)
-    public List<Uzytkownik> findAll(){
-        return uzytkownikRepository.findAll();
+    public PageResponse<UzytkownikResponse> findAllUzytkownicy(int page, int size, String szukaj, Authentication connectedUser) {
+        log.info("Pobieranie wszystkich użytkowników z nazwą: " + szukaj);
+        Boolean aktywowany = false;
+
+        if(connectedUser != null) {
+            Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
+            aktywowany = uzyt.isAdmin() || uzyt.isPracownik();
+        }
+        
+        Pageable pageable = PageRequest.of(page, size, Sort.by("uzyt.dataUtworzenia").descending());
+        Page<Uzytkownik> uzytkownicy = uzytkownikRepository.findAllUzytkownicy(szukaj, aktywowany, pageable);
+        return commonMapperService.uzytkownikPagetoPageUzytkownikResponse(uzytkownicy);
     }
 
     /**
@@ -117,6 +140,7 @@ public class UzytkownikService implements  UserDetailsService {
      */
     @Transactional(readOnly = true)
     public UzytkownikResponse findByEmail(String userEmail){
+        log.info("Pobieranie użytkownika o emailu: " + userEmail);
         Uzytkownik uzyt = uzytkownikRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o emailu: " + userEmail));
 
@@ -132,6 +156,7 @@ public class UzytkownikService implements  UserDetailsService {
      */
     @Transactional(readOnly = true)
     public UzytkownikResponse findByNazwa(String nazwa){
+        log.info("Pobieranie użytkownika o nazwie: " + nazwa);
         Uzytkownik uzyt = uzytkownikRepository.findByNazwa(nazwa)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
 
@@ -163,9 +188,8 @@ public class UzytkownikService implements  UserDetailsService {
      */
     @Transactional(readOnly = true)
     public UzytkownikResponse getBlokowaniAndBlokujacy(Authentication currentUser) {
+        log.info("Pobieranie blokowanych i blokujących użytkowników");
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
-
-        System.out.println("Pobieranie blokowanych i blokujących użytkowników");
         Uzytkownik uzyt2 = uzytkownikRepository.getBlokowaniAndBlokujacy(uzyt.getNazwa()).orElse(null);
 
         return commonMapperService.toUzytkownikResponse(uzyt2);
@@ -403,14 +427,17 @@ public class UzytkownikService implements  UserDetailsService {
     public void addPracownik(Uzytkownik uzytkownik){
         Ustawienia ust = Ustawienia.builder().build();
         
-        String labels = uzytkownik.getLabels().stream()
+        List<String> labelsSet = uzytkownik.getLabels();
+        if (!labelsSet.contains("Pracownik")) {
+            labelsSet.add("Pracownik");
+        }
+
+        String labels = labelsSet.stream()
                      .map(role -> "`" + role + "`")
-                     .collect(Collectors.joining(":")
-                     );
+                     .collect(Collectors.joining(":"));
 
         uzytkownikRepository.addUzytkownik(uzytkownik, labels, ust);
     }
-
 
     /**
      * Usuwa konto użytkownika, który wykonuje operację.

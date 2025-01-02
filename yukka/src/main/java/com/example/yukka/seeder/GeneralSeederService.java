@@ -2,6 +2,7 @@ package com.example.yukka.seeder;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -119,7 +120,7 @@ public class GeneralSeederService {
 
 		uzytkownicy = seedUzytkownicy();
 		
-		// postSeeder.addPostyWithKomentarze(uzytkownicy);
+		postSeeder.addPostyWithKomentarze(uzytkownicy);
 
 		// postSeeder.seedRozmowy(usKatarzyna, usPiotr, uzytkownicy);
 
@@ -134,15 +135,15 @@ public class GeneralSeederService {
 
 		Uzytkownik usJan = Uzytkownik.builder()
 		.uzytId(uzytkownikService.createUzytkownikId())
-        .nazwa("Jan Kowalski").email("jan@email.pl")
-        .haslo(passwordEncoder.encode("jan12345678"))
-		.labels(List.of("Admin", "Pracownik"))
+		.nazwa("Jan Kowalski").email("jan@email.pl")
+		.haslo(passwordEncoder.encode("jan12345678"))
+		.labels(new ArrayList<>(Arrays.asList("Admin")))
 		.aktywowany(true)
-        .build();
+		.build();
 
 		Uzytkownik usPrac = Uzytkownik.builder()
 		.uzytId(uzytkownikService.createUzytkownikId())
-		.labels(List.of("Pracownik")).nazwa("Anna Nowak")
+		.nazwa("Anna Nowak")
 		.email("anna@email.pl")
 		.haslo(passwordEncoder.encode("anna12345678"))
 		.aktywowany(true)

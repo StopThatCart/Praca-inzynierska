@@ -1,23 +1,27 @@
 package com.example.yukka.model.uzytkownik.controller;
 
 import static java.io.File.separator;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.yukka.auth.email.EmailService;
+import com.example.yukka.auth.email.EmailTemplateName;
 import com.example.yukka.auth.requests.BanRequest;
+import com.example.yukka.auth.requests.RegistrationRequest;
 import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.social.models.powiadomienie.controller.PowiadomienieService;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,14 +48,39 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional
 public class PracownikService {
+    private final EmailService emailService;
+    private final UzytkownikService uzytkownikService;
     private final UzytkownikRepository uzytkownikRepository;
     private final PowiadomienieService powiadomienieService;
     private final FileUtils fileUtils;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${application.file.uploads.photos-output-path}")
     String fileUploadPath;
 
-    
+    @Value("${uzytkownik.obraz.default.name}")
+    private  String defaultAvatarObrazName;
+
+    public Boolean addPracownik(RegistrationRequest request) throws MessagingException {
+        log.info("Rejestracja pracownika: " + request.getNazwa());
+
+        Optional<Uzytkownik> targetUzyt = uzytkownikRepository.checkIfUzytkownikExists(request.getNazwa(), request.getEmail());
+        if (targetUzyt.isPresent()) {
+            throw new IllegalArgumentException("Aktywny użytkownik o podanej nazwie lub adresie e-mail już istnieje.");
+        }
+
+        Uzytkownik uzyt = Uzytkownik.builder()
+                .uzytId(uzytkownikService.createUzytkownikId())
+                .nazwa(request.getNazwa())
+                .email(request.getEmail())
+                .haslo(passwordEncoder.encode(request.getHaslo()))
+                .avatar(defaultAvatarObrazName)
+                .build();
+
+        uzytkownikService.addPracownik(uzyt);
+        emailService.sendValidationEmail(uzyt, EmailTemplateName.AKTYWACJA_KONTA);
+        return true;
+    }
 
     /**
      * Odbanowuje użytkownika o podanej nazwie.
@@ -107,6 +136,10 @@ public class PracownikService {
 
         if(targetUzyt.isBan() == request.getBan()) {
             throw new IllegalArgumentException("Użytkownik jest już zbanowany/odbanowany");
+        }
+        
+        if(!targetUzyt.isAktywowany()) {
+            throw new IllegalArgumentException("Konto użytkownika nie jest aktywne");
         }
         
         if(targetUzyt.isPracownik() && !uzyt.isAdmin()) { 

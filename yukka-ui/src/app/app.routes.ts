@@ -55,7 +55,7 @@ export const routes: Routes = [
     loadChildren: () => import('./modules/roslina/roslina.module').then(m => m.RoslinaModule)
   },
   {
-    path: 'posty',
+    path: 'social',
     loadChildren: () => import('./modules/post/post.module').then(m => m.PostModule)
   },
   {

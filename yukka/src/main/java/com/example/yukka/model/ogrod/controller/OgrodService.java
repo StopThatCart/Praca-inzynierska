@@ -51,6 +51,10 @@ public class OgrodService {
         Uzytkownik targetUzyt = uzytRepository.findByNazwa(uzytkownikNazwa)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie " + uzytkownikNazwa));
 
+        if (!targetUzyt.isAktywowany()) {
+            throw new IllegalArgumentException("Użytkownik " + uzytkownikNazwa + " nie jest aktywowany");
+        }
+
         if(!targetUzyt.getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
             throw new ForbiddenException("Nie masz uprawnień do przeglądania tego ogrodu");
         }

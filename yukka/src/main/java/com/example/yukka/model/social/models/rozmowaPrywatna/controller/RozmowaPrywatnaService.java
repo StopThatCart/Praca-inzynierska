@@ -178,6 +178,10 @@ public class RozmowaPrywatnaService {
             throw new IllegalArgumentException("Nie można rozmawiać sam ze sobą");
         }
 
+        if (!odbiorca.isAktywowany()) {
+            throw new IllegalArgumentException("Konto użytkownika nie jest aktywne");
+        }
+
         if (rozmowaPrywatnaRepository.findRozmowaPrywatnaByUzytId(nadawca.getUzytId(), odbiorca.getUzytId()).isPresent()) {
             throw new EntityAlreadyExistsException("Rozmowa prywatna już istnieje");
         }

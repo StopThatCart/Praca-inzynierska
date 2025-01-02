@@ -48,25 +48,22 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 public class RegistrationRequest {
-    //@JsonProperty("nazwa")
     @Pattern(regexp = "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+( [a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)*$", 
     message = "Nazwa może zawierać tylko litery, cyfry, pojedyńcze spacje i polskie znaki")
     @Size(min = 3, max = 100, message = "Nazwa powinna mieć od 3 do 100 znaków")
     @NotEmpty(message = "nazwa jest wymagana")
     private String nazwa;
 
-   // @JsonProperty("email")
     @Email(message = "Niepoprawny format adresu email")
     @NotEmpty(message = "Email jest wymagany")
     private String email;
 
-   // @JsonProperty("haslo")
     @NotEmpty(message = "haslo jest wymagane")
-    @Size(min = 8, message = "Hasło powinno mieć co najmniej 8 znaków")
+    @Size(min = 8, max = 100, message = "Hasło powinno mieć od 8 do 100 znaków")
     private String haslo;
 
     @NotEmpty(message = "Hasła nie zgadzają się")
-    @Size(min = 8, message = "Nowe hasło powinno mieć co najmniej 8 znaków")
+    @Size(min = 8, max = 100, message = "Nowe hasło powinno mieć od 8 do 100 znaków")
     private String powtorzHaslo;
 
     

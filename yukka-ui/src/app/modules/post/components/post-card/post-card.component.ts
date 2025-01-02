@@ -68,11 +68,7 @@ export class PostCardComponent implements OnInit {
     return this._postAvatar;
   }
 
-  goToPost(postId: string | undefined) {
-    if (postId) {
-      this.router.navigate(['/posty', postId]);
-    }
-  }
+
 
   addOcenaToPost(postId: string | undefined, ocena: boolean) {
     if (postId && this.tokenService) {
@@ -104,7 +100,7 @@ export class PostCardComponent implements OnInit {
         this.postService.removePost({ 'post-id': this.post.postId }).subscribe({
           next: (res) => {
             //console.log('Post usunięty');
-            this.router.navigate(['/posty']);
+            this.router.navigate(['/social/posty']);
           },
           error: (error) => {
             this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);

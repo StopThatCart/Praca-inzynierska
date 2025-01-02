@@ -222,6 +222,7 @@ public class PowiadomienieService {
         if (checkIfUzytkownikSentZgloszenieBeforeCooldown(connectedUser)) {
             throw new IllegalArgumentException("Możesz wysłać zgłoszenie raz na 15 minut");
         }
+        
 
         sendZgloszenie(request, uzyt);
     }
@@ -237,9 +238,14 @@ public class PowiadomienieService {
         Uzytkownik zglaszany = uzytkownikRepository.findByNameOrEmail(request.getZglaszany())
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika " + request.getZglaszany()));
 
+        if(!zglaszany.isAktywowany()) {
+            throw new IllegalArgumentException("Konto użytkownika nie jest aktywne");
+        }
+
         if (zglaszany.getUzytId().equals(uzyt.getUzytId())) {
             throw new IllegalArgumentException("Nie można zgłosić samego siebie");
         }
+        
 
         TypPowiadomienia typPowiadomienia = TypPowiadomienia.valueOf(request.getTypPowiadomienia());
         if (typPowiadomienia.equals(TypPowiadomienia.ZGLOSZENIE)) {

@@ -66,14 +66,19 @@ export class AddPostCardComponent {
       body: { request: this.request, file: leFile }
     }).subscribe( {
         next: (res) => { this.goToPost(res.postId); },
-        error: (error) => {  this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg); }
+        error: (error) => {  
+          if (error.status === 403) {
+            this.router.navigate(['/login']);
+          }
+          this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg); 
+        }
     });
 
   }
 
   private goToPost(postId: string | undefined) {
     if (postId) {
-      this.router.navigate(['/posty', postId]);
+      this.router.navigate(['/social/posty', postId]);
     } else {
       console.log('Error: Brak postId w response');
     }

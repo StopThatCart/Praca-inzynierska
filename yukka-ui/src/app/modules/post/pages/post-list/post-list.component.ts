@@ -10,18 +10,20 @@ import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { AddPostCardComponent } from "../../components/add-post-card/add-post-card.component";
 import { LoadingComponent } from "../../../../components/loading/loading.component";
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { SocialNavComponent } from "../../components/social-nav/social-nav.component";
+import { SearchComponent } from "../../components/search/search.component";
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, PostCardComponent, InfiniteScrollModule, AddPostCardComponent, LoadingComponent, NgbTooltipModule],
+  imports: [CommonModule, FormsModule, PostCardComponent, InfiniteScrollModule, AddPostCardComponent, LoadingComponent, NgbTooltipModule, SocialNavComponent, SearchComponent],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
 export class PostListComponent {
   postResponse: PageResponsePostResponse = {};
   isLoading = false;
-  page = 1;
+  page = 0;
   size = 5;
   searchText = '';
   pages: number[] = [];
@@ -47,11 +49,11 @@ export class PostListComponent {
   findAllPosty() {
     console.log('findAllPosty');
 
-    this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 1;
+    this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 0;
 
     this.toggleLoading();
     this.postService.findAllPosty({
-      page: this.page - 1,
+      page: this.page,
       size: this.size,
       szukaj: this.searchText.trim()
     }).subscribe({
@@ -63,7 +65,6 @@ export class PostListComponent {
           this.message = 'Wystąpił błąd podczas pobierania postów.';
         },
         complete:()=> this.toggleLoading()
-
       });
   }
 
@@ -95,10 +96,10 @@ export class PostListComponent {
     this.appendPost();
    }
 
-   onSearch = () => {
-    this.page = 1;
+   onSearch = (event: any) => {
+    console.log('onSearch');
+    this.page = 0;
+    this.searchText = event;
     this.findAllPosty();
   }
-
-
 }

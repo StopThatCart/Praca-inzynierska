@@ -1,0 +1,41 @@
+<div class="rounded card my-3 bg-secondary">
+    <div class="d-flex card-header">
+        <img
+        [routerLink]="['/profil/', uzyt.nazwa]"
+        [src]="getUzytAvatar()" alt="..." class="rounded-circle flex-shrink-0 me-3 fit-cover"
+        width="75" height="75">
+        <div>
+          <a [routerLink]="['/profil/', uzyt.nazwa]" class="fw-medium mb-0 text-white link-underline link-underline-opacity-0 fs-4">{{uzyt.nazwa}}</a>
+          <span *ngIf="uzyt.labels?.includes('Pracownik')" class="ms-2 text-info">
+            <ng-container *ngIf="uzyt.labels?.includes('Admin'); else pracownik">
+                <div class="text-warning">
+                    <i class="fas fa-shield-alt"></i>
+                    <span class="fw-semibold uppercase">&nbsp; ADMIN</span>
+                </div>
+            </ng-container>
+            <ng-template #pracownik>
+                <div>
+                    <i class="fas fa-shield"></i>
+                    <span class="fw-semibold uppercase">&nbsp; PRACOWNIK</span>
+                </div>
+            </ng-template>
+          </span>
+          <div *ngIf="!uzyt.aktywowany" class="text-danger">
+            <span  class="fw-medium">Konto nieaktywne</span>
+          </div>
+          <div *ngIf="uzyt.ban" class="text-danger">
+            <i class="fas fa-hammer me-1"></i>
+            <span  class="fw-medium">Zbanowany do: 
+                <span class=" fw-semibold">{{uzyt.banDo}}</span>
+            </span>
+          </div>
+        </div>
+    </div>
+    <div class="card-body d-block">
+        <p *ngIf="uzyt.opis; else brakOpisu"
+        class="card-text">{{ uzyt.opis }}</p>
+        <ng-template #brakOpisu>
+            <p class="card-text">Brak opisu.</p>
+        </ng-template>
+    </div>
+</div>

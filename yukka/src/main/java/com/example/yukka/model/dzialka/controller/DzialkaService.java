@@ -134,7 +134,11 @@ public class DzialkaService {
         }
 
         Uzytkownik wlasciciel = uzytkownikRepository.findByNazwa(nazwa).orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika " + nazwa));
-        if (!wlasciciel.getUstawienia().isOgrodPokaz() && (uzyt == null || !uzyt.getEmail().equals(wlasciciel.getEmail()))) {
+        if (!wlasciciel.isAktywowany()) {
+            throw new IllegalArgumentException("Użytkownik " + nazwa + " nie jest aktywowany");
+        }
+        
+        if (!wlasciciel.getUstawienia().isOgrodPokaz() && (uzyt == null || !uzyt.hasAuthenticationRights(wlasciciel, uzyt))) {
             throw new ForbiddenException("Ogród użytkownika " + nazwa + " jest ukryty");
         }
 

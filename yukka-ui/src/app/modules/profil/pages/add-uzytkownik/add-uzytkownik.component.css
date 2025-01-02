@@ -1,0 +1,7 @@
+form input,
+form select,
+form textarea {
+  color: black;
+  --bs-bg-opacity: 1;
+  background-color: rgba(248, 249, 250, 1) !important;
+}

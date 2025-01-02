@@ -24,6 +24,7 @@ import { getStatystykiOfUzytkownik } from '../fn/uzytkownik/get-statystyki-of-uz
 import { GetStatystykiOfUzytkownik$Params } from '../fn/uzytkownik/get-statystyki-of-uzytkownik';
 import { getUstawienia } from '../fn/uzytkownik/get-ustawienia';
 import { GetUstawienia$Params } from '../fn/uzytkownik/get-ustawienia';
+import { PageResponseUzytkownikResponse } from '../models/page-response-uzytkownik-response';
 import { removeSelf } from '../fn/uzytkownik/remove-self';
 import { RemoveSelf$Params } from '../fn/uzytkownik/remove-self';
 import { sendChangeEmail } from '../fn/uzytkownik/send-change-email';
@@ -37,7 +38,6 @@ import { updateProfil } from '../fn/uzytkownik/update-profil';
 import { UpdateProfil$Params } from '../fn/uzytkownik/update-profil';
 import { updateUstawienia } from '../fn/uzytkownik/update-ustawienia';
 import { UpdateUstawienia$Params } from '../fn/uzytkownik/update-ustawienia';
-import { Uzytkownik } from '../models/uzytkownik';
 import { UzytkownikResponse } from '../models/uzytkownik-response';
 
 @Injectable({ providedIn: 'root' })
@@ -226,7 +226,7 @@ export class UzytkownikService extends BaseService {
   }
 
   /** Path part for operation `findAllUzytkownicy()` */
-  static readonly FindAllUzytkownicyPath = '/uzytkownicy';
+  static readonly FindAllUzytkownicyPath = '/uzytkownicy/szukaj';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -234,7 +234,7 @@ export class UzytkownikService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findAllUzytkownicy$Response(params?: FindAllUzytkownicy$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Uzytkownik>>> {
+  findAllUzytkownicy$Response(params?: FindAllUzytkownicy$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseUzytkownikResponse>> {
     return findAllUzytkownicy(this.http, this.rootUrl, params, context);
   }
 
@@ -244,34 +244,9 @@ export class UzytkownikService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findAllUzytkownicy(params?: FindAllUzytkownicy$Params, context?: HttpContext): Observable<Array<Uzytkownik>> {
+  findAllUzytkownicy(params?: FindAllUzytkownicy$Params, context?: HttpContext): Observable<PageResponseUzytkownikResponse> {
     return this.findAllUzytkownicy$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Uzytkownik>>): Array<Uzytkownik> => r.body)
-    );
-  }
-
-  /** Path part for operation `removeSelf()` */
-  static readonly RemoveSelfPath = '/uzytkownicy';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `removeSelf()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  removeSelf$Response(params: RemoveSelf$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return removeSelf(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `removeSelf$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  removeSelf(params: RemoveSelf$Params, context?: HttpContext): Observable<void> {
-    return this.removeSelf$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
+      map((r: StrictHttpResponse<PageResponseUzytkownikResponse>): PageResponseUzytkownikResponse => r.body)
     );
   }
 
@@ -372,6 +347,31 @@ export class UzytkownikService extends BaseService {
   getBlokowaniAndBlokujacy(params?: GetBlokowaniAndBlokujacy$Params, context?: HttpContext): Observable<UzytkownikResponse> {
     return this.getBlokowaniAndBlokujacy$Response(params, context).pipe(
       map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `removeSelf()` */
+  static readonly RemoveSelfPath = '/uzytkownicy';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `removeSelf()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  removeSelf$Response(params: RemoveSelf$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return removeSelf(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `removeSelf$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  removeSelf(params: RemoveSelf$Params, context?: HttpContext): Observable<void> {
+    return this.removeSelf$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

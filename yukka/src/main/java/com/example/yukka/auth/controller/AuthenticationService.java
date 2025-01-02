@@ -106,12 +106,7 @@ public class AuthenticationService {
         log.info("Rejestracja użytkownika: " + request.getNazwa());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.checkIfUzytkownikExists(request.getNazwa(), request.getEmail());
         if (targetUzyt.isPresent()) {
-            // if(targetUzyt.get().isAktywowany()) {
-                throw new IllegalArgumentException("Aktywny użytkownik o podanej nazwie lub adresie e-mail już istnieje.");
-            // } else {
-                // emailService.sendValidationEmail(targetUzyt.get(), EmailTemplateName.AKTYWACJA_KONTA);
-                // return;
-            // }
+            throw new IllegalArgumentException("Aktywny użytkownik o podanej nazwie lub adresie e-mail już istnieje.");
         }
 
         Uzytkownik uzyt = Uzytkownik.builder()
@@ -201,7 +196,7 @@ public class AuthenticationService {
     public void activateAccount(String token) throws MessagingException {
         log.info("Aktywacja konta tokenem: " + token);
         Token savedToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new EntityNotFoundException("Kod aktywacyjny jest nieprawidłowy"));
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono kodu aktywacyjnego"));
                 
         if (savedToken.getDataWalidacji() != null) {
             throw new IllegalArgumentException("Kod aktywacyjny został już użyty.");

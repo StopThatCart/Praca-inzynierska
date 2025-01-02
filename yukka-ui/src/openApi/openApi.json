@@ -667,6 +667,43 @@
         }
       }
     },
+    "/pracownicy": {
+      "post": {
+        "tags": [
+          "Pracownik"
+        ],
+        "operationId": "addPracownik",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "request"
+                ],
+                "type": "object",
+                "properties": {
+                  "request": {
+                    "$ref": "#/components/schemas/RegistrationRequest"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/powiadomienia/zgloszenie": {
       "post": {
         "tags": [
@@ -1149,8 +1186,8 @@
           "required": true
         },
         "responses": {
-          "202": {
-            "description": "Accepted",
+          "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -1915,46 +1952,52 @@
         }
       }
     },
-    "/uzytkownicy": {
+    "/uzytkownicy/szukaj": {
       "get": {
         "tags": [
           "Uzytkownik"
         ],
         "operationId": "findAllUzytkownicy",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "szukaj",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Uzytkownik"
-                  }
+                  "$ref": "#/components/schemas/PageResponseUzytkownikResponse"
                 }
               }
             }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Uzytkownik"
-        ],
-        "operationId": "removeSelf",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UsunKontoRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -2737,6 +2780,29 @@
         }
       }
     },
+    "/uzytkownicy": {
+      "delete": {
+        "tags": [
+          "Uzytkownik"
+        ],
+        "operationId": "removeSelf",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsunKontoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/rosliny/{roslina-id}": {
       "delete": {
         "tags": [
@@ -2913,11 +2979,11 @@
           "wposcie": {
             "$ref": "#/components/schemas/Post"
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -2926,11 +2992,11 @@
       "Oceniany": {
         "type": "object",
         "properties": {
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3022,11 +3088,11 @@
               "$ref": "#/components/schemas/Komentarz"
             }
           },
-          "ocenyNieLubi": {
+          "ocenyLubi": {
             "type": "integer",
             "format": "int32"
           },
-          "ocenyLubi": {
+          "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
           }
@@ -3193,6 +3259,12 @@
           "name": {
             "type": "string"
           },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
           "normalUzytkownik": {
             "type": "boolean"
           },
@@ -3201,12 +3273,6 @@
           },
           "admin": {
             "type": "boolean"
-          },
-          "username": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
           },
           "authorities": {
             "type": "array",
@@ -3217,13 +3283,13 @@
           "enabled": {
             "type": "boolean"
           },
-          "accountNonLocked": {
-            "type": "boolean"
-          },
           "accountNonExpired": {
             "type": "boolean"
           },
           "credentialsNonExpired": {
+            "type": "boolean"
+          },
+          "accountNonLocked": {
             "type": "boolean"
           }
         }
@@ -3691,7 +3757,7 @@
         "type": "object",
         "properties": {
           "haslo": {
-            "maxLength": 2147483647,
+            "maxLength": 100,
             "minLength": 8,
             "type": "string"
           },
@@ -3799,6 +3865,9 @@
             "type": "string",
             "format": "date-time"
           },
+          "aktywowany": {
+            "type": "boolean"
+          },
           "ban": {
             "type": "boolean"
           },
@@ -3834,6 +3903,36 @@
             "items": {
               "$ref": "#/components/schemas/UzytkownikResponse"
             }
+          }
+        }
+      },
+      "RegistrationRequest": {
+        "required": [
+          "email",
+          "haslo",
+          "nazwa",
+          "powtorzHaslo"
+        ],
+        "type": "object",
+        "properties": {
+          "nazwa": {
+            "maxLength": 100,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+( [a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)*$",
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "haslo": {
+            "maxLength": 100,
+            "minLength": 8,
+            "type": "string"
+          },
+          "powtorzHaslo": {
+            "maxLength": 100,
+            "minLength": 8,
+            "type": "string"
           }
         }
       },
@@ -4098,36 +4197,6 @@
           }
         }
       },
-      "RegistrationRequest": {
-        "required": [
-          "email",
-          "haslo",
-          "nazwa",
-          "powtorzHaslo"
-        ],
-        "type": "object",
-        "properties": {
-          "nazwa": {
-            "maxLength": 100,
-            "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+( [a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)*$",
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "haslo": {
-            "maxLength": 2147483647,
-            "minLength": 8,
-            "type": "string"
-          },
-          "powtorzHaslo": {
-            "maxLength": 2147483647,
-            "minLength": 8,
-            "type": "string"
-          }
-        }
-      },
       "AuthenticationResponse": {
         "type": "object",
         "properties": {
@@ -4150,7 +4219,7 @@
             "type": "string"
           },
           "haslo": {
-            "maxLength": 2147483647,
+            "maxLength": 100,
             "minLength": 8,
             "type": "string"
           }
@@ -4330,11 +4399,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           }
@@ -4346,6 +4415,39 @@
           "content": {
             "type": "string",
             "format": "byte"
+          }
+        }
+      },
+      "PageResponseUzytkownikResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UzytkownikResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           }
         }
       },
@@ -4590,7 +4692,7 @@
         "type": "object",
         "properties": {
           "haslo": {
-            "maxLength": 2147483647,
+            "maxLength": 100,
             "minLength": 8,
             "type": "string"
           }

@@ -9,6 +9,8 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { addPracownik } from '../fn/pracownik/add-pracownik';
+import { AddPracownik$Params } from '../fn/pracownik/add-pracownik';
 import { remove } from '../fn/pracownik/remove';
 import { Remove$Params } from '../fn/pracownik/remove';
 import { setBanUzytkownik } from '../fn/pracownik/set-ban-uzytkownik';
@@ -20,6 +22,35 @@ import { UnbanUzytkownik$Params } from '../fn/pracownik/unban-uzytkownik';
 export class PracownikService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `addPracownik()` */
+  static readonly AddPracownikPath = '/pracownicy';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `addPracownik()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  addPracownik$Response(params?: AddPracownik$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return addPracownik(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `addPracownik$Response()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  addPracownik(params?: AddPracownik$Params, context?: HttpContext): Observable<{
+}> {
+    return this.addPracownik$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
   }
 
   /** Path part for operation `unbanUzytkownik()` */

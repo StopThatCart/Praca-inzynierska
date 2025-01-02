@@ -85,6 +85,7 @@ public class CommonMapperService {
             .email(uzytkownik.getEmail())
             .avatar(fileUtils.readFile(uzytkownik.getAvatar(), DefaultImage.AVATAR))
             .dataUtworzenia(uzytkownik.getDataUtworzenia())
+            .aktywowany(uzytkownik.isAktywowany())
             .ban(uzytkownik.isBan())
             .banDo(uzytkownik.getBanDo())
             .imie(uzytkownik.getImie())
@@ -118,6 +119,24 @@ public class CommonMapperService {
             .powiadomieniaOgrodKwitnienie(ustawieniaRequest.isPowiadomieniaOgrodKwitnienie())
             .powiadomieniaOgrodOwocowanie(ustawieniaRequest.isPowiadomieniaOgrodOwocowanie())
             .build();
+    }
+
+
+    public PageResponse<UzytkownikResponse> uzytkownikPagetoPageUzytkownikResponse(
+        Page<Uzytkownik> rozmowyPrywatne) {
+            List<UzytkownikResponse> uzytkownicyResponse = rozmowyPrywatne.getContent().stream()
+            .map(this::toUzytkownikResponse)
+            .collect(Collectors.toList());
+    
+            return new PageResponse<>(
+                uzytkownicyResponse,
+                rozmowyPrywatne.getNumber(),
+                rozmowyPrywatne.getSize(),
+                rozmowyPrywatne.getTotalElements(),
+                rozmowyPrywatne.getTotalPages(),
+                rozmowyPrywatne.isFirst(),
+                rozmowyPrywatne.isLast()
+        );
     }
 
     

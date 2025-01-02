@@ -68,7 +68,7 @@ export class PowiadomienieCardComponent {
         case TypPowiadomienia.POLUBIENIA_POST:
         case TypPowiadomienia.ZGLOSZENIE_KOMENTARZ:
         case TypPowiadomienia.ZGLOSZENIE_POST:
-          this.router.navigate(['/posty', this.pow.odnosnik]);
+          this.router.navigate(['/social/posty', this.pow.odnosnik]);
           break;
         case TypPowiadomienia.ZAPROSZENIE:
           this.router.navigate(['profil/rozmowy']);

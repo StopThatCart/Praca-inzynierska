@@ -28,6 +28,7 @@ export type { PageResponsePostResponse } from './models/page-response-post-respo
 export type { PageResponsePowiadomienieResponse } from './models/page-response-powiadomienie-response';
 export type { PageResponseRoslinaResponse } from './models/page-response-roslina-response';
 export type { PageResponseRozmowaPrywatnaResponse } from './models/page-response-rozmowa-prywatna-response';
+export type { PageResponseUzytkownikResponse } from './models/page-response-uzytkownik-response';
 export type { Post } from './models/post';
 export type { PostRequest } from './models/post-request';
 export type { PostResponse } from './models/post-response';

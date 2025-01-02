@@ -39,6 +39,6 @@ import lombok.Setter;
 @Getter
 public class UsunKontoRequest {
     @NotEmpty(message = "Hasło nie może być puste")
-    @Size(min = 8, message = "Hasło powinno mieć co najmniej 8 znaków")
+    @Size(min = 8, max = 100, message = "Hasło powinno mieć od 8 do 100 znaków")
     private String haslo;
 }
