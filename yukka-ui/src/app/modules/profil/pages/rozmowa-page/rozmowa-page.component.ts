@@ -200,6 +200,7 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
               console.log('Użytkownik zablokowany');
               console.log(res);
               this.zablokowany = true;
+              this.getBlokowaniAndBlokujacy();
             } else {
               console.log('Nie udało się zablokować użytkownika');
             }
@@ -223,6 +224,7 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
               console.log('Użytkownik odblokowany');
               console.log(res);
               this.zablokowany = false;
+              this.getBlokowaniAndBlokujacy();
             } else {
               console.log('Nie udało się odblokować użytkownika');
             }
@@ -235,9 +237,5 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
       }
     }
   }
-
-
-
-
 
 }

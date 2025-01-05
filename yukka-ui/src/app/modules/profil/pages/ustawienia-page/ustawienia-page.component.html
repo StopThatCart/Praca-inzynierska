@@ -7,9 +7,10 @@
   </div>
 
   <div class="col-auto col-lg-8">
-    <div class="card mb-5" style="background: var(--bs-secondary);">
+    <div class="card mb-5 mt-2" style="background: var(--bs-secondary);">
         <div class="card-body p-sm-5">
             <h3 class="text-center mb-4">Ustawienia konta</h3>
+            <app-error-msg [errorMsg]="errorMsg" [message]="message"></app-error-msg>
             <form (ngSubmit)="updatePowiadomienia()">
                 <div class="mb-3">
                     <h4>Profil</h4>

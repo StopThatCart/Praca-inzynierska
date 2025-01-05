@@ -10,13 +10,13 @@
             type="button">{{ wlasciwosc.etykieta }}</a>
             <div ngbDropdownMenu class="dropdown-menu">
                 <div *ngFor="let nazwy of wlasciwosc.nazwyLiczbaRoslin"
-                class="link-body-emphasis mb-1 px-3">
+                class="link-body-emphasis mb-1 px-4">
                   <input [checked]="isSelected(wlasciwosc, nazwy.nazwa)"
                     type="checkbox" class="form-check-input mx-1 link-body-emphasis"
                     (change)="toggleWlasciwosc(wlasciwosc, nazwy.nazwa)"/>
                   <label class="form-check-label" [ngStyle]="{'color': textColor}" style="white-space: normal;" >
                     {{ nazwy.nazwa }} 
-                    <span class="text-black-50">({{nazwy.liczbaRoslin}})</span>
+                    <span class="text-black-50 fw-semibold">({{nazwy.liczbaRoslin}})</span>
                   </label>
                 </div>
             </div>

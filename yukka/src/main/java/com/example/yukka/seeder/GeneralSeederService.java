@@ -122,11 +122,11 @@ public class GeneralSeederService {
 		
 		postSeeder.addPostyWithKomentarze(uzytkownicy);
 
-		// postSeeder.seedRozmowy(usKatarzyna, usPiotr, uzytkownicy);
+		postSeeder.seedRozmowy(usKatarzyna, usPiotr, uzytkownicy);
 
-		// seedZgloszenia();
+		seedZgloszenia();
 
-		// seedDzialka();
+		seedDzialka();
 
 	}
 

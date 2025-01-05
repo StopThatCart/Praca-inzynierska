@@ -85,7 +85,6 @@ export class DzialkaPageComponent implements OnInit  {
 
   isLoading: boolean = true;
   ngOnInit() {
-    // TODO: Dodawanie ładowania
     this.initializeTiles();
     this.drawChessboard();
 

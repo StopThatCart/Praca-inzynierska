@@ -8,15 +8,19 @@ import { get } from 'http';
 import { UzytkownikResponse } from '../../../../services/models/uzytkownik-response';
 import { Ustawienia, UstawieniaRequest } from '../../../../services/models';
 import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.component";
+import { ErrorMsgComponent } from '../../../../components/error-msg/error-msg.component';
 
 @Component({
   selector: 'app-ustawienia-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, EdycjaNavComponent],
+  imports: [CommonModule, FormsModule, ErrorMsgComponent, EdycjaNavComponent],
   templateUrl: './ustawienia-page.component.html',
   styleUrl: './ustawienia-page.component.css'
 })
 export class UstawieniaPageComponent  implements OnInit {
+  errorMsg: Array<string> = [];
+  message: string = "";
+
   uzyt: UzytkownikResponse = {};
   ustawienia : UstawieniaRequest = {
     ogrodPokaz: false,
@@ -72,19 +76,23 @@ export class UstawieniaPageComponent  implements OnInit {
 
 
   updatePowiadomienia() {
+    this.errorMsg = [];
+    this.message = "";
+
     if(this.ustawienia) {
       console.log("Masz tu ustawienia mordo: ");
       console.log(this.ustawienia);
       this.uzytService.updateUstawienia({body:  { ustawienia: this.ustawienia }})
       .subscribe({
         next: (uzyt) => {
-
+          this.message = "Ustawienia zostały zaktualizowane.";
           this.uzyt = uzyt;
           this.ustawienia = this.convertToUstawieniaRequest(uzyt.ustawienia || {});
           console.log(uzyt.ustawienia);
         },
         error: (err) => {
           console.log(err);
+          this.errorMsg.push("Nie udało się zaktualizować ustawień.");
         }
       });
     }

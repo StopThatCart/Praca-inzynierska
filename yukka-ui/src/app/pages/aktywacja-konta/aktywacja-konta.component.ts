@@ -38,7 +38,7 @@ export class AktywacjaKontaComponent {
       token
     }).subscribe({
       next: () => {
-        this.message = 'Twoje konto zostało aktywowane.\nMożesz się zalogować';
+        this.message = 'Twoje konto zostało aktywowane.\nMożesz się już zalogować.';
         this.submitted = true;
       },
       error: (error) => {

@@ -51,8 +51,6 @@ export class ProfilPageComponent implements OnInit {
       if (this.nazwa) {
         this.getUzytkownikByNazwa(this.nazwa);
         this.route.snapshot.data['nazwa'] = this.nazwa;
-        this.getStatystykiOfUzytkownik(this.nazwa);
-        this.getOcenyPozytywne();
       }
     });
     this.isCurrentUserBoi = this.isCurrentUser();
@@ -63,13 +61,13 @@ export class ProfilPageComponent implements OnInit {
       next: (uzyt) => {
         this.uzyt = uzyt;
         this.errorMsg = null;
+        this.getStatystykiOfUzytkownik(nazwa);
       },
       error: (err) => {
         this.errorMsg = 'Nie znaleziono użytkownika o podanej nazwie.';
       }
     });
   }
-
 
   getAvatar(): string | undefined {
     if(this.uzyt && this.uzyt.avatar) {
@@ -82,7 +80,6 @@ export class ProfilPageComponent implements OnInit {
     //if(!this.tokenService.isTokenValid()) return;
     if(!this.uzyt.aktywowany) return;
 
-    console.log('Pobieranie statystyk: ', nazwa);
     this.uzytService.getStatystykiOfUzytkownik({ nazwa: nazwa }).subscribe({
       next: (statystyki) => {
         this.statystyki = statystyki;
@@ -150,9 +147,6 @@ export class ProfilPageComponent implements OnInit {
     return false;
   }
 
-
-
-
   checkIfZaproszony(): void {
     if(this.zaproszony) {
       return;
@@ -216,38 +210,6 @@ export class ProfilPageComponent implements OnInit {
             console.log('Error: ', err.error);
           }
         });
-    }
-  }
-
-  goToEdycjaProfil() {
-    this.router.navigate(['edycja', 'profil'], { relativeTo: this.route });
-  }
-
-  goToRozmowa() {
-    this.router.navigate(['rozmowy', this.uzyt.nazwa], { relativeTo: this.route });
-  }
-
-
-
-  goToRozmowy() {
-    this.router.navigate(['rozmowy'], { relativeTo: this.route });
-  }
-
-  goToOgrod() {
-    if (this.uzyt.nazwa) {
-      this.router.navigate(['ogrod', this.uzyt.nazwa]);
-    }
-  }
-
-  goToPosty() {
-    if (this.uzyt.nazwa) {
-      this.router.navigate(['posty'], { relativeTo: this.route });
-    }
-  }
-
-  goToKomentarze() {
-    if (this.uzyt.nazwa) {
-      this.router.navigate(['komentarze'], { relativeTo: this.route });
     }
   }
 

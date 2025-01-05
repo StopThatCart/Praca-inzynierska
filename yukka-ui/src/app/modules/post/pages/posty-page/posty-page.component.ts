@@ -9,11 +9,12 @@ import { AddKomentarzCardComponent } from '../../components/add-komentarz-card/a
 import { TypKomentarza } from '../../models/TypKomentarza';
 import { error } from 'console';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
+import { LoadingComponent } from "../../../../components/loading/loading.component";
 
 @Component({
   selector: 'app-posty-page',
   standalone: true,
-  imports: [CommonModule, PostCardComponent, KomentarzCardComponent, AddKomentarzCardComponent],
+  imports: [CommonModule, PostCardComponent, KomentarzCardComponent, AddKomentarzCardComponent, LoadingComponent],
   templateUrl: './posty-page.component.html',
   styleUrl: './posty-page.component.css'
 })
@@ -25,6 +26,7 @@ export class PostyPageComponent implements OnInit {
   private _postObraz: string | undefined;
 
   errorMsg: Array<string> = [];
+  isLoading: boolean = true;
 
   public TypKomentarza = TypKomentarza;
   constructor(
@@ -55,6 +57,9 @@ export class PostyPageComponent implements OnInit {
 
         }
         this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }

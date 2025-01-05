@@ -6,39 +6,40 @@
           </div>
           <hr>
           <app-error-msg [errorMsg]="errorMsg"></app-error-msg>
-      </div>
-      <div class="row d-flex justify-content-center">
-          <div class="col-md-6 col-xl-4">
-              <div class="card mb-5" 
-                  style="border-color: var(--bs-secondary);background: var(--bs-primary-border-subtle);">
-                  <div class="card-body d-flex flex-column align-items-center">
-                    <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4">
-                        <i class="fas fa-user"></i>
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-6 col-xl-4">
+                <div class="card mb-5" 
+                    style="border-color: var(--bs-secondary);background: var(--bs-primary-border-subtle);">
+                    <div class="card-body d-flex flex-column align-items-center">
+                      <div class="bs-icon-xl bs-icon-circle bs-icon-primary bs-icon my-4">
+                          <i class="fas fa-user"></i>
+                      </div>
+                        <form class="text-center">
+                            <div class="mb-3">
+                              <input [(ngModel)]="registerRequest.nazwa" class="form-control text-black" type="text" name="nazwa" placeholder="nazwa użytkownika">
+                          </div>
+                            <div class="mb-3">
+                              <input [(ngModel)]="registerRequest.email" class="form-control text-black" type="email" name="email" placeholder="email" >
+                          </div>
+                            <div class="mb-3">
+                              <span class="fs-6 text-info fw-semibold" style="max-width: 10px;">Hasło powinno składać się z min. 8 znaków.</span>
+                              <input [(ngModel)]="registerRequest.haslo" class="form-control text-black" type="password" name="password" placeholder="haslo">
+                            </div>
+                            <div class="mb-3">
+                              <input [(ngModel)]="registerRequest.powtorzHaslo" class="form-control text-black" type="password" name="password-repeat" placeholder="powtórz hasło">
+                            </div>
+                            <div class="mb-3">
+                              <a [routerLink]="'/aktywacja-konta-refresh'"  class="link">Nie otrzymałeś kodu aktywacyjnego?</a>
+                            </div>
+                            <div class="mb-3">
+                              <button (click)="register()" class="btn btn-primary d-block w-100" type="submit">Rejestracja</button>
+                            </div>
+                        </form>
                     </div>
-                      <form class="text-center">
-                          <div class="mb-3">
-                            <input [(ngModel)]="registerRequest.nazwa" class="form-control text-black" type="text" name="nazwa" placeholder="nazwa użytkownika">
-                        </div>
-                          <div class="mb-3">
-                            <input [(ngModel)]="registerRequest.email" class="form-control text-black" type="email" name="email" placeholder="email" >
-                        </div>
-                          <div class="mb-3">
-                            <span class="fs-6 text-info fw-semibold" style="max-width: 10px;">Hasło powinno składać się z min. 8 znaków.</span>
-                            <input [(ngModel)]="registerRequest.haslo" class="form-control text-black" type="password" name="password" placeholder="haslo">
-                          </div>
-                          <div class="mb-3">
-                            <input [(ngModel)]="registerRequest.powtorzHaslo" class="form-control text-black" type="password" name="password-repeat" placeholder="powtórz hasło">
-                          </div>
-                          <div class="mb-3">
-                            <a [routerLink]="'/aktywacja-konta-refresh'"  class="link">Nie otrzymałeś kodu aktywacyjnego?</a>
-                          </div>
-                          <div class="mb-3">
-                            <button (click)="register()" class="btn btn-primary d-block w-100" type="submit">Rejestracja</button>
-                          </div>
-                      </form>
-                  </div>
-              </div>
-          </div>
+                </div>
+            </div>
+        </div>
       </div>
+
   </div>
 </section>

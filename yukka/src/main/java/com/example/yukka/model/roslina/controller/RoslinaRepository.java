@@ -58,10 +58,10 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 
     @Query("""
         MATCH (roslina:Roslina {roslinaId: $roslinaId})
-        OPTIONAL MATCH (roslina)-[r1:STWORZONA_PRZEZ]->(u:Uzytkownik)
+        OPTIONAL MATCH (roslina)-[r1:STWORZONA_PRZEZ]->(u:Uzytkownik)-[r2:MA_USTAWIENIA]->(ust:Ustawienia)
         OPTIONAL MATCH path=(roslina)-[rels]->(w:Wlasciwosc)
 
-        RETURN roslina, r1, u, collect(nodes(path)), collect(relationships(path))
+        RETURN roslina, r1, u, r2, ust, collect(nodes(path)), collect(relationships(path))
     """)
     Optional<Roslina> findByRoslinaId(@Param("roslinaId") String roslinaId);
 

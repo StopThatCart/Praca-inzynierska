@@ -79,6 +79,10 @@ export class EdycjaAvatarPageComponent {
     this.errorMsg = [];
     this.message = '';
 
+    if (!this.wybranyPlik) {
+      this.errorMsg.push('Nie wybrano pliku.');
+      return;
+    }
     console.log("nazwa łacińska: " + this.nazwa);
 
     this.uzytService.updateAvatar ({ body: { file: this.wybranyPlik } })

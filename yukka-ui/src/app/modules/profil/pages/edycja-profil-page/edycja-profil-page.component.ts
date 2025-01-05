@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.component";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,10 +16,11 @@ import { ErrorHandlingService } from '../../../../services/error-handler/error-h
   templateUrl: './edycja-profil-page.component.html',
   styleUrl: './edycja-profil-page.component.css'
 })
-export class EdycjaProfilPageComponent {
+export class EdycjaProfilPageComponent implements OnInit {
 
   errorMsg: Array<string> = [];
   message = '';
+  nazwa: string = '';
 
   request: ProfilRequest = {
     imie: undefined,
@@ -39,6 +40,7 @@ export class EdycjaProfilPageComponent {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
+      this.nazwa = params['nazwa'];
       this.uzytService.findByNazwa({ nazwa: params['nazwa'] })
       .subscribe({
         next: (response) => {
@@ -61,6 +63,7 @@ export class EdycjaProfilPageComponent {
     this.uzytService.updateProfil({body: { profil: this.request} }).subscribe({
       next: () => {
         this.message = 'Pomyślnie zaktualizowano profil';
+        this.router.navigate(['profil', this.nazwa]);
       },
       error: (error) => {
         this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);

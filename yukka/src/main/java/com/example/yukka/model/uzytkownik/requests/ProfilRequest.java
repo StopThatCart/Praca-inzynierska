@@ -24,13 +24,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProfilRequest {
 
-    @Size(min = 1, max = 100, message = "Imię musi zawierać od 1 do 100 znaków")
+    @Size(max = 100, message = "Imię musi zawierać do 100 znaków")
     private String imie;
-    @Size(min = 1, max = 100, message = "Miasto musi zawierać od 1 do 100 znaków")
+    @Size(max = 100, message = "Miasto musi zawierać do 100 znaków")
     private String miasto;
-    @Size(min = 1, max = 100, message = "Miejsce zamieszkania musi zawierać od 1 do 100 znaków")
+    @Size(max = 100, message = "Miejsce zamieszkania musi zawierać do 100 znaków")
     private String miejsceZamieszkania;
 
-    @Size(min = 1, max = 500, message = "Opis musi zawierać od 1 do 500 znaków")
+    @Size(max = 500, message = "Opis musi zawierać do 500 znaków")
     private String opis;
 }

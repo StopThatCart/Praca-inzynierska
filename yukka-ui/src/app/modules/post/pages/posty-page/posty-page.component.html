@@ -1,5 +1,8 @@
 
-<section class="mx-1">
+<app-loading class="p-2" [isLoading]="isLoading"></app-loading>
+<section class="mx-1"
+[hidden]="isLoading">
+  
   <div class="container" style="max-width: 800px;">
     <ng-container *ngIf="post">
       <app-post-card class="my-5" [post]="post"></app-post-card>

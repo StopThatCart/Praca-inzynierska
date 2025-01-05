@@ -4,7 +4,7 @@
       <div class="gap-1 col-auto d-flex flex-column avatar-info">
         <img [src]="getAvatar()" class="rounded-circle mb-2 border border-3 border-success-subtle mr-3" width="250" height="250" alt="">
         <ng-container *ngIf="isCurrentUser() else wyslijWiadomosc">
-          <button (click)="goToEdycjaProfil()" class="btn btn-primary btn-custom" role="button">Edytuj profil</button>
+          <a [routerLink]="['edycja', 'profil']" class="btn btn-primary btn-custom" role="button">Edytuj profil</a>
         </ng-container>
 
         <div class="btn-group gap-1 d-flex align-items-center justify-content-center">
@@ -27,13 +27,10 @@
           </app-zgloszenie-button>
         </div>
 
-
-
-
         <ng-template #wyslijWiadomosc>
           <ng-container *ngIf="uzyt.aktywowany">
             <ng-container *ngIf="isZaproszony() else wyslijZaproszenie">
-              <a (click)="goToRozmowa()" class="btn btn-primary btn-custom" role="button">Wyślij wiadomość</a>
+              <a [routerLink]="['rozmowy', this.uzyt.nazwa]" class="btn btn-primary btn-custom" role="button">Wyślij wiadomość</a>
             </ng-container>
             <ng-template #wyslijZaproszenie>
               <a *ngIf="!zaproszenieWyslane; else zaproszenieWyslaneText"
@@ -76,16 +73,16 @@
     </div>
     <div class="row gx-2 gy-2 justify-content-center align-items-center">
       <div *ngIf="uzyt.ustawienia?.ogrodPokaz" class="col d-flex justify-content-center align-items-center">
-          <a (click)="goToOgrod()" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Ogród</a>
+        <a [routerLink]="['/ogrod', uzyt.nazwa]" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Ogród</a>
       </div>
       <div *ngIf="isCurrentUser() || isPracownikOrAdmin()" class="col d-flex justify-content-center align-items-center">
-          <a (click)="goToPosty()" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Posty</a>
+        <a [routerLink]="'posty'" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Posty</a>
       </div>
       <div *ngIf="isCurrentUser() || isPracownikOrAdmin()" class="col d-flex justify-content-center align-items-center">
-        <a (click)="goToKomentarze()" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Komentarze</a>
+        <a [routerLink]="'komentarze'" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Komentarze</a>
       </div>
       <div *ngIf="isCurrentUser()" class="col d-flex justify-content-center align-items-center">
-          <a (click)="goToRozmowy()" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Rozmowy prywatne</a>
+        <a [routerLink]="'rozmowy'" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Rozmowy prywatne</a>
       </div>
     </div>
 

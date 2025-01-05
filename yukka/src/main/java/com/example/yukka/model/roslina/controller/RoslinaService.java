@@ -164,7 +164,7 @@ public class RoslinaService {
             }
             
             uzyt = (Uzytkownik) connectedUser.getPrincipal();
-            if (!uzyt.hasAuthenticationRights(ros.getUzytkownik(), connectedUser)) {
+            if (!ros.getUzytkownik().getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(ros.getUzytkownik(), connectedUser)) {
                 throw new ForbiddenException("Nie masz uprawnień do wyświetlenia tej rośliny.");
             }
         }

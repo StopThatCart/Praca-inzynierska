@@ -58,7 +58,8 @@
         [id]="post.postId">
         </app-zgloszenie-button>
 
-        <a [routerLink]="['/social/posty', post.postId]" class="link-light link-underline link-underline-opacity-0">
+        <a [routerLink]="['/social/posty', post.postId]" class="link-light link-underline link-underline-opacity-0"
+        placement="bottom" ngbTooltip="Zobacz komentarze">
           <i class="fas fs-5 fa-comment"></i>
           <span>&nbsp;{{post.liczbaKomentarzy}}</span>
         </a>

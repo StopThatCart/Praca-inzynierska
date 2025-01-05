@@ -1,5 +1,5 @@
 
-    <section class="mx-1" style="--bs-body-bg: rgba(255,255,255,0);">
+    <section class="mx-1 mt-3" style="--bs-body-bg: rgba(255,255,255,0);">
         <!-- Start: 1 Row 2 Columns -->
         <div class="container" style="max-width: 800px;">
             <div class="row gx-3 gy-3 justify-content-center align-items-start">
@@ -17,13 +17,17 @@
                                         </div>
                                     </div>
                                     <h4 class="text-center mb-4 pb-2">Rozmowa prywatna z {{ rozmowaUzyt.nazwa }}</h4>
-                                    <div class="hstack gap-2 justify-content-center">
-                                      <button (click)="zablokujUzyt()" class="btn btn-danger" type="button">
-                                        Zablokuj &nbsp;<i class="fa-solid fa-user-slash" ></i>
-                                      </button>
-                                      <button (click)="odblokujUzyt()" class="btn btn-danger" type="button">
-                                        Odblokuj &nbsp;<i class="fa-solid fa-user-slash" ></i>
-                                      </button>
+                                    <div class="hstack gap-2 justify-content-center mb-2">
+                                      <ng-container *ngIf="!zablokowany; else odblokuj" >
+                                        <button (click)="zablokujUzyt()" class="btn btn-danger" type="button">
+                                          Zablokuj &nbsp;<i class="fa-solid fa-user-slash" ></i>
+                                        </button>
+                                      </ng-container>
+                                      <ng-template #odblokuj>
+                                        <button (click)="odblokujUzyt()" class="btn btn-danger" type="button">
+                                          Odblokuj &nbsp;<i class="fa-solid fa-user-slash" ></i>
+                                        </button>
+                                      </ng-template>
                                       <app-zgloszenie-button
                                       [zglaszany]="rozmowaUzyt.nazwa">
                                       </app-zgloszenie-button>
