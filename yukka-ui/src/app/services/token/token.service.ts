@@ -72,10 +72,10 @@ export class TokenService {
     if (!token) {
       if (isRefreshTokenExpired) {
         this.clearRefreshToken();
+        return false;
       }
-      return false;
+      return this.getNewToken();
     }
-
 
     if (isRefreshTokenExpired) {
       this.clearRefreshToken();
@@ -89,7 +89,6 @@ export class TokenService {
         return this.getNewToken();
       }
     }
-
 
     return true;
   }

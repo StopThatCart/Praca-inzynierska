@@ -2,12 +2,9 @@ import { Component } from '@angular/core';
 import { PageResponseKomentarzResponse } from '../../../../services/models';
 import { KomentarzService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { error } from 'console';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { PaginationComponent } from "../../../../components/pagination/pagination.component";
-import { KomentarzCardComponent } from "../../../post/components/komentarz-card/komentarz-card.component";
 import { CommonModule } from '@angular/common';
-import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.component";
 import { SimpleKomentarzCardComponent } from "../../components/simple-komentarz-card/simple-komentarz-card.component";
 import { LoadingComponent } from "../../../../components/loading/loading.component";
 

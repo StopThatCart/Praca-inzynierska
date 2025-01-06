@@ -128,7 +128,7 @@ public class UzytkownikRoslinaController {
      * @param connectedUser obiekt uwierzytelnionego użytkownika
      * @return ResponseEntity zawierające odpowiedź z informacją o zaktualizowaniu rośliny
      */
-    @PatchMapping
+    @PatchMapping(consumes = "application/json", produces="application/json")
     public ResponseEntity<RoslinaResponse> updateRoslina(@Valid @RequestBody UzytkownikRoslinaRequest request, Authentication connectedUser) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(uzytkownikRoslinaService.update(request, connectedUser));
     }
@@ -141,7 +141,7 @@ public class UzytkownikRoslinaController {
      * @param connectedUser obiekt uwierzytelnionego użytkownika
      * @return ResponseEntity zawierające odpowiedź z informacją o zaktualizowaniu obrazu rośliny
      */
-    @PostMapping(value = "/{roslinaId}", consumes = "multipart/form-data")
+    @PostMapping(value = "/{roslinaId}", consumes = "multipart/form-data", produces = "application/json")
     public ResponseEntity<?> updateRoslinaObraz(
             @PathVariable("roslinaId") String roslinaId, 
             @Parameter() @RequestPart("file") 

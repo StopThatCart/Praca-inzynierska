@@ -293,7 +293,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RoslinaResponse"
                 }
@@ -341,7 +341,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "object"
                 }
@@ -3259,15 +3259,6 @@
           "name": {
             "type": "string"
           },
-          "username": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
           "pracownik": {
             "type": "boolean"
           },
@@ -3279,6 +3270,15 @@
             "items": {
               "$ref": "#/components/schemas/GrantedAuthority"
             }
+          },
+          "username": {
+            "type": "string"
+          },
+          "normalUzytkownik": {
+            "type": "boolean"
+          },
+          "password": {
+            "type": "string"
           },
           "enabled": {
             "type": "boolean"
@@ -4257,22 +4257,22 @@
         "properties": {
           "imie": {
             "maxLength": 100,
-            "minLength": 1,
+            "minLength": 0,
             "type": "string"
           },
           "miasto": {
             "maxLength": 100,
-            "minLength": 1,
+            "minLength": 0,
             "type": "string"
           },
           "miejsceZamieszkania": {
             "maxLength": 100,
-            "minLength": 1,
+            "minLength": 0,
             "type": "string"
           },
           "opis": {
             "maxLength": 500,
-            "minLength": 1,
+            "minLength": 0,
             "type": "string"
           }
         }
@@ -4399,11 +4399,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           }

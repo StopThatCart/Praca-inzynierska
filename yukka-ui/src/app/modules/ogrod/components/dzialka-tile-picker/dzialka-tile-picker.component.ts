@@ -3,7 +3,7 @@ import { DzialkaRoslinaRequest, MoveRoslinaRequest, RoslinaRequest, RoslinaRespo
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { WyswietlanieRosliny } from '../../../post/models/WyswietlanieRosliny';
+import { WyswietlanieRosliny } from '../../../social/models/WyswietlanieRosliny';
 import { Tile, TileUtils } from '../../models/Tile';
 import { DzialkaModes } from '../../models/dzialka-modes';
 
@@ -33,7 +33,7 @@ export class DzialkaTilePickerComponent {
 
   DzialkaModes = DzialkaModes;
   selectColor: string = '#32a852';
-  roslinaPosColor: string = '#0dcaf0';
+  roslinaPosColor: string = '#ffffff';
 
   constructor() { }
 

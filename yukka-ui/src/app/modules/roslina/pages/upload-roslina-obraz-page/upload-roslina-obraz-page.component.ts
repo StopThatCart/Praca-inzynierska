@@ -7,11 +7,12 @@ import { RoslinaRequest, RoslinaResponse, UzytkownikRoslinaRequest } from '../..
 import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
 import { UzytkownikRoslinaService } from '../../../../services/services';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
+import { ImageUploadComponent } from "../../../../components/image-upload/image-upload.component";
 
 @Component({
   selector: 'app-upload-roslina-obraz-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, BreadcrumbComponent],
+  imports: [CommonModule, FormsModule, BreadcrumbComponent, ImageUploadComponent],
   templateUrl: './upload-roslina-obraz-page.component.html',
   styleUrl: './upload-roslina-obraz-page.component.css'
 })
@@ -21,11 +22,7 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
 
   roslinaId: string = '';
 
-  wybranyObraz: any;
-  wybranyPlik: any;
-
-
-  @ViewChild('fileInput') fileInput!: ElementRef;
+  wybranyPlik: any = null;
 
   message = '';
   errorMsg: Array<string> = [];
@@ -68,29 +65,19 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
     return this._roslinaObraz;
   }
 
-  onFileSelected(event: any) {
-    this.wybranyPlik = event.target.files[0];
-
-     if (this.wybranyPlik) {
-       //this.request.obraz = this.wybranyPlik.name;
-       const reader = new FileReader();
-       reader.onload = () => {
-         this.wybranyObraz = reader.result as string;
-       };
-       reader.readAsDataURL(this.wybranyPlik);
-     }
+  onFileSelected(file: File) {
+    this.wybranyPlik = file;
   }
 
   clearImage() {
-     this.wybranyObraz = null;
-     this.wybranyPlik = null;
-    // this.request.obraz = '';
-     this.fileInput.nativeElement.value = '';
+    this.wybranyPlik = null;
   }
 
   uploadRoslinaObraz(): void {
     this.errorMsg = [];
     this.message = '';
+
+    if (!this.wybranyPlik) return;
 
     console.log("roslina id: " + this.roslinaId);
 

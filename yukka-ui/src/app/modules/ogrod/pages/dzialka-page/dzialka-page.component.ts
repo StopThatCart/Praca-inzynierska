@@ -2,7 +2,6 @@ import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } fro
 import { CommonModule } from '@angular/common';
 import html2canvas from 'html2canvas';
 import { MoveRoslinaRequest, Pozycja, RoslinaResponse, UzytkownikResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
-import { PostCardComponent } from "../../../post/components/post-card/post-card.component";
 import { DzialkaResponse } from '../../../../services/models/dzialka-response';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DzialkaService, UzytkownikService } from '../../../../services/services';
@@ -13,8 +12,7 @@ import { CanvasService } from '../../services/canvas-service/canvas.service';
 import { Offcanvas } from 'bootstrap';
 import { OffcanvasRoslinaComponent } from "../../components/offcanvas-roslina/offcanvas-roslina.component";
 import { DzialkaModes } from '../../models/dzialka-modes';
-import { DzialkaRoslinaRequest } from '../../../../services/models/dzialka-roslina-request';
-import { WyswietlanieRosliny } from '../../../post/models/WyswietlanieRosliny';
+import { WyswietlanieRosliny } from '../../../social/models/WyswietlanieRosliny';
 import { RenameIconComponent } from "../../components/rename-icon/rename-icon.component";
 import { RenameIconModes } from '../../components/rename-icon/rename-icon-mode';
 import { LoadingComponent } from "../../../../components/loading/loading.component";

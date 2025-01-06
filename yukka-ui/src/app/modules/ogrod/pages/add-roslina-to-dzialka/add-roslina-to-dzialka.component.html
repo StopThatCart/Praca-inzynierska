@@ -13,8 +13,8 @@
           </div>
           <div class="col-md-6 d-md-flex align-items-md-center">
             <div>
-              <h3 class="roslina-nazwa-color">{{roslina?.nazwa}}</h3>
-              <h5 class="roslina-nazwa-lacinska-color">{{roslina?.nazwaLacinska}}</h5>
+              <h3 class="text-primary fw-bold text-uppercase">{{roslina?.nazwa}}</h3>
+              <h5 class="text-secondary-emphasis fw-bold text-uppercase">{{roslina?.nazwaLacinska}}</h5>
             </div>
           </div>
         </div>
@@ -39,13 +39,12 @@
           <h4 class="text-primary">Tryb edycji:
             <span *ngIf="mode === DzialkaModes.EditRoslinaKafelki" class="text-danger">Przypisanie kafelków</span>
             <span *ngIf="mode === DzialkaModes.EditRoslinaPozycja" class="text-danger">Przypisanie pozycji</span>
-
           </h4>
 
           <p *ngIf="mode === DzialkaModes.EditRoslinaKafelki" >Kliknij na wolny kafelek, aby go dodać lub usunąć z rośliny. </p>
           <p *ngIf="mode === DzialkaModes.EditRoslinaPozycja" >Kliknij na wolny kafelek, aby postawić na nim roślinę.</p>
           <div class="btn-group">
-            <button (click)="changeEditMode(DzialkaModes.EditRoslinaPozycja)" class="btn btn-info">Zmień pozycję rośliny</button>
+            <button (click)="changeEditMode(DzialkaModes.EditRoslinaPozycja)" class="btn btn-light">Zmień pozycję rośliny</button>
             <button (click)="changeEditMode(DzialkaModes.EditRoslinaKafelki)" class="btn btn-primary">Zmień kafelki należące do rośliny</button>
           </div>
         </div>

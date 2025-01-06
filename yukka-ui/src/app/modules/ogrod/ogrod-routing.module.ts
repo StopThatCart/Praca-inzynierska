@@ -52,7 +52,7 @@ const routes: Routes = [
                     component: DzialkaPageComponent,
                   },
                   {
-                    path: 'przenoszenie/:roslinaId',
+                    path: 'przenoszenie/:roslina-id',
                     component: MoveRoslinaToOtherDzialkaComponent,
                     data: { breadcrumb: (data: any) => `Przenoszenie rośliny ${data.roslina.nazwa}` },
                     resolve: { roslina: RoslinaResolverService }

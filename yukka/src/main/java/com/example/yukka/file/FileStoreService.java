@@ -291,13 +291,13 @@ public class FileStoreService {
             }
             int width = image.getWidth();
             int height = image.getHeight();
-            if (width < 25 || height < 25) {
-                log.warn("Obraz musi mieć przynajmniej 25x25 pikseli");
-                throw new IllegalArgumentException("obraz musi mieć przynajmniej 25x25 pikseli");
+            if (width < 50 || height < 50) {
+                log.warn("Obraz musi mieć przynajmniej 50x50 pikseli");
+                throw new IllegalArgumentException("obraz musi mieć przynajmniej 50x50 pikseli");
             }
         } catch (IOException e) {
             log.error("Błąd podczas odczytu obrazu", e);
-            throw new IllegalArgumentException("nie udało się odczytać obrazu");
+            throw new IllegalArgumentException("Nie udało się odczytać obrazu");
         }
     }
 }

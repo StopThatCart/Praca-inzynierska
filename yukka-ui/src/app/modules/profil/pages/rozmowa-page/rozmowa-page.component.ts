@@ -1,13 +1,13 @@
 import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.component";
-import { AddKomentarzCardComponent } from "../../../post/components/add-komentarz-card/add-komentarz-card.component";
+import { AddKomentarzCardComponent } from "../../../social/components/add-komentarz-card/add-komentarz-card.component";
 import { WiadomoscCardComponent } from "../../components/wiadomosc-card/wiadomosc-card.component";
 import { PageResponseRozmowaPrywatnaResponse, RozmowaPrywatna, RozmowaPrywatnaResponse, UzytkownikResponse } from '../../../../services/models';
 import { RozmowaPrywatnaService, UzytkownikService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { TypKomentarza } from '../../../post/models/TypKomentarza';
+import { TypKomentarza } from '../../../social/models/TypKomentarza';
 import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zgloszenie-button.component";
 
 @Component({

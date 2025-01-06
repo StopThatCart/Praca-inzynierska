@@ -11,7 +11,7 @@ import { TokenService } from '../../../../services/token/token.service';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { ErrorMsgComponent } from '../../../../components/error-msg/error-msg.component';
 import { ImageUploadComponent } from "../../../../components/image-upload/image-upload.component";
-import { WyswietlanieRosliny } from '../../../post/models/WyswietlanieRosliny';
+import { WyswietlanieRosliny } from '../../../social/models/WyswietlanieRosliny';
 import { WyswietlanieRoslinyOpcjeComponent } from "../../components/wyswietlanie-rosliny-opcje/wyswietlanie-rosliny-opcje.component";
 import { DzialkaTilePickerComponent } from "../../components/dzialka-tile-picker/dzialka-tile-picker.component";
 

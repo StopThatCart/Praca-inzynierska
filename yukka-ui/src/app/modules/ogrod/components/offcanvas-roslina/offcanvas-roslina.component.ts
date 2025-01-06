@@ -7,12 +7,11 @@ import { WlasciwoscProcessService } from '../../../roslina/services/wlasciwosc-s
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ModalColorPickComponent } from '../modal-color-pick/modal-color-pick.component';
 import { ModalObrazPickComponent } from "../modal-obraz-pick/modal-obraz-pick.component";
-import { WyswietlanieRoslinyOpcjeComponent } from "../wyswietlanie-rosliny-opcje/wyswietlanie-rosliny-opcje.component";
 import { ModalWyswietlanieRoslinyPickComponent } from "../modal-wyswietlanie-rosliny-pick/modal-wyswietlanie-rosliny-pick.component";
 import { ModalNotatkaPickComponent } from "../modal-notatka-pick/modal-notatka-pick.component";
 import { NgbCollapseModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TokenService } from '../../../../services/token/token.service';
-import { WyswietlanieRosliny } from '../../../post/models/WyswietlanieRosliny';
+import { WyswietlanieRosliny } from '../../../social/models/WyswietlanieRosliny';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RoslinaWlasciwosciContainerComponent } from "../../../roslina/components/roslina-wlasciwosci-container/roslina-wlasciwosci-container.component";
 

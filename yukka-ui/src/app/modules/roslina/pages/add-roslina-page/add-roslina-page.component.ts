@@ -13,6 +13,7 @@ import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasci
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
 import { TokenService } from '../../../../services/token/token.service';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
+import { ImageUploadComponent } from "../../../../components/image-upload/image-upload.component";
 
 @Component({
   selector: 'app-add-roslina-page',
@@ -20,7 +21,7 @@ import { ErrorHandlingService } from '../../../../services/error-handler/error-h
   imports: [CommonModule, FormsModule, WlasciwoscDropdownComponent,
     WysokoscInputComponent,
     AddCustomWlasciwoscComponent,
-    WlasciwoscTagComponent, ErrorMsgComponent],
+    WlasciwoscTagComponent, ErrorMsgComponent, ImageUploadComponent],
   templateUrl: './add-roslina-page.component.html',
   styleUrl: './add-roslina-page.component.css'
 })
@@ -29,7 +30,6 @@ export class AddRoslinaPageComponent implements OnInit {
   message = '';
   errorMsg: Array<string> = [];
 
-  @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild(WlasciwoscTagComponent) wlasciwoscTagComponent!: WlasciwoscTagComponent;
 
   doKatalogu: boolean = false;
@@ -43,7 +43,6 @@ export class AddRoslinaPageComponent implements OnInit {
     wlasciwosci: [] as WlasciwoscWithRelations[],
   };
 
-  wybranyObraz: any;
   wybranyPlik: any;
 
   selectedWlasciwoscType: WlasciwoscResponse | null = null;
@@ -59,25 +58,17 @@ export class AddRoslinaPageComponent implements OnInit {
     private route : ActivatedRoute
   ) {}
 
-  onFileSelected(event: any) {
-    this.wybranyPlik = event.target.files[0];
-
-     if (this.wybranyPlik) {
-       this.request.obraz = this.wybranyPlik.name;
-
-       const reader = new FileReader();
-       reader.onload = () => {
-         this.wybranyObraz = reader.result as string;
-       };
-       reader.readAsDataURL(this.wybranyPlik);
-     }
+  onFileSelected(file: File) {
+    this.wybranyPlik = file;
+    
+    if (this.wybranyPlik) {
+      this.request.obraz = this.wybranyPlik.name;
+    }
   }
 
   clearImage() {
-     this.wybranyObraz = null;
      this.wybranyPlik = null;
      this.request.obraz = '';
-     this.fileInput.nativeElement.value = '';
   }
 
   ngOnInit(): void {

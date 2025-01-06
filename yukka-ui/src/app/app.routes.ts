@@ -56,7 +56,7 @@ export const routes: Routes = [
   },
   {
     path: 'social',
-    loadChildren: () => import('./modules/post/post.module').then(m => m.PostModule)
+    loadChildren: () => import('./modules/social/social.module').then(m => m.SocialModule)
   },
   {
     path: 'profil',

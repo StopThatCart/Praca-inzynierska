@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { PostCardComponent } from '../../../post/components/post-card/post-card.component';
+import { PostCardComponent } from '../../../social/components/post-card/post-card.component';
 import { PageResponsePostResponse } from '../../../../services/models';
 import { PostService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';

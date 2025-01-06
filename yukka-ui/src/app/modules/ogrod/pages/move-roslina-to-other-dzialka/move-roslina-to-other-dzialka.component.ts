@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
-import { WyswietlanieRoslinyOpcjeComponent } from "../../components/wyswietlanie-rosliny-opcje/wyswietlanie-rosliny-opcje.component";
 import { DzialkaTilePickerComponent } from "../../components/dzialka-tile-picker/dzialka-tile-picker.component";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DzialkaResponse, DzialkaRoslinaRequest, MoveRoslinaRequest, Pozycja, RoslinaResponse, ZasadzonaRoslinaResponse } from '../../../../services/models';
 import { Tile, TileUtils } from '../../models/Tile';
 import { DzialkaModes } from '../../models/dzialka-modes';
-import { WyswietlanieRosliny } from '../../../post/models/WyswietlanieRosliny';
+import { WyswietlanieRosliny } from '../../../social/models/WyswietlanieRosliny';
 import { DzialkaService, RoslinaService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -70,11 +69,11 @@ export class MoveRoslinaToOtherDzialkaComponent {
   ngOnInit(): void {
     this.initializeTiles();
     this.route.params.subscribe(params => {
-      const roslinaId = params['roslinaId'];
+      const roslinaId = params['roslina-id'];
       const numerDzialki = Number(params['numer']);
       if (roslinaId && numerDzialki) {
         this.getRoslinaInDzialkaByRoslinaId(numerDzialki, roslinaId);
-        this.route.snapshot.data['roslinaId'] = roslinaId;
+        this.route.snapshot.data['roslina-id'] = roslinaId;
         this.route.snapshot.data['numer'] = numerDzialki;
 
         this.request.numerDzialki = numerDzialki;

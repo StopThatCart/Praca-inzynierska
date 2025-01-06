@@ -14,7 +14,10 @@
 
         <div *ngIf="editMode !== DzialkaModes.BrakEdycji"
         class="mb-2">
-          <h4 class="text-primary">Tryb edycji: <span class="text-danger">{{ editMode }}</span></h4>
+          <h4 class="text-primary">Tryb edycji:
+            <span *ngIf="editMode === DzialkaModes.EditRoslinaKafelki" class="text-danger">Przypisanie kafelków</span>
+            <span *ngIf="editMode === DzialkaModes.EditRoslinaPozycja" class="text-danger">Przypisanie pozycji</span>
+          </h4>
           <h4 class="text-primary">Wybrana roślina: <span class="text-danger">{{ selectedRoslina?.roslina?.nazwa }}</span></h4>
           <p class="text-primary">Kliknij na kafelek, aby go dodać lub usunąć go z rośliny. </p>
           <div class="btn-group">
