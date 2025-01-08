@@ -44,12 +44,13 @@ export class ZmianaHaslaComponent {
       body: this.request
     }).subscribe({
       next: () => {
-        this.message = 'Twoje hasło zostało aktywowane.\nMożesz się zalogować.';
+        this.message = 'Twoje hasło zostało zmienione.\nMożesz się zalogować.';
         this.isDone = true;
       },
       error: (error) => {
         this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
         this.codeInput.reset();
+        this.request.token = '';
       }
     });
   }

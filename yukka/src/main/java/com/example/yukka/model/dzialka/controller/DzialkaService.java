@@ -138,7 +138,7 @@ public class DzialkaService {
             throw new IllegalArgumentException("Użytkownik " + nazwa + " nie jest aktywowany");
         }
         
-        if (!wlasciciel.getUstawienia().isOgrodPokaz() && (uzyt == null || !uzyt.hasAuthenticationRights(wlasciciel, uzyt))) {
+        if (!wlasciciel.getUstawienia().isOgrodPokaz() && (uzyt == null || !uzyt.hasAuthenticationRights(wlasciciel))) {
             throw new ForbiddenException("Ogród użytkownika " + nazwa + " jest ukryty");
         }
 
@@ -687,7 +687,7 @@ public class DzialkaService {
         
         Uzytkownik wlasciciel = dzialka.getOgrod().getUzytkownik();
         
-        if(!uzyt.hasAuthenticationRights(wlasciciel, uzyt)) {
+        if(!uzyt.hasAuthenticationRights(wlasciciel)) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia rośliny z działki użytkownika " + dzialka.getOgrod().getUzytkownik().getNazwa());
         }
         ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());

@@ -36,10 +36,7 @@ import com.example.yukka.file.FileUtils;
 import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
 import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
-import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.social.mappers.CommonMapperService;
-import com.example.yukka.model.social.models.post.Post;
-import com.example.yukka.model.social.models.post.PostResponse;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
@@ -249,7 +246,7 @@ public class UzytkownikService implements  UserDetailsService {
                 return null;
             }
             Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
-            if(!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+            if(!uzyt.hasAuthenticationRights(targetUzyt)) {
                 return null;
             }
         }

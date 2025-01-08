@@ -57,7 +57,7 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
                 throw new IllegalArgumentException("Konto nie zostało jeszcze aktywowane. Sprawdź swoje wiadomości w poczcie email albo zarejestruj się ponownie.");
         } else if (uzyt.isBan()) {
             log.info("login [" + nameOrEmail + "] nieudany: konto zbanowane");
-            throw new BannedUzytkownikException("Konto zostało zbanowane do " + uzyt.getBanDo());
+            throw new BannedUzytkownikException("Konto zostało zbanowane do " + uzyt.getBanDo() + " z powodu: " + uzyt.getBanPowod());
         }
 
         if(passwordEncoder.matches(haslo, uzyt.getHaslo())) {

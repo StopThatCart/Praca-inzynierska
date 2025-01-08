@@ -85,6 +85,22 @@ public class PostService {
     }
 
     /**
+     * Znajduje post na podstawie podanego ID posta, ale bez komentarzy.
+     * Używane do sprawdzania, czy post o podanym ID istnieje.
+     * 
+     * @param postId ID posta, który ma zostać znaleziony.
+     * @return PostResponse obiekt zawierający dane znalezionego posta.
+     * @throws EntityNotFoundException jeśli post o podanym ID nie zostanie znaleziony.
+     */
+    @Transactional(readOnly = true)
+    public PostResponse findByPostIdCheck(String postId) {
+        Post post = postRepository.findPostByPostIdCheck(postId)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+
+        return postMapper.toPostResponse(post);
+    }
+
+    /**
      * Znajduje wszystkie posty z możliwością paginacji i filtrowania.
      *
      * @param page <ul><li><strong>int</strong>: Numer strony.</li></ul>
@@ -118,7 +134,7 @@ public class PostService {
         if(targetUzyt.isEmpty()) {
             throw new EntityNotFoundException("Nie znaleziono użytkownika o podanej nazwie: " + nazwa);
         }
-        if(!uzyt.hasAuthenticationRights(targetUzyt.get(), uzyt)){
+        if(!uzyt.hasAuthenticationRights(targetUzyt.get())){
             throw new ForbiddenException("Nie masz uprawnień do przeglądania postów tego użytkownika");
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
@@ -172,7 +188,7 @@ public class PostService {
      */
     public PostResponse addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(request.getOcenialnyId())
+        Post post = postRepository.findPostByPostIdCheck(request.getOcenialnyId())
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getOcenialnyId()));
         
         uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
@@ -191,8 +207,8 @@ public class PostService {
      */
     public void deletePost(String postId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
-        if(!uzyt.hasAuthenticationRights(post.getAutor(), uzyt)) {
+        Post post = postRepository.findPostByPostIdCheck(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+        if(!uzyt.hasAuthenticationRights(post.getAutor())) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia tego posta");
         }
 
@@ -236,7 +252,7 @@ public class PostService {
     public String createPostId() {
         String resultId = UUID.randomUUID().toString();
         do { 
-            Optional<Post> kom = postRepository.findPostByPostId(resultId);
+            Optional<Post> kom = postRepository.findPostByPostIdCheck(resultId);
             if(kom.isEmpty()){
                 break;
             }

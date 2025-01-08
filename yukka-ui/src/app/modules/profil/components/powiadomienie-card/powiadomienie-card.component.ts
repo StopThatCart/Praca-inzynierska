@@ -25,6 +25,7 @@ export class PowiadomienieCardComponent {
 
   errorMsg : Array<string> = [];
   private _avatar: string | undefined;
+  TypPowiadomienia = TypPowiadomienia;
 
   constructor(
     private powiadomienieService : PowiadomienieService,

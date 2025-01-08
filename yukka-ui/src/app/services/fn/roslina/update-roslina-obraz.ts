@@ -6,16 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { RoslinaResponse } from '../../models/roslina-response';
 
 export interface UpdateRoslinaObraz$Params {
   'nazwa-lacinska': string;
       body?: {
-'file': Blob;
+'file'?: Blob;
 }
 }
 
-export function updateRoslinaObraz(http: HttpClient, rootUrl: string, params: UpdateRoslinaObraz$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+export function updateRoslinaObraz(http: HttpClient, rootUrl: string, params: UpdateRoslinaObraz$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
   const rb = new RequestBuilder(rootUrl, updateRoslinaObraz.PATH, 'put');
   if (params) {
     rb.path('nazwa-lacinska', params['nazwa-lacinska'], {});
@@ -27,7 +26,7 @@ export function updateRoslinaObraz(http: HttpClient, rootUrl: string, params: Up
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<RoslinaResponse>;
+      return r as StrictHttpResponse<string>;
     })
   );
 }

@@ -1,7 +1,6 @@
 package com.example.yukka.model.roslina.wlasciwosc;
 
 import java.util.List;
-import java.util.Set;
 
 import lombok.Builder;
 import lombok.Getter;

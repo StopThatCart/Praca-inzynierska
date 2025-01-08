@@ -168,7 +168,7 @@ export class UpdateRoslinaPageComponent {
 
     console.log("Uzytkownik roslina request: ", uzytRequest);
 
-    this.uzytkownikRoslinaService.updateRoslina1({ body: uzytRequest }).subscribe({
+    this.uzytkownikRoslinaService.update({ body: uzytRequest }).subscribe({
       next: () => {
         this.message = 'Roślina została zaaktualizowana';
         this.router.navigate(['/rosliny', this.roslina.roslinaId]);

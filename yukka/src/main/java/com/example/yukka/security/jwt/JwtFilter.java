@@ -68,18 +68,10 @@ public class JwtFilter extends OncePerRequestFilter {
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 Uzytkownik uzytkownik = (Uzytkownik) userDetails;
                 if (uzytkownik.isBan()) {
-                    response.setStatus(YukkaErrorCodes.ACCOUNT_BANNED.getCode());
-                    response.setContentType("application/json");
-                    
-                    ExceptionResponse exceptionResponse = ExceptionResponse.builder()
-                            .businessErrorCode(YukkaErrorCodes.ACCOUNT_BANNED.getCode())
-                            .businessErrorDescription(YukkaErrorCodes.ACCOUNT_BANNED.getDescription())
-                            .build();
-                    
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    String jsonResponse = objectMapper.writeValueAsString(exceptionResponse);
-                    
-                    response.getWriter().write(jsonResponse);
+                    makeException(response, YukkaErrorCodes.ACCOUNT_BANNED);
+                    return;
+                } else if (!uzytkownik.isAktywowany()) {
+                    makeException(response, YukkaErrorCodes.ACCOUNT_DISABLED);
                     return;
                 }
 
@@ -93,5 +85,21 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+
+    private void makeException(HttpServletResponse response, YukkaErrorCodes errorCode) throws IOException {
+        response.setStatus(errorCode.getCode());
+                    response.setContentType("application/json");
+                    
+                    ExceptionResponse exceptionResponse = ExceptionResponse.builder()
+                            .businessErrorCode(errorCode.getCode())
+                            .businessErrorDescription(errorCode.getDescription())
+                            .build();
+                    
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonResponse = objectMapper.writeValueAsString(exceptionResponse);
+                    
+                    response.getWriter().write(jsonResponse);
     }
 }

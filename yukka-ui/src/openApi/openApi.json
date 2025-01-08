@@ -26,6 +26,51 @@
     }
   ],
   "paths": {
+    "/uzytkownikRosliny/{roslinaId}": {
+      "put": {
+        "tags": [
+          "UzytkownikRoslina"
+        ],
+        "operationId": "updateObraz",
+        "parameters": [
+          {
+            "name": "roslinaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rozmowy/{uzytkownik-nazwa}/reject": {
       "put": {
         "tags": [
@@ -146,9 +191,6 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "file"
-                ],
                 "type": "object",
                 "properties": {
                   "file": {
@@ -166,7 +208,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
+                  "type": "string"
                 }
               }
             }
@@ -239,7 +281,7 @@
         "tags": [
           "UzytkownikRoslina"
         ],
-        "operationId": "saveRoslina",
+        "operationId": "save",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -278,7 +320,7 @@
         "tags": [
           "UzytkownikRoslina"
         ],
-        "operationId": "updateRoslina_1",
+        "operationId": "update",
         "requestBody": {
           "content": {
             "application/json": {
@@ -296,54 +338,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RoslinaResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/uzytkownikRosliny/{roslinaId}": {
-      "post": {
-        "tags": [
-          "UzytkownikRoslina"
-        ],
-        "operationId": "updateRoslinaObraz_1",
-        "parameters": [
-          {
-            "name": "roslinaId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "file"
-                ],
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
                 }
               }
             }
@@ -547,7 +541,7 @@
         "tags": [
           "Roslina"
         ],
-        "operationId": "saveRoslina_1",
+        "operationId": "saveRoslina",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -2390,6 +2384,36 @@
         }
       }
     },
+    "/posty/{post-id}/check": {
+      "get": {
+        "tags": [
+          "Post"
+        ],
+        "operationId": "findPostByIdCheck",
+        "parameters": [
+          {
+            "name": "post-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posty/uzytkownik/{nazwa}": {
       "get": {
         "tags": [
@@ -3259,10 +3283,16 @@
           "name": {
             "type": "string"
           },
-          "pracownik": {
-            "type": "boolean"
+          "password": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
           },
           "admin": {
+            "type": "boolean"
+          },
+          "pracownik": {
             "type": "boolean"
           },
           "authorities": {
@@ -3271,22 +3301,16 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "username": {
-            "type": "string"
-          },
           "normalUzytkownik": {
             "type": "boolean"
-          },
-          "password": {
-            "type": "string"
           },
           "enabled": {
             "type": "boolean"
           },
-          "accountNonExpired": {
+          "credentialsNonExpired": {
             "type": "boolean"
           },
-          "credentialsNonExpired": {
+          "accountNonExpired": {
             "type": "boolean"
           },
           "accountNonLocked": {

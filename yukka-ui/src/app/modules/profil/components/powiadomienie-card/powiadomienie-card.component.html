@@ -6,7 +6,7 @@
 >
 
   <div class="d-flex  card-header my-2"
-  [ngClass]="{'bg-warning': pow.zgloszenie}"
+  [ngClass]="{'bg-warning': pow.zgloszenie || pow.typ === TypPowiadomienia.SPECJALNE }"
   >
 
     <div class="hstack align-self-start">

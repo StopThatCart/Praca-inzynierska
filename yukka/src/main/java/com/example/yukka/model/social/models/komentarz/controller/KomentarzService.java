@@ -117,7 +117,7 @@ public class KomentarzService {
     public PageResponse<KomentarzResponse> findKomentarzeOfUzytkownik(int page, int size, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
-        if (targetUzyt.isEmpty() || !uzyt.hasAuthenticationRights(targetUzyt.get(), uzyt)) {
+        if (targetUzyt.isEmpty() || !uzyt.hasAuthenticationRights(targetUzyt.get())) {
            throw new ForbiddenException("Nie masz uprawnień do przeglądania komentarzy tego użytkownika");
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("komentarz.dataUtworzenia").descending());
@@ -251,7 +251,7 @@ public class KomentarzService {
     public Komentarz addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Uzytkownik connectedUser)  {
         Uzytkownik uzyt = connectedUser;
 
-        Post post = postRepository.findPostByPostId(request.getTargetId())
+        Post post = postRepository.findPostByPostIdCheck(request.getTargetId())
         .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getTargetId()));
 
         uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), connectedUser);
@@ -332,7 +332,7 @@ public class KomentarzService {
     public KomentarzResponse updateKomentarz(String komentarzId, KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Komentarz kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
-                .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik(), uzyt))
+                .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik()))
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
 
         kom = komentarzRepository.updateKomentarz(komentarzId, request.getOpis())
@@ -354,7 +354,7 @@ public class KomentarzService {
         Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
             .orElseThrow();
         
-        if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik(), uzyt)) {
+        if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik())) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
         }
 
@@ -379,11 +379,11 @@ public class KomentarzService {
      */
     public void deleteKomentarzFromPost(String postId, String komentarzId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        postRepository.findPostByPostId(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+        postRepository.findPostByPostIdCheck(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
         Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
         
-        if (!uzyt.hasAuthenticationRights(kom.getUzytkownik(), uzyt)) {
+        if (!uzyt.hasAuthenticationRights(kom.getUzytkownik())) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
         }
 
@@ -405,7 +405,7 @@ public class KomentarzService {
      * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
      */
     public void deleteKomentarzFromPost(String postId, String komentarzId, Uzytkownik connectedUser) {
-        postRepository.findPostByPostId(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+        postRepository.findPostByPostIdCheck(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
         Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
 

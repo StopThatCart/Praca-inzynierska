@@ -158,7 +158,7 @@ export class AddRoslinaPageComponent implements OnInit {
       return;
     }
     console.log('Dodawanie rośliny: ', this.request);
-    this.roslinaService.saveRoslina1({ body: { request: this.request, file: leFile } }).subscribe({
+    this.roslinaService.saveRoslina({ body: { request: this.request, file: leFile } }).subscribe({
       next: (roslina) => {
         this.router.navigate(['rosliny', roslina.roslinaId]);
         //this.afterAddRoslina();
@@ -182,7 +182,7 @@ export class AddRoslinaPageComponent implements OnInit {
       wlasciwosci: this.request.wlasciwosci,
     };
 
-    this.uzytkownikRoslinaService.saveRoslina({ body: { request: uzytRequest, file: leFile } }).subscribe({
+    this.uzytkownikRoslinaService.save({ body: { request: uzytRequest, file: leFile } }).subscribe({
       next: (roslina) => {
         //this.afterAddRoslina();
        // console.log("roslinka", roslina);

@@ -68,7 +68,7 @@ public class GeneralSeederService {
 	private final UzytkownikRoslinaSeeder uzytkownikRoslinaSeeder;
 	private final PowiadomienieService powiadomienieService;
 
-    private final PostSeeder postSeeder;
+    private final SocialSeeder socialSeeder;
 
 	//Faker faker = new Faker(new Locale.Builder().setLanguage("pl").setRegion("PL").build());
 
@@ -120,9 +120,9 @@ public class GeneralSeederService {
 
 		uzytkownicy = seedUzytkownicy();
 		
-		postSeeder.addPostyWithKomentarze(uzytkownicy);
+		socialSeeder.addPostyWithKomentarze(uzytkownicy);
 
-		postSeeder.seedRozmowy(usKatarzyna, usPiotr, uzytkownicy);
+		socialSeeder.seedRozmowy(usKatarzyna, usPiotr, uzytkownicy);
 
 		seedZgloszenia();
 

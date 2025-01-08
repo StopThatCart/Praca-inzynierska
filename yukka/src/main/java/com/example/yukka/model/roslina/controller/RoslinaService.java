@@ -164,7 +164,7 @@ public class RoslinaService {
             }
             
             uzyt = (Uzytkownik) connectedUser.getPrincipal();
-            if (!ros.getUzytkownik().getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(ros.getUzytkownik(), connectedUser)) {
+            if (!ros.getUzytkownik().getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(ros.getUzytkownik())) {
                 throw new ForbiddenException("Nie masz uprawnień do wyświetlenia tej rośliny.");
             }
         }
@@ -323,14 +323,24 @@ public class RoslinaService {
      * Aktualizuje obraz rośliny.
      *
      * @param roslinaId nazwa łacińska rośliny.
-     * @param file obiekt MultipartFile zawierający obraz rośliny.
+     * @param file obiekt MultipartFile zawierający obraz rośliny. W razie braku pliku, ustawia domyślny obraz.
      * @return Roslina zawierający informacje o zaktualizowanej roślinie.
      */
     // Uwaga: to jest do głównej rośliny, nie customowej
-    public RoslinaResponse uploadRoslinaObraz(String nazwaLacinska, MultipartFile file) {
+    public void uploadRoslinaObraz(String nazwaLacinska, MultipartFile file) {
         log.info("Aktualizacja obrazu rośliny: " + nazwaLacinska);
         Roslina roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
+
+        if (file == null) {
+            log.info("Brak pliku obrazu, ustawienie domyślnego obrazu");
+            log.info("Obraz: " + roslina.getObraz());
+            if(!roslina.getObraz().equals(defaultRoslinaObrazName)) {
+                fileUtils.deleteObraz(roslina.getObraz());
+                roslinaRepository.updateRoslinaObraz(roslina.getRoslinaId(), defaultRoslinaObrazName);
+            }
+            return;
+        }
         
         String pfp = fileStoreService.saveRoslina(file, roslina.getRoslinaId());
         if(pfp == null){
@@ -340,8 +350,7 @@ public class RoslinaService {
         if(roslina.getObraz() != null) fileUtils.deleteObraz(roslina.getObraz());
         roslina.setObraz(pfp);
 
-        Roslina ros = roslinaRepository.updateRoslinaObraz(roslina.getRoslinaId(), pfp);
-        return roslinaMapper.toRoslinaResponse(ros);
+        roslinaRepository.updateRoslinaObraz(roslina.getRoslinaId(), pfp);
    }
 
 
@@ -376,7 +385,7 @@ public class RoslinaService {
 
         if(roslina.isUzytkownikRoslina() ) {
             Uzytkownik targetUzyt = roslina.getUzytkownik();
-            if (!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+            if (!uzyt.hasAuthenticationRights(targetUzyt)) {
                 throw new ForbiddenException("Nie masz uprawnień do usunięcia rośliny użytkownika: " + targetUzyt.getNazwa());
             }
 

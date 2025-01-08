@@ -38,7 +38,7 @@ public enum YukkaErrorCodes {
     NEW_PASSWORD_DOES_NOT_MATCH(301, BAD_REQUEST, "Nowe hasło nie pasuje"),
     ACCOUNT_BANNED(302, FORBIDDEN, "Twoje konto jest zbanowane."),
     
-    ACCOUNT_DISABLED(303, FORBIDDEN, "Konto użytkownika jest wyłączone"),
+    ACCOUNT_DISABLED(303, FORBIDDEN, "Konto użytkownika nie jest aktywne"),
     BAD_CREDENTIALS(304, FORBIDDEN, "Niepoprawny login lub hasło"),
     ENTITY_NOT_FOUND(305, NOT_FOUND, "Nie znaleziono obiektu w bazie danych"),
     ENTITY_ALREADY_EXISTS(306, BAD_REQUEST, "Obiekt już istnieje w bazie danych"),

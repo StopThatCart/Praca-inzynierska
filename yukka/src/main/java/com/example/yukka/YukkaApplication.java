@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.example.yukka.seeder.GeneralSeederService;
-import com.example.yukka.seeder.RoslinaImporterService;
+import com.example.yukka.seeder.rosliny.RoslinaImporterService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,8 +54,8 @@ public class YukkaApplication {
 			if (seedDatabase) {
                 log.info("Seedowanie bazy danych...");
 				//roslinaImporterService.seedRosliny();
-				// generalSeeder.unseed();
-				// generalSeeder.seed();
+				generalSeeder.unseed();
+				generalSeeder.seed();
 				
             }
         };

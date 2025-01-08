@@ -91,4 +91,8 @@ export class AddPowiadomienieModalComponent {
     return this.tokenService.isAdmin();
   }
 
+  isPracownik(): boolean {
+    return this.tokenService.isPracownik();
+  }
+
 }

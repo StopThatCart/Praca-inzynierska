@@ -1,7 +1,5 @@
 package com.example.yukka.model.uzytkownik.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,9 +19,7 @@ import com.example.yukka.auth.requests.EmailRequest;
 import com.example.yukka.auth.requests.UsunKontoRequest;
 import com.example.yukka.common.FileResponse;
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.social.models.post.PostResponse;
 import com.example.yukka.model.social.models.powiadomienie.controller.PowiadomienieService;
-import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 import com.example.yukka.model.uzytkownik.requests.ProfilRequest;
 import com.example.yukka.model.uzytkownik.requests.StatystykiDTO;

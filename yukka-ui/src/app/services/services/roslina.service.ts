@@ -23,8 +23,8 @@ import { getWlasciwosciWithRelations } from '../fn/roslina/get-wlasciwosci-with-
 import { GetWlasciwosciWithRelations$Params } from '../fn/roslina/get-wlasciwosci-with-relations';
 import { PageResponseRoslinaResponse } from '../models/page-response-roslina-response';
 import { RoslinaResponse } from '../models/roslina-response';
-import { saveRoslina1 } from '../fn/roslina/save-roslina-1';
-import { SaveRoslina1$Params } from '../fn/roslina/save-roslina-1';
+import { saveRoslina } from '../fn/roslina/save-roslina';
+import { SaveRoslina$Params } from '../fn/roslina/save-roslina';
 import { updateRoslina } from '../fn/roslina/update-roslina';
 import { UpdateRoslina$Params } from '../fn/roslina/update-roslina';
 import { updateRoslinaObraz } from '../fn/roslina/update-roslina-obraz';
@@ -72,7 +72,7 @@ export class RoslinaService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  updateRoslinaObraz$Response(params: UpdateRoslinaObraz$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+  updateRoslinaObraz$Response(params: UpdateRoslinaObraz$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
     return updateRoslinaObraz(this.http, this.rootUrl, params, context);
   }
 
@@ -82,33 +82,33 @@ export class RoslinaService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  updateRoslinaObraz(params: UpdateRoslinaObraz$Params, context?: HttpContext): Observable<RoslinaResponse> {
+  updateRoslinaObraz(params: UpdateRoslinaObraz$Params, context?: HttpContext): Observable<string> {
     return this.updateRoslinaObraz$Response(params, context).pipe(
-      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
+      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 
-  /** Path part for operation `saveRoslina1()` */
-  static readonly SaveRoslina1Path = '/rosliny';
+  /** Path part for operation `saveRoslina()` */
+  static readonly SaveRoslinaPath = '/rosliny';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `saveRoslina1()` instead.
+   * To access only the response body, use `saveRoslina()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslina1$Response(params?: SaveRoslina1$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
-    return saveRoslina1(this.http, this.rootUrl, params, context);
+  saveRoslina$Response(params?: SaveRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+    return saveRoslina(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `saveRoslina1$Response()` instead.
+   * To access the full response (for headers, for example), `saveRoslina$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  saveRoslina1(params?: SaveRoslina1$Params, context?: HttpContext): Observable<RoslinaResponse> {
-    return this.saveRoslina1$Response(params, context).pipe(
+  saveRoslina(params?: SaveRoslina$Params, context?: HttpContext): Observable<RoslinaResponse> {
+    return this.saveRoslina$Response(params, context).pipe(
       map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
     );
   }

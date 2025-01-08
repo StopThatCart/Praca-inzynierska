@@ -108,7 +108,7 @@ public class PracownikService {
         }
 
         log.info("Użytkownik {} odbanowany przez {}", targetUzyt.getNazwa(), uzyt.getNazwa());
-        Boolean unbanus = uzytkownikRepository.banUzytkownik(nazwa, false, null);
+        Boolean unbanus = uzytkownikRepository.banUzytkownik(nazwa, false, null, null);
         powiadomienieService.sendPowiadomienieOfUnban(targetUzyt);
         return unbanus;
     }
@@ -154,7 +154,7 @@ public class PracownikService {
             throw new IllegalArgumentException("Użytkownik nie może być odbanowany podczas banowania");
         }
 
-        Boolean banus = uzytkownikRepository.banUzytkownik(request.getNazwa(), request.getBan(), request.getBanDo());
+        Boolean banus = uzytkownikRepository.banUzytkownik(request.getNazwa(), request.getBan(), request.getBanDo(), request.getPowod());
         powiadomienieService.sendPowiadomienieOfBan(targetUzyt, request);
         return banus;
     }

@@ -86,7 +86,7 @@ public class UzytkownikRoslinaService {
         Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie " + nazwa));
 
-        if(!targetUzyt.getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+        if(!targetUzyt.getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(targetUzyt)) {
             throw new ForbiddenException("Brak uprawnień do przeglądania roślin użytkownika " + targetUzyt.getNazwa());
         }
 
@@ -145,7 +145,7 @@ public class UzytkownikRoslinaService {
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie " + nazwa));
 
 
-        if(!targetUzyt.getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+        if(!targetUzyt.getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(targetUzyt)) {
             throw new ForbiddenException("Brak uprawnień do przeglądania roślin użytkownika " + targetUzyt.getNazwa());
         }
         
@@ -230,7 +230,7 @@ public class UzytkownikRoslinaService {
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + request.getRoslinaId() + " dla użytkownika " + uzyt.getNazwa()));
 
         Uzytkownik targetUzyt = roslina.getUzytkownik();
-        if (!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+        if (!uzyt.hasAuthenticationRights(targetUzyt)) {
             throw new ForbiddenException("Brak uprawnień do zmiany rośliny " + request.getRoslinaId());
         }
         
@@ -269,8 +269,18 @@ public class UzytkownikRoslinaService {
         Uzytkownik targetUzyt = roslina.getUzytkownik();
         System.out.println("Uzytkownik: " + targetUzyt.getNazwa());
 
-        if (!uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+        if (!uzyt.hasAuthenticationRights(targetUzyt)) {
             throw new ForbiddenException("Brak uprawnień do zmiany obrazu rośliny " + roslinaId);
+        }
+
+        if (file == null) {
+            log.info("Brak pliku obrazu, ustawienie domyślnego obrazu");
+            log.info("Obraz: " + roslina.getObraz());
+            if(!roslina.getObraz().equals(defaultRoslinaObrazName)) {
+                fileUtils.deleteObraz(roslina.getObraz());
+                roslinaRepository.updateRoslinaObraz(roslina.getRoslinaId(), defaultRoslinaObrazName);
+            }
+            return;
         }
         
         if (roslina.getObraz() != null) fileUtils.deleteObraz(roslina.getObraz());

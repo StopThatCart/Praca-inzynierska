@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -115,7 +116,7 @@ public class UzytkownikRoslinaController {
      * @return ResponseEntity zawierające odpowiedź z informacją o zapisaniu rośliny
      */
     @PostMapping(consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<RoslinaResponse> saveRoslina(@Valid @RequestPart("request") UzytkownikRoslinaRequest request, 
+    public ResponseEntity<RoslinaResponse> save(@Valid @RequestPart("request") UzytkownikRoslinaRequest request, 
     @Parameter() @RequestPart(value = "file", required = false) MultipartFile file,
     Authentication connectedUser) {
         return ResponseEntity.status(HttpStatus.CREATED).body(uzytkownikRoslinaService.save(request, file, connectedUser));
@@ -129,7 +130,7 @@ public class UzytkownikRoslinaController {
      * @return ResponseEntity zawierające odpowiedź z informacją o zaktualizowaniu rośliny
      */
     @PatchMapping(consumes = "application/json", produces="application/json")
-    public ResponseEntity<RoslinaResponse> updateRoslina(@Valid @RequestBody UzytkownikRoslinaRequest request, Authentication connectedUser) {
+    public ResponseEntity<RoslinaResponse> update(@Valid @RequestBody UzytkownikRoslinaRequest request, Authentication connectedUser) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(uzytkownikRoslinaService.update(request, connectedUser));
     }
 
@@ -141,11 +142,10 @@ public class UzytkownikRoslinaController {
      * @param connectedUser obiekt uwierzytelnionego użytkownika
      * @return ResponseEntity zawierające odpowiedź z informacją o zaktualizowaniu obrazu rośliny
      */
-    @PostMapping(value = "/{roslinaId}", consumes = "multipart/form-data", produces = "application/json")
-    public ResponseEntity<?> updateRoslinaObraz(
+    @PutMapping(value = "/{roslinaId}", consumes = "multipart/form-data", produces = "application/json")
+    public ResponseEntity<?> updateObraz(
             @PathVariable("roslinaId") String roslinaId, 
-            @Parameter() @RequestPart("file") 
-            MultipartFile file, 
+            @Parameter() @RequestPart(value = "file", required = false) MultipartFile file, 
             Authentication connectedUser) {
         uzytkownikRoslinaService.uploadUzytkownikRoslinaObraz(file, roslinaId, connectedUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();

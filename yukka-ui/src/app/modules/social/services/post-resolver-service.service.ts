@@ -19,7 +19,7 @@ export class PostResolverService implements Resolve<PostResponse> {
     const postId = route.paramMap.get('postId');
     console.log("PostResolverService:resolve: postId: ", postId);
     //return this.postService.findPostById({ 'post-id': postId as string } );
-    return this.postService.findPostById({ 'post-id': postId as string } ).pipe(
+    return this.postService.findPostByIdCheck({ 'post-id': postId as string } ).pipe(
       catchError((error) => {
         this.errorHandlingService.handleResolverErrors(error, this.router);
         throw error;

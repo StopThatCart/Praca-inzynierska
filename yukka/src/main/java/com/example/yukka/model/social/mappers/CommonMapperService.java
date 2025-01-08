@@ -88,6 +88,7 @@ public class CommonMapperService {
             .aktywowany(uzytkownik.isAktywowany())
             .ban(uzytkownik.isBan())
             .banDo(uzytkownik.getBanDo())
+            .banPowod(uzytkownik.getBanPowod())
             .imie(uzytkownik.getImie())
             .miasto(uzytkownik.getMiasto())
             .miejsceZamieszkania(uzytkownik.getMiejsceZamieszkania())

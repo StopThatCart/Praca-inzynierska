@@ -4,11 +4,11 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { UzytkownikRoslinaService } from './services/uzytkownik-roslina.service';
 import { RozmowaPrywatnaService } from './services/rozmowa-prywatna.service';
 import { RoslinaService } from './services/roslina.service';
 import { PostService } from './services/post.service';
 import { KomentarzService } from './services/komentarz.service';
-import { UzytkownikRoslinaService } from './services/uzytkownik-roslina.service';
 import { UzytkownikService } from './services/uzytkownik.service';
 import { PracownikService } from './services/pracownik.service';
 import { PowiadomienieService } from './services/powiadomienie.service';
@@ -24,11 +24,11 @@ import { OgrodService } from './services/ogrod.service';
   exports: [],
   declarations: [],
   providers: [
+    UzytkownikRoslinaService,
     RozmowaPrywatnaService,
     RoslinaService,
     PostService,
     KomentarzService,
-    UzytkownikRoslinaService,
     UzytkownikService,
     PracownikService,
     PowiadomienieService,

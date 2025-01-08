@@ -156,11 +156,11 @@ public class RoslinaController {
      * @return ResponseEntity zawierające odpowiedź z zaktualizowaną rośliną w formacie JSON
      */
     @PutMapping(value = "/{nazwa-lacinska}/obraz", consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<RoslinaResponse> updateRoslinaObraz(
+    public ResponseEntity<String> updateRoslinaObraz(
             @PathVariable("nazwa-lacinska") String nazwaLacinska,
-            @Parameter() @RequestPart("file") MultipartFile file) {
-        RoslinaResponse roslina = roslinaService.uploadRoslinaObraz(nazwaLacinska, file);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(roslina);
+            @Parameter() @RequestPart(value = "file", required = false) MultipartFile file) {
+        roslinaService.uploadRoslinaObraz(nazwaLacinska, file);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     
     /**

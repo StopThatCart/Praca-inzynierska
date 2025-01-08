@@ -128,7 +128,7 @@ public class SecurityConfig {
 
                     .requestMatchers("/pracownicy/**").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers(HttpMethod.POST, "/pracownicy").hasAuthority(ROLE.Admin.toString())
-                    .requestMatchers(HttpMethod.DELETE, "/rosliny/{roslina-id}").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
+                    //.requestMatchers(HttpMethod.DELETE, "/rosliny/{roslina-id}").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers(HttpMethod.POST, "/rosliny").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
                     .requestMatchers(HttpMethod.PUT, "/rosliny/{nazwa-lacinska}/**").hasAnyAuthority(ROLE.Admin.toString(), ROLE.Pracownik.toString())
 

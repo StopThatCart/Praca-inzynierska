@@ -54,6 +54,9 @@
             <ng-container *ngIf="!uzyt.aktywowany">
               <h5 class="text-danger fw-bold">Konto nieaktywne</h5>
             </ng-container>
+            <ng-container *ngIf="uzyt.ban">
+              <h5 class="text-danger fw-bold">Konto zbanowane do : {{ uzyt.banDo }}</h5>
+            </ng-container>
             
 
 

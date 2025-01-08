@@ -1,4 +1,4 @@
-<button
+<button *ngIf="isPracownik()"
 (click)="open(content)"
 class="btn btn-info rounded text-white" type="button" placement="bottom" ngbTooltip="Zgłoś">
   Stwórz powiadomienie
@@ -29,7 +29,7 @@ class="btn btn-info rounded text-white" type="button" placement="bottom" ngbTool
 				<div class="input-group">
           <textarea [(ngModel)]="request.opis"
           class="form-control text-black"
-          name="opis" type="text" placeholder="Powód zgłoszenia">
+          name="opis" type="text" placeholder="Treść...">
 
           </textarea>
 				</div>

@@ -70,19 +70,26 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
                               (kom:Komentarz)
                               <-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)
                               <-[:SKOMENTOWAL]-(uzytkownik:Uzytkownik)
-        OPTIONAL MATCH path2 = (post)<-[:OCENIL]-(oceniajacy:Uzytkownik) WHERE oceniajacy <> autor
-        OPTIONAL MATCH path3 = (post)<-[:JEST_W_POSCIE]-(:Komentarz)
-
-        OPTIONAL MATCH oceniajacyKomentarze = (kom)<-[:OCENIL]-(oceniajacyKom:Uzytkownik)
-        OPTIONAL MATCH oceniajacyOdpowiedzi = (odpowiedz)<-[:OCENIL]-(oceniajacyOdp:Uzytkownik)
+        OPTIONAL MATCH path2 = (post)<-[:OCENIL]-(oceniajacy:Uzytkownik)
+        
+        OPTIONAL MATCH path3 = (post)<-[:JEST_W_POSCIE]-(komentarze:Komentarz)
+        OPTIONAL MATCH oceniajacyKomentarze = (komentarze)<-[:OCENIL]-(oceniajacyKom:Uzytkownik)
 
         RETURN post, r1, autor, collect(nodes(path)), collect(relationships(path)),
                 collect(nodes(path2)), collect(relationships(path2)),
                 collect(nodes(path3)), collect(relationships(path3)),
-                collect(nodes(oceniajacyKomentarze)),  collect(relationships(oceniajacyKomentarze)),
-                collect(nodes(oceniajacyOdpowiedzi)),  collect(relationships(oceniajacyOdpowiedzi))
+                collect(nodes(oceniajacyKomentarze)),  collect(relationships(oceniajacyKomentarze))
         """)
     Optional<Post> findPostByPostId(@Param("postId") String postId);
+
+
+    @Query("""
+        MATCH (post:Post {postId: $postId})
+        MATCH (autor:Uzytkownik)-[r1:MA_POST]->(post)
+
+        RETURN post, r1, autor
+        """)
+    Optional<Post> findPostByPostIdCheck(@Param("postId") String postId);
 
 
     @Query("""

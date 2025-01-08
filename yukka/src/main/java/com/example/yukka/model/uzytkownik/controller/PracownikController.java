@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.yukka.auth.requests.BanRequest;
 import com.example.yukka.auth.requests.RegistrationRequest;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;

@@ -16,7 +16,6 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,6 +50,7 @@ import lombok.ToString;
  * <li><strong>aktywowany</strong>: Status aktywacji konta użytkownika.</li>
  * <li><strong>ban</strong>: Status bana użytkownika.</li>
  * <li><strong>banDo</strong>: Data wygaśnięcia bana.</li>
+ * <li><strong>banPowod</strong>: Powód bana.</li>
  * <li><strong>imie</strong>: Imię użytkownika.</li>
  * <li><strong>miasto</strong>: Miasto użytkownika.</li>
  * <li><strong>miejsceZamieszkania</strong>: Miejsce zamieszkania użytkownika.</li>
@@ -113,6 +113,9 @@ public class Uzytkownik implements UserDetails, Principal{
     @Property("banDo")
     private LocalDate banDo;
 
+    @Property("banPowod")
+    private String banPowod;
+
     @Property("imie")
     private String imie;
 
@@ -136,7 +139,6 @@ public class Uzytkownik implements UserDetails, Principal{
     private List<Ocenil> oceny;
 
     @Relationship(type = "MA_USTAWIENIA", direction = Relationship.Direction.OUTGOING)
-    // Daj List jak nie działa
     private Ustawienia ustawienia;
     
     @Relationship(type = "MA_OGROD", direction = Relationship.Direction.OUTGOING)
@@ -165,11 +167,7 @@ public class Uzytkownik implements UserDetails, Principal{
         this.haslo = password;
         this.labels = List.of(label);
     }
-
     
-    /** 
-     * @return String
-     */
     @Override
     public String getName() {
         return nazwa;
@@ -210,28 +208,13 @@ public class Uzytkownik implements UserDetails, Principal{
      * @param connectedUser Połączony zalogowany użytkownik
      * @return boolean
     */
-    public boolean hasAuthenticationRights(Uzytkownik targetUzyt, Authentication connectedUser) {
-        if (connectedUser == null) {
-            throw new IllegalArgumentException("Użytkownik nie jest zalogowany");
-        }
-        Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
-
-        if(uzyt.isAdmin()){
+    public boolean hasAuthenticationRights(Uzytkownik targetUzyt) {
+        if(this.isAdmin()){
             return true;
-        }else if (uzyt.isPracownik()) {
-            return targetUzyt.isNormalUzytkownik() || uzyt.getEmail().equals(targetUzyt.getEmail());
+        }else if (this.isPracownik()) {
+            return targetUzyt.isNormalUzytkownik() || this.getEmail().equals(targetUzyt.getEmail());
         } else  {
-            return uzyt.getEmail().equals(targetUzyt.getEmail());
-        }
-    }
-
-    public boolean hasAuthenticationRights(Uzytkownik targetUzyt, Uzytkownik uzyt) {
-        if(uzyt.isAdmin()){
-            return true;
-        }else if (uzyt.isPracownik()) {
-            return targetUzyt.isNormalUzytkownik() || uzyt.getEmail().equals(targetUzyt.getEmail());
-        } else  {
-            return uzyt.getEmail().equals(targetUzyt.getEmail());
+            return this.getEmail().equals(targetUzyt.getEmail());
         }
     }
     

@@ -113,7 +113,7 @@ public class PowiadomienieService {
         
 
         Miesiac aktualnyMiesiac = Miesiac.values()[LocalDate.now().getMonthValue() - 1];
-        System.out.println("Aktualny miesiąc: " + aktualnyMiesiac.name());
+        log.info("Aktualny miesiąc: " + aktualnyMiesiac.name());
        // Miesiac aktualnyMiesiac = Miesiac.MAJ;  // Test
 
         for (Uzytkownik uzytkownik : uzytkownicy) {
@@ -152,13 +152,12 @@ public class PowiadomienieService {
         
         for (Uzytkownik uzytkownik : uzytkownicy) {
             if(uzytkownik.getBanDo().isBefore(LocalDate.now())) {
-                uzytkownikRepository.banUzytkownik(uzytkownik.getNazwa(), false, null);
-                sendPowiadomienieOfBan(uzytkownik, null);
+                log.info("Odbanowywanie użytkownika: " + uzytkownik.getNazwa());
+                uzytkownikRepository.banUzytkownik(uzytkownik.getNazwa(), false, null, null);
             }
         }
     }
 
-    
     /**
      * Metoda sprawdzająca codziennie, którzy użytkownicy powinni zostać odbanowani.
      */

@@ -64,6 +64,18 @@ public class PostController {
     }
 
     /**
+     * Metoda obsługująca żądanie GET na endpoint /{post-id}/check.
+     * Sprawdza istnienie posta o podanym identyfikatorze.
+     *
+     * @param postId identyfikator posta, który ma zostać sprawdzony
+     * @return ResponseEntity zawierające obiekt PostResponse z informacjami o poście
+     */
+    @GetMapping(value = "/{post-id}/check", produces="application/json")
+    public ResponseEntity<PostResponse> findPostByIdCheck(@PathVariable("post-id") String postId) {
+        return ResponseEntity.ok(postService.findByPostIdCheck(postId));
+    }
+
+    /**
      * Metoda obsługująca żądanie GET do wyszukania wszystkich postów.
      *
      * @param page numer strony wyników, domyślnie 0

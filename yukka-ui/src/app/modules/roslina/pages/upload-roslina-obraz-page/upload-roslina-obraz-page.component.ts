@@ -73,13 +73,14 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
     this.wybranyPlik = null;
   }
 
+  onSubmit() {
+    if (!this.wybranyPlik) return;
+    this.uploadRoslinaObraz();
+  }
+
   uploadRoslinaObraz(): void {
     this.errorMsg = [];
     this.message = '';
-
-    if (!this.wybranyPlik) return;
-
-    console.log("roslina id: " + this.roslinaId);
 
     if (this.roslina.roslinaUzytkownika) {
       this.uploadUzytkownikRoslinaObraz();
@@ -103,9 +104,7 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
   }
 
   uploadUzytkownikRoslinaObraz(): void {
-    console.log("AKTUALIZACJA OBRAZU ROŚLINY UZYTKOWNIKA");
-
-    this.uzytkownikRoslinaService.updateRoslinaObraz1({
+    this.uzytkownikRoslinaService.updateObraz({
       roslinaId: this.roslinaId,
       body: { file: this.wybranyPlik } })
       .subscribe({
@@ -118,6 +117,13 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
           this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);
         }
       });
+  }
+
+  delet() {
+    if(confirm('Czy na pewno chcesz zmienić obraz na domyślny?')) {
+      this.wybranyPlik = null;
+      this.uploadRoslinaObraz();
+    }
   }
 
 }

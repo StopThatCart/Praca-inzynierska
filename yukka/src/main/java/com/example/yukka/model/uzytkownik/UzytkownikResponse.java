@@ -23,6 +23,7 @@ import lombok.Setter;
  * <li><strong>aktywowany</strong>: Informacja, czy użytkownik jest aktywowany.</li>
  * <li><strong>ban</strong>: Informacja, czy użytkownik jest zbanowany.</li>
  * <li><strong>banDo</strong>: Data do kiedy użytkownik jest zbanowany.</li>
+ * <li><strong>banPowod</strong>: Powód zbanowania użytkownika.</li>
  * <li><strong>imie</strong>: Imię użytkownika.</li>
  * <li><strong>miasto</strong>: Miasto użytkownika.</li>
  * <li><strong>miejsceZamieszkania</strong>: Miejsce zamieszkania użytkownika.</li>
@@ -47,6 +48,7 @@ private Long id;
     private boolean aktywowany;
     private boolean ban;
     public LocalDate banDo;
+    private String banPowod;
 
     private String imie;
     private String miasto;

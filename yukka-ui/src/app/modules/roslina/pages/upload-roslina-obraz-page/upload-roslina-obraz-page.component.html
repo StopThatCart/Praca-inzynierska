@@ -21,7 +21,10 @@
         <app-image-upload
         (fileSelected)="onFileSelected($event)"
         (clearImageEvent)="clearImage()"></app-image-upload>
-        <button class="btn btn-primary text-uppercase" type="submit">Dodaj Obraz</button>
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger text-uppercase" (click)="delet()">Domyślny</button>
+          <button class="btn btn-primary text-uppercase" type="submit">Dodaj</button>
+        </div>
       </form>
     </div>
   </div>

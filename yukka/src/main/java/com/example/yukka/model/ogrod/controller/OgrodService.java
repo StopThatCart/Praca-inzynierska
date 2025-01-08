@@ -55,7 +55,7 @@ public class OgrodService {
             throw new IllegalArgumentException("Użytkownik " + uzytkownikNazwa + " nie jest aktywowany");
         }
 
-        if(!targetUzyt.getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(targetUzyt, uzyt)) {
+        if(!targetUzyt.getUstawienia().isOgrodPokaz() && !uzyt.hasAuthenticationRights(targetUzyt)) {
             throw new ForbiddenException("Nie masz uprawnień do przeglądania tego ogrodu");
         }
         

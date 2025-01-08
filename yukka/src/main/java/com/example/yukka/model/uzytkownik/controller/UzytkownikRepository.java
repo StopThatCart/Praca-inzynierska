@@ -329,10 +329,10 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
     @Query("""
        MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa 
-       SET u.ban = $ban, u.banDo = $banDo 
+       SET u.ban = $ban, u.banDo = $banDo, u.banPowod = $banPowod
        RETURN COUNT(u) > 0 AS success     
             """)
-    Boolean banUzytkownik(String nazwa, boolean ban, LocalDate banDo);
+    Boolean banUzytkownik(String nazwa, boolean ban, LocalDate banDo, String banPowod);
 
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
