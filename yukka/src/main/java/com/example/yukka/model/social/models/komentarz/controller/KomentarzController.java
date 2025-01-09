@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.social.models.komentarz.KomentarzResponse;
+import com.example.yukka.model.social.models.ocenil.OcenaResponse;
 import com.example.yukka.model.social.requests.KomentarzRequest;
 import com.example.yukka.model.social.requests.OcenaRequest;
 
@@ -33,7 +34,6 @@ import lombok.RequiredArgsConstructor;
  * <li><strong>findKomentarzeOfUzytkownik:</strong> Znajduje komentarze użytkownika na podstawie jego nazwy.</li>
  * <li><strong>addOdpowiedzToKomentarz:</strong> Dodaje odpowiedź do komentarza.</li>
  * <li><strong>addKomentarzToPost:</strong> Dodaje komentarz do posta.</li>
- * <li><strong>addKomentarzToWiadomoscPrywatna:</strong> Dodaje komentarz do wiadomości prywatnej.</li>
  * <li><strong>addOcenaToKomentarz:</strong> Dodaje ocenę do komentarza (działa również jako aktualizacja).</li>
  * <li><strong>removeOcenaFromKomentarz:</strong> Usuwa ocenę z komentarza.</li>
  * <li><strong>updateKomentarz:</strong> Aktualizuje komentarz.</li>
@@ -135,42 +135,19 @@ public class KomentarzController {
     }
 
     /**
-     * Metoda obsługująca żądanie POST do dodania komentarza do wiadomości prywatnej.
-     *
-     * @param request obiekt żądania zawierający dane komentarza
-     * @param file plik obrazu (opcjonalnie)
-     * @param connectedUser aktualnie zalogowany użytkownik
-     * @return ResponseEntity zawierające obiekt KomentarzResponse
-     * <ul>
-     *   <li><strong>request</strong> - obiekt żądania zawierający dane komentarza</li>
-     *   <li><strong>file</strong> - plik obrazu (opcjonalnie)</li>
-     *   <li><strong>connectedUser</strong> - aktualnie zalogowany użytkownik</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt KomentarzResponse</li>
-     * </ul>
-     */
-    @PostMapping(value =  "/wiadomosciPrywatne", consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<KomentarzResponse> addKomentarzToWiadomoscPrywatna(
-                    @Valid @RequestPart("request") KomentarzRequest request, 
-                    @Parameter() @RequestPart(value = "file", required = false) MultipartFile file,
-                    Authentication connectedUser) {
-        return ResponseEntity.status(CREATED).body(komentarzService.addKomentarzToWiadomoscPrywatna(request, file, connectedUser));
-    }
-
-
-    /**
      * Metoda obsługująca żądanie PUT do dodania oceny do komentarza.
      *
      * @param request obiekt żądania zawierający dane oceny
      * @param connectedUser aktualnie zalogowany użytkownik
-     * @return ResponseEntity zawierające obiekt KomentarzResponse
+     * @return ResponseEntity zawierające obiekt OcenaResponse
      * <ul>
      *   <li><strong>request</strong> - obiekt żądania zawierający dane oceny</li>
      *   <li><strong>connectedUser</strong> - aktualnie zalogowany użytkownik</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt KomentarzResponse</li>
+     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt OcenaResponse</li>
      * </ul>
      */
     @PutMapping(value = "/oceny", consumes="application/json", produces="application/json")
-    public ResponseEntity<KomentarzResponse> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
+    public ResponseEntity<OcenaResponse> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.status(CREATED).body(komentarzService.addOcenaToKomentarz(request, connectedUser));
     }
 
@@ -188,12 +165,10 @@ public class KomentarzController {
      *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt KomentarzResponse</li>
      * </ul>
      */
-    @PatchMapping(value = "/{komentarz-id}", consumes="application/json", produces="application/json")
+    @PatchMapping(consumes="application/json", produces="application/json")
     public ResponseEntity<KomentarzResponse> updateKomentarz(
-                    @PathVariable("komentarz-id") String komentarzId, 
-                    @Valid @RequestBody KomentarzRequest request, 
-                    Authentication connectedUser) {
-        return ResponseEntity.status(ACCEPTED).body(komentarzService.updateKomentarz(komentarzId, request, connectedUser));
+                    @Valid @RequestBody KomentarzRequest request, Authentication connectedUser) {
+        return ResponseEntity.status(ACCEPTED).body(komentarzService.updateKomentarz(request, connectedUser));
     }
 
     /**

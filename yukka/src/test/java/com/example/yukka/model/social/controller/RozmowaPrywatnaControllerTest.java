@@ -1,30 +1,36 @@
 package com.example.yukka.model.social.controller;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import org.mockito.Mock;
+import java.util.Collections;
+
+import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.example.yukka.auth.authorities.ROLE;
+import com.example.yukka.auth.requests.UsunKontoRequest;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.social.models.komentarz.Komentarz;
-import com.example.yukka.model.social.models.rozmowaPrywatna.RozmowaPrywatna;
+import com.example.yukka.model.social.models.komentarz.KomentarzResponse;
+import com.example.yukka.model.social.models.komentarz.controller.KomentarzController;
 import com.example.yukka.model.social.models.rozmowaPrywatna.RozmowaPrywatnaResponse;
 import com.example.yukka.model.social.models.rozmowaPrywatna.controller.RozmowaPrywatnaController;
 import com.example.yukka.model.social.models.rozmowaPrywatna.controller.RozmowaPrywatnaService;
+import com.example.yukka.model.social.requests.KomentarzRequest;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
@@ -32,239 +38,189 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 import lombok.extern.slf4j.Slf4j;
 //@WebMvcTest(RozmowaPrywatnaController.class)
 @Testcontainers
-//@SpringBootTest(classes = {TestUzytConfig.class})
 @SpringBootTest
 @Slf4j
+@TestMethodOrder(OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RozmowaPrywatnaControllerTest {
-   // @MockBean
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private KomentarzController komentarzController;
+    @Autowired
+    private UzytkownikService uzytkownikService;
+    @Autowired
+    private UzytkownikRepository uzytkownikRepository;
+    @Autowired
     private RozmowaPrywatnaService rozmowaPrywatnaService;
-
-   // @InjectMocks
-  //  @InjectMocks
+    @Autowired
     private RozmowaPrywatnaController rozmowaPrywatnaController;
 
-  //  @MockBean
-    private UzytkownikRepository uzytkownikRepository;
- //   @MockBean
-    private UzytkownikService uzytkownikService;
-
-
-   // @MockBean
-    AuthenticationManager authenticationManager;
-
-    @Mock
-    private MockMvc mockMvc;
-
-    @Mock
-    private Authentication senderAuth;
-    @Mock
-    private Authentication receiverAuth;
-
-    //@Mock
-    private Authentication authentication;
-
+    Authentication senderAuth;
     Uzytkownik nadawca;
+
+    Authentication receiverAuth;
     Uzytkownik odbiorca;
 
-    RozmowaPrywatna rozmowa;
+    KomentarzResponse komentarzResponse;
+
+    RozmowaPrywatnaResponse rozmowa;
 
     Komentarz k1;
     Komentarz k2;
     Komentarz k3;
 
-    @BeforeEach
+    @BeforeAll
     public void setup() {
-
-        mockMvc = MockMvcBuilders.standaloneSetup(rozmowaPrywatnaController)
-                .apply(springSecurity())
-                .build();
-
-      //  SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-      //  securityContext.setAuthentication(authentication);
-      //  SecurityContextHolder.setContext(securityContext);
-
-
         senderAuth = Mockito.mock(Authentication.class);
         receiverAuth = Mockito.mock(Authentication.class);
 
-
-
-
-       // MockitoAnnotations.openMocks(this);
-       // mockMvc = MockMvcBuilders.standaloneSetup(rozmowaPrywatnaController).build();
-
         nadawca = Uzytkownik.builder()
-        .uzytId("dawcaIdJakies")
+        .uzytId(uzytkownikService.createUzytkownikId())
         .nazwa("Na Dawca")
         .email("dawca@email.pl")
-       // .labels(Collections.singletonList(ROLE.Admin.toString()))
+        .haslo(passwordEncoder.encode("haslo12345678"))
+        .aktywowany(true)
+        .labels(Collections.singletonList(ROLE.Uzytkownik.toString()))
         .build();  
+       
+        Mockito.when(senderAuth.getPrincipal()).thenReturn(nadawca);
 
         odbiorca = Uzytkownik.builder()
-        .uzytId("biorcaIdJakies")
+        .uzytId(uzytkownikService.createUzytkownikId())
         .nazwa("Oden Biorca")
         .email("biorca@email.pl")
-       // .labels(Collections.singletonList(ROLE.Admin.toString()))
-        .build();  
+        .haslo(passwordEncoder.encode("haslo12345678"))
+        .aktywowany(true)
+        .build();
+
+        Mockito.when(receiverAuth.getPrincipal()).thenReturn(odbiorca);
 
         uzytkownikService.addUzytkownik(nadawca);
         uzytkownikService.addUzytkownik(odbiorca);
 
-      //  Mockito.when(senderAuth.getPrincipal()).thenReturn(nadawca);
-     //   Mockito.when(receiverAuth.getPrincipal()).thenReturn(odbiorca);
-        
+        rozmowa = RozmowaPrywatnaResponse.builder().build();
 
         k1 = Komentarz.builder().komentarzId("komId1").opis("Wiadomość od nadawcy").build();
-		k2 = Komentarz.builder().komentarzId("komId2").opis("Wiadomość od odbiorcy").build();
+		    k2 = Komentarz.builder().komentarzId("komId2").opis("Wiadomość od odbiorcy").build();
         k3 = Komentarz.builder().komentarzId("komId3").opis("Wiadomość kolejna").build();
 
 
-        uzytkownikService.addUzytkownik(nadawca);
-        uzytkownikService.addUzytkownik(odbiorca);
-
-        Uzytkownik nadawca2  = uzytkownikRepository.findByUzytId(nadawca.getUzytId()).get();
-
-        authentication = Mockito.mock(Authentication.class);
-
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
-        SecurityContextHolder.setContext(securityContext);
-
-        Mockito.when(authentication.getPrincipal()).thenReturn(nadawca2);
-        
-
-        
-        Authentication bb = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("bb: " + bb);
+        nadawca = uzytkownikRepository.findByEmail(nadawca.getEmail()).get();
+        odbiorca = uzytkownikRepository.findByEmail(odbiorca.getEmail()).get();
 
      //   RozmowaPrywatna rozmowa1 = rozmowaPrywatnaService.inviteToRozmowaPrywatnaNoPunjabi(katarzyna.getNazwa(), piotr);
-
     }
 
-    @AfterEach
-    void cleanUp() {
-        if (nadawca != null && nadawca.getEmail() != null) {
-            uzytkownikRepository.removeUzytkownik(nadawca.getEmail());
+
+    @AfterAll
+    public void afterAll() {
+        log.info("Usuwanie konta testowego...");
+        UsunKontoRequest request = UsunKontoRequest.builder().haslo("haslo12345678").build();
+
+        try {
+            uzytkownikService.removeSelf(request, senderAuth);
+        } catch (IllegalArgumentException e) {
+            log.error("Błąd podczas usuwania konta testowego: {}", e.getMessage());
         }
-        if (odbiorca != null && odbiorca.getEmail() != null) {
-            uzytkownikRepository.removeUzytkownik(odbiorca.getEmail());
-        };
-    }
 
-  
-  /** 
-   * @throws Exception
-   */
-  //  @Test
-    void testFindRozmowyPrywatneOfUzytkownikAsAdmin() throws Exception {
-        Authentication bb = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("\n\n\nbb: " + bb + "\n\n\n");
-
-        log.info("bb: " + bb);
-        log.info("nadawca: " + nadawca);
-       
-        PageResponse<RozmowaPrywatnaResponse> pageResponse = new PageResponse<>();
-        when(rozmowaPrywatnaService.findRozmowyPrywatneOfUzytkownik(any(Integer.class), any(Integer.class), eq(bb)))
-                .thenReturn(pageResponse);
-
-        mockMvc.perform(get("/rozmowy")
-                .param("page", "0")
-                .param("size", "10")
-                .principal(authentication))
-                .andExpect(status().isOk());
-    }
-/*
-    @Test
-   // @WithMockUser(username = "pracownik", roles = {"Pracownik"})
-    void testGetRozmowaPrywatnaAsPracownik() throws Exception {
-
-        String lacinskaNazwa2 = "Jeśli taka łacińska nazwa się znajdzie to będę bardzo zdziwiony";
-        Roslina roslinaWithoutRelations = Roslina.builder()
-            .nazwa(roslinaNazwa)
-            .nazwaLacinska(lacinskaNazwa2)
-            .opis(roslinaOpis)
-            .wysokoscMin(wysokoscMin)
-            .wysokoscMax(wysokoscMax)
-            .obraz(roslinaObraz)
-            .build();
-
-
-            rozmowaPrywatnaController.getRozmowaPrywatna(lacinskaNazwa2, senderAuth);
-
-        RoslinaRequest emptyRoslinaRequest = roslinaMapper.toRoslinaRequest(roslinaWithoutRelations);
-        ResponseEntity<String> response = roslinaController.saveRoslina(emptyRoslinaRequest, mockAuth);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-
-        Roslina roslina2 = roslinaService.findByNazwaLacinska(lacinskaNazwa2).get();
-        // Assert
-            
-        Assertions.assertThat(roslina2).isNotNull();
-        Assertions.assertThat(roslina2.getId()).isNotNull();
-        Assertions.assertThat(roslina2.getNazwa()).isEqualTo(roslinaWithoutRelations.getNazwa());
-        Assertions.assertThat(roslina2.getNazwaLacinska()).isEqualTo(roslinaWithoutRelations.getNazwaLacinska());
-        Assertions.assertThat(roslina2.getOpis()).isEqualTo(roslinaWithoutRelations.getOpis());
-        Assertions.assertThat(roslina2.getWysokoscMin()).isEqualTo(roslinaWithoutRelations.getWysokoscMin());
-        Assertions.assertThat(roslina2.getWysokoscMax()).isEqualTo(roslinaWithoutRelations.getWysokoscMax());
-
-        Assertions.assertThat(roslina2.getFormy()).isEmpty();
-        // Reszty nie trzeba bo to w sumie to samo
-
-        roslinaService.deleteByNazwaLacinska(lacinskaNazwa2)
-
-
-
-        RozmowaPrywatnaResponse response = new RozmowaPrywatnaResponse();
-        when(rozmowaPrywatnaService.findRozmowaPrywatna(eq("receiverId"), eq(senderAuth)))
-                .thenReturn(response);
-
-        mockMvc.perform(get("/rozmowy/receiverId")
-                .principal(senderAuth))
-                .andExpect(status().isOk());
-    }
-
-    
-     
-     */
-
-   // @Test
-   // @WithMockUser(username = "uzytkownik", roles = {"Uzytkownik"})
-    void testInviteToRozmowaPrywatnaAsUzytkownik() throws Exception {
-    //    rozmowaPrywatnaController.inviteToRozmowaPrywatna(odbiorca.getUzytId(), senderAuth);
-        
-      //  RozmowaPrywatna rozmowa1 = rozmowaPrywatnaService.inviteToRozmowaPrywatna(odbiorca.getUzytId(), senderAuth);
-     //   RozmowaPrywatna rozmowa = new RozmowaPrywatna();
-     //   when(rozmowaPrywatnaService.inviteToRozmowaPrywatna(odbiorca.getUzytId(), senderAuth))
-      //          .thenReturn(rozmowa);
-
-       // mockMvc.perform(post("/rozmowy/{odbiorca-uzyt-id}")
-      //          .principal(senderAuth))
-      //          .andExpect(status().isCreated());
-    }
-    /*
-    @Test
-    @WithMockUser(username = "uzytkownik", roles = {"Uzytkownik"})
-    void testAcceptRozmowaPrywatnaAsUzytkownik() throws Exception {
-        RozmowaPrywatna rozmowa = new RozmowaPrywatna();
-        when(rozmowaPrywatnaService.acceptRozmowaPrywatna(eq("senderId"), eq(receiverAuth)))
-                .thenReturn(rozmowa);
-
-        mockMvc.perform(put("/rozmowy/senderId/accept")
-                .principal(receiverAuth))
-                .andExpect(status().isOk());
+        try {
+            uzytkownikService.removeSelf(request, receiverAuth);
+        } catch (IllegalArgumentException e) {
+            log.error("Błąd podczas usuwania konta testowego: {}", e.getMessage());
+        }
     }
 
     @Test
-    @WithMockUser(username = "uzytkownik", roles = {"Uzytkownik"})
-    void testRejectRozmowaPrywatnaAsUzytkownik() throws Exception {
-        // No need to mock return value as the method returns void
-        mockMvc.perform(put("/rozmowy/senderId/reject")
-                .principal(receiverAuth))
-                .andExpect(status().isOk());
+    @Order(1)
+    void testInviteToRozmowaPrywatna() {
+      assertNotNull(odbiorca.getNazwa());
+
+      ResponseEntity<?> response = rozmowaPrywatnaController.inviteToRozmowaPrywatna(odbiorca.getNazwa(), senderAuth);
+      assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
-    
 
-     */
-    
+    @Test
+    @Order(2)
+    void testRejectRozmowaPrywatna() {
+      assertNotNull(odbiorca.getNazwa());
+
+      try {
+        rozmowa = rozmowaPrywatnaService.findRozmowaPrywatnaByNazwa(odbiorca.getNazwa(), senderAuth);
+      } catch (Exception e) {
+        log.error("Nie znaleziono testowej rozmowy. Tworzenie nowego zaproszenia...");
+        testInviteToRozmowaPrywatna();
+      }
+
+      assertNotNull(nadawca.getNazwa());
+      
+      ResponseEntity<?> response = rozmowaPrywatnaController.rejectRozmowaPrywatna(nadawca.getNazwa(), receiverAuth);
+      assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+    }
+
+    @Test
+    @Order(3)
+    void testAcceptRozmowaPrywatna() {
+      assertNotNull(odbiorca.getNazwa());
+
+      try {
+        rozmowa = rozmowaPrywatnaService.findRozmowaPrywatnaByNazwa(odbiorca.getNazwa(), senderAuth);
+      } catch (Exception e) {
+        log.error("Nie znaleziono testowej rozmowy. Tworzenie nowego zaproszenia...");
+        testInviteToRozmowaPrywatna();
+      }
+
+      assertNotNull(nadawca.getNazwa());
+
+      ResponseEntity<?> response = rozmowaPrywatnaController.acceptRozmowaPrywatna(nadawca.getNazwa(), receiverAuth);
+      assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+    }
+
+    @Test
+    @Order(4)
+    void testFindRozmowyPrywatneOfUzytkownik() {
+      ResponseEntity<PageResponse<RozmowaPrywatnaResponse>> response = rozmowaPrywatnaController.findRozmowyPrywatneOfUzytkownik(0, 10, senderAuth);
+      assertEquals(HttpStatus.OK, response.getStatusCode());
+
+      PageResponse<RozmowaPrywatnaResponse> body = response.getBody();
+      assertNotNull(body);
+    }
+
+    @Test
+    @Order(5)
+    void testFindRozmowaPrywatnaByNazwa() {
+      assertNotNull(odbiorca.getNazwa());
+
+      ResponseEntity<RozmowaPrywatnaResponse> response = rozmowaPrywatnaController.findRozmowaPrywatnaByNazwa(odbiorca.getNazwa(), senderAuth);
+      assertEquals(HttpStatus.OK, response.getStatusCode());
+
+      RozmowaPrywatnaResponse body = response.getBody();
+      assertNotNull(body);
+      assertTrue(body.getUzytkownicy().stream().anyMatch(u -> u.getNazwa().equals(odbiorca.getNazwa())));
+      assertTrue(body.getUzytkownicy().stream().anyMatch(u -> u.getNazwa().equals(nadawca.getNazwa())));
+
+      rozmowa = body;
+    }
+
+    @Test
+    @Order(6)
+    void testAddKomentarzToWiadomoscPrywatna() {
+      assertNotNull(nadawca.getNazwa());
+      assertNotNull(odbiorca.getNazwa());
+
+      KomentarzRequest request = KomentarzRequest.builder()
+      .opis("Testowa wiadomość")
+      .targetId(odbiorca.getNazwa())
+      .build();
+
+      ResponseEntity<KomentarzResponse> response = rozmowaPrywatnaController.addKomentarzToWiadomoscPrywatna(request, null, senderAuth);
+      assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+      KomentarzResponse body = response.getBody();
+      assertNotNull(body);
+      assertEquals(request.getOpis(), body.getOpis());
+    }
+
+
 }

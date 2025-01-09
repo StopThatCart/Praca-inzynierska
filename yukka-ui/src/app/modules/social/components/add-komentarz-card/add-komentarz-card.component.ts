@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KomentarzRequest } from '../../../../services/models/komentarz-request';
-import { KomentarzService } from '../../../../services/services';
+import { KomentarzService, RozmowaPrywatnaService } from '../../../../services/services';
 import { Router } from '@angular/router';
 import { TypKomentarza } from '../../models/TypKomentarza';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
@@ -35,7 +35,10 @@ export class AddKomentarzCardComponent implements OnInit {
 
   public TypKomentarza = TypKomentarza;
 
-  constructor(private komentarzService : KomentarzService, private router : Router,
+  constructor(
+    private komentarzService : KomentarzService, 
+    private rozmowaPrywatnaService: RozmowaPrywatnaService,
+    private router : Router,
     private errorHandlingService: ErrorHandlingService
   ) { }
 
@@ -139,7 +142,7 @@ export class AddKomentarzCardComponent implements OnInit {
     }
 
     this.wybranyPlik = null;
-    this.komentarzService.addKomentarzToWiadomoscPrywatna({
+    this.rozmowaPrywatnaService.addKomentarzToWiadomoscPrywatna({
       body: { request: this.request, file: leFile }
     }).subscribe( {
         next: (res) => { this.updateRozmowa(res); },

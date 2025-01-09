@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Uzytkownik, UzytkownikResponse } from '../models';
+import { UzytkownikResponse } from '../models';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { AuthenticationService } from '../services';
 

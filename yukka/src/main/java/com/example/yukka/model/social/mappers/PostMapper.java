@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.file.FileUtils;
+import com.example.yukka.model.social.models.ocenil.OcenaResponse;
 import com.example.yukka.model.social.models.post.Post;
 import com.example.yukka.model.social.models.post.PostResponse;
 import com.example.yukka.model.social.requests.PostRequest;
@@ -82,6 +83,19 @@ public class PostMapper {
      */
      public PostResponse toPostResponse(Post post) {
         return commonMapperService.mapToPostResponse(post);
+    }
+
+    /**
+     * Konwertuje obiekt Post na obiekt OcenaResponse.
+     *
+     * @param post obiekt typu <strong>Post</strong> do konwersji
+     * @return obiekt typu <strong>OcenaResponse</strong> zawierający oceny pozytywne i negatywne posta
+     */
+    public OcenaResponse toOcenaResponse(Post post) {
+        return OcenaResponse.builder()
+            .ocenyLubi(post.getOcenyLubi())
+            .ocenyNieLubi(post.getOcenyNieLubi())
+            .build();
     }
 
     /**

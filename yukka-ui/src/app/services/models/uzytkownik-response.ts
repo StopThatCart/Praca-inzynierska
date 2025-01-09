@@ -6,6 +6,7 @@ export interface UzytkownikResponse {
   avatar?: string;
   ban?: boolean;
   banDo?: string;
+  banPowod?: string;
   blokowaniUzytkownicy?: Array<UzytkownikResponse>;
   blokujacyUzytkownicy?: Array<UzytkownikResponse>;
   dataUtworzenia?: string;

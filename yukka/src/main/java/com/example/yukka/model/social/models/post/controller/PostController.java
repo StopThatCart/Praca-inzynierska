@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.social.models.post.Post;
+import com.example.yukka.model.social.models.ocenil.OcenaResponse;
 import com.example.yukka.model.social.models.post.PostResponse;
 import com.example.yukka.model.social.requests.OcenaRequest;
 import com.example.yukka.model.social.requests.PostRequest;
@@ -131,7 +131,7 @@ public class PostController {
      * </ul>
      */
     @PostMapping(consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<Post> addPost(@Valid @RequestPart("request") PostRequest request, 
+    public ResponseEntity<PostResponse> addPost(@Valid @RequestPart("request") PostRequest request, 
     @Parameter() @RequestPart(value = "file", required = false) MultipartFile file, Authentication connectedUser) {
         return ResponseEntity.status(CREATED).body(postService.save(request, file, connectedUser));
     }
@@ -141,15 +141,15 @@ public class PostController {
      *
      * @param request obiekt żądania zawierający ocenę
      * @param connectedUser obiekt uwierzytelnionego użytkownika
-     * @return ResponseEntity zawierające obiekt PostResponse
+     * @return ResponseEntity zawierające obiekt OcenaResponse
      * <ul>
      *   <li><strong>request</strong> - obiekt żądania zawierający ocenę</li>
      *   <li><strong>connectedUser</strong> - obiekt uwierzytelnionego użytkownika</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt PostResponse</li>
+     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt OcenaResponse</li>
      * </ul>
      */
     @PutMapping(value = "/oceny", produces="application/json")
-    public ResponseEntity<PostResponse> addOcenaToPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
+    public ResponseEntity<OcenaResponse> addOcenaToPost(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
         return ResponseEntity.status(CREATED).body(postService.addOcenaToPost(request, connectedUser));
     }
 

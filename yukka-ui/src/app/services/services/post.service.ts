@@ -21,8 +21,8 @@ import { findPostById } from '../fn/post/find-post-by-id';
 import { FindPostById$Params } from '../fn/post/find-post-by-id';
 import { findPostByIdCheck } from '../fn/post/find-post-by-id-check';
 import { FindPostByIdCheck$Params } from '../fn/post/find-post-by-id-check';
+import { OcenaResponse } from '../models/ocena-response';
 import { PageResponsePostResponse } from '../models/page-response-post-response';
-import { Post } from '../models/post';
 import { PostResponse } from '../models/post-response';
 import { removePost } from '../fn/post/remove-post';
 import { RemovePost$Params } from '../fn/post/remove-post';
@@ -42,7 +42,7 @@ export class PostService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOcenaToPost$Response(params: AddOcenaToPost$Params, context?: HttpContext): Observable<StrictHttpResponse<PostResponse>> {
+  addOcenaToPost$Response(params: AddOcenaToPost$Params, context?: HttpContext): Observable<StrictHttpResponse<OcenaResponse>> {
     return addOcenaToPost(this.http, this.rootUrl, params, context);
   }
 
@@ -52,9 +52,9 @@ export class PostService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOcenaToPost(params: AddOcenaToPost$Params, context?: HttpContext): Observable<PostResponse> {
+  addOcenaToPost(params: AddOcenaToPost$Params, context?: HttpContext): Observable<OcenaResponse> {
     return this.addOcenaToPost$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PostResponse>): PostResponse => r.body)
+      map((r: StrictHttpResponse<OcenaResponse>): OcenaResponse => r.body)
     );
   }
 
@@ -92,7 +92,7 @@ export class PostService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addPost$Response(params?: AddPost$Params, context?: HttpContext): Observable<StrictHttpResponse<Post>> {
+  addPost$Response(params?: AddPost$Params, context?: HttpContext): Observable<StrictHttpResponse<PostResponse>> {
     return addPost(this.http, this.rootUrl, params, context);
   }
 
@@ -102,9 +102,9 @@ export class PostService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  addPost(params?: AddPost$Params, context?: HttpContext): Observable<Post> {
+  addPost(params?: AddPost$Params, context?: HttpContext): Observable<PostResponse> {
     return this.addPost$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Post>): Post => r.body)
+      map((r: StrictHttpResponse<PostResponse>): PostResponse => r.body)
     );
   }
 

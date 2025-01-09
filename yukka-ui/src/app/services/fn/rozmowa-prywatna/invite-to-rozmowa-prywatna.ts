@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { RozmowaPrywatnaResponse } from '../../models/rozmowa-prywatna-response';
 
 export interface InviteToRozmowaPrywatna$Params {
   'uzytkownik-nazwa': string;
 }
 
-export function inviteToRozmowaPrywatna(http: HttpClient, rootUrl: string, params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatnaResponse>> {
+export function inviteToRozmowaPrywatna(http: HttpClient, rootUrl: string, params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
   const rb = new RequestBuilder(rootUrl, inviteToRozmowaPrywatna.PATH, 'post');
   if (params) {
     rb.path('uzytkownik-nazwa', params['uzytkownik-nazwa'], {});
@@ -23,7 +23,8 @@ export function inviteToRozmowaPrywatna(http: HttpClient, rootUrl: string, param
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<RozmowaPrywatnaResponse>;
+      return r as StrictHttpResponse<{
+      }>;
     })
   );
 }

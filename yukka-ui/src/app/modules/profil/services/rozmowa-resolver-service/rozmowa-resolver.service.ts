@@ -17,7 +17,7 @@ export class RozmowaResolverService implements Resolve<RozmowaPrywatnaResponse> 
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RozmowaPrywatnaResponse> {
     const nazwa = route.paramMap.get('uzytkownik-nazwa');
-    return this.rozService.getRozmowaPrywatna({ 'uzytkownik-nazwa': nazwa as string } ).pipe(
+    return this.rozService.findRozmowaPrywatnaByNazwa({ 'uzytkownik-nazwa': nazwa as string } ).pipe(
       catchError((error) => {
               this.errorHandlingService.handleResolverErrors(error, this.router);
               throw error;

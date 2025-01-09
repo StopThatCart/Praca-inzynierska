@@ -122,14 +122,13 @@ export class KomentarzCardComponent implements OnInit {
   addOcenaToKomentarz(komentarzId: string | undefined, ocena: boolean) {
     this.errorMsg = [];
     if (komentarzId && this.tokenService) {
-      if(this.tokenService.nazwa === this.komentarz.uzytkownikNazwa) {
-        return;
-      }
+      // if(this.tokenService.nazwa === this.komentarz.uzytkownikNazwa) {
+      //   return;
+      // }
       let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: komentarzId };
       this.komentarzService.addOcenaToKomentarz({ body: ocenaRequest }).subscribe({
         next: (komentarz) => {
           console.log('Ocena dodana');
-          console.log(komentarz);
           this.komentarz.ocenyLubi = komentarz.ocenyLubi;
           this.komentarz.ocenyNieLubi = komentarz.ocenyNieLubi;
         },
@@ -165,10 +164,7 @@ export class KomentarzCardComponent implements OnInit {
 
       this.request.targetId = this.komentarz.komentarzId;
       this.request.opis = this.editedOpis;
-      this.komentarzService.updateKomentarz({
-        'komentarz-id': this.komentarz.komentarzId,
-        body: this.request
-      }).subscribe({
+      this.komentarzService.updateKomentarz({ body: this.request }).subscribe({
         next: (res) => {
           console.log('Komentarz zaktualizowany');
           console.log(res);

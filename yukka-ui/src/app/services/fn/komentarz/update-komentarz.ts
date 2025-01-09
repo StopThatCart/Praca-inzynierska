@@ -10,14 +10,12 @@ import { KomentarzRequest } from '../../models/komentarz-request';
 import { KomentarzResponse } from '../../models/komentarz-response';
 
 export interface UpdateKomentarz$Params {
-  'komentarz-id': string;
       body: KomentarzRequest
 }
 
 export function updateKomentarz(http: HttpClient, rootUrl: string, params: UpdateKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
   const rb = new RequestBuilder(rootUrl, updateKomentarz.PATH, 'patch');
   if (params) {
-    rb.path('komentarz-id', params['komentarz-id'], {});
     rb.body(params.body, 'application/json');
   }
 
@@ -31,4 +29,4 @@ export function updateKomentarz(http: HttpClient, rootUrl: string, params: Updat
   );
 }
 
-updateKomentarz.PATH = '/komentarze/{komentarz-id}';
+updateKomentarz.PATH = '/komentarze';

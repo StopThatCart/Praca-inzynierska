@@ -11,8 +11,6 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { addKomentarzToPost } from '../fn/komentarz/add-komentarz-to-post';
 import { AddKomentarzToPost$Params } from '../fn/komentarz/add-komentarz-to-post';
-import { addKomentarzToWiadomoscPrywatna } from '../fn/komentarz/add-komentarz-to-wiadomosc-prywatna';
-import { AddKomentarzToWiadomoscPrywatna$Params } from '../fn/komentarz/add-komentarz-to-wiadomosc-prywatna';
 import { addOcenaToKomentarz } from '../fn/komentarz/add-ocena-to-komentarz';
 import { AddOcenaToKomentarz$Params } from '../fn/komentarz/add-ocena-to-komentarz';
 import { addOdpowiedzToKomentarz } from '../fn/komentarz/add-odpowiedz-to-komentarz';
@@ -22,6 +20,7 @@ import { FindKomentarzById$Params } from '../fn/komentarz/find-komentarz-by-id';
 import { findKomentarzeOfUzytkownik } from '../fn/komentarz/find-komentarze-of-uzytkownik';
 import { FindKomentarzeOfUzytkownik$Params } from '../fn/komentarz/find-komentarze-of-uzytkownik';
 import { KomentarzResponse } from '../models/komentarz-response';
+import { OcenaResponse } from '../models/ocena-response';
 import { PageResponseKomentarzResponse } from '../models/page-response-komentarz-response';
 import { removeKomentarz } from '../fn/komentarz/remove-komentarz';
 import { RemoveKomentarz$Params } from '../fn/komentarz/remove-komentarz';
@@ -43,7 +42,7 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOcenaToKomentarz$Response(params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+  addOcenaToKomentarz$Response(params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<OcenaResponse>> {
     return addOcenaToKomentarz(this.http, this.rootUrl, params, context);
   }
 
@@ -53,34 +52,9 @@ export class KomentarzService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addOcenaToKomentarz(params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<KomentarzResponse> {
+  addOcenaToKomentarz(params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<OcenaResponse> {
     return this.addOcenaToKomentarz$Response(params, context).pipe(
-      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `addKomentarzToWiadomoscPrywatna()` */
-  static readonly AddKomentarzToWiadomoscPrywatnaPath = '/komentarze/wiadomosciPrywatne';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `addKomentarzToWiadomoscPrywatna()` instead.
-   *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
-   */
-  addKomentarzToWiadomoscPrywatna$Response(params?: AddKomentarzToWiadomoscPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-    return addKomentarzToWiadomoscPrywatna(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `addKomentarzToWiadomoscPrywatna$Response()` instead.
-   *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
-   */
-  addKomentarzToWiadomoscPrywatna(params?: AddKomentarzToWiadomoscPrywatna$Params, context?: HttpContext): Observable<KomentarzResponse> {
-    return this.addKomentarzToWiadomoscPrywatna$Response(params, context).pipe(
-      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
+      map((r: StrictHttpResponse<OcenaResponse>): OcenaResponse => r.body)
     );
   }
 
@@ -134,6 +108,31 @@ export class KomentarzService extends BaseService {
     );
   }
 
+  /** Path part for operation `updateKomentarz()` */
+  static readonly UpdateKomentarzPath = '/komentarze';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateKomentarz()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateKomentarz$Response(params: UpdateKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+    return updateKomentarz(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateKomentarz$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateKomentarz(params: UpdateKomentarz$Params, context?: HttpContext): Observable<KomentarzResponse> {
+    return this.updateKomentarz$Response(params, context).pipe(
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
+    );
+  }
+
   /** Path part for operation `findKomentarzById()` */
   static readonly FindKomentarzByIdPath = '/komentarze/{komentarz-id}';
 
@@ -181,31 +180,6 @@ export class KomentarzService extends BaseService {
   removeKomentarz(params: RemoveKomentarz$Params, context?: HttpContext): Observable<string> {
     return this.removeKomentarz$Response(params, context).pipe(
       map((r: StrictHttpResponse<string>): string => r.body)
-    );
-  }
-
-  /** Path part for operation `updateKomentarz()` */
-  static readonly UpdateKomentarzPath = '/komentarze/{komentarz-id}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateKomentarz()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  updateKomentarz$Response(params: UpdateKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-    return updateKomentarz(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `updateKomentarz$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  updateKomentarz(params: UpdateKomentarz$Params, context?: HttpContext): Observable<KomentarzResponse> {
-    return this.updateKomentarz$Response(params, context).pipe(
-      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 

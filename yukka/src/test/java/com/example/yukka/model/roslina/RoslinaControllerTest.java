@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
@@ -157,9 +158,10 @@ public class RoslinaControllerTest {
     void testRoslinaRequestInvalidDataAccessResourceUsageException(){
         Roslina emptyRoslina2 = Roslina.builder().build();
         RoslinaRequest emptyRoslinaRequest2 = roslinaMapper.toRoslinaRequest(emptyRoslina2);
-        assertThrows(NullPointerException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             roslinaController.saveRoslina(emptyRoslinaRequest2, null, mockAuth);
         });
+        assertNotNull(exception);
     }
 
     @Test

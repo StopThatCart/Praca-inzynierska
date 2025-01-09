@@ -112,7 +112,10 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
             ON CREATE SET relu.lubi = $ocena
             ON MATCH SET relu.lubi = $ocena
 
-            RETURN kom
+            WITH kom
+            OPTIONAL MATCH path2 = (kom)<-[:OCENIL]-(:Uzytkownik)
+
+            RETURN kom, collect(nodes(path2)), collect(relationships(path2))
             """)
     Komentarz addOcenaToKomentarz(@Param("email") String email, @Param("komentarzId") String komentarzId, @Param("ocena") boolean ocena);
 

@@ -2,8 +2,6 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { IndeksusComponent } from './pages/indeksus/indeksus.component';
 import { RegisterComponent } from './pages/register/register.component';
-import { Post } from './services/models/post';
-import { ProfilModule } from './modules/profil/profil.module';
 import { loggedInGuard } from './services/guard/loggedIn/logged-in.guard';
 import { AktywacjaKontaComponent } from './pages/aktywacja-konta/aktywacja-konta.component';
 import { ZmianaHaslaComponent } from './pages/zmiana-hasla/zmiana-hasla.component';

@@ -24,6 +24,7 @@ import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.social.mappers.KomentarzMapper;
 import com.example.yukka.model.social.models.komentarz.Komentarz;
 import com.example.yukka.model.social.models.komentarz.KomentarzResponse;
+import com.example.yukka.model.social.models.ocenil.OcenaResponse;
 import com.example.yukka.model.social.models.post.Post;
 import com.example.yukka.model.social.models.post.controller.PostRepository;
 import com.example.yukka.model.social.models.powiadomienie.controller.PowiadomienieService;
@@ -131,10 +132,10 @@ public class KomentarzService {
      *
      * @param request obiekt OcenaRequest zawierający dane oceny.
      * @param connectedUser zalogowany użytkownik.
-     * @return KomentarzResponse zawierający zaktualizowany komentarz.
+     * @return OcenaResponse zawierający zawierający oceny komentarza.
      * @throws BannedUzytkownikException jeśli zalogowany użytkownik jest zbanowany.
      */
-    public KomentarzResponse addOcenaToKomentarz(OcenaRequest request, Authentication connectedUser) {
+    public OcenaResponse addOcenaToKomentarz(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
 
         if(uzyt.isBan()) {
@@ -149,12 +150,12 @@ public class KomentarzService {
      *
      * @param request obiekt OcenaRequest zawierający dane oceny.
      * @param connectedUser zalogowany użytkownik.
-     * @return KomentarzResponse zawierający zaktualizowany komentarz.
+     * @return OcenaResponse zawierający oceny komentarza.
      * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
      * @throws IllegalArgumentException jeśli użytkownik próbuje ocenić własny komentarz.
      * @throws IllegalArgumentException jeśli użytkownik próbuje ocenić komentarz w rozmowie prywatnej.
      */
-    public KomentarzResponse addOcenaToKomentarz(OcenaRequest request, Uzytkownik connectedUser) {
+    public OcenaResponse addOcenaToKomentarz(OcenaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
 
         Komentarz komentarz = komentarzRepository
@@ -164,16 +165,14 @@ public class KomentarzService {
             throw new IllegalArgumentException("Nie można oceniać wiadomości w rozmowach prywatnych");    
         }
 
-        if(komentarz.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
-            throw new IllegalArgumentException("Nie można oceniać własnych komentarzy");
-        }
+        // if(komentarz.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
+        //     throw new IllegalArgumentException("Nie można oceniać własnych komentarzy");
+        // }
 
         uzytkownikService.sprawdzBlokowanie(komentarz.getUzytkownik().getNazwa(), connectedUser);
+        Komentarz kom = komentarzRepository.addOcenaToKomentarz(uzyt.getEmail(), komentarz.getKomentarzId(), request.isLubi());
 
-        return komentarzMapper.toKomentarzResponse(
-            komentarzRepository.addOcenaToKomentarz(uzyt.getEmail(), 
-            komentarz.getKomentarzId(), 
-            request.isLubi()));
+        return komentarzMapper.toOcenaResponse(kom);
     }
 
     /**
@@ -186,7 +185,7 @@ public class KomentarzService {
      * @throws IllegalArgumentException jeśli użytkownik próbuje rozmawiać sam ze sobą.
      */
     public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request, MultipartFile file, Authentication connectedUser) {
-        Uzytkownik nadawca = ((Uzytkownik) connectedUser.getPrincipal());
+        Uzytkownik nadawca = (Uzytkownik) connectedUser.getPrincipal();
         return addKomentarzToWiadomoscPrywatna(request, file, nadawca);
     }
 
@@ -278,10 +277,8 @@ public class KomentarzService {
 
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastKomentarz(newestKomentarz);
-        Komentarz kom = null;
-        kom = addOdpowiedzToKomentarz(request, file, uzyt);
+        Komentarz kom = addOdpowiedzToKomentarz(request, file, uzyt);
         
-
         return komentarzMapper.toKomentarzResponse(kom);
 
     }
@@ -329,14 +326,14 @@ public class KomentarzService {
      * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
      * @throws ForbiddenException jeśli zalogowany użytkownik nie ma uprawnień do aktualizacji komentarza.
      */
-    public KomentarzResponse updateKomentarz(String komentarzId, KomentarzRequest request, Authentication connectedUser) {
+    public KomentarzResponse updateKomentarz(KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Komentarz kom = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
+        komentarzRepository.findKomentarzByKomentarzId(request.getTargetId())
                 .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik()))
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
 
-        kom = komentarzRepository.updateKomentarz(komentarzId, request.getOpis())
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza do aktualizacji o podanym ID: " + komentarzId));
+        Komentarz kom = komentarzRepository.updateKomentarz(request.getTargetId(), request.getOpis())
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza do aktualizacji o podanym ID: " + request.getTargetId()));
 
         return komentarzMapper.toKomentarzResponse(kom);
     }
@@ -352,7 +349,9 @@ public class KomentarzService {
     public void deleteKomentarz(String komentarzId, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());        
         Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
-            .orElseThrow();
+            .orElseThrow(
+                () -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId)
+            );
         
         if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik())) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");

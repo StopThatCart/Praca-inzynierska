@@ -2,18 +2,19 @@ import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild }
 import { EdycjaNavComponent } from "../../components/edycja-nav/edycja-nav.component";
 import { AddKomentarzCardComponent } from "../../../social/components/add-komentarz-card/add-komentarz-card.component";
 import { WiadomoscCardComponent } from "../../components/wiadomosc-card/wiadomosc-card.component";
-import { PageResponseRozmowaPrywatnaResponse, RozmowaPrywatna, RozmowaPrywatnaResponse, UzytkownikResponse } from '../../../../services/models';
+import { PageResponseRozmowaPrywatnaResponse, RozmowaPrywatnaResponse, UzytkownikResponse } from '../../../../services/models';
 import { RozmowaPrywatnaService, UzytkownikService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { TypKomentarza } from '../../../social/models/TypKomentarza';
 import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zgloszenie-button.component";
+import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-rozmowa-page',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage, EdycjaNavComponent, AddKomentarzCardComponent, WiadomoscCardComponent, ZgloszenieButtonComponent],
+  imports: [CommonModule, EdycjaNavComponent, AddKomentarzCardComponent, WiadomoscCardComponent],
   templateUrl: './rozmowa-page.component.html',
   styleUrl: './rozmowa-page.component.css'
 })
@@ -39,7 +40,7 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
 
   private _avatar: string | undefined;
 
-  errorMessage: string | null = null;
+  errorMsg: Array<string> = [];
 
   private intervalId: any;
 
@@ -49,7 +50,8 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
     private uzytService: UzytkownikService,
     private router: Router,
     private route: ActivatedRoute,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private errorHandlingService: ErrorHandlingService
   ) {
 
   }
@@ -98,15 +100,14 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   getRozmowa(nazwa: string): void {
-    this.rozService.getRozmowaPrywatna({ 'uzytkownik-nazwa': nazwa }).subscribe({
+    this.errorMsg = [];
+    this.rozService.findRozmowaPrywatnaByNazwa({ 'uzytkownik-nazwa': nazwa }).subscribe({
       next: (rozmowa) => {
         this.rozmowa = rozmowa;
         this.wiadomoscCount = rozmowa.komentarze?.length;
         if (!this.rozmowa.aktywna) {
           //this.router.navigate(['/profil/rozmowy']);
         }
-
-        this.errorMessage = null;
         if(this.rozmowa.uzytkownicy) {
           const otherUzyt = this.rozmowa.uzytkownicy.find(user => user.nazwa === nazwa);
           if (otherUzyt) {
@@ -119,7 +120,7 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
         this.blokujacy = this.isBlokujacy(this.rozmowa.uzytkownicy);
       },
       error: (err) => {
-        this.errorMessage = 'Nie znaleziono rozmowy o podanym ID.';
+        this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
       }
     });
   }
@@ -180,7 +181,7 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
 
   private scrollToBottom(): void {
     if (this.isUserNearBottom()) {
-      console.log('Scrolling to bottom');
+      //console.log('Scrolling to bottom');
       try {
         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
       } catch(err) {
@@ -191,50 +192,53 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
 
 
   zablokujUzyt() {
-    if(confirm("Czy aby na pewno chcesz zablokować użytkownika? Nie będziesz mógł z nim rozmawiać, dopoki go nie odblokujesz.")) {
-      if (this.odbiorcaNazwa) {
+    if(!confirm("Czy aby na pewno chcesz zablokować użytkownika? Nie będziesz mógł z nim rozmawiać, dopoki go nie odblokujesz.")) {
+      return;
+    }
 
-        this.uzytService.setBlokUzytkownik({ nazwa: this.odbiorcaNazwa, blok: true }).subscribe({
-          next: (res) => {
-            if(res) {
-              console.log('Użytkownik zablokowany');
-              console.log(res);
-              this.zablokowany = true;
-              this.getBlokowaniAndBlokujacy();
-            } else {
-              console.log('Nie udało się zablokować użytkownika');
-            }
-          },
-          error: (err) => {
-           // this.handleErrors(err);
+    if (this.odbiorcaNazwa) {
+      this.errorMsg = [];
+      this.uzytService.setBlokUzytkownik({ nazwa: this.odbiorcaNazwa, blok: true }).subscribe({
+        next: (res) => {
+          if(res) {
+            console.log('Użytkownik zablokowany');
+            console.log(res);
+            this.zablokowany = true;
+            this.getBlokowaniAndBlokujacy();
+          } else {
+            console.log('Nie udało się zablokować użytkownika');
           }
-        });
+        },
+        error: (err) => {
+          this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
+        }
+      });
 
-      }
     }
   }
 
   odblokujUzyt() {
-    if(confirm("Czy aby na pewno chcesz odblokować użytkownika?")) {
-      if (this.odbiorcaNazwa) {
+    if(!confirm("Czy aby na pewno chcesz odblokować użytkownika?")) {
+      return;
+    }
 
-        this.uzytService.setBlokUzytkownik({ nazwa: this.odbiorcaNazwa, blok: false }).subscribe({
-          next: (res) => {
-            if(res) {
-              console.log('Użytkownik odblokowany');
-              console.log(res);
-              this.zablokowany = false;
-              this.getBlokowaniAndBlokujacy();
-            } else {
-              console.log('Nie udało się odblokować użytkownika');
-            }
-          },
-          error: (err) => {
-           // this.handleErrors(err);
+    if (this.odbiorcaNazwa) {
+      this.errorMsg = [];
+      this.uzytService.setBlokUzytkownik({ nazwa: this.odbiorcaNazwa, blok: false }).subscribe({
+        next: (res) => {
+          if(res) {
+            console.log('Użytkownik odblokowany');
+            console.log(res);
+            this.zablokowany = false;
+            this.getBlokowaniAndBlokujacy();
+          } else {
+            console.log('Nie udało się odblokować użytkownika');
           }
-        });
-
-      }
+        },
+        error: (err) => {
+          this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
+        }
+      });
     }
   }
 

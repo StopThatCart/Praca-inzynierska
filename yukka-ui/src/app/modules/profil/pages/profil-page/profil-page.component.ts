@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { StatystykiDto, Uzytkownik, UzytkownikResponse } from '../../../../services/models';
+import { StatystykiDto, UzytkownikResponse } from '../../../../services/models';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { PostService, UzytkownikService } from '../../../../services/services';
+import { UzytkownikService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
 import { CommonModule } from '@angular/common';
 import { RozmowaPrywatnaService } from '../../../../services/services/rozmowa-prywatna.service';
 import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zgloszenie-button.component";
 import { TypPowiadomienia } from '../../models/TypPowiadomienia';
 import { BanButtonComponent } from "../../components/ban-button/ban-button.component";
-import { getStatystykiOfUzytkownik } from '../../../../services/fn/uzytkownik/get-statystyki-of-uzytkownik';
 import { UsunKontoButtonComponent } from "../../components/usun-konto-button/usun-konto-button.component";
-import { error } from 'console';
 
 @Component({
   selector: 'app-profil-page',
@@ -168,7 +166,7 @@ export class ProfilPageComponent implements OnInit {
     if (this.tokenService.token && this.uzyt.nazwa
       && this.tokenService.nazwa !== this.uzyt.nazwa) {
 
-      this.rozService.getRozmowaPrywatna({ 'uzytkownik-nazwa': this.uzyt.nazwa })
+      this.rozService.findRozmowaPrywatnaByNazwa({ 'uzytkownik-nazwa': this.uzyt.nazwa })
         .subscribe({
           next: (roz) => {
             console.log('Rozmowa: ', roz);
@@ -183,8 +181,6 @@ export class ProfilPageComponent implements OnInit {
               this.isZaproszonyChecked = true;
               return null;
             }
-
-
             this.isZaproszonyChecked = true;
             return false;
           }
@@ -198,9 +194,9 @@ export class ProfilPageComponent implements OnInit {
     if (this.uzyt.nazwa) {
       this.rozService.inviteToRozmowaPrywatna({ 'uzytkownik-nazwa': this.uzyt.nazwa })
         .subscribe({
-          next: (roz) => {
-            if(roz) {
-              console.log('Zaproszenie do rozmowy prywatnej wysłane: ', roz);
+          next: (res) => {
+            if(res) {
+              console.log('Zaproszenie do rozmowy prywatnej wysłane');
               this.zaproszenieWyslane = true;
             } else {
               console.log('Coś poszło nie tak.');

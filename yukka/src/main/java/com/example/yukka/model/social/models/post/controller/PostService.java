@@ -23,6 +23,7 @@ import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.social.mappers.PostMapper;
 import com.example.yukka.model.social.models.komentarz.Komentarz;
+import com.example.yukka.model.social.models.ocenil.OcenaResponse;
 import com.example.yukka.model.social.models.post.Post;
 import com.example.yukka.model.social.models.post.PostResponse;
 import com.example.yukka.model.social.requests.OcenaRequest;
@@ -150,13 +151,13 @@ public class PostService {
      * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
      * @return <ul><li><strong>Post</strong>: Zapisany post.</li></ul>
      */
-    public Post save(PostRequest request, MultipartFile file, Authentication connectedUser) {
+    public PostResponse save(PostRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         
         Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastPost(newestPost);
 
-        return save(request, file, uzyt);
+        return postMapper.toPostResponse(save(request, file, uzyt));
     }
 
     /**
@@ -184,9 +185,9 @@ public class PostService {
      *
      * @param request <ul><li><strong>OcenaRequest</strong>: Dane oceny.</li></ul>
      * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
-     * @return <ul><li><strong>PostResponse</strong>: Odpowiedź zawierająca dane posta po dodaniu oceny.</li></ul>
+     * @return <ul><li><strong>OcenaResponse</strong>: Odpowiedź zawierająca oceny posta.</li></ul>
      */
-    public PostResponse addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
+    public OcenaResponse addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Post post = postRepository.findPostByPostIdCheck(request.getOcenialnyId())
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getOcenialnyId()));
@@ -194,7 +195,7 @@ public class PostService {
         uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
 
         post =  postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
-        return postMapper.toPostResponse(post);
+        return postMapper.toOcenaResponse(post);
     }
 
     /**

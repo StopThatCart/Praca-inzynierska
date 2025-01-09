@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.social.models.komentarz.Komentarz;
 import com.example.yukka.model.social.models.komentarz.KomentarzResponse;
+import com.example.yukka.model.social.models.ocenil.OcenaResponse;
 import com.example.yukka.model.social.requests.KomentarzRequest;
 
 import jakarta.validation.Valid;
@@ -71,6 +72,19 @@ public class KomentarzMapper {
      */
     public KomentarzResponse toKomentarzResponse(Komentarz komentarz) {
         return commonMapperService.toKomentarzResponse(komentarz);
+    }
+
+    /**
+     * Konwertuje obiekt Komentarz na obiekt OcenaResponse.
+     *
+     * @param komentarz obiekt typu <strong>Komentarz</strong> do konwersji
+     * @return obiekt typu <strong>OcenaResponse</strong> zawierający oceny pozytywne i negatywne komentarza
+     */
+    public OcenaResponse toOcenaResponse(Komentarz komentarz) {
+        return OcenaResponse.builder()
+            .ocenyLubi(komentarz.getOcenyLubi())
+            .ocenyNieLubi(komentarz.getOcenyNieLubi())
+            .build();
     }
 
     /**

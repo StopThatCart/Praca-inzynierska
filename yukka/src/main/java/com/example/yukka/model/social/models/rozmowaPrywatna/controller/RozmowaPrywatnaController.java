@@ -10,13 +10,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.social.models.rozmowaPrywatna.RozmowaPrywatna;
+import com.example.yukka.model.social.models.komentarz.KomentarzResponse;
+import com.example.yukka.model.social.models.komentarz.controller.KomentarzService;
 import com.example.yukka.model.social.models.rozmowaPrywatna.RozmowaPrywatnaResponse;
+import com.example.yukka.model.social.requests.KomentarzRequest;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -24,11 +30,11 @@ import lombok.RequiredArgsConstructor;
  * 
  * <ul>
  * <li><strong>findRozmowyPrywatneOfUzytkownik</strong> - Pobiera listę rozmów prywatnych użytkownika.</li>
- * <li><strong>getRozmowaPrywatnaById</strong> - Pobiera rozmowę prywatną na podstawie identyfikatora.</li>
  * <li><strong>getRozmowaPrywatna</strong> - Pobiera rozmowę prywatną na podstawie nazwy użytkownika.</li>
  * <li><strong>inviteToRozmowaPrywatna</strong> - Zaprasza użytkownika do rozmowy prywatnej.</li>
  * <li><strong>acceptRozmowaPrywatna</strong> - Akceptuje zaproszenie do rozmowy prywatnej.</li>
  * <li><strong>rejectRozmowaPrywatna</strong> - Odrzuca zaproszenie do rozmowy prywatnej.</li>
+ * <li><strong>addKomentarzToWiadomoscPrywatna</strong> - Dodaje wiadomość do rozmowy prywatnej.</li>
  * </ul>
  */
 @RestController
@@ -37,10 +43,8 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "RozmowaPrywatna")
 public class RozmowaPrywatnaController {
     private final RozmowaPrywatnaService rozmowaPrywatnaService;
+    private final KomentarzService komentarzService;
     
-
-    
-
     /**
      * Metoda obsługująca żądanie GET do pobrania prywatnych rozmów użytkownika.
      *
@@ -48,12 +52,6 @@ public class RozmowaPrywatnaController {
      * @param size rozmiar strony wyników (opcjonalny, domyślnie 10)
      * @param connectedUser uwierzytelniony użytkownik
      * @return ResponseEntity zawierające PageResponse z rozmowami prywatnymi użytkownika
-     *
-     * <ul>
-     *   <li><strong>page</strong>: numer strony wyników (opcjonalny, domyślnie 0)</li>
-     *   <li><strong>size</strong>: rozmiar strony wyników (opcjonalny, domyślnie 10)</li>
-     *   <li><strong>connectedUser</strong>: uwierzytelniony użytkownik</li>
-     * </ul>
      */
     @GetMapping(produces="application/json")
     public ResponseEntity<PageResponse<RozmowaPrywatnaResponse>> findRozmowyPrywatneOfUzytkownik(
@@ -63,70 +61,73 @@ public class RozmowaPrywatnaController {
         PageResponse<RozmowaPrywatnaResponse> rozmowy = rozmowaPrywatnaService.findRozmowyPrywatneOfUzytkownik(page, size, connectedUser);
         return ResponseEntity.ok(rozmowy);
     }
-
-
-    /**
-     * Pobiera rozmowę prywatną na podstawie podanego identyfikatora.
-     *
-     * @param id <ul><li><strong>Long</strong></li></ul> identyfikator rozmowy prywatnej
-     * @param connectedUser <ul><li><strong>Authentication</strong></li></ul> obiekt uwierzytelnienia bieżącego użytkownika
-     * @return <ul><li><strong>ResponseEntity<RozmowaPrywatnaResponse></strong></li></ul> odpowiedź zawierająca rozmowę prywatną
-     */
-    @GetMapping(value = "/id/{id}", produces="application/json")
-    public ResponseEntity<RozmowaPrywatnaResponse> getRozmowaPrywatnaById(@PathVariable("id") Long id, Authentication connectedUser) {
-        RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.findRozmowaPrywatnaById(id, connectedUser);
-        return ResponseEntity.ok(rozmowa);
-    }
     
     /**
      * Metoda obsługująca żądanie GET dla uzyskania prywatnej rozmowy użytkownika.
      *
-     * @param nazwa <ul><li><strong>uzytkownik-nazwa</strong></li></ul> Nazwa użytkownika, dla którego ma zostać pobrana rozmowa prywatna.
-     * @param connectedUser <ul><li><strong>connectedUser</strong></li></ul> Obiekt uwierzytelnionego użytkownika.
-     * @return <ul><li><strong>ResponseEntity<RozmowaPrywatnaResponse></strong></li></ul> Odpowiedź zawierająca prywatną rozmowę użytkownika w formacie JSON.
+     * @param odbiorcaNazwa Nazwa użytkownika, z którym się rozmawia.
+     * @param connectedUser Obiekt uwierzytelnionego użytkownika.
+     * @return <strong>ResponseEntity<RozmowaPrywatnaResponse></strong> Odpowiedź zawierająca prywatną rozmowę użytkownika w formacie JSON.
      */
     @GetMapping(value = "/{uzytkownik-nazwa}", produces="application/json")
-    public ResponseEntity<RozmowaPrywatnaResponse> getRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String nazwa, Authentication connectedUser) {
-        RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.findRozmowaPrywatnaByNazwa(nazwa, connectedUser);
+    public ResponseEntity<RozmowaPrywatnaResponse> findRozmowaPrywatnaByNazwa(@PathVariable("uzytkownik-nazwa") String odbiorcaNazwa, Authentication connectedUser) {
+        RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.findRozmowaPrywatnaByNazwa(odbiorcaNazwa, connectedUser);
         return ResponseEntity.ok(rozmowa);
     }
 
     /**
      * Zaprasza użytkownika do prywatnej rozmowy.
      *
-     * @param nazwa <ul><li><strong>nazwa</strong> - Nazwa użytkownika, który ma zostać zaproszony do rozmowy.</li></ul>
-     * @param connectedUser <ul><li><strong>connectedUser</strong> - Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.</li></ul>
-     * @return <ul><li><strong>ResponseEntity<RozmowaPrywatnaResponse></strong> - Odpowiedź HTTP zawierająca status oraz obiekt RozmowaPrywatnaResponse.</li></ul>
+     * @param nazwa Nazwa użytkownika, który ma zostać zaproszony do rozmowy.
+     * @param connectedUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
+     * @return <strong>ResponseEntity<RozmowaPrywatnaResponse></strong> - Odpowiedź HTTP zawierająca status oraz obiekt RozmowaPrywatnaResponse.
      */
     @PostMapping(value = "/{uzytkownik-nazwa}", produces="application/json")
-    public ResponseEntity<RozmowaPrywatnaResponse> inviteToRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String nazwa, Authentication connectedUser) {
-        RozmowaPrywatnaResponse rozmowa = rozmowaPrywatnaService.inviteToRozmowaPrywatna(nazwa, connectedUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(rozmowa);
+    public ResponseEntity<?> inviteToRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String nazwa, Authentication connectedUser) {
+        rozmowaPrywatnaService.inviteToRozmowaPrywatna(nazwa, connectedUser);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
     /**
      * Akceptuje zaproszenie do prywatnej rozmowy.
      *
-     * @param nazwa <ul><li><strong>nazwa</strong> - Nazwa użytkownika, który ma zostać zaproszony do rozmowy.</li></ul>
-     * @param connectedUser <ul><li><strong>connectedUser</strong> - Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.</li></ul>
-     * @return <ul><li><strong>ResponseEntity<RozmowaPrywatna></strong> - Odpowiedź HTTP zawierająca status oraz obiekt RozmowaPrywatna.</li></ul>
+     * @param nadawcaNazwa Nazwa użytkownika, który zaprosił do rozmowy.</li></ul>
+     * @param connectedUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.</li></ul>
+     * @return <strong>ResponseEntity<RozmowaPrywatna></strong> - Odpowiedź HTTP zawierająca status oraz obiekt RozmowaPrywatna.
      */
     @PutMapping(value = "/{uzytkownik-nazwa}/accept", produces="application/json")
-    public ResponseEntity<RozmowaPrywatna> acceptRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String nazwa, Authentication connectedUser) {
-        RozmowaPrywatna rozmowa = rozmowaPrywatnaService.acceptRozmowaPrywatna(nazwa, connectedUser);
-        return ResponseEntity.ok(rozmowa);
+    public ResponseEntity<?> acceptRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String nadawcaNazwa, Authentication connectedUser) {
+        rozmowaPrywatnaService.acceptRozmowaPrywatna(nadawcaNazwa, connectedUser);
+        return ResponseEntity.accepted().build();
     }
 
     /**
      * Odrzuca zaproszenie do prywatnej rozmowy.
      *
-     * @param uzytkownikNazwa <ul><li><strong>uzytkownikNazwa</strong> - Nazwa użytkownika, który ma zostać zaproszony do rozmowy.</li></ul>
-     * @param connectedUser <ul><li><strong>connectedUser</strong> - Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.</li></ul>
-     * @return <ul><li><strong>ResponseEntity<RozmowaPrywatna></strong> - Odpowiedź HTTP zawierająca status oraz obiekt RozmowaPrywatna.</li></ul>
+     * @param uzytkownikNazwa Nazwa użytkownika, który ma zostać zaproszony do rozmowy.
+     * @param connectedUser Obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
      */
     @PutMapping(value = "/{uzytkownik-nazwa}/reject")
-    public ResponseEntity<RozmowaPrywatna> rejectRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String uzytkownikNazwa, Authentication connectedUser) {
+    public ResponseEntity<?> rejectRozmowaPrywatna(@PathVariable("uzytkownik-nazwa") String uzytkownikNazwa, Authentication connectedUser) {
         rozmowaPrywatnaService.rejectRozmowaPrywatna(uzytkownikNazwa, connectedUser);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.accepted().build();
     }
+
+
+    /**
+     * Metoda obsługująca żądanie POST do dodania wiadomości do rozmowy prywatnej.
+     *
+     * @param request obiekt żądania zawierający dane wiadomości
+     * @param file plik obrazu (opcjonalnie)
+     * @param connectedUser aktualnie zalogowany użytkownik
+     * @return ResponseEntity zawierające obiekt KomentarzResponse
+     */
+    @PostMapping(value =  "/wiadomosc", consumes = "multipart/form-data", produces="application/json")
+    public ResponseEntity<KomentarzResponse> addKomentarzToWiadomoscPrywatna(
+                    @Valid @RequestPart("request") KomentarzRequest request, 
+                    @Parameter() @RequestPart(value = "file", required = false) MultipartFile file,
+                    Authentication connectedUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(komentarzService.addKomentarzToWiadomoscPrywatna(request, file, connectedUser));
+    }
+
 }

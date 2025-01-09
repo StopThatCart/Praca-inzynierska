@@ -119,10 +119,7 @@ export class WiadomoscCardComponent implements OnInit {
 
       this.request.targetId = this.wiadomosc.komentarzId;
       this.request.opis = this.editedOpis;
-      this.komentarzService.updateKomentarz({
-        'komentarz-id': this.wiadomosc.komentarzId,
-        body: this.request
-      }).subscribe({
+      this.komentarzService.updateKomentarz({ body: this.request }).subscribe({
         next: (res) => {
           console.log('Komentarz zaktualizowany');
           console.log(res);

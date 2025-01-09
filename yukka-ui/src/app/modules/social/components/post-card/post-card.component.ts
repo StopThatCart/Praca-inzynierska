@@ -73,14 +73,18 @@ export class PostCardComponent implements OnInit {
   addOcenaToPost(postId: string | undefined, ocena: boolean) {
     if (postId && this.tokenService) {
 
-      if(this.tokenService.nazwa === this.post.uzytkownik) {
-        return;
-      }
+      // if(this.tokenService.nazwa === this.post.uzytkownik) {
+      //   return;
+      // }
 
       let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: postId };
       this.postService.addOcenaToPost({ body: ocenaRequest }).subscribe({
-        next: (post) => {
-          this.post = post;
+        next: (res) => {
+          console.log('Ocena dodana: ', res);
+          console.log('Oceny: ', res.ocenyLubi, res.ocenyNieLubi);
+          this.post.ocenyLubi = res.ocenyLubi;
+          this.post.ocenyNieLubi = res.ocenyNieLubi;
+          console.log('Post po ocenie: ', this.post);
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 403) {

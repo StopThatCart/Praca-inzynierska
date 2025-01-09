@@ -11,18 +11,18 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { acceptRozmowaPrywatna } from '../fn/rozmowa-prywatna/accept-rozmowa-prywatna';
 import { AcceptRozmowaPrywatna$Params } from '../fn/rozmowa-prywatna/accept-rozmowa-prywatna';
+import { addKomentarzToWiadomoscPrywatna } from '../fn/rozmowa-prywatna/add-komentarz-to-wiadomosc-prywatna';
+import { AddKomentarzToWiadomoscPrywatna$Params } from '../fn/rozmowa-prywatna/add-komentarz-to-wiadomosc-prywatna';
+import { findRozmowaPrywatnaByNazwa } from '../fn/rozmowa-prywatna/find-rozmowa-prywatna-by-nazwa';
+import { FindRozmowaPrywatnaByNazwa$Params } from '../fn/rozmowa-prywatna/find-rozmowa-prywatna-by-nazwa';
 import { findRozmowyPrywatneOfUzytkownik } from '../fn/rozmowa-prywatna/find-rozmowy-prywatne-of-uzytkownik';
 import { FindRozmowyPrywatneOfUzytkownik$Params } from '../fn/rozmowa-prywatna/find-rozmowy-prywatne-of-uzytkownik';
-import { getRozmowaPrywatna } from '../fn/rozmowa-prywatna/get-rozmowa-prywatna';
-import { GetRozmowaPrywatna$Params } from '../fn/rozmowa-prywatna/get-rozmowa-prywatna';
-import { getRozmowaPrywatnaById } from '../fn/rozmowa-prywatna/get-rozmowa-prywatna-by-id';
-import { GetRozmowaPrywatnaById$Params } from '../fn/rozmowa-prywatna/get-rozmowa-prywatna-by-id';
 import { inviteToRozmowaPrywatna } from '../fn/rozmowa-prywatna/invite-to-rozmowa-prywatna';
 import { InviteToRozmowaPrywatna$Params } from '../fn/rozmowa-prywatna/invite-to-rozmowa-prywatna';
+import { KomentarzResponse } from '../models/komentarz-response';
 import { PageResponseRozmowaPrywatnaResponse } from '../models/page-response-rozmowa-prywatna-response';
 import { rejectRozmowaPrywatna } from '../fn/rozmowa-prywatna/reject-rozmowa-prywatna';
 import { RejectRozmowaPrywatna$Params } from '../fn/rozmowa-prywatna/reject-rozmowa-prywatna';
-import { RozmowaPrywatna } from '../models/rozmowa-prywatna';
 import { RozmowaPrywatnaResponse } from '../models/rozmowa-prywatna-response';
 
 @Injectable({ providedIn: 'root' })
@@ -40,7 +40,8 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  rejectRozmowaPrywatna$Response(params: RejectRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
+  rejectRozmowaPrywatna$Response(params: RejectRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
     return rejectRozmowaPrywatna(this.http, this.rootUrl, params, context);
   }
 
@@ -50,9 +51,12 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  rejectRozmowaPrywatna(params: RejectRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatna> {
+  rejectRozmowaPrywatna(params: RejectRozmowaPrywatna$Params, context?: HttpContext): Observable<{
+}> {
     return this.rejectRozmowaPrywatna$Response(params, context).pipe(
-      map((r: StrictHttpResponse<RozmowaPrywatna>): RozmowaPrywatna => r.body)
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
     );
   }
 
@@ -65,7 +69,8 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  acceptRozmowaPrywatna$Response(params: AcceptRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatna>> {
+  acceptRozmowaPrywatna$Response(params: AcceptRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
     return acceptRozmowaPrywatna(this.http, this.rootUrl, params, context);
   }
 
@@ -75,33 +80,36 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  acceptRozmowaPrywatna(params: AcceptRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatna> {
+  acceptRozmowaPrywatna(params: AcceptRozmowaPrywatna$Params, context?: HttpContext): Observable<{
+}> {
     return this.acceptRozmowaPrywatna$Response(params, context).pipe(
-      map((r: StrictHttpResponse<RozmowaPrywatna>): RozmowaPrywatna => r.body)
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
     );
   }
 
-  /** Path part for operation `getRozmowaPrywatna()` */
-  static readonly GetRozmowaPrywatnaPath = '/rozmowy/{uzytkownik-nazwa}';
+  /** Path part for operation `findRozmowaPrywatnaByNazwa()` */
+  static readonly FindRozmowaPrywatnaByNazwaPath = '/rozmowy/{uzytkownik-nazwa}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getRozmowaPrywatna()` instead.
+   * To access only the response body, use `findRozmowaPrywatnaByNazwa()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getRozmowaPrywatna$Response(params: GetRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatnaResponse>> {
-    return getRozmowaPrywatna(this.http, this.rootUrl, params, context);
+  findRozmowaPrywatnaByNazwa$Response(params: FindRozmowaPrywatnaByNazwa$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatnaResponse>> {
+    return findRozmowaPrywatnaByNazwa(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getRozmowaPrywatna$Response()` instead.
+   * To access the full response (for headers, for example), `findRozmowaPrywatnaByNazwa$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getRozmowaPrywatna(params: GetRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatnaResponse> {
-    return this.getRozmowaPrywatna$Response(params, context).pipe(
+  findRozmowaPrywatnaByNazwa(params: FindRozmowaPrywatnaByNazwa$Params, context?: HttpContext): Observable<RozmowaPrywatnaResponse> {
+    return this.findRozmowaPrywatnaByNazwa$Response(params, context).pipe(
       map((r: StrictHttpResponse<RozmowaPrywatnaResponse>): RozmowaPrywatnaResponse => r.body)
     );
   }
@@ -115,7 +123,8 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  inviteToRozmowaPrywatna$Response(params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatnaResponse>> {
+  inviteToRozmowaPrywatna$Response(params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
     return inviteToRozmowaPrywatna(this.http, this.rootUrl, params, context);
   }
 
@@ -125,9 +134,37 @@ export class RozmowaPrywatnaService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  inviteToRozmowaPrywatna(params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<RozmowaPrywatnaResponse> {
+  inviteToRozmowaPrywatna(params: InviteToRozmowaPrywatna$Params, context?: HttpContext): Observable<{
+}> {
     return this.inviteToRozmowaPrywatna$Response(params, context).pipe(
-      map((r: StrictHttpResponse<RozmowaPrywatnaResponse>): RozmowaPrywatnaResponse => r.body)
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
+  }
+
+  /** Path part for operation `addKomentarzToWiadomoscPrywatna()` */
+  static readonly AddKomentarzToWiadomoscPrywatnaPath = '/rozmowy/wiadomosc';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `addKomentarzToWiadomoscPrywatna()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  addKomentarzToWiadomoscPrywatna$Response(params?: AddKomentarzToWiadomoscPrywatna$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+    return addKomentarzToWiadomoscPrywatna(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `addKomentarzToWiadomoscPrywatna$Response()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  addKomentarzToWiadomoscPrywatna(params?: AddKomentarzToWiadomoscPrywatna$Params, context?: HttpContext): Observable<KomentarzResponse> {
+    return this.addKomentarzToWiadomoscPrywatna$Response(params, context).pipe(
+      map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
@@ -153,31 +190,6 @@ export class RozmowaPrywatnaService extends BaseService {
   findRozmowyPrywatneOfUzytkownik(params?: FindRozmowyPrywatneOfUzytkownik$Params, context?: HttpContext): Observable<PageResponseRozmowaPrywatnaResponse> {
     return this.findRozmowyPrywatneOfUzytkownik$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageResponseRozmowaPrywatnaResponse>): PageResponseRozmowaPrywatnaResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `getRozmowaPrywatnaById()` */
-  static readonly GetRozmowaPrywatnaByIdPath = '/rozmowy/id/{id}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getRozmowaPrywatnaById()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getRozmowaPrywatnaById$Response(params: GetRozmowaPrywatnaById$Params, context?: HttpContext): Observable<StrictHttpResponse<RozmowaPrywatnaResponse>> {
-    return getRozmowaPrywatnaById(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getRozmowaPrywatnaById$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getRozmowaPrywatnaById(params: GetRozmowaPrywatnaById$Params, context?: HttpContext): Observable<RozmowaPrywatnaResponse> {
-    return this.getRozmowaPrywatnaById$Response(params, context).pipe(
-      map((r: StrictHttpResponse<RozmowaPrywatnaResponse>): RozmowaPrywatnaResponse => r.body)
     );
   }
 

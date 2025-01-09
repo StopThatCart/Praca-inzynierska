@@ -93,7 +93,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/RozmowaPrywatna"
+                  "type": "object"
                 }
               }
             }
@@ -123,7 +123,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RozmowaPrywatna"
+                  "type": "object"
                 }
               }
             }
@@ -238,7 +238,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostResponse"
+                  "$ref": "#/components/schemas/OcenaResponse"
                 }
               }
             }
@@ -268,7 +268,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/KomentarzResponse"
+                  "$ref": "#/components/schemas/OcenaResponse"
                 }
               }
             }
@@ -483,7 +483,7 @@
         "tags": [
           "RozmowaPrywatna"
         ],
-        "operationId": "getRozmowaPrywatna",
+        "operationId": "findRozmowaPrywatnaByNazwa",
         "parameters": [
           {
             "name": "uzytkownik-nazwa",
@@ -528,7 +528,48 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RozmowaPrywatnaResponse"
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rozmowy/wiadomosc": {
+      "post": {
+        "tags": [
+          "RozmowaPrywatna"
+        ],
+        "operationId": "addKomentarzToWiadomoscPrywatna",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "request"
+                ],
+                "type": "object",
+                "properties": {
+                  "request": {
+                    "$ref": "#/components/schemas/KomentarzRequest"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KomentarzResponse"
                 }
               }
             }
@@ -869,48 +910,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Post"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/komentarze/wiadomosciPrywatne": {
-      "post": {
-        "tags": [
-          "Komentarz"
-        ],
-        "operationId": "addKomentarzToWiadomoscPrywatna",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "request"
-                ],
-                "type": "object",
-                "properties": {
-                  "request": {
-                    "$ref": "#/components/schemas/KomentarzRequest"
-                  },
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/KomentarzResponse"
+                  "$ref": "#/components/schemas/PostResponse"
                 }
               }
             }
@@ -1618,78 +1618,12 @@
         }
       }
     },
-    "/komentarze/{komentarz-id}": {
-      "get": {
-        "tags": [
-          "Komentarz"
-        ],
-        "operationId": "findKomentarzById",
-        "parameters": [
-          {
-            "name": "komentarz-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/KomentarzResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Komentarz"
-        ],
-        "operationId": "removeKomentarz",
-        "parameters": [
-          {
-            "name": "komentarz-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
+    "/komentarze": {
       "patch": {
         "tags": [
           "Komentarz"
         ],
         "operationId": "updateKomentarz",
-        "parameters": [
-          {
-            "name": "komentarz-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -2148,37 +2082,6 @@
         }
       }
     },
-    "/rozmowy/id/{id}": {
-      "get": {
-        "tags": [
-          "RozmowaPrywatna"
-        ],
-        "operationId": "getRozmowaPrywatnaById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RozmowaPrywatnaResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/rosliny/wlasciwosci": {
       "get": {
         "tags": [
@@ -2537,6 +2440,64 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OgrodResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/komentarze/{komentarz-id}": {
+      "get": {
+        "tags": [
+          "Komentarz"
+        ],
+        "operationId": "findKomentarzById",
+        "parameters": [
+          {
+            "name": "komentarz-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KomentarzResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Komentarz"
+        ],
+        "operationId": "removeKomentarz",
+        "parameters": [
+          {
+            "name": "komentarz-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2951,373 +2912,6 @@
   },
   "components": {
     "schemas": {
-      "GrantedAuthority": {
-        "type": "object",
-        "properties": {
-          "authority": {
-            "type": "string"
-          }
-        }
-      },
-      "Komentarz": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "komentarzId": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string"
-          },
-          "edytowany": {
-            "type": "boolean"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "rozmowaPrywatna": {
-            "$ref": "#/components/schemas/RozmowaPrywatna"
-          },
-          "post": {
-            "$ref": "#/components/schemas/Post"
-          },
-          "odpowiadaKomentarzowi": {
-            "$ref": "#/components/schemas/Komentarz"
-          },
-          "odpowiedzi": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Komentarz"
-            }
-          },
-          "uzytkownik": {
-            "$ref": "#/components/schemas/Uzytkownik"
-          },
-          "wposcie": {
-            "$ref": "#/components/schemas/Post"
-          },
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "Oceniany": {
-        "type": "object",
-        "properties": {
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "Ocenil": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "lubi": {
-            "type": "boolean"
-          },
-          "oceniany": {
-            "$ref": "#/components/schemas/Oceniany"
-          }
-        }
-      },
-      "OcenilReverse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "lubi": {
-            "type": "boolean"
-          },
-          "uzytkownik": {
-            "$ref": "#/components/schemas/Uzytkownik"
-          }
-        }
-      },
-      "Ogrod": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "nazwa": {
-            "type": "string"
-          }
-        }
-      },
-      "Post": {
-        "type": "object",
-        "properties": {
-          "ocenil": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OcenilReverse"
-            }
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "postId": {
-            "type": "string"
-          },
-          "tytul": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "autor": {
-            "$ref": "#/components/schemas/Uzytkownik"
-          },
-          "komentarze": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Komentarz"
-            }
-          },
-          "komentarzeWPoscie": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Komentarz"
-            }
-          },
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "RozmowaPrywatna": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "aktywna": {
-            "type": "boolean"
-          },
-          "nadawca": {
-            "type": "string"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "ostatnioAktualizowana": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "uzytkownicy": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Uzytkownik"
-            }
-          },
-          "wiadomosci": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Komentarz"
-            }
-          }
-        }
-      },
-      "Ustawienia": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "statystykiProfilu": {
-            "type": "boolean"
-          },
-          "ogrodPokaz": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeOdpowiedz": {
-            "type": "boolean"
-          },
-          "powiadomieniaOgrodKwitnienie": {
-            "type": "boolean"
-          },
-          "powiadomieniaOgrodOwocowanie": {
-            "type": "boolean"
-          }
-        }
-      },
-      "Uzytkownik": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "uzytId": {
-            "type": "string"
-          },
-          "labels": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "haslo": {
-            "type": "string"
-          },
-          "avatar": {
-            "type": "string"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "aktywowany": {
-            "type": "boolean"
-          },
-          "ban": {
-            "type": "boolean"
-          },
-          "banDo": {
-            "type": "string",
-            "format": "date"
-          },
-          "imie": {
-            "type": "string"
-          },
-          "miasto": {
-            "type": "string"
-          },
-          "miejsceZamieszkania": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "posty": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Post"
-            }
-          },
-          "komentarze": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Komentarz"
-            }
-          },
-          "oceny": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Ocenil"
-            }
-          },
-          "ustawienia": {
-            "$ref": "#/components/schemas/Ustawienia"
-          },
-          "ogrod": {
-            "$ref": "#/components/schemas/Ogrod"
-          },
-          "rozmowyPrywatne": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RozmowaPrywatna"
-            }
-          },
-          "blokowaniUzytkownicy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Uzytkownik"
-            }
-          },
-          "blokujacyUzytkownicy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Uzytkownik"
-            }
-          },
-          "name": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "username": {
-            "type": "string"
-          },
-          "admin": {
-            "type": "boolean"
-          },
-          "pracownik": {
-            "type": "boolean"
-          },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
-          },
-          "normalUzytkownik": {
-            "type": "boolean"
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "credentialsNonExpired": {
-            "type": "boolean"
-          },
-          "accountNonExpired": {
-            "type": "boolean"
-          },
-          "accountNonLocked": {
-            "type": "boolean"
-          }
-        }
-      },
       "RoslinaRequest": {
         "required": [
           "nazwa",
@@ -3568,22 +3162,9 @@
           }
         }
       },
-      "KomentarzResponse": {
+      "OcenaResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "komentarzId": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "edytowany": {
-            "type": "boolean"
-          },
           "ocenyLubi": {
             "type": "integer",
             "format": "int32"
@@ -3591,82 +3172,6 @@
           "ocenyNieLubi": {
             "type": "integer",
             "format": "int32"
-          },
-          "dataUtworzenia": {
-            "type": "string"
-          },
-          "post": {
-            "$ref": "#/components/schemas/PostResponse"
-          },
-          "odpowiadaKomentarzowi": {
-            "$ref": "#/components/schemas/KomentarzResponse"
-          },
-          "odpowiedzi": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KomentarzResponse"
-            }
-          },
-          "uzytkownikNazwa": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          }
-        }
-      },
-      "PostResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "postId": {
-            "type": "string"
-          },
-          "tytul": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "liczbaKomentarzy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "komentarze": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KomentarzResponse"
-            }
-          },
-          "uzytkownik": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          },
-          "dataUtworzenia": {
-            "type": "string"
           }
         }
       },
@@ -3790,7 +3295,26 @@
           }
         }
       },
-      "KomentarzSimpleResponse": {
+      "KomentarzRequest": {
+        "required": [
+          "targetId"
+        ],
+        "type": "object",
+        "properties": {
+          "opis": {
+            "maxLength": 3000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "obraz": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          }
+        }
+      },
+      "KomentarzResponse": {
         "type": "object",
         "properties": {
           "id": {
@@ -3806,13 +3330,30 @@
           "edytowany": {
             "type": "boolean"
           },
+          "ocenyLubi": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ocenyNieLubi": {
+            "type": "integer",
+            "format": "int32"
+          },
           "dataUtworzenia": {
             "type": "string"
           },
-          "uzytkownikNazwa": {
-            "type": "string"
+          "post": {
+            "$ref": "#/components/schemas/PostResponse"
           },
-          "postId": {
+          "odpowiadaKomentarzowi": {
+            "$ref": "#/components/schemas/KomentarzResponse"
+          },
+          "odpowiedzi": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KomentarzResponse"
+            }
+          },
+          "uzytkownikNazwa": {
             "type": "string"
           },
           "obraz": {
@@ -3825,108 +3366,53 @@
           }
         }
       },
-      "RozmowaPrywatnaResponse": {
+      "PostResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int64"
           },
-          "aktywna": {
-            "type": "boolean"
-          },
-          "nadawca": {
+          "postId": {
             "type": "string"
           },
-          "uzytkownicy": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UzytkownikResponse"
-            }
+          "tytul": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
+          "ocenyLubi": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ocenyNieLubi": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "liczbaKomentarzy": {
+            "type": "integer",
+            "format": "int32"
           },
           "komentarze": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/KomentarzSimpleResponse"
+              "$ref": "#/components/schemas/KomentarzResponse"
             }
           },
-          "liczbaWiadomosci": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ostatnioAktualizowana": {
-            "type": "string"
-          }
-        }
-      },
-      "UzytkownikResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "uzytId": {
+          "uzytkownik": {
             "type": "string"
           },
-          "labels": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
+          "obraz": {
+            "type": "string",
+            "format": "byte"
           },
           "avatar": {
             "type": "string",
             "format": "byte"
           },
           "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "aktywowany": {
-            "type": "boolean"
-          },
-          "ban": {
-            "type": "boolean"
-          },
-          "banDo": {
-            "type": "string",
-            "format": "date"
-          },
-          "imie": {
             "type": "string"
-          },
-          "miasto": {
-            "type": "string"
-          },
-          "miejsceZamieszkania": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "ustawienia": {
-            "$ref": "#/components/schemas/Ustawienia"
-          },
-          "blokowaniUzytkownicy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UzytkownikResponse"
-            }
-          },
-          "blokujacyUzytkownicy": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UzytkownikResponse"
-            }
           }
         }
       },
@@ -4019,25 +3505,6 @@
           "obraz": {
             "maxLength": 200,
             "minLength": 0,
-            "type": "string"
-          }
-        }
-      },
-      "KomentarzRequest": {
-        "required": [
-          "targetId"
-        ],
-        "type": "object",
-        "properties": {
-          "opis": {
-            "maxLength": 3000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string"
-          },
-          "targetId": {
             "type": "string"
           }
         }
@@ -4276,6 +3743,104 @@
           }
         }
       },
+      "Ustawienia": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "statystykiProfilu": {
+            "type": "boolean"
+          },
+          "ogrodPokaz": {
+            "type": "boolean"
+          },
+          "powiadomieniaKomentarzeOdpowiedz": {
+            "type": "boolean"
+          },
+          "powiadomieniaOgrodKwitnienie": {
+            "type": "boolean"
+          },
+          "powiadomieniaOgrodOwocowanie": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UzytkownikResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uzytId": {
+            "type": "string"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nazwa": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "byte"
+          },
+          "dataUtworzenia": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "aktywowany": {
+            "type": "boolean"
+          },
+          "ban": {
+            "type": "boolean"
+          },
+          "banDo": {
+            "type": "string",
+            "format": "date"
+          },
+          "banPowod": {
+            "type": "string"
+          },
+          "imie": {
+            "type": "string"
+          },
+          "miasto": {
+            "type": "string"
+          },
+          "miejsceZamieszkania": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
+          "ustawienia": {
+            "$ref": "#/components/schemas/Ustawienia"
+          },
+          "blokowaniUzytkownicy": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UzytkownikResponse"
+            }
+          },
+          "blokujacyUzytkownicy": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UzytkownikResponse"
+            }
+          }
+        }
+      },
       "ProfilRequest": {
         "type": "object",
         "properties": {
@@ -4508,6 +4073,41 @@
           }
         }
       },
+      "KomentarzSimpleResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "komentarzId": {
+            "type": "string"
+          },
+          "opis": {
+            "type": "string"
+          },
+          "edytowany": {
+            "type": "boolean"
+          },
+          "dataUtworzenia": {
+            "type": "string"
+          },
+          "uzytkownikNazwa": {
+            "type": "string"
+          },
+          "postId": {
+            "type": "string"
+          },
+          "obraz": {
+            "type": "string",
+            "format": "byte"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      },
       "PageResponseRozmowaPrywatnaResponse": {
         "type": "object",
         "properties": {
@@ -4538,6 +4138,40 @@
           },
           "last": {
             "type": "boolean"
+          }
+        }
+      },
+      "RozmowaPrywatnaResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "aktywna": {
+            "type": "boolean"
+          },
+          "nadawca": {
+            "type": "string"
+          },
+          "uzytkownicy": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UzytkownikResponse"
+            }
+          },
+          "komentarze": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KomentarzSimpleResponse"
+            }
+          },
+          "liczbaWiadomosci": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ostatnioAktualizowana": {
+            "type": "string"
           }
         }
       },

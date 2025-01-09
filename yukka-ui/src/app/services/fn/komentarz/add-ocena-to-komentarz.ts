@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { KomentarzResponse } from '../../models/komentarz-response';
 import { OcenaRequest } from '../../models/ocena-request';
+import { OcenaResponse } from '../../models/ocena-response';
 
 export interface AddOcenaToKomentarz$Params {
       body: OcenaRequest
 }
 
-export function addOcenaToKomentarz(http: HttpClient, rootUrl: string, params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+export function addOcenaToKomentarz(http: HttpClient, rootUrl: string, params: AddOcenaToKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<OcenaResponse>> {
   const rb = new RequestBuilder(rootUrl, addOcenaToKomentarz.PATH, 'put');
   if (params) {
     rb.body(params.body, 'application/json');
@@ -24,7 +24,7 @@ export function addOcenaToKomentarz(http: HttpClient, rootUrl: string, params: A
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<KomentarzResponse>;
+      return r as StrictHttpResponse<OcenaResponse>;
     })
   );
 }
