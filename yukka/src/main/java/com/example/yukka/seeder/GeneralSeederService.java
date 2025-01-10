@@ -65,7 +65,7 @@ public class GeneralSeederService {
 
 	private final FileUtils fileUtils;
 
-	private final UzytkownikRoslinaSeeder uzytkownikRoslinaSeeder;
+	private final RoslinaWlasnaSeeder roslinaWlasnaSeeder;
 	private final PowiadomienieService powiadomienieService;
 
     private final SocialSeeder socialSeeder;
@@ -108,7 +108,7 @@ public class GeneralSeederService {
 		uzytkownikRepository.clearPowiadomienia();
 
 		log.info("Usuwanie roslin uzytkownikow");
-		uzytkownikRepository.clearUzytkownikRoslina();
+		uzytkownikRepository.clearRoslinaWlasna();
 
 		log.info("Usuwanie uzytkownikow");
 		uzytkownikRepository.clearUzytkowicy();
@@ -274,7 +274,7 @@ public class GeneralSeederService {
 		log.info("Seedowanie roslin uzytkownika[TESTOWE]...");
 		
 		// Wiem wiem, okropieństwo
-		PageResponse<RoslinaResponse> roslinyUzytkownika = uzytkownikRoslinaSeeder.seedUzytkownikRosliny(usPiotr);
+		PageResponse<RoslinaResponse> roslinyUzytkownika = roslinaWlasnaSeeder.seedUzytkownikRosliny(usPiotr);
 		if (roslinyUzytkownika.getSize() == 0) {
 			throw new RuntimeException("Nie udało się załadować roślin użytkownika.");
 		}
@@ -338,24 +338,24 @@ public class GeneralSeederService {
     //     Double wysokoscMin = 1.5;
     //     Double wysokoscMax = 12.0;
 
-	// 	WlasciwoscWithRelations kolorLisci = WlasciwoscWithRelations.builder()
+	// 	CechaWithRelations kolorLisci = CechaWithRelations.builder()
 	// 	.etykieta("Kolor").relacja("MA_KOLOR_LISCI").nazwa("ciemnozielone")
 	// 	.build();
-	// 	WlasciwoscWithRelations okresOwocowania = WlasciwoscWithRelations.builder()
+	// 	CechaWithRelations okresOwocowania = CechaWithRelations.builder()
 	// 	.etykieta("Okres").relacja("MA_OKRES_OWOCOWANIA").nazwa("październik")
 	// 	.build();
 
-	// 	WlasciwoscWithRelations gleba1 = WlasciwoscWithRelations.builder()
+	// 	CechaWithRelations gleba1 = CechaWithRelations.builder()
 	// 	.etykieta("Gleba").relacja("MA_GLEBE").nazwa("przeciętna ogrodowa")
 	// 	.build();
-	// 	WlasciwoscWithRelations gleba2 = WlasciwoscWithRelations.builder()
+	// 	CechaWithRelations gleba2 = CechaWithRelations.builder()
 	// 	.etykieta("Gleba").relacja("MA_GLEBE").nazwa("próchniczna")
 	// 	.build();
 	// 	RoslinaRequest exampleRoslina = RoslinaRequest.builder()
     //         .nazwa(roslinaNazwa)
     //         .wysokoscMin(wysokoscMin)
     //         .wysokoscMax(wysokoscMax)
-	// 		.wlasciwosci(Arrays.asList(kolorLisci, okresOwocowania, gleba1, gleba2))
+	// 		.cechy(Arrays.asList(kolorLisci, okresOwocowania, gleba1, gleba2))
 	// 		.build();
 
 	// 	System.out.println("Testowanie wyszukiwania rośliny z parametrami");

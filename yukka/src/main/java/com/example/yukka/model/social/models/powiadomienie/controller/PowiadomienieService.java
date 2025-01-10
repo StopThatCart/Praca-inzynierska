@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.yukka.auth.requests.BanRequest;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
+import com.example.yukka.model.roslina.cecha.Cecha;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
-import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.social.mappers.PowiadomienieMapper;
 import com.example.yukka.model.social.models.komentarz.Komentarz;
 import com.example.yukka.model.social.models.post.Post;
@@ -517,12 +517,12 @@ public class PowiadomienieService {
      * Przetwarza zestaw okresów, filtrując je na podstawie nazwy aktualnego miesiąca,
      * a następnie dodaje nazwę rośliny do zestawu nazw roślin, jeśli okres pasuje do aktualnego miesiąca.
      *
-     * @param okresy        Zestaw obiektów typu Wlasciwosc reprezentujących okresy.
+     * @param okresy        Zestaw obiektów typu Cecha reprezentujących okresy.
      * @param aktualnyMiesiac Aktualny miesiąc, który jest używany do filtrowania okresów.
      * @param nazwyRoslin   Zestaw nazw roślin, do którego dodawana jest nazwa rośliny, jeśli okres pasuje do aktualnego miesiąca.
      * @param nazwaRosliny  Nazwa rośliny, która jest dodawana do zestawu nazw roślin, jeśli okres pasuje do aktualnego miesiąca.
      */
-    private void przetworzOkresy(Set<Wlasciwosc> okresy, Miesiac aktualnyMiesiac, Set<String> nazwyRoslin, String nazwaRosliny) {
+    private void przetworzOkresy(Set<Cecha> okresy, Miesiac aktualnyMiesiac, Set<String> nazwyRoslin, String nazwaRosliny) {
         okresy.stream()
               .filter(okres -> okres.getNazwa().equalsIgnoreCase(aktualnyMiesiac.name()))
               .forEach(okres -> nazwyRoslin.add(nazwaRosliny));

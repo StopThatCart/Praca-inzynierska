@@ -1,13 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
-import { WlasciwoscWithRelations } from '../models/wlasciwosc-with-relations';
+import { CechaWithRelations } from '../models/cecha-with-relations';
 export interface RoslinaRequest {
+  cechy: Array<CechaWithRelations>;
   nazwa: string;
   nazwaLacinska: string;
   obraz?: string;
   opis: string;
   roslinaId?: string;
-  wlasciwosci: Array<WlasciwoscWithRelations>;
   wysokoscMax: number;
   wysokoscMin: number;
 }

@@ -20,9 +20,9 @@ import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.model.roslina.RoslinaRequest;
+import com.example.yukka.model.roslina.cecha.CechaWithRelations;
 import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.roslina.enums.RoslinaEtykietyFrontend;
-import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscWithRelations;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
@@ -225,7 +225,7 @@ public class RoslinaImporterService {
                     .wysokoscMin(heights.getMin())
                     .wysokoscMax(heights.getMax())
                     .obraz(row[headerMap.get("image_filename")])
-                    .wlasciwosci(parseWlasciwosci(row, headerMap))
+                    .cechy(parseCechy(row, headerMap))
                     .build();
 
                 roslinaRequests.add(roslinaRequest);
@@ -236,11 +236,11 @@ public class RoslinaImporterService {
     }
 
     /**
-     * Parsuje właściwości rośliny z wiersza danych wejściowych.
+     * Parsuje cechy rośliny z wiersza danych wejściowych.
      *
      * @param row       Tablica Stringów reprezentująca wiersz danych wejściowych.
      * @param headerMap Mapa nagłówków, gdzie kluczem jest nazwa kolumny, a wartością indeks kolumny w tablicy row.
-     * @return Lista obiektów WlasciwoscWithRelations zawierająca właściwości rośliny.
+     * @return Lista obiektów CechaWithRelations zawierająca cechy rośliny.
      *
      * Właściwości rośliny:
      * <ul>
@@ -264,46 +264,40 @@ public class RoslinaImporterService {
      *   <li><strong>Kolor kwiatów</strong>: barwa_kwiatow</li>
      * </ul>
      */
-    private List<WlasciwoscWithRelations> parseWlasciwosci(String[] row, Map<String, Integer> headerMap) {
-        List<WlasciwoscWithRelations> wlasciwosci = new ArrayList<>();
+    private List<CechaWithRelations> parseCechy(String[] row, Map<String, Integer> headerMap) {
+        List<CechaWithRelations> cechy = new ArrayList<>();
 
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.GRUPA.getBackendValue(), row[headerMap.get("grupa_roslin")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.PODGRUPA.getBackendValue(), row[headerMap.get("grupa_uzytkowa")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.FORMA.getBackendValue(), row[headerMap.get("forma")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.SILA_WZROSTU.getBackendValue(), row[headerMap.get("sila_wzrostu")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.POKROJ.getBackendValue(), row[headerMap.get("pokroj")]);
-        addWlasciwosc(wlasciwosci, "KolorLisci", row[headerMap.get("barwa_lisci_(igiel)")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.ZIMOZIELONOSC.getBackendValue(), row[headerMap.get("zimozielonosc_lisci_(igiel)")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.KWIAT.getBackendValue(), row[headerMap.get("rodzaj_kwiatow")]);
-        addWlasciwosc(wlasciwosci, "OkresKwitnienia", row[headerMap.get("pora_kwitnienia")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.OWOC.getBackendValue(), row[headerMap.get("owoce")]);
-        addWlasciwosc(wlasciwosci, "OkresOwocowania", row[headerMap.get("pora_owocowania")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.STANOWISKO.getBackendValue(), row[headerMap.get("naslonecznienie")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.WILGOTNOSC.getBackendValue(), row[headerMap.get("wilgotnosc")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.ODCZYN.getBackendValue(), row[headerMap.get("ph_podloza")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.GLEBA.getBackendValue(), row[headerMap.get("rodzaj_gleby")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.WALOR.getBackendValue(), row[headerMap.get("walory")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.ZASTOSOWANIE.getBackendValue(), row[headerMap.get("zastosowanie")]);
-        addWlasciwosc(wlasciwosci, RoslinaEtykietyFrontend.ZASTOSOWANIE.getBackendValue(), row[headerMap.get("zastosowanie")]);
-        addWlasciwosc(wlasciwosci, "KolorKwiatow", row[headerMap.get("barwa_kwiatow")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.GRUPA.getBackendValue(), row[headerMap.get("grupa_roslin")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.PODGRUPA.getBackendValue(), row[headerMap.get("grupa_uzytkowa")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.FORMA.getBackendValue(), row[headerMap.get("forma")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.SILA_WZROSTU.getBackendValue(), row[headerMap.get("sila_wzrostu")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.POKROJ.getBackendValue(), row[headerMap.get("pokroj")]);
+        addCecha(cechy, "KolorLisci", row[headerMap.get("barwa_lisci_(igiel)")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.ZIMOZIELONOSC.getBackendValue(), row[headerMap.get("zimozielonosc_lisci_(igiel)")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.KWIAT.getBackendValue(), row[headerMap.get("rodzaj_kwiatow")]);
+        addCecha(cechy, "OkresKwitnienia", row[headerMap.get("pora_kwitnienia")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.OWOC.getBackendValue(), row[headerMap.get("owoce")]);
+        addCecha(cechy, "OkresOwocowania", row[headerMap.get("pora_owocowania")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.STANOWISKO.getBackendValue(), row[headerMap.get("naslonecznienie")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.WILGOTNOSC.getBackendValue(), row[headerMap.get("wilgotnosc")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.ODCZYN.getBackendValue(), row[headerMap.get("ph_podloza")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.GLEBA.getBackendValue(), row[headerMap.get("rodzaj_gleby")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.WALOR.getBackendValue(), row[headerMap.get("walory")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.ZASTOSOWANIE.getBackendValue(), row[headerMap.get("zastosowanie")]);
+        addCecha(cechy, RoslinaEtykietyFrontend.ZASTOSOWANIE.getBackendValue(), row[headerMap.get("zastosowanie")]);
+        addCecha(cechy, "KolorKwiatow", row[headerMap.get("barwa_kwiatow")]);
     
-        return wlasciwosci;
+        return cechy;
     }
 
     /**
-     * Dodaje właściwość do listy właściwości, jeśli podane etykieta i wartość są prawidłowe.
+     * Dodaje właściwość do listy cech, jeśli podana etykieta i wartość są prawidłowe.
      *
-     * @param wlasciwosci lista właściwości, do której dodawana jest nowa właściwość
-     * @param label etykieta właściwości
-     * @param value wartość właściwości
-     *
-     * <ul>
-     * <li><strong>wlasciwosci</strong> - lista właściwości, do której dodawana jest nowa właściwość</li>
-     * <li><strong>label</strong> - etykieta właściwości</li>
-     * <li><strong>value</strong> - wartość właściwości</li>
-     * </ul>
+     * @param cechy lista cech, do której dodawana jest nowa właściwość
+     * @param label etykieta cechy
+     * @param value wartość cechy
      */
-    private void addWlasciwosc(List<WlasciwoscWithRelations> wlasciwosci, String label, String value) {
+    private void addCecha(List<CechaWithRelations> cechy, String label, String value) {
         if (value != null && !value.isEmpty() && !value.toLowerCase().equals(emptyCsvValue.toLowerCase()) 
         && label != null && !label.isEmpty() &&  !label.toLowerCase().equals(emptyCsvValue.toLowerCase())) {
            
@@ -320,7 +314,7 @@ public class RoslinaImporterService {
 
             while (matcher.find()) {
                 String matchedValue = matcher.group();
-                wlasciwosci.add(new WlasciwoscWithRelations(label, matchedValue.trim(), determineRelacja(meh)));
+                cechy.add(new CechaWithRelations(label, matchedValue.trim(), determineRelacja(meh)));
             }
         }
     }

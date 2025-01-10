@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RoslinaService } from '../../../../services/services/roslina.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PageResponseRoslinaResponse, RoslinaRequest, WlasciwoscKatalogResponse, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
+import { PageResponseRoslinaResponse, RoslinaRequest, CechaKatalogResponse, CechaWithRelations } from '../../../../services/models';
 import { CommonModule } from '@angular/common';
 import { RoslinaCardComponent } from "../../components/roslina-card/roslina-card.component";
-import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";
-import { WlasciwoscDropdownComponent } from "../../components/wlasciwosc-dropdown/wlasciwosc-dropdown.component";
+import { CechaTagComponent } from "../../components/cecha-tag/cecha-tag.component";
+import { CechaDropdownComponent } from "../../components/cecha-dropdown/cecha-dropdown.component";
 import { FormsModule } from '@angular/forms';
-import { Convert } from '../../../../services/converts/wlasciwosc-with-relations-convert';
+import { Convert } from '../../../../services/converts/cecha-with-relations-convert';
 import { PaginationComponent } from "../../../../components/pagination/pagination.component";
-import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
+import { CechaProcessService } from '../../services/cecha-service/cecha.service';
 import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
 import { TokenService } from '../../../../services/token/token.service';
 import { LoadingComponent } from "../../../../components/loading/loading.component";
@@ -17,7 +17,7 @@ import { LoadingComponent } from "../../../../components/loading/loading.compone
 @Component({
   selector: 'app-roslina-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RoslinaCardComponent, WlasciwoscTagComponent, WlasciwoscDropdownComponent, PaginationComponent, WysokoscInputComponent, LoadingComponent],
+  imports: [CommonModule, FormsModule, RoslinaCardComponent, CechaTagComponent, CechaDropdownComponent, PaginationComponent, WysokoscInputComponent, LoadingComponent],
   templateUrl: './roslina-list.component.html',
   styleUrl: './roslina-list.component.css'
 })
@@ -25,7 +25,7 @@ export class RoslinaListComponent implements OnInit{
   canAddRoslina: boolean = false;
 
   roslinaResponse: PageResponseRoslinaResponse = {};
-  wlasciwosciResponse: WlasciwoscKatalogResponse[] = [];
+  cechyResponse: CechaKatalogResponse[] = [];
   isLoading = false;
   message = '';
 
@@ -36,7 +36,7 @@ export class RoslinaListComponent implements OnInit{
     opis: '',
     wysokoscMin: 0,
     wysokoscMax: 100,
-    wlasciwosci: [
+    cechy: [
 /*
       {
         etykieta: 'Kolor', relacja: 'MA_KOLOR_LISCI', nazwa: 'ciemnozielone'
@@ -56,18 +56,18 @@ export class RoslinaListComponent implements OnInit{
         etykieta: 'Gleba', relacja: 'MA_GLEBE', nazwa: 'próchniczna'
       }
 */
-    ] as WlasciwoscWithRelations[],
+    ] as CechaWithRelations[],
   };
   // Na backendzie jest size 10, więc tutaj tylko testuję
   page = 1;
   size = 12;
   roslinaCount: number = 0;
 
-  @ViewChild(WlasciwoscTagComponent) wlasciwoscTagComponent!: WlasciwoscTagComponent;
+  @ViewChild(CechaTagComponent) cechaTagComponent!: CechaTagComponent;
 
   constructor(
     private roslinaService: RoslinaService,
-    private wlasciwoscProcessService: WlasciwoscProcessService,
+    private cechaProcessService: CechaProcessService,
     private router: Router,
     private route: ActivatedRoute,
     private tokenService: TokenService
@@ -86,10 +86,10 @@ export class RoslinaListComponent implements OnInit{
 
       // Uwaga: uważaj na api-gen, bo trzeba ręcznie tworzyć konwersję na JSON
       // Tutaj link dla przyszłego mnie. https://app.quicktype.io/
-      let wlasciwosci2 = params['wlasciwosci'] ? JSON.parse(params['wlasciwosci']) : [];
-     // console.log("Właściwości2: " + wlasciwosci2);
+      let cechy2 = params['cechy'] ? JSON.parse(params['cechy']) : [];
+     // console.log("Cechy2: " + cechy2);
 
-      this.request.wlasciwosci = Convert.toWlasciwoscWithRelationsArray(JSON.stringify(wlasciwosci2));
+      this.request.cechy = Convert.toCechaWithRelationsArray(JSON.stringify(cechy2));
 
       this.findAllRosliny();
     });
@@ -128,13 +128,13 @@ export class RoslinaListComponent implements OnInit{
         }
       });
 
-    this.roslinaService.getWlasciwosciCountFromQuery({ body: this.request })
+    this.roslinaService.getCechyCountFromQuery({ body: this.request })
     .subscribe({
-      next: (wlasciwosci) => {
-        this.wlasciwosciResponse = this.wlasciwoscProcessService.processWlasciwosciResponse(wlasciwosci);
+      next: (cechy) => {
+        this.cechyResponse = this.cechaProcessService.processCechyResponse(cechy);
       },
       error: (error) => {
-        console.error('Error fetching wlasciwosci:', error);
+        console.error('Error fetching cechy:', error);
       }
     });
   }
@@ -153,23 +153,23 @@ export class RoslinaListComponent implements OnInit{
     this.request.wysokoscMax = max;
   }
 
-  onWlasciwoscToggled(wlasciwosci: WlasciwoscWithRelations[]): void {
-    console.log('Wlasciwosci toggled:', wlasciwosci);
-    this.request.wlasciwosci = wlasciwosci;
-    this.wlasciwoscTagComponent.updateSortedWlasciwosci(wlasciwosci);
+  onCechaToggled(cechy: CechaWithRelations[]): void {
+    console.log('Cechy toggled:', cechy);
+    this.request.cechy = cechy;
+    this.cechaTagComponent.updateSortedCechy(cechy);
   }
 
-  onWlasciwoscRemoved(index: number): void {
-    console.log('Removing wlasciwosc at index:', index);
+  onCechaRemoved(index: number): void {
+    console.log('Removing cecha at index:', index);
 
-    this.request.wlasciwosci.splice(index, 1);
+    this.request.cechy.splice(index, 1);
     console.log('Request after removing:', this.request);
   }
 
   // Paginacja
 
   goToPage(page: number) {
-    const wlasciwosciJson = Convert.wlasciwoscWithRelationsArrayToJson(this.request.wlasciwosci);
+    const cechyJson = Convert.cechaWithRelationsArrayToJson(this.request.cechy);
 
     this.router.navigate(['/rosliny'], {
       queryParams: {
@@ -178,7 +178,7 @@ export class RoslinaListComponent implements OnInit{
         wysokoscMax: this.request.wysokoscMax,
         nazwa: this.request.nazwa,
         nazwaLacinska: this.request.nazwaLacinska,
-        wlasciwosci: wlasciwosciJson
+        cechy: cechyJson
       },
       queryParamsHandling: 'merge'
     });

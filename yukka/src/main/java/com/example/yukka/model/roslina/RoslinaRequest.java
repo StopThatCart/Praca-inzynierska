@@ -26,7 +26,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class RoslinaRequest extends UzytkownikRoslinaRequest{
+public class RoslinaRequest extends RoslinaWlasnaRequest{
     @NotEmpty(message = "Nazwa łacińska jest wymagana")
     @Size(min = 1, max = 255, message = "Nazwa łacińska musi zawierać od 1 do 255 znaków")
     private String nazwaLacinska;

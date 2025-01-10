@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import com.example.yukka.model.roslina.Roslina;
-import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
+import com.example.yukka.model.roslina.cecha.Cecha;
 
 
 /**
@@ -61,8 +61,8 @@ public enum RoslinaRelacje {
 
     private final String property;
 
-    private static final Map<String, Function<Roslina, Set<Wlasciwosc>>> getters = new HashMap<>();
-    private static final Map<String, BiConsumer<Roslina, Set<Wlasciwosc>>> setters = new HashMap<>();
+    private static final Map<String, Function<Roslina, Set<Cecha>>> getters = new HashMap<>();
+    private static final Map<String, BiConsumer<Roslina, Set<Cecha>>> setters = new HashMap<>();
 
     static {
         getters.put("formy", Roslina::getFormy);
@@ -112,11 +112,11 @@ public enum RoslinaRelacje {
         return property;
     }
 
-    public Set<Wlasciwosc> getWlasciwosci(Roslina roslina) {
+    public Set<Cecha> getCechy(Roslina roslina) {
         return getters.get(property).apply(roslina);
     }
 
-    public void setWlasciwosci(Roslina roslina, Set<Wlasciwosc> wlasciwosci) {
-        setters.get(property).accept(roslina, wlasciwosci);
+    public void setCechy(Roslina roslina, Set<Cecha> cechy) {
+        setters.get(property).accept(roslina, cechy);
     }
 }

@@ -22,7 +22,7 @@ def query_string(node_name, label, relationship):
         "WITH p, plant "
         f"UNWIND plant.{label} AS item "
         f"WITH p, item WHERE item <> '{brak}' "
-        f"MERGE (n:Wlasciwosc:{node_name.capitalize()} {{nazwa: item}}) "
+        f"MERGE (n:Cecha:{node_name.capitalize()} {{nazwa: item}}) "
         f"MERGE (p)-[:{relationship}]->(n) "
     )
     return query
@@ -35,7 +35,7 @@ def query_string_good(node_name, label, relationship):
         "WITH p, plant "
         f"UNWIND plant.{label} AS item "
         f"WITH p, item WHERE item <> '{brak}' "
-        f"MERGE (n:Wlasciwosc:{node_name.capitalize()} {{nazwa: item}}) "
+        f"MERGE (n:Cecha:{node_name.capitalize()} {{nazwa: item}}) "
         f"MERGE (p)-[:{relationship}]->(n) "
     )
     return query

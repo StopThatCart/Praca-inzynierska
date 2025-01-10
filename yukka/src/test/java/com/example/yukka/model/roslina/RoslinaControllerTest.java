@@ -26,11 +26,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.example.yukka.auth.authorities.ROLE;
+import com.example.yukka.model.roslina.cecha.Cecha;
 import com.example.yukka.model.roslina.controller.RoslinaController;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
 import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.roslina.enums.RoslinaEtykietyFrontend;
-import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.extern.slf4j.Slf4j;
@@ -90,36 +90,36 @@ public class RoslinaControllerTest {
         Mockito.when(mockAuth.getPrincipal()).thenReturn(uzyt);
 
 
-        Wlasciwosc formaDrzewo = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.FORMA.getBackendValue()), "TAKA TESTOWA");
+        Cecha formaDrzewo = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.FORMA.getBackendValue()), "TAKA TESTOWA");
 
-        Wlasciwosc glebaPrzecietna = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.GLEBA.getBackendValue()), "TEŻ TESTOWA");
-        Wlasciwosc glebaProchniczna = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.GLEBA.getBackendValue()), "próchniczna");
-        Wlasciwosc glebaGliniasta = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.GLEBA.getBackendValue()), "gliniasta");
+        Cecha glebaPrzecietna = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.GLEBA.getBackendValue()), "TEŻ TESTOWA");
+        Cecha glebaProchniczna = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.GLEBA.getBackendValue()), "próchniczna");
+        Cecha glebaGliniasta = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.GLEBA.getBackendValue()), "gliniasta");
         
-        Wlasciwosc grupaLisciaste = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.GRUPA.getBackendValue()), "liściaste");
+        Cecha grupaLisciaste = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.GRUPA.getBackendValue()), "liściaste");
         
-        Wlasciwosc kolorLisciCiemnozielone = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.KOLOR_LISCI.getBackendValue()), "ciemnozielone");
-        Wlasciwosc kolorKwiatowKremowy = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.KOLOR_KWIATOW.getBackendValue()), "kremowe");
+        Cecha kolorLisciCiemnozielone = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.KOLOR_LISCI.getBackendValue()), "ciemnozielone");
+        Cecha kolorKwiatowKremowy = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.KOLOR_KWIATOW.getBackendValue()), "kremowe");
         
-        Wlasciwosc kwiatPojedynczy = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.KWIAT.getBackendValue()), "pojedyncze");
-        Wlasciwosc kwiatPachnace = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.KWIAT.getBackendValue()), "pachnące");
+        Cecha kwiatPojedynczy = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.KWIAT.getBackendValue()), "pojedyncze");
+        Cecha kwiatPachnace = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.KWIAT.getBackendValue()), "pachnące");
         
-        Wlasciwosc okresKwitnieniaWrzesien = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.OKRES_KWITNIENIA.getBackendValue()), "wrzesień");
-        Wlasciwosc okresOwocowaniaPazdziernik = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.OKRES_OWOCOWANIA.getBackendValue()), "październik");
-        Wlasciwosc okresOwocowaniaListopad = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.OKRES_OWOCOWANIA.getBackendValue()), "listopad");
+        Cecha okresKwitnieniaWrzesien = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.OKRES_KWITNIENIA.getBackendValue()), "wrzesień");
+        Cecha okresOwocowaniaPazdziernik = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.OKRES_OWOCOWANIA.getBackendValue()), "październik");
+        Cecha okresOwocowaniaListopad = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.OKRES_OWOCOWANIA.getBackendValue()), "listopad");
         
-        Wlasciwosc owocBrazowy = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.OWOC.getBackendValue()), "brązowe");
+        Cecha owocBrazowy = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.OWOC.getBackendValue()), "brązowe");
         
-        Wlasciwosc podgrupaLiscisteDrzewa = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.PODGRUPA.getBackendValue()), "liściaste drzewa");
+        Cecha podgrupaLiscisteDrzewa = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.PODGRUPA.getBackendValue()), "liściaste drzewa");
         
-        Wlasciwosc pokrojDrzewiastyRozlozysty = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.POKROJ.getBackendValue()), "drzewiasty rozłożysty");
-        Wlasciwosc pokrojSzerokostoszkowy = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.POKROJ.getBackendValue()), "szerokostożkowy");
+        Cecha pokrojDrzewiastyRozlozysty = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.POKROJ.getBackendValue()), "drzewiasty rozłożysty");
+        Cecha pokrojSzerokostoszkowy = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.POKROJ.getBackendValue()), "szerokostożkowy");
         
-        Wlasciwosc silaWzrostuTypowa = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.SILA_WZROSTU.getBackendValue()), "wzrost typowy dla gatunku");
-        Wlasciwosc stanowiskoSloneczne = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.STANOWISKO.getBackendValue()), "stanowisko słoneczne");
+        Cecha silaWzrostuTypowa = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.SILA_WZROSTU.getBackendValue()), "wzrost typowy dla gatunku");
+        Cecha stanowiskoSloneczne = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.STANOWISKO.getBackendValue()), "stanowisko słoneczne");
         
-        Wlasciwosc walorPachnaceKwiaty = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.WALOR.getBackendValue()), "pachnące kwiaty");
-        Wlasciwosc walorRoslinaMiododajna = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.WALOR.getBackendValue()), "roślina miododajna");
+        Cecha walorPachnaceKwiaty = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.WALOR.getBackendValue()), "pachnące kwiaty");
+        Cecha walorRoslinaMiododajna = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.WALOR.getBackendValue()), "roślina miododajna");
         // Resztę właściwości zostawia się pustą.
 
         Roslina lipaHenryego = Roslina.builder()
@@ -206,7 +206,7 @@ public class RoslinaControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         
       //  Roslina roslina2 = roslinaController.saveRoslina(roslinaRequest).getBody();
-        Roslina roslina2 = roslinaRepository.findByNazwaLacinskaWithWlasciwosci(nazwaLacinska).get();
+        Roslina roslina2 = roslinaRepository.findByNazwaLacinskaWithCechy(nazwaLacinska).get();
         // Assert
         
         Assertions.assertThat(roslina2).isNotNull();
@@ -219,10 +219,10 @@ public class RoslinaControllerTest {
 
         System.out.println("\n\n\nroslina2 gleby: "+ roslina2.getGleby().toString() + " ||| " + roslina.getGleby().toString() + "    :roslina]\n\n\n");
         
-        Assertions.assertThat(roslina2.areWlasciwosciEqual(roslina2.getFormy(), roslina.getFormy())).isTrue();
-        Assertions.assertThat(roslina2.areWlasciwosciEqual(roslina2.getGleby(), roslina.getGleby())).isTrue();
-        Assertions.assertThat(roslina2.areWlasciwosciEqual(roslina2.getKoloryLisci(), roslina.getKoloryLisci())).isTrue();
-        Assertions.assertThat(roslina2.areWlasciwosciEqual(roslina2.getKoloryKwiatow(), roslina.getKoloryKwiatow())).isTrue();
+        Assertions.assertThat(roslina2.areCechyEqual(roslina2.getFormy(), roslina.getFormy())).isTrue();
+        Assertions.assertThat(roslina2.areCechyEqual(roslina2.getGleby(), roslina.getGleby())).isTrue();
+        Assertions.assertThat(roslina2.areCechyEqual(roslina2.getKoloryLisci(), roslina.getKoloryLisci())).isTrue();
+        Assertions.assertThat(roslina2.areCechyEqual(roslina2.getKoloryKwiatow(), roslina.getKoloryKwiatow())).isTrue();
         // Reszty nie trzeba bo nie ma zbytniej różnicy
 
         System.out.println("\n\n\nZakończono test dodawania roślin.\n\n\n");
@@ -235,8 +235,8 @@ public class RoslinaControllerTest {
         roslinaService.save(roslinaRequestOld, null);
 
         String nazwa2 = "Zmieniona nazwa";
-        Set<Wlasciwosc> grupa2 = new HashSet<>(Arrays.asList(new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.GRUPA.getBackendValue()), "owocowe")));
-        Wlasciwosc owoc22 = new Wlasciwosc(Collections.singletonList(RoslinaEtykietyFrontend.OWOC.getBackendValue()),"rzułte");
+        Set<Cecha> grupa2 = new HashSet<>(Arrays.asList(new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.GRUPA.getBackendValue()), "owocowe")));
+        Cecha owoc22 = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.OWOC.getBackendValue()),"rzułte");
 
         // Zmiana nazwy
         roslina.setNazwa(nazwa2);
@@ -248,8 +248,8 @@ public class RoslinaControllerTest {
         roslina.setGrupy(grupa2);
 
         // Dodanie właściwości
-        Set<Wlasciwosc> owoceOld = roslina.getOwoce();
-        Set<Wlasciwosc> owoceNew = new HashSet<>(owoceOld);  // Zamiana na modyfikowalną listę
+        Set<Cecha> owoceOld = roslina.getOwoce();
+        Set<Cecha> owoceNew = new HashSet<>(owoceOld);  // Zamiana na modyfikowalną listę
         owoceNew.addAll(Arrays.asList(owoc22));
         roslina.setOwoce(owoceNew);  // Ustawienie zaktualizowanej listy
 
@@ -258,7 +258,7 @@ public class RoslinaControllerTest {
 
         // Assert
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-        Roslina roslina2 = roslinaRepository.findByNazwaLacinskaWithWlasciwosci(nazwaLacinska).get();
+        Roslina roslina2 = roslinaRepository.findByNazwaLacinskaWithCechy(nazwaLacinska).get();
         
         Assertions.assertThat(roslina2).isNotNull();
         Assertions.assertThat(roslina2.getId()).isNotNull();
@@ -266,12 +266,12 @@ public class RoslinaControllerTest {
         // Ta część jest ważna
         Assertions.assertThat(roslina2.getNazwa()).isEqualTo(nazwa2);
         
-        Assertions.assertThat(roslina2.areWlasciwosciEqual(roslina2.getFormy(), Collections.emptySet())).isTrue();
-        Assertions.assertThat(roslina2.areWlasciwosciEqual(roslina2.getGrupy(), grupa2)).isTrue();
+        Assertions.assertThat(roslina2.areCechyEqual(roslina2.getFormy(), Collections.emptySet())).isTrue();
+        Assertions.assertThat(roslina2.areCechyEqual(roslina2.getGrupy(), grupa2)).isTrue();
 
         //System.out.println("\n\n\n + OwoceOld: " + owoceOld + " Roslina: " + roslina2.getOwoce() + " ||| " + owoceNew + " :OwoceNew\n\n\n");
 
-        Assertions.assertThat(roslina2.areWlasciwosciEqual(roslina2.getOwoce(), owoceNew)).isTrue();
+        Assertions.assertThat(roslina2.areCechyEqual(roslina2.getOwoce(), owoceNew)).isTrue();
 
         System.out.println("\n\n\nZakończono test auktualizacji rośliny.\n\n\n");
     }

@@ -123,9 +123,9 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     @Query("""
         MATCH path = (uzyt:Uzytkownik)-[:MA_OGROD]->(:Ogrod)
             -[:MA_DZIALKE]->(:Dzialka)
-            <-[:ZASADZONA_NA]-(rosliny)-[r]-(wlasciwosc)
-        WHERE (wlasciwosc:Wlasciwosc OR wlasciwosc:UzytkownikWlasciwosc)
-                AND (rosliny:Roslina OR rosliny:UzytkownikRoslina)
+            <-[:ZASADZONA_NA]-(rosliny)-[r]-(cecha)
+        WHERE (cecha:Cecha OR cecha:CechaWlasna)
+                AND (rosliny:Roslina OR rosliny:RoslinaWlasna)
         RETURN uzyt, collect(NODES(path)), collect(RELATIONSHIPS(path))
         """)
     List<Uzytkownik> getUzytkownicyWithRoslinyInDzialki();
@@ -162,7 +162,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     Integer getKomentarzeCountOfUzytkownik(@Param("nazwa") String nazwa);
     @Query("""
         MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
-        OPTIONAL MATCH (uzyt)<-[:STWORZONA_PRZEZ]-(ros:UzytkownikRoslina)
+        OPTIONAL MATCH (uzyt)<-[:STWORZONA_PRZEZ]-(ros:RoslinaWlasna)
         RETURN count(ros) as rosliny
                 """)
     Integer getRoslinyCountOfUzytkownik(@Param("nazwa") String nazwa);
@@ -387,14 +387,14 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     void removePowiadomieniaOfUzytkownik(@Param("email") String email);
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
-        OPTIONAL MATCH (u)<-[:STWORZONA_PRZEZ]-(roslina:UzytkownikRoslina)
-        OPTIONAL MATCH (roslina)-[rel]-(wl:UzytkownikWlasciwosc)
+        OPTIONAL MATCH (u)<-[:STWORZONA_PRZEZ]-(roslina:RoslinaWlasna)
+        OPTIONAL MATCH (roslina)-[rel]-(wl:CechaWlasna)
         DETACH DELETE roslina
 
         WITH u
-        MATCH (wlasciwosc:UzytkownikWlasciwosc) 
-        WHERE NOT (wlasciwosc)--()
-        DELETE wlasciwosc
+        MATCH (cecha:CechaWlasna) 
+        WHERE NOT (cecha)--()
+        DELETE cecha
         """)
     void removeRoslinyOfUzytkownik(@Param("email") String email);
 
@@ -427,11 +427,11 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     
 
     @Query("""
-        MATCH (roslina:UzytkownikRoslina)
-        OPTIONAL MATCH (roslina)-[rel]-(wl:UzytkownikWlasciwosc)
+        MATCH (roslina:RoslinaWlasna)
+        OPTIONAL MATCH (roslina)-[rel]-(wl:CechaWlasna)
         DETACH DELETE roslina, wl
         """)
-    void clearUzytkownikRoslina(); 
+    void clearRoslinaWlasna(); 
 
 
 

@@ -117,7 +117,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> 
                     auth.requestMatchers("/rosliny",
                     "/rosliny/szukaj",
-                    "/rosliny/wlasciwosciQuery"
+                    "/rosliny/cechyQuery"
                                         
                     ).permitAll()
                     .requestMatchers(HttpMethod.GET, 

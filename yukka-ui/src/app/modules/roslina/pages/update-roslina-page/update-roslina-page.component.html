@@ -39,30 +39,30 @@
           </app-wysokosc-input>
         </div>
         <div class="mb-3">
-          <app-add-custom-wlasciwosc
-          [wlasciwosciResponse]="wlasciwosciResponse"
-          (customWlasciwoscAdded)="onCustomWlasciwoscAdded($event)">
-        </app-add-custom-wlasciwosc>
+          <app-add-custom-cecha
+          [cechyResponse]="cechyResponse"
+          (customCechaAdded)="onCustomCechaAdded($event)">
+        </app-add-custom-cecha>
         </div>
         <div>
-          <label for="wlasciwosci">Właściwości:</label>
-          <div *ngIf="request.wlasciwosci.length > 0; else noWlasciwosci">
-            <app-wlasciwosc-tag
-              [wlasciwosci]="request.wlasciwosci"
-              (wlasciwoscRemoved)="onWlasciwoscRemoved($event)">
-            </app-wlasciwosc-tag>
+          <label for="cechy">Cechy:</label>
+          <div *ngIf="request.cechy.length > 0; else noCechy">
+            <app-cecha-tag
+              [cechy]="request.cechy"
+              (cechaRemoved)="onCechaRemoved($event)">
+            </app-cecha-tag>
           </div>
-          <ng-template #noWlasciwosci>
-            <p>Nie wybrano żadnych właściwości.</p>
+          <ng-template #noCechy>
+            <p>Nie wybrano żadnych cech.</p>
           </ng-template>
           <div class="row mb-1">
-            <div class="col-md-4" *ngFor="let wlasciwosc of wlasciwosciResponse">
-              <app-wlasciwosc-dropdown class="text-white"
-                [wlasciwosciResponse]="[wlasciwosc]"
+            <div class="col-md-4" *ngFor="let cecha of cechyResponse">
+              <app-cecha-dropdown class="text-white"
+                [cechyResponse]="[cecha]"
                 [textColor]="'white'"
-                [(selectedWlasciwosci)]="request.wlasciwosci"
-                (selectedWlasciwosciChange)="onWlasciwoscToggled($event)">
-              </app-wlasciwosc-dropdown>
+                [(selectedCechy)]="request.cechy"
+                (selectedCechyChange)="onCechaToggled($event)">
+              </app-cecha-dropdown>
             </div>
           </div>
         </div>

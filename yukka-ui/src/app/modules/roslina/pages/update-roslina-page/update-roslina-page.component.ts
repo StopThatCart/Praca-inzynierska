@@ -1,38 +1,36 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { WlasciwoscDropdownComponent } from '../../components/wlasciwosc-dropdown/wlasciwosc-dropdown.component';
-import { WlasciwoscTagComponent } from '../../components/wlasciwosc-tag/wlasciwosc-tag.component';
+import { CechaDropdownComponent } from '../../components/cecha-dropdown/cecha-dropdown.component';
+import { CechaTagComponent } from '../../components/cecha-tag/cecha-tag.component';
 import { WysokoscInputComponent } from '../../components/wysokosc-input/wysokosc-input.component';
-import { RoslinaRequest, RoslinaResponse, UzytkownikRoslinaRequest, WlasciwoscResponse, WlasciwoscWithRelations } from '../../../../services/models';
-import { RoslinaService } from '../../../../services/services';
-import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
+import { RoslinaRequest, RoslinaResponse, CechaResponse, CechaWithRelations, RoslinaWlasnaRequest } from '../../../../services/models';
+import { RoslinaService, RoslinaWlasnaService } from '../../../../services/services';
+import { CechaProcessService } from '../../services/cecha-service/cecha.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasciwosc/add-custom-wlasciwosc.component';
+import { AddCustomCechaComponent } from '../../components/add-custom-cecha/add-custom-cecha.component';
 import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
-import { UzytkownikRoslinaService } from '../../../../services/services/uzytkownik-roslina.service';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 
 @Component({
   selector: 'app-update-roslina-page',
   standalone: true,
   imports: [CommonModule, FormsModule,
-    WlasciwoscDropdownComponent,
+    CechaDropdownComponent,
     WysokoscInputComponent,
-    WlasciwoscTagComponent,
-    AddCustomWlasciwoscComponent,
+    CechaTagComponent,
+    AddCustomCechaComponent,
     BreadcrumbComponent],
   templateUrl: './update-roslina-page.component.html',
   styleUrl: './update-roslina-page.component.css'
 })
 export class UpdateRoslinaPageComponent {
-  wlasciwosciResponse: WlasciwoscResponse[] = [];
+  cechyResponse: CechaResponse[] = [];
   message = '';
   errorMsg: Array<string> = [];
 
-  @ViewChild('fileInput') fileInput!: ElementRef;
-  @ViewChild(WlasciwoscTagComponent) wlasciwoscTagComponent!: WlasciwoscTagComponent;
+  @ViewChild(CechaTagComponent) cechaTagComponent!: CechaTagComponent;
 
   request: RoslinaRequest = {
     nazwa: '',
@@ -41,7 +39,7 @@ export class UpdateRoslinaPageComponent {
     opis: '',
     wysokoscMin: 0,
     wysokoscMax: 100,
-    wlasciwosci: [] as WlasciwoscWithRelations[],
+    cechy: [] as CechaWithRelations[],
   };
 
   roslina: RoslinaResponse = {};
@@ -51,20 +49,20 @@ export class UpdateRoslinaPageComponent {
   wybranyObraz: any;
   wybranyPlik: any;
 
-  selectedWlasciwoscType: WlasciwoscResponse | null = null;
-  customWlasciwoscName: string = '';
+  selectedCechaType: CechaResponse | null = null;
+  customCechaName: string = '';
 
   constructor(
     private roslinaService: RoslinaService,
-    private uzytkownikRoslinaService: UzytkownikRoslinaService,
-    private wlasciwoscProcessService: WlasciwoscProcessService,
+    private roslinaWlasnaService: RoslinaWlasnaService,
+    private cechaProcessService: CechaProcessService,
     private errorHandlingService: ErrorHandlingService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.fetchWlasciwosci();
+    this.fetchCechy();
     this.route.params.subscribe(params => {
       const roslinaId = params['roslina-id'];
       if (roslinaId) {
@@ -79,7 +77,7 @@ export class UpdateRoslinaPageComponent {
       next: (roslina) => {
         this.roslina = roslina;
 
-        this.request = this.wlasciwoscProcessService.convertRoslinaResponseToRequest(roslina);
+        this.request = this.cechaProcessService.convertRoslinaResponseToRequest(roslina);
         this.errorMsg = [];
       },
       error: (err) => {
@@ -97,32 +95,32 @@ export class UpdateRoslinaPageComponent {
     this.request.wysokoscMax = max;
   }
 
-  onWlasciwoscToggled(wlasciwosci: WlasciwoscWithRelations[]): void {
-    console.log('Wlasciwosci toggled:', wlasciwosci);
-    this.request.wlasciwosci = wlasciwosci;
-    this.wlasciwoscTagComponent.updateSortedWlasciwosci(wlasciwosci);
+  onCechaToggled(cechy: CechaWithRelations[]): void {
+    console.log('Cechy toggled:', cechy);
+    this.request.cechy = cechy;
+    this.cechaTagComponent.updateSortedCechy(cechy);
   }
 
-  onWlasciwoscRemoved(index: number): void {
-    console.log('Removing wlasciwosc at index:', index);
-    this.request.wlasciwosci.splice(index, 1);
+  onCechaRemoved(index: number): void {
+    console.log('Removing cecha at index:', index);
+    this.request.cechy.splice(index, 1);
     console.log('Request after removing:', this.request);
   }
 
-  onCustomWlasciwoscAdded(customWlasciwosc: WlasciwoscWithRelations): void {
-    this.request.wlasciwosci.push(customWlasciwosc);
-    this.wlasciwoscTagComponent.updateSortedWlasciwosci(this.request.wlasciwosci);
+  onCustomCechaAdded(customCecha: CechaWithRelations): void {
+    this.request.cechy.push(customCecha);
+    this.cechaTagComponent.updateSortedCechy(this.request.cechy);
   }
 
-  fetchWlasciwosci(): void {
-    this.roslinaService.getWlasciwosciWithRelations().subscribe({
+  fetchCechy(): void {
+    this.roslinaService.getCechyWithRelations().subscribe({
       next: (response) => {
-        this.wlasciwosciResponse = response;
-        console.log("Konwertowanie wlasciwosci");
-        this.wlasciwosciResponse = this.wlasciwoscProcessService.processWlasciwosciResponse(this.wlasciwosciResponse);
+        this.cechyResponse = response;
+        console.log("Konwertowanie cech");
+        this.cechyResponse = this.cechaProcessService.processCechyResponse(this.cechyResponse);
       },
       error: (error) => {
-        this.message = 'Błąd podczas pobierania właściwości';
+        this.message = 'Błąd podczas pobierania cech';
       }
     });
   }
@@ -156,19 +154,19 @@ export class UpdateRoslinaPageComponent {
 
   updateUzytkownikRoslina(request: RoslinaRequest): void {
     console.log("AKTUALIZACJA ROŚLINY UZYTKOWNIKA");
-    let uzytRequest : UzytkownikRoslinaRequest = {
+    let uzytRequest : RoslinaWlasnaRequest = {
       roslinaId: this.roslina.roslinaId,
       nazwa: request.nazwa,
       obraz: '',
       opis: request.opis,
       wysokoscMin: request.wysokoscMin,
       wysokoscMax: request.wysokoscMax,
-      wlasciwosci: request.wlasciwosci
+      cechy: request.cechy
     }
 
     console.log("Uzytkownik roslina request: ", uzytRequest);
 
-    this.uzytkownikRoslinaService.update({ body: uzytRequest }).subscribe({
+    this.roslinaWlasnaService.update({ body: uzytRequest }).subscribe({
       next: () => {
         this.message = 'Roślina została zaaktualizowana';
         this.router.navigate(['/rosliny', this.roslina.roslinaId]);

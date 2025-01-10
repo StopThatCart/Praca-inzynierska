@@ -1,0 +1,15 @@
+<div class="mb-3">
+  <h3>Dodawanie własnych cech</h3>
+  <label for="customCechaType" class="form-label">Typ Cechy:</label>
+  <select [(ngModel)]="selectedCechaType" name="customCechaType" class="form-select text-black">
+    <option value="" selected disabled>Wybierz typ...</option>
+    <option *ngFor="let cechy of deployCechy()" [ngValue]="cechy" class="text-black">
+      {{ cechy.etykieta }}
+    </option>
+  </select>
+</div>
+<div class="mb-3">
+  <label for="customCechaName" class="form-label">Nazwa Cechy:</label>
+  <input [(ngModel)]="customCechaName" name="customCechaName" class="form-control text-black" placeholder="Wpisz nazwę cechy" />
+</div>
+<button type="button" class="btn btn-primary mb-3" (click)="addCustomCecha()">Dodaj Własną Cechę</button>

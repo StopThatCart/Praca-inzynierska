@@ -1,4 +1,4 @@
-export { UzytkownikRoslinaService } from './services/uzytkownik-roslina.service';
+export { RoslinaWlasnaService } from './services/roslina-wlasna.service';
 export { RozmowaPrywatnaService } from './services/rozmowa-prywatna.service';
 export { RoslinaService } from './services/roslina.service';
 export { PostService } from './services/post.service';

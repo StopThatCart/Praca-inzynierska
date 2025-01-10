@@ -3,7 +3,7 @@ import { BaseDzialkaRequest, DzialkaRoslinaRequest, RoslinaResponse, UzytkownikR
 import { CommonModule } from '@angular/common';
 import { DzialkaModes } from '../../models/dzialka-modes';
 import { DzialkaService } from '../../../../services/services';
-import { WlasciwoscProcessService } from '../../../roslina/services/wlasciwosc-service/wlasciwosc.service';
+import { CechaProcessService } from '../../../roslina/services/cecha-service/cecha.service';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ModalColorPickComponent } from '../modal-color-pick/modal-color-pick.component';
 import { ModalObrazPickComponent } from "../modal-obraz-pick/modal-obraz-pick.component";
@@ -13,7 +13,7 @@ import { NgbCollapseModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap'
 import { TokenService } from '../../../../services/token/token.service';
 import { WyswietlanieRosliny } from '../../../social/models/WyswietlanieRosliny';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { RoslinaWlasciwosciContainerComponent } from "../../../roslina/components/roslina-wlasciwosci-container/roslina-wlasciwosci-container.component";
+import { RoslinaCechyContainerComponent } from "../../../roslina/components/roslina-cechy-container/roslina-cechy-container.component";
 
 @Component({
   selector: 'app-offcanvas-roslina',
@@ -26,7 +26,7 @@ import { RoslinaWlasciwosciContainerComponent } from "../../../roslina/component
     ModalColorPickComponent,
     ModalObrazPickComponent,
     ModalWyswietlanieRoslinyPickComponent,
-    ModalNotatkaPickComponent, RoslinaWlasciwosciContainerComponent],
+    ModalNotatkaPickComponent, RoslinaCechyContainerComponent],
   templateUrl: './offcanvas-roslina.component.html',
   styleUrl: './offcanvas-roslina.component.css'
 })
@@ -56,7 +56,7 @@ export class OffcanvasRoslinaComponent {
 
   constructor(
     private dzialkaService: DzialkaService,
-    private wlasciwoscProcessService: WlasciwoscProcessService,
+    private cechaProcessService: CechaProcessService,
     private router: Router,
     private route: ActivatedRoute,
     private tokenService: TokenService

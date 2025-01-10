@@ -1,0 +1,21 @@
+export enum CechaEtykiety {
+
+  GLEBA = 'Gleba',
+  GRUPA = 'Grupa',
+  KWIAT = 'Kwiat',
+  OWOC = 'Owoc',
+  ODCZYN = 'Odczyn',
+  PODGRUPA = 'Podgrupa',
+  POKROJ = 'Pokrój',
+  STANOWISKO = 'Stanowisko',
+  WALOR = 'Walor',
+  WILGOTNOSC = 'Wilgotność',
+  ZASTOSOWANIE = 'Zastosowanie',
+  KOLOR_LISCI = 'Kolor Liści',
+  KOLOR_KWIATOW = 'Kolor Kwiatów',
+  FORMA = 'Forma',
+  SILA_WZROSTU = 'Siła Wzrostu',
+  ZIMOZIELONOSC = 'Zimozieloność',
+  OKRES_KWITNIENIA = 'Okres Kwitnienia',
+  OKRES_OWOCOWANIA = 'Okres Owocowania',
+}

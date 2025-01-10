@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * <ul>
  * <li><strong>saveSeededRoslina</strong> - Zapisuje obraz rośliny z seedowanych danych.</li>
- * <li><strong>saveUzytkownikRoslinaObraz</strong> - Zapisuje obraz rośliny użytkownika.</li>
+ * <li><strong>saveRoslinaWlasnaObraz</strong> - Zapisuje obraz rośliny użytkownika.</li>
  * <li><strong>saveRoslina</strong> - Zapisuje obraz rośliny.</li>
  * <li><strong>saveRoslinaObrazInDzialka</strong> - Zapisuje obraz rośliny w działce użytkownika.</li>
  * <li><strong>savePost</strong> - Zapisuje obraz posta użytkownika.</li>
@@ -92,7 +92,7 @@ public class FileStoreService {
      * @return Ścieżka do zapisanego pliku.
      * @throws IllegalArgumentException Jeśli plik obrazu jest nieprawidłowy.
      */
-    public String saveUzytkownikRoslinaObraz(@Nonnull MultipartFile sourceFile, @Nonnull String roslinaId, @Nonnull String uzytId) {
+    public String saveRoslinaWlasnaObraz(@Nonnull MultipartFile sourceFile, @Nonnull String roslinaId, @Nonnull String uzytId) {
         validateImage(sourceFile, false);
         String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "rosliny" + separator + roslinaId;
         String fileName = generateFileName(sourceFile.getName()) + "_" + System.currentTimeMillis();

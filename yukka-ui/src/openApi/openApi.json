@@ -29,7 +29,7 @@
     "/uzytkownikRosliny/{roslinaId}": {
       "put": {
         "tags": [
-          "UzytkownikRoslina"
+          "RoslinaWlasna"
         ],
         "operationId": "updateObraz",
         "parameters": [
@@ -279,7 +279,7 @@
     "/uzytkownikRosliny": {
       "post": {
         "tags": [
-          "UzytkownikRoslina"
+          "RoslinaWlasna"
         ],
         "operationId": "save",
         "requestBody": {
@@ -292,7 +292,7 @@
                 "type": "object",
                 "properties": {
                   "request": {
-                    "$ref": "#/components/schemas/UzytkownikRoslinaRequest"
+                    "$ref": "#/components/schemas/RoslinaWlasnaRequest"
                   },
                   "file": {
                     "type": "string",
@@ -318,14 +318,14 @@
       },
       "patch": {
         "tags": [
-          "UzytkownikRoslina"
+          "RoslinaWlasna"
         ],
         "operationId": "update",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UzytkownikRoslinaRequest"
+                "$ref": "#/components/schemas/RoslinaWlasnaRequest"
               }
             }
           },
@@ -345,53 +345,10 @@
         }
       }
     },
-    "/uzytkownikRosliny/wlasciwosciQuery": {
-      "post": {
-        "tags": [
-          "UzytkownikRoslina"
-        ],
-        "operationId": "getUzytkownikWlasciwosciCountFromQuery",
-        "parameters": [
-          {
-            "name": "uzytkownik-nazwa",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UzytkownikRoslinaRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "uniqueItems": true,
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WlasciwoscKatalogResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/uzytkownikRosliny/szukaj": {
       "post": {
         "tags": [
-          "UzytkownikRoslina"
+          "RoslinaWlasna"
         ],
         "operationId": "findAllRoslinyOfUzytkownik",
         "parameters": [
@@ -428,7 +385,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UzytkownikRoslinaRequest"
+                "$ref": "#/components/schemas/RoslinaWlasnaRequest"
               }
             }
           },
@@ -441,6 +398,49 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponseRoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/uzytkownikRosliny/cechyQuery": {
+      "post": {
+        "tags": [
+          "RoslinaWlasna"
+        ],
+        "operationId": "getUzytkownikCechyCountFromQuery",
+        "parameters": [
+          {
+            "name": "uzytkownik-nazwa",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoslinaWlasnaRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "uniqueItems": true,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CechaKatalogResponse"
+                  }
                 }
               }
             }
@@ -618,39 +618,6 @@
         }
       }
     },
-    "/rosliny/wlasciwosciQuery": {
-      "post": {
-        "tags": [
-          "Roslina"
-        ],
-        "operationId": "getWlasciwosciCountFromQuery",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "uniqueItems": true,
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WlasciwoscKatalogResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/rosliny/szukaj": {
       "post": {
         "tags": [
@@ -695,6 +662,39 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponseRoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rosliny/cechyQuery": {
+      "post": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "getCechyCountFromQuery",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoslinaRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "uniqueItems": true,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CechaKatalogResponse"
+                  }
                 }
               }
             }
@@ -2082,30 +2082,6 @@
         }
       }
     },
-    "/rosliny/wlasciwosci": {
-      "get": {
-        "tags": [
-          "Roslina"
-        ],
-        "operationId": "getWlasciwosciWithRelations",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "uniqueItems": true,
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WlasciwoscResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/rosliny/roslina-id/{roslina-id}": {
       "get": {
         "tags": [
@@ -2159,6 +2135,30 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RoslinaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rosliny/cechy": {
+      "get": {
+        "tags": [
+          "Roslina"
+        ],
+        "operationId": "getCechyWithRelations",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "uniqueItems": true,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CechaResponse"
+                  }
                 }
               }
             }
@@ -2912,12 +2912,26 @@
   },
   "components": {
     "schemas": {
+      "CechaWithRelations": {
+        "type": "object",
+        "properties": {
+          "etykieta": {
+            "type": "string"
+          },
+          "nazwa": {
+            "type": "string"
+          },
+          "relacja": {
+            "type": "string"
+          }
+        }
+      },
       "RoslinaRequest": {
         "required": [
+          "cechy",
           "nazwa",
           "nazwaLacinska",
           "opis",
-          "wlasciwosci",
           "wysokoscMax",
           "wysokoscMin"
         ],
@@ -2947,31 +2961,17 @@
             "type": "number",
             "format": "double"
           },
-          "wlasciwosci": {
+          "cechy": {
             "maxItems": 100,
             "minItems": 0,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WlasciwoscWithRelations"
+              "$ref": "#/components/schemas/CechaWithRelations"
             }
           },
           "nazwaLacinska": {
             "maxLength": 255,
             "minLength": 1,
-            "type": "string"
-          }
-        }
-      },
-      "WlasciwoscWithRelations": {
-        "type": "object",
-        "properties": {
-          "etykieta": {
-            "type": "string"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "relacja": {
             "type": "string"
           }
         }
@@ -3175,11 +3175,11 @@
           }
         }
       },
-      "UzytkownikRoslinaRequest": {
+      "RoslinaWlasnaRequest": {
         "required": [
+          "cechy",
           "nazwa",
           "opis",
-          "wlasciwosci",
           "wysokoscMax",
           "wysokoscMin"
         ],
@@ -3209,38 +3209,12 @@
             "type": "number",
             "format": "double"
           },
-          "wlasciwosci": {
+          "cechy": {
             "maxItems": 100,
             "minItems": 0,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WlasciwoscWithRelations"
-            }
-          }
-        }
-      },
-      "NazwaLiczbaRoslin": {
-        "type": "object",
-        "properties": {
-          "nazwa": {
-            "type": "string"
-          },
-          "liczbaRoslin": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "WlasciwoscKatalogResponse": {
-        "type": "object",
-        "properties": {
-          "etykieta": {
-            "type": "string"
-          },
-          "nazwyLiczbaRoslin": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NazwaLiczbaRoslin"
+              "$ref": "#/components/schemas/CechaWithRelations"
             }
           }
         }
@@ -3275,6 +3249,32 @@
           },
           "last": {
             "type": "boolean"
+          }
+        }
+      },
+      "CechaKatalogResponse": {
+        "type": "object",
+        "properties": {
+          "etykieta": {
+            "type": "string"
+          },
+          "nazwyLiczbaRoslin": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NazwaLiczbaRoslin"
+            }
+          }
+        }
+      },
+      "NazwaLiczbaRoslin": {
+        "type": "object",
+        "properties": {
+          "nazwa": {
+            "type": "string"
+          },
+          "liczbaRoslin": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -4175,7 +4175,7 @@
           }
         }
       },
-      "WlasciwoscResponse": {
+      "CechaResponse": {
         "type": "object",
         "properties": {
           "etykieta": {

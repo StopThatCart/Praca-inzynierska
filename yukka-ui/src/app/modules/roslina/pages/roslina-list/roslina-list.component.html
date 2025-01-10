@@ -32,22 +32,22 @@
             </app-wysokosc-input>
           </div>
 
-            <app-wlasciwosc-tag
-            [wlasciwosci]="request.wlasciwosci"
-            (wlasciwoscRemoved)="onWlasciwoscRemoved($event)"
-            ></app-wlasciwosc-tag>
+            <app-cecha-tag
+            [cechy]="request.cechy"
+            (cechaRemoved)="onCechaRemoved($event)"
+            ></app-cecha-tag>
         </div>
       </div>
     </div>
     <div class="row gx-5 gy-2 h-100 mx-auto my-auto">
       <div class="col-md-4 col-lg-3 d-flex flex-column justify-content-between p-1 rounded  border border-2 border-secondary-subtle" style="background: var(--bs-primary-border-subtle);" >
         <div class="offcanvas-body d-flex flex-column justify-content-between p-2 rounded">
-          <app-wlasciwosc-dropdown
+          <app-cecha-dropdown
           
-          [wlasciwosciKatalogResponse]="wlasciwosciResponse"
-          [selectedWlasciwosci]="request.wlasciwosci"
-          (selectedWlasciwosciChange)="onWlasciwoscToggled($event)">
-          </app-wlasciwosc-dropdown>
+          [cechyKatalogResponse]="cechyResponse"
+          [selectedCechy]="request.cechy"
+          (selectedCechyChange)="onCechaToggled($event)">
+          </app-cecha-dropdown>
         </div>
       </div>
 

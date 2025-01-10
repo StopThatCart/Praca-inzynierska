@@ -2,18 +2,16 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RoslinaResponse } from '../../../../services/models';
-import { RoslinaService, UzytkownikRoslinaService } from '../../../../services/services';
-import { switchMap } from 'rxjs/operators';
+import { RoslinaService } from '../../../../services/services';
 import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
 import { TokenService } from '../../../../services/token/token.service';
-import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
-import { RoslinaWlasciwosciContainerComponent } from "../../components/roslina-wlasciwosci-container/roslina-wlasciwosci-container.component";
+import { RoslinaCechyContainerComponent } from "../../components/roslina-cechy-container/roslina-cechy-container.component";
 
 
 @Component({
   selector: 'app-roslina-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, BreadcrumbComponent, RoslinaWlasciwosciContainerComponent],
+  imports: [CommonModule, RouterModule, BreadcrumbComponent, RoslinaCechyContainerComponent],
   templateUrl: './roslina-page.component.html',
   styleUrl: './roslina-page.component.css'
 })

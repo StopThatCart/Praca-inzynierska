@@ -1,0 +1,63 @@
+
+<nav class="navbar navbar-expand-md navbar-light ">
+  <div class="container-fluid">
+    <ul class="navbar-nav nav-pills flex-column text-truncate mb-auto">
+      <ng-container *ngIf="cechyKatalogResponse.length > 0; else normalTemplate">
+        <li *ngFor="let cecha of cechyKatalogResponse" class="nav-item my-1 w-100">
+          <div class="nav-item" ngbDropdown>
+            <a  ngbDropdownToggle
+            class="nav-link text-uppercase link-white w-100" [ngStyle]="{'color': textColor}"
+            type="button">{{ cecha.etykieta }}</a>
+            <div ngbDropdownMenu class="dropdown-menu">
+                <div *ngFor="let nazwy of cecha.nazwyLiczbaRoslin"
+                class="link-body-emphasis mb-1 px-4">
+                  <input [checked]="isSelected(cecha, nazwy.nazwa)"
+                    type="checkbox" class="form-check-input mx-1 link-body-emphasis"
+                    (change)="toggleCecha(cecha, nazwy.nazwa)"/>
+                  <label class="form-check-label" [ngStyle]="{'color': textColor}" style="white-space: normal;" >
+                    {{ nazwy.nazwa }} 
+                    <span class="text-black-50 fw-semibold">({{nazwy.liczbaRoslin}})</span>
+                  </label>
+                </div>
+            </div>
+          </div>
+        </li>
+      </ng-container>
+      <ng-template #normalTemplate>
+        <ng-container *ngIf="cechyResponse.length > 0; else emptyTemplate">
+          <li *ngFor="let cecha of cechyResponse" class="nav-item my-1 w-100">
+            <div class="nav-item" ngbDropdown>
+              <a  ngbDropdownToggle
+              class="nav-link text-uppercase link-white w-100" [ngStyle]="{'color': textColor}"
+              type="button">{{ cecha.etykieta }}</a>
+              <div ngbDropdownMenu class="dropdown-menu">
+                  <div *ngFor="let nazwa of cecha.nazwy"
+                  class="link-body-emphasis mb-1 px-3">
+                    <input [checked]="isSelected(cecha, nazwa)"
+                      type="checkbox" class="form-check-input mx-1 link-body-emphasis"
+                      (change)="toggleCecha(cecha, nazwa)"/>
+                    <label class="form-check-label" [ngStyle]="{'color': textColor}" style="white-space: normal;" >{{ nazwa }}</label>
+                  </div>
+              </div>
+            </div>
+          </li>
+        </ng-container>
+      </ng-template>
+      
+
+      <ng-template #emptyTemplate>
+        <li class="nav-item my-1 w-100">
+          <div class="nav-item">
+            <span class="nav-link text-uppercase link-white w-100" [ngStyle]="{'color': textColor}">
+              Brak właściwości
+            </span>
+          </div>
+        </li>
+      </ng-template>
+      
+
+
+    </ul>
+  </div>
+</nav>
+

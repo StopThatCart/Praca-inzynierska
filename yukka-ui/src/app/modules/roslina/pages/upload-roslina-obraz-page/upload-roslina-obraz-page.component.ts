@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RoslinaService } from '../../../../services/services/roslina.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RoslinaRequest, RoslinaResponse, UzytkownikRoslinaRequest } from '../../../../services/models';
+import { RoslinaResponse } from '../../../../services/models';
 import { BreadcrumbComponent } from '../../../../components/breadcrumb/breadcrumb.component';
-import { UzytkownikRoslinaService } from '../../../../services/services';
+import { RoslinaWlasnaService } from '../../../../services/services';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { ImageUploadComponent } from "../../../../components/image-upload/image-upload.component";
 
@@ -29,7 +29,7 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
 
   constructor(
     private roslinaService: RoslinaService,
-    private uzytkownikRoslinaService: UzytkownikRoslinaService,
+    private roslinaWlasnaService: RoslinaWlasnaService,
     private errorHandlingService: ErrorHandlingService,
     private router: Router,
     private route: ActivatedRoute
@@ -104,7 +104,7 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
   }
 
   uploadUzytkownikRoslinaObraz(): void {
-    this.uzytkownikRoslinaService.updateObraz({
+    this.roslinaWlasnaService.updateObraz({
       roslinaId: this.roslinaId,
       body: { file: this.wybranyPlik } })
       .subscribe({

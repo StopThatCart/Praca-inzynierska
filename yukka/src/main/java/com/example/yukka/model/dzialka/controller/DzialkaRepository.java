@@ -54,14 +54,14 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Query("""
         MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki}) 
         OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(rosliny)-[r]-(w)
-        WHERE w:Wlasciwosc OR w:UzytkownikWlasciwosc
+        WHERE w:Cecha OR w:CechaWlasna
         RETURN d, collect(r1), collect(rosliny), collect(r), collect(w), collect(nodes(path)), collect(relationships(path))
         """)
         Optional<Dzialka> getDzialkaByNumer(@Param("email") String email, @Param("numerDzialki") int numerDzialki);
 
         @Query("""
         MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki}) 
-        OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(roslina:Roslina)-[r]-(w:Wlasciwosc)
+        OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(roslina:Roslina)-[r]-(w:Cecha)
         WHERE r1.x = $x AND r1.y = $y
         RETURN d, collect(r1), collect(roslina), collect(r), collect(w), collect(nodes(path)), collect(relationships(path))
         """)
@@ -70,7 +70,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         
         @Query("""
         MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki}) 
-        OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(roslina:Roslina{ roslinaId: $roslinaId })-[r]-(w:Wlasciwosc)
+        OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(roslina:Roslina{ roslinaId: $roslinaId })-[r]-(w:Cecha)
         RETURN d, collect(r1), collect(roslina), collect(r), collect(w), collect(nodes(path)), collect(relationships(path))
         """)
         Optional<Dzialka> getRoslinaInDzialka(@Param("email") String email, @Param("numerDzialki") int numerDzialki, String roslinaId);
@@ -142,7 +142,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
 
         MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki}) 
         OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(rosliny)-[r]-(w)
-        WHERE w:Wlasciwosc OR w:UzytkownikWlasciwosc
+        WHERE w:Cecha OR w:CechaWlasna
         RETURN d, collect(r1), collect(rosliny), collect(r), collect(w), collect(nodes(path)), collect(relationships(path))
 
         """)

@@ -14,7 +14,7 @@ import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.example.yukka.model.dzialka.ZasadzonaNa;
-import com.example.yukka.model.roslina.wlasciwosc.Wlasciwosc;
+import com.example.yukka.model.roslina.cecha.Cecha;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -61,9 +61,9 @@ import lombok.ToString;
  * 
  * Metody:
  * <ul>
- * <li><strong>isUzytkownikRoslina</strong>: sprawdza, czy roślina jest użytkownika</li>
- * <li><strong>areWlasciwosciEqual</strong>: porównuje dwa zestawy właściwości</li>
- * <li><strong>extractNazwy</strong>: wyodrębnia nazwy z zestawu właściwości</li>
+ * <li><strong>isRoslinaWlasna</strong>: sprawdza, czy roślina jest rośliną własną użytkownika</li>
+ * <li><strong>areCechyEqual</strong>: porównuje dwa zestawy cech</li>
+ * <li><strong>extractNazwy</strong>: wyodrębnia nazwy z zestawu cech</li>
  * </ul>
  */
 @Node
@@ -111,95 +111,93 @@ public class Roslina {
 	@Relationship(type = "STWORZONA_PRZEZ", direction = Relationship.Direction.OUTGOING)
     private Uzytkownik uzytkownik;
 
-    // Wlasciwosci
-
     @Relationship(type = "MA_FORME", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> formy = new HashSet<>();
+    private Set<Cecha> formy = new HashSet<>();
 
     @Relationship(type = "MA_GLEBE", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> gleby = new HashSet<>();
+    private Set<Cecha> gleby = new HashSet<>();
 
     @Relationship(type = "MA_GRUPE", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> grupy = new HashSet<>();
+    private Set<Cecha> grupy = new HashSet<>();
 
     @Relationship(type = "MA_KOLOR_LISCI", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> koloryLisci = new HashSet<>();
+    private Set<Cecha> koloryLisci = new HashSet<>();
 
     @Relationship(type = "MA_KOLOR_KWIATOW", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> koloryKwiatow = new HashSet<>();
+    private Set<Cecha> koloryKwiatow = new HashSet<>();
 
     @Relationship(type = "MA_KWIAT", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> kwiaty = new HashSet<>();
+    private Set<Cecha> kwiaty = new HashSet<>();
 
     @Relationship(type = "MA_ODCZYN", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> odczyny = new HashSet<>();
+    private Set<Cecha> odczyny = new HashSet<>();
 
     @Relationship(type = "MA_OKRES_KWITNIENIA", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> okresyKwitnienia = new HashSet<>();
+    private Set<Cecha> okresyKwitnienia = new HashSet<>();
 
     @Relationship(type = "MA_OKRES_OWOCOWANIA", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> okresyOwocowania = new HashSet<>();
+    private Set<Cecha> okresyOwocowania = new HashSet<>();
 
     @Relationship(type = "MA_OWOC", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> owoce = new HashSet<>();
+    private Set<Cecha> owoce = new HashSet<>();
 
     @Relationship(type = "MA_PODGRUPE", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> podgrupa = new HashSet<>();
+    private Set<Cecha> podgrupa = new HashSet<>();
 
     @Relationship(type = "MA_POKROJ", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> pokroje = new HashSet<>();
+    private Set<Cecha> pokroje = new HashSet<>();
 
     @Relationship(type = "MA_SILE_WZROSTU", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> silyWzrostu = new HashSet<>();
+    private Set<Cecha> silyWzrostu = new HashSet<>();
 
     @Relationship(type = "MA_STANOWISKO", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> stanowiska = new HashSet<>();
+    private Set<Cecha> stanowiska = new HashSet<>();
 
     @Relationship(type = "MA_WALOR", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> walory = new HashSet<>();
+    private Set<Cecha> walory = new HashSet<>();
 
     @Relationship(type = "MA_WILGOTNOSC", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> wilgotnosci = new HashSet<>();
+    private Set<Cecha> wilgotnosci = new HashSet<>();
 
     @Relationship(type = "MA_ZASTOSOWANIE", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> zastosowania = new HashSet<>();
+    private Set<Cecha> zastosowania = new HashSet<>();
 
     @Relationship(type = "MA_ZIMOZIELONOSC_LISCI", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Wlasciwosc> zimozielonosci = new HashSet<>();
+    private Set<Cecha> zimozielonosci = new HashSet<>();
 
     
 
-    public boolean isUzytkownikRoslina() {
-        return labels.contains("UzytkownikRoslina");
+    public boolean isRoslinaWlasna() {
+        return labels.contains("RoslinaWlasna");
     }
 
     @JsonIgnore
-    boolean areWlasciwosciEqual(Set<Wlasciwosc> set1, Set<Wlasciwosc> set2) {
+    boolean areCechyEqual(Set<Cecha> set1, Set<Cecha> set2) {
         return extractNazwy(set1).equals(extractNazwy(set2));
     }
 
     @JsonIgnore
-    private Set<String> extractNazwy(Set<Wlasciwosc> wlasciwosci) {
-        return wlasciwosci.stream()
-                          .map(Wlasciwosc::getNazwa)
+    private Set<String> extractNazwy(Set<Cecha> cechy) {
+        return cechy.stream()
+                          .map(Cecha::getNazwa)
                           .collect(Collectors.toSet());
     }
 

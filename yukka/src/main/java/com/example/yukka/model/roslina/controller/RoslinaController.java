@@ -22,8 +22,8 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
-import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscKatalogResponse;
-import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
+import com.example.yukka.model.roslina.cecha.CechaKatalogResponse;
+import com.example.yukka.model.roslina.cecha.CechaResponse;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
  * 
  * <ul>
  * <li><strong>findAllRoslinyWithParameters</strong> - Wyszukuje rośliny na podstawie podanych parametrów.</li>
- * <li><strong>getWlasciwosciWithRelations</strong> - Pobiera właściwości roślin wraz z relacjami.</li>
+ * <li><strong>getCechyWithRelations</strong> - Pobiera cechy roślin wraz z relacjami.</li>
  * <li><strong>findByNazwaLacinska</strong> - Wyszukuje roślinę na podstawie nazwy łacińskiej.</li>
  * <li><strong>findByRoslinaId</strong> - Wyszukuje roślinę na podstawie identyfikatora rośliny.</li>
  * <li><strong>saveRoslina</strong> - Zapisuje nową roślinę.</li>
@@ -73,21 +73,21 @@ public class RoslinaController {
     }
 
     /**
-     * Endpoint do pobierania właściwości roślin wraz z ich relacjami.
+     * Endpoint do pobierania cech roślin wraz z ich relacjami.
      *
-     * @return ResponseEntity zawierające zbiór obiektów WlasciwoscResponse w formacie JSON.
+     * @return ResponseEntity zawierające zbiór obiektów CechaResponse w formacie JSON.
      */
-    @GetMapping(value = "/wlasciwosci", produces="application/json")
-    public ResponseEntity<Set<WlasciwoscResponse>> getWlasciwosciWithRelations() {
-        return ResponseEntity.ok(roslinaService.getWlasciwosciWithRelations());
+    @GetMapping(value = "/cechy", produces="application/json")
+    public ResponseEntity<Set<CechaResponse>> getCechyWithRelations() {
+        return ResponseEntity.ok(roslinaService.getCechyWithRelations());
     }
 
-    @PostMapping(value = "/wlasciwosciQuery", produces="application/json")
-    public ResponseEntity<Set<WlasciwoscKatalogResponse>> getWlasciwosciCountFromQuery(
+    @PostMapping(value = "/cechyQuery", produces="application/json")
+    public ResponseEntity<Set<CechaKatalogResponse>> getCechyCountFromQuery(
         @RequestBody(required = false) RoslinaRequest request
     ) {
 
-        return ResponseEntity.ok(roslinaService.getWlasciwosciCountFromQuery(request));
+        return ResponseEntity.ok(roslinaService.getCechyCountFromQuery(request));
     }
 
     /**

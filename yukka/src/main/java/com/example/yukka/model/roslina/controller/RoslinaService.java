@@ -25,8 +25,8 @@ import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
-import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscKatalogResponse;
-import com.example.yukka.model.roslina.wlasciwosc.WlasciwoscResponse;
+import com.example.yukka.model.roslina.cecha.CechaKatalogResponse;
+import com.example.yukka.model.roslina.cecha.CechaResponse;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
  * <li><strong>findAllRoslinyWithParameters</strong>: Znajduje wszystkie rośliny z paginacją i filtrami.</li>
  * <li><strong>findByRoslinaId</strong>: Znajduje roślinę po jej identyfikatorze.</li>
  * <li><strong>findByNazwaLacinska</strong>: Znajduje roślinę po jej nazwie łacińskiej.</li>
- * <li><strong>getWlasciwosciWithRelations</strong>: Pobiera właściwości roślin z relacjami.</li>
+ * <li><strong>getCechyWithRelations</strong>: Pobiera cechy roślin z relacjami.</li>
  * <li><strong>save</strong>: Zapisuje nową roślinę.</li>
  * <li><strong>saveSeededRoslina</strong>: Zapisuje nową roślinę z plikiem obrazu.</li>
  * <li><strong>update</strong>: Aktualizuje istniejącą roślinę.</li>
@@ -56,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RoslinaService {
     private final RoslinaRepository roslinaRepository;
-    private final WlasciwoscRepository wlasciwoscRepository;
+    private final CechaRepository cechaRepository;
     private final FileStoreService fileStoreService;
     private final FileUtils fileUtils;
     private final RoslinaMapper roslinaMapper;
@@ -142,7 +142,7 @@ public class RoslinaService {
     public RoslinaResponse findByRoslinaId(String id) {
         Roslina ros = roslinaRepository.findByRoslinaId(id)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o roslinaId: " + id));
-        return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
+        return roslinaMapper.roslinaToRoslinaResponseWithCechy(ros);
     }
 
     /**
@@ -157,7 +157,7 @@ public class RoslinaService {
         Roslina ros = roslinaRepository.findByRoslinaId(id)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o roslinaId: " + id));
         
-        if (ros.isUzytkownikRoslina()) {
+        if (ros.isRoslinaWlasna()) {
             Uzytkownik uzyt = null;
             if (connectedUser == null) {
                 throw new ForbiddenException("Nie masz uprawnień do wyświetlenia tej rośliny.");
@@ -169,7 +169,7 @@ public class RoslinaService {
             }
         }
 
-        return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
+        return roslinaMapper.roslinaToRoslinaResponseWithCechy(ros);
     }
 
     /**
@@ -180,29 +180,29 @@ public class RoslinaService {
      */
     @Transactional(readOnly = true)
     public RoslinaResponse findByNazwaLacinska(String nazwaLacinska) {
-        Roslina ros = roslinaRepository.findByNazwaLacinskaWithWlasciwosci(nazwaLacinska)
+        Roslina ros = roslinaRepository.findByNazwaLacinskaWithCechy(nazwaLacinska)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
-        RoslinaResponse res = roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
+        RoslinaResponse res = roslinaMapper.roslinaToRoslinaResponseWithCechy(ros);
 
         return res;
     }
 
     /**
-     * Pobiera właściwości roślin wraz z ich relacjami.
+     * Pobiera cechy roślin wraz z ich relacjami.
      *
-     * @return zbiór obiektów WlasciwoscResponse.
+     * @return zbiór obiektów CechaResponse.
      */
     @Transactional(readOnly = true)
-    public Set<WlasciwoscResponse> getWlasciwosciWithRelations() {
-        Set<WlasciwoscResponse> responses = wlasciwoscRepository.getWlasciwosciWithRelacje();
+    public Set<CechaResponse> getCechyWithRelations() {
+        Set<CechaResponse> responses = cechaRepository.getCechyWithRelacje();
         return responses;
     }
 
     @Transactional(readOnly = true)
-    public Set<WlasciwoscKatalogResponse> getWlasciwosciCountFromQuery(RoslinaRequest request) {
+    public Set<CechaKatalogResponse> getCechyCountFromQuery(RoslinaRequest request) {
         Roslina ros = roslinaMapper.toRoslina(request);
 
-        Set<WlasciwoscKatalogResponse> responses = wlasciwoscRepository.getWlasciwosciCountFromQuery(
+        Set<CechaKatalogResponse> responses = cechaRepository.getCechyCountFromQuery(
             ros, 
             ros.getFormy(), ros.getGleby(), ros.getGrupy(), ros.getKoloryLisci(),
             ros.getKoloryKwiatow(), ros.getKwiaty(), ros.getOdczyny(),
@@ -236,7 +236,7 @@ public class RoslinaService {
             request.setObraz(defaultRoslinaObrazName);
         }
 
-        if(request.areWlasciwosciEmpty()) {
+        if(request.areCechyEmpty()) {
             Roslina pl = roslinaMapper.toRoslina(request);
             Roslina ros = roslinaRepository.addRoslina(pl);
             return ros;
@@ -247,7 +247,7 @@ public class RoslinaService {
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosciAsMap());
+            request.getCechyAsMap());
 
         return ros;
     }
@@ -266,7 +266,7 @@ public class RoslinaService {
         
         String leObraz = fileStoreService.saveSeededRoslina(file, request.getObraz());
         request.setObraz(leObraz);
-        if(request.areWlasciwosciEmpty()) {
+        if(request.areCechyEmpty()) {
             Roslina ros = roslinaRepository.addRoslina(pl);
             return ros;
         }
@@ -275,7 +275,7 @@ public class RoslinaService {
             request.getNazwa(), request.getNazwaLacinska(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
-            request.getWlasciwosciAsMap());
+            request.getCechyAsMap());
 
         return ros;
     }
@@ -299,7 +299,8 @@ public class RoslinaService {
             }           
         }
 
-        if(request.areWlasciwosciEmpty()) {
+        log.info("Właściwości: " + request.getCechyAsMap());
+        if(request.areCechyEmpty()) {
             Roslina ros = roslinaRepository.updateRoslina(
                 request.getNazwa(), staraNazwaLacinska, 
                 request.getOpis(),  
@@ -307,16 +308,21 @@ public class RoslinaService {
                 request.getNazwaLacinska());
             return roslinaMapper.toRoslinaResponse(ros);
         }
-        
+        log.info(staraNazwaLacinska);
         Roslina ros = roslinaRepository.updateRoslina(
             request.getNazwa(), staraNazwaLacinska, 
             request.getOpis(),
             request.getWysokoscMin(), request.getWysokoscMax(),
             request.getNazwaLacinska(), 
-            request.getWlasciwosciAsMap());
-        roslinaRepository.removeLeftoverWlasciwosci();
+            request.getCechyAsMap());
+        if (ros == null) {
+            log.error("ROŚLINA JEST NULLEM AAA");
+        }
+        System.out.println("Roslina formy:" + ros.getFormy());
+        System.out.println("Roslina cechy:" + ros.getGleby());
+        //roslinaRepository.removeLeftoverCechy();
         
-        return roslinaMapper.roslinaToRoslinaResponseWithWlasciwosci(ros);
+        return roslinaMapper.roslinaToRoslinaResponseWithCechy(ros);
     }
 
     /**
@@ -383,7 +389,7 @@ public class RoslinaService {
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId));
         
 
-        if(roslina.isUzytkownikRoslina() ) {
+        if(roslina.isRoslinaWlasna() ) {
             Uzytkownik targetUzyt = roslina.getUzytkownik();
             if (!uzyt.hasAuthenticationRights(targetUzyt)) {
                 throw new ForbiddenException("Nie masz uprawnień do usunięcia rośliny użytkownika: " + targetUzyt.getNazwa());

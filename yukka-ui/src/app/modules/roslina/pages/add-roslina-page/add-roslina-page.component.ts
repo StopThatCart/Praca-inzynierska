@@ -1,15 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { WlasciwoscDropdownComponent } from '../../components/wlasciwosc-dropdown/wlasciwosc-dropdown.component';
-import { WlasciwoscResponse } from '../../../../services/models/wlasciwosc-response';
-import { RoslinaRequest, UzytkownikRoslinaRequest, WlasciwoscWithRelations } from '../../../../services/models';
-import { RoslinaService, UzytkownikRoslinaService } from '../../../../services/services';
+import { CechaDropdownComponent } from '../../components/cecha-dropdown/cecha-dropdown.component';
+import { RoslinaRequest, CechaWithRelations, CechaResponse, RoslinaWlasnaRequest } from '../../../../services/models';
+import { RoslinaService, RoslinaWlasnaService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { WlasciwoscProcessService } from '../../services/wlasciwosc-service/wlasciwosc.service';
+import { CechaProcessService } from '../../services/cecha-service/cecha.service';
 import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
-import { WlasciwoscTagComponent } from "../../components/wlasciwosc-tag/wlasciwosc-tag.component";
-import { AddCustomWlasciwoscComponent } from '../../components/add-custom-wlasciwosc/add-custom-wlasciwosc.component';
+import { CechaTagComponent } from "../../components/cecha-tag/cecha-tag.component";
+import { AddCustomCechaComponent } from '../../components/add-custom-cecha/add-custom-cecha.component';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
 import { TokenService } from '../../../../services/token/token.service';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
@@ -18,19 +17,19 @@ import { ImageUploadComponent } from "../../../../components/image-upload/image-
 @Component({
   selector: 'app-add-roslina-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, WlasciwoscDropdownComponent,
+  imports: [CommonModule, FormsModule, CechaDropdownComponent,
     WysokoscInputComponent,
-    AddCustomWlasciwoscComponent,
-    WlasciwoscTagComponent, ErrorMsgComponent, ImageUploadComponent],
+    AddCustomCechaComponent,
+    CechaTagComponent, ErrorMsgComponent, ImageUploadComponent],
   templateUrl: './add-roslina-page.component.html',
   styleUrl: './add-roslina-page.component.css'
 })
 export class AddRoslinaPageComponent implements OnInit {
-  wlasciwosciResponse: WlasciwoscResponse[] = [];
+  cechyResponse: CechaResponse[] = [];
   message = '';
   errorMsg: Array<string> = [];
 
-  @ViewChild(WlasciwoscTagComponent) wlasciwoscTagComponent!: WlasciwoscTagComponent;
+  @ViewChild(CechaTagComponent) cechaTagComponent!: CechaTagComponent;
 
   doKatalogu: boolean = false;
   request: RoslinaRequest = {
@@ -40,18 +39,18 @@ export class AddRoslinaPageComponent implements OnInit {
     opis: '',
     wysokoscMin: 0,
     wysokoscMax: 100,
-    wlasciwosci: [] as WlasciwoscWithRelations[],
+    cechy: [] as CechaWithRelations[],
   };
 
   wybranyPlik: any;
 
-  selectedWlasciwoscType: WlasciwoscResponse | null = null;
-  customWlasciwoscName: string = '';
+  selectedCechaType: CechaResponse | null = null;
+  customCechaName: string = '';
 
   constructor(
     private roslinaService: RoslinaService,
-    private uzytkownikRoslinaService: UzytkownikRoslinaService,
-    private wlasciwoscProcessService: WlasciwoscProcessService,
+    private roslinaWlasnaService: RoslinaWlasnaService,
+    private cechaProcessService: CechaProcessService,
     private errorHandlingService : ErrorHandlingService,
     private tokenService: TokenService,
     private router: Router,
@@ -78,7 +77,7 @@ export class AddRoslinaPageComponent implements OnInit {
       }
       console.log('doKatalogu:', this.doKatalogu);
     });
-    this.fetchWlasciwosci();
+    this.fetchCechy();
   }
 
   onWysokoscMinChange(min: number) {
@@ -89,48 +88,48 @@ export class AddRoslinaPageComponent implements OnInit {
     this.request.wysokoscMax = max;
   }
 
-  onWlasciwoscToggled(wlasciwosci: WlasciwoscWithRelations[]): void {
-    console.log('Wlasciwosci toggled:', wlasciwosci);
-    this.request.wlasciwosci = wlasciwosci;
-    this.wlasciwoscTagComponent.updateSortedWlasciwosci(wlasciwosci);
+  onCechaToggled(cechy: CechaWithRelations[]): void {
+    console.log('Cechy toggled:', cechy);
+    this.request.cechy = cechy;
+    this.cechaTagComponent.updateSortedCechy(cechy);
   }
 
-  onWlasciwoscRemoved(index: number): void {
-    console.log('Removing wlasciwosc at index:', index);
-    this.request.wlasciwosci.splice(index, 1);
+  onCechaRemoved(index: number): void {
+    console.log('Removing cecha at index:', index);
+    this.request.cechy.splice(index, 1);
     console.log('Request after removing:', this.request);
   }
 
-  onCustomWlasciwoscAdded(customWlasciwosc: WlasciwoscWithRelations): void {
-    this.request.wlasciwosci.push(customWlasciwosc);
-    this.wlasciwoscTagComponent.updateSortedWlasciwosci(this.request.wlasciwosci);
+  onCustomCechaAdded(customCecha: CechaWithRelations): void {
+    this.request.cechy.push(customCecha);
+    this.cechaTagComponent.updateSortedCechy(this.request.cechy);
   }
 
 
-  fetchWlasciwosci(): void {
-    this.roslinaService.getWlasciwosciWithRelations().subscribe({
+  fetchCechy(): void {
+    this.roslinaService.getCechyWithRelations().subscribe({
       next: (response) => {
-        this.wlasciwosciResponse = response;
-        console.log("Konwertowanie wlasciwosci");
-        this.wlasciwosciResponse = this.wlasciwoscProcessService.processWlasciwosciResponse(this.wlasciwosciResponse);
+        this.cechyResponse = response;
+        console.log("Konwertowanie cech");
+        this.cechyResponse = this.cechaProcessService.processCechyResponse(this.cechyResponse);
       },
       error: (error) => {
-        this.message = 'Błąd podczas pobierania właściwości';
+        this.message = 'Błąd podczas pobierania cech';
       }
     });
   }
 
-  addCustomWlasciwosc(): void {
-    if (this.selectedWlasciwoscType && this.customWlasciwoscName.trim()) {
-      let customWlasciwosc: WlasciwoscWithRelations = {
-        etykieta: this.selectedWlasciwoscType.etykieta,
-        nazwa: this.customWlasciwoscName.trim().toLowerCase(),
+  addCustomCecha(): void {
+    if (this.selectedCechaType && this.customCechaName.trim()) {
+      let customCecha: CechaWithRelations = {
+        etykieta: this.selectedCechaType.etykieta,
+        nazwa: this.customCechaName.trim().toLowerCase(),
         relacja: ''
       };
-      customWlasciwosc = this.wlasciwoscProcessService.addRelacjaToWlasciwoscCauseIAmTooLazyToChangeTheBackend(customWlasciwosc);
-      this.request.wlasciwosci.push(customWlasciwosc);
-      this.wlasciwoscTagComponent.updateSortedWlasciwosci(this.request.wlasciwosci);
-      this.customWlasciwoscName = '';
+      customCecha = this.cechaProcessService.addRelacjaToCecha(customCecha);
+      this.request.cechy.push(customCecha);
+      this.cechaTagComponent.updateSortedCechy(this.request.cechy);
+      this.customCechaName = '';
     }
   }
 
@@ -173,16 +172,16 @@ export class AddRoslinaPageComponent implements OnInit {
 
   addUzytkownikRoslina(request: RoslinaRequest, leFile: any) {
     console.log('Dodawanie rośliny użytkownika: ', request);
-    let uzytRequest: UzytkownikRoslinaRequest = {
+    let uzytRequest: RoslinaWlasnaRequest = {
       nazwa: this.request.nazwa,
       opis: this.request.opis,
       //obraz: '',
       wysokoscMin: this.request.wysokoscMin,
       wysokoscMax: this.request.wysokoscMax,
-      wlasciwosci: this.request.wlasciwosci,
+      cechy: this.request.cechy,
     };
 
-    this.uzytkownikRoslinaService.save({ body: { request: uzytRequest, file: leFile } }).subscribe({
+    this.roslinaWlasnaService.save({ body: { request: uzytRequest, file: leFile } }).subscribe({
       next: (roslina) => {
         //this.afterAddRoslina();
        // console.log("roslinka", roslina);
@@ -204,7 +203,7 @@ export class AddRoslinaPageComponent implements OnInit {
       opis: '',
       wysokoscMin: 0,
       wysokoscMax: 100,
-      wlasciwosci: [] as WlasciwoscWithRelations[],
+      cechy: [] as CechaWithRelations[],
     };
     this.clearImage();
   }
