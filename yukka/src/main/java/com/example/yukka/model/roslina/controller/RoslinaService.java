@@ -315,13 +315,7 @@ public class RoslinaService {
             request.getWysokoscMin(), request.getWysokoscMax(),
             request.getNazwaLacinska(), 
             request.getCechyAsMap());
-        if (ros == null) {
-            log.error("ROŚLINA JEST NULLEM AAA");
-        }
-        System.out.println("Roslina formy:" + ros.getFormy());
-        System.out.println("Roslina cechy:" + ros.getGleby());
-        //roslinaRepository.removeLeftoverCechy();
-        
+               
         return roslinaMapper.roslinaToRoslinaResponseWithCechy(ros);
     }
 

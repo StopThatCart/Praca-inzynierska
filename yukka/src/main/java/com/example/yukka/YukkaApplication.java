@@ -53,7 +53,7 @@ public class YukkaApplication {
         return args -> {
 			if (seedDatabase) {
                 log.info("Seedowanie bazy danych...");
-				//roslinaImporterService.seedRosliny();
+				// roslinaImporterService.seedRosliny();
 				// generalSeeder.unseed();
 				// generalSeeder.seed();
             }

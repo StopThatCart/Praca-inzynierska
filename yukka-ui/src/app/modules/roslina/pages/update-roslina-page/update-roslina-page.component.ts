@@ -76,7 +76,6 @@ export class UpdateRoslinaPageComponent {
     this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId }).subscribe({
       next: (roslina) => {
         this.roslina = roslina;
-
         this.request = this.cechaProcessService.convertRoslinaResponseToRequest(roslina);
         this.errorMsg = [];
       },

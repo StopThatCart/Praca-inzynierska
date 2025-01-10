@@ -352,22 +352,21 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
                 p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
            WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
-           MATCH (p)-[r]->(w:Cecha)
-           WITH p, r, w, collect(relat) AS newRelatLump
-
-           WHERE NOT any(np IN newRelatLump WHERE w.nazwa = np.nazwa AND type(r) = np.relacja)
-           DELETE r
-
-           WITH p, newRelatLump AS relatLump
-           UNWIND relatLump AS relat
-           WITH p, relat, [ relat.etykieta, 'CechaWlasna', 'Cecha' ] AS labels
+           WITH p, relat, [relat.etykieta, 'CechaWlasna', 'Cecha'] AS labels
            CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
            WITH p, w, relat
            CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
 
+           WITH p, collect(DISTINCT w) AS currentNodes, collect(DISTINCT rel) AS currentRels
+           OPTIONAL MATCH (p)-[r]->(w:Cecha)
 
-           WITH p OPTIONAL MATCH path=(p)-[r]->(w)
-           RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
+           WHERE NOT w IN currentNodes
+           CALL {
+               WITH r
+               DELETE r
+               RETURN COUNT(*) AS deletedRels
+           }
+           RETURN p
     """)
     Roslina updateRoslina(
         @Param("roslinaId") String roslinaId,

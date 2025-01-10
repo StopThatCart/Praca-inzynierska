@@ -316,8 +316,6 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         @Param("zimozielonosci") Set<Cecha> zimozielonosci,
         Pageable pageable);
 
-
-
     @Query("""
         MERGE (p:Roslina {roslinaId: $roslinaId, nazwa: $name, nazwaLacinska: toLower($latinName), opis: $description, 
         obraz: COALESCE($obraz, 'default_plant.jpg'), wysokoscMin: $heightMin, wysokoscMax: $heightMax}) 
@@ -361,29 +359,29 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 // To niestety trzeba zapamiętać bo mi trochę zajęło
 // Czas wykonania testu: 162ms, 179ms
     @Query("""
-           MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:RoslinaWlasna
-           SET  p.nazwa = $name, 
-                p.nazwaLacinska = toLower($nowaNazwaLacinska),
-                p.opis = $description,
-                p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
-           WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
+        MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:RoslinaWlasna
+        SET  p.nazwa = $name, 
+            p.nazwaLacinska = toLower($nowaNazwaLacinska),
+            p.opis = $description,
+            p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
+        WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
-           OPTIONAL MATCH (p)-[r]->(w:Cecha)
-           WITH p, r, w, collect(relat) AS newRelatLump
+        WITH p, relat, [relat.etykieta, 'Cecha'] AS labels
+        CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
+        WITH p, w, relat
+        CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
 
-           WHERE NOT any(np IN newRelatLump WHERE w.nazwa = np.nazwa AND type(r) = np.relacja)
-           DELETE r
+        WITH p, collect(DISTINCT w) AS currentNodes, collect(DISTINCT rel) AS currentRels
+        OPTIONAL MATCH (p)-[r]->(w:Cecha)
 
-           WITH p, newRelatLump AS relatLump
-           UNWIND relatLump AS relat
-           WITH p, relat, [ relat.etykieta, 'Cecha' ] AS labels
-           CALL apoc.merge.node(labels, {nazwa: relat.nazwa}) YIELD node AS w
-           WITH p, w, relat
-           CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
+        WHERE NOT w IN currentNodes
+        CALL {
+            WITH r
+            DELETE r
+            RETURN COUNT(*) AS deletedRels
+        }
 
-           WITH p 
-           OPTIONAL MATCH path=(p)-[r]->(w)
-           RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
+        RETURN p
     """)
     Roslina updateRoslina(
         @Param("name") String name,

@@ -225,8 +225,6 @@ public class RoslinaWlasnaService {
     public RoslinaResponse update(RoslinaWlasnaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         log.info("Aktualizacja rośliny " + request.getRoslinaId() + " przez użytkownika: " + uzyt.getNazwa());
-        log.info("Właściwości: " + request.getCechyAsMap());
-
 
         Roslina roslina = roslinaWlasnaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), request.getRoslinaId())
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + request.getRoslinaId() + " dla użytkownika " + uzyt.getNazwa()));
@@ -237,20 +235,18 @@ public class RoslinaWlasnaService {
         }
         
         if(request.areCechyEmpty()) {
-            log.info("Aktualizacja rośliny bez właściwości");
             Roslina ros = roslinaWlasnaRepository.updateRoslina(
                 request.getRoslinaId(), request.getNazwa(), 
                 request.getOpis(), request.getObraz(), 
                 request.getWysokoscMin(), request.getWysokoscMax());
             return roslinaMapper.toRoslinaResponse(ros);
         }
-        log.info("Aktualizacja rośliny z właściwościami");
         Roslina ros = roslinaWlasnaRepository.updateRoslina(
             request.getRoslinaId(), request.getNazwa(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getCechyAsMap());
-       // roslinaWlasnaRepository.removeLeftoverUzytkownikCechy();
+        roslinaWlasnaRepository.removeLeftoverUzytkownikCechy();
 
         return  roslinaMapper.toRoslinaResponse(ros);
     }

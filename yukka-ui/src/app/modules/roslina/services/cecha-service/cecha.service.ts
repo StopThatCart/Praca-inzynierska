@@ -77,6 +77,12 @@ export class CechaProcessService {
   private convertCechy(roslina: RoslinaResponse): CechaWithRelations[] {
     const cechy: CechaWithRelations[] = [];
 
+    if (roslina.formy) {
+      roslina.formy.forEach(forma => {
+        cechy.push({ etykieta: CechaEtykiety.FORMA, nazwa: forma, relacja: getRelacjaByEtykieta(CechaEtykiety.FORMA) });
+      });
+    }
+
     if (roslina.koloryKwiatow) {
       roslina.koloryKwiatow.forEach(kolor => {
         cechy.push({ etykieta: CechaEtykiety.KOLOR_KWIATOW, nazwa: kolor, relacja: getRelacjaByEtykieta(CechaEtykiety.KOLOR_KWIATOW) });
@@ -211,7 +217,7 @@ export class CechaProcessService {
       createCecha(CechaEtykiety.STANOWISKO, roslina.stanowiska),
       createCecha(CechaEtykiety.WALOR, roslina.walory),
       createCecha(CechaEtykiety.WILGOTNOSC, roslina.wilgotnosci),
-      createCecha('Wysokość', roslina.wysokoscMin && roslina.wysokoscMax ? `Od ${roslina.wysokoscMin} m do ${roslina.wysokoscMax} m` : ''),
+      createCecha('Wysokość', `Od ${roslina.wysokoscMin} m do ${roslina.wysokoscMax} m` ),
       createCecha(CechaEtykiety.ZASTOSOWANIE, roslina.zastosowania),
       createCecha(CechaEtykiety.ZIMOZIELONOSC, roslina.zimozielonosci),
     ].filter(w => w !== null);
