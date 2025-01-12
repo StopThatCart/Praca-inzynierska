@@ -13,7 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
 import { CechaProcessService } from '../../../roslina/services/cecha-service/cecha.service';
 import { LoadingComponent } from "../../../../components/loading/loading.component";
-
+import { CryptKeyService } from '../../../../services/crypt-key/crypt-key.service';
+import * as crypto from 'crypto';
 @Component({
   selector: 'app-rosliny-uzytkownika-page',
   standalone: true,
@@ -50,6 +51,7 @@ export class RoslinyUzytkownikaPageComponent {
   constructor(
     private roslinaWlasnaService: RoslinaWlasnaService,
     private cechaProcessService: CechaProcessService,
+    private cryptKeyService: CryptKeyService,
     private router: Router,
     private route: ActivatedRoute,
     private tokenService: TokenService
@@ -62,7 +64,6 @@ export class RoslinyUzytkownikaPageComponent {
         this.route.snapshot.data['uzytkownik-nazwa'] = this.uzytNazwa;
       }
     });
-
     this.checkRoles();
 
     this.route.queryParams.subscribe(params => {
@@ -73,9 +74,11 @@ export class RoslinyUzytkownikaPageComponent {
       this.request.nazwa = params['nazwa'] || '';
       //this.request.nazwaLacinska = params['nazwaLacinska'] || '';
 
-      // Uwaga: uważaj na api-gen, bo trzeba ręcznie tworzyć konwersję na JSON
-      // Tutaj link dla przyszłego mnie. https://app.quicktype.io/
-      let cechy2 = params['cechy'] ? JSON.parse(params['cechy']) : [];
+      let cechy2 = [];
+      if (params['cechy']) {
+        const decryptedCechy = this.cryptKeyService.decrypt(params['cechy']);
+        cechy2 = JSON.parse(decryptedCechy);
+      }
 
       this.request.cechy = Convert.toCechaWithRelationsArray(JSON.stringify(cechy2));
 
@@ -160,6 +163,7 @@ export class RoslinyUzytkownikaPageComponent {
 
   goToPage(page: number) {
     const cechyJson = Convert.cechaWithRelationsArrayToJson(this.request.cechy);
+    const encryptedCechy = this.cryptKeyService.encrypt(cechyJson);
 
     this.router.navigate(['ogrod', this.uzytNazwa, 'rosliny'], {
       queryParams: {
@@ -168,7 +172,7 @@ export class RoslinyUzytkownikaPageComponent {
         wysokoscMax: this.request.wysokoscMax,
         nazwa: this.request.nazwa,
        // nazwaLacinska: this.request.nazwaLacinska,
-        cechy: cechyJson
+        cechy: encryptedCechy
       },
       queryParamsHandling: 'merge'
     });

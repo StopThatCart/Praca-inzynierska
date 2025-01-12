@@ -83,9 +83,7 @@ public class RoslinaController {
     }
 
     @PostMapping(value = "/cechyQuery", produces="application/json")
-    public ResponseEntity<Set<CechaKatalogResponse>> getCechyCountFromQuery(
-        @RequestBody(required = false) RoslinaRequest request
-    ) {
+    public ResponseEntity<Set<CechaKatalogResponse>> getCechyCountFromQuery(@RequestBody(required = false) RoslinaRequest request) {
 
         return ResponseEntity.ok(roslinaService.getCechyCountFromQuery(request));
     }

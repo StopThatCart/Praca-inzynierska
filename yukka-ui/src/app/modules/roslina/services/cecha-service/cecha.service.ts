@@ -36,10 +36,24 @@ export class CechaProcessService {
         const okresKwitnienia = { ...w, etykieta: CechaEtykiety.OKRES_KWITNIENIA, nazwy: this.miesiace };
         const okresDojrzewania = { ...w, etykieta: CechaEtykiety.OKRES_OWOCOWANIA, nazwy: this.miesiace };
         processedCechy.push(okresKwitnienia, okresDojrzewania);
-      } else if (w.etykieta === 'Kolor') {
+      } else if (w.etykieta === 'OkresKwitnienia') {
+        w.etykieta = CechaEtykiety.OKRES_KWITNIENIA;
+        w.nazwy = this.miesiace;
+        processedCechy.push(w);
+      } else if (w.etykieta === 'OkresOwocowania') {
+        w.etykieta = CechaEtykiety.OKRES_OWOCOWANIA;
+        w.nazwy = this.miesiace;
+        processedCechy.push(w);
+      }else if (w.etykieta === 'Kolor') {
         const kolorKwiatow = { ...w, etykieta: CechaEtykiety.KOLOR_KWIATOW, nazwy: w.nazwy };
         const kolorLisci = { ...w, etykieta: CechaEtykiety.KOLOR_LISCI, nazwy: w.nazwy };
         processedCechy.push(kolorKwiatow, kolorLisci);
+      } else if (w.etykieta === 'KolorKwiatow') {
+        w.etykieta = CechaEtykiety.KOLOR_KWIATOW;
+        processedCechy.push(w);
+      } else if (w.etykieta === 'KolorLisci') {
+        w.etykieta = CechaEtykiety.KOLOR_LISCI;
+        processedCechy.push(w);
       } else {
         processedCechy.push(w);
       }

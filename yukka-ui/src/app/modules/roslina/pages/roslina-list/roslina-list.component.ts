@@ -13,6 +13,7 @@ import { CechaProcessService } from '../../services/cecha-service/cecha.service'
 import { WysokoscInputComponent } from "../../components/wysokosc-input/wysokosc-input.component";
 import { TokenService } from '../../../../services/token/token.service';
 import { LoadingComponent } from "../../../../components/loading/loading.component";
+import { CryptKeyService } from '../../../../services/crypt-key/crypt-key.service';
 
 @Component({
   selector: 'app-roslina-list',
@@ -68,6 +69,7 @@ export class RoslinaListComponent implements OnInit{
   constructor(
     private roslinaService: RoslinaService,
     private cechaProcessService: CechaProcessService,
+    private cryptKeyService: CryptKeyService,
     private router: Router,
     private route: ActivatedRoute,
     private tokenService: TokenService
@@ -85,9 +87,13 @@ export class RoslinaListComponent implements OnInit{
       this.request.nazwaLacinska = params['nazwaLacinska'] || '';
 
       // Uwaga: uważaj na api-gen, bo trzeba ręcznie tworzyć konwersję na JSON
-      // Tutaj link dla przyszłego mnie. https://app.quicktype.io/
-      let cechy2 = params['cechy'] ? JSON.parse(params['cechy']) : [];
-     // console.log("Cechy2: " + cechy2);
+      // Tutaj link: https://app.quicktype.io/
+      let cechy2 = [];
+      if (params['cechy']) {
+        const decryptedCechy = this.cryptKeyService.decrypt(params['cechy']);
+        cechy2 = JSON.parse(decryptedCechy);
+      }
+      // let cechy2 = params['cechy'] ? JSON.parse(params['cechy']) : [];
 
       this.request.cechy = Convert.toCechaWithRelationsArray(JSON.stringify(cechy2));
 
@@ -132,6 +138,7 @@ export class RoslinaListComponent implements OnInit{
     .subscribe({
       next: (cechy) => {
         this.cechyResponse = this.cechaProcessService.processCechyResponse(cechy);
+        console.log('Cechy:', this.cechyResponse);
       },
       error: (error) => {
         console.error('Error fetching cechy:', error);
@@ -170,6 +177,7 @@ export class RoslinaListComponent implements OnInit{
 
   goToPage(page: number) {
     const cechyJson = Convert.cechaWithRelationsArrayToJson(this.request.cechy);
+    const encryptedCechy = this.cryptKeyService.encrypt(cechyJson);
 
     this.router.navigate(['/rosliny'], {
       queryParams: {
@@ -178,7 +186,7 @@ export class RoslinaListComponent implements OnInit{
         wysokoscMax: this.request.wysokoscMax,
         nazwa: this.request.nazwa,
         nazwaLacinska: this.request.nazwaLacinska,
-        cechy: cechyJson
+        cechy: encryptedCechy
       },
       queryParamsHandling: 'merge'
     });

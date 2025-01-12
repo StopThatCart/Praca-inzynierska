@@ -26,28 +26,25 @@ url_list = [
     
 ##    "https://e-katalogroslin.pl/przegladaj-katalog?se=6fa1929f87113a75900ba8d4b4b46a98",
 
-
-    "https://e-katalogroslin.pl/przegladaj-katalog?se=39921be9413de6ac538a4df45da7d104",
+    # "https://e-katalogroslin.pl/przegladaj-katalog?se=39921be9413de6ac538a4df45da7d104",
     
-##    "https://e-katalogroslin.pl/przegladaj-katalog?se=38ec3b62fa9d7cb98b7e2a47becf8f04",
+   "https://e-katalogroslin.pl/przegladaj-katalog?se=38ec3b62fa9d7cb98b7e2a47becf8f04",
 
-    "https://e-katalogroslin.pl/przegladaj-katalog?se=0f53540eb1787eab5cf47d55874e4372",
-    
+    # "https://e-katalogroslin.pl/przegladaj-katalog?se=0f53540eb1787eab5cf47d55874e4372",
     
 ##    "https://e-katalogroslin.pl/przegladaj-katalog?se=5dc50211f4e63ccd8eefa37c99d6186b",
 
-
     "https://e-katalogroslin.pl/przegladaj-katalog?se=04c2fcb871ee0704e7af0cd6183a01e1",
-    
     
 ##    "https://e-katalogroslin.pl/przegladaj-katalog?se=5869b59c0dfb79d0604ad654ddf4b404",
 
-
-    "https://e-katalogroslin.pl/przegladaj-katalog?se=85f76f2e4609984bd0caa1a567285df3",
-    "https://e-katalogroslin.pl/przegladaj-katalog?se=b0282224a707a5010c36fa11e8fd8c18"
-    ##"https://e-katalogroslin.pl/przegladaj-katalog?se=c94bf7912b270f9c04423786d26f051f"
+    # "https://e-katalogroslin.pl/przegladaj-katalog?se=85f76f2e4609984bd0caa1a567285df3",
+    # "https://e-katalogroslin.pl/przegladaj-katalog?se=b0282224a707a5010c36fa11e8fd8c18",
+    "https://e-katalogroslin.pl/przegladaj-katalog?se=e2d860561d7ad162458f2301c4b89bea"
+    # "https://e-katalogroslin.pl/przegladaj-katalog?se=c94bf7912b270f9c04423786d26f051f"
 ]
 
+first_url = "https://e-katalogroslin.pl/przegladaj-katalog?se=b873c55f322d2ae7c077b52480a75f81"
 last_url = "https://e-katalogroslin.pl/przegladaj-katalog?se=4d4d14322be96da421727124e8e76fff"
 
 no_description = "Ta roślina nie posiada opisu."
@@ -108,13 +105,13 @@ async def parse_page(html):
         if desc == no_description:
             continue
         
-        name_pp = element.find('div', class_='description').find('p', class_='desc_pl_title').find("span")
-        latin_name_pp = element.find('div', class_='description').find('p', class_='desc_title')
+        name_span = element.find('div', class_='description').find('p', class_='desc_pl_title').find("span")
+        latin_name_span = element.find('div', class_='description').find('p', class_='desc_title')
 
-        def trace_spanowanie(pp):
-            if pp:
+        def process_span(span_elem):
+            if span_elem:
                 name = ""
-                for content in pp.contents:
+                for content in span_elem.contents:
                     if isinstance(content, str):
                         name += content.strip() + " "
                     elif content.name == 'span':
@@ -127,14 +124,14 @@ async def parse_page(html):
                 name = name.strip()
                 name = re.sub(r'\s+', ' ', name)
                 return name
-            elif isinstance(pp, str):
+            elif isinstance(span_elem, str):
                 name += content.strip() + " "
                 return name
             else:
                 return ""
         
-        name = trace_spanowanie(name_pp)
-        latin_name = trace_spanowanie(latin_name_pp)
+        name = process_span(name_span)
+        latin_name = process_span(latin_name_span)
         
         if name == "" or latin_name == "":
             continue
@@ -156,27 +153,29 @@ async def parse_page(html):
     return plant_info_list
 
 
-
-
 async def get_all_plant_info(start_url, url_list, amount=9999):
     max_tries = 5
     page_number = 1
     all_plant_info = []
     current_url = start_url
     driver = webdriver.Firefox(options=firefox_options)
-    driver.implicitly_wait(10)
+    driver.implicitly_wait(15)
     driver.get(start_url)
     thread_id = threading.get_ident()
+    tries = 0 
     
     try:
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "listning")))
+        WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "listning")))
     except:
         print(f"Timeout! Nie udało się załadować sekcji listingu dla {start_url}.")
         driver.quit()
         return None
 
     async with aiohttp.ClientSession() as session:
-        while current_url != last_url and amount != 0:
+        while amount != 0:
+            if start_url != first_url and current_url == first_url:
+                print(f"Zatrzymanie wątku, napotkano pierwszą stronę: {current_url}")
+                break
             if current_url in url_list and current_url != start_url:
                 print(f"Zatrzymanie wątku, napotkano adres startowy innego wątku: {current_url}")
                 break
@@ -197,14 +196,18 @@ async def get_all_plant_info(start_url, url_list, amount=9999):
             
             all_plant_info.extend(plant_info_list)
             
+            if current_url == last_url:
+                print(f"Wątek [{thread_id}]: Osiągnięto ostatnią stronę: {current_url}")
+                break
+            
             if(page_number % 10 == 0):
                 print(f"Wątek [{thread_id}]: Przetworzone strony: [{page_number}]. Pobrano dane z: {current_url}")     
             
             for _ in range(max_tries):
                 try:
-                    next_button = WebDriverWait(driver, 12).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-next]")))
+                    next_button = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-next]")))
                     next_button.click()
-                    WebDriverWait(driver, 12).until(EC.url_changes(current_url))
+                    WebDriverWait(driver, 15).until(EC.url_changes(current_url))
                     break
                 except (ElementClickInterceptedException, StaleElementReferenceException, TimeoutException):
                     continue
@@ -214,22 +217,24 @@ async def get_all_plant_info(start_url, url_list, amount=9999):
                 print("Nie udało się załadować nowej strony.")
                 
             new_url = driver.current_url
-            tries = 0
             if new_url == current_url:
-                print("URL nie zmienił się. Spróbuj ponownie.")
+                print(f"Wątek [{thread_id}]: URL nie zmienił się. Spróbuj ponownie: [{tries}].")
                 tries += 1
-                if tries >= 30:
+                if tries >= 10:
                     print("Przekroczono limit prób zmiany adresu.")
-                    break
+                    try:
+                        next_button = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "//button[@data-next]")))
+                        next_button.click()
+                        WebDriverWait(driver, 15).until(EC.url_changes(current_url))
+                        break
+                    except (ElementClickInterceptedException, StaleElementReferenceException, TimeoutException):
+                        continue
                 continue
-            
-            if tries > 0:
-                print(f"Ilość prób zmiany adresu nr: {tries}.")
 
             current_url = new_url
             page_number += 1
             amount -= 1
-
+    print(f"Wątek [{thread_id}]: Zakończono scrapowanie dla adresu: {start_url}\n Ostatnia strona: {current_url}")
     driver.quit()
     return all_plant_info
 

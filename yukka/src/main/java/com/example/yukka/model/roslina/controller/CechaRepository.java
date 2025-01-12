@@ -128,11 +128,18 @@ public interface CechaRepository extends Neo4jRepository<Cecha, Long> {
                 MATCH (roslina)-[:MA_ZIMOZIELONOSC_LISCI]->(:Cecha {nazwa: wezel.__properties__.nazwa})
             })
         
-            MATCH (roslina)-[]->(w:Cecha) WHERE NOT w:CechaWlasna
-            WITH w, [lbl IN labels(w) WHERE lbl <> 'Cecha'] AS lbls, roslina
-            UNWIND lbls AS lbl
-            WITH DISTINCT lbl, w.nazwa AS nazwa, count(DISTINCT roslina) AS liczbaRoslin
-            RETURN lbl AS etykieta, collect({nazwa: nazwa, liczbaRoslin: liczbaRoslin}) AS nazwyLiczbaRoslin
+            MATCH (roslina)-[relacja]->(w:Cecha) WHERE NOT w:CechaWlasna
+            WITH w, 
+            CASE 
+                WHEN type(relacja) = 'MA_OKRES_KWITNIENIA' THEN 'OkresKwitnienia'
+                WHEN type(relacja) = 'MA_OKRES_OWOCOWANIA' THEN 'OkresOwocowania'
+                WHEN type(relacja) = 'MA_KOLOR_LISCI' THEN 'KolorLisci'
+                WHEN type(relacja) = 'MA_KOLOR_KWIATOW' THEN 'KolorKwiatow'
+                ELSE [lbl IN labels(w) WHERE lbl <> 'Cecha'][0]
+            END AS etykieta, 
+            roslina
+            WITH DISTINCT etykieta, w.nazwa AS nazwa, count(DISTINCT roslina) AS liczbaRoslin
+            RETURN etykieta, collect({nazwa: nazwa, liczbaRoslin: liczbaRoslin}) AS nazwyLiczbaRoslin
             """)
         Set<CechaKatalogResponse> getCechyCountFromQuery(
             @Param("roslina") Roslina roslina, 
@@ -255,11 +262,18 @@ public interface CechaRepository extends Neo4jRepository<Cecha, Long> {
                 MATCH (roslina)-[:MA_ZIMOZIELONOSC_LISCI]->(:Cecha {nazwa: wezel.__properties__.nazwa})
             })
         
-            MATCH (roslina)-[]->(w:Cecha)
-            WITH w, [lbl IN labels(w) WHERE lbl <> 'Cecha'] AS lbls, roslina
-            UNWIND lbls AS lbl
-            WITH DISTINCT lbl, w.nazwa AS nazwa, count(DISTINCT roslina) AS liczbaRoslin
-            RETURN lbl AS etykieta, collect({nazwa: nazwa, liczbaRoslin: liczbaRoslin}) AS nazwyLiczbaRoslin
+            MATCH (roslina)-[relacja]->(w:Cecha)
+            WITH w, 
+            CASE 
+                WHEN type(relacja) = 'MA_OKRES_KWITNIENIA' THEN 'OkresKwitnienia'
+                WHEN type(relacja) = 'MA_OKRES_OWOCOWANIA' THEN 'OkresOwocowania'
+                WHEN type(relacja) = 'MA_KOLOR_LISCI' THEN 'KolorLisci'
+                WHEN type(relacja) = 'MA_KOLOR_KWIATOW' THEN 'KolorKwiatow'
+                ELSE [lbl IN labels(w) WHERE lbl <> 'Cecha'][0]
+            END AS etykieta, 
+            roslina
+            WITH DISTINCT etykieta, w.nazwa AS nazwa, count(DISTINCT roslina) AS liczbaRoslin
+            RETURN etykieta, collect({nazwa: nazwa, liczbaRoslin: liczbaRoslin}) AS nazwyLiczbaRoslin
             """)
         Set<CechaKatalogResponse> getUzytkownikCechyCountFromQuery(
             @Param("uzytkownikNazwa") String uzytkownikNazwa,

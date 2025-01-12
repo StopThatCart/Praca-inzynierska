@@ -9,12 +9,6 @@ import re
 default_img = "default_plant.jpg"
 
 def sanitize_filename(name):
-    # Usuń specjalne znaki i zastąp je znakiem podkreślenia
-   # sanitized_name = re.sub(r'[^a-zA-Z0-9\s]', '', name)
-   # sanitized_name = re.sub(r'[\s!,!@#$%^&*()-=+{}<>?~`]', '_', sanitized_name)
-    # lol nie
- #   sanitized_name = sanitized_name.replace("'", '_').replace('"', '_')
-   
     # Usuń nadmiarowe spacje
     sanitized_name = re.sub(r'[^\w\s]', '', name)  # Usuń wszystkie znaki poza literami, cyframi i spacjami
     sanitized_name = re.sub(r'\s+', '_', sanitized_name).strip('_') 
@@ -66,9 +60,6 @@ def get_images(file_path, image_link, name_label):
             print(f"Aktualny rząd: [{count}]")
         count = count + 1
     
-   # print("OBrazy")
-   # for names in image_names:
-   #     print(names)
     df['image_filename'] = image_names
     df.to_csv(file_path, index=False)
     
@@ -84,9 +75,6 @@ def remove_column(file_path, column_name):
     
     df.to_csv(file_path, index=False)
    
-
-
-# Ustaw katalog roboczy na katalog, w którym znajduje się skrypt. Potem sie poprawi
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 
@@ -94,6 +82,5 @@ file_path = os.path.join(os.getcwd(), 'katalog_roslin2.csv')
 image_link = 'image'
 name_label = 'latin_name'
 
-#remove_column(file_path, 'nagrody')
 get_images(file_path, image_link, name_label)
 

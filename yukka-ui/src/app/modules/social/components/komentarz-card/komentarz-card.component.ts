@@ -18,7 +18,7 @@ import { ImageUploadComponent } from "../../../../components/image-upload/image-
 @Component({
   selector: 'app-komentarz-card',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddKomentarzCardComponent, ZgloszenieButtonComponent, NgbTooltipModule, ImageUploadComponent],
+  imports: [CommonModule, FormsModule, AddKomentarzCardComponent, ZgloszenieButtonComponent, NgbTooltipModule],
   templateUrl: './komentarz-card.component.html',
   styleUrls: ['./komentarz-card.component.css']
 })
