@@ -51,28 +51,28 @@ public class PostController {
     /**
      * Metoda obsługująca żądanie GET do wyszukania posta po jego identyfikatorze.
      *
-     * @param postId identyfikator posta
+     * @param uuid identyfikator posta
      * @return ResponseEntity zawierające obiekt PostResponse
      * <ul>
-     *   <li><strong>postId</strong> - identyfikator posta</li>
+     *   <li><strong>uuid</strong> - identyfikator posta</li>
      *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt PostResponse</li>
      * </ul>
      */
-    @GetMapping(value = "/{post-id}", produces="application/json")
-    public ResponseEntity<PostResponse> findPostById(@PathVariable("post-id") String postId) {
-        return ResponseEntity.ok(postService.findByPostId(postId));
+    @GetMapping(value = "/{uuid}", produces="application/json")
+    public ResponseEntity<PostResponse> findPostByUUID(@PathVariable("uuid") String uuid) {
+        return ResponseEntity.ok(postService.findByUUID(uuid));
     }
 
     /**
-     * Metoda obsługująca żądanie GET na endpoint /{post-id}/check.
+     * Metoda obsługująca żądanie GET na endpoint /{uuid}/check.
      * Sprawdza istnienie posta o podanym identyfikatorze.
      *
-     * @param postId identyfikator posta, który ma zostać sprawdzony
+     * @param uuid identyfikator posta, który ma zostać sprawdzony
      * @return ResponseEntity zawierające obiekt PostResponse z informacjami o poście
      */
-    @GetMapping(value = "/{post-id}/check", produces="application/json")
-    public ResponseEntity<PostResponse> findPostByIdCheck(@PathVariable("post-id") String postId) {
-        return ResponseEntity.ok(postService.findByPostIdCheck(postId));
+    @GetMapping(value = "/{uuid}/check", produces="application/json")
+    public ResponseEntity<PostResponse> findPostByUUIDCheck(@PathVariable("uuid") String uuid) {
+        return ResponseEntity.ok(postService.findByUUIDCheck(uuid));
     }
 
     /**
@@ -156,21 +156,21 @@ public class PostController {
     /**
      * Metoda obsługująca żądanie DELETE do usunięcia posta na podstawie identyfikatora.
      *
-     * @param postId identyfikator posta
+     * @param uuid identyfikator posta
      * @param currentUser obiekt uwierzytelnionego użytkownika
      * @return ResponseEntity zawierające informację o usunięciu posta
      * <ul>
-     *   <li><strong>postId</strong> - identyfikator posta</li>
+     *   <li><strong>uuid</strong> - identyfikator posta</li>
      *   <li><strong>currentUser</strong> - obiekt uwierzytelnionego użytkownika</li>
      *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca informację o usunięciu posta</li>
      * </ul>
      */
-    @DeleteMapping(value = "/{post-id}", produces="application/json")
+    @DeleteMapping(value = "/{uuid}", produces="application/json")
     public ResponseEntity<String> removePost(
-                    @PathVariable("post-id") String postId,
+                    @PathVariable("uuid") String uuid,
                     Authentication currentUser) {
                         
-        postService.deletePost(postId, currentUser);
+        postService.deletePost(uuid, currentUser);
         return ResponseEntity.noContent().build();
     }
 

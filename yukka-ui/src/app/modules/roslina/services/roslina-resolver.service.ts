@@ -17,8 +17,8 @@ export class RoslinaResolverService implements Resolve<RoslinaResponse> {
   ) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RoslinaResponse> {
-    const roslinaId = route.paramMap.get('roslina-id');
-    return this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId as string }).pipe(
+    const uuid = route.paramMap.get('uuid');
+    return this.roslinaService.findByUuid({ uuid: uuid as string }).pipe(
       catchError((error) => {
         this.errorHandlingService.handleResolverErrors(error, this.router);
         throw error;

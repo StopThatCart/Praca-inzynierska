@@ -5,23 +5,21 @@ import { FormsModule } from '@angular/forms';
 import { PostService } from '../../../../services/services';
 import { Router } from '@angular/router';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
+import { ImageUploadComponent } from "../../../../components/image-upload/image-upload.component";
 
 @Component({
   selector: 'app-add-post-card',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ImageUploadComponent],
   templateUrl: './add-post-card.component.html',
   styleUrl: './add-post-card.component.css'
 })
 export class AddPostCardComponent {
-
-  @ViewChild('fileInput') fileInput!: ElementRef;
   request: PostRequest = {
     tytul: '',
     opis: '',
     obraz: ''
   };
-  wybranyObraz: any;
   wybranyPlik: any;
 
   errorMsg: Array<string> = [];
@@ -33,25 +31,14 @@ export class AddPostCardComponent {
   ) { }
 
 
-  onFileSelected(event: any) {
-    this.wybranyPlik = event.target.files[0];
-
-     if (this.wybranyPlik) {
-       this.request.obraz = this.wybranyPlik.name;
-
-       const reader = new FileReader();
-       reader.onload = () => {
-         this.wybranyObraz = reader.result as string;
-       };
-       reader.readAsDataURL(this.wybranyPlik);
-     }
+  onFileSelected(file: File) {
+    this.wybranyPlik = file;
+    this.request.obraz = this.wybranyPlik.name;
   }
 
   clearImage() {
-     this.wybranyObraz = null;
      this.wybranyPlik = null;
      this.request.obraz = '';
-     this.fileInput.nativeElement.value = '';
   }
 
 
@@ -65,7 +52,7 @@ export class AddPostCardComponent {
     this.postService.addPost({
       body: { request: this.request, file: leFile }
     }).subscribe( {
-        next: (res) => { this.goToPost(res.postId); },
+        next: (res) => { this.goToPost(res.uuid); },
         error: (error) => {  
           if (error.status === 403) {
             this.router.navigate(['/login']);
@@ -76,11 +63,11 @@ export class AddPostCardComponent {
 
   }
 
-  private goToPost(postId: string | undefined) {
-    if (postId) {
-      this.router.navigate(['/social/posty', postId]);
+  private goToPost(uuid: string | undefined) {
+    if (uuid) {
+      this.router.navigate(['/social/posty', uuid]);
     } else {
-      console.log('Error: Brak postId w response');
+      console.log('Error: Brak uuid w response');
     }
   }
 

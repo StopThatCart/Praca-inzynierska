@@ -77,7 +77,7 @@ public class DzialkaControllerTest {
         mockAuth = Mockito.mock(Authentication.class);
 
         uzyt = Uzytkownik.builder()
-        .uzytId(uzytkownikService.createUzytkownikId())
+        .uuid(uzytkownikService.createUzytkownikId())
         .nazwa("Działacz Działkujący")
         .email("dzialacz@email.pl")
         .haslo(passwordEncoder.encode("haslo12345678"))
@@ -94,7 +94,7 @@ public class DzialkaControllerTest {
         uzytkownikService.addUzytkownik(uzyt);
         uzyt = uzytkownikRepository.findByEmail(uzyt.getEmail()).get();
 
-        System.out.println(uzyt.getUzytId());
+        System.out.println(uzyt.getUuid());
     }
 
     @AfterAll
@@ -156,7 +156,7 @@ public class DzialkaControllerTest {
 			))
 		.kolor("#ebf06c")
 		.wyswietlanie(Wyswietlanie.TEKSTURA_KOLOR.toString())
-		.roslinaId(roslina.getRoslinaId())
+		.roslinaUUID(roslina.getUuid())
 		.build();
 
         zasadzonaRoslinaResponse.setX(request.getX());
@@ -186,7 +186,7 @@ public class DzialkaControllerTest {
 
         assertNotNull(body);
         assertNotNull(body.getRoslina());
-        assertNotNull(body.getRoslina().getRoslinaId());
+        assertNotNull(body.getRoslina().getUuid());
 
         assertEquals(zasadzonaRoslinaResponse.getX(), body.getX());
         assertEquals(zasadzonaRoslinaResponse.getY(), body.getY());
@@ -199,15 +199,15 @@ public class DzialkaControllerTest {
 
     @Test
     @Order(6)
-    void testGetRoslinaInDzialkaByRoslinaId() {
+    void testGetRoslinaInDzialkaByUUID() {
         assertNotNull(zasadzonaRoslinaResponse);
         assertNotNull(zasadzonaRoslinaResponse.getRoslina());
-        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getRoslinaId());
+        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getUuid());
 
         ResponseEntity<ZasadzonaRoslinaResponse> response = controller
-            .getRoslinaInDzialkaByRoslinaId(
+            .getRoslinaInDzialkaByUUID(
                 numerDzialki, 
-                zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), 
+                zasadzonaRoslinaResponse.getRoslina().getUuid(), 
                 mockAuth
             );
         
@@ -216,14 +216,14 @@ public class DzialkaControllerTest {
 
         assertNotNull(body);
         assertNotNull(body.getRoslina());
-        assertNotNull(body.getRoslina().getRoslinaId());
+        assertNotNull(body.getRoslina().getUuid());
         
         assertEquals(zasadzonaRoslinaResponse.getX(), body.getX());
         assertEquals(zasadzonaRoslinaResponse.getY(), body.getY());
         assertEquals(zasadzonaRoslinaResponse.getKolor(), body.getKolor());
         assertEquals(zasadzonaRoslinaResponse.getWyswietlanie(), body.getWyswietlanie());
         assertEquals(zasadzonaRoslinaResponse.getPozycje(), body.getPozycje());
-        assertEquals(zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), body.getRoslina().getRoslinaId());
+        assertEquals(zasadzonaRoslinaResponse.getRoslina().getUuid(), body.getRoslina().getUuid());
     }
 
     @Test
@@ -231,7 +231,7 @@ public class DzialkaControllerTest {
     void testUpdateRoslinaKolorInDzialka() {
         assertNotNull(zasadzonaRoslinaResponse);
         assertNotNull(zasadzonaRoslinaResponse.getRoslina());
-        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getRoslinaId());
+        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getUuid());
 
         String nowyKolor = "#ff0000";
 
@@ -246,15 +246,15 @@ public class DzialkaControllerTest {
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
 
         ResponseEntity<ZasadzonaRoslinaResponse> response2 = controller
-        .getRoslinaInDzialkaByRoslinaId(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), mockAuth);
+        .getRoslinaInDzialkaByUUID(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getUuid(), mockAuth);
         
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         ZasadzonaRoslinaResponse body = response2.getBody();
 
         assertNotNull(body);
         assertNotNull(body.getRoslina());
-        assertNotNull(body.getRoslina().getRoslinaId());
-        assertEquals(zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), body.getRoslina().getRoslinaId());
+        assertNotNull(body.getRoslina().getUuid());
+        assertEquals(zasadzonaRoslinaResponse.getRoslina().getUuid(), body.getRoslina().getUuid());
 
         assertEquals(nowyKolor, body.getKolor());
     }
@@ -264,7 +264,7 @@ public class DzialkaControllerTest {
     void testUpdateRoslinaNotatkaInDzialka() {
         assertNotNull(zasadzonaRoslinaResponse);
         assertNotNull(zasadzonaRoslinaResponse.getRoslina());
-        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getRoslinaId());
+        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getUuid());
 
         String nowaNotatka = "Nowa notatka";
 
@@ -280,15 +280,15 @@ public class DzialkaControllerTest {
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
 
         ResponseEntity<ZasadzonaRoslinaResponse> response2 = controller
-        .getRoslinaInDzialkaByRoslinaId(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), mockAuth);
+        .getRoslinaInDzialkaByUUID(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getUuid(), mockAuth);
         
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         ZasadzonaRoslinaResponse body = response2.getBody();
 
         assertNotNull(body);
         assertNotNull(body.getRoslina());
-        assertNotNull(body.getRoslina().getRoslinaId());
-        assertEquals(zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), body.getRoslina().getRoslinaId());
+        assertNotNull(body.getRoslina().getUuid());
+        assertEquals(zasadzonaRoslinaResponse.getRoslina().getUuid(), body.getRoslina().getUuid());
         
         assertEquals(nowaNotatka, body.getNotatka());
     }
@@ -298,7 +298,7 @@ public class DzialkaControllerTest {
     void testUpdateRoslinaWyswietlanieInDzialka() {
         assertNotNull(zasadzonaRoslinaResponse);
         assertNotNull(zasadzonaRoslinaResponse.getRoslina());
-        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getRoslinaId());
+        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getUuid());
 
 
         String noweWyswietlanie = Wyswietlanie.KOLOR.toString();
@@ -314,15 +314,15 @@ public class DzialkaControllerTest {
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
 
         ResponseEntity<ZasadzonaRoslinaResponse> response2 = controller
-        .getRoslinaInDzialkaByRoslinaId(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), mockAuth);
+        .getRoslinaInDzialkaByUUID(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getUuid(), mockAuth);
         
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         ZasadzonaRoslinaResponse body = response2.getBody();
 
         assertNotNull(body);
         assertNotNull(body.getRoslina());
-        assertNotNull(body.getRoslina().getRoslinaId());
-        assertEquals(zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), body.getRoslina().getRoslinaId());
+        assertNotNull(body.getRoslina().getUuid());
+        assertEquals(zasadzonaRoslinaResponse.getRoslina().getUuid(), body.getRoslina().getUuid());
         
         assertEquals(noweWyswietlanie, body.getWyswietlanie());
     }
@@ -332,7 +332,7 @@ public class DzialkaControllerTest {
     void testUpdateRoslinaObrazInDzialka() {
         assertNotNull(zasadzonaRoslinaResponse);
         assertNotNull(zasadzonaRoslinaResponse.getRoslina());
-        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getRoslinaId());
+        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getUuid());
 
         DzialkaRoslinaRequest request = DzialkaRoslinaRequest.builder()
         .numerDzialki(numerDzialki).x(zasadzonaRoslinaResponse.getX()).y(zasadzonaRoslinaResponse.getY())
@@ -367,15 +367,15 @@ public class DzialkaControllerTest {
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());  
 
         ResponseEntity<ZasadzonaRoslinaResponse> response2 = controller
-        .getRoslinaInDzialkaByRoslinaId(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), mockAuth);
+        .getRoslinaInDzialkaByUUID(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getUuid(), mockAuth);
         
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         ZasadzonaRoslinaResponse body = response2.getBody();
 
         assertNotNull(body);
         assertNotNull(body.getRoslina());
-        assertNotNull(body.getRoslina().getRoslinaId());
-        assertEquals(zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), body.getRoslina().getRoslinaId());
+        assertNotNull(body.getRoslina().getUuid());
+        assertEquals(zasadzonaRoslinaResponse.getRoslina().getUuid(), body.getRoslina().getUuid());
         
         assertNotNull(body.getObraz());
         assertNotNull(body.getTekstura());
@@ -386,7 +386,7 @@ public class DzialkaControllerTest {
     void testDeleteRoslinaObrazFromDzialka() {
         assertNotNull(zasadzonaRoslinaResponse);
         assertNotNull(zasadzonaRoslinaResponse.getRoslina());
-        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getRoslinaId());
+        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getUuid());
 
         BaseDzialkaRequest request = BaseDzialkaRequest.builder()
         .numerDzialki(numerDzialki).x(zasadzonaRoslinaResponse.getX()).y(zasadzonaRoslinaResponse.getY())
@@ -397,15 +397,15 @@ public class DzialkaControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());  
 
         ResponseEntity<ZasadzonaRoslinaResponse> response2 = controller
-        .getRoslinaInDzialkaByRoslinaId(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), mockAuth);
+        .getRoslinaInDzialkaByUUID(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getUuid(), mockAuth);
         
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         ZasadzonaRoslinaResponse body = response2.getBody();
 
         assertNotNull(body);
         assertNotNull(body.getRoslina());
-        assertNotNull(body.getRoslina().getRoslinaId());
-        assertEquals(zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), body.getRoslina().getRoslinaId());
+        assertNotNull(body.getRoslina().getUuid());
+        assertEquals(zasadzonaRoslinaResponse.getRoslina().getUuid(), body.getRoslina().getUuid());
         
         assertNull(body.getObraz());
     }
@@ -415,7 +415,7 @@ public class DzialkaControllerTest {
     void testDeleteRoslinaTeksturaFromDzialka() {
         assertNotNull(zasadzonaRoslinaResponse);
         assertNotNull(zasadzonaRoslinaResponse.getRoslina());
-        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getRoslinaId());
+        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getUuid());
 
         BaseDzialkaRequest request = BaseDzialkaRequest.builder()
         .numerDzialki(numerDzialki).x(zasadzonaRoslinaResponse.getX()).y(zasadzonaRoslinaResponse.getY())
@@ -426,15 +426,15 @@ public class DzialkaControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());  
 
         ResponseEntity<ZasadzonaRoslinaResponse> response2 = controller
-        .getRoslinaInDzialkaByRoslinaId(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), mockAuth);
+        .getRoslinaInDzialkaByUUID(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getUuid(), mockAuth);
         
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         ZasadzonaRoslinaResponse body = response2.getBody();
 
         assertNotNull(body);
         assertNotNull(body.getRoslina());
-        assertNotNull(body.getRoslina().getRoslinaId());
-        assertEquals(zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), body.getRoslina().getRoslinaId());
+        assertNotNull(body.getRoslina().getUuid());
+        assertEquals(zasadzonaRoslinaResponse.getRoslina().getUuid(), body.getRoslina().getUuid());
         
         assertNull(body.getTekstura());
     }
@@ -444,7 +444,7 @@ public class DzialkaControllerTest {
     void testUpdateRoslinaPozycjaInDzialka() {
         assertNotNull(zasadzonaRoslinaResponse);
         assertNotNull(zasadzonaRoslinaResponse.getRoslina());
-        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getRoslinaId());
+        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getUuid());
 
         Set<Pozycja> nowePozycje = Set.of(
             Pozycja.builder().x(2).y(2).build(), 
@@ -467,15 +467,15 @@ public class DzialkaControllerTest {
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
 
         ResponseEntity<ZasadzonaRoslinaResponse> response2 = controller
-        .getRoslinaInDzialkaByRoslinaId(numerDzialkiNowy, zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), mockAuth);
+        .getRoslinaInDzialkaByUUID(numerDzialkiNowy, zasadzonaRoslinaResponse.getRoslina().getUuid(), mockAuth);
         
         assertEquals(HttpStatus.OK, response2.getStatusCode());
         ZasadzonaRoslinaResponse body = response2.getBody();
 
         assertNotNull(body);
         assertNotNull(body.getRoslina());
-        assertNotNull(body.getRoslina().getRoslinaId());
-        assertEquals(zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), body.getRoslina().getRoslinaId());
+        assertNotNull(body.getRoslina().getUuid());
+        assertEquals(zasadzonaRoslinaResponse.getRoslina().getUuid(), body.getRoslina().getUuid());
 
         assertEquals(moveRequest.getXNowy(), body.getX());
         assertEquals(moveRequest.getYNowy(), body.getY());
@@ -491,7 +491,7 @@ public class DzialkaControllerTest {
     void testDeleteRoslinaFromDzialka() {
         assertNotNull(zasadzonaRoslinaResponse);
         assertNotNull(zasadzonaRoslinaResponse.getRoslina());
-        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getRoslinaId());
+        assertNotNull(zasadzonaRoslinaResponse.getRoslina().getUuid());
 
         BaseDzialkaRequest request = BaseDzialkaRequest.builder()
         .numerDzialki(numerDzialki).x(zasadzonaRoslinaResponse.getX()).y(zasadzonaRoslinaResponse.getY())
@@ -502,7 +502,7 @@ public class DzialkaControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode()); 
         
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
-            controller.getRoslinaInDzialkaByRoslinaId(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getRoslinaId(), mockAuth);
+            controller.getRoslinaInDzialkaByUUID(numerDzialki, zasadzonaRoslinaResponse.getRoslina().getUuid(), mockAuth);
         });
         assertNotNull(exception);
     }

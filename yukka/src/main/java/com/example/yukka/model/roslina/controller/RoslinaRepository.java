@@ -47,29 +47,29 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         MATCH (roslina:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT roslina:RoslinaWlasna
         RETURN count(roslina) > 0
     """)
-    boolean checkIfRoslinaWithNazwaLacinskaExists(@Param("latinName") String latinName);
+    boolean checkIfRoslinaWithNazwaLacinskaExists(String latinName);
 
     @Query("""
         MATCH (roslina:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT roslina:RoslinaWlasna
         OPTIONAL MATCH path=(roslina)-[r]->(w:Cecha)
         RETURN roslina, collect(nodes(path)), collect(relationships(path))
     """)
-    Optional<Roslina> findByNazwaLacinskaWithCechy(@Param("latinName") String latinName);
+    Optional<Roslina> findByNazwaLacinskaWithCechy(String latinName);
 
     @Query("""
-        MATCH (roslina:Roslina {roslinaId: $roslinaId})
+        MATCH (roslina:Roslina {uuid: $uuid})
         OPTIONAL MATCH (roslina)-[r1:STWORZONA_PRZEZ]->(u:Uzytkownik)-[r2:MA_USTAWIENIA]->(ust:Ustawienia)
         OPTIONAL MATCH path=(roslina)-[rels]->(w:Cecha)
 
         RETURN roslina, r1, u, r2, ust, collect(nodes(path)), collect(relationships(path))
     """)
-    Optional<Roslina> findByRoslinaId(@Param("roslinaId") String roslinaId);
+    Optional<Roslina> findByUUID(String uuid);
 
     @Query("""
         MATCH (roslina:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT roslina:RoslinaWlasna
         RETURN roslina
     """)
-    Optional<Roslina> findByNazwaLacinska(@Param("latinName") String latinName);
+    Optional<Roslina> findByNazwaLacinska(String latinName);
 
 
     
@@ -295,29 +295,29 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         RETURN count(DISTINCT roslina)
         """)
     Page<Roslina> findAllRoslinyWithParameters(
-        @Param("roslina") Roslina roslina, 
-        @Param("formy") Set<Cecha> formy,
-        @Param("gleby") Set<Cecha> gleby,
-        @Param("grupy") Set<Cecha> grupy,
-        @Param("koloryLisci") Set<Cecha> koloryLisci,
-        @Param("koloryKwiatow") Set<Cecha> koloryKwiatow,
-        @Param("kwiaty") Set<Cecha> kwiaty,
-        @Param("odczyny") Set<Cecha> odczyny,
-        @Param("okresyKwitnienia") Set<Cecha> okresyKwitnienia,
-        @Param("okresyOwocowania") Set<Cecha> okresyOwocowania,
-        @Param("owoce") Set<Cecha> owoce,
-        @Param("podgrupa") Set<Cecha> podgrupa,
-        @Param("pokroje") Set<Cecha> pokroje,
-        @Param("silyWzrostu") Set<Cecha> silyWzrostu,
-        @Param("stanowiska") Set<Cecha> stanowiska,
-        @Param("walory") Set<Cecha> walory,
-        @Param("wilgotnosci") Set<Cecha> wilgotnosci,
-        @Param("zastosowania") Set<Cecha> zastosowania,
-        @Param("zimozielonosci") Set<Cecha> zimozielonosci,
+        Roslina roslina, 
+        Set<Cecha> formy,
+        Set<Cecha> gleby,
+        Set<Cecha> grupy,
+        Set<Cecha> koloryLisci,
+        Set<Cecha> koloryKwiatow,
+        Set<Cecha> kwiaty,
+        Set<Cecha> odczyny,
+        Set<Cecha> okresyKwitnienia,
+        Set<Cecha> okresyOwocowania,
+        Set<Cecha> owoce,
+        Set<Cecha> podgrupa,
+        Set<Cecha> pokroje,
+        Set<Cecha> silyWzrostu,
+        Set<Cecha> stanowiska,
+        Set<Cecha> walory,
+        Set<Cecha> wilgotnosci,
+        Set<Cecha> zastosowania,
+        Set<Cecha> zimozielonosci,
         Pageable pageable);
 
     @Query("""
-        MERGE (p:Roslina {roslinaId: $roslinaId, nazwa: $name, nazwaLacinska: toLower($latinName), opis: $description, 
+        MERGE (p:Roslina {uuid: randomUUID(), nazwa: $name, nazwaLacinska: toLower($latinName), opis: $description, 
         obraz: COALESCE($obraz, 'default_plant.jpg'), wysokoscMin: $heightMin, wysokoscMax: $heightMax}) 
 
         WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
@@ -331,18 +331,17 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
     Roslina addRoslina(
-        @Param("roslinaId") String roslinaId,
-        @Param("name") String name, @Param("latinName") String latinName, 
-        @Param("description") String description, 
-        @Param("obraz") String obraz, 
-        @Param("heightMin") Double heightMin, @Param("heightMax") Double heightMax, 
+        String name, String latinName, 
+        String description, 
+        String obraz, 
+        Double heightMin, Double heightMax, 
         @Param("relatLump") List<Map<String, String>> relatLump
     );
 
     @Query("""
         WITH $roslina.__properties__ AS rp 
         MERGE (p:Roslina {
-        roslinaId: rp.roslinaId, 
+        uuid: randomUUID(), 
         nazwa: rp.nazwa, 
         nazwaLacinska: toLower(rp.nazwaLacinska), 
         opis: rp.opis, 
@@ -354,7 +353,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         WITH p OPTIONAL MATCH path=(p)-[r]->(w)
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
-    Roslina addRoslina(@Param("roslina") Roslina roslina);
+    Roslina addRoslina(Roslina roslina);
 
 // To niestety trzeba zapamiętać bo mi trochę zajęło
 // Czas wykonania testu: 162ms, 179ms
@@ -384,12 +383,12 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         RETURN p
     """)
     Roslina updateRoslina(
-        @Param("name") String name,
-        @Param("latinName") String latinName,
-        @Param("description") String description,
-        @Param("heightMin") Double heightMin,
-        @Param("heightMax") Double heightMax,
-        @Param("nowaNazwaLacinska") String nowaNazwaLacinska,
+        String name,
+        String latinName,
+        String description,
+        Double heightMin,
+        Double heightMax,
+        String nowaNazwaLacinska,
         @Param("relatLump") List<Map<String, String>> relatLump
     );
 
@@ -404,20 +403,20 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         RETURN p
     """)
     Roslina updateRoslina(
-    @Param("name") String name,
-    @Param("latinName") String latinName,
-    @Param("description") String description,
-    @Param("heightMin") Double heightMin,
-    @Param("heightMax") Double heightMax,
-    @Param("nowaNazwaLacinska") String nowaNazwaLacinska
+   String name,
+    String latinName,
+    String description,
+    Double heightMin,
+    Double heightMax,
+    String nowaNazwaLacinska
     );
 
     @Query("""
-        MATCH (p:Roslina{roslinaId: $roslinaId})
+        MATCH (p:Roslina{uuid: $uuid})
         SET  p.obraz = $obraz
         RETURN p
     """)
-    Roslina updateRoslinaObraz(@Param("roslinaId") String roslinaId, @Param("obraz") String obraz);
+    Roslina updateRoslinaObraz(String uuid, String obraz);
 
     @Query("""
             MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:RoslinaWlasna
@@ -428,17 +427,17 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
             WHERE NOT (cecha)--()
             DELETE cecha
             """)
-    void deleteByNazwaLacinska(@Param("latinName") String latinName);
+    void deleteByNazwaLacinska(String latinName);
 
     @Query("""
-            MATCH (p:Roslina{roslinaId: $roslinaId})
+            MATCH (p:Roslina{uuid: $uuid})
             DETACH DELETE p
 
             WITH p 
             MATCH (cecha:Cecha) WHERE NOT (cecha)--()
             DELETE cecha
             """)
-    void deleteByRoslinaId(@Param("roslinaId") String roslinaId);
+    void deleteByUUID(String uuid);
 
     @Query("""
         MATCH (cecha:Cecha) 

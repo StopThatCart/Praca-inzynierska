@@ -26,7 +26,7 @@ import lombok.ToString;
  * 
  * <ul>
  *   <li><strong>id</strong>: Unikalny identyfikator posta.</li>
- *   <li><strong>postId</strong>: Identyfikator posta jako uuid.</li>
+ *   <li><strong>uuid</strong>: Identyfikator posta jako uuid.</li>
  *   <li><strong>tytul</strong>: Tytuł posta.</li>
  *   <li><strong>opis</strong>: Opis posta.</li>
  *   <li><strong>obraz</strong>: URL obrazu powiązanego z postem.</li>
@@ -46,8 +46,8 @@ import lombok.ToString;
 public class Post extends Oceniany {
     @Id @GeneratedValue
     private Long id;
-    @Property(name = "postId")
-    private String postId;
+    @Property(name = "uuid")
+    private String uuid;
 
     @Property(name = "tytul")
     private String tytul;

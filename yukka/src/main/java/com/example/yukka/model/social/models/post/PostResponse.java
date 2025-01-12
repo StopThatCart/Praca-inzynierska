@@ -15,7 +15,7 @@ import lombok.Setter;
  * 
  * <ul>
  * <li><strong>id</strong>: Unikalny identyfikator posta.</li>
- * <li><strong>postId</strong>: Identyfikator posta.</li>
+ * <li><strong>uuid</strong>: Identyfikator posta.</li>
  * <li><strong>tytul</strong>: Tytuł posta.</li>
  * <li><strong>opis</strong>: Opis posta.</li>
  * <li><strong>ocenyLubi</strong>: Liczba polubień posta.</li>
@@ -36,7 +36,7 @@ import lombok.Setter;
 public class PostResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
-    private String postId;
+    private String uuid;
     private String tytul;
     private String opis;
      @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -164,7 +164,7 @@ public class RoslinaMapper {
             return null;
         }
         return RoslinaWlasnaRequest.builder()
-            .roslinaId(roslina.getRoslinaId())
+            .uuid(roslina.getUuid())
             .nazwa(roslina.getNazwa())
             .opis(roslina.getOpis())
             .obraz(roslina.getObraz())
@@ -188,7 +188,7 @@ public class RoslinaMapper {
 
         return RoslinaResponse.builder()
                 .id(roslina.getId())
-                .roslinaId(roslina.getRoslinaId())
+                .uuid(roslina.getUuid())
                 .nazwa(roslina.getNazwa())
                 .opis(roslina.getOpis())
                 .wysokoscMin(roslina.getWysokoscMin())
@@ -211,7 +211,7 @@ public class RoslinaMapper {
             return null;
         }
         return RoslinaRequest.builder()
-            .roslinaId(roslina.getRoslinaId())
+            .uuid(roslina.getUuid())
             .nazwa(roslina.getNazwa())
             .nazwaLacinska(roslina.getNazwaLacinska())
             .opis(roslina.getOpis())
@@ -234,7 +234,7 @@ public class RoslinaMapper {
         }
         Roslina roslina = Roslina.builder()
             .labels(List.of("RoslinaWlasna"))
-            .roslinaId(request.getRoslinaId())
+            .uuid(request.getUuid())
             .nazwa(request.getNazwa())
             .opis(request.getOpis())
             .obraz(request.getObraz())
@@ -257,7 +257,7 @@ public class RoslinaMapper {
             return null;
         }
         Roslina roslina = Roslina.builder()
-            .roslinaId(request.getRoslinaId())
+            .uuid(request.getUuid())
             .nazwa(request.getNazwa())
             .nazwaLacinska(request.getNazwaLacinska())
             .opis(request.getOpis())
@@ -292,7 +292,7 @@ public class RoslinaMapper {
 
         return RoslinaResponse.builder()
                 .id(roslina.getId())
-                .roslinaId(roslina.getRoslinaId())
+                .uuid(roslina.getUuid())
                 .nazwa(roslina.getNazwa())
                 .nazwaLacinska(roslina.getNazwaLacinska())
                 .opis(roslina.getOpis())
@@ -317,7 +317,7 @@ public class RoslinaMapper {
 
         return RoslinaResponse.builder()
                 .id(roslina.getId())
-                .roslinaId(roslina.getRoslinaId())
+                .uuid(roslina.getUuid())
 
                 .labels(roslina.getLabels())
 

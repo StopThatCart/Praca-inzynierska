@@ -44,8 +44,6 @@ export class UpdateRoslinaPageComponent {
 
   roslina: RoslinaResponse = {};
 
-  //roslinaId: string = '';
-
   wybranyObraz: any;
   wybranyPlik: any;
 
@@ -64,16 +62,16 @@ export class UpdateRoslinaPageComponent {
   ngOnInit(): void {
     this.fetchCechy();
     this.route.params.subscribe(params => {
-      const roslinaId = params['roslina-id'];
-      if (roslinaId) {
-        this.getRoslinaByRoslinaId(roslinaId);
-        this.route.snapshot.data['roslina-id'] = roslinaId;
+      const uuid = params['uuid'];
+      if (uuid) {
+        this.getRoslinaByUuid(uuid);
+        this.route.snapshot.data['uuid'] = uuid;
       }
     });
   }
 
-  getRoslinaByRoslinaId(roslinaId: string): void {
-    this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId }).subscribe({
+  getRoslinaByUuid(uuid: string): void {
+    this.roslinaService.findByUuid({ uuid: uuid }).subscribe({
       next: (roslina) => {
         this.roslina = roslina;
         this.request = this.cechaProcessService.convertRoslinaResponseToRequest(roslina);
@@ -125,7 +123,7 @@ export class UpdateRoslinaPageComponent {
   }
 
   updateRoslina(): void {
-    if(!this.roslina.roslinaId) {
+    if(!this.roslina.uuid) {
       return;
     }
     this.errorMsg = [];
@@ -142,7 +140,7 @@ export class UpdateRoslinaPageComponent {
       next: () => {
         this.message = 'Roślina została zaaktualizowana';
         //this.getRoslinaByNazwaLacinska(this.request.nazwaLacinska);
-        this.router.navigate(['/rosliny', this.roslina.roslinaId]);
+        this.router.navigate(['/rosliny', this.roslina.uuid]);
       },
       error: (error) => {
         this.message = 'Błąd podczas aktualizacji rośliny';
@@ -154,7 +152,7 @@ export class UpdateRoslinaPageComponent {
   updateUzytkownikRoslina(request: RoslinaRequest): void {
     console.log("AKTUALIZACJA ROŚLINY UZYTKOWNIKA");
     let uzytRequest : RoslinaWlasnaRequest = {
-      roslinaId: this.roslina.roslinaId,
+      uuid: this.roslina.uuid,
       nazwa: request.nazwa,
       obraz: '',
       opis: request.opis,
@@ -168,7 +166,7 @@ export class UpdateRoslinaPageComponent {
     this.roslinaWlasnaService.update({ body: uzytRequest }).subscribe({
       next: () => {
         this.message = 'Roślina została zaaktualizowana';
-        this.router.navigate(['/rosliny', this.roslina.roslinaId]);
+        this.router.navigate(['/rosliny', this.roslina.uuid]);
       },
       error: (error) => {
         this.message = 'Błąd podczas aktualizacji rośliny';

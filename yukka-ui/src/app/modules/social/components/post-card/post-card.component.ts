@@ -70,14 +70,14 @@ export class PostCardComponent implements OnInit {
 
 
 
-  addOcenaToPost(postId: string | undefined, ocena: boolean) {
-    if (postId && this.tokenService) {
+  addOcenaToPost(uuid: string | undefined, ocena: boolean) {
+    if (uuid && this.tokenService) {
 
       // if(this.tokenService.nazwa === this.post.uzytkownik) {
       //   return;
       // }
 
-      let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: postId };
+      let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: uuid };
       this.postService.addOcenaToPost({ body: ocenaRequest }).subscribe({
         next: (res) => {
           console.log('Ocena dodana: ', res);
@@ -100,8 +100,8 @@ export class PostCardComponent implements OnInit {
   deletePost() {
     this.errorMsg = [];
     if(confirm("Czy aby na pewno chcesz usunąć ten post?")) {
-      if (this.post.postId) {
-        this.postService.removePost({ 'post-id': this.post.postId }).subscribe({
+      if (this.post.uuid) {
+        this.postService.removePost({ uuid: this.post.uuid }).subscribe({
           next: (res) => {
             //console.log('Post usunięty');
             this.router.navigate(['/social/posty']);

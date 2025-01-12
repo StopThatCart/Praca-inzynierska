@@ -8,13 +8,13 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface RemovePost$Params {
-  'post-id': string;
+  uuid: string;
 }
 
 export function removePost(http: HttpClient, rootUrl: string, params: RemovePost$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
   const rb = new RequestBuilder(rootUrl, removePost.PATH, 'delete');
   if (params) {
-    rb.path('post-id', params['post-id'], {});
+    rb.path('uuid', params.uuid, {});
   }
 
   return http.request(
@@ -27,4 +27,4 @@ export function removePost(http: HttpClient, rootUrl: string, params: RemovePost
   );
 }
 
-removePost.PATH = '/posty/{post-id}';
+removePost.PATH = '/posty/{uuid}';

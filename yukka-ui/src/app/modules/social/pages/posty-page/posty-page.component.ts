@@ -20,7 +20,7 @@ import { LoadingComponent } from "../../../../components/loading/loading.compone
 })
 export class PostyPageComponent implements OnInit {
   post : PostResponse = {};
-  postId: string | undefined;
+  uuid: string | undefined;
   typ: TypKomentarza = TypKomentarza.POST;
 
   private _postObraz: string | undefined;
@@ -37,17 +37,17 @@ export class PostyPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.postId = params['postId'];
-      if (this.postId) {
-        this.getPostByPostId(this.postId);
-        this.route.snapshot.data['postId'] = this.postId;
+      this.uuid = params['uuid'];
+      if (this.uuid) {
+        this.getPostByUuid(this.uuid);
+        this.route.snapshot.data['uuid'] = this.uuid;
       }
     });
 
   }
 
-  getPostByPostId(postId: string): void {
-    this.postService.findPostById({ 'post-id': postId }).subscribe({
+  getPostByUuid(uuid: string): void {
+    this.postService.findPostByUuid({ uuid: uuid }).subscribe({
       next: (post) => {
         this.post = post;
         this.errorMsg = [];

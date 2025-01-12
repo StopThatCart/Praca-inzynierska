@@ -72,7 +72,7 @@ export class RozmowaCardComponent implements OnInit {
 
   isNadawca(): boolean | undefined {
     if (this.rozmowa.nadawca) {
-      return this.rozmowa.nadawca === this.tokenService.uzytId;
+      return this.rozmowa.nadawca === this.tokenService.uuid;
     }
     return undefined;
   }

@@ -70,7 +70,7 @@ public class PracownikService {
         }
 
         Uzytkownik uzyt = Uzytkownik.builder()
-                .uzytId(uzytkownikService.createUzytkownikId())
+                .uuid(uzytkownikService.createUzytkownikId())
                 .nazwa(request.getNazwa())
                 .email(request.getEmail())
                 .haslo(passwordEncoder.encode(request.getHaslo()))
@@ -190,7 +190,7 @@ public class PracownikService {
         //uzytkownikRepository.removeUzytkownik(uzytOpt.getEmail());
         removeUzytkownikQueries(targetUzyt.getEmail());
 
-        Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + targetUzyt.getUzytId());
+        Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + targetUzyt.getUuid());
         System.out.println("Usuwanie folderu: " + path);
         fileUtils.deleteDirectory(path);
     }

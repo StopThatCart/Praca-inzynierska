@@ -39,7 +39,7 @@ export class MoveRoslinaToOtherDzialkaComponent {
   };
 
   request : DzialkaRoslinaRequest = {
-    roslinaId: '',
+    roslinaUUID: '',
     numerDzialki: -1,
     pozycje: [],
     x: -1,
@@ -69,11 +69,11 @@ export class MoveRoslinaToOtherDzialkaComponent {
   ngOnInit(): void {
     this.initializeTiles();
     this.route.params.subscribe(params => {
-      const roslinaId = params['roslina-id'];
+      const uuid = params['uuid'];
       const numerDzialki = Number(params['numer']);
-      if (roslinaId && numerDzialki) {
-        this.getRoslinaInDzialkaByRoslinaId(numerDzialki, roslinaId);
-        this.route.snapshot.data['roslina-id'] = roslinaId;
+      if (uuid && numerDzialki) {
+        this.getRoslinaInDzialkaByUuid(numerDzialki, uuid);
+        this.route.snapshot.data['uuid'] = uuid;
         this.route.snapshot.data['numer'] = numerDzialki;
 
         this.request.numerDzialki = numerDzialki;
@@ -84,10 +84,10 @@ export class MoveRoslinaToOtherDzialkaComponent {
     });
   }
 
-  getRoslinaInDzialkaByRoslinaId(numerDzialki: number, roslinaId: string): void {
+  getRoslinaInDzialkaByUuid(numerDzialki: number, uuid: string): void {
     this.errorMsg = [];
-    if(!numerDzialki || !roslinaId) return;
-    this.dzialkaService.getRoslinaInDzialkaByRoslinaId({ numer: numerDzialki, 'roslina-id': roslinaId }).subscribe({
+    if(!numerDzialki || !uuid) return;
+    this.dzialkaService.getRoslinaInDzialkaByUuid({ numer: numerDzialki, uuid: uuid }).subscribe({
       next: (zasadzonaRoslina) => {
         this.zasadzonaRoslina = zasadzonaRoslina;
         if (zasadzonaRoslina.x && zasadzonaRoslina.y) {
@@ -140,7 +140,7 @@ export class MoveRoslinaToOtherDzialkaComponent {
       this.updateTilesWithRoslina(this.dzialka.zasadzoneRosliny);
 
       const existingRoslina = this.dzialka.zasadzoneRosliny?.find(roslina =>
-       (this.zasadzonaRoslina?.roslina?.roslinaId && roslina.roslina?.roslinaId === this.zasadzonaRoslina?.roslina?.roslinaId));
+       (this.zasadzonaRoslina?.roslina?.uuid && roslina.roslina?.uuid === this.zasadzonaRoslina?.roslina?.uuid));
 
       if (existingRoslina) {
         this.errorMsg.push('Roślina już istnieje w tej działce.');
@@ -194,7 +194,7 @@ export class MoveRoslinaToOtherDzialkaComponent {
       zasadzonaRoslina.pozycje?.forEach((pozycja: Pozycja) => {
         const tile = this.tiles.find(t => t.x === pozycja.x && t.y === pozycja.y);
         if (tile) {
-          tile.roslinaId = zasadzonaRoslina.roslina?.roslinaId;
+          tile.uuid = zasadzonaRoslina.roslina?.uuid;
           tile.backgroundColor = this.takenColor;
         }
       });

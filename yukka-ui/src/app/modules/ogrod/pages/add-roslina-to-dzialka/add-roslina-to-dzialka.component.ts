@@ -34,7 +34,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
 
   wyswietlanieOpcje = WyswietlanieRosliny;
   request : DzialkaRoslinaRequest = {
-    roslinaId: '',
+    roslinaUUID: '',
     numerDzialki: 1,
     pozycje: [],
     x: -1,
@@ -66,10 +66,10 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
   ngOnInit(): void {
     this.initializeTiles();
     this.route.params.subscribe(params => {
-      const roslinaId = params['roslina-id'];
-      if (roslinaId) {
-        this.getRoslinaByRoslinaId(roslinaId);
-        this.route.snapshot.data['roslina-id'] = roslinaId;
+      const uuid = params['uuid'];
+      if (uuid) {
+        this.getRoslinaByUUID(uuid);
+        this.route.snapshot.data['uuid'] = uuid;
 
         this.getPozycjeInDzialki();
       }
@@ -116,7 +116,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
       this.updateTilesWithRoslina(this.dzialka.zasadzoneRosliny);
 
       const existingRoslina = this.dzialka.zasadzoneRosliny?.find(roslina =>
-       (this.roslina?.roslinaId && roslina.roslina?.roslinaId === this.roslina?.roslinaId)
+       (this.roslina?.uuid && roslina.roslina?.uuid === this.roslina?.uuid)
         || (this.roslina?.nazwaLacinska && roslina.roslina?.nazwaLacinska === this.roslina?.nazwaLacinska));
 
       if (existingRoslina) {
@@ -130,21 +130,21 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
     }
   }
 
-  getRoslinaByRoslinaId(roslinaId: string): void {
+  getRoslinaByUUID(uuid: string): void {
     this.errorMsg = [];
-    if(!roslinaId) return;
-    this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId }).subscribe({
+    if(!uuid) return;
+    this.roslinaService.findByUuid({ uuid: uuid }).subscribe({
       next: (roslina) => {
         this.roslina = roslina;
-        if (roslina.roslinaId) {
-          this.request.roslinaId = roslina.roslinaId;
+        if (roslina.uuid) {
+          this.request.roslinaUUID = roslina.uuid;
         }
         console.log(roslina);
       },
       error: (err) => {
         this.roslina = undefined;
         console.log(err);
-        this.errorMsg.push('Nie znaleziono rośliny o podanym roslina-id.');
+        this.errorMsg.push('Nie znaleziono rośliny o podanym uuid.');
       }
     });
   }
@@ -184,7 +184,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
       zasadzonaRoslina.pozycje?.forEach((pozycja: Pozycja) => {
         const tile = this.tiles.find(t => t.x === pozycja.x && t.y === pozycja.y);
         if (tile) {
-          tile.roslinaId = zasadzonaRoslina.roslina?.roslinaId;
+          tile.uuid = zasadzonaRoslina.roslina?.uuid;
           tile.backgroundColor = this.takenColor;
         }
       });

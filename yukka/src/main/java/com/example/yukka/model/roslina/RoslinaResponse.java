@@ -1,8 +1,7 @@
 package com.example.yukka.model.roslina;
 
-import java.util.Set;
 import java.util.List;
-
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +14,7 @@ import lombok.Setter;
  * 
  * <ul>
  * <li><strong>id</strong>: Unikalny identyfikator rośliny.</li>
- * <li><strong>roslinaId</strong>: Identyfikator rośliny.</li>
+ * <li><strong>uuid</strong>: Identyfikator rośliny.</li>
  * <li><strong>labels</strong>: Lista etykiet przypisanych do rośliny.</li>
  * <li><strong>nazwa</strong>: Nazwa rośliny.</li>
  * <li><strong>nazwaLacinska</strong>: Łacińska nazwa rośliny.</li>
@@ -52,7 +51,7 @@ import lombok.Setter;
 @Builder
 public class RoslinaResponse {
     private Long id;
-    private String roslinaId;
+    private String uuid;
 
     private List<String> labels;
 

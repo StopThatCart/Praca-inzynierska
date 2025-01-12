@@ -56,11 +56,11 @@
     </ng-container>
     <div class="hstack justify-content-between p-1 komentarz-border">
         <div class="hstack gap-3">
-          <a (click)="addOcenaToKomentarz(komentarz.komentarzId, true)"
+          <a (click)="addOcenaToKomentarz(komentarz.uuid, true)"
               class="komentarz-option justify-content-center">
             <i class="fas fa-thumbs-up text-primary"></i><span>&nbsp;{{ komentarz.ocenyLubi }}</span>
           </a>
-          <a (click)="addOcenaToKomentarz(komentarz.komentarzId, false)"
+          <a (click)="addOcenaToKomentarz(komentarz.uuid, false)"
               class="komentarz-option">
             <i class="fas fa-thumbs-down text-danger"></i>&nbsp;{{ komentarz.ocenyNieLubi }}
           </a>
@@ -81,7 +81,7 @@
           <app-zgloszenie-button
           [typPowiadomienia]="typPowiadomienia.ZGLOSZENIE_KOMENTARZ"
           [zglaszany]="komentarz.uzytkownikNazwa"
-          [odnosnik]="getPostIdFromPage()">
+          [odnosnik]="getPostUuidFromPage()">
           </app-zgloszenie-button>
 
         </div>
@@ -97,7 +97,7 @@
     <!-- Add Komentarz Card for replying -->
     <div *ngIf="isReplying">
       <app-add-komentarz-card
-        [targetId]="komentarz.komentarzId"
+        [targetId]="komentarz.uuid"
         [typ]="TypKomentarza.ODPOWIEDZ"
         (onCancelOdpowiedz)="cancelOdpowiedz()">
       </app-add-komentarz-card>

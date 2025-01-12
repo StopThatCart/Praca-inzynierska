@@ -11,7 +11,7 @@ export interface PostResponse {
   ocenyLubi?: number;
   ocenyNieLubi?: number;
   opis?: string;
-  postId?: string;
   tytul?: string;
+  uuid?: string;
   uzytkownik?: string;
 }

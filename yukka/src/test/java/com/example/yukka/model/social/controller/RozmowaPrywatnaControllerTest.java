@@ -24,9 +24,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import com.example.yukka.auth.authorities.ROLE;
 import com.example.yukka.auth.requests.UsunKontoRequest;
 import com.example.yukka.common.PageResponse;
-import com.example.yukka.model.social.models.komentarz.Komentarz;
 import com.example.yukka.model.social.models.komentarz.KomentarzResponse;
-import com.example.yukka.model.social.models.komentarz.controller.KomentarzController;
 import com.example.yukka.model.social.models.rozmowaPrywatna.RozmowaPrywatnaResponse;
 import com.example.yukka.model.social.models.rozmowaPrywatna.controller.RozmowaPrywatnaController;
 import com.example.yukka.model.social.models.rozmowaPrywatna.controller.RozmowaPrywatnaService;
@@ -46,8 +44,6 @@ public class RozmowaPrywatnaControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private KomentarzController komentarzController;
-    @Autowired
     private UzytkownikService uzytkownikService;
     @Autowired
     private UzytkownikRepository uzytkownikRepository;
@@ -66,17 +62,13 @@ public class RozmowaPrywatnaControllerTest {
 
     RozmowaPrywatnaResponse rozmowa;
 
-    Komentarz k1;
-    Komentarz k2;
-    Komentarz k3;
-
     @BeforeAll
     public void setup() {
         senderAuth = Mockito.mock(Authentication.class);
         receiverAuth = Mockito.mock(Authentication.class);
 
         nadawca = Uzytkownik.builder()
-        .uzytId(uzytkownikService.createUzytkownikId())
+        .uuid(uzytkownikService.createUzytkownikId())
         .nazwa("Na Dawca")
         .email("dawca@email.pl")
         .haslo(passwordEncoder.encode("haslo12345678"))
@@ -87,7 +79,7 @@ public class RozmowaPrywatnaControllerTest {
         Mockito.when(senderAuth.getPrincipal()).thenReturn(nadawca);
 
         odbiorca = Uzytkownik.builder()
-        .uzytId(uzytkownikService.createUzytkownikId())
+        .uuid(uzytkownikService.createUzytkownikId())
         .nazwa("Oden Biorca")
         .email("biorca@email.pl")
         .haslo(passwordEncoder.encode("haslo12345678"))
@@ -101,15 +93,8 @@ public class RozmowaPrywatnaControllerTest {
 
         rozmowa = RozmowaPrywatnaResponse.builder().build();
 
-        k1 = Komentarz.builder().komentarzId("komId1").opis("Wiadomość od nadawcy").build();
-		    k2 = Komentarz.builder().komentarzId("komId2").opis("Wiadomość od odbiorcy").build();
-        k3 = Komentarz.builder().komentarzId("komId3").opis("Wiadomość kolejna").build();
-
-
         nadawca = uzytkownikRepository.findByEmail(nadawca.getEmail()).get();
         odbiorca = uzytkownikRepository.findByEmail(odbiorca.getEmail()).get();
-
-     //   RozmowaPrywatna rozmowa1 = rozmowaPrywatnaService.inviteToRozmowaPrywatnaNoPunjabi(katarzyna.getNazwa(), piotr);
     }
 
 

@@ -53,8 +53,8 @@ export class SimpleKomentarzCardComponent {
   }
 
   goToPost() {
-    if (this.komentarz.post && this.komentarz.post.postId) {
-      this.router.navigate([`/social/posty/${this.komentarz.post.postId}`]);
+    if (this.komentarz.post && this.komentarz.post.uuid) {
+      this.router.navigate([`/social/posty/${this.komentarz.post.uuid}`]);
     }
   }
 }

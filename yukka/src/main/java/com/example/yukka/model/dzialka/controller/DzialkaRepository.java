@@ -70,10 +70,10 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         
         @Query("""
         MATCH path = (u:Uzytkownik{email: $email})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka{numer: $numerDzialki}) 
-        OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(roslina:Roslina{ roslinaId: $roslinaId })-[r]-(w:Cecha)
+        OPTIONAL MATCH (d)<-[r1:ZASADZONA_NA]-(roslina:Roslina{ uuid: $uuid })-[r]-(w:Cecha)
         RETURN d, collect(r1), collect(roslina), collect(r), collect(w), collect(nodes(path)), collect(relationships(path))
         """)
-        Optional<Dzialka> getRoslinaInDzialka(@Param("email") String email, @Param("numerDzialki") int numerDzialki, String roslinaId);
+        Optional<Dzialka> getRoslinaInDzialka(@Param("email") String email, @Param("numerDzialki") int numerDzialki, String uuid);
 
         @Query("""
         MATCH path = (u:Uzytkownik{nazwa: $nazwa})-[:MA_OGROD]->(:Ogrod)-[:MA_DZIALKE]->(d:Dzialka) 
@@ -104,7 +104,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
               (:Ogrod)-[:MA_DZIALKE]->
               (d:Dzialka{numer: $numerDzialki})
 
-        MATCH (roslina:Roslina {roslinaId: $roslinaId})
+        MATCH (roslina:Roslina {uuid: $uuid})
 
         OPTIONAL MATCH (d)<-[existing:ZASADZONA_NA]-(existingRoslina)
         WHERE   existing.x = $x AND existing.y = $y 
@@ -128,7 +128,7 @@ public interface DzialkaRepository extends Neo4jRepository<Dzialka, Long> {
         @Param("tekstura") String tekstura, 
         @Param("wyswietlanie") String wyswietlanie,
         @Param("obraz") String obraz,
-        @Param("roslinaId") String roslinaId);
+        @Param("uuid") String uuid);
 
         @Query("""
         MATCH (u:Uzytkownik{email: $email})-[:MA_OGROD]->

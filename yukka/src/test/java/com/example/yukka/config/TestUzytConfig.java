@@ -22,7 +22,7 @@ public class TestUzytConfig {
     @Primary
     public List<Uzytkownik> createTestUsers(UzytkownikRepository uzytkownikRepository, PasswordEncoder passwordEncoder) {
         Uzytkownik admin = Uzytkownik.builder()
-                .uzytId("admin-id")
+                .uuid("admin-id")
                 .nazwa("admin")
                 .email("admin@example.com")
                 .haslo(passwordEncoder.encode("adminpass"))
@@ -30,7 +30,7 @@ public class TestUzytConfig {
                 .build();
 
         Uzytkownik pracownik = Uzytkownik.builder()
-                .uzytId("pracownik-id")
+                .uuid("pracownik-id")
                 .nazwa("pracownik")
                 .email("pracownik@example.com")
                 .haslo(passwordEncoder.encode("pracownikpass"))
@@ -38,7 +38,7 @@ public class TestUzytConfig {
                 .build();
 
         Uzytkownik normalnyUzytkownik = Uzytkownik.builder()
-                .uzytId("uzytkownik-id")
+                .uuid("uzytkownik-id")
                 .nazwa("uzytkownik")
                 .email("uzytkownik@example.com")
                 .haslo(passwordEncoder.encode("uzytkownikpass"))
@@ -46,7 +46,7 @@ public class TestUzytConfig {
                 .build();
         
         Uzytkownik normalnyUzytkownik2 = Uzytkownik.builder()
-                .uzytId("uzytkownik-id2")
+                .uuid("uzytkownik-id2")
                 .nazwa("uzytkownik2")
                 .email("uzytkownik2@example.com")
                 .haslo(passwordEncoder.encode("uzytkownikpass2"))

@@ -64,7 +64,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         """)
     Optional<Post> findLatestPost();
     @Query("""
-        MATCH (post:Post {postId: $postId})
+        MATCH (post:Post {uuid: $uuid})
         MATCH (autor:Uzytkownik)-[r1:MA_POST]->(post)
         OPTIONAL MATCH path = (post)-[:MA_KOMENTARZ]->
                               (kom:Komentarz)
@@ -80,16 +80,16 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
                 collect(nodes(path3)), collect(relationships(path3)),
                 collect(nodes(oceniajacyKomentarze)),  collect(relationships(oceniajacyKomentarze))
         """)
-    Optional<Post> findPostByPostId(@Param("postId") String postId);
+    Optional<Post> findPostByUUID(@Param("uuid") String uuid);
 
 
     @Query("""
-        MATCH (post:Post {postId: $postId})
+        MATCH (post:Post {uuid: $uuid})
         MATCH (autor:Uzytkownik)-[r1:MA_POST]->(post)
 
         RETURN post, r1, autor
         """)
-    Optional<Post> findPostByPostIdCheck(@Param("postId") String postId);
+    Optional<Post> findPostByUUIDCheck(@Param("uuid") String uuid);
 
 
     @Query("""
@@ -139,7 +139,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})
-            MATCH (post:Post{postId: $postId})
+            MATCH (post:Post{uuid: $uuid})
             MERGE (uzyt)-[relu:OCENIL]->(post)
             ON CREATE SET relu.lubi = $ocena
             ON MATCH SET relu.lubi = $ocena
@@ -150,12 +150,12 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
             RETURN post, r1, autor, collect(nodes(path2)), collect(relationships(path2))
             """)
-    Post addOcenaToPost(@Param("email") String email, @Param("postId") String postId, @Param("ocena") boolean ocena);
+    Post addOcenaToPost(@Param("email") String email, @Param("uuid") String uuid, @Param("ocena") boolean ocena);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
         WITH uzyt, $post.__properties__ AS pt 
-        CREATE (uzyt)-[relu:MA_POST]->(post:Post{postId: pt.postId, 
+        CREATE (uzyt)-[relu:MA_POST]->(post:Post{uuid: randomUUID(), 
                                         tytul: pt.tytul, opis: pt.opis, 
                                         obraz: COALESCE(pt.obraz, null), dataUtworzenia: $time
                                         })
@@ -164,29 +164,29 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
     Optional<Post> addPost(@Param("email") String email, @Param("post") Post post, @Param("time") LocalDateTime time);
 
     @Query("""
-        MATCH (post:Post{postId: $postId})
+        MATCH (post:Post{uuid: $uuid})
         SET post.obraz = $obraz
         """)
-    void updatePostObraz(@Param("postId") String postId, @Param("obraz") String obraz);
+    void updatePostObraz(@Param("uuid") String uuid, @Param("obraz") String obraz);
 
     @Query("""
-        MATCH (post:Post {postId: $postId})
+        MATCH (post:Post {uuid: $uuid})
         OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(komentarz:Komentarz)
 
         WITH post, komentarz
         DETACH DELETE komentarz, post
         """)
-    void deletePost(@Param("postId") String postId);
+    void deletePost(@Param("uuid") String uuid);
 
     @Query("""
-        MATCH (post:Post {postId: $postId})
+        MATCH (post:Post {uuid: $uuid})
         OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(komentarz:Komentarz)
         DETACH DELETE komentarz
 
         WITH post
         DETACH DELETE post
         """)
-    void deletePostButBetter(@Param("postId") String postId);
+    void deletePostButBetter(@Param("uuid") String uuid);
 
 
     @Query("""

@@ -7,11 +7,12 @@ import { Router } from '@angular/router';
 import { TypKomentarza } from '../../models/TypKomentarza';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
+import { ImageUploadComponent } from "../../../../components/image-upload/image-upload.component";
 
 @Component({
   selector: 'app-add-komentarz-card',
   standalone: true,
-  imports: [CommonModule, FormsModule, ErrorMsgComponent],
+  imports: [CommonModule, FormsModule, ErrorMsgComponent, ImageUploadComponent],
   templateUrl: './add-komentarz-card.component.html',
   styleUrls: ['./add-komentarz-card.component.css']
 })
@@ -21,14 +22,11 @@ export class AddKomentarzCardComponent implements OnInit {
   @Output() onCancelOdpowiedz = new EventEmitter<void>();
   @Output() onNewMessage = new EventEmitter<any>();
 
-
-  @ViewChild('fileInput') fileInput!: ElementRef;
   request: KomentarzRequest = {
     opis: '',
     targetId: '',
     obraz: ''
   };
-  wybranyObraz: any;
   wybranyPlik: any;
 
   errorMsg: string[] = [];
@@ -38,7 +36,6 @@ export class AddKomentarzCardComponent implements OnInit {
   constructor(
     private komentarzService : KomentarzService, 
     private rozmowaPrywatnaService: RozmowaPrywatnaService,
-    private router : Router,
     private errorHandlingService: ErrorHandlingService
   ) { }
 
@@ -52,30 +49,15 @@ export class AddKomentarzCardComponent implements OnInit {
     console.log(this.request);
   }
 
-
-  onFileSelected(event: any) {
-    // console.log("Obraz wybrano");
-    this.wybranyPlik = event.target.files[0];
-    //console.log(file);
-
-    if (this.wybranyPlik) {
-      this.request.obraz = this.wybranyPlik.name;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.wybranyObraz = reader.result as string;
-      };
-      reader.readAsDataURL(this.wybranyPlik);
-    }
+  onFileSelected(file: any) {
+    this.wybranyPlik = file;
+    this.request.obraz = this.wybranyPlik.name;
   }
 
   clearImage() {
-    this.wybranyObraz = null;
     this.wybranyPlik = null;
     this.request.obraz = '';
-    this.fileInput.nativeElement.value = '';
   }
-
 
   addKomentarz() {
     console.log("Request przy dodawaniu");
@@ -93,11 +75,9 @@ export class AddKomentarzCardComponent implements OnInit {
         console.log("Wiadomość do użytkownika");
         this.addWiadomoscToRozmowaPrywatna();
       }
-
     } else {
       console.log("Nie wybrano typu komentarza");
     }
-
   }
 
   private addKomentarzToPost() {
@@ -160,6 +140,4 @@ export class AddKomentarzCardComponent implements OnInit {
   cancelOdpowiedz() {
     this.onCancelOdpowiedz.emit();
   }
-
-
 }

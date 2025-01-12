@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -40,7 +39,7 @@ import lombok.RequiredArgsConstructor;
  * Metody:
  * 
  * <ul>
- * <li><strong>findByPostId</strong>: Znajduje post na podstawie jego ID.</li>
+ * <li><strong>findByUUID</strong>: Znajduje post na podstawie jego ID.</li>
  * <li><strong>findAllPosts</strong>: Znajduje wszystkie posty z możliwością paginacji i filtrowania.</li>
  * <li><strong>findAllPostyByConnectedUzytkownik</strong>: Znajduje wszystkie posty powiązane z zalogowanym użytkownikiem.</li>
  * <li><strong>findAllPostyByUzytkownik</strong>: Znajduje wszystkie posty konkretnego użytkownika z możliwością paginacji.</li>
@@ -49,7 +48,6 @@ import lombok.RequiredArgsConstructor;
  * <li><strong>removeOcenaFromPost</strong>: Usuwa ocenę z posta.</li>
  * <li><strong>deletePost</strong>: Usuwa post na podstawie jego ID.</li>
  * <li><strong>seedRemovePostyObrazy</strong>: Usuwa obrazy z wszystkich postów.</li>
- * <li><strong>createPostId</strong>: Tworzy unikalne ID dla posta.</li>
  * <li><strong>checkTimeSinceLastPost</strong>: Sprawdza czas, który upłynął od ostatniego posta.</li>
  * </ul>
  */
@@ -73,14 +71,14 @@ public class PostService {
     /**
      * Znajduje post na podstawie podanego identyfikatora postu.
      *
-     * @param postId <ul><li><strong>String</strong>: Identyfikator postu do znalezienia.</li></ul>
+     * @param uuid <ul><li><strong>String</strong>: Identyfikator postu do znalezienia.</li></ul>
      * @return <ul><li><strong>PostResponse</strong>: Odpowiedź zawierająca dane znalezionego postu.</li></ul>
      * @throws EntityNotFoundException <ul><li><strong>EntityNotFoundException</strong>: Wyjątek rzucany, gdy post o podanym identyfikatorze nie zostanie znaleziony.</li></ul>
      */
     @Transactional(readOnly = true)
-    public PostResponse findByPostId(String postId) {
-        Post post = postRepository.findPostByPostId(postId)
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+    public PostResponse findByUUID(String uuid) {
+        Post post = postRepository.findPostByUUID(uuid)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + uuid));
 
         return postMapper.toPostResponse(post);
     }
@@ -89,14 +87,14 @@ public class PostService {
      * Znajduje post na podstawie podanego ID posta, ale bez komentarzy.
      * Używane do sprawdzania, czy post o podanym ID istnieje.
      * 
-     * @param postId ID posta, który ma zostać znaleziony.
+     * @param uuid ID posta, który ma zostać znaleziony.
      * @return PostResponse obiekt zawierający dane znalezionego posta.
      * @throws EntityNotFoundException jeśli post o podanym ID nie zostanie znaleziony.
      */
     @Transactional(readOnly = true)
-    public PostResponse findByPostIdCheck(String postId) {
-        Post post = postRepository.findPostByPostIdCheck(postId)
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+    public PostResponse findByUUIDCheck(String uuid) {
+        Post post = postRepository.findPostByUUIDCheck(uuid)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + uuid));
 
         return postMapper.toPostResponse(post);
     }
@@ -169,12 +167,10 @@ public class PostService {
      */
     public Post save(PostRequest request, MultipartFile file, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
-
         Post post = postMapper.toPost(request);
-        post.setPostId(createPostId());
 
         if (file != null) {
-            post.setObraz(fileStoreService.savePost(file, post.getPostId(), uzyt.getUzytId()));
+            post.setObraz(fileStoreService.savePost(file, post.getUuid(), uzyt.getUuid()));
         }
 
         return postRepository.addPost(uzyt.getEmail(), post, LocalDateTime.now()).get();
@@ -189,44 +185,44 @@ public class PostService {
      */
     public OcenaResponse addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostIdCheck(request.getOcenialnyId())
+        Post post = postRepository.findPostByUUIDCheck(request.getOcenialnyId())
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getOcenialnyId()));
         
         uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), uzyt);
 
-        post =  postRepository.addOcenaToPost(uzyt.getEmail(), post.getPostId(), request.isLubi());
+        post =  postRepository.addOcenaToPost(uzyt.getEmail(), post.getUuid(), request.isLubi());
         return postMapper.toOcenaResponse(post);
     }
 
     /**
      * Usuwa post na podstawie jego identyfikatora.
      *
-     * @param postId <ul><li><strong>String</strong>: Identyfikator postu do usunięcia.</li></ul>
+     * @param uuid <ul><li><strong>String</strong>: Identyfikator postu do usunięcia.</li></ul>
      * @param connectedUser <ul><li><strong>Authentication</strong>: Zalogowany użytkownik.</li></ul>
      * @throws EntityNotFoundException <ul><li><strong>EntityNotFoundException</strong>: Wyjątek rzucany, gdy post o podanym identyfikatorze nie zostanie znaleziony.</li></ul>
      * @throws ForbiddenException <ul><li><strong>ForbiddenException</strong>: Wyjątek rzucany, gdy zalogowany użytkownik nie ma uprawnień do usunięcia posta.</li></ul>
      */
-    public void deletePost(String postId, Authentication connectedUser) {
+    public void deletePost(String uuid, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        Post post = postRepository.findPostByPostIdCheck(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+        Post post = postRepository.findPostByUUIDCheck(uuid).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + uuid));
         if(!uzyt.hasAuthenticationRights(post.getAutor())) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia tego posta");
         }
 
-        deletePost(postId, uzyt);
+        deletePost(uuid, uzyt);
     }
 
     /**
      * Usuwa post na podstawie jego identyfikatora.
      *
-     * @param postId <ul><li><strong>String</strong>: Identyfikator postu do usunięcia.</li></ul>
+     * @param uuid <ul><li><strong>String</strong>: Identyfikator postu do usunięcia.</li></ul>
      * @param uzyt <ul><li><strong>Uzytkownik</strong>: Użytkownik, który usuwa post.</li></ul>
      */
-    public void deletePost(String postId, Uzytkownik uzyt) {
-        Post post = postRepository.findPostByPostId(postId).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
+    public void deletePost(String uuid, Uzytkownik uzyt) {
+        Post post = postRepository.findPostByUUID(uuid).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + uuid));
 
         fileUtils.deleteObraz(post.getObraz());
-        postRepository.deletePost(postId);
+        postRepository.deletePost(uuid);
 
         for (Komentarz kom : post.getKomentarze()) {
             fileUtils.deleteObraz(kom.getObraz());
@@ -240,26 +236,8 @@ public class PostService {
         List<Post> posty = postRepository.findAll();
         for (Post post : posty) {
             fileUtils.deleteObraz(post.getObraz());
-            postRepository.deletePostButBetter(post.getPostId());
+            postRepository.deletePostButBetter(post.getUuid());
         }
-    }
-
-    // Pomocnicze
-    /**
-     * Tworzy unikalne ID dla posta.
-     *
-     * @return <ul><li><strong>String</strong>: Unikalne ID posta.</li></ul>
-     */
-    public String createPostId() {
-        String resultId = UUID.randomUUID().toString();
-        do { 
-            Optional<Post> kom = postRepository.findPostByPostIdCheck(resultId);
-            if(kom.isEmpty()){
-                break;
-            }
-            resultId = UUID.randomUUID().toString();
-        } while (true);
-        return resultId;
     }
 
     /**

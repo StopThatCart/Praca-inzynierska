@@ -26,7 +26,7 @@
     }
   ],
   "paths": {
-    "/uzytkownikRosliny/{roslinaId}": {
+    "/uzytkownikRosliny/{uuid}": {
       "put": {
         "tags": [
           "RoslinaWlasna"
@@ -34,7 +34,7 @@
         "operationId": "updateObraz",
         "parameters": [
           {
-            "name": "roslinaId",
+            "name": "uuid",
             "in": "path",
             "required": true,
             "schema": {
@@ -2082,15 +2082,15 @@
         }
       }
     },
-    "/rosliny/roslina-id/{roslina-id}": {
+    "/rosliny/uuid/{uuid}": {
       "get": {
         "tags": [
           "Roslina"
         ],
-        "operationId": "findByRoslinaId",
+        "operationId": "findByUUID",
         "parameters": [
           {
-            "name": "roslina-id",
+            "name": "uuid",
             "in": "path",
             "required": true,
             "schema": {
@@ -2229,15 +2229,15 @@
         }
       }
     },
-    "/posty/{post-id}": {
+    "/posty/{uuid}": {
       "get": {
         "tags": [
           "Post"
         ],
-        "operationId": "findPostById",
+        "operationId": "findPostByUUID",
         "parameters": [
           {
-            "name": "post-id",
+            "name": "uuid",
             "in": "path",
             "required": true,
             "schema": {
@@ -2265,7 +2265,7 @@
         "operationId": "removePost",
         "parameters": [
           {
-            "name": "post-id",
+            "name": "uuid",
             "in": "path",
             "required": true,
             "schema": {
@@ -2287,15 +2287,15 @@
         }
       }
     },
-    "/posty/{post-id}/check": {
+    "/posty/{uuid}/check": {
       "get": {
         "tags": [
           "Post"
         ],
-        "operationId": "findPostByIdCheck",
+        "operationId": "findPostByUUIDCheck",
         "parameters": [
           {
-            "name": "post-id",
+            "name": "uuid",
             "in": "path",
             "required": true,
             "schema": {
@@ -2447,15 +2447,15 @@
         }
       }
     },
-    "/komentarze/{komentarz-id}": {
+    "/komentarze/{uuid}": {
       "get": {
         "tags": [
           "Komentarz"
         ],
-        "operationId": "findKomentarzById",
+        "operationId": "findKomentarzByUUID",
         "parameters": [
           {
-            "name": "komentarz-id",
+            "name": "uuid",
             "in": "path",
             "required": true,
             "schema": {
@@ -2483,7 +2483,7 @@
         "operationId": "removeKomentarz",
         "parameters": [
           {
-            "name": "komentarz-id",
+            "name": "uuid",
             "in": "path",
             "required": true,
             "schema": {
@@ -2604,12 +2604,12 @@
         }
       }
     },
-    "/dzialki/{numer}/{roslina-id}": {
+    "/dzialki/{numer}/{uuid}": {
       "get": {
         "tags": [
           "Dzialka"
         ],
-        "operationId": "getRoslinaInDzialkaByRoslinaId",
+        "operationId": "getRoslinaInDzialkaByUUID",
         "parameters": [
           {
             "name": "numer",
@@ -2621,7 +2621,7 @@
             }
           },
           {
-            "name": "roslina-id",
+            "name": "uuid",
             "in": "path",
             "required": true,
             "schema": {
@@ -2788,7 +2788,7 @@
         }
       }
     },
-    "/rosliny/{roslina-id}": {
+    "/rosliny/{uuid}": {
       "delete": {
         "tags": [
           "Roslina"
@@ -2796,7 +2796,7 @@
         "operationId": "deleteRoslina",
         "parameters": [
           {
-            "name": "roslina-id",
+            "name": "uuid",
             "in": "path",
             "required": true,
             "schema": {
@@ -2937,7 +2937,7 @@
         ],
         "type": "object",
         "properties": {
-          "roslinaId": {
+          "uuid": {
             "type": "string"
           },
           "nazwa": {
@@ -2983,7 +2983,7 @@
             "type": "integer",
             "format": "int64"
           },
-          "roslinaId": {
+          "uuid": {
             "type": "string"
           },
           "labels": {
@@ -3185,7 +3185,7 @@
         ],
         "type": "object",
         "properties": {
-          "roslinaId": {
+          "uuid": {
             "type": "string"
           },
           "nazwa": {
@@ -3321,7 +3321,7 @@
             "type": "integer",
             "format": "int64"
           },
-          "komentarzId": {
+          "uuid": {
             "type": "string"
           },
           "opis": {
@@ -3373,7 +3373,7 @@
             "type": "integer",
             "format": "int64"
           },
-          "postId": {
+          "uuid": {
             "type": "string"
           },
           "tytul": {
@@ -3514,7 +3514,7 @@
           "kolor",
           "numerDzialki",
           "pozycje",
-          "roslinaId",
+          "roslinaUUID",
           "wyswietlanie",
           "x",
           "y"
@@ -3548,7 +3548,7 @@
               "$ref": "#/components/schemas/Pozycja"
             }
           },
-          "roslinaId": {
+          "roslinaUUID": {
             "type": "string"
           },
           "kolor": {
@@ -3774,7 +3774,7 @@
             "type": "integer",
             "format": "int64"
           },
-          "uzytId": {
+          "uuid": {
             "type": "string"
           },
           "labels": {
@@ -3988,11 +3988,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           }
@@ -4080,7 +4080,7 @@
             "type": "integer",
             "format": "int64"
           },
-          "komentarzId": {
+          "uuid": {
             "type": "string"
           },
           "opis": {
@@ -4095,7 +4095,7 @@
           "uzytkownikNazwa": {
             "type": "string"
           },
-          "postId": {
+          "postUUID": {
             "type": "string"
           },
           "obraz": {

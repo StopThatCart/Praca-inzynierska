@@ -27,7 +27,7 @@ import lombok.ToString;
  * Klasa reprezentująca komentarz.
  * <ul>
  *   <li><strong>id</strong>: Unikalny identyfikator komentarza.</li>
- *   <li><strong>komentarzId</strong>: Identyfikator komentarza jako String.</li>
+ *   <li><strong>uuid</strong>: Identyfikator komentarza jako String.</li>
  *   <li><strong>opis</strong>: Treść komentarza.</li>
  *   <li><strong>obraz</strong>: Ścieżka do obrazu związanego z komentarzem.</li>
  *   <li><strong>edytowany</strong>: Flaga oznaczająca, czy komentarz został edytowany.</li>
@@ -49,8 +49,8 @@ import lombok.ToString;
 public class Komentarz extends Oceniany {
     @Id @GeneratedValue
     private Long id;
-    @Property(name = "komentarzId")
-    private String komentarzId;
+    @Property(name = "uuid")
+    private String uuid;
 
     @Property(name = "opis")
     private String opis;
@@ -95,38 +95,19 @@ public class Komentarz extends Oceniany {
     @Relationship(type = "SKOMENTOWAL", direction = Relationship.Direction.INCOMING)
     private Uzytkownik uzytkownik;
 
-    
-    /** 
-     * @return String
-     */
     @Override
     public String toString() {
         return "Komentarz{" +
                 "id=" + id +
-                ", komentarzId='" + komentarzId + '\'' +
+                ", uuid='" + uuid + '\'' +
                 ", opis='" + opis + '\'' +
                 ", polubienia='" + getOcenyLubi() + '\'' +
                 ", niepolubienia='" + getOcenyNieLubi() + '\'' +
                 ", edytowany=" + edytowany +
                 ", dataUtworzenia=" + dataUtworzenia +
-                ", postId=" + (post != null ? post.getPostId() : "null") +
+                ", postUUID=" + (post != null ? post.getUuid() : "null") +
                 ", rozmowaPrywatna=" + (rozmowaPrywatna != null ? rozmowaPrywatna.getUzytkownicy().stream().map(Uzytkownik::getNazwa).collect(Collectors.joining(", ")) : "null") +
                 ", odpowiedziCount=" + (odpowiedzi != null ? odpowiedzi.size() : 0) +
                 '}';
     }
-
-    // private boolean isInPost() {
-    //     return wPoscie != null;
-    // }
-
-    // private String getPostId() {
-    //   if(isInPost()) {
-    //     return wPoscie.getPostId();
-    //   }
-    //   return null;
-    // }
-
-
-
-
 }

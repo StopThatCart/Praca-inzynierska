@@ -7,7 +7,7 @@
         {
             "roslina": {
                 "id": 1157,
-                "roslinaId": "12345678",
+                "uuid": "12345678",
                 "nazwa": "pierwsza roślina użytkownika",
                 "nazwaLacinska": null,
                 "opis": "To jest dramat.",
@@ -47,7 +47,7 @@
         {
             "roslina": {
                 "id": 184,
-                "roslinaId": null,
+                "uuid": null,
                 "nazwa": "cis pospolity 'adpressa'",
                 "nazwaLacinska": "taxus baccata'adpressa'",
                 "opis": "Szeroki i wysoki krzew o nieregularnym, dość luźnym pokroju i powolnym wzroście.",

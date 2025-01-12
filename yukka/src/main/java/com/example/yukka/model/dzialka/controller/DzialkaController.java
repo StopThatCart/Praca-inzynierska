@@ -83,14 +83,14 @@ public class DzialkaController {
      * Metoda obsługująca żądanie GET do pobrania zasadzonej roślinę w działce na podstawie numeru działki i id rośliny.
      *
      * @param numer numer działki
-     * @param roslinaId id rośliny
+     * @param uuid id rośliny
      * @param connectedUser uwierzytelniony użytkownik
      * @return ResponseEntity zawierające odpowiedź z zasadzoną rośliną
      */
-    @GetMapping(value = "/{numer}/{roslina-id}", produces="application/json")
-    public ResponseEntity<ZasadzonaRoslinaResponse> getRoslinaInDzialkaByRoslinaId(@PathVariable int numer, @PathVariable("roslina-id") String roslinaId, 
+    @GetMapping(value = "/{numer}/{uuid}", produces="application/json")
+    public ResponseEntity<ZasadzonaRoslinaResponse> getRoslinaInDzialkaByUUID(@PathVariable int numer, @PathVariable("uuid") String uuid, 
     Authentication connectedUser) {
-        return ResponseEntity.ok(dzialkaService.getRoslinaInDzialka(numer, roslinaId, connectedUser));
+        return ResponseEntity.ok(dzialkaService.getRoslinaInDzialka(numer, uuid, connectedUser));
     }
 
     /**

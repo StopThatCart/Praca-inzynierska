@@ -62,7 +62,7 @@ public class PostControllerTest {
         mockAuth = Mockito.mock(Authentication.class);
 
         uzyt = Uzytkownik.builder()
-        .uzytId(uzytkownikService.createUzytkownikId())
+        .uuid(uzytkownikService.createUzytkownikId())
         .nazwa("Postownik pospolity")
         .email("postownik@email.pl")
         .haslo(passwordEncoder.encode("haslo12345678"))
@@ -121,14 +121,14 @@ public class PostControllerTest {
 
     @Test
     @Order(3)
-    void testGetPostByPostId() {
-        assertNotNull(postResponse.getPostId());
-        ResponseEntity<?> response = postController.findPostById(postResponse.getPostId());
+    void testGetPostByUUID() {
+        assertNotNull(postResponse.getUuid());
+        ResponseEntity<?> response = postController.findPostByUUID(postResponse.getUuid());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         PostResponse body = (PostResponse) response.getBody();
         assertNotNull(body);
-        assertEquals(postResponse.getPostId(), body.getPostId());
+        assertEquals(postResponse.getUuid(), body.getUuid());
         assertEquals(postResponse.getTytul(), body.getTytul());
         assertEquals(postResponse.getOpis(), body.getOpis());
     }
@@ -136,11 +136,11 @@ public class PostControllerTest {
     @Test
     @Order(4)
     void testAddOcenaToPost() {
-        assertNotNull(postResponse.getPostId());
+        assertNotNull(postResponse.getUuid());
 
         boolean ocena = false;        
         OcenaRequest request = OcenaRequest.builder()
-        .ocenialnyId(postResponse.getPostId()).lubi(ocena)
+        .ocenialnyId(postResponse.getUuid()).lubi(ocena)
         .build();
 
         ResponseEntity<?> response = postController.addOcenaToPost(request, mockAuth);
@@ -159,7 +159,7 @@ public class PostControllerTest {
     @Test
     @Order(5)
     void testFindAllPostyByUzytkownik() {
-        assertNotNull(postResponse.getPostId());
+        assertNotNull(postResponse.getUuid());
         assertNotNull(uzyt.getNazwa());
 
         ResponseEntity<PageResponse<PostResponse>> response = postController
@@ -175,14 +175,14 @@ public class PostControllerTest {
     @Test
     @Order(6)
     void testRemovePost() {
-        assertNotNull(postResponse.getPostId());
+        assertNotNull(postResponse.getUuid());
         assertNotNull(uzyt.getNazwa());
 
-        ResponseEntity<?> response = postController.removePost(postResponse.getPostId(), mockAuth);
+        ResponseEntity<?> response = postController.removePost(postResponse.getUuid(), mockAuth);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
-            postController.findPostById(postResponse.getPostId());
+            postController.findPostByUUID(postResponse.getUuid());
         });
         assertNotNull(exception);
     }

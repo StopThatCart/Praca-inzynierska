@@ -5,6 +5,6 @@
     <p *ngIf="!roslina.roslinaUzytkownika" class="text-truncate mb-1 text-white-50 fs-6 card-text mb-0">({{roslina.nazwaLacinska}})</p>
     <h5 class="card-title">{{roslina.nazwa}}</h5>
     <p class=" limit-to-3-lines">{{roslina.opis}}</p>
-    <a [routerLink]="['/rosliny', roslina.roslinaId]" class="btn btn-primary mt-auto align-self-start">Przejdź do rośliny</a>
+    <a [routerLink]="['/rosliny', roslina.uuid]" class="btn btn-primary mt-auto align-self-start">Przejdź do rośliny</a>
   </div>
 </div>

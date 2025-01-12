@@ -13,11 +13,12 @@ import { ZgloszenieButtonComponent } from "../../../profil/components/zgloszenie
 import { TypPowiadomienia } from '../../../profil/models/TypPowiadomienia';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorHandlingService } from '../../../../services/error-handler/error-handling.service';
+import { ImageUploadComponent } from "../../../../components/image-upload/image-upload.component";
 
 @Component({
   selector: 'app-komentarz-card',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddKomentarzCardComponent, ZgloszenieButtonComponent, NgbTooltipModule],
+  imports: [CommonModule, FormsModule, AddKomentarzCardComponent, ZgloszenieButtonComponent, NgbTooltipModule, ImageUploadComponent],
   templateUrl: './komentarz-card.component.html',
   styleUrls: ['./komentarz-card.component.css']
 })
@@ -42,7 +43,7 @@ export class KomentarzCardComponent implements OnInit {
 
   private request: KomentarzRequest = {
     opis: '',
-    targetId: this.komentarz.komentarzId ?? '',
+    targetId: this.komentarz.uuid ?? '',
     obraz: ''
   };
 
@@ -97,9 +98,9 @@ export class KomentarzCardComponent implements OnInit {
     return this._komentarzAvatar;
   }
 
-  getPostIdFromPage(): string | undefined {
-    let postId = this.route.snapshot.data['postId'];
-    return postId;
+  getPostUuidFromPage(): string | undefined {
+    let uuid = this.route.snapshot.data['uuid'];
+    return uuid;
   }
 
   goToProfil() {
@@ -119,13 +120,13 @@ export class KomentarzCardComponent implements OnInit {
   }
 
 
-  addOcenaToKomentarz(komentarzId: string | undefined, ocena: boolean) {
+  addOcenaToKomentarz(uuid: string | undefined, ocena: boolean) {
     this.errorMsg = [];
-    if (komentarzId && this.tokenService) {
+    if (uuid && this.tokenService) {
       // if(this.tokenService.nazwa === this.komentarz.uzytkownikNazwa) {
       //   return;
       // }
-      let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: komentarzId };
+      let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: uuid };
       this.komentarzService.addOcenaToKomentarz({ body: ocenaRequest }).subscribe({
         next: (komentarz) => {
           console.log('Ocena dodana');
@@ -156,13 +157,13 @@ export class KomentarzCardComponent implements OnInit {
 
   confirmEditing() {
     this.errorMsg = [];
-    if (this.komentarz.komentarzId) {
+    if (this.komentarz.uuid) {
       if(this.editedOpis === this.komentarz.opis) {
         this.isEditing = false;
         return;
       }
 
-      this.request.targetId = this.komentarz.komentarzId;
+      this.request.targetId = this.komentarz.uuid;
       this.request.opis = this.editedOpis;
       this.komentarzService.updateKomentarz({ body: this.request }).subscribe({
         next: (res) => {
@@ -183,8 +184,8 @@ export class KomentarzCardComponent implements OnInit {
   deleteKomentarz() {
     this.errorMsg = [];
     if(confirm("Czy aby na pewno chcesz usunąć ten komentarz?")) {
-      if (this.komentarz.komentarzId) {
-        this.komentarzService.removeKomentarz({ 'komentarz-id': this.komentarz.komentarzId }).subscribe({
+      if (this.komentarz.uuid) {
+        this.komentarzService.removeKomentarz({ uuid: this.komentarz.uuid }).subscribe({
           next: (res) => {
             console.log('Komentarz usunięty');
             console.log(res);

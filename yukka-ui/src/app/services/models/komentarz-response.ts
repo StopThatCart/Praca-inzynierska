@@ -6,7 +6,6 @@ export interface KomentarzResponse {
   dataUtworzenia?: string;
   edytowany?: boolean;
   id?: number;
-  komentarzId?: string;
   obraz?: string;
   ocenyLubi?: number;
   ocenyNieLubi?: number;
@@ -14,5 +13,6 @@ export interface KomentarzResponse {
   odpowiedzi?: Array<KomentarzResponse>;
   opis?: string;
   post?: PostResponse;
+  uuid?: string;
   uzytkownikNazwa?: string;
 }

@@ -37,7 +37,7 @@ const routes: Routes = [
             data: { breadcrumb: (data: any) =>`Działka` },
             children: [
               {
-                path: 'dodawanie/:roslina-id',
+                path: 'dodawanie/:uuid',
                 component: AddRoslinaToDzialkaComponent,
                 data: { breadcrumb: (data: any) => `Dodawanie rośliny ${data.roslina.nazwa}` },
                 resolve: { roslina: RoslinaResolverService }
@@ -52,7 +52,7 @@ const routes: Routes = [
                     component: DzialkaPageComponent,
                   },
                   {
-                    path: 'przenoszenie/:roslina-id',
+                    path: 'przenoszenie/:uuid',
                     component: MoveRoslinaToOtherDzialkaComponent,
                     data: { breadcrumb: (data: any) => `Przenoszenie rośliny ${data.roslina.nazwa}` },
                     resolve: { roslina: RoslinaResolverService }

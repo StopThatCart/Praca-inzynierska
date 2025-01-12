@@ -29,7 +29,7 @@ export class WiadomoscCardComponent implements OnInit {
 
   private request: KomentarzRequest = {
     opis: '',
-    targetId: this.wiadomosc.komentarzId ?? '',
+    targetId: this.wiadomosc.uuid ?? '',
     obraz: ''
   };
 
@@ -111,13 +111,13 @@ export class WiadomoscCardComponent implements OnInit {
 
   confirmEditing() {
     this.errorMsg = [];
-    if (this.wiadomosc.komentarzId) {
+    if (this.wiadomosc.uuid) {
       if(this.editedOpis === this.wiadomosc.opis) {
         this.isEditing = false;
         return;
       }
 
-      this.request.targetId = this.wiadomosc.komentarzId;
+      this.request.targetId = this.wiadomosc.uuid;
       this.request.opis = this.editedOpis;
       this.komentarzService.updateKomentarz({ body: this.request }).subscribe({
         next: (res) => {
@@ -138,12 +138,12 @@ export class WiadomoscCardComponent implements OnInit {
   deleteKomentarz() {
     this.errorMsg = [];
     if(confirm("Czy aby na pewno chcesz usunąć ten komentarz?")) {
-      if (this.wiadomosc.komentarzId) {
-        this.komentarzService.removeKomentarz({ 'komentarz-id': this.wiadomosc.komentarzId }).subscribe({
+      if (this.wiadomosc.uuid) {
+        this.komentarzService.removeKomentarz({ uuid: this.wiadomosc.uuid }).subscribe({
           next: (res) => {
             console.log('Komentarz usunięty');
             console.log(res);
-            this.onRemove.emit(this.wiadomosc.komentarzId);
+            this.onRemove.emit(this.wiadomosc.uuid);
           },
           error: (err) => {
             this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);

@@ -20,10 +20,10 @@ export interface RoslinaResponse {
   owoce?: Array<string>;
   podgrupa?: Array<string>;
   pokroje?: Array<string>;
-  roslinaId?: string;
   roslinaUzytkownika?: boolean;
   silyWzrostu?: Array<string>;
   stanowiska?: Array<string>;
+  uuid?: string;
   walory?: Array<string>;
   wilgotnosci?: Array<string>;
   wysokoscMax?: number;

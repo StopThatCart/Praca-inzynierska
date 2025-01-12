@@ -58,7 +58,6 @@ public class KomentarzMapper {
      */
     public Komentarz toKomentarz(@Valid KomentarzRequest request) {
         return Komentarz.builder()
-            .komentarzId(UUID.randomUUID().toString())
             .opis(request.getOpis())
             .obraz(request.getObraz())
             .build();

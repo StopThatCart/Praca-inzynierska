@@ -3,8 +3,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,7 +42,7 @@ import lombok.RequiredArgsConstructor;
  * 
  * <strong>Metody:</strong>
  * <ul>
- * <li><strong>findByKomentarzIdWithOdpowiedzi</strong> - Znajduje komentarz po ID wraz z odpowiedziami.</li>
+ * <li><strong>findByUUIDWithOdpowiedzi</strong> - Znajduje komentarz po ID wraz z odpowiedziami.</li>
  * <li><strong>findKomentarzeOfUzytkownik</strong> - Znajduje komentarze użytkownika.</li>
  * <li><strong>addOcenaToKomentarz</strong> - Dodaje ocenę do komentarza.</li>
  * <li><strong>removeOcenaFromKomentarz</strong> - Usuwa ocenę z komentarza.</li>
@@ -60,7 +58,6 @@ import lombok.RequiredArgsConstructor;
  * <strong>Metody pomocnicze:</strong>
  * <ul>
  * <li><strong>createKomentarz</strong> - Tworzy nowy komentarz.</li>
- * <li><strong>createKomentarzId</strong> - Tworzy unikalne ID dla komentarza.</li>
  * <li><strong>saveKomentarzFile</strong> - Zapisuje plik komentarza.</li>
  * <li><strong>checkTimeSinceLastKomentarz</strong> - Sprawdza czas od ostatniego komentarza.</li>
  * </ul>
@@ -81,27 +78,19 @@ public class KomentarzService {
     private final FileUtils fileUtils;
     private final PowiadomienieService powiadomienieService;
     private final KomentarzMapper komentarzMapper;
-
-    
-    /** 
-     * @param komentarzId
-     * @return KomentarzResponse
-     */
-    // Przysięgam, potem poprawię te funkcje, ale teraz nie mam czasu
-    // No poprawiłem delikatnie
-                
+        
     /**
      * Znajduje komentarz na podstawie jego ID wraz z odpowiedziami.
      *
-     * @param komentarzId ID komentarza do znalezienia.
+     * @param uuid ID komentarza do znalezienia.
      * @return KomentarzResponse zawierający znaleziony komentarz oraz jego odpowiedzi.
      * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
      */
     @Transactional(readOnly = true)
-    public KomentarzResponse findByKomentarzIdWithOdpowiedzi(String komentarzId) {
-        return  komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
+    public KomentarzResponse findByUUIDWithOdpowiedzi(String uuid) {
+        return  komentarzRepository.findKomentarzWithOdpowiedziByUUID(uuid)
                 .map(komentarzMapper::toKomentarzResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + uuid));
     }
 
     /**
@@ -159,18 +148,18 @@ public class KomentarzService {
         Uzytkownik uzyt = connectedUser;
 
         Komentarz komentarz = komentarzRepository
-            .findKomentarzByKomentarzId(request.getOcenialnyId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
+            .findKomentarzByUUID(request.getOcenialnyId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
 
         if(komentarz.getRozmowaPrywatna() != null) {
             throw new IllegalArgumentException("Nie można oceniać wiadomości w rozmowach prywatnych");    
         }
 
-        // if(komentarz.getUzytkownik().getUzytId().equals(uzyt.getUzytId())) {
+        // if(komentarz.getUzytkownik().getUuid().equals(uzyt.getUuid())) {
         //     throw new IllegalArgumentException("Nie można oceniać własnych komentarzy");
         // }
 
         uzytkownikService.sprawdzBlokowanie(komentarz.getUzytkownik().getNazwa(), connectedUser);
-        Komentarz kom = komentarzRepository.addOcenaToKomentarz(uzyt.getEmail(), komentarz.getKomentarzId(), request.isLubi());
+        Komentarz kom = komentarzRepository.addOcenaToKomentarz(uzyt.getEmail(), komentarz.getUuid(), request.isLubi());
 
         return komentarzMapper.toOcenaResponse(kom);
     }
@@ -250,7 +239,7 @@ public class KomentarzService {
     public Komentarz addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Uzytkownik connectedUser)  {
         Uzytkownik uzyt = connectedUser;
 
-        Post post = postRepository.findPostByPostIdCheck(request.getTargetId())
+        Post post = postRepository.findPostByUUIDCheck(request.getTargetId())
         .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getTargetId()));
 
         uzytkownikService.sprawdzBlokowanie(post.getAutor().getNazwa(), connectedUser);
@@ -258,7 +247,7 @@ public class KomentarzService {
         Komentarz kom = createKomentarz(request);
         saveKomentarzFile(file, kom, uzyt);
         
-        Komentarz response = komentarzRepository.addKomentarzToPost(uzyt.getEmail(), post.getPostId(), 
+        Komentarz response = komentarzRepository.addKomentarzToPost(uzyt.getEmail(), post.getUuid(), 
         kom, LocalDateTime.now());
 
         return response;
@@ -293,7 +282,7 @@ public class KomentarzService {
      */
     public Komentarz addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Uzytkownik connectedUser) {
         Uzytkownik nadawca = connectedUser;
-        Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByKomentarzId(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
+        Komentarz komentarzDoOdpowiedzi = komentarzRepository.findKomentarzByUUID(request.getTargetId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
 
         if(komentarzDoOdpowiedzi.getPost() == null && komentarzDoOdpowiedzi.getWPoscie() == null) {
             uzytkownikService.sprawdzBlokowanie(komentarzDoOdpowiedzi.getUzytkownik().getNazwa(), connectedUser);  
@@ -319,7 +308,6 @@ public class KomentarzService {
     /**
      * Aktualizuje komentarz.
      *
-     * @param komentarzId ID komentarza do aktualizacji.
      * @param request obiekt KomentarzRequest zawierający dane komentarza.
      * @param connectedUser zalogowany użytkownik.
      * @return KomentarzResponse zawierający zaktualizowany komentarz.
@@ -328,7 +316,7 @@ public class KomentarzService {
      */
     public KomentarzResponse updateKomentarz(KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        komentarzRepository.findKomentarzByKomentarzId(request.getTargetId())
+        komentarzRepository.findKomentarzByUUID(request.getTargetId())
                 .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik()))
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
 
@@ -342,15 +330,15 @@ public class KomentarzService {
     /**
      * Usuwa komentarz.
      *
-     * @param komentarzId ID komentarza do usunięcia.
+     * @param uuid ID komentarza do usunięcia.
      * @param connectedUser zalogowany użytkownik.
      * @throws ForbiddenException jeśli zalogowany użytkownik nie ma uprawnień do usunięcia komentarza.
      */
-    public void deleteKomentarz(String komentarzId, Authentication connectedUser) {
+    public void deleteKomentarz(String uuid, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());        
-        Komentarz komentarz = komentarzRepository.findKomentarzByKomentarzId(komentarzId)
+        Komentarz komentarz = komentarzRepository.findKomentarzByUUID(uuid)
             .orElseThrow(
-                () -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId)
+                () -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + uuid)
             );
         
         if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik())) {
@@ -359,9 +347,9 @@ public class KomentarzService {
 
         if(komentarz.getWPoscie() != null) {
             System.out.println("Usuwanie komentarza z posta BO TAKI WYKRYTO");
-            deleteKomentarzFromPost(komentarz.getWPoscie().getPostId(), komentarzId, uzyt);
+            deleteKomentarzFromPost(komentarz.getWPoscie().getUuid(), uuid, uzyt);
         } else if(komentarz.getRozmowaPrywatna() != null) {
-            komentarzRepository.removeKomentarz(komentarzId);
+            komentarzRepository.removeKomentarz(uuid);
         } else {
             throw new IllegalArgumentException("Nie można usunąć komentarza, bo nie komentuje ani posta, ani komentarza, ani rozmowy prywatnej.");
         }
@@ -370,17 +358,17 @@ public class KomentarzService {
     /**
      * Usuwa komentarz z posta oraz wszystkie odpowiedzi na ten komentarz.
      *
-     * @param postId ID posta, z którego ma zostać usunięty komentarz.
-     * @param komentarzId ID komentarza, który ma zostać usunięty.
+     * @param postUUID ID posta, z którego ma zostać usunięty komentarz.
+     * @param uuid ID komentarza, który ma zostać usunięty.
      * @param connectedUser Użytkownik, który jest aktualnie zalogowany i wykonuje operację.
      * @throws EntityNotFoundException jeśli post o podanym ID nie zostanie znaleziony.
      * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
      */
-    public void deleteKomentarzFromPost(String postId, String komentarzId, Authentication connectedUser) {
+    public void deleteKomentarzFromPost(String postUUID, String uuid, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        postRepository.findPostByPostIdCheck(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
-        Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
+        postRepository.findPostByUUIDCheck(postUUID).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postUUID));
+        Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByUUID(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + uuid));
         
         if (!uzyt.hasAuthenticationRights(kom.getUzytkownik())) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
@@ -390,23 +378,23 @@ public class KomentarzService {
         for (Komentarz odp : kom.getOdpowiedzi()) {
             fileUtils.deleteObraz(odp.getObraz());
         }
-        komentarzRepository.removeKomentarz(kom.getKomentarzId());
+        komentarzRepository.removeKomentarz(kom.getUuid());
     }
 
 
     /**
      * Usuwa komentarz z posta oraz wszystkie odpowiedzi na ten komentarz.
      *
-     * @param postId ID posta, z którego ma zostać usunięty komentarz.
-     * @param komentarzId ID komentarza, który ma zostać usunięty.
+     * @param postUUID ID posta, z którego ma zostać usunięty komentarz.
+     * @param komUUID ID komentarza, który ma zostać usunięty.
      * @param connectedUser Użytkownik, który jest aktualnie zalogowany i wykonuje operację.
      * @throws EntityNotFoundException jeśli post o podanym ID nie zostanie znaleziony.
      * @throws EntityNotFoundException jeśli komentarz o podanym ID nie zostanie znaleziony.
      */
-    public void deleteKomentarzFromPost(String postId, String komentarzId, Uzytkownik connectedUser) {
-        postRepository.findPostByPostIdCheck(postId).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postId));
-        Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByKomentarzId(komentarzId)
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komentarzId));
+    public void deleteKomentarzFromPost(String postUUID, String komUUID, Uzytkownik connectedUser) {
+        postRepository.findPostByUUIDCheck(postUUID).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postUUID));
+        Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByUUID(komUUID)
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komUUID));
 
         System.out.println("Pobieranie użytowników z posta");
 
@@ -414,7 +402,7 @@ public class KomentarzService {
         for (Komentarz odp : kom.getOdpowiedzi()) {
             fileUtils.deleteObraz(odp.getObraz());
         }
-        komentarzRepository.removeKomentarz(kom.getKomentarzId());
+        komentarzRepository.removeKomentarz(kom.getUuid());
     }
 
 
@@ -429,7 +417,7 @@ public class KomentarzService {
         List<Komentarz> komentarze = komentarzRepository.findAll();
         System.out.println("Usuwanie obrazów komentarzy");
         for (Komentarz kom : komentarze) {
-            System.out.println("Usuwanie obrazu komentarza: " + kom.getKomentarzId());
+            System.out.println("Usuwanie obrazu komentarza: " + kom.getUuid());
             fileUtils.deleteObraz(kom.getObraz());
         }
     }
@@ -444,25 +432,7 @@ public class KomentarzService {
      */
     private Komentarz createKomentarz(KomentarzRequest request) {
         Komentarz kom = komentarzMapper.toKomentarz(request);
-        kom.setKomentarzId(createKomentarzId());
         return kom;
-    }
-
-    /**
-     * Tworzy unikalne ID dla komentarza.
-     *
-     * @return unikalne ID dla komentarza.
-     */
-    String createKomentarzId() {
-        String resultId = UUID.randomUUID().toString();
-        do { 
-            Optional<Komentarz> kom = komentarzRepository.findKomentarzByKomentarzId(resultId);
-            if(kom.isEmpty()){
-                break;
-            }
-            resultId = UUID.randomUUID().toString();
-        } while (true);
-        return resultId;
     }
 
     /**
@@ -474,7 +444,7 @@ public class KomentarzService {
      */
     private void saveKomentarzFile(MultipartFile file, Komentarz kom, Uzytkownik uzyt) {
         if (file != null) {
-            String leObraz = fileStoreService.saveKomentarz(file, kom.getKomentarzId(), uzyt.getUzytId());
+            String leObraz = fileStoreService.saveKomentarz(file, kom.getUuid(), uzyt.getUuid());
             // if (leObraz == null) {
             //     throw new FileUploadException("Wystąpił błąd podczas wysyłania pliku");
             // }

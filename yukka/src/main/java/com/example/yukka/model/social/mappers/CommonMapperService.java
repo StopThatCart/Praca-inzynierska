@@ -79,7 +79,7 @@ public class CommonMapperService {
         }
         return UzytkownikResponse.builder()
             .id(uzytkownik.getId())
-            .uzytId(uzytkownik.getUzytId())
+            .uuid(uzytkownik.getUuid())
             .labels(uzytkownik.getLabels())
             .nazwa(uzytkownik.getNazwa())
             .email(uzytkownik.getEmail())
@@ -150,7 +150,7 @@ public class CommonMapperService {
     public PostResponse mapToPostResponse(Post post) {
         return PostResponse.builder()
                 .id(post.getId())
-                .postId(post.getPostId())
+                .uuid(post.getUuid())
                 .tytul(post.getTytul())
                 .opis(post.getOpis())
                 .dataUtworzenia(timeAgo(post.getDataUtworzenia()))
@@ -190,7 +190,7 @@ public class CommonMapperService {
       //  System.out.println("Komentarz: " + komentarz);
         return KomentarzResponse.builder()
             .id(komentarz.getId())
-            .komentarzId(komentarz.getKomentarzId())
+            .uuid(komentarz.getUuid())
             .post(post != null ? mapPostForKomentarzResponse(post) : null)
             .opis(komentarz.getOpis())
             .edytowany(komentarz.isEdytowany())
@@ -267,7 +267,7 @@ public class CommonMapperService {
     private UzytkownikResponse toUzytkownikSimpleResponse(Uzytkownik uzytkownik) {
         return UzytkownikResponse.builder()
             .id(uzytkownik.getId())
-            .uzytId(uzytkownik.getUzytId())
+            .uuid(uzytkownik.getUuid())
             .nazwa(uzytkownik.getNazwa())
             .avatar(fileUtils.readFile(uzytkownik.getAvatar(), DefaultImage.AVATAR))
             .build();
@@ -296,11 +296,11 @@ public class CommonMapperService {
 
         return KomentarzSimpleResponse.builder()
             .id(komentarz.getId())
-            .komentarzId(komentarz.getKomentarzId())
+            .uuid(komentarz.getUuid())
             .opis(komentarz.getOpis())
             .edytowany(komentarz.isEdytowany())
             .dataUtworzenia(timeAgo(komentarz.getDataUtworzenia()))
-            .postId(post != null ? post.getPostId() : null)
+            .postUUID(post != null ? post.getUuid() : null)
             .uzytkownikNazwa(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getNazwa() : null)
             .avatar(fileUtils.readFile(komentarz.getUzytkownik() != null ? komentarz.getUzytkownik().getAvatar() : null, DefaultImage.AVATAR))
             .obraz(fileUtils.readFile(komentarz.getObraz(), null))
@@ -320,7 +320,7 @@ public class CommonMapperService {
             return null;
         }
         return PostResponse.builder()
-            .postId(post.getPostId())
+            .uuid(post.getUuid())
             .tytul(post.getTytul())
             .uzytkownik(post.getAutor() != null ? post.getAutor().getNazwa() : null)
             .build();
@@ -347,7 +347,7 @@ public class CommonMapperService {
         }
 
         return KomentarzResponse.builder()
-            .komentarzId(kom.getKomentarzId())
+            .uuid(kom.getUuid())
             .post(post != null ? mapPostForKomentarzResponse(post) : null)
             .opis(kom.getOpis())
             .uzytkownikNazwa(kom.getUzytkownik() != null ? kom.getUzytkownik().getNazwa() : null)

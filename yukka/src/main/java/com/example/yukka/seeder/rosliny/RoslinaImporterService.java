@@ -83,7 +83,6 @@ public class RoslinaImporterService {
                 List<RoslinaRequest> bep = parseCsvToRoslinaRequests(CSV_FILE, limit);
                 if (neo4jSeeder.isItActuallyAvailable()) {
                     neo4jSeeder.installConstraints();
-                    log.info("Importowanie roślin...");
                     importRoslinyIntoDatabase(bep);
                 }
             }

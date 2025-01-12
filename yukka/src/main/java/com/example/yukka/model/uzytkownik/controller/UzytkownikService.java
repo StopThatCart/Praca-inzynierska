@@ -345,7 +345,7 @@ public class UzytkownikService implements  UserDetailsService {
         }
         fileUtils.deleteObraz(uzytkownik.getAvatar());
 
-        String leObraz = fileStoreService.saveAvatar(file, uzyt.getUzytId());
+        String leObraz = fileStoreService.saveAvatar(file, uzyt.getUuid());
         System.out.println("Zapisano avatar: " + leObraz);
 
         uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
@@ -466,7 +466,7 @@ public class UzytkownikService implements  UserDetailsService {
 
         removeUzytkownikQueries(uzyt.getEmail());
 
-        Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUzytId());
+        Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUuid());
         System.out.println("Usuwanie folderu: " + path);
         fileUtils.deleteDirectory(path);
     }
@@ -507,13 +507,13 @@ public class UzytkownikService implements  UserDetailsService {
         }
         
         for(Uzytkownik blokujacy : odbiorca.getBlokujacyUzytkownicy()) {
-            if(blokujacy.getUzytId().equals(connectedUser.getUzytId())) {
+            if(blokujacy.getUuid().equals(connectedUser.getUuid())) {
                 throw new BlockedUzytkownikException("Nie można komentować ani oceniać treści blokujących użytkowników");
             }
         }
 
         for(Uzytkownik blokowany : odbiorca.getBlokowaniUzytkownicy()) {
-            if(blokowany.getUzytId().equals(connectedUser.getUzytId())) {
+            if(blokowany.getUuid().equals(connectedUser.getUuid())) {
                 throw new BlockedUzytkownikException("Nie można komentować ani oceniać treści zablokowanych użytkowników");
             }
         }
@@ -530,7 +530,7 @@ public class UzytkownikService implements  UserDetailsService {
     public String createUzytkownikId() {
         String resultId = UUID.randomUUID().toString();
         do { 
-            Optional<Uzytkownik> uzyt = uzytkownikRepository.findByUzytId(resultId);
+            Optional<Uzytkownik> uzyt = uzytkownikRepository.findByUUID(resultId);
             if(uzyt.isEmpty()){
                 break;
             }
@@ -547,7 +547,7 @@ public class UzytkownikService implements  UserDetailsService {
      * usuwa odpowiedni folder z obrazami znajdujący się w ścieżce określonej przez zmienną 
      * fileUploadPath. Ścieżka do folderu jest tworzona na podstawie identyfikatora użytkownika.
      * 
-     * <p>Przykładowa ścieżka do folderu: fileUploadPath/uzytkownicy/{uzytId}
+     * <p>Przykładowa ścieżka do folderu: fileUploadPath/uzytkownicy/{uuid}
      * 
      * <p>Metoda wykorzystuje klasę fileUtils do usunięcia folderu.
      */
@@ -557,7 +557,7 @@ public class UzytkownikService implements  UserDetailsService {
         for(Uzytkownik uzyt : uzytkownicy) {
 
            // uzytkownikRepository.delete(uzyt);
-            Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUzytId());
+            Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUuid());
             System.out.println("Usuwanie folderu: " + path);
             fileUtils.deleteDirectory(path);
         }

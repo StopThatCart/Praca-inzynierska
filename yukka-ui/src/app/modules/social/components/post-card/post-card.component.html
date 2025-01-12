@@ -32,11 +32,11 @@
   <div class="fs-4 card-footer">
     <div class="btn-toolbar justify-content-between">
       <div class="btn-group" role="group">
-        <a (click)="addOcenaToPost(post.postId, true)" class="link-light link-underline link-underline-opacity-0">
+        <a (click)="addOcenaToPost(post.uuid, true)" class="link-light link-underline link-underline-opacity-0">
           <i class="fas fs-5 fa-thumbs-up text-primary"></i>
           <span>&nbsp;{{post.ocenyLubi}}</span>
         </a>
-        <a (click)="addOcenaToPost(post.postId, false)" class="link-light mx-3 link-underline link-underline-opacity-0">
+        <a (click)="addOcenaToPost(post.uuid, false)" class="link-light mx-3 link-underline link-underline-opacity-0">
           <i class="fas fs-5 fa-thumbs-down text-danger"></i>
           <span>&nbsp;{{post.ocenyNieLubi}}</span>
         </a>
@@ -54,11 +54,11 @@
         <app-zgloszenie-button
         [typPowiadomienia]="typPowiadomienia.ZGLOSZENIE_POST"
         [zglaszany]="post.uzytkownik"
-        [odnosnik]="post.postId"
-        [id]="post.postId">
+        [odnosnik]="post.uuid"
+        [id]="post.uuid">
         </app-zgloszenie-button>
 
-        <a [routerLink]="['/social/posty', post.postId]" class="link-light link-underline link-underline-opacity-0"
+        <a [routerLink]="['/social/posty', post.uuid]" class="link-light link-underline link-underline-opacity-0"
         placement="bottom" ngbTooltip="Zobacz komentarze">
           <i class="fas fs-5 fa-comment"></i>
           <span>&nbsp;{{post.liczbaKomentarzy}}</span>

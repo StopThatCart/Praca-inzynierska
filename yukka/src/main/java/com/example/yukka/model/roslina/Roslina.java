@@ -30,7 +30,7 @@ import lombok.ToString;
  * <ul>
  * <li><strong>labels</strong>: dynamiczne etykiety rośliny</li>
  * <li><strong>id</strong>: unikalny identyfikator rośliny</li>
- * <li><strong>roslinaId</strong>: identyfikator rośliny</li>
+ * <li><strong>uuid</strong>: identyfikator rośliny</li>
  * <li><strong>nazwa</strong>: nazwa rośliny</li>
  * <li><strong>nazwaLacinska</strong>: łacińska nazwa rośliny</li>
  * <li><strong>opis</strong>: opis rośliny</li>
@@ -81,8 +81,8 @@ public class Roslina {
     @Id @GeneratedValue
     private long id;
 
-    @Property("roslinaId")
-    private String roslinaId;
+    @Property("uuid")
+    private String uuid;
 
     @Property("nazwa")
     private String nazwa;

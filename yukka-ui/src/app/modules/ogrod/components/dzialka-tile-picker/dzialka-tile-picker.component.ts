@@ -19,7 +19,7 @@ export class DzialkaTilePickerComponent {
   @Input() roslina: RoslinaResponse | undefined;
   @Input() tiles: Tile[] = [];
   @Input() request: DzialkaRoslinaRequest = {
-      roslinaId: '',
+      roslinaUUID: '',
       numerDzialki: 1,
       pozycje: [],
       x: -1,
@@ -41,7 +41,7 @@ export class DzialkaTilePickerComponent {
   onTileClick(tile: Tile) {
     console.log('x:', tile.x, 'y:', tile.y);
 
-    if(tile.roslinaId  && tile.roslinaId !== this.roslina?.roslinaId) {
+    if(tile.uuid  && tile.uuid !== this.roslina?.uuid) {
       console.log('Ten kafelek jest zajęty przez inną roślinę.');
       return;
     }
@@ -58,11 +58,11 @@ export class DzialkaTilePickerComponent {
     if (!this.roslina) return;
     console.log(tile);
 
-    if (tile.roslinaId === this.roslina.roslinaId) {
+    if (tile.uuid === this.roslina.uuid) {
       TileUtils.clearTile(tile);
       this.request.pozycje = this.request.pozycje.filter(p => p.x !== tile.x || p.y !== tile.y);
     } else if (!this.request.pozycje.some(p => p.x === tile.x && p.y === tile.y)) {
-      tile.roslinaId = this.roslina.roslinaId;
+      tile.uuid = this.roslina.uuid;
       tile.backgroundColor = this.selectColor;
       this.request.pozycje.push({ x: tile.x, y: tile.y });
     }
@@ -77,7 +77,7 @@ export class DzialkaTilePickerComponent {
       }
     });
 
-    tile.roslinaId = this.roslina.roslinaId;
+    tile.uuid = this.roslina.uuid;
     tile.zasadzonaRoslina = this.roslina;
     tile.backgroundColor = this.roslinaPosColor;
 

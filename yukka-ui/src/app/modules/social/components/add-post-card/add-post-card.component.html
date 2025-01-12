@@ -17,23 +17,10 @@
           placeholder="Opis" minlength="1" required maxlength="300"
           style="--bs-body-color: #000000;"></textarea>
       </div>
-      <div class="mb-3" data-mdb-ripple-init>
-        <label class="form-label text-white m-1" for="inputObraz">
-          <i class="fas fa-camera"></i>
-          <span>&nbsp;Dołącz obraz</span>
-        </label>
-        <input  #fileInput (change)="onFileSelected($event)"
-          class="form-control d-none"
-          id="inputObraz"
-          type="file"
-          accept="image/*"
-          />
-      </div>
-      <div class="position-relative d-inline-block" *ngIf="wybranyObraz">
-        <img class="rounded-1 img-fluid" [src]="wybranyObraz"
-        style="max-width: 100%; height: auto; max-height: 250px;">
-        <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2" (click)="clearImage()">X</button>
-      </div>
+      <app-image-upload
+        (fileSelected)="onFileSelected($event)"
+        (clearImageEvent)="clearImage()">
+      </app-image-upload>
     </form>
 
     <div class="btn-toolbar justify-content-between">

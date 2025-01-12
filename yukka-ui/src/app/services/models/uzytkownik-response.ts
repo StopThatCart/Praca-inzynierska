@@ -19,5 +19,5 @@ export interface UzytkownikResponse {
   nazwa?: string;
   opis?: string;
   ustawienia?: Ustawienia;
-  uzytId?: string;
+  uuid?: string;
 }

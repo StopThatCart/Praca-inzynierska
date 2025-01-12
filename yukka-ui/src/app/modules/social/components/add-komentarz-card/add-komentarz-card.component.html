@@ -7,20 +7,10 @@
             <textarea [(ngModel)]="request.opis" class="form-control bg-white text-black" id="message-2" name="message" rows="6" placeholder="Komentarz"></textarea>
           </div>
           <div class="hstack fs-4 justify-content-between">
-              <div>
-                <div data-mdb-ripple-init class="">
-                  <label class="form-label text-white m-1" for="inputObraz">
-                    <i class="fas fa-camera"></i>
-                    <span>&nbsp;Dołącz obraz</span>
-                  </label>
-                  <input  #fileInput (change)="onFileSelected($event)"
-                  class="form-control d-none"
-                  id="inputObraz"
-                  type="file"
-                  accept="image/*"
-                  />
-                </div>
-              </div>
+            <app-image-upload
+            (fileSelected)="onFileSelected($event)"
+            (clearImageEvent)="clearImage()">
+          </app-image-upload>
               <div class="hstack gap-2">
                 <ng-container *ngIf="typ === TypKomentarza.ODPOWIEDZ">
                   <div>
@@ -32,11 +22,7 @@
                 </div>
               </div>
           </div>
-          <div class="position-relative d-inline-block" *ngIf="wybranyObraz">
-            <img class="rounded-1 img-fluid" [src]="wybranyObraz"
-            style="max-width: 100%; height: auto; max-height: 250px;">
-            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2" (click)="clearImage()">X</button>
-          </div>
+
       </form>
   </div>
 </div>

@@ -72,7 +72,7 @@ public class KomentarzControllerTest {
         otherMockAuth = Mockito.mock(Authentication.class);
 
         uzyt = Uzytkownik.builder()
-        .uzytId(uzytkownikService.createUzytkownikId())
+        .uuid(uzytkownikService.createUzytkownikId())
         .nazwa("Postownik komentujący")
         .email("postokom@email.pl")
         .haslo(passwordEncoder.encode("haslo12345678"))
@@ -83,7 +83,7 @@ public class KomentarzControllerTest {
         Mockito.when(mockAuth.getPrincipal()).thenReturn(uzyt);
 
         otherUzyt = Uzytkownik.builder()
-        .uzytId(uzytkownikService.createUzytkownikId())
+        .uuid(uzytkownikService.createUzytkownikId())
         .nazwa("Krzysztof Koment")
         .email("chris@email.pl")
         .haslo(passwordEncoder.encode("haslo12345678"))
@@ -136,11 +136,11 @@ public class KomentarzControllerTest {
     @Test
     @Order(1)
     void testAddKomentarzToPost() {
-        assertNotNull(postResponse.getPostId());
+        assertNotNull(postResponse.getUuid());
 
         KomentarzRequest request = KomentarzRequest.builder()
         .opis("Testowy opis")
-        .targetId(postResponse.getPostId())
+        .targetId(postResponse.getUuid())
         .build();
 
         ResponseEntity<?> response = komentarzController.addKomentarzToPost(request, null, mockAuth);
@@ -155,25 +155,25 @@ public class KomentarzControllerTest {
     @Test
     @Order(2)
     void testFindKomentarzById() {
-        assertNotNull(komentarzResponse.getKomentarzId());
+        assertNotNull(komentarzResponse.getUuid());
 
-        ResponseEntity<?> response = komentarzController.findKomentarzById(komentarzResponse.getKomentarzId());
+        ResponseEntity<?> response = komentarzController.findKomentarzByUUID(komentarzResponse.getUuid());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         KomentarzResponse body = (KomentarzResponse) response.getBody();
         assertNotNull(body);
-        assertEquals(komentarzResponse.getKomentarzId(), body.getKomentarzId());
+        assertEquals(komentarzResponse.getUuid(), body.getUuid());
         assertEquals(komentarzResponse.getOpis(), body.getOpis());
     }
 
     @Test
     @Order(3)
     void testAddOdpowiedzToKomentarz() {
-        assertNotNull(komentarzResponse.getKomentarzId());
+        assertNotNull(komentarzResponse.getUuid());
 
         KomentarzRequest request = KomentarzRequest.builder()
         .opis("Testowa odpowiedź")
-        .targetId(komentarzResponse.getKomentarzId())
+        .targetId(komentarzResponse.getUuid())
         .build();
 
         ResponseEntity<?> response = komentarzController.addOdpowiedzToKomentarz(request, null, otherMockAuth);
@@ -187,11 +187,11 @@ public class KomentarzControllerTest {
     @Test
     @Order(4)
     void testUpdateKomentarz() {
-        assertNotNull(komentarzResponse.getKomentarzId());
+        assertNotNull(komentarzResponse.getUuid());
 
         KomentarzRequest request = KomentarzRequest.builder()
         .opis("Zaktualizowany opis")
-        .targetId(komentarzResponse.getKomentarzId())
+        .targetId(komentarzResponse.getUuid())
         .build();
 
         ResponseEntity<?> response = komentarzController.updateKomentarz(request, mockAuth);
@@ -205,7 +205,7 @@ public class KomentarzControllerTest {
     @Test
     @Order(5)
     void testFindKomentarzeOfUzytkownik() {
-        assertNotNull(uzyt.getUzytId());
+        assertNotNull(uzyt.getUuid());
         assertNotNull(uzyt.getNazwa());
 
         ResponseEntity<?> response = komentarzController.findKomentarzeOfUzytkownik(0, 12, uzyt.getNazwa(), mockAuth);
@@ -215,11 +215,11 @@ public class KomentarzControllerTest {
     @Test
     @Order(6)
     void testAddOcenaToKomentarz() {
-        assertNotNull(komentarzResponse.getKomentarzId());
+        assertNotNull(komentarzResponse.getUuid());
 
         boolean ocena = false;
         OcenaRequest request = OcenaRequest.builder()
-        .ocenialnyId(komentarzResponse.getKomentarzId())
+        .ocenialnyId(komentarzResponse.getUuid())
         .lubi(ocena)
         .build();
 
@@ -239,13 +239,13 @@ public class KomentarzControllerTest {
     @Test
     @Order(7)
     void testRemoveKomentarz() {
-        assertNotNull(komentarzResponse.getKomentarzId());
+        assertNotNull(komentarzResponse.getUuid());
 
-        ResponseEntity<?> response = komentarzController.removeKomentarz(komentarzResponse.getKomentarzId(), mockAuth);
+        ResponseEntity<?> response = komentarzController.removeKomentarz(komentarzResponse.getUuid(), mockAuth);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
-            komentarzController.findKomentarzById(komentarzResponse.getKomentarzId());
+            komentarzController.findKomentarzByUUID(komentarzResponse.getUuid());
         });
         assertNotNull(exception);
 

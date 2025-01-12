@@ -98,10 +98,10 @@ public class Neo4jSeeder {
             "CREATE CONSTRAINT unikalnaLacinskaNazwa FOR (ros:Roslina) REQUIRE ros.nazwaLacinska IS UNIQUE",
             "CREATE CONSTRAINT unikalnyEmail FOR (u:Uzytkownik) REQUIRE u.email IS UNIQUE",
             "CREATE CONSTRAINT unikalnaNazwaUzytkownika FOR (u:Uzytkownik) REQUIRE u.nazwa IS UNIQUE",
-            "CREATE CONSTRAINT unikalneRoslinaId FOR (ros:Roslina) REQUIRE ros.roslinaId IS UNIQUE",
-            "CREATE CONSTRAINT unikalneUzytkownikId FOR (u:Uzytkownik) REQUIRE u.uzytId IS UNIQUE",
-            "CREATE CONSTRAINT unikalnePostId FOR (p:Post) REQUIRE p.postId IS UNIQUE",
-            "CREATE CONSTRAINT unikalneKomentarzId FOR (k:Komentarz) REQUIRE k.komentarzId IS UNIQUE",
+            "CREATE CONSTRAINT unikalneRoslinaUUID FOR (ros:Roslina) REQUIRE ros.uuid IS UNIQUE",
+            "CREATE CONSTRAINT unikalneUzytkownikUUID FOR (u:Uzytkownik) REQUIRE u.uuid IS UNIQUE",
+            "CREATE CONSTRAINT unikalnePostUUID FOR (p:Post) REQUIRE p.uuid IS UNIQUE",
+            "CREATE CONSTRAINT unikalneKomentarzUUID FOR (k:Komentarz) REQUIRE k.uuid IS UNIQUE",
         };
 
         try (Session session = driver.session(SessionConfig.forDatabase("test"))) {

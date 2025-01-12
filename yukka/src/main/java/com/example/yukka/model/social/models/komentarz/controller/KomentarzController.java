@@ -51,17 +51,13 @@ public class KomentarzController {
     /**
      * Metoda obsługująca żądanie GET do wyszukania komentarza po jego identyfikatorze.
      *
-     * @param komentarzId identyfikator komentarza
+     * @param uuid identyfikator komentarza
      * @return ResponseEntity zawierające obiekt KomentarzResponse
-     * <ul>
-     *   <li><strong>komentarzId</strong> - identyfikator komentarza</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt KomentarzResponse</li>
-     * </ul>
      */
-    @GetMapping(value = "/{komentarz-id}", produces="application/json")
-    public ResponseEntity<KomentarzResponse> findKomentarzById(@PathVariable("komentarz-id") String komentarzId) {
+    @GetMapping(value = "/{uuid}", produces="application/json")
+    public ResponseEntity<KomentarzResponse> findKomentarzByUUID(@PathVariable() String uuid) {
         
-        return ResponseEntity.ok(komentarzService.findByKomentarzIdWithOdpowiedzi(komentarzId));
+        return ResponseEntity.ok(komentarzService.findByUUIDWithOdpowiedzi(uuid));
     }
 
     /**
@@ -72,13 +68,6 @@ public class KomentarzController {
      * @param nazwa nazwa użytkownika
      * @param connectedUser aktualnie zalogowany użytkownik
      * @return ResponseEntity zawierające stronę wyników z komentarzami użytkownika
-     * <ul>
-     *   <li><strong>page</strong> - numer strony wyników</li>
-     *   <li><strong>size</strong> - rozmiar strony wyników</li>
-     *   <li><strong>nazwa</strong> - nazwa użytkownika</li>
-     *   <li><strong>connectedUser</strong> - aktualnie zalogowany użytkownik</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca stronę wyników z komentarzami użytkownika</li>
-     * </ul>
      */
     @GetMapping(value = "/uzytkownicy/{nazwa}", produces="application/json")
     public ResponseEntity<PageResponse<KomentarzResponse>> findKomentarzeOfUzytkownik(
@@ -95,12 +84,6 @@ public class KomentarzController {
      * @param file plik obrazu (opcjonalnie)
      * @param connectedUser aktualnie zalogowany użytkownik
      * @return ResponseEntity zawierające obiekt KomentarzResponse
-     * <ul>
-     *   <li><strong>request</strong> - obiekt żądania zawierający dane komentarza</li>
-     *   <li><strong>file</strong> - plik obrazu (opcjonalnie)</li>
-     *   <li><strong>connectedUser</strong> - aktualnie zalogowany użytkownik</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt KomentarzResponse</li>
-     * </ul>
      */
     @PostMapping(value = "/odpowiedzi", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<KomentarzResponse> addOdpowiedzToKomentarz(
@@ -119,12 +102,6 @@ public class KomentarzController {
      * @param file plik obrazu (opcjonalnie)
      * @param connectedUser aktualnie zalogowany użytkownik
      * @return ResponseEntity zawierające obiekt KomentarzResponse
-     * <ul>
-     *   <li><strong>request</strong> - obiekt żądania zawierający dane komentarza</li>
-     *   <li><strong>file</strong> - plik obrazu (opcjonalnie)</li>
-     *   <li><strong>connectedUser</strong> - aktualnie zalogowany użytkownik</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt KomentarzResponse</li>
-     * </ul>
      */
     @PostMapping(value =  "/posty", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<KomentarzResponse> addKomentarzToPost(
@@ -140,11 +117,6 @@ public class KomentarzController {
      * @param request obiekt żądania zawierający dane oceny
      * @param connectedUser aktualnie zalogowany użytkownik
      * @return ResponseEntity zawierające obiekt OcenaResponse
-     * <ul>
-     *   <li><strong>request</strong> - obiekt żądania zawierający dane oceny</li>
-     *   <li><strong>connectedUser</strong> - aktualnie zalogowany użytkownik</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt OcenaResponse</li>
-     * </ul>
      */
     @PutMapping(value = "/oceny", consumes="application/json", produces="application/json")
     public ResponseEntity<OcenaResponse> addOcenaToKomentarz(@Valid @RequestBody OcenaRequest request, Authentication connectedUser) {
@@ -154,16 +126,9 @@ public class KomentarzController {
     /**
      * Metoda obsługująca żądanie PATCH do aktualizacji komentarza.
      *
-     * @param komentarzId identyfikator komentarza
      * @param request obiekt żądania zawierający dane komentarza
      * @param connectedUser aktualnie zalogowany użytkownik
      * @return ResponseEntity zawierające obiekt KomentarzResponse
-     * <ul>
-     *   <li><strong>komentarzId</strong> - identyfikator komentarza</li>
-     *   <li><strong>request</strong> - obiekt żądania zawierający dane komentarza</li>
-     *   <li><strong>connectedUser</strong> - aktualnie zalogowany użytkownik</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca obiekt KomentarzResponse</li>
-     * </ul>
      */
     @PatchMapping(consumes="application/json", produces="application/json")
     public ResponseEntity<KomentarzResponse> updateKomentarz(
@@ -174,21 +139,16 @@ public class KomentarzController {
     /**
      * Metoda obsługująca żądanie DELETE do usunięcia komentarza.
      *
-     * @param komentarzId identyfikator komentarza
+     * @param uuid identyfikator komentarza
      * @param currentUser aktualnie zalogowany użytkownik
      * @return ResponseEntity zawierające informację o usunięciu komentarza
-     * <ul>
-     *   <li><strong>komentarzId</strong> - identyfikator komentarza</li>
-     *   <li><strong>currentUser</strong> - aktualnie zalogowany użytkownik</li>
-     *   <li><strong>ResponseEntity</strong> - odpowiedź HTTP zawierająca informację o usunięciu komentarza</li>
-     * </ul>
      */
-    @DeleteMapping(value = "/{komentarz-id}", produces="application/json")
+    @DeleteMapping(value = "/{uuid}", produces="application/json")
     public ResponseEntity<String> removeKomentarz(
-                    @PathVariable("komentarz-id") String komentarzId,
+                    @PathVariable() String uuid,
                     Authentication currentUser) {
 
-        komentarzService.deleteKomentarz(komentarzId, currentUser);
+        komentarzService.deleteKomentarz(uuid, currentUser);
         return ResponseEntity.noContent().build();
     }
 }

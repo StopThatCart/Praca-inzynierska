@@ -5,9 +5,9 @@ export interface KomentarzSimpleResponse {
   dataUtworzenia?: string;
   edytowany?: boolean;
   id?: number;
-  komentarzId?: string;
   obraz?: string;
   opis?: string;
-  postId?: string;
+  postUUID?: string;
+  uuid?: string;
   uzytkownikNazwa?: string;
 }

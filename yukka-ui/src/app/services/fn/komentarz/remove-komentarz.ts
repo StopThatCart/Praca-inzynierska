@@ -8,13 +8,13 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface RemoveKomentarz$Params {
-  'komentarz-id': string;
+  uuid: string;
 }
 
 export function removeKomentarz(http: HttpClient, rootUrl: string, params: RemoveKomentarz$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
   const rb = new RequestBuilder(rootUrl, removeKomentarz.PATH, 'delete');
   if (params) {
-    rb.path('komentarz-id', params['komentarz-id'], {});
+    rb.path('uuid', params.uuid, {});
   }
 
   return http.request(
@@ -27,4 +27,4 @@ export function removeKomentarz(http: HttpClient, rootUrl: string, params: Remov
   );
 }
 
-removeKomentarz.PATH = '/komentarze/{komentarz-id}';
+removeKomentarz.PATH = '/komentarze/{uuid}';

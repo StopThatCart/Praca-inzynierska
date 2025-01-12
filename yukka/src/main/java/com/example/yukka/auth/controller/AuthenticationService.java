@@ -110,7 +110,7 @@ public class AuthenticationService {
         }
 
         Uzytkownik uzyt = Uzytkownik.builder()
-                .uzytId(uzytkownikService.createUzytkownikId())
+                .uuid(uzytkownikService.createUzytkownikId())
                 .nazwa(request.getNazwa())
                 .email(request.getEmail())
                 .haslo(passwordEncoder.encode(request.getHaslo()))
@@ -137,7 +137,7 @@ public class AuthenticationService {
         var claims = new HashMap<String, Object>();
         
         Uzytkownik uzyt = ((Uzytkownik) auth.getPrincipal());
-        claims.put("UzytId", uzyt.getUzytId());
+        claims.put("Uuid", uzyt.getUuid());
         claims.put("Nazwa", uzyt.getUsername());
         claims.put("Email", uzyt.getEmail());
         
@@ -171,7 +171,7 @@ public class AuthenticationService {
     var claims = new HashMap<String, Object>();
     Uzytkownik uzyt = ((Uzytkownik) userDetails);
 
-    claims.put("UzytId", uzyt.getUzytId());
+    claims.put("Uuid", uzyt.getUuid());
     claims.put("Nazwa", uzyt.getUsername());
     claims.put("Email", uzyt.getEmail());
 

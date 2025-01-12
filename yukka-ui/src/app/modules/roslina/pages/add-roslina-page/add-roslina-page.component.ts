@@ -159,7 +159,7 @@ export class AddRoslinaPageComponent implements OnInit {
     console.log('Dodawanie rośliny: ', this.request);
     this.roslinaService.saveRoslina({ body: { request: this.request, file: leFile } }).subscribe({
       next: (roslina) => {
-        this.router.navigate(['rosliny', roslina.roslinaId]);
+        this.router.navigate(['rosliny', roslina.uuid]);
         //this.afterAddRoslina();
       },
       error: (error) => {
@@ -185,7 +185,7 @@ export class AddRoslinaPageComponent implements OnInit {
       next: (roslina) => {
         //this.afterAddRoslina();
        // console.log("roslinka", roslina);
-        this.router.navigate(['rosliny', roslina.roslinaId]);
+        this.router.navigate(['rosliny', roslina.uuid]);
       },
       error: (error) => {
         this.message = 'Błąd podczas dodawania rośliny';

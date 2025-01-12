@@ -54,10 +54,10 @@ public class SocialSeeder {
 		log.info("Seedowanie rozmow prywatnych...");
 		// Zaproszenie do rozmowy prywatnej
 		rozmowaPrywatnaRepository
-		.inviteToRozmowaPrywatna(nadawca.getUzytId(), odbiorca.getUzytId(), LocalDateTime.now());
+		.inviteToRozmowaPrywatna(nadawca.getUuid(), odbiorca.getUuid(), LocalDateTime.now());
 
 		// Akceptacja rozmowy prywatnej
-		rozmowaPrywatnaRepository.acceptRozmowaPrywatna(odbiorca.getUzytId(), nadawca.getUzytId());
+		rozmowaPrywatnaRepository.acceptRozmowaPrywatna(odbiorca.getUuid(), nadawca.getUuid());
 
 		log.info("Dodawanie komentarzy do rozmowy prywatnej");
 		for (int i = 0; i < 10; i++) {
@@ -105,7 +105,7 @@ public class SocialSeeder {
 			for (int j = 0; j < liczbaOcen; j++) {
 				boolean ocena = Math.random() < 0.5;
 				if (post != null) {
-					postRepository.addOcenaToPost(uzytkownicy.get(j).getEmail(), post.getPostId(), ocena);
+					postRepository.addOcenaToPost(uzytkownicy.get(j).getEmail(), post.getUuid(), ocena);
 				}
 			}
 
@@ -115,7 +115,7 @@ public class SocialSeeder {
 
 			for (int j = 0; j < liczbaKomentarzy; j++) {
 				KomentarzRequest komReq = KomentarzRequest.builder()
-					.targetId(post != null ? post.getPostId() : null)
+					.targetId(post != null ? post.getUuid() : null)
 					.opis(faker.lorem().sentence())
 					.build();
 
@@ -154,7 +154,7 @@ public class SocialSeeder {
 	
 		for (int k = 0; k < liczbaOdpowiedzi; k++) {
 			KomentarzRequest odp = KomentarzRequest.builder()
-				.targetId(kom.getKomentarzId())
+				.targetId(kom.getUuid())
 				.opis(faker.lorem().sentence())
 				.build();
 	
@@ -188,7 +188,7 @@ public class SocialSeeder {
 	
 		for (int j = 0; j < liczbaOcen; j++) {
 			OcenaRequest ocenaReq = OcenaRequest.builder()
-				.ocenialnyId(kom.getKomentarzId())
+				.ocenialnyId(kom.getUuid())
 				.lubi(Math.random() < 0.5)
 				.build();
 	

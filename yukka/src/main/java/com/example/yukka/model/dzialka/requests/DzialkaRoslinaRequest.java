@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
  * Reprezentuje żądanie dotyczące rośliny na działce.
  * 
  * <ul>
- * <li><strong>roslinaId</strong>: Id rośliny, wymagane.</li>
+ * <li><strong>roslinaUUID</strong>: Id rośliny, wymagane.</li>
  * <li><strong>kolor</strong>: Kolor w formacie hex, wymagany.</li>
  * <li><strong>wyswietlanie</strong>: Sposób wyświetlania, wymagany.</li>
  * <li><strong>notatka</strong>: Dodatkowa notatka, opcjonalna.</li>
@@ -43,7 +43,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
     @NotEmpty(message = "Id rośliny jest wymagane")
-    private String roslinaId;
+    private String roslinaUUID;
 
     @NotEmpty(message = "Kolor jest wymagany")
     @Pattern(regexp = "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$", message = "Kolor musi być w formacie hex")

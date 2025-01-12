@@ -43,24 +43,24 @@ import com.example.yukka.model.social.models.rozmowaPrywatna.RozmowaPrywatna;
  */
 public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywatna, Long> {
    @Query("""
-    MATCH path = (uzyt1:Uzytkownik{uzytId: $odbiorca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawca})
+    MATCH path = (uzyt1:Uzytkownik{uuid: $odbiorca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uuid: $nadawca})
     RETURN priv, collect(nodes(path)), collect(relationships(path))
        """
        )
-    Optional<RozmowaPrywatna> findRozmowaPrywatnaByUzytId(@Param("odbiorca") String odbiorca, @Param("nadawca") String nadawca);
+    Optional<RozmowaPrywatna> findRozmowaPrywatnaByUUID(String odbiorca, String nadawca);
 
     @Query("""
     MATCH path = (uzyt1:Uzytkownik{nazwa: $odbiorca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $nadawca})
     RETURN priv, collect(nodes(path)), collect(relationships(path))
        """
        )
-    Optional<RozmowaPrywatna> findRozmowaPrywatnaByNazwa(@Param("odbiorca") String odbiorca, @Param("nadawca") String nadawca);
+    Optional<RozmowaPrywatna> findRozmowaPrywatnaByNazwa(String odbiorca, String nadawca);
 
     
    @Query("""
-    MATCH path = (uzyt1:Uzytkownik{uzytId: $nadawcaId})-[:JEST_W_ROZMOWIE]->
+    MATCH path = (uzyt1:Uzytkownik{uuid: $nadawcaId})-[:JEST_W_ROZMOWIE]->
                 (priv:RozmowaPrywatna)
-                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $odbiorcaId})
+                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uuid: $odbiorcaId})
     OPTIONAL MATCH komPath = (priv)-[r1:MA_WIADOMOSC]->(kom:Komentarz)<-[:SKOMENTOWAL]-(diff:Uzytkownik)
     WITH priv, path, komPath, kom
     ORDER BY kom.dataUtworzenia
@@ -79,7 +79,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
                 collect(nodes(komPath)), collect(relationships(komPath))
        """
        )
-    Optional<RozmowaPrywatna> findRozmowaPrywatnaById(@Param("id") Long id);
+    Optional<RozmowaPrywatna> findRozmowaPrywatnaById(Long id);
 
 
     @Query(value ="""
@@ -91,7 +91,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         MATCH path = (uzyt:Uzytkownik{email: $email})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik)
         RETURN count(priv)
             """)
-    Page<RozmowaPrywatna> findRozmowyPrywatneOfUzytkownik(@Param("email") String email, Pageable pageable);
+    Page<RozmowaPrywatna> findRozmowyPrywatneOfUzytkownik(String email, Pageable pageable);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
@@ -99,14 +99,14 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         OPTIONAL MATCH (priv)-[:MA_WIADOMOSC]->(kom:Komentarz)
         RETURN priv, collect(kom) AS komentarze
         """)
-    List<RozmowaPrywatna> findRozmowyPrywatneByEmail(@Param("email") String email);
+    List<RozmowaPrywatna> findRozmowyPrywatneByEmail(String email);
 
     @Query("""
-        MATCH (uzyt1:Uzytkownik{uzytId: $nadawcaId})
-        MATCH (uzyt2:Uzytkownik{uzytId: $odbiorcaId})
+        MATCH (uzyt1:Uzytkownik{uuid: $nadawcaId})
+        MATCH (uzyt2:Uzytkownik{uuid: $odbiorcaId})
         WITH uzyt1, uzyt2
         MERGE (uzyt1)-[:JEST_W_ROZMOWIE]->
-               (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uzytId, 
+               (priv:RozmowaPrywatna{aktywna: false, nadawca: uzyt1.uuid, 
                dataUtworzenia: $time, 
                ostatnioAktualizowana: $time})
                <-[:JEST_W_ROZMOWIE]-(uzyt2)
@@ -116,9 +116,9 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
      @Param("time") LocalDateTime localdatetime);
 
     @Query("""
-        MATCH (uzyt1:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
+        MATCH (uzyt1:Uzytkownik{uuid: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
                 (priv:RozmowaPrywatna)
-                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $nadawcaId})
+                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uuid: $nadawcaId})
         WHERE  priv.aktywna = false
         SET    priv.aktywna = true
         WITH   priv
@@ -126,26 +126,26 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         RETURN priv
         """
         )
-    RozmowaPrywatna acceptRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
-                                        @Param("odbiorcaId") String odbiorcaId);
+    RozmowaPrywatna acceptRozmowaPrywatna(String nadawcaId, 
+                                        String odbiorcaId);
 
     @Query("""
-        MATCH (odbiorca:Uzytkownik{uzytId: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
+        MATCH (odbiorca:Uzytkownik{uuid: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
                 (priv:RozmowaPrywatna)
-                <-[:JEST_W_ROZMOWIE]-(nadawca:Uzytkownik{uzytId: $nadawcaId})
-        WHERE priv.aktywna = false AND priv.nadawca <> odbiorca.uzytId
+                <-[:JEST_W_ROZMOWIE]-(nadawca:Uzytkownik{uuid: $nadawcaId})
+        WHERE priv.aktywna = false AND priv.nadawca <> odbiorca.uuid
         DETACH DELETE priv
         """
         )
-    void rejectRozmowaPrywatna(@Param("nadawcaId") String nadawcaId, 
-                                        @Param("odbiorcaId") String odbiorcaId,
+    void rejectRozmowaPrywatna(String nadawcaId, 
+                                        String odbiorcaId,
                                         @Param("rozmowa") RozmowaPrywatna rozmowa);
 
     // To pójdzie do admina potem
     @Query("""
-        MATCH  (uzyt1:Uzytkownik{uzytId: $uczestnik1})-[:JEST_W_ROZMOWIE]->
+        MATCH  (uzyt1:Uzytkownik{uuid: $uczestnik1})-[:JEST_W_ROZMOWIE]->
                 (priv:RozmowaPrywatna)
-                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uzytId: $uczestnik2})
+                <-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{uuid: $uczestnik2})
         OPTIONAL MATCH (priv)-[:MA_WIADOMOSC]->(komentarz:Komentarz)
 
         WITH priv, komentarz, collect(komentarz) AS komentarze
@@ -153,9 +153,9 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         DETACH DELETE kom
         DETACH DELETE priv
         """)
-    void deleteRozmowaPrywatna(@Param("uczestnik1") String uczestnik1, @Param("uczestnik2") String uczestnik2);
+    void deleteRozmowaPrywatna(String uczestnik1, String uczestnik2);
 
-    // funkcja seedowania, spokojnie.
+    // funkcja seedowania.
     @Query("""
         MATCH (roz:RozmowaPrywatna)
         OPTIONAL MATCH (roz)-[:MA_WIADOMOSC]->(kom:Komentarz) 

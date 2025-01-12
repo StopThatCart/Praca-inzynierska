@@ -17,10 +17,10 @@ import { findAllPosty } from '../fn/post/find-all-posty';
 import { FindAllPosty$Params } from '../fn/post/find-all-posty';
 import { findAllPostyByUzytkownik } from '../fn/post/find-all-posty-by-uzytkownik';
 import { FindAllPostyByUzytkownik$Params } from '../fn/post/find-all-posty-by-uzytkownik';
-import { findPostById } from '../fn/post/find-post-by-id';
-import { FindPostById$Params } from '../fn/post/find-post-by-id';
-import { findPostByIdCheck } from '../fn/post/find-post-by-id-check';
-import { FindPostByIdCheck$Params } from '../fn/post/find-post-by-id-check';
+import { findPostByUuid } from '../fn/post/find-post-by-uuid';
+import { FindPostByUuid$Params } from '../fn/post/find-post-by-uuid';
+import { findPostByUuidCheck } from '../fn/post/find-post-by-uuid-check';
+import { FindPostByUuidCheck$Params } from '../fn/post/find-post-by-uuid-check';
 import { OcenaResponse } from '../models/ocena-response';
 import { PageResponsePostResponse } from '../models/page-response-post-response';
 import { PostResponse } from '../models/post-response';
@@ -108,33 +108,33 @@ export class PostService extends BaseService {
     );
   }
 
-  /** Path part for operation `findPostById()` */
-  static readonly FindPostByIdPath = '/posty/{post-id}';
+  /** Path part for operation `findPostByUuid()` */
+  static readonly FindPostByUuidPath = '/posty/{uuid}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findPostById()` instead.
+   * To access only the response body, use `findPostByUuid()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findPostById$Response(params: FindPostById$Params, context?: HttpContext): Observable<StrictHttpResponse<PostResponse>> {
-    return findPostById(this.http, this.rootUrl, params, context);
+  findPostByUuid$Response(params: FindPostByUuid$Params, context?: HttpContext): Observable<StrictHttpResponse<PostResponse>> {
+    return findPostByUuid(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findPostById$Response()` instead.
+   * To access the full response (for headers, for example), `findPostByUuid$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findPostById(params: FindPostById$Params, context?: HttpContext): Observable<PostResponse> {
-    return this.findPostById$Response(params, context).pipe(
+  findPostByUuid(params: FindPostByUuid$Params, context?: HttpContext): Observable<PostResponse> {
+    return this.findPostByUuid$Response(params, context).pipe(
       map((r: StrictHttpResponse<PostResponse>): PostResponse => r.body)
     );
   }
 
   /** Path part for operation `removePost()` */
-  static readonly RemovePostPath = '/posty/{post-id}';
+  static readonly RemovePostPath = '/posty/{uuid}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -158,27 +158,27 @@ export class PostService extends BaseService {
     );
   }
 
-  /** Path part for operation `findPostByIdCheck()` */
-  static readonly FindPostByIdCheckPath = '/posty/{post-id}/check';
+  /** Path part for operation `findPostByUuidCheck()` */
+  static readonly FindPostByUuidCheckPath = '/posty/{uuid}/check';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findPostByIdCheck()` instead.
+   * To access only the response body, use `findPostByUuidCheck()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findPostByIdCheck$Response(params: FindPostByIdCheck$Params, context?: HttpContext): Observable<StrictHttpResponse<PostResponse>> {
-    return findPostByIdCheck(this.http, this.rootUrl, params, context);
+  findPostByUuidCheck$Response(params: FindPostByUuidCheck$Params, context?: HttpContext): Observable<StrictHttpResponse<PostResponse>> {
+    return findPostByUuidCheck(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findPostByIdCheck$Response()` instead.
+   * To access the full response (for headers, for example), `findPostByUuidCheck$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findPostByIdCheck(params: FindPostByIdCheck$Params, context?: HttpContext): Observable<PostResponse> {
-    return this.findPostByIdCheck$Response(params, context).pipe(
+  findPostByUuidCheck(params: FindPostByUuidCheck$Params, context?: HttpContext): Observable<PostResponse> {
+    return this.findPostByUuidCheck$Response(params, context).pipe(
       map((r: StrictHttpResponse<PostResponse>): PostResponse => r.body)
     );
   }

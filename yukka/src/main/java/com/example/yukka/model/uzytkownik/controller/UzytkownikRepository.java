@@ -45,32 +45,32 @@ import jakarta.annotation.Nonnull;
  */
 public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> {
     @Query("""
-        MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(u:Uzytkownik{uzytId: $uzytId})
+        MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(u:Uzytkownik{uuid: $uuid})
         RETURN u, collect(NODES(path)), collect(RELATIONSHIPS(path))
         """)
-    Optional<Uzytkownik> findByUzytId(@Param("uzytId") String uzytId);
+    Optional<Uzytkownik> findByUUID(String uuid);
 
     @Query("""
             MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(u:Uzytkownik{nazwa: $nazwa})
             RETURN u, collect(NODES(path)), collect(RELATIONSHIPS(path))
             """)
-    Optional<Uzytkownik> findByNazwa(@Param("nazwa") String nazwa);
+    Optional<Uzytkownik> findByNazwa(String nazwa);
     
     @Query("""
         MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(u:Uzytkownik{email: $email})
         RETURN u, collect(NODES(path)), collect(RELATIONSHIPS(path))
         """)
-    Optional<Uzytkownik> findByEmail(@Param("email") String email);
+    Optional<Uzytkownik> findByEmail(String email);
 
     @Query("""
         MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(u:Uzytkownik)
         WHERE u.nazwa = $nazwa OR u.email = $nazwa
         RETURN u, collect(NODES(path)), collect(RELATIONSHIPS(path))
         """)
-    Optional<Uzytkownik> findByNameOrEmail(@Param("nazwa") String nameOrEmail);
+    Optional<Uzytkownik> findByNameOrEmail(String nazwa);
 
     @Query("MATCH (u:Uzytkownik) WHERE (u.nazwa = $nazwa OR u.email = $nazwa) AND u.haslo = $haslo RETURN u")
-    Uzytkownik findByLogin(@Param("nazwa") String nazwa, @Param("haslo") String haslo);
+    Uzytkownik findByLogin(String nazwa, String haslo);
 
    // List<Uzytkownik> findByLabels(Set<String> labels);
 
@@ -96,10 +96,10 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
         RETURN count(uzyt)
         """)
-    Page<Uzytkownik> findAllUzytkownicy(@Param("szukaj") String szukaj, boolean aktywowany, Pageable pageable);
+    Page<Uzytkownik> findAllUzytkownicy(String szukaj, boolean aktywowany, Pageable pageable);
 
     @Query("MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa OR u.email = $email RETURN u")
-    Optional<Uzytkownik> checkIfUzytkownikExists(@Param("nazwa") String nazwa, @Param("email") String email);
+    Optional<Uzytkownik> checkIfUzytkownikExists(String nazwa, String email);
 
 
     @Query("""
@@ -107,7 +107,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         
         RETURN blokujacy, collect(nodes(p)), collect(relationships(p))
             """)
-    Optional<Uzytkownik> getBlokowaniUzytkownicyOfUzytkownik(@Param("email") String email);
+    Optional<Uzytkownik> getBlokowaniUzytkownicyOfUzytkownik(String email);
 
 
     @Query("""
@@ -118,7 +118,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         collect(nodes(p)), collect(relationships(p)), 
         collect(nodes(p2)), collect(relationships(p2))
             """)
-    Optional<Uzytkownik> getBlokowaniAndBlokujacy(@Param("nazwa") String nazwa);
+    Optional<Uzytkownik> getBlokowaniAndBlokujacy(String nazwa);
 
     @Query("""
         MATCH path = (uzyt:Uzytkownik)-[:MA_OGROD]->(:Ogrod)
@@ -138,7 +138,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
 
     @Query("""
-        MATCH (post:Post{postId: $postId})
+        MATCH (post:Post{uuid: $uuid})
         OPTIONAL MATCH (post)<-[:MA_POST]-(uzyt:Uzytkownik)
         OPTIONAL MATCH (post)<-[:JEST_W_POSCIE]-(:Komentarz)<-[:SKOMENTOWAL]-(uzyt2:Uzytkownik)
         OPTIONAL MATCH (post)<-[:OCENIL]-(uzyt3:Uzytkownik)
@@ -146,26 +146,26 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         UNWIND uzytkownicy AS uzytkownik
         RETURN DISTINCT uzytkownik
         """)
-    List<Uzytkownik> getConnectedUzytkownicyFromPostButBetter(@Param("postId") String postId);
+    List<Uzytkownik> getConnectedUzytkownicyFromPostButBetter(String uuid);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
         OPTIONAL MATCH (uzyt)-[:MA_POST]->(post:Post)
         RETURN count(post) as posty
                 """)
-    Integer getPostyCountOfUzytkownik(@Param("nazwa") String nazwa);
+    Integer getPostyCountOfUzytkownik(String nazwa);
     @Query("""
         MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
         OPTIONAL MATCH (uzyt)-[:SKOMENTOWAL]->(kom:Komentarz)
         RETURN count(kom) as komentarze
                 """)
-    Integer getKomentarzeCountOfUzytkownik(@Param("nazwa") String nazwa);
+    Integer getKomentarzeCountOfUzytkownik(String nazwa);
     @Query("""
         MATCH (uzyt:Uzytkownik{nazwa: $nazwa})
         OPTIONAL MATCH (uzyt)<-[:STWORZONA_PRZEZ]-(ros:RoslinaWlasna)
         RETURN count(ros) as rosliny
                 """)
-    Integer getRoslinyCountOfUzytkownik(@Param("nazwa") String nazwa);
+    Integer getRoslinyCountOfUzytkownik(String nazwa);
     @Query("""
         MATCH (oceniany:Uzytkownik{nazwa: $nazwa})
         OPTIONAL MATCH (oceniany)-[:SKOMENTOWAL]->(komentarz:Komentarz)<-[r2:OCENIL]-(uzyt:Uzytkownik)
@@ -175,7 +175,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
         RETURN ocenyPozytywne
                 """)
-    Integer getKomentarzeOcenyPozytywneOfUzytkownik(@Param("nazwa") String nazwa);
+    Integer getKomentarzeOcenyPozytywneOfUzytkownik(String nazwa);
 
 
     @Query("""
@@ -187,7 +187,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             COUNT(CASE WHEN r2.lubi = false THEN 1 ELSE NULL END) AS ocenyNegatywne
         RETURN ocenyNegatywne
                 """)
-    Integer getKomentarzeOcenyNegatywneOfUzytkownik(@Param("nazwa") String nazwa);
+    Integer getKomentarzeOcenyNegatywneOfUzytkownik(String nazwa);
 
 
     @Query("""
@@ -200,7 +200,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
         RETURN ocenyPozytywne
                 """)
-    Integer getPostyOcenyPozytywneOfUzytkownik(@Param("nazwa") String nazwa);
+    Integer getPostyOcenyPozytywneOfUzytkownik(String nazwa);
 
     @Query("""
         MATCH (oceniany:Uzytkownik{nazwa: $nazwa})
@@ -212,7 +212,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
 
         RETURN ocenyNegatywne
                 """)
-    Integer getPostyOcenyNegatywneOfUzytkownik(@Param("nazwa") String nazwa);
+    Integer getPostyOcenyNegatywneOfUzytkownik(String nazwa);
 
     /*
  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠤⢤⣄⡤⠤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -281,18 +281,18 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     SET ustawienia += $ustawienia.__properties__
     RETURN uzyt, collect(NODES(path)), collect(RELATIONSHIPS(path))
         """)
-    Uzytkownik updateUstawienia(@Param("ustawienia") Ustawienia ustawienia, @Param("email") String email);
+    Uzytkownik updateUstawienia(@Param("ustawienia") Ustawienia ustawienia, String email);
 
 
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.email = $nowyEmail RETURN u")
-    Uzytkownik updateEmail(@Param("email") String email, @Param("nowyEmail") String nowyEmail);
+    Uzytkownik updateEmail(String email, String nowyEmail);
 
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.haslo = $noweHaslo RETURN u")
-    Uzytkownik updateHaslo(@Param("email") String email, @Param("noweHaslo") String noweHaslo);
+    Uzytkownik updateHaslo(String email, String noweHaslo);
 
 
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.avatar = $avatar RETURN u")
-    Uzytkownik updateAvatar(@Param("email") String email, @Param("avatar") String avatar);
+    Uzytkownik updateAvatar(String email, String avatar);
 
     
     @Query("""
@@ -301,13 +301,13 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
             u.miejsceZamieszkania = $miejsceZamieszkania, u.opis = $opis
         RETURN u
         """)
-    Uzytkownik updateProfil(@Param("email") String email, @Param("imie") String imie, 
-    @Param("miasto") String miasto, @Param("miejsceZamieszkania") String miejsceZamieszkania,
-    @Param("opis") String opis);
+    Uzytkownik updateProfil(String email, String imie, 
+    String miasto, String miejsceZamieszkania,
+    String opis);
 
 
     @Query("MATCH (u:Uzytkownik) WHERE u.email = $email SET u.aktywowany = true RETURN u")
-    Uzytkownik activate(@Param("email") String email);
+    Uzytkownik activate(String email);
 
     @Query("""
         MATCH (blokowany:Uzytkownik{email: $blokowanyEmail})
@@ -317,7 +317,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         
         RETURN COUNT(r) > 0 AS success
             """)
-    Boolean zablokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, @Param("blokujacyEmail") String blokujacyEmail);
+    Boolean zablokujUzyt(String blokowanyEmail, String blokujacyEmail);
     
     @Query("""
         MATCH (blokujacy:Uzytkownik{email: $blokujacyEmail})-[r:BLOKUJE]->
@@ -325,7 +325,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         DELETE r
         RETURN COUNT(r) > 0 AS success
             """)
-    Boolean odblokujUzyt(@Param("blokowanyEmail") String blokowanyEmail, @Param("blokujacyEmail") String blokujacyEmail);
+    Boolean odblokujUzyt(String blokowanyEmail, String blokujacyEmail);
 
     @Query("""
        MATCH (u:Uzytkownik) WHERE u.nazwa = $nazwa 
@@ -353,7 +353,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         WITH u
         DETACH DELETE u 
         """)
-    void removeUzytkownik(@Param("email") String email);
+    void removeUzytkownik(String email);
 
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
@@ -364,7 +364,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         WITH post
         DETACH DELETE post
         """)
-    void removePostyOfUzytkownik(@Param("email") String email);
+    void removePostyOfUzytkownik(String email);
 
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
@@ -372,7 +372,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         OPTIONAL MATCH (kom)<-[:ODPOWIEDZIAL*0..]-(odpowiedz:Komentarz)<-[:SKOMENTOWAL]-(:Uzytkownik)
         DETACH DELETE odpowiedz
         """)
-    void removeKomentarzeOfUzytkownik(@Param("email") String email);
+    void removeKomentarzeOfUzytkownik(String email);
 
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
@@ -384,7 +384,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         WHERE NOT (powiadomienie)--()
         DELETE powiadomienie
         """)
-    void removePowiadomieniaOfUzytkownik(@Param("email") String email);
+    void removePowiadomieniaOfUzytkownik(String email);
     @Query("""
         MATCH (u:Uzytkownik{email: $email})
         OPTIONAL MATCH (u)<-[:STWORZONA_PRZEZ]-(roslina:RoslinaWlasna)
@@ -396,7 +396,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
         WHERE NOT (cecha)--()
         DELETE cecha
         """)
-    void removeRoslinyOfUzytkownik(@Param("email") String email);
+    void removeRoslinyOfUzytkownik(String email);
 
     @Query("""
         MATCH (u:Uzytkownik) DETACH DELETE u 

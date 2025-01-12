@@ -33,7 +33,7 @@ const routes: Routes = [
         data: { breadcrumb: 'Dodawanie rośliny' }
       },
       {
-        path: ':roslina-id',
+        path: ':uuid',
         data: { breadcrumb: (data: any) =>`${data.roslina.nazwa}` },
         resolve: { roslina: RoslinaResolverService },
         children:[

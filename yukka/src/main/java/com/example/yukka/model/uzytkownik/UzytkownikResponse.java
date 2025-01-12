@@ -14,7 +14,7 @@ import lombok.Setter;
  * 
  * <ul>
  * <li><strong>id</strong>: Unikalny identyfikator użytkownika.</li>
- * <li><strong>uzytId</strong>: Identyfikator użytkownika.</li>
+ * <li><strong>uuid</strong>: Identyfikator użytkownika.</li>
  * <li><strong>labels</strong>: Lista etykiet przypisanych do użytkownika.</li>
  * <li><strong>nazwa</strong>: Nazwa użytkownika.</li>
  * <li><strong>email</strong>: Adres email użytkownika.</li>
@@ -38,7 +38,7 @@ import lombok.Setter;
 @Builder
 public class UzytkownikResponse {
 private Long id;
-    private String uzytId;
+    private String uuid;
     private List<String> labels;
     private String nazwa;
     private String email;

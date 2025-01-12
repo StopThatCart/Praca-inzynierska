@@ -40,7 +40,7 @@ import lombok.ToString;
  * 
  * <ul>
  * <li><strong>id</strong>: Unikalny identyfikator użytkownika.</li>
- * <li><strong>uzytId</strong>: Identyfikator użytkownika.</li>
+ * <li><strong>uuid</strong>: Identyfikator użytkownika.</li>
  * <li><strong>labels</strong>: Lista etykiet przypisanych do użytkownika.</li>
  * <li><strong>nazwa</strong>: Nazwa użytkownika.</li>
  * <li><strong>email</strong>: Adres email użytkownika.</li>
@@ -77,8 +77,8 @@ public class Uzytkownik implements UserDetails, Principal{
     @Id @GeneratedValue
     private Long id;
 
-    @Property(name = "uzytId")
-    private String uzytId;
+    @Property(name = "uuid")
+    private String uuid;
 
     @DynamicLabels
     @Builder.Default
@@ -222,7 +222,7 @@ public class Uzytkownik implements UserDetails, Principal{
     public String toString() {
         return "Uzytkownik{" +
                 "id=" + id +
-                ", uzytId='" + uzytId + '\'' +
+                ", uuid='" + uuid + '\'' +
                 ", labels=" + labels +
                 ", nazwa='" + nazwa + '\'' +
                 ", email='" + email + '\'' +

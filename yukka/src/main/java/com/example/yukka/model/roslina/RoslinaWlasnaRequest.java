@@ -31,7 +31,7 @@ import lombok.experimental.SuperBuilder;
 /**
  * Klasa reprezentująca żądanie użytkownika dotyczące rośliny.
  * <ul>
- * <li><strong>roslinaId</strong>: Identyfikator rośliny.</li>
+ * <li><strong>uuid</strong>: Identyfikator rośliny.</li>
  * <li><strong>nazwa</strong>: Nazwa rośliny. Wymagana.</li>
  * <li><strong>opis</strong>: Opis rośliny. Wymagany.</li>
  * <li><strong>obrazDefault</strong>: Domyślna nazwa obrazu rośliny. Ignorowane podczas serializacji JSON.</li>
@@ -58,7 +58,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @ToString
 public class RoslinaWlasnaRequest {
-    private String roslinaId;
+    private String uuid;
 
     @NotEmpty(message = "Nazwa jest wymagana")
     private String nazwa;

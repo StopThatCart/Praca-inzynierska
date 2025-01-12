@@ -241,7 +241,7 @@ public class PowiadomienieService {
             throw new IllegalArgumentException("Konto użytkownika nie jest aktywne");
         }
 
-        if (zglaszany.getUzytId().equals(uzyt.getUzytId())) {
+        if (zglaszany.getUuid().equals(uzyt.getUuid())) {
             throw new IllegalArgumentException("Nie można zgłosić samego siebie");
         }
         
@@ -368,7 +368,7 @@ public class PowiadomienieService {
      * @param komentarz Komentarz, który dotyczy powiadomienia.
      */
     public void sendPowiadomienieOfKomentarz(Uzytkownik nadawca, Uzytkownik odbiorca, Komentarz komentarz) {
-        if(komentarz.getUzytkownik().getUzytId().equals(nadawca.getUzytId())) {
+        if(komentarz.getUzytkownik().getUuid().equals(nadawca.getUuid())) {
             return;
         }
 
@@ -384,7 +384,7 @@ public class PowiadomienieService {
         PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()
             .typ(TypPowiadomienia.KOMENTARZ_POST.name())
             .tytul(post != null ? post.getTytul() : "")
-            .odnosnik(post != null ? post.getPostId() : "")
+            .odnosnik(post != null ? post.getUuid() : "")
             .uzytkownikNazwa(nadawca.getNazwa()).avatar(nadawca.getAvatar())
             .avatar(nadawca.getAvatar())
             .build();
@@ -539,7 +539,7 @@ public class PowiadomienieService {
         if (!nazwyRoslin.isEmpty()) {
             PowiadomienieDTO powiadomienieRequest = PowiadomienieDTO.builder()
                     .typ(typ.toString())
-                    .odnosnik(uzytkownik.getUzytId())
+                    .odnosnik(uzytkownik.getUuid())
                     .nazwyRoslin(nazwyRoslin)
                     .build();
             addPowiadomienie(powiadomienieRequest, uzytkownik);

@@ -6,7 +6,7 @@ export interface Tile {
   y: number,
   clickable: boolean,
   zasadzonaRoslina?: ZasadzonaRoslinaResponse,
-  roslinaId?: string,
+  uuid?: string,
   backgroundColor?: string,
   hovered: boolean
 }
@@ -24,23 +24,23 @@ export class TileUtils {
     return tile;
   }
 
-  static findTileById(tiles: Tile[], roslinaId: string): Tile {
-    const tile = tiles.find(t => t.roslinaId === roslinaId);
+  static findTileById(tiles: Tile[], uuid: string): Tile {
+    const tile = tiles.find(t => t.uuid === uuid);
     if (!tile) {
-      throw new Error(`Nie znaleziono kafelka z przypisanym roslinaId(${roslinaId})`);
+      throw new Error(`Nie znaleziono kafelka z przypisanym uuid(${uuid})`);
     }
     return tile;
   }
 
   static clearTile(tile: Tile) {
-    tile.roslinaId = undefined;
+    tile.uuid = undefined;
     tile.zasadzonaRoslina = undefined;
     tile.backgroundColor = undefined;
     tile.image = this.images.dirt;
   }
 
   static removeRoslina(tile: Tile) {
-    tile.roslinaId = undefined;
+    tile.uuid = undefined;
     tile.zasadzonaRoslina = undefined;
     tile.image = this.images.dirt;
   }

@@ -30,7 +30,7 @@ export class RoslinaWlasnaService extends BaseService {
   }
 
   /** Path part for operation `updateObraz()` */
-  static readonly UpdateObrazPath = '/uzytkownikRosliny/{roslinaId}';
+  static readonly UpdateObrazPath = '/uzytkownikRosliny/{uuid}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

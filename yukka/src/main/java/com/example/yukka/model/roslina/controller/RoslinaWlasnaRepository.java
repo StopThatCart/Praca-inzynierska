@@ -256,7 +256,7 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
         RETURN count(DISTINCT roslina)
         """)
     Page<Roslina> findAllRoslinyOfUzytkownikWithParameters(
-        @Param("uzytkownikNazwa") String uzytkownikNazwa,
+        String uzytkownikNazwa,
         @Param("roslina") Roslina roslina, 
         @Param("formy") Set<Cecha> formy,
         @Param("gleby") Set<Cecha> gleby,
@@ -279,12 +279,12 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
         Pageable pageable);
 
     @Query("""
-        MATCH (ros:RoslinaWlasna{roslinaId: $roslinaId})
+        MATCH (ros:RoslinaWlasna{uuid: $uuid})
         OPTIONAL MATCH path = (ros)-[r]-(cecha)
         WHERE cecha:Cecha OR cecha:CechaWlasna
         RETURN ros, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relationships
     """)
-    Optional<Roslina> findByRoslinaIdWithRelations(@Param("roslinaId") String roslinaId);
+    Optional<Roslina> findByUUIDWithRelations(String uuid);
 
     @Query(value = """
         MATCH (roslina:RoslinaWlasna)-[:STWORZONA_PRZEZ]->(uzytkownik:Uzytkownik{nazwa: $nazwa})
@@ -295,21 +295,21 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
         MATCH (roslina:RoslinaWlasna)-[:STWORZONA_PRZEZ]->(uzytkownik:Uzytkownik{nazwa: $nazwa})
         RETURN count(roslina)
         """)
-    Page<Roslina> findRoslinyOfUzytkownik(@Param("nazwa") String nazwa, Pageable pageable);
+    Page<Roslina> findRoslinyOfUzytkownik(String nazwa, Pageable pageable);
 
     @Query("""
-        MATCH (roslina:RoslinaWlasna {roslinaId: $roslinaId})-[r1:STWORZONA_PRZEZ]->(uzytkownik:Uzytkownik{nazwa: $nazwa})
+        MATCH (roslina:RoslinaWlasna {uuid: $uuid})-[r1:STWORZONA_PRZEZ]->(uzytkownik:Uzytkownik{nazwa: $nazwa})
         RETURN roslina, r1, uzytkownik
         """)
-    Optional<Roslina> findRoslinaOfUzytkownik(@Param("nazwa") String nazwa, String roslinaId);
+    Optional<Roslina> findRoslinaOfUzytkownik(String nazwa, String uuid);
 
 
     @Query("""
-        MATCH (uzytkownik:Uzytkownik{uzytId: $uzytId})
+        MATCH (uzytkownik:Uzytkownik{uuid: $uuid})
         WITH uzytkownik, $roslina.__properties__ AS rp 
         MERGE (p:RoslinaWlasna:Roslina {
         nazwa: rp.nazwa, 
-        roslinaId: rp.roslinaId,
+        uuid: randomUUID(),
         opis: rp.opis, 
         obraz: COALESCE(rp.obraz, 'default_plant.jpg'), 
         wysokoscMin: rp.wysokoscMin, 
@@ -319,12 +319,12 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
         WITH p OPTIONAL MATCH path=(p)-[r]->(w)
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
-    Roslina addRoslina(@Param("uzytId") String uzytId, @Param("roslina") Roslina roslina);
+    Roslina addRoslina(String uuid, @Param("roslina") Roslina roslina);
 
     @Query("""
-        MATCH (uzytkownik:Uzytkownik{uzytId: $uzytId})
+        MATCH (uzytkownik:Uzytkownik{uuid: $uzytUUID})
         WITH uzytkownik
-        MERGE (p:RoslinaWlasna:Roslina {nazwa: $name, roslinaId: $roslinaId, opis: $description, 
+        MERGE (p:RoslinaWlasna:Roslina {nazwa: $name, uuid: randomUUID(), opis: $description, 
         obraz: COALESCE($imageFilename, 'default_plant.jpg'), wysokoscMin: $heightMin, wysokoscMax: $heightMax})
             -[:STWORZONA_PRZEZ]->(uzytkownik)
 
@@ -338,16 +338,16 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
         WITH p OPTIONAL MATCH path=(p)-[r]->(w)
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
-    Roslina addRoslina(@Param("uzytId") String uzytId,
-        @Param("name") String name, @Param("roslinaId") String roslinaId, 
-        @Param("description") String description, @Param("imageFilename") String imageFilename, 
-        @Param("heightMin") Double heightMin, @Param("heightMax") Double heightMax, 
-        @Param("relatLump") List<Map<String, String>> relatLump
+    Roslina addRoslina(String uzytUUID,
+        String name,
+        String description, String imageFilename, 
+        Double heightMin, Double heightMax, 
+        List<Map<String, String>> relatLump
     );
 
 
     @Query("""
-           MATCH (p:RoslinaWlasna{roslinaId: $roslinaId})
+           MATCH (p:RoslinaWlasna{uuid: $uuid})
            SET  p.nazwa = $name, p.opis = $description,
                 p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
            WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
@@ -369,32 +369,32 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
            RETURN p
     """)
     Roslina updateRoslina(
-        @Param("roslinaId") String roslinaId,
-        @Param("name") String name,
-        @Param("description") String description,
-        @Param("imageFilename") String imageFilename,
-        @Param("heightMin") Double heightMin,
-        @Param("heightMax") Double heightMax,
+        String uuid,
+        String name,
+        String description,
+        String imageFilename,
+        Double heightMin,
+        Double heightMax,
         @Param("relatLump") List<Map<String, String>> relatLump
     );
 
     @Query("""
-        MATCH (p:RoslinaWlasna{roslinaId: $roslinaId})
+        MATCH (p:RoslinaWlasna{uuid: $uuid})
         SET  p.nazwa = $name, p.opis = $description,
             p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
     """)
     Roslina updateRoslina(
-    @Param("roslinaId") String roslinaId,
-    @Param("name") String name,
-    @Param("description") String description,
-    @Param("imageFilename") String imageFilename,
-    @Param("heightMin") Double heightMin,
-    @Param("heightMax") Double heightMax
+    String uuid,
+    String name,
+    String description,
+    String imageFilename,
+    Double heightMin,
+    Double heightMax
     );
 
 
     @Query("""
-            MATCH (p:RoslinaWlasna{roslinaId: $roslinaId}) 
+            MATCH (p:RoslinaWlasna{uuid: $uuid}) 
             DETACH DELETE p
 
             WITH p 
@@ -402,7 +402,7 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
             WHERE NOT (cecha)--()
             DELETE cecha
             """)
-    void deleteByRoslinaId(@Param("roslinaId") String roslinaId);
+    void deleteByUUID(String uuid);
 
     @Query("""
            MATCH (cecha:CechaWlasna) 

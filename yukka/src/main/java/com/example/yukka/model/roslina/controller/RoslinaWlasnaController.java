@@ -62,7 +62,7 @@ import lombok.RequiredArgsConstructor;
  * 
  * <li><strong>updateRoslinaObraz</strong>: Aktualizuje obraz rośliny.
  * <ul>
- * <li><strong>roslinaId</strong>: Identyfikator rośliny.</li>
+ * <li><strong>uuid</strong>: Identyfikator rośliny.</li>
  * <li><strong>file</strong>: Nowy plik obrazu rośliny.</li>
  * <li><strong>connectedUser</strong>: Aktualnie zalogowany użytkownik.</li>
  * </ul>
@@ -137,17 +137,17 @@ public class RoslinaWlasnaController {
     /**
      * Metoda obsługująca żądanie HTTP POST do aktualizacji obrazu rośliny.
      *
-     * @param roslinaId identyfikator rośliny
+     * @param uuid identyfikator rośliny
      * @param file plik obrazu rośliny
      * @param connectedUser obiekt uwierzytelnionego użytkownika
      * @return ResponseEntity zawierające odpowiedź z informacją o zaktualizowaniu obrazu rośliny
      */
-    @PutMapping(value = "/{roslinaId}", consumes = "multipart/form-data", produces = "application/json")
+    @PutMapping(value = "/{uuid}", consumes = "multipart/form-data", produces = "application/json")
     public ResponseEntity<?> updateObraz(
-            @PathVariable("roslinaId") String roslinaId, 
+            @PathVariable() String uuid, 
             @Parameter() @RequestPart(value = "file", required = false) MultipartFile file, 
             Authentication connectedUser) {
-        roslinaWlasnaService.uploadRoslinaWlasnaObraz(file, roslinaId, connectedUser);
+        roslinaWlasnaService.uploadRoslinaWlasnaObraz(file, uuid, connectedUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     

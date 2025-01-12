@@ -278,7 +278,7 @@ export class OffcanvasRoslinaComponent {
   goToMoveRoslina() {
     this.router.navigate(['ogrod', this.tokenService.nazwa,
       'dzialka', this.numerDzialki,
-      'przenoszenie', this.zasadzonaRoslina?.roslina?.roslinaId])
+      'przenoszenie', this.zasadzonaRoslina?.roslina?.uuid])
       // .then(() => {
       //   window.location.reload();
       // })
@@ -288,7 +288,7 @@ export class OffcanvasRoslinaComponent {
 
   private makeDzialkaRoslinaRequest(): DzialkaRoslinaRequest {
     return {
-      roslinaId: this.zasadzonaRoslina!.roslina!.roslinaId!,
+      roslinaUUID: this.zasadzonaRoslina!.roslina!.uuid!,
       numerDzialki: this.numerDzialki!,
       x: this.zasadzonaRoslina!.x!,
       y: this.zasadzonaRoslina!.y!,

@@ -30,10 +30,10 @@ export class RoslinaPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const roslinaId = params['roslina-id'];
-      if (roslinaId) {
-        this.getRoslinaByRoslinaId(roslinaId);
-        this.route.snapshot.data['roslina-id'] = roslinaId;
+      const uuid = params['uuid'];
+      if (uuid) {
+        this.getRoslinaByUuid(uuid);
+        this.route.snapshot.data['uuid'] = uuid;
       }
     });
 
@@ -53,34 +53,34 @@ export class RoslinaPageComponent implements OnInit {
 
 
   goToUpdateRoslina() {
-    if ((this.isPracownik() || this.isAutor()) && this.roslina?.roslinaId) {
-      return ['/rosliny', this.roslina.roslinaId ,'aktualizuj'];
+    if ((this.isPracownik() || this.isAutor()) && this.roslina?.uuid) {
+      return ['/rosliny', this.roslina.uuid ,'aktualizuj'];
     }
     return undefined;
   }
 
   goToUploadRoslinaObraz() {
-    if ((this.isPracownik() || this.isAutor()) && this.roslina?.roslinaId) {
-      return ['/rosliny', this.roslina.roslinaId ,'obraz'];
+    if ((this.isPracownik() || this.isAutor()) && this.roslina?.uuid) {
+      return ['/rosliny', this.roslina.uuid ,'obraz'];
     }
     return undefined;
   }
 
   goToAddRoslinaToDzialka() {
-    if (this.roslina?.roslinaId) {
-      return ['/ogrod', this.tokenService.nazwa, 'dzialka', 'dodawanie', this.roslina.roslinaId];
+    if (this.roslina?.uuid) {
+      return ['/ogrod', this.tokenService.nazwa, 'dzialka', 'dodawanie', this.roslina.uuid];
     }
     return undefined;
     
   }
 
   removeRoslina() {
-    if(!(this.isPracownik() || this.isAutor()) || !this.roslina?.roslinaId) {
+    if(!(this.isPracownik() || this.isAutor()) || !this.roslina?.uuid) {
       return;
     }
 
     if(confirm("Czy na pewno chcesz usunąć roślinę?")) {
-      this.roslinaService.deleteRoslina({ 'roslina-id': this.roslina?.roslinaId }).subscribe({
+      this.roslinaService.deleteRoslina({ uuid: this.roslina?.uuid }).subscribe({
         next: () => {
           this.router.navigate(['..'], { relativeTo: this.route });
         },
@@ -103,8 +103,8 @@ export class RoslinaPageComponent implements OnInit {
     });
   }
 
-  getRoslinaByRoslinaId(roslinaId: string): void {
-    this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId }).subscribe({
+  getRoslinaByUuid(uuid: string): void {
+    this.roslinaService.findByUuid({ uuid: uuid }).subscribe({
       next: (roslina) => {
         this.roslina = roslina;
         this.errorMessage = null;

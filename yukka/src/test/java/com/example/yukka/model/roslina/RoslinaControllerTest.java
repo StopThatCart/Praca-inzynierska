@@ -60,7 +60,7 @@ public class RoslinaControllerTest {
     Uzytkownik uzyt;
 
     Roslina roslina;
-    //private Long roslinaId;
+    //private Long uuid;
     private final String roslinaNazwa = "Na pewno takiej nazwy nie ma";
     private final String nazwaLacinska = "nomen latinum certe nullum est";
     private final String roslinaOpis = "To jest dramat.";
@@ -290,7 +290,7 @@ public class RoslinaControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Roslina roslina2 = roslinaRepository.findByNazwaLacinska(nazwaLacinska).get();
 
-        roslinaController.deleteRoslina(roslina2.getRoslinaId(), mockAuth);
+        roslinaController.deleteRoslina(roslina2.getUuid(), mockAuth);
 
         Assertions.assertThat(roslinaRepository.findByNazwaLacinska(nazwaLacinska)).isEmpty();
 

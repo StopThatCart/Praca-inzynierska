@@ -87,14 +87,14 @@ public class FileStoreService {
      * Zapisuje obraz rośliny użytkownika.
      *
      * @param sourceFile Plik obrazu do zapisania.
-     * @param roslinaId Identyfikator rośliny.
-     * @param uzytId Identyfikator użytkownika.
+     * @param roslinaUUID Identyfikator rośliny.
+     * @param uzytUUID Identyfikator użytkownika.
      * @return Ścieżka do zapisanego pliku.
      * @throws IllegalArgumentException Jeśli plik obrazu jest nieprawidłowy.
      */
-    public String saveRoslinaWlasnaObraz(@Nonnull MultipartFile sourceFile, @Nonnull String roslinaId, @Nonnull String uzytId) {
+    public String saveRoslinaWlasnaObraz(@Nonnull MultipartFile sourceFile, @Nonnull String roslinaUUID, @Nonnull String uzytUUID) {
         validateImage(sourceFile, false);
-        String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "rosliny" + separator + roslinaId;
+        String fileUploadSubPath = "uzytkownicy" + separator + uzytUUID + separator + "rosliny" + separator + roslinaUUID;
         String fileName = generateFileName(sourceFile.getName()) + "_" + System.currentTimeMillis();
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
@@ -121,13 +121,13 @@ public class FileStoreService {
      * Zapisuje obraz rośliny w działce użytkownika.
      *
      * @param sourceFile Plik obrazu do zapisania.
-     * @param uzytId Identyfikator użytkownika.
+     * @param uuid Identyfikator użytkownika.
      * @return Ścieżka do zapisanego pliku.
      * @throws IllegalArgumentException Jeśli plik obrazu jest nieprawidłowy.
      */
-    public String saveRoslinaObrazInDzialka(@Nonnull MultipartFile sourceFile, @Nonnull String uzytId) {
+    public String saveRoslinaObrazInDzialka(@Nonnull MultipartFile sourceFile, @Nonnull String uuid) {
         validateImage(sourceFile, false);
-        String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "dzialki" + separator + "rosliny";
+        String fileUploadSubPath = "uzytkownicy" + separator + uuid + separator + "dzialki" + separator + "rosliny";
         String fileName = generateFileName(sourceFile.getName()) + "_" + System.currentTimeMillis();
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
@@ -136,21 +136,21 @@ public class FileStoreService {
      * Zapisuje obraz posta użytkownika.
      *
      * @param sourceFile Plik obrazu do zapisania.
-     * @param postId Identyfikator posta.
-     * @param uzytId Identyfikator użytkownika.
+     * @param postUUID Identyfikator posta.
+     * @param uzytUUID Identyfikator użytkownika.
      * @return Ścieżka do zapisanego pliku.
      * @throws IllegalArgumentException Jeśli plik obrazu jest nieprawidłowy.
      */
     public String savePost(@Nonnull MultipartFile sourceFile,
-                           @Nonnull String postId, @Nonnull String uzytId) {
+                           @Nonnull String postUUID, @Nonnull String uzytUUID) {
         
         validateImage(sourceFile, true);
-        final String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "posty";
+        final String fileUploadSubPath = "uzytkownicy" + separator + uzytUUID + separator + "posty";
         String fileName = "";
         if (!sourceFile.getName().isEmpty()) {
             fileName =  generateFileName(sourceFile.getName()) + System.currentTimeMillis();
         } else {
-            fileName = generateFileName(postId) + System.currentTimeMillis();
+            fileName = generateFileName(postUUID) + System.currentTimeMillis();
         }
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
@@ -159,22 +159,22 @@ public class FileStoreService {
      * Zapisuje obraz komentarza użytkownika.
      *
      * @param sourceFile Plik obrazu do zapisania.
-     * @param komentarzId Identyfikator komentarza.
-     * @param uzytId Identyfikator użytkownika.
+     * @param komentarzUUID Identyfikator komentarza.
+     * @param uzytUUID Identyfikator użytkownika.
      * @return Ścieżka do zapisanego pliku.
      * @throws IllegalArgumentException Jeśli plik obrazu jest nieprawidłowy.
      */
     public String saveKomentarz(@Nonnull MultipartFile sourceFile,
-                                @Nonnull String komentarzId, @Nonnull String uzytId) {
+                                @Nonnull String komentarzUUID, @Nonnull String uzytUUID) {
         
         validateImage(sourceFile, true);
-        final String fileUploadSubPath = "uzytkownicy" + separator + uzytId + separator + "komentarze";
+        final String fileUploadSubPath = "uzytkownicy" + separator + uzytUUID + separator + "komentarze";
         
         String fileName = "";
         if (!sourceFile.getName().isEmpty()) {
             fileName =  generateFileName(sourceFile.getName()) + "_" + System.currentTimeMillis();
         } else {
-            fileName = generateFileName(komentarzId) + "_" + System.currentTimeMillis();
+            fileName = generateFileName(komentarzUUID) + "_" + System.currentTimeMillis();
         }
         return uploadFile(sourceFile, fileUploadSubPath, fileName);
     }
@@ -183,14 +183,14 @@ public class FileStoreService {
      * Zapisuje obraz avatara użytkownika.
      *
      * @param sourceFile Plik obrazu do zapisania.
-     * @param uzytId Identyfikator użytkownika.
+     * @param uzytUUID Identyfikator użytkownika.
      * @return Ścieżka do zapisanego pliku.
      * @throws IllegalArgumentException Jeśli plik obrazu jest nieprawidłowy.
      */
-    public String saveAvatar(@Nonnull MultipartFile sourceFile, @Nonnull String uzytId) {
+    public String saveAvatar(@Nonnull MultipartFile sourceFile, @Nonnull String uzytUUID) {
         validateImage(sourceFile, false);
 
-        String fileUploadSubPath = "uzytkownicy"+ separator + uzytId + separator + "avatar";
+        String fileUploadSubPath = "uzytkownicy"+ separator + uzytUUID + separator + "avatar";
         String fileName = "avatar";
         String avatar = uploadFile(sourceFile, fileUploadSubPath, fileName);
         if(avatar == null) {

@@ -15,7 +15,7 @@ import lombok.Setter;
  * 
  * <ul>
  * <li><strong>id</strong>: Unikalny identyfikator komentarza.</li>
- * <li><strong>komentarzId</strong>: Identyfikator komentarza.</li>
+ * <li><strong>uuid</strong>: Identyfikator komentarza.</li>
  * <li><strong>opis</strong>: Treść komentarza.</li>
  * <li><strong>edytowany</strong>: Flaga wskazująca, czy komentarz został edytowany.</li>
  * <li><strong>ocenyLubi</strong>: Liczba pozytywnych ocen komentarza.</li>
@@ -36,7 +36,7 @@ import lombok.Setter;
 @Builder
 public class KomentarzResponse {
     private Long id;
-    private String komentarzId;
+    private String uuid;
     private String opis;
     private boolean edytowany;
     private Integer ocenyLubi;

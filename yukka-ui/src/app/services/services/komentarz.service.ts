@@ -15,8 +15,8 @@ import { addOcenaToKomentarz } from '../fn/komentarz/add-ocena-to-komentarz';
 import { AddOcenaToKomentarz$Params } from '../fn/komentarz/add-ocena-to-komentarz';
 import { addOdpowiedzToKomentarz } from '../fn/komentarz/add-odpowiedz-to-komentarz';
 import { AddOdpowiedzToKomentarz$Params } from '../fn/komentarz/add-odpowiedz-to-komentarz';
-import { findKomentarzById } from '../fn/komentarz/find-komentarz-by-id';
-import { FindKomentarzById$Params } from '../fn/komentarz/find-komentarz-by-id';
+import { findKomentarzByUuid } from '../fn/komentarz/find-komentarz-by-uuid';
+import { FindKomentarzByUuid$Params } from '../fn/komentarz/find-komentarz-by-uuid';
 import { findKomentarzeOfUzytkownik } from '../fn/komentarz/find-komentarze-of-uzytkownik';
 import { FindKomentarzeOfUzytkownik$Params } from '../fn/komentarz/find-komentarze-of-uzytkownik';
 import { KomentarzResponse } from '../models/komentarz-response';
@@ -133,33 +133,33 @@ export class KomentarzService extends BaseService {
     );
   }
 
-  /** Path part for operation `findKomentarzById()` */
-  static readonly FindKomentarzByIdPath = '/komentarze/{komentarz-id}';
+  /** Path part for operation `findKomentarzByUuid()` */
+  static readonly FindKomentarzByUuidPath = '/komentarze/{uuid}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findKomentarzById()` instead.
+   * To access only the response body, use `findKomentarzByUuid()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findKomentarzById$Response(params: FindKomentarzById$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
-    return findKomentarzById(this.http, this.rootUrl, params, context);
+  findKomentarzByUuid$Response(params: FindKomentarzByUuid$Params, context?: HttpContext): Observable<StrictHttpResponse<KomentarzResponse>> {
+    return findKomentarzByUuid(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findKomentarzById$Response()` instead.
+   * To access the full response (for headers, for example), `findKomentarzByUuid$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findKomentarzById(params: FindKomentarzById$Params, context?: HttpContext): Observable<KomentarzResponse> {
-    return this.findKomentarzById$Response(params, context).pipe(
+  findKomentarzByUuid(params: FindKomentarzByUuid$Params, context?: HttpContext): Observable<KomentarzResponse> {
+    return this.findKomentarzByUuid$Response(params, context).pipe(
       map((r: StrictHttpResponse<KomentarzResponse>): KomentarzResponse => r.body)
     );
   }
 
   /** Path part for operation `removeKomentarz()` */
-  static readonly RemoveKomentarzPath = '/komentarze/{komentarz-id}';
+  static readonly RemoveKomentarzPath = '/komentarze/{uuid}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

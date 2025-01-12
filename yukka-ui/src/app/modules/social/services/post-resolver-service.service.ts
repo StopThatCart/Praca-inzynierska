@@ -16,10 +16,8 @@ export class PostResolverService implements Resolve<PostResponse> {
   ) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<PostResponse> {
-    const postId = route.paramMap.get('postId');
-    console.log("PostResolverService:resolve: postId: ", postId);
-    //return this.postService.findPostById({ 'post-id': postId as string } );
-    return this.postService.findPostByIdCheck({ 'post-id': postId as string } ).pipe(
+    const uuid = route.paramMap.get('uuid');
+    return this.postService.findPostByUuidCheck({ uuid: uuid as string } ).pipe(
       catchError((error) => {
         this.errorHandlingService.handleResolverErrors(error, this.router);
         throw error;

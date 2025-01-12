@@ -326,8 +326,8 @@ export class DzialkaPageComponent implements OnInit  {
 
       const tile = TileUtils.findTile(this.tiles, pozycja.x, pozycja.y);
       if (tile) {
-        if (zasadzonaRoslina.roslina && zasadzonaRoslina.roslina.roslinaId) {
-          tile.roslinaId = zasadzonaRoslina.roslina.roslinaId;
+        if (zasadzonaRoslina.roslina && zasadzonaRoslina.roslina.uuid) {
+          tile.uuid = zasadzonaRoslina.roslina.uuid;
           if(zasadzonaRoslina.wyswietlanie !== WyswietlanieRosliny.TEKSTURA) {
             tile.backgroundColor = zasadzonaRoslina.kolor;
           }
@@ -357,7 +357,7 @@ export class DzialkaPageComponent implements OnInit  {
         return;
       }
 
-      if(tile.roslinaId  && tile.roslinaId !== this.selectedRoslina?.roslina?.roslinaId) {
+      if(tile.uuid  && tile.uuid !== this.selectedRoslina?.roslina?.uuid) {
         console.log('Ten kafelek nie jest przypisany do tej rośliny.');
         return;
       }
@@ -371,7 +371,7 @@ export class DzialkaPageComponent implements OnInit  {
 
     else {
       console.log(`Koordynaty kafelka: (${tile.x}, ${tile.y})
-        RoslinaId: ${tile.roslinaId}
+        Uuid: ${tile.uuid}
         Leży na nim roślina: ${tile.zasadzonaRoslina?.roslina?.nazwa}
         Kolorek: ${tile.backgroundColor}
         tekstura jest?: ${tile.image ? 'tak' : 'nie'}
@@ -392,7 +392,7 @@ export class DzialkaPageComponent implements OnInit  {
         this.drawTileTexture(tile, this.canvas.nativeElement.getContext('2d')!);
       } else {
         this.selectedRoslina.pozycje?.push({ x: tile.x, y: tile.y });
-        tile.roslinaId = this.selectedRoslina.roslina?.roslinaId;
+        tile.uuid = this.selectedRoslina.roslina?.uuid;
         tile.backgroundColor = this.selectedRoslina.kolor;
         tile.image = this.selectedRoslina.tekstura || TileUtils.images.dirt;
       }
@@ -412,7 +412,7 @@ export class DzialkaPageComponent implements OnInit  {
 
     }
 
-    tile.roslinaId = this.selectedRoslina.roslina?.roslinaId;
+    tile.uuid = this.selectedRoslina.roslina?.uuid;
     tile.zasadzonaRoslina = this.selectedRoslina;
     tile.backgroundColor = this.selectedRoslina.kolor;
     tile.image = this.selectedRoslina.tekstura || TileUtils.images.dirt;

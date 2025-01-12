@@ -41,7 +41,7 @@ import lombok.Setter;
  * <ul>
  *   <li><strong>initPozycje</strong>: Inicjalizuje zbiór pozycji na podstawie tablic współrzędnych.</li>
  *   <li><strong>equalsRoslina(Roslina roslina)</strong>: Sprawdza, czy podana roślina jest równa roślinie w relacji.</li>
- *   <li><strong>equalsRoslina(String roslinaId)</strong>: Sprawdza, czy podane ID rośliny jest równe ID rośliny w relacji.</li>
+ *   <li><strong>equalsRoslina(String roslinaUUID)</strong>: Sprawdza, czy podane ID rośliny jest równe ID rośliny w relacji.</li>
  *   <li><strong>equalsRoslina(ZasadzonaNaReverse zasadzinaNaReverse)</strong>: Sprawdza, czy roślina w podanej relacji jest równa roślinie w tej relacji.</li>
  * </ul>
  */
@@ -102,17 +102,17 @@ public class ZasadzonaNaReverse {
 
     @JsonIgnore
     public boolean equalsRoslina(Roslina roslina) {
-        return this.roslina.getRoslinaId().equals(roslina.getRoslinaId());
+        return this.roslina.getUuid().equals(roslina.getUuid());
     }
 
     @JsonIgnore
-    public boolean equalsRoslina(String roslinaId) {
+    public boolean equalsRoslina(String roslinaUUID) {
         Roslina roslina = this.roslina;
         if(roslina == null) {
             return false;
         } 
 
-        return this.roslina.getRoslinaId().equals(roslinaId);
+        return this.roslina.getUuid().equals(roslinaUUID);
     }
 
     @JsonIgnore
@@ -122,7 +122,7 @@ public class ZasadzonaNaReverse {
         if(roslina == null || roslinaWhatever == null) {
             return false;
         } 
-        return this.roslina.getRoslinaId().equals(roslinaWhatever.getRoslinaId());
+        return this.roslina.getUuid().equals(roslinaWhatever.getUuid());
     }
 
 }

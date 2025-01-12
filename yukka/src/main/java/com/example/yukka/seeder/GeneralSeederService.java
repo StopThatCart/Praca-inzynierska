@@ -134,7 +134,7 @@ public class GeneralSeederService {
 		log.info("Seedowanie uzytkownikow...");
 
 		Uzytkownik usJan = Uzytkownik.builder()
-		.uzytId(uzytkownikService.createUzytkownikId())
+		.uuid(uzytkownikService.createUzytkownikId())
 		.nazwa("Jan Kowalski").email("jan@email.pl")
 		.haslo(passwordEncoder.encode("jan12345678"))
 		.labels(new ArrayList<>(Arrays.asList("Admin")))
@@ -142,7 +142,7 @@ public class GeneralSeederService {
 		.build();
 
 		Uzytkownik usPrac = Uzytkownik.builder()
-		.uzytId(uzytkownikService.createUzytkownikId())
+		.uuid(uzytkownikService.createUzytkownikId())
 		.nazwa("Anna Nowak")
 		.email("anna@email.pl")
 		.haslo(passwordEncoder.encode("anna12345678"))
@@ -151,7 +151,7 @@ public class GeneralSeederService {
 
 
 		Uzytkownik usPiotr = Uzytkownik.builder()
-		.uzytId(uzytkownikService.createUzytkownikId())
+		.uuid(uzytkownikService.createUzytkownikId())
         .nazwa("Piotr Wiśniewski").email(piotrEmail)
         .haslo(passwordEncoder.encode("piotr12345678"))
 		.aktywowany(true)
@@ -159,7 +159,7 @@ public class GeneralSeederService {
 
 
 		Uzytkownik usKatarzyna = Uzytkownik.builder()
-		.uzytId(uzytkownikService.createUzytkownikId())
+		.uuid(uzytkownikService.createUzytkownikId())
 		.nazwa("Katarzyna Mazur").email(katarzynaEmail)
         .haslo(passwordEncoder.encode("katarzyna12345678"))
 		.aktywowany(true)
@@ -167,14 +167,14 @@ public class GeneralSeederService {
 
 
 		Uzytkownik usMichal = Uzytkownik.builder()
-		.uzytId(uzytkownikService.createUzytkownikId())
+		.uuid(uzytkownikService.createUzytkownikId())
         .nazwa("Michał Zieliński").email(michalEmail)
         .haslo(passwordEncoder.encode("michal12345678"))
 		.aktywowany(true)
         .build();
 
 		Uzytkownik usNiegrzeczny = Uzytkownik.builder()
-		.uzytId(uzytkownikService.createUzytkownikId())
+		.uuid(uzytkownikService.createUzytkownikId())
 		.nazwa("Niegrzeczny Użytkownik").email(niegrzecznyEmail)
 		.haslo(passwordEncoder.encode("bad12345678"))
 		.aktywowany(true)
@@ -244,7 +244,7 @@ public class GeneralSeederService {
 			))
 		.kolor("#6c6ef0")
 		.wyswietlanie(Wyswietlanie.TEKSTURA_KOLOR.toString())
-		.roslinaId(ros.getRoslinaId())
+		.roslinaUUID(ros.getUuid())
 		.build();
 
 
@@ -259,7 +259,7 @@ public class GeneralSeederService {
 			))
 		.kolor("#f06ce7")
 		.wyswietlanie(Wyswietlanie.KOLOR.toString())
-		.roslinaId(ros.getRoslinaId())
+		.roslinaUUID(ros.getUuid())
 		.build();
 		
 		log.info("Dodawanie rosliny 1 do dzialek");
@@ -290,7 +290,7 @@ public class GeneralSeederService {
 			))
 		.kolor("#ebf06c")
 		.wyswietlanie(Wyswietlanie.TEKSTURA_KOLOR.toString())
-		.roslinaId(roslinaUzyt.getRoslinaId())
+		.roslinaUUID(roslinaUzyt.getUuid())
 		.build();
 
 		dzialkaService.saveRoslinaToDzialka(req3, null, null, usPiotr);
@@ -324,7 +324,7 @@ public class GeneralSeederService {
 			))
 		.kolor("#1ba626")
 		.wyswietlanie(Wyswietlanie.KOLOR.toString())
-		.roslinaId(ros.getRoslinaId())
+		.roslinaUUID(ros.getUuid())
 		.build();
 		
 		log.info("Dodawanie rosliny dla anny do dzialek");

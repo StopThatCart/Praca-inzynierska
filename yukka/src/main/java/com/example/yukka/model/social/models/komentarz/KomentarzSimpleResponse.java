@@ -11,12 +11,12 @@ import lombok.Setter;
  * 
  * <ul>
  *   <li><strong>id</strong>: Unikalny identyfikator komentarza.</li>
- *   <li><strong>komentarzId</strong>: Identyfikator komentarza.</li>
+ *   <li><strong>uuid</strong>: Identyfikator komentarza.</li>
  *   <li><strong>opis</strong>: Treść komentarza.</li>
  *   <li><strong>edytowany</strong>: Flaga oznaczająca, czy komentarz został edytowany.</li>
  *   <li><strong>dataUtworzenia</strong>: Data utworzenia komentarza.</li>
  *   <li><strong>uzytkownikNazwa</strong>: Nazwa użytkownika, który dodał komentarz.</li>
- *   <li><strong>postId</strong>: Identyfikator posta, do którego odnosi się komentarz.</li>
+ *   <li><strong>postUUID</strong>: Identyfikator posta, do którego odnosi się komentarz.</li>
  *   <li><strong>obraz</strong>: Obraz związany z komentarzem.</li>
  *   <li><strong>avatar</strong>: Avatar użytkownika, który dodał komentarz.</li>
  * </ul>
@@ -28,12 +28,12 @@ import lombok.Setter;
 @Builder
 public class KomentarzSimpleResponse {
     private Long id;
-    private String komentarzId;
+    private String uuid;
     private String opis;
     private boolean edytowany;
     private String dataUtworzenia;
     private String uzytkownikNazwa;
-    private String postId;
+    private String postUUID;
     public byte[] obraz;
     public byte[] avatar;
 }

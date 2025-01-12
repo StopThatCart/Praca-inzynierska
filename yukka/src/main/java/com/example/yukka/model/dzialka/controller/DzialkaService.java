@@ -187,14 +187,14 @@ public class DzialkaService {
     }
 
     @Transactional(readOnly = true)
-    public ZasadzonaRoslinaResponse getRoslinaInDzialka(int numer, String roslinaId, Authentication connectedUser) {
+    public ZasadzonaRoslinaResponse getRoslinaInDzialka(int numer, String uuid, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
 
-        Dzialka dzialka = dzialkaRepository.getRoslinaInDzialka(uzyt.getEmail(), numer, roslinaId)
-        .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId + " na działce " + numer));
+        Dzialka dzialka = dzialkaRepository.getRoslinaInDzialka(uzyt.getEmail(), numer, uuid)
+        .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + uuid + " na działce " + numer));
 
         if (dzialka.getZasadzoneRosliny().isEmpty()) {
-            throw new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId + " na działce " + numer);
+            throw new EntityNotFoundException("Nie znaleziono rośliny o id " + uuid + " na działce " + numer);
         }
         
         return roslinaMapper.toZasadzonaRoslinaResponse(dzialka.getZasadzoneRosliny().get(0));
@@ -280,10 +280,10 @@ public class DzialkaService {
     private Dzialka saveToDzialka(@Valid DzialkaRoslinaRequest request, MultipartFile obraz, MultipartFile tekstura, Uzytkownik uzyt) {
         String nazwaLacinskaOrId;
 
-        if(request.getRoslinaId() != null) {
-            roslinaRepository.findByRoslinaId(request.getRoslinaId())
-            .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rośliny użytkownika o roslinaId: " + request.getRoslinaId()));
-            nazwaLacinskaOrId = request.getRoslinaId();
+        if(request.getRoslinaUUID() != null) {
+            roslinaRepository.findByUUID(request.getRoslinaUUID())
+            .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rośliny użytkownika o Id: " + request.getRoslinaUUID()));
+            nazwaLacinskaOrId = request.getRoslinaUUID();
         } else {
             throw new IllegalArgumentException("Nie podano id rośliny");
         }
@@ -297,7 +297,7 @@ public class DzialkaService {
 
         
         if(tekstura != null) {
-            request.setTekstura(fileStoreService.saveRoslinaObrazInDzialka(tekstura, uzyt.getUzytId()));    
+            request.setTekstura(fileStoreService.saveRoslinaObrazInDzialka(tekstura, uzyt.getUuid()));    
         } else if(request.getWyswietlanie().equals(Wyswietlanie.TEKSTURA.toString())) {
             throw new IllegalArgumentException("Nie można wybrać wyświetlania samej tekstury bez podania tekstury");
         } else {
@@ -305,7 +305,7 @@ public class DzialkaService {
         }
 
         if(obraz != null) {
-            request.setObraz(fileStoreService.saveRoslinaObrazInDzialka(obraz, uzyt.getUzytId()));    
+            request.setObraz(fileStoreService.saveRoslinaObrazInDzialka(obraz, uzyt.getUuid()));    
         } else {
             request.setObraz(null);
         }
@@ -582,7 +582,7 @@ public class DzialkaService {
                 if (pozycja.getObraz() != null) fileUtils.deleteObraz(pozycja.getObraz());
                 
                 log.info("Zapisywanie obrazu rośliny na działce[" + request.getNumerDzialki() + "]");
-                pfp = fileStoreService.saveRoslinaObrazInDzialka(obraz, uzyt.getUzytId());
+                pfp = fileStoreService.saveRoslinaObrazInDzialka(obraz, uzyt.getUuid());
                 if(pfp == null) return null;
                 dzialkaZRoslina = dzialkaRepository.updateRoslinaObrazInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
                  request.getX(), request.getY(), pfp);
@@ -592,7 +592,7 @@ public class DzialkaService {
                 if (pozycja.getTekstura() != null) fileUtils.deleteObraz(pozycja.getTekstura());
 
                 log.info("Zapisywanie tekstury rośliny na działce[" + request.getNumerDzialki() + "]");
-                pfp = fileStoreService.saveRoslinaObrazInDzialka(tekstura, uzyt.getUzytId());
+                pfp = fileStoreService.saveRoslinaObrazInDzialka(tekstura, uzyt.getUuid());
                 if(pfp == null) return null;
                 dzialkaZRoslina = dzialkaRepository.updateRoslinaTeksturaInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
                  request.getX(), request.getY(), pfp);

@@ -68,7 +68,6 @@ public class PostMapper {
      */
     public Post toPost(@Valid PostRequest request) {
         return Post.builder()
-            .postId(UUID.randomUUID().toString())
             .tytul(request.getTytul())
             .opis(request.getOpis())
             .obraz(request.getObraz())

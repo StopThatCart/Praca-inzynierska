@@ -20,7 +20,7 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
   roslina: RoslinaResponse = {};
   private _roslinaObraz: string | undefined;
 
-  roslinaId: string = '';
+  uuid: string = '';
 
   wybranyPlik: any = null;
 
@@ -37,16 +37,16 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.roslinaId = params['roslina-id'];
-      if (this.roslinaId) {
-        this.getRoslinaByRoslinaId(this.roslinaId);
-        this.route.snapshot.data['roslina-id'] = this.roslinaId;
+      this.uuid = params['uuid'];
+      if (this.uuid) {
+        this.getRoslinaByUuid(this.uuid);
+        this.route.snapshot.data['uuid'] = this.uuid;
       }
     });
   }
 
-  getRoslinaByRoslinaId(roslinaId: string): void {
-    this.roslinaService.findByRoslinaId({ 'roslina-id': roslinaId }).subscribe({
+  getRoslinaByUuid(uuid: string): void {
+    this.roslinaService.findByUuid({ uuid: uuid }).subscribe({
       next: (roslina) => {
         this.roslina = roslina;
         this.errorMsg = [];
@@ -94,7 +94,7 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
         next: () => {
           //this.message = 'Roślina została zaaktualizowana';
          // this.clearImage();
-          this.router.navigate(['/rosliny', this.roslinaId]);
+          this.router.navigate(['/rosliny', this.uuid]);
         },
         error: (error) => {
           this.message = 'Błąd podczas aktualizacji rośliny';
@@ -105,12 +105,12 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
 
   uploadUzytkownikRoslinaObraz(): void {
     this.roslinaWlasnaService.updateObraz({
-      roslinaId: this.roslinaId,
+      uuid: this.uuid,
       body: { file: this.wybranyPlik } })
       .subscribe({
         next: () => {
           this.message = 'Roślina została zaaktualizowana';
-          this.router.navigate(['/rosliny', this.roslina.roslinaId]);
+          this.router.navigate(['/rosliny', this.roslina.uuid]);
         },
         error: (error) => {
           this.message = 'Błąd podczas aktualizacji rośliny';

@@ -46,7 +46,7 @@ const routes: Routes = [
             data: { breadcrumb: 'Posty' }
           },
           {
-            path: ':postId',
+            path: ':uuid',
             component: PostyPageComponent,
             data: { breadcrumb: (data: any) =>`${data.post.tytul}` },
             resolve: { post: PostResolverService }
@@ -54,7 +54,7 @@ const routes: Routes = [
         ]
       },
       {
-        path: ':postId',
+        path: ':uuid',
         component: PostyPageComponent,
         data: { breadcrumb: (data: any) =>`${data.post.tytul}` },
         resolve: { post: PostResolverService }

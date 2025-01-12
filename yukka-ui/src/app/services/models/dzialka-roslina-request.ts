@@ -7,7 +7,7 @@ export interface DzialkaRoslinaRequest {
   numerDzialki: number;
   obraz?: string;
   pozycje: Array<Pozycja>;
-  roslinaId: string;
+  roslinaUUID: string;
   tekstura?: string;
   wyswietlanie: string;
   x: number;

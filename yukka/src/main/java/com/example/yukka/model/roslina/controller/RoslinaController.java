@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
  * <li><strong>findAllRoslinyWithParameters</strong> - Wyszukuje rośliny na podstawie podanych parametrów.</li>
  * <li><strong>getCechyWithRelations</strong> - Pobiera cechy roślin wraz z relacjami.</li>
  * <li><strong>findByNazwaLacinska</strong> - Wyszukuje roślinę na podstawie nazwy łacińskiej.</li>
- * <li><strong>findByRoslinaId</strong> - Wyszukuje roślinę na podstawie identyfikatora rośliny.</li>
+ * <li><strong>findByUUID</strong> - Wyszukuje roślinę na podstawie identyfikatora rośliny.</li>
  * <li><strong>saveRoslina</strong> - Zapisuje nową roślinę.</li>
  * <li><strong>updateRoslina</strong> - Aktualizuje dane rośliny na podstawie nazwy łacińskiej.</li>
  * <li><strong>updateRoslinaObraz</strong> - Aktualizuje obraz rośliny na podstawie nazwy łacińskiej.</li>
@@ -109,13 +109,13 @@ public class RoslinaController {
     /**
      * Metoda obsługująca żądanie HTTP GET do wyszukiwania rośliny na podstawie identyfikatora rośliny.
      *
-     * @param id identyfikator rośliny
+     * @param uuid identyfikator rośliny
      * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika. Używany jeśli roślina jest użytkownika.
      * @return ResponseEntity zawierające odpowiedź z rośliną w formacie JSON
      */
-    @GetMapping(value = "/roslina-id/{roslina-id}", produces="application/json")
-    public ResponseEntity<RoslinaResponse> findByRoslinaId(@PathVariable("roslina-id") String id, Authentication connectedUser) {
-        return ResponseEntity.ok(roslinaService.findByRoslinaId(id, connectedUser));
+    @GetMapping(value = "/uuid/{uuid}", produces="application/json")
+    public ResponseEntity<RoslinaResponse> findByUUID(@PathVariable("uuid") String uuid, Authentication connectedUser) {
+        return ResponseEntity.ok(roslinaService.findByUUID(uuid, connectedUser));
     }
 
     /**
@@ -166,13 +166,13 @@ public class RoslinaController {
     /**
      * Metoda obsługująca żądanie HTTP DELETE do usuwania rośliny na podstawie identyfikatora rośliny.
      *
-     * @param roslinaId identyfikator rośliny
+     * @param uuid identyfikator rośliny
      * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
      * @return ResponseEntity z odpowiedzią HTTP 204 NO CONTENT
      */
-    @DeleteMapping("/{roslina-id}")
-    public ResponseEntity<String> deleteRoslina(@PathVariable("roslina-id") String roslinaId, Authentication connectedUser) {
-        roslinaService.deleteByRoslinaId(roslinaId, connectedUser);
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<String> deleteRoslina(@PathVariable("uuid") String uuid, Authentication connectedUser) {
+        roslinaService.deleteByUUID(uuid, connectedUser);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

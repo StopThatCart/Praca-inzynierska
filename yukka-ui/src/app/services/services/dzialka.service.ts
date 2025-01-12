@@ -23,8 +23,8 @@ import { getPozycjeInDzialki } from '../fn/dzialka/get-pozycje-in-dzialki';
 import { GetPozycjeInDzialki$Params } from '../fn/dzialka/get-pozycje-in-dzialki';
 import { getRoslinaInDzialka } from '../fn/dzialka/get-roslina-in-dzialka';
 import { GetRoslinaInDzialka$Params } from '../fn/dzialka/get-roslina-in-dzialka';
-import { getRoslinaInDzialkaByRoslinaId } from '../fn/dzialka/get-roslina-in-dzialka-by-roslina-id';
-import { GetRoslinaInDzialkaByRoslinaId$Params } from '../fn/dzialka/get-roslina-in-dzialka-by-roslina-id';
+import { getRoslinaInDzialkaByUuid } from '../fn/dzialka/get-roslina-in-dzialka-by-uuid';
+import { GetRoslinaInDzialkaByUuid$Params } from '../fn/dzialka/get-roslina-in-dzialka-by-uuid';
 import { renameDzialka } from '../fn/dzialka/rename-dzialka';
 import { RenameDzialka$Params } from '../fn/dzialka/rename-dzialka';
 import { saveRoslinaToDzialka } from '../fn/dzialka/save-roslina-to-dzialka';
@@ -297,27 +297,27 @@ export class DzialkaService extends BaseService {
     );
   }
 
-  /** Path part for operation `getRoslinaInDzialkaByRoslinaId()` */
-  static readonly GetRoslinaInDzialkaByRoslinaIdPath = '/dzialki/{numer}/{roslina-id}';
+  /** Path part for operation `getRoslinaInDzialkaByUuid()` */
+  static readonly GetRoslinaInDzialkaByUuidPath = '/dzialki/{numer}/{uuid}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getRoslinaInDzialkaByRoslinaId()` instead.
+   * To access only the response body, use `getRoslinaInDzialkaByUuid()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getRoslinaInDzialkaByRoslinaId$Response(params: GetRoslinaInDzialkaByRoslinaId$Params, context?: HttpContext): Observable<StrictHttpResponse<ZasadzonaRoslinaResponse>> {
-    return getRoslinaInDzialkaByRoslinaId(this.http, this.rootUrl, params, context);
+  getRoslinaInDzialkaByUuid$Response(params: GetRoslinaInDzialkaByUuid$Params, context?: HttpContext): Observable<StrictHttpResponse<ZasadzonaRoslinaResponse>> {
+    return getRoslinaInDzialkaByUuid(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getRoslinaInDzialkaByRoslinaId$Response()` instead.
+   * To access the full response (for headers, for example), `getRoslinaInDzialkaByUuid$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getRoslinaInDzialkaByRoslinaId(params: GetRoslinaInDzialkaByRoslinaId$Params, context?: HttpContext): Observable<ZasadzonaRoslinaResponse> {
-    return this.getRoslinaInDzialkaByRoslinaId$Response(params, context).pipe(
+  getRoslinaInDzialkaByUuid(params: GetRoslinaInDzialkaByUuid$Params, context?: HttpContext): Observable<ZasadzonaRoslinaResponse> {
+    return this.getRoslinaInDzialkaByUuid$Response(params, context).pipe(
       map((r: StrictHttpResponse<ZasadzonaRoslinaResponse>): ZasadzonaRoslinaResponse => r.body)
     );
   }

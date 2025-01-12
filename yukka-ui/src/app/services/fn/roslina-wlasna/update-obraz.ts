@@ -8,7 +8,7 @@ import { RequestBuilder } from '../../request-builder';
 
 
 export interface UpdateObraz$Params {
-  roslinaId: string;
+  uuid: string;
       body?: {
 'file'?: Blob;
 }
@@ -18,7 +18,7 @@ export function updateObraz(http: HttpClient, rootUrl: string, params: UpdateObr
 }>> {
   const rb = new RequestBuilder(rootUrl, updateObraz.PATH, 'put');
   if (params) {
-    rb.path('roslinaId', params.roslinaId, {});
+    rb.path('uuid', params.uuid, {});
     rb.body(params.body, 'multipart/form-data');
   }
 
@@ -33,4 +33,4 @@ export function updateObraz(http: HttpClient, rootUrl: string, params: UpdateObr
   );
 }
 
-updateObraz.PATH = '/uzytkownikRosliny/{roslinaId}';
+updateObraz.PATH = '/uzytkownikRosliny/{uuid}';

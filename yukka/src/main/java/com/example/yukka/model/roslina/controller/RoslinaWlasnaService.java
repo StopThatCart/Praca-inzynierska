@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  * Metody:
  * 
  * <ul>
- * <li><strong>findByRoslinaId</strong> - Znajduje roślinę po jej identyfikatorze</li>
+ * <li><strong>findByUUID</strong> - Znajduje roślinę po jej identyfikatorze</li>
  * <li><strong>findRoslinyOfUzytkownik</strong> - Znajduje rośliny użytkownika</li>
  * <li><strong>save</strong> - Zapisuje roślinę użytkownika</li>
  * <li><strong>update</strong> - Aktualizuje roślinę użytkownika</li>
@@ -187,27 +187,22 @@ public class RoslinaWlasnaService {
     public Roslina save(RoslinaWlasnaRequest request, MultipartFile file, Uzytkownik connectedUser) {
         log.info("Zapisywanie rośliny użytkownika: " + connectedUser.getNazwa());
         Uzytkownik uzyt = connectedUser;
-        request.setRoslinaId(roslinaService.createRoslinaId());
         
         if (file != null) {
-            request.setObraz(fileStoreService.saveRoslinaWlasnaObraz(file, request.getRoslinaId(), uzyt.getUzytId()));
+            request.setObraz(fileStoreService.saveRoslinaWlasnaObraz(file, request.getUuid(), uzyt.getUuid()));
         } else {
             request.setObraz(defaultRoslinaObrazName);
         }
 
         if(request.areCechyEmpty()) {
-            log.info("Zapisywanie rośliny bez właściwości");
-            log.info("Request id: " + request.getRoslinaId());
             Roslina pl = roslinaMapper.toRoslina(request);
-            log.info("Roslina id: " + pl.getRoslinaId());
-
-            Roslina ros = roslinaWlasnaRepository.addRoslina(uzyt.getUzytId(), pl);
+            Roslina ros = roslinaWlasnaRepository.addRoslina(uzyt.getUuid(), pl);
             return ros;
         }
         log.info("Zapisywanie rośliny z właściwościami");
         Roslina ros = roslinaWlasnaRepository.addRoslina(
-            uzyt.getUzytId(),
-            request.getNazwa(), request.getRoslinaId(),
+            uzyt.getUuid(),
+            request.getNazwa(),
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getCechyAsMap());
@@ -224,25 +219,25 @@ public class RoslinaWlasnaService {
      */
     public RoslinaResponse update(RoslinaWlasnaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-        log.info("Aktualizacja rośliny " + request.getRoslinaId() + " przez użytkownika: " + uzyt.getNazwa());
+        log.info("Aktualizacja rośliny " + request.getUuid() + " przez użytkownika: " + uzyt.getNazwa());
 
-        Roslina roslina = roslinaWlasnaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), request.getRoslinaId())
-            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + request.getRoslinaId() + " dla użytkownika " + uzyt.getNazwa()));
+        Roslina roslina = roslinaWlasnaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), request.getUuid())
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + request.getUuid() + " dla użytkownika " + uzyt.getNazwa()));
 
         Uzytkownik targetUzyt = roslina.getUzytkownik();
         if (!uzyt.hasAuthenticationRights(targetUzyt)) {
-            throw new ForbiddenException("Brak uprawnień do zmiany rośliny " + request.getRoslinaId());
+            throw new ForbiddenException("Brak uprawnień do zmiany rośliny " + request.getUuid());
         }
         
         if(request.areCechyEmpty()) {
             Roslina ros = roslinaWlasnaRepository.updateRoslina(
-                request.getRoslinaId(), request.getNazwa(), 
+                request.getUuid(), request.getNazwa(), 
                 request.getOpis(), request.getObraz(), 
                 request.getWysokoscMin(), request.getWysokoscMax());
             return roslinaMapper.toRoslinaResponse(ros);
         }
         Roslina ros = roslinaWlasnaRepository.updateRoslina(
-            request.getRoslinaId(), request.getNazwa(), 
+            request.getUuid(), request.getNazwa(), 
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getCechyAsMap());
@@ -256,20 +251,20 @@ public class RoslinaWlasnaService {
      * 
      * @param file Nowy plik obrazu rośliny
      * @param connectedUser Aktualnie zalogowany użytkownik
-     * @param roslinaId Identyfikator rośliny
+     * @param uuid Identyfikator rośliny
      */
-    public void uploadRoslinaWlasnaObraz(MultipartFile file, String roslinaId, Authentication connectedUser) {
+    public void uploadRoslinaWlasnaObraz(MultipartFile file, String uuid, Authentication connectedUser) {
         Uzytkownik uzyt = (Uzytkownik) connectedUser.getPrincipal();
-        log.info("Zmiana obrazu rośliny " + roslinaId + " przez użytkownika: " + uzyt.getNazwa());
+        log.info("Zmiana obrazu rośliny " + uuid + " przez użytkownika: " + uzyt.getNazwa());
 
-        Roslina roslina = roslinaWlasnaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), roslinaId)
-            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + roslinaId + " dla użytkownika " + uzyt.getNazwa()));
+        Roslina roslina = roslinaWlasnaRepository.findRoslinaOfUzytkownik(uzyt.getNazwa(), uuid)
+            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + uuid + " dla użytkownika " + uzyt.getNazwa()));
 
         Uzytkownik targetUzyt = roslina.getUzytkownik();
         System.out.println("Uzytkownik: " + targetUzyt.getNazwa());
 
         if (!uzyt.hasAuthenticationRights(targetUzyt)) {
-            throw new ForbiddenException("Brak uprawnień do zmiany obrazu rośliny " + roslinaId);
+            throw new ForbiddenException("Brak uprawnień do zmiany obrazu rośliny " + uuid);
         }
 
         if (file == null) {
@@ -277,18 +272,18 @@ public class RoslinaWlasnaService {
             log.info("Obraz: " + roslina.getObraz());
             if(!roslina.getObraz().equals(defaultRoslinaObrazName)) {
                 fileUtils.deleteObraz(roslina.getObraz());
-                roslinaRepository.updateRoslinaObraz(roslina.getRoslinaId(), defaultRoslinaObrazName);
+                roslinaRepository.updateRoslinaObraz(roslina.getUuid(), defaultRoslinaObrazName);
             }
             return;
         }
         
         if (roslina.getObraz() != null) fileUtils.deleteObraz(roslina.getObraz());
-        String pfp = fileStoreService.saveRoslinaWlasnaObraz(file, roslinaId, uzyt.getUzytId());
+        String pfp = fileStoreService.saveRoslinaWlasnaObraz(file, uuid, uzyt.getUuid());
         if(pfp == null) {
             return;
         }
        
         roslina.setObraz(pfp);
-        roslinaRepository.updateRoslinaObraz(roslinaId, pfp);
+        roslinaRepository.updateRoslinaObraz(uuid, pfp);
     }
 }

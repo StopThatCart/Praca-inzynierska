@@ -7,7 +7,7 @@ export interface RoslinaRequest {
   nazwaLacinska: string;
   obraz?: string;
   opis: string;
-  roslinaId?: string;
+  uuid?: string;
   wysokoscMax: number;
   wysokoscMin: number;
 }
