@@ -40,6 +40,12 @@ export class AddUzytkownikComponent {
         next: (res) => {
           console.log(res);
           this.message = 'Użytkownik został dodany, a na podany adres email został wysłany kod aktywacyjny.';
+          this.request = {
+            nazwa: '',
+            email: '',
+            haslo: '',
+            powtorzHaslo: ''
+          };
           //this.router.navigate(['aktywacja-konta']);
           //this.login();
         },

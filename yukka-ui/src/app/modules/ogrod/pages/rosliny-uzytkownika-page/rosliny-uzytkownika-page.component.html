@@ -16,7 +16,7 @@
         <div class="vstack">
           <div class="d-flex justify-content-center align-items-center input-group p-4 ">
             <input [(ngModel)]="request.nazwa" type="text" class="form-control rounded-start text-black" placeholder="Wyszukaj roślinę">
-           <!-- <input [(ngModel)]="request.nazwaLacinska" type="text" class="form-control rounded-start text-black" placeholder="Nazwa łacińska rośliny"> -->
+            <input [(ngModel)]="request.nazwaLacinska" type="text" class="form-control rounded-start text-black" placeholder="Nazwa łacińska rośliny">
             <button (click)="onSearch()" class="btn text-uppercase btn-primary input-group-append" type="button">
               <i class="fas fa-search" style="font-size: 1em; color: currentColor;"></i>
             </button>

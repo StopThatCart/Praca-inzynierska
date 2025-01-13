@@ -1,5 +1,5 @@
-export { RoslinaWlasnaService } from './services/roslina-wlasna.service';
 export { RozmowaPrywatnaService } from './services/rozmowa-prywatna.service';
+export { RoslinaWlasnaService } from './services/roslina-wlasna.service';
 export { RoslinaService } from './services/roslina.service';
 export { PostService } from './services/post.service';
 export { KomentarzService } from './services/komentarz.service';

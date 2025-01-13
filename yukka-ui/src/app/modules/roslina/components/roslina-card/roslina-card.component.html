@@ -2,7 +2,7 @@
 <div class="card">
   <img [src]="getRoslinaObraz()" class="card-img-top" alt="Card Image">
   <div class="card-body d-flex flex-column" style="background: var(--bs-secondary);border-color: var(--bs-primary-text-emphasis);">
-    <p *ngIf="!roslina.roslinaUzytkownika" class="text-truncate mb-1 text-white-50 fs-6 card-text mb-0">({{roslina.nazwaLacinska}})</p>
+    <p *ngIf="roslina.nazwaLacinska" class="text-truncate mb-1 text-white-50 fs-6 card-text mb-0">({{roslina.nazwaLacinska}})</p>
     <h5 class="card-title">{{roslina.nazwa}}</h5>
     <p class=" limit-to-3-lines">{{roslina.opis}}</p>
     <a [routerLink]="['/rosliny', roslina.uuid]" class="btn btn-primary mt-auto align-self-start">Przejdź do rośliny</a>

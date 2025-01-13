@@ -228,7 +228,7 @@ public class GeneralSeederService {
 	private void seedDzialka() {
 		log.info("Seedowanie dzialek...");
 
-		RoslinaResponse ros = roslinaService.findByNazwaLacinska("symphytum grandiflorum'goldsmith'");
+		RoslinaResponse ros = roslinaMapper.toRoslinaResponse(roslinaRepository.getRandomRoslina().get());
 
 		Path peppinoPath = Paths.get(obrazSeedPath, "peppino.png");
 		MockMultipartFile obraz2 = new MockMultipartFile("tempFileName", "peppino.png", 
@@ -274,7 +274,7 @@ public class GeneralSeederService {
 		log.info("Seedowanie roslin uzytkownika[TESTOWE]...");
 		
 		// Wiem wiem, okropieństwo
-		PageResponse<RoslinaResponse> roslinyUzytkownika = roslinaWlasnaSeeder.seedUzytkownikRosliny(usPiotr);
+		PageResponse<RoslinaResponse> roslinyUzytkownika = roslinaWlasnaSeeder.seedRoslinyWlasne(usPiotr);
 		if (roslinyUzytkownika.getSize() == 0) {
 			throw new RuntimeException("Nie udało się załadować roślin użytkownika.");
 		}
@@ -313,7 +313,7 @@ public class GeneralSeederService {
 		dzialkaService.updateRoslinaPozycjaInDzialka(moveRequest1, usPiotr);
 
 		// To samo ale dla anny
-		ros = roslinaService.findByNazwaLacinska("vaccinium corymbosum'alvar'");
+		ros =  roslinaMapper.toRoslinaResponse(roslinaRepository.getRandomRoslina().get());
 		DzialkaRoslinaRequest reqAna = DzialkaRoslinaRequest.builder()
 		.numerDzialki(2)
 		.x(1).y(4)

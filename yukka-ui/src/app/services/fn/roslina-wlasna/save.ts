@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { RoslinaRequest } from '../../models/roslina-request';
 import { RoslinaResponse } from '../../models/roslina-response';
-import { RoslinaWlasnaRequest } from '../../models/roslina-wlasna-request';
 
 export interface Save$Params {
       body?: {
-'request': RoslinaWlasnaRequest;
+'request': RoslinaRequest;
 'file'?: Blob;
 }
 }
@@ -32,4 +32,4 @@ export function save(http: HttpClient, rootUrl: string, params?: Save$Params, co
   );
 }
 
-save.PATH = '/uzytkownikRosliny';
+save.PATH = '/roslinyWlasne';

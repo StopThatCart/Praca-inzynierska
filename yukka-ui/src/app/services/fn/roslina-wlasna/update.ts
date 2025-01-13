@@ -6,11 +6,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { RoslinaRequest } from '../../models/roslina-request';
 import { RoslinaResponse } from '../../models/roslina-response';
-import { RoslinaWlasnaRequest } from '../../models/roslina-wlasna-request';
 
 export interface Update$Params {
-      body: RoslinaWlasnaRequest
+      body: RoslinaRequest
 }
 
 export function update(http: HttpClient, rootUrl: string, params: Update$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
@@ -29,4 +29,4 @@ export function update(http: HttpClient, rootUrl: string, params: Update$Params,
   );
 }
 
-update.PATH = '/uzytkownikRosliny';
+update.PATH = '/roslinyWlasne';

@@ -7,7 +7,7 @@ import { CechaDropdownComponent } from '../../../roslina/components/cecha-dropdo
 import { CechaTagComponent } from '../../../roslina/components/cecha-tag/cecha-tag.component';
 import { WysokoscInputComponent } from '../../../roslina/components/wysokosc-input/wysokosc-input.component';
 import { Convert } from '../../../../services/converts/cecha-with-relations-convert';
-import { PageResponseRoslinaResponse, CechaKatalogResponse, CechaWithRelations, RoslinaWlasnaRequest } from '../../../../services/models';
+import { PageResponseRoslinaResponse, CechaKatalogResponse, CechaWithRelations, RoslinaRequest } from '../../../../services/models';
 import { RoslinaWlasnaService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/token.service';
@@ -31,9 +31,9 @@ export class RoslinyUzytkownikaPageComponent {
   isLoading = false;
   message = '';
 
-  request: RoslinaWlasnaRequest = {
+  request: RoslinaRequest = {
     nazwa: '',
-   // nazwaLacinska: '',
+    nazwaLacinska: '',
     obraz: '',
     opis: '',
     wysokoscMin: 0,
@@ -72,7 +72,7 @@ export class RoslinyUzytkownikaPageComponent {
       this.request.wysokoscMin = params['wysokoscMin'] || 0;
       this.request.wysokoscMax = params['wysokoscMax'] || 100;
       this.request.nazwa = params['nazwa'] || '';
-      //this.request.nazwaLacinska = params['nazwaLacinska'] || '';
+      this.request.nazwaLacinska = params['nazwaLacinska'] || '';
 
       let cechy2 = [];
       if (params['cechy']) {
@@ -171,7 +171,7 @@ export class RoslinyUzytkownikaPageComponent {
         wysokoscMin: this.request.wysokoscMin,
         wysokoscMax: this.request.wysokoscMax,
         nazwa: this.request.nazwa,
-       // nazwaLacinska: this.request.nazwaLacinska,
+        nazwaLacinska: this.request.nazwaLacinska,
         cechy: encryptedCechy
       },
       queryParamsHandling: 'merge'

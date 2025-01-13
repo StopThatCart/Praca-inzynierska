@@ -15,8 +15,6 @@ import { deleteRoslina } from '../fn/roslina/delete-roslina';
 import { DeleteRoslina$Params } from '../fn/roslina/delete-roslina';
 import { findAllRoslinyWithParameters } from '../fn/roslina/find-all-rosliny-with-parameters';
 import { FindAllRoslinyWithParameters$Params } from '../fn/roslina/find-all-rosliny-with-parameters';
-import { findByNazwaLacinska } from '../fn/roslina/find-by-nazwa-lacinska';
-import { FindByNazwaLacinska$Params } from '../fn/roslina/find-by-nazwa-lacinska';
 import { findByUuid } from '../fn/roslina/find-by-uuid';
 import { FindByUuid$Params } from '../fn/roslina/find-by-uuid';
 import { getCechyCountFromQuery } from '../fn/roslina/get-cechy-count-from-query';
@@ -38,8 +36,33 @@ export class RoslinaService extends BaseService {
     super(config, http);
   }
 
+  /** Path part for operation `findByUuid()` */
+  static readonly FindByUuidPath = '/rosliny/{uuid}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `findByUuid()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findByUuid$Response(params: FindByUuid$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
+    return findByUuid(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `findByUuid$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findByUuid(params: FindByUuid$Params, context?: HttpContext): Observable<RoslinaResponse> {
+    return this.findByUuid$Response(params, context).pipe(
+      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
+    );
+  }
+
   /** Path part for operation `updateRoslina()` */
-  static readonly UpdateRoslinaPath = '/rosliny/{nazwa-lacinska}';
+  static readonly UpdateRoslinaPath = '/rosliny/{uuid}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -63,8 +86,33 @@ export class RoslinaService extends BaseService {
     );
   }
 
+  /** Path part for operation `deleteRoslina()` */
+  static readonly DeleteRoslinaPath = '/rosliny/{uuid}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteRoslina()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteRoslina$Response(params: DeleteRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+    return deleteRoslina(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteRoslina$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteRoslina(params: DeleteRoslina$Params, context?: HttpContext): Observable<string> {
+    return this.deleteRoslina$Response(params, context).pipe(
+      map((r: StrictHttpResponse<string>): string => r.body)
+    );
+  }
+
   /** Path part for operation `updateRoslinaObraz()` */
-  static readonly UpdateRoslinaObrazPath = '/rosliny/{nazwa-lacinska}/obraz';
+  static readonly UpdateRoslinaObrazPath = '/rosliny/{uuid}/obraz';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -163,56 +211,6 @@ export class RoslinaService extends BaseService {
     );
   }
 
-  /** Path part for operation `findByUuid()` */
-  static readonly FindByUuidPath = '/rosliny/uuid/{uuid}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findByUuid()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findByUuid$Response(params: FindByUuid$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
-    return findByUuid(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findByUuid$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findByUuid(params: FindByUuid$Params, context?: HttpContext): Observable<RoslinaResponse> {
-    return this.findByUuid$Response(params, context).pipe(
-      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `findByNazwaLacinska()` */
-  static readonly FindByNazwaLacinskaPath = '/rosliny/nazwa-lacinska/{nazwa-lacinska}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findByNazwaLacinska()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findByNazwaLacinska$Response(params: FindByNazwaLacinska$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
-    return findByNazwaLacinska(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findByNazwaLacinska$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  findByNazwaLacinska(params: FindByNazwaLacinska$Params, context?: HttpContext): Observable<RoslinaResponse> {
-    return this.findByNazwaLacinska$Response(params, context).pipe(
-      map((r: StrictHttpResponse<RoslinaResponse>): RoslinaResponse => r.body)
-    );
-  }
-
   /** Path part for operation `getCechyWithRelations()` */
   static readonly GetCechyWithRelationsPath = '/rosliny/cechy';
 
@@ -235,31 +233,6 @@ export class RoslinaService extends BaseService {
   getCechyWithRelations(params?: GetCechyWithRelations$Params, context?: HttpContext): Observable<Array<CechaResponse>> {
     return this.getCechyWithRelations$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<CechaResponse>>): Array<CechaResponse> => r.body)
-    );
-  }
-
-  /** Path part for operation `deleteRoslina()` */
-  static readonly DeleteRoslinaPath = '/rosliny/{uuid}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `deleteRoslina()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deleteRoslina$Response(params: DeleteRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return deleteRoslina(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `deleteRoslina$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  deleteRoslina(params: DeleteRoslina$Params, context?: HttpContext): Observable<string> {
-    return this.deleteRoslina$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
 

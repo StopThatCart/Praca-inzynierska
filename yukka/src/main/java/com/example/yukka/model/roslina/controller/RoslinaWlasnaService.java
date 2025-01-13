@@ -20,8 +20,8 @@ import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.handler.exceptions.ForbiddenException;
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
+import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
-import com.example.yukka.model.roslina.RoslinaWlasnaRequest;
 import com.example.yukka.model.roslina.cecha.CechaKatalogResponse;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
@@ -60,7 +60,6 @@ public class RoslinaWlasnaService {
     private final RoslinaWlasnaRepository roslinaWlasnaRepository;
     private final RoslinaRepository roslinaRepository;
     private final CechaRepository cechaRepository;
-    private final RoslinaService roslinaService;
 
     private final FileUtils fileUtils;
     private final FileStoreService fileStoreService;
@@ -80,9 +79,10 @@ public class RoslinaWlasnaService {
      * @param connectedUser Aktualnie zalogowany użytkownik
      * @return Zwraca stronę z roślinami użytkownika
      */
-    public PageResponse<RoslinaResponse> findRoslinyOfUzytkownik(int page, int size, RoslinaWlasnaRequest request, String nazwa, Authentication connectedUser) {
+    public PageResponse<RoslinaResponse> findRoslinyOfUzytkownik(int page, int size, RoslinaRequest request, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         log.info(nazwa + " próbuje pobrać rośliny użytkownika: " + nazwa);
+
         Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie " + nazwa));
 
@@ -103,10 +103,10 @@ public class RoslinaWlasnaService {
      * @param uzyt Użytkownik
      * @return Zwraca stronę z roślinami użytkownika
      */
-    public PageResponse<RoslinaResponse> findRoslinyOfUzytkownik(int page, int size, RoslinaWlasnaRequest request, String nazwa, Uzytkownik uzyt) {
+    public PageResponse<RoslinaResponse> findRoslinyOfUzytkownik(int page, int size, RoslinaRequest request, String nazwa, Uzytkownik uzyt) {
         if (request == null) {
             System.out.println("Request is null");
-            request = RoslinaWlasnaRequest.builder().build();
+            request = RoslinaRequest.builder().build();
         }
         log.info(nazwa + " próbuje pobrać rośliny użytkownika: " + nazwa);
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").descending());
@@ -138,7 +138,7 @@ public class RoslinaWlasnaService {
 
 
     @Transactional(readOnly = true)
-    public Set<CechaKatalogResponse> getUzytkownikCechyCountFromQuery(RoslinaWlasnaRequest request, String nazwa, Authentication connectedUser) {
+    public Set<CechaKatalogResponse> getUzytkownikCechyCountFromQuery(RoslinaRequest request, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         log.info(nazwa + " próbuje pobrać rośliny użytkownika: " + nazwa);
         Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
@@ -151,7 +151,7 @@ public class RoslinaWlasnaService {
         
         Roslina ros = roslinaMapper.toRoslina(request);
 
-        Set<CechaKatalogResponse> responses = cechaRepository.getUzytkownikCechyCountFromQuery(
+        Set<CechaKatalogResponse> responses = cechaRepository.getCechyWlasneCountFromQuery(
             nazwa,
             ros, 
             ros.getFormy(), ros.getGleby(), ros.getGrupy(), ros.getKoloryLisci(),
@@ -172,7 +172,7 @@ public class RoslinaWlasnaService {
      * @param connectedUser Aktualnie zalogowany użytkownik
      * @return Zwraca zapisaną roślinę
      */
-    public RoslinaResponse save(RoslinaWlasnaRequest request, MultipartFile file, Authentication connectedUser) {
+    public RoslinaResponse save(RoslinaRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         return  roslinaMapper.toRoslinaResponse(save(request, file, uzyt));
     }
@@ -184,7 +184,7 @@ public class RoslinaWlasnaService {
      * @param connectedUser Aktualnie zalogowany użytkownik
      * @return Zwraca zaktualizowaną roślinę
      */
-    public Roslina save(RoslinaWlasnaRequest request, MultipartFile file, Uzytkownik connectedUser) {
+    public Roslina save(RoslinaRequest request, MultipartFile file, Uzytkownik connectedUser) {
         log.info("Zapisywanie rośliny użytkownika: " + connectedUser.getNazwa());
         Uzytkownik uzyt = connectedUser;
         
@@ -203,6 +203,7 @@ public class RoslinaWlasnaService {
         Roslina ros = roslinaWlasnaRepository.addRoslina(
             uzyt.getUuid(),
             request.getNazwa(),
+            request.getNazwaLacinska(),
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getCechyAsMap());
@@ -217,7 +218,7 @@ public class RoslinaWlasnaService {
      * @param connectedUser Aktualnie zalogowany użytkownik
      * @return Zwraca zaktualizowaną roślinę
      */
-    public RoslinaResponse update(RoslinaWlasnaRequest request, Authentication connectedUser) {
+    public RoslinaResponse update(RoslinaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         log.info("Aktualizacja rośliny " + request.getUuid() + " przez użytkownika: " + uzyt.getNazwa());
 
@@ -231,19 +232,19 @@ public class RoslinaWlasnaService {
         
         if(request.areCechyEmpty()) {
             Roslina ros = roslinaWlasnaRepository.updateRoslina(
-                request.getUuid(), request.getNazwa(), 
+                request.getUuid(), request.getNazwa(), request.getNazwaLacinska(),
                 request.getOpis(), request.getObraz(), 
                 request.getWysokoscMin(), request.getWysokoscMax());
             return roslinaMapper.toRoslinaResponse(ros);
         }
         Roslina ros = roslinaWlasnaRepository.updateRoslina(
-            request.getUuid(), request.getNazwa(), 
+            request.getUuid(), request.getNazwa(), request.getNazwaLacinska(),
             request.getOpis(), request.getObraz(), 
             request.getWysokoscMin(), request.getWysokoscMax(), 
             request.getCechyAsMap());
         roslinaWlasnaRepository.removeLeftoverUzytkownikCechy();
 
-        return  roslinaMapper.toRoslinaResponse(ros);
+        return roslinaMapper.toRoslinaResponse(ros);
     }
 
     /**

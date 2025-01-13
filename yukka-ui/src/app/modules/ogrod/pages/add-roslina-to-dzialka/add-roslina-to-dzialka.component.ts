@@ -116,8 +116,7 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
       this.updateTilesWithRoslina(this.dzialka.zasadzoneRosliny);
 
       const existingRoslina = this.dzialka.zasadzoneRosliny?.find(roslina =>
-       (this.roslina?.uuid && roslina.roslina?.uuid === this.roslina?.uuid)
-        || (this.roslina?.nazwaLacinska && roslina.roslina?.nazwaLacinska === this.roslina?.nazwaLacinska));
+       (this.roslina?.uuid && roslina.roslina?.uuid === this.roslina?.uuid));
 
       if (existingRoslina) {
         this.errorMsg.push('Roślina już istnieje w tej działce.');

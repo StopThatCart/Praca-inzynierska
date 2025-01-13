@@ -224,7 +224,7 @@ public class RoslinaService {
 
         Optional<Roslina> roslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
         if (roslina.isPresent()) {
-            throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje.");
+            throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje w katalogu.");
         }
         
         if (file != null) {
@@ -277,37 +277,40 @@ public class RoslinaService {
     /**
      * Aktualizuje istniejącą roślinę.
      *
-     * @param staraNazwaLacinska stara nazwa łacińska rośliny.
+     * @param uuid identyfikator rośliny
      * @param request obiekt zawierający nowe dane rośliny.
      * @return Roslina zawierający informacje o zaktualizowanej roślinie.
      */
-    public RoslinaResponse update(String staraNazwaLacinska, RoslinaRequest request) {
+    public RoslinaResponse update(String uuid, RoslinaRequest request) {
         request.setNazwaLacinska(request.getNazwaLacinska().toLowerCase());
-        roslinaRepository.findByNazwaLacinska(staraNazwaLacinska)
-            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + request.getNazwaLacinska()));
 
-        if(!staraNazwaLacinska.equals(request.getNazwaLacinska())) {
+        Roslina targetRoslina = roslinaRepository.findByUUID(uuid)
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id " + uuid));
+
+        if (!targetRoslina.getNazwaLacinska().equals(request.getNazwaLacinska())) {
             Optional<Roslina> anotherRoslina = roslinaRepository.findByNazwaLacinska(request.getNazwaLacinska());
             if(anotherRoslina.isPresent()) {
-                throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje.");
-            }           
+                throw new EntityAlreadyExistsException("Roslina o nazwie łacińskiej \"" + request.getNazwaLacinska() + "\" już istnieje w katalogu.");
+            }    
         }
 
-        log.info("Właściwości: " + request.getCechyAsMap());
         if(request.areCechyEmpty()) {
             Roslina ros = roslinaRepository.updateRoslina(
-                request.getNazwa(), staraNazwaLacinska, 
+                uuid,
+                request.getNazwa(),  
+                request.getNazwaLacinska(),
                 request.getOpis(),  
-                request.getWysokoscMin(), request.getWysokoscMax(),
-                request.getNazwaLacinska());
+                request.getWysokoscMin(), request.getWysokoscMax()
+                );
             return roslinaMapper.toRoslinaResponse(ros);
         }
-        log.info(staraNazwaLacinska);
+
         Roslina ros = roslinaRepository.updateRoslina(
-            request.getNazwa(), staraNazwaLacinska, 
+            uuid, 
+            request.getNazwa(),
+            request.getNazwaLacinska(), 
             request.getOpis(),
             request.getWysokoscMin(), request.getWysokoscMax(),
-            request.getNazwaLacinska(), 
             request.getCechyAsMap());
                
         return roslinaMapper.roslinaToRoslinaResponseWithCechy(ros);
@@ -316,15 +319,14 @@ public class RoslinaService {
     /**
      * Aktualizuje obraz rośliny.
      *
-     * @param nazwaLacinska nazwa łacińska rośliny.
+     * @param uuid identyfikator rośliny.
      * @param file obiekt MultipartFile zawierający obraz rośliny. W razie braku pliku, ustawia domyślny obraz.
-     * @return Roslina zawierający informacje o zaktualizowanej roślinie.
      */
     // Uwaga: to jest do głównej rośliny, nie customowej
-    public void uploadRoslinaObraz(String nazwaLacinska, MultipartFile file) {
-        log.info("Aktualizacja obrazu rośliny: " + nazwaLacinska);
-        Roslina roslina = roslinaRepository.findByNazwaLacinska(nazwaLacinska)
-        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o nazwie łacińskiej: " + nazwaLacinska));
+    public void uploadRoslinaObraz(String uuid, MultipartFile file) {
+        log.info("Aktualizacja obrazu rośliny: " + uuid);
+        Roslina roslina = roslinaRepository.findByUUID(uuid)
+        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono rośliny o id: " + uuid));
 
         if (file == null) {
             log.info("Brak pliku obrazu, ustawienie domyślnego obrazu");

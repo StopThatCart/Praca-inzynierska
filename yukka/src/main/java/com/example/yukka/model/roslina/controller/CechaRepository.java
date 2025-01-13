@@ -169,6 +169,7 @@ public interface CechaRepository extends Neo4jRepository<Cecha, Long> {
             WITH $roslina.__properties__ AS rp
             MATCH (roslina:RoslinaWlasna)-[:STWORZONA_PRZEZ]->(uzyt:Uzytkownik{nazwa: $uzytkownikNazwa})
                 WHERE (rp.nazwa IS NULL OR roslina.nazwa CONTAINS rp.nazwa) 
+                AND (rp.nazwaLacinska IS NULL OR roslina.nazwaLacinska CONTAINS toLower(rp.nazwaLacinska))
                 AND (rp.wysokoscMin IS NULL OR roslina.wysokoscMin >= rp.wysokoscMin)
                 AND (rp.wysokoscMax IS NULL OR roslina.wysokoscMax <= rp.wysokoscMax)
         
@@ -275,7 +276,7 @@ public interface CechaRepository extends Neo4jRepository<Cecha, Long> {
             WITH DISTINCT etykieta, w.nazwa AS nazwa, count(DISTINCT roslina) AS liczbaRoslin
             RETURN etykieta, collect({nazwa: nazwa, liczbaRoslin: liczbaRoslin}) AS nazwyLiczbaRoslin
             """)
-        Set<CechaKatalogResponse> getUzytkownikCechyCountFromQuery(
+        Set<CechaKatalogResponse> getCechyWlasneCountFromQuery(
             @Param("uzytkownikNazwa") String uzytkownikNazwa,
             @Param("roslina") Roslina roslina, 
             @Param("formy") Set<Cecha> formy,

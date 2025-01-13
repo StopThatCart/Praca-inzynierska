@@ -28,4 +28,4 @@ export function findByUuid(http: HttpClient, rootUrl: string, params: FindByUuid
   );
 }
 
-findByUuid.PATH = '/rosliny/uuid/{uuid}';
+findByUuid.PATH = '/rosliny/{uuid}';

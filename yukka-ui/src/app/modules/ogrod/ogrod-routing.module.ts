@@ -69,32 +69,7 @@ const routes: Routes = [
             data: { breadcrumb: 'Rośliny' },
           },
         ]
-      }//,
-      /*
-      {
-        path: ':uzytkownikNazwa',
-       // data: { breadcrumb: (data: any) =>`${data.dzialki.}` },
-        //resolve: { dzialki: OgrodResolverService },
-        children:[
-          {
-            path: '',
-            component: RoslinaPageComponent
-          },
-          {
-            path: ':nazwa-lacinska/aktualizuj',
-            component: UpdateRoslinaPageComponent,
-            data: { breadcrumb: 'Aktualizuj' },
-            canActivate: [pracownikGuard]
-          },
-          {
-            path: ':nazwa-lacinska/obraz',
-            component: UploadRoslinaObrazPageComponent,
-            data: { breadcrumb: 'Zmień obraz' },
-            canActivate: [pracownikGuard]
-          }
-        ]
-      },*/
-
+      }
     ]
   }
 ];

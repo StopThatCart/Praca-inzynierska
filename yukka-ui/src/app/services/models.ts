@@ -35,7 +35,6 @@ export type { ProfilRequest } from './models/profil-request';
 export type { RegistrationRequest } from './models/registration-request';
 export type { RoslinaRequest } from './models/roslina-request';
 export type { RoslinaResponse } from './models/roslina-response';
-export type { RoslinaWlasnaRequest } from './models/roslina-wlasna-request';
 export type { RozmowaPrywatnaResponse } from './models/rozmowa-prywatna-response';
 export type { SpecjalnePowiadomienieRequest } from './models/specjalne-powiadomienie-request';
 export type { StatystykiDto } from './models/statystyki-dto';

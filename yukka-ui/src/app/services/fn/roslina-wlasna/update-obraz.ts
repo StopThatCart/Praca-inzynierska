@@ -33,4 +33,4 @@ export function updateObraz(http: HttpClient, rootUrl: string, params: UpdateObr
   );
 }
 
-updateObraz.PATH = '/uzytkownikRosliny/{uuid}';
+updateObraz.PATH = '/roslinyWlasne/{uuid}';

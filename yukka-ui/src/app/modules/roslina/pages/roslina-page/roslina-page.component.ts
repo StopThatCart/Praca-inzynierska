@@ -91,18 +91,6 @@ export class RoslinaPageComponent implements OnInit {
     }
   }
 
-  getRoslinaByNazwaLacinska(nazwaLacinska: string): void {
-    this.roslinaService.findByNazwaLacinska({ 'nazwa-lacinska': nazwaLacinska }).subscribe({
-      next: (roslina) => {
-        this.roslina = roslina;
-        this.errorMessage = null;
-      },
-      error: (err) => {
-        this.errorMessage = 'Nie znaleziono rośliny o podanej nazwie łacińskiej.';
-      }
-    });
-  }
-
   getRoslinaByUuid(uuid: string): void {
     this.roslinaService.findByUuid({ uuid: uuid }).subscribe({
       next: (roslina) => {

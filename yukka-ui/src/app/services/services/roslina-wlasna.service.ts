@@ -30,7 +30,7 @@ export class RoslinaWlasnaService extends BaseService {
   }
 
   /** Path part for operation `updateObraz()` */
-  static readonly UpdateObrazPath = '/uzytkownikRosliny/{uuid}';
+  static readonly UpdateObrazPath = '/roslinyWlasne/{uuid}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -59,7 +59,7 @@ export class RoslinaWlasnaService extends BaseService {
   }
 
   /** Path part for operation `save()` */
-  static readonly SavePath = '/uzytkownikRosliny';
+  static readonly SavePath = '/roslinyWlasne';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -84,7 +84,7 @@ export class RoslinaWlasnaService extends BaseService {
   }
 
   /** Path part for operation `update()` */
-  static readonly UpdatePath = '/uzytkownikRosliny';
+  static readonly UpdatePath = '/roslinyWlasne';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -109,7 +109,7 @@ export class RoslinaWlasnaService extends BaseService {
   }
 
   /** Path part for operation `findAllRoslinyOfUzytkownik()` */
-  static readonly FindAllRoslinyOfUzytkownikPath = '/uzytkownikRosliny/szukaj';
+  static readonly FindAllRoslinyOfUzytkownikPath = '/roslinyWlasne/szukaj';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -134,7 +134,7 @@ export class RoslinaWlasnaService extends BaseService {
   }
 
   /** Path part for operation `getUzytkownikCechyCountFromQuery()` */
-  static readonly GetUzytkownikCechyCountFromQueryPath = '/uzytkownikRosliny/cechyQuery';
+  static readonly GetUzytkownikCechyCountFromQueryPath = '/roslinyWlasne/cechyQuery';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

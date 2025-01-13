@@ -78,6 +78,7 @@ export class CechaProcessService {
 
   convertRoslinaResponseToRequest(roslina: RoslinaResponse): RoslinaRequest {
     return {
+      uuid: roslina.uuid || '',
       nazwa: roslina.nazwa || '',
       nazwaLacinska: roslina.nazwaLacinska || '',
       obraz: roslina.obraz || '',

@@ -10,14 +10,14 @@ import { RoslinaRequest } from '../../models/roslina-request';
 import { RoslinaResponse } from '../../models/roslina-response';
 
 export interface UpdateRoslina$Params {
-  'nazwa-lacinska': string;
+  uuid: string;
       body: RoslinaRequest
 }
 
 export function updateRoslina(http: HttpClient, rootUrl: string, params: UpdateRoslina$Params, context?: HttpContext): Observable<StrictHttpResponse<RoslinaResponse>> {
   const rb = new RequestBuilder(rootUrl, updateRoslina.PATH, 'put');
   if (params) {
-    rb.path('nazwa-lacinska', params['nazwa-lacinska'], {});
+    rb.path('uuid', params.uuid, {});
     rb.body(params.body, 'application/json');
   }
 
@@ -31,4 +31,4 @@ export function updateRoslina(http: HttpClient, rootUrl: string, params: UpdateR
   );
 }
 
-updateRoslina.PATH = '/rosliny/{nazwa-lacinska}';
+updateRoslina.PATH = '/rosliny/{uuid}';

@@ -152,28 +152,6 @@ public class RoslinaMapper {
             .obraz(obraz)
             .build();
     }
-
-    /**
-     * Konwertuje obiekt typu <strong>Roslina</strong> na obiekt typu <strong>RoslinaWlasnaRequest</strong>.
-     *
-     * @param roslina obiekt typu <strong>Roslina</strong>, który ma zostać przekonwertowany
-     * @return obiekt typu <strong>RoslinaWlasnaRequest</strong> lub <strong>null</strong>, jeśli przekazany obiekt <strong>Roslina</strong> jest <strong>null</strong>
-     */
-    public RoslinaWlasnaRequest toRoslinaWlasnaRequest(Roslina roslina) {
-        if (roslina == null) {
-            return null;
-        }
-        return RoslinaWlasnaRequest.builder()
-            .uuid(roslina.getUuid())
-            .nazwa(roslina.getNazwa())
-            .opis(roslina.getOpis())
-            .obraz(roslina.getObraz())
-            .wysokoscMin(roslina.getWysokoscMin())
-            .wysokoscMax(roslina.getWysokoscMax())
-            .cechy(mapCechaWithRelationsToMap(roslina))
-            .build();
-    }
-
     
     /**
      * Konwertuje obiekt typu <strong>Roslina</strong> na obiekt typu <strong>RoslinaRequest</strong>.
@@ -223,30 +201,6 @@ public class RoslinaMapper {
     }
 
     /**
-     * Konwertuje obiekt typu <strong>RoslinaWlasnaRequest</strong> na obiekt typu <strong>Roslina</strong>.
-     *
-     * @param request obiekt typu <strong>RoslinaWlasnaRequest</strong>, który ma zostać przekonwertowany
-     * @return obiekt typu <strong>Roslina</strong> lub <strong>null</strong>, jeśli przekazany obiekt <strong>RoslinaWlasnaRequest</strong> jest <strong>null</strong>
-     */
-    public Roslina toRoslina(@Valid RoslinaWlasnaRequest request) {
-        if (request == null) {
-            return null;
-        }
-        Roslina roslina = Roslina.builder()
-            .labels(List.of("RoslinaWlasna"))
-            .uuid(request.getUuid())
-            .nazwa(request.getNazwa())
-            .opis(request.getOpis())
-            .obraz(request.getObraz())
-            .wysokoscMin(request.getWysokoscMin())
-            .wysokoscMax(request.getWysokoscMax())
-            .build();
-        mapCechyToRoslina(roslina, request.getCechy());
-        
-        return roslina;
-    }
-
-    /**
      * Konwertuje obiekt typu <strong>RoslinaRequest</strong> na obiekt typu <strong>Roslina</strong>.
      *
      * @param request obiekt typu <strong>RoslinaRequest</strong>, który ma zostać przekonwertowany
@@ -256,6 +210,7 @@ public class RoslinaMapper {
         if (request == null) {
             return null;
         }
+
         Roslina roslina = Roslina.builder()
             .uuid(request.getUuid())
             .nazwa(request.getNazwa())

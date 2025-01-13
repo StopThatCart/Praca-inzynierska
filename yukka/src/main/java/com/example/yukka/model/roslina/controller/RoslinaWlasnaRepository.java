@@ -60,6 +60,7 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
         WITH $roslina.__properties__ AS rp
         MATCH (roslina:RoslinaWlasna)-[:STWORZONA_PRZEZ]->(uzyt:Uzytkownik{nazwa: $uzytkownikNazwa})
             WHERE (rp.nazwa IS NULL OR roslina.nazwa CONTAINS rp.nazwa) 
+            AND (rp.nazwaLacinska IS NULL OR roslina.nazwaLacinska CONTAINS toLower(rp.nazwaLacinska))
             AND (rp.wysokoscMin IS NULL OR roslina.wysokoscMin >= rp.wysokoscMin)
             AND (rp.wysokoscMax IS NULL OR roslina.wysokoscMax <= rp.wysokoscMax)
 
@@ -160,6 +161,7 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
         WITH $roslina.__properties__ AS rp 
         MATCH (roslina:RoslinaWlasna)-[:STWORZONA_PRZEZ]->(uzyt:Uzytkownik{nazwa: $uzytkownikNazwa})
             WHERE (rp.nazwa IS NULL OR roslina.nazwa CONTAINS rp.nazwa) 
+            AND (rp.nazwaLacinska IS NULL OR roslina.nazwaLacinska CONTAINS toLower(rp.nazwaLacinska))
             AND (rp.wysokoscMin IS NULL OR roslina.wysokoscMin >= rp.wysokoscMin)
             AND (rp.wysokoscMax IS NULL OR roslina.wysokoscMax <= rp.wysokoscMax)
             
@@ -308,7 +310,7 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
         MATCH (uzytkownik:Uzytkownik{uuid: $uuid})
         WITH uzytkownik, $roslina.__properties__ AS rp 
         MERGE (p:RoslinaWlasna:Roslina {
-        nazwa: rp.nazwa, 
+        nazwa: rp.nazwa, nazwaLacinska: toLower(rp.nazwaLacinska),
         uuid: randomUUID(),
         opis: rp.opis, 
         obraz: COALESCE(rp.obraz, 'default_plant.jpg'), 
@@ -324,8 +326,8 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
     @Query("""
         MATCH (uzytkownik:Uzytkownik{uuid: $uzytUUID})
         WITH uzytkownik
-        MERGE (p:RoslinaWlasna:Roslina {nazwa: $name, uuid: randomUUID(), opis: $description, 
-        obraz: COALESCE($imageFilename, 'default_plant.jpg'), wysokoscMin: $heightMin, wysokoscMax: $heightMax})
+        MERGE (p:RoslinaWlasna:Roslina {uuid: randomUUID(), nazwa: $nazwa, nazwaLacinska: toLower($nazwaLacinska), opis: $opis, 
+        obraz: COALESCE($imageFilename, 'default_plant.jpg'), wysokoscMin: $wysokoscMin, wysokoscMax: $wysokoscMax})
             -[:STWORZONA_PRZEZ]->(uzytkownik)
 
         WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
@@ -339,17 +341,17 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
     Roslina addRoslina(String uzytUUID,
-        String name,
-        String description, String imageFilename, 
-        Double heightMin, Double heightMax, 
+        String nazwa, String nazwaLacinska,
+        String opis, String imageFilename, 
+        Double wysokoscMin, Double wysokoscMax, 
         List<Map<String, String>> relatLump
     );
 
 
     @Query("""
            MATCH (p:RoslinaWlasna{uuid: $uuid})
-           SET  p.nazwa = $name, p.opis = $description,
-                p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
+           SET  p.nazwa = $nazwa, p.nazwaLacinska = toLower($nazwaLacinska), p.opis = $opis,
+                p.wysokoscMin = $wysokoscMin, p.wysokoscMax = $wysokoscMax
            WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
            WITH p, relat, [relat.etykieta, 'CechaWlasna', 'Cecha'] AS labels
@@ -370,26 +372,27 @@ public interface RoslinaWlasnaRepository  extends Neo4jRepository<Roslina, Long>
     """)
     Roslina updateRoslina(
         String uuid,
-        String name,
-        String description,
+        String nazwa, String nazwaLacinska,
+        String opis,
         String imageFilename,
-        Double heightMin,
-        Double heightMax,
+        Double wysokoscMin,
+        Double wysokoscMax,
         @Param("relatLump") List<Map<String, String>> relatLump
     );
 
     @Query("""
         MATCH (p:RoslinaWlasna{uuid: $uuid})
-        SET  p.nazwa = $name, p.opis = $description,
-            p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
+        SET  p.nazwa = $nazwa, p.nazwaLacinska = toLower($nazwaLacinska), p.opis = $opis,
+            p.wysokoscMin = $wysokoscMin, p.wysokoscMax = $wysokoscMax
+        RETURN p
     """)
     Roslina updateRoslina(
     String uuid,
-    String name,
-    String description,
+    String nazwa, String nazwaLacinska,
+    String opis,
     String imageFilename,
-    Double heightMin,
-    Double heightMax
+    Double wysokoscMin,
+    Double wysokoscMax
     );
 
 

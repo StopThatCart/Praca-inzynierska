@@ -95,11 +95,10 @@ public class Neo4jSeeder {
         log.info("Instalacja ograniczeń...");
         Driver driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
         String[] constraintQueries = {
-            "CREATE CONSTRAINT unikalnaLacinskaNazwa FOR (ros:Roslina) REQUIRE ros.nazwaLacinska IS UNIQUE",
             "CREATE CONSTRAINT unikalnyEmail FOR (u:Uzytkownik) REQUIRE u.email IS UNIQUE",
             "CREATE CONSTRAINT unikalnaNazwaUzytkownika FOR (u:Uzytkownik) REQUIRE u.nazwa IS UNIQUE",
-            "CREATE CONSTRAINT unikalneRoslinaUUID FOR (ros:Roslina) REQUIRE ros.uuid IS UNIQUE",
             "CREATE CONSTRAINT unikalneUzytkownikUUID FOR (u:Uzytkownik) REQUIRE u.uuid IS UNIQUE",
+            "CREATE CONSTRAINT unikalneRoslinaUUID FOR (ros:Roslina) REQUIRE ros.uuid IS UNIQUE",
             "CREATE CONSTRAINT unikalnePostUUID FOR (p:Post) REQUIRE p.uuid IS UNIQUE",
             "CREATE CONSTRAINT unikalneKomentarzUUID FOR (k:Komentarz) REQUIRE k.uuid IS UNIQUE",
         };

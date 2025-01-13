@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CechaDropdownComponent } from '../../components/cecha-dropdown/cecha-dropdown.component';
-import { RoslinaRequest, CechaWithRelations, CechaResponse, RoslinaWlasnaRequest } from '../../../../services/models';
+import { RoslinaRequest, CechaWithRelations, CechaResponse } from '../../../../services/models';
 import { RoslinaService, RoslinaWlasnaService } from '../../../../services/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CechaProcessService } from '../../services/cecha-service/cecha.service';
@@ -153,7 +153,7 @@ export class AddRoslinaPageComponent implements OnInit {
     }
 
     if (!this.isAddingDoKatalogu()) {
-      this.addUzytkownikRoslina(this.request, leFile);
+      this.addRoslinaWlasna(this.request, leFile);
       return;
     }
     console.log('Dodawanie rośliny: ', this.request);
@@ -170,18 +170,10 @@ export class AddRoslinaPageComponent implements OnInit {
   }
 
 
-  addUzytkownikRoslina(request: RoslinaRequest, leFile: any) {
+  addRoslinaWlasna(request: RoslinaRequest, leFile: any) {
     console.log('Dodawanie rośliny użytkownika: ', request);
-    let uzytRequest: RoslinaWlasnaRequest = {
-      nazwa: this.request.nazwa,
-      opis: this.request.opis,
-      //obraz: '',
-      wysokoscMin: this.request.wysokoscMin,
-      wysokoscMax: this.request.wysokoscMax,
-      cechy: this.request.cechy,
-    };
 
-    this.roslinaWlasnaService.save({ body: { request: uzytRequest, file: leFile } }).subscribe({
+    this.roslinaWlasnaService.save({ body: { request: request, file: leFile } }).subscribe({
       next: (roslina) => {
         //this.afterAddRoslina();
        // console.log("roslinka", roslina);

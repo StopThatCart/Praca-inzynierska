@@ -10,8 +10,8 @@ import com.example.yukka.common.PageResponse;
 
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.RoslinaMapper;
+import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
-import com.example.yukka.model.roslina.RoslinaWlasnaRequest;
 import com.example.yukka.model.roslina.cecha.Cecha;
 import com.example.yukka.model.roslina.controller.RoslinaWlasnaService;
 import com.example.yukka.model.roslina.enums.RoslinaEtykietyFrontend;
@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
  * <li><strong>roslina1</strong>: Przykładowa roślina użytkownika.</li>
  * </ul>
  * 
- * Metoda <strong>seedUzytkownikRosliny</strong> inicjalizuje przykładową roślinę użytkownika i zapisuje ją w bazie danych.
+ * Metoda <strong>seedRoslinyWlasne</strong> inicjalizuje przykładową roślinę użytkownika i zapisuje ją w bazie danych.
  * 
  * @param uzyt Obiekt użytkownika, dla którego inicjalizowane są rośliny.
  * @return PageResponse<RoslinaResponse> Zwraca stronę z odpowiedzią zawierającą rośliny użytkownika.
@@ -37,7 +37,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RoslinaWlasnaSeeder {
     private final RoslinaWlasnaService roslinaWlasnaService;
-    //private final RoslinaWlasnaRepository uzytkownikRoslinaRepository;
     private final RoslinaMapper roslinaMapper;
     //private final DzialkaService dzialkaService;
     
@@ -49,8 +48,9 @@ public class RoslinaWlasnaSeeder {
      * @param uzyt
      * @return PageResponse<RoslinaResponse>
      */
-    public PageResponse<RoslinaResponse> seedUzytkownikRosliny(Uzytkownik uzyt) {
+    public PageResponse<RoslinaResponse> seedRoslinyWlasne(Uzytkownik uzyt) {
         String roslinaNazwa = "Pierwsza roślina użytkownika";
+        String roslinaNazwaLacinska = "Primum plant usoris";
         String roslinaOpis = "Jest to pierwsza roślina.";
        // String roslinaObraz = "tilia_henryana.jpg";
         Double wysokoscMin = 0.5;
@@ -82,6 +82,7 @@ public class RoslinaWlasnaSeeder {
         Roslina lipaHenryego = Roslina.builder()
             //.id(12345678L)
             .nazwa(roslinaNazwa)
+            .nazwaLacinska(roslinaNazwaLacinska)
             .opis(roslinaOpis)
             .wysokoscMin(wysokoscMin)
             .wysokoscMax(wysokoscMax)
@@ -104,7 +105,7 @@ public class RoslinaWlasnaSeeder {
 
         roslina1 = lipaHenryego;
 
-        RoslinaWlasnaRequest roslinaRequest = roslinaMapper.toRoslinaWlasnaRequest(roslina1);
+        RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina1);
 
         roslinaWlasnaService.save(roslinaRequest, null, uzyt);
 

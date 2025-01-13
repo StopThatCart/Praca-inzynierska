@@ -83,17 +83,15 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
     this.message = '';
 
     if (this.roslina.roslinaUzytkownika) {
-      this.uploadUzytkownikRoslinaObraz();
+      this.uploadRoslinaWlasnaObraz();
       return;
-    } else if (!this.roslina.nazwaLacinska) return;
+    }
 
     this.roslinaService.updateRoslinaObraz({
-      'nazwa-lacinska': this.roslina.nazwaLacinska,
+      uuid: this.uuid,
       body: { file: this.wybranyPlik } })
       .subscribe({
         next: () => {
-          //this.message = 'Roślina została zaaktualizowana';
-         // this.clearImage();
           this.router.navigate(['/rosliny', this.uuid]);
         },
         error: (error) => {
@@ -103,13 +101,12 @@ export class UploadRoslinaObrazPageComponent implements OnInit {
       });
   }
 
-  uploadUzytkownikRoslinaObraz(): void {
+  uploadRoslinaWlasnaObraz(): void {
     this.roslinaWlasnaService.updateObraz({
       uuid: this.uuid,
       body: { file: this.wybranyPlik } })
       .subscribe({
         next: () => {
-          this.message = 'Roślina została zaaktualizowana';
           this.router.navigate(['/rosliny', this.roslina.uuid]);
         },
         error: (error) => {

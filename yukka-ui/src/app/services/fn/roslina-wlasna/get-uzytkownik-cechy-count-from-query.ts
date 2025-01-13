@@ -7,11 +7,11 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { CechaKatalogResponse } from '../../models/cecha-katalog-response';
-import { RoslinaWlasnaRequest } from '../../models/roslina-wlasna-request';
+import { RoslinaRequest } from '../../models/roslina-request';
 
 export interface GetUzytkownikCechyCountFromQuery$Params {
   'uzytkownik-nazwa'?: string;
-      body?: RoslinaWlasnaRequest
+      body?: RoslinaRequest
 }
 
 export function getUzytkownikCechyCountFromQuery(http: HttpClient, rootUrl: string, params?: GetUzytkownikCechyCountFromQuery$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CechaKatalogResponse>>> {
@@ -31,4 +31,4 @@ export function getUzytkownikCechyCountFromQuery(http: HttpClient, rootUrl: stri
   );
 }
 
-getUzytkownikCechyCountFromQuery.PATH = '/uzytkownikRosliny/cechyQuery';
+getUzytkownikCechyCountFromQuery.PATH = '/roslinyWlasne/cechyQuery';

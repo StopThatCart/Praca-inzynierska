@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.yukka.common.PageResponse;
+import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaResponse;
-import com.example.yukka.model.roslina.RoslinaWlasnaRequest;
 import com.example.yukka.model.roslina.cecha.CechaKatalogResponse;
 
 import io.swagger.v3.oas.annotations.Parameter;
@@ -70,7 +70,7 @@ import lombok.RequiredArgsConstructor;
  * </ul>
  */
 @RestController
-@RequestMapping("uzytkownikRosliny")
+@RequestMapping("roslinyWlasne")
 @Tag(name = "RoslinaWlasna")
 @RequiredArgsConstructor
 public class RoslinaWlasnaController {
@@ -91,7 +91,7 @@ public class RoslinaWlasnaController {
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllRoslinyOfUzytkownik(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "12", required = false) int size,
-            @RequestBody RoslinaWlasnaRequest request,
+            @RequestBody RoslinaRequest request,
             @RequestParam(name = "uzytkownik-nazwa", required = false) String uzytkownikNazwa,
             Authentication connectedUser) {
         return ResponseEntity.ok(roslinaWlasnaService.findRoslinyOfUzytkownik(page, size, request, uzytkownikNazwa, connectedUser));
@@ -99,7 +99,7 @@ public class RoslinaWlasnaController {
 
     @PostMapping(value = "/cechyQuery", produces="application/json")
     public ResponseEntity<Set<CechaKatalogResponse>> getUzytkownikCechyCountFromQuery(
-        @RequestBody(required = false) RoslinaWlasnaRequest request,
+        @RequestBody(required = false) RoslinaRequest request,
         @RequestParam(name = "uzytkownik-nazwa", required = false) String uzytkownikNazwa,
         Authentication connectedUser
     ) {
@@ -116,7 +116,7 @@ public class RoslinaWlasnaController {
      * @return ResponseEntity zawierające odpowiedź z informacją o zapisaniu rośliny
      */
     @PostMapping(consumes = "multipart/form-data", produces="application/json")
-    public ResponseEntity<RoslinaResponse> save(@Valid @RequestPart("request") RoslinaWlasnaRequest request, 
+    public ResponseEntity<RoslinaResponse> save(@Valid @RequestPart("request") RoslinaRequest request, 
     @Parameter() @RequestPart(value = "file", required = false) MultipartFile file,
     Authentication connectedUser) {
         return ResponseEntity.status(HttpStatus.CREATED).body(roslinaWlasnaService.save(request, file, connectedUser));
@@ -130,7 +130,7 @@ public class RoslinaWlasnaController {
      * @return ResponseEntity zawierające odpowiedź z informacją o zaktualizowaniu rośliny
      */
     @PatchMapping(consumes = "application/json", produces="application/json")
-    public ResponseEntity<RoslinaResponse> update(@Valid @RequestBody RoslinaWlasnaRequest request, Authentication connectedUser) {
+    public ResponseEntity<RoslinaResponse> update(@Valid @RequestBody RoslinaRequest request, Authentication connectedUser) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roslinaWlasnaService.update(request, connectedUser));
     }
 

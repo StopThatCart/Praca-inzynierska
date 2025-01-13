@@ -4,8 +4,8 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
-import { RoslinaWlasnaService } from './services/roslina-wlasna.service';
 import { RozmowaPrywatnaService } from './services/rozmowa-prywatna.service';
+import { RoslinaWlasnaService } from './services/roslina-wlasna.service';
 import { RoslinaService } from './services/roslina.service';
 import { PostService } from './services/post.service';
 import { KomentarzService } from './services/komentarz.service';
@@ -24,8 +24,8 @@ import { OgrodService } from './services/ogrod.service';
   exports: [],
   declarations: [],
   providers: [
-    RoslinaWlasnaService,
     RozmowaPrywatnaService,
+    RoslinaWlasnaService,
     RoslinaService,
     PostService,
     KomentarzService,

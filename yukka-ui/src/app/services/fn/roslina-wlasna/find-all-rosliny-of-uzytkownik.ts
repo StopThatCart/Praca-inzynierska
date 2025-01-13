@@ -7,13 +7,13 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { PageResponseRoslinaResponse } from '../../models/page-response-roslina-response';
-import { RoslinaWlasnaRequest } from '../../models/roslina-wlasna-request';
+import { RoslinaRequest } from '../../models/roslina-request';
 
 export interface FindAllRoslinyOfUzytkownik$Params {
   page?: number;
   size?: number;
   'uzytkownik-nazwa'?: string;
-      body: RoslinaWlasnaRequest
+      body: RoslinaRequest
 }
 
 export function findAllRoslinyOfUzytkownik(http: HttpClient, rootUrl: string, params: FindAllRoslinyOfUzytkownik$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseRoslinaResponse>> {
@@ -35,4 +35,4 @@ export function findAllRoslinyOfUzytkownik(http: HttpClient, rootUrl: string, pa
   );
 }
 
-findAllRoslinyOfUzytkownik.PATH = '/uzytkownikRosliny/szukaj';
+findAllRoslinyOfUzytkownik.PATH = '/roslinyWlasne/szukaj';

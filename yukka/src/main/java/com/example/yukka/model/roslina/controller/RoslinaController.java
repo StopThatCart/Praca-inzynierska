@@ -37,7 +37,6 @@ import lombok.RequiredArgsConstructor;
  * <ul>
  * <li><strong>findAllRoslinyWithParameters</strong> - Wyszukuje rośliny na podstawie podanych parametrów.</li>
  * <li><strong>getCechyWithRelations</strong> - Pobiera cechy roślin wraz z relacjami.</li>
- * <li><strong>findByNazwaLacinska</strong> - Wyszukuje roślinę na podstawie nazwy łacińskiej.</li>
  * <li><strong>findByUUID</strong> - Wyszukuje roślinę na podstawie identyfikatora rośliny.</li>
  * <li><strong>saveRoslina</strong> - Zapisuje nową roślinę.</li>
  * <li><strong>updateRoslina</strong> - Aktualizuje dane rośliny na podstawie nazwy łacińskiej.</li>
@@ -89,29 +88,13 @@ public class RoslinaController {
     }
 
     /**
-     * Metoda obsługująca żądanie HTTP GET do wyszukiwania rośliny na podstawie nazwy łacińskiej.
-     *
-     * @param nazwaLacinska nazwa łacińska rośliny
-     * @return ResponseEntity zawierające odpowiedź z rośliną w formacie JSON
-     */
-    @GetMapping(value = "/nazwa-lacinska/{nazwa-lacinska}", produces="application/json")
-    public ResponseEntity<RoslinaResponse> findByNazwaLacinska(@PathVariable("nazwa-lacinska") String nazwaLacinska) {
-        return ResponseEntity.ok(roslinaService.findByNazwaLacinska(nazwaLacinska.toLowerCase()));
-    }
-
-    // @GetMapping(value = "/id/{id}", produces="application/json")
-    // public ResponseEntity<RoslinaResponse> findById(@PathVariable("id") Long id) {
-    //     return ResponseEntity.ok(roslinaService.findById(id));
-    // }
-
-    /**
      * Metoda obsługująca żądanie HTTP GET do wyszukiwania rośliny na podstawie identyfikatora rośliny.
      *
      * @param uuid identyfikator rośliny
      * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika. Używany jeśli roślina jest użytkownika.
      * @return ResponseEntity zawierające odpowiedź z rośliną w formacie JSON
      */
-    @GetMapping(value = "/uuid/{uuid}", produces="application/json")
+    @GetMapping(value = "/{uuid}", produces="application/json")
     public ResponseEntity<RoslinaResponse> findByUUID(@PathVariable("uuid") String uuid, Authentication connectedUser) {
         return ResponseEntity.ok(roslinaService.findByUUID(uuid, connectedUser));
     }
@@ -135,29 +118,29 @@ public class RoslinaController {
     /**
      * Metoda obsługująca żądanie HTTP PUT do aktualizacji danych rośliny na podstawie nazwy łacińskiej.
      *
-     * @param nazwaLacinska nazwa łacińska rośliny
+     * @param uuid identyfikator rośliny
      * @param request obiekt zawierający nowe dane rośliny
      * @return ResponseEntity zawierające odpowiedź z zaktualizowaną rośliną w formacie JSON
      */
-    @PutMapping(value = "/{nazwa-lacinska}", consumes="application/json", produces="application/json")
-    public ResponseEntity<RoslinaResponse> updateRoslina(@PathVariable("nazwa-lacinska") String nazwaLacinska,
+    @PutMapping(value = "/{uuid}", consumes="application/json", produces="application/json")
+    public ResponseEntity<RoslinaResponse> updateRoslina(@PathVariable() String uuid,
             @Valid @RequestBody RoslinaRequest request) {
-        RoslinaResponse roslina = roslinaService.update(nazwaLacinska, request);
+        RoslinaResponse roslina = roslinaService.update(uuid, request);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(roslina);
     }
 
     /**
      * Metoda obsługująca żądanie HTTP PUT do aktualizacji obrazu rośliny na podstawie nazwy łacińskiej.
      *
-     * @param nazwaLacinska nazwa łacińska rośliny
+     * @param uuid identyfikator rośliny
      * @param file obiekt MultipartFile zawierający nowy obraz rośliny
      * @return ResponseEntity zawierające odpowiedź z zaktualizowaną rośliną w formacie JSON
      */
-    @PutMapping(value = "/{nazwa-lacinska}/obraz", consumes = "multipart/form-data", produces="application/json")
+    @PutMapping(value = "/{uuid}/obraz", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<String> updateRoslinaObraz(
-            @PathVariable("nazwa-lacinska") String nazwaLacinska,
+            @PathVariable() String uuid,
             @Parameter() @RequestPart(value = "file", required = false) MultipartFile file) {
-        roslinaService.uploadRoslinaObraz(nazwaLacinska, file);
+        roslinaService.uploadRoslinaObraz(uuid, file);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     

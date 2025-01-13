@@ -317,8 +317,8 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         Pageable pageable);
 
     @Query("""
-        MERGE (p:Roslina {uuid: randomUUID(), nazwa: $name, nazwaLacinska: toLower($latinName), opis: $description, 
-        obraz: COALESCE($obraz, 'default_plant.jpg'), wysokoscMin: $heightMin, wysokoscMax: $heightMax}) 
+        MERGE (p:Roslina {uuid: randomUUID(), nazwa: $nazwa, nazwaLacinska: toLower($nazwaLacinska), opis: $opis, 
+        obraz: COALESCE($obraz, 'default_plant.jpg'), wysokoscMin: $wysokoscMin, wysokoscMax: $wysokoscMax}) 
 
         WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
@@ -331,10 +331,10 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
     Roslina addRoslina(
-        String name, String latinName, 
-        String description, 
+        String nazwa, String nazwaLacinska, 
+        String opis, 
         String obraz, 
-        Double heightMin, Double heightMax, 
+        Double wysokoscMin, Double wysokoscMax, 
         @Param("relatLump") List<Map<String, String>> relatLump
     );
 
@@ -358,11 +358,11 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
 // To niestety trzeba zapamiętać bo mi trochę zajęło
 // Czas wykonania testu: 162ms, 179ms
     @Query("""
-        MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:RoslinaWlasna
-        SET  p.nazwa = $name, 
-            p.nazwaLacinska = toLower($nowaNazwaLacinska),
-            p.opis = $description,
-            p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
+        MATCH (p:Roslina{uuid: $uuid}) WHERE NOT p:RoslinaWlasna
+        SET p.nazwa = $nazwa, 
+            p.nazwaLacinska = toLower($nazwaLacinska),
+            p.opis = $opis,
+            p.wysokoscMin = $wysokoscMin, p.wysokoscMax = $wysokoscMax
         WITH p, $relatLump AS relatLump UNWIND relatLump AS relat
 
         WITH p, relat, [relat.etykieta, 'Cecha'] AS labels
@@ -371,7 +371,7 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
         CALL apoc.merge.relationship(p, relat.relacja, {}, {}, w) YIELD rel
 
         WITH p, collect(DISTINCT w) AS currentNodes, collect(DISTINCT rel) AS currentRels
-        OPTIONAL MATCH (p)-[r]->(w:Cecha)
+        OPTIONAL MATCH path=(p)-[r]->(w:Cecha)
 
         WHERE NOT w IN currentNodes
         CALL {
@@ -380,35 +380,35 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
             RETURN COUNT(*) AS deletedRels
         }
 
-        RETURN p
+        RETURN p, collect(nodes(path)) AS nodes, collect(relationships(path)) AS relus
     """)
     Roslina updateRoslina(
-        String name,
-        String latinName,
-        String description,
-        Double heightMin,
-        Double heightMax,
-        String nowaNazwaLacinska,
+        String uuid,
+        String nazwa,
+        String nazwaLacinska,
+        String opis,
+        Double wysokoscMin,
+        Double wysokoscMax,
         @Param("relatLump") List<Map<String, String>> relatLump
     );
 
 
     @Query("""
-        MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:RoslinaWlasna
-        SET p.nazwa = $name,
-            p.nazwaLacinska = toLower($nowaNazwaLacinska),
-            p.opis = $description,
+        MATCH (p:Roslina{uuid: $uuid}) WHERE NOT p:RoslinaWlasna
+        SET p.nazwa = $nazwa,
+            p.nazwaLacinska = toLower($nazwaLacinska),
+            p.opis = $opis,
            
-            p.wysokoscMin = $heightMin, p.wysokoscMax = $heightMax
-        RETURN p
+            p.wysokoscMin = $wysokoscMin, p.wysokoscMax = $wysokoscMax
+        
     """)
     Roslina updateRoslina(
-   String name,
-    String latinName,
-    String description,
-    Double heightMin,
-    Double heightMax,
-    String nowaNazwaLacinska
+        String uuid,
+        String nazwa,
+        String nazwaLacinska,
+        String opis,
+        Double wysokoscMin,
+        Double wysokoscMax
     );
 
     @Query("""
@@ -419,15 +419,14 @@ public interface RoslinaRepository extends Neo4jRepository<Roslina, Long> {
     Roslina updateRoslinaObraz(String uuid, String obraz);
 
     @Query("""
-            MATCH (p:Roslina{nazwaLacinska: toLower($latinName)}) WHERE NOT p:RoslinaWlasna
+            MATCH (p:Roslina{nazwaLacinska: toLower($nazwaLacinska)}) WHERE NOT p:RoslinaWlasna
             DETACH DELETE p
 
             WITH p 
-            MATCH (cecha:Cecha) 
-            WHERE NOT (cecha)--()
+            MATCH (cecha:Cecha) WHERE NOT (cecha)--()
             DELETE cecha
             """)
-    void deleteByNazwaLacinska(String latinName);
+    void deleteByNazwaLacinska(String nazwaLacinska);
 
     @Query("""
             MATCH (p:Roslina{uuid: $uuid})
