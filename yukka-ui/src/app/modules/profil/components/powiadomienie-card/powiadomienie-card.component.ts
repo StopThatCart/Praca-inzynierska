@@ -57,7 +57,6 @@ export class PowiadomienieCardComponent {
     if (this.pow.odnosnik && this.pow.typ) {
       // TODO: Nawigacja na bazie typu powiadomienia
       switch (this.pow.typ) {
-        case TypPowiadomienia.GRATULACJE:
         case TypPowiadomienia.SPECJALNE:
         case TypPowiadomienia.BAN:
         case TypPowiadomienia.ZAPROSZENIE_ODRUCONE:
@@ -66,7 +65,6 @@ export class PowiadomienieCardComponent {
           this.router.navigate(['profil', this.pow.odnosnik]);
           break;
         case TypPowiadomienia.KOMENTARZ_POST:
-        case TypPowiadomienia.POLUBIENIA_POST:
         case TypPowiadomienia.ZGLOSZENIE_KOMENTARZ:
         case TypPowiadomienia.ZGLOSZENIE_POST:
           this.router.navigate(['/social/posty', this.pow.odnosnik]);
@@ -79,14 +77,13 @@ export class PowiadomienieCardComponent {
           this.router.navigate(['profil', this.tokenService.nazwa ,'rozmowy', this.pow.odnosnik]);
           break;
 
-        case TypPowiadomienia.OWOCOWANIE_ROSLIN:
         case TypPowiadomienia.OWOCOWANIE_ROSLIN_TERAZ:
         case TypPowiadomienia.KWITNIENIE_ROSLIN_TERAZ:
           this.router.navigate(['/ogrod', this.pow.odnosnik]);
           //throw new Error('NotImplementedYet: Typ powiadomienia nie jest obsługiwany');
           break;
         default:
-          throw new Error('NotImplementedYet: Typ powiadomienia nie jest obsługiwany');
+          throw new Error('Typ powiadomienia nie jest obsługiwany.');
       }
     }
   }

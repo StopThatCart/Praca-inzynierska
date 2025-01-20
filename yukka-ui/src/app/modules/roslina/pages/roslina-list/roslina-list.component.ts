@@ -138,7 +138,7 @@ export class RoslinaListComponent implements OnInit{
     .subscribe({
       next: (cechy) => {
         this.cechyResponse = this.cechaProcessService.processCechyResponse(cechy);
-        console.log('Cechy:', this.cechyResponse);
+        //console.log('Cechy:', this.cechyResponse);
       },
       error: (error) => {
         console.error('Error fetching cechy:', error);

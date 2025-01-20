@@ -17,3 +17,8 @@
       0% { word-break: break-all; }
   }
 }
+
+.roslina-card {
+  background: var(--bs-secondary);
+  border-color: var(--bs-primary-text-emphasis);
+}
