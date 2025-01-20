@@ -34,5 +34,4 @@ public class Ocenil {
 
     @TargetNode
     private Oceniany oceniany;
-
 }

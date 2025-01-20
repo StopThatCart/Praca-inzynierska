@@ -4,7 +4,6 @@ import java.util.Set;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
-import org.springframework.data.repository.query.Param;
 
 import com.example.yukka.model.roslina.Roslina;
 import com.example.yukka.model.roslina.cecha.Cecha;
@@ -142,25 +141,25 @@ public interface CechaRepository extends Neo4jRepository<Cecha, Long> {
             RETURN etykieta, collect({nazwa: nazwa, liczbaRoslin: liczbaRoslin}) AS nazwyLiczbaRoslin
             """)
         Set<CechaKatalogResponse> getCechyCountFromQuery(
-            @Param("roslina") Roslina roslina, 
-            @Param("formy") Set<Cecha> formy,
-            @Param("gleby") Set<Cecha> gleby,
-            @Param("grupy") Set<Cecha> grupy,
-            @Param("koloryLisci") Set<Cecha> koloryLisci,
-            @Param("koloryKwiatow") Set<Cecha> koloryKwiatow,
-            @Param("kwiaty") Set<Cecha> kwiaty,
-            @Param("odczyny") Set<Cecha> odczyny,
-            @Param("okresyKwitnienia") Set<Cecha> okresyKwitnienia,
-            @Param("okresyOwocowania") Set<Cecha> okresyOwocowania,
-            @Param("owoce") Set<Cecha> owoce,
-            @Param("podgrupa") Set<Cecha> podgrupa,
-            @Param("pokroje") Set<Cecha> pokroje,
-            @Param("silyWzrostu") Set<Cecha> silyWzrostu,
-            @Param("stanowiska") Set<Cecha> stanowiska,
-            @Param("walory") Set<Cecha> walory,
-            @Param("wilgotnosci") Set<Cecha> wilgotnosci,
-            @Param("zastosowania") Set<Cecha> zastosowania,
-            @Param("zimozielonosci") Set<Cecha> zimozielonosci
+            Roslina roslina, 
+            Set<Cecha> formy,
+            Set<Cecha> gleby,
+            Set<Cecha> grupy,
+            Set<Cecha> koloryLisci,
+            Set<Cecha> koloryKwiatow,
+            Set<Cecha> kwiaty,
+            Set<Cecha> odczyny,
+            Set<Cecha> okresyKwitnienia,
+            Set<Cecha> okresyOwocowania,
+            Set<Cecha> owoce,
+            Set<Cecha> podgrupa,
+            Set<Cecha> pokroje,
+            Set<Cecha> silyWzrostu,
+            Set<Cecha> stanowiska,
+            Set<Cecha> walory,
+            Set<Cecha> wilgotnosci,
+            Set<Cecha> zastosowania,
+            Set<Cecha> zimozielonosci
         );
 
 
@@ -277,26 +276,26 @@ public interface CechaRepository extends Neo4jRepository<Cecha, Long> {
             RETURN etykieta, collect({nazwa: nazwa, liczbaRoslin: liczbaRoslin}) AS nazwyLiczbaRoslin
             """)
         Set<CechaKatalogResponse> getCechyWlasneCountFromQuery(
-            @Param("uzytkownikNazwa") String uzytkownikNazwa,
-            @Param("roslina") Roslina roslina, 
-            @Param("formy") Set<Cecha> formy,
-            @Param("gleby") Set<Cecha> gleby,
-            @Param("grupy") Set<Cecha> grupy,
-            @Param("koloryLisci") Set<Cecha> koloryLisci,
-            @Param("koloryKwiatow") Set<Cecha> koloryKwiatow,
-            @Param("kwiaty") Set<Cecha> kwiaty,
-            @Param("odczyny") Set<Cecha> odczyny,
-            @Param("okresyKwitnienia") Set<Cecha> okresyKwitnienia,
-            @Param("okresyOwocowania") Set<Cecha> okresyOwocowania,
-            @Param("owoce") Set<Cecha> owoce,
-            @Param("podgrupa") Set<Cecha> podgrupa,
-            @Param("pokroje") Set<Cecha> pokroje,
-            @Param("silyWzrostu") Set<Cecha> silyWzrostu,
-            @Param("stanowiska") Set<Cecha> stanowiska,
-            @Param("walory") Set<Cecha> walory,
-            @Param("wilgotnosci") Set<Cecha> wilgotnosci,
-            @Param("zastosowania") Set<Cecha> zastosowania,
-            @Param("zimozielonosci") Set<Cecha> zimozielonosci
+            String uzytkownikNazwa,
+            Roslina roslina, 
+            Set<Cecha> formy,
+            Set<Cecha> gleby,
+            Set<Cecha> grupy,
+            Set<Cecha> koloryLisci,
+            Set<Cecha> koloryKwiatow,
+            Set<Cecha> kwiaty,
+            Set<Cecha> odczyny,
+            Set<Cecha> okresyKwitnienia,
+            Set<Cecha> okresyOwocowania,
+            Set<Cecha> owoce,
+            Set<Cecha> podgrupa,
+            Set<Cecha> pokroje,
+            Set<Cecha> silyWzrostu,
+            Set<Cecha> stanowiska,
+            Set<Cecha> walory,
+            Set<Cecha> wilgotnosci,
+            Set<Cecha> zastosowania,
+            Set<Cecha> zimozielonosci
         );
 
 }

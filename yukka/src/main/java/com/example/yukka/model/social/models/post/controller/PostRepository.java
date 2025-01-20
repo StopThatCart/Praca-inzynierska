@@ -80,7 +80,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
                 collect(nodes(path3)), collect(relationships(path3)),
                 collect(nodes(oceniajacyKomentarze)),  collect(relationships(oceniajacyKomentarze))
         """)
-    Optional<Post> findPostByUUID(@Param("uuid") String uuid);
+    Optional<Post> findPostByUUID(String uuid);
 
 
     @Query("""
@@ -89,7 +89,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
         RETURN post, r1, autor
         """)
-    Optional<Post> findPostByUUIDCheck(@Param("uuid") String uuid);
+    Optional<Post> findPostByUUIDCheck(String uuid);
 
 
     @Query("""
@@ -98,14 +98,14 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         ORDER BY post.dataUtworzenia DESC
         LIMIT 1
         """)
-    Optional<Post> findNewestPostOfUzytkownik(@Param("email") String email);
+    Optional<Post> findNewestPostOfUzytkownik(String email);
 
 
     @Query(value = """
         MATCH path = (post:Post)<-[:MA_POST]-(:Uzytkownik)
         WHERE $szukaj IS NULL OR toLower(post.tytul) CONTAINS toLower($szukaj) OR toLower(post.opis) CONTAINS toLower($szukaj)
 
-        OPTIONAL MATCH path2 = (post)-[:OCENIL]-(:Uzytkownik)
+        OPTIONAL MATCH path2 = (post)<-[:OCENIL]-(:Uzytkownik)
         OPTIONAL MATCH path3 = (post)<-[:JEST_W_POSCIE]-(kom:Komentarz)
 
         RETURN post, collect(nodes(path)), collect(relationships(path)),
@@ -118,7 +118,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         WHERE $szukaj IS NULL OR toLower(post.tytul) CONTAINS toLower($szukaj) OR toLower(post.opis) CONTAINS toLower($szukaj)
         RETURN count(post)
         """)
-    Page<Post> findAllPosts(@Param("szukaj") String szukaj, Pageable pageable);
+    Page<Post> findAllPosts(String szukaj, Pageable pageable);
 
     @Query(value = """
         MATCH path = (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{nazwa: $nazwa})
@@ -135,7 +135,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         MATCH (post:Post)<-[:MA_POST]-(uzyt:Uzytkownik{nazwa: $nazwa})
         RETURN count(post)
         """)
-    Page<Post> findAllPostyByUzytkownik(@Param("nazwa") String nazwa, Pageable pageable);
+    Page<Post> findAllPostyByUzytkownik(String nazwa, Pageable pageable);
 
     @Query("""
             MATCH (uzyt:Uzytkownik{email: $email})
@@ -150,7 +150,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
 
             RETURN post, r1, autor, collect(nodes(path2)), collect(relationships(path2))
             """)
-    Post addOcenaToPost(@Param("email") String email, @Param("uuid") String uuid, @Param("ocena") boolean ocena);
+    Post addOcenaToPost(String email, String uuid, boolean ocena);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
@@ -161,13 +161,13 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
                                         })
         RETURN post
         """)
-    Optional<Post> addPost(@Param("email") String email, @Param("post") Post post, @Param("time") LocalDateTime time);
+    Optional<Post> addPost(String email, Post post, @Param("time") LocalDateTime time);
 
     @Query("""
         MATCH (post:Post{uuid: $uuid})
         SET post.obraz = $obraz
         """)
-    void updatePostObraz(@Param("uuid") String uuid, @Param("obraz") String obraz);
+    void updatePostObraz(String uuid, String obraz);
 
     @Query("""
         MATCH (post:Post {uuid: $uuid})
@@ -176,7 +176,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         WITH post, komentarz
         DETACH DELETE komentarz, post
         """)
-    void deletePost(@Param("uuid") String uuid);
+    void deletePost(String uuid);
 
     @Query("""
         MATCH (post:Post {uuid: $uuid})
@@ -186,7 +186,7 @@ public interface PostRepository extends Neo4jRepository<Post, Long> {
         WITH post
         DETACH DELETE post
         """)
-    void deletePostButBetter(@Param("uuid") String uuid);
+    void deletePostButBetter(String uuid);
 
 
     @Query("""

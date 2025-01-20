@@ -68,7 +68,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
                 collect(nodes(komPath)), collect(relationships(komPath))
        """
        )
-    Optional<RozmowaPrywatna> findRozmowaPrywatnaWithKomentarze(@Param("odbiorcaId") String odbiorca, @Param("nadawcaId") String nadawca);
+    Optional<RozmowaPrywatna> findRozmowaPrywatnaWithKomentarze(String odbiorcaId, String nadawcaId);
 
 
     @Query("""
@@ -112,8 +112,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
                <-[:JEST_W_ROZMOWIE]-(uzyt2)
         RETURN priv
         """)
-    RozmowaPrywatna inviteToRozmowaPrywatna(@Param("nadawcaId") String nadawca, @Param("odbiorcaId") String odbiorca,
-     @Param("time") LocalDateTime localdatetime);
+    RozmowaPrywatna inviteToRozmowaPrywatna(String nadawcaId, String odbiorcaId, @Param("time") LocalDateTime localdatetime);
 
     @Query("""
         MATCH (uzyt1:Uzytkownik{uuid: $odbiorcaId})-[:JEST_W_ROZMOWIE]->
@@ -126,8 +125,7 @@ public interface RozmowaPrywatnaRepository extends Neo4jRepository<RozmowaPrywat
         RETURN priv
         """
         )
-    RozmowaPrywatna acceptRozmowaPrywatna(String nadawcaId, 
-                                        String odbiorcaId);
+    RozmowaPrywatna acceptRozmowaPrywatna(String nadawcaId, String odbiorcaId);
 
     @Query("""
         MATCH (odbiorca:Uzytkownik{uuid: $odbiorcaId})-[:JEST_W_ROZMOWIE]->

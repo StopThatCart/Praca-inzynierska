@@ -121,7 +121,7 @@ public interface UzytkownikRepository extends Neo4jRepository<Uzytkownik, Long> 
     Optional<Uzytkownik> getBlokowaniAndBlokujacy(String nazwa);
 
     @Query("""
-        MATCH path = (uzyt:Uzytkownik)-[:MA_OGROD]->(:Ogrod)
+        MATCH path = (ustawienia:Ustawienia)<-[:MA_USTAWIENIA]-(uzyt:Uzytkownik)-[:MA_OGROD]->(:Ogrod)
             -[:MA_DZIALKE]->(:Dzialka)
             <-[:ZASADZONA_NA]-(rosliny)-[r]-(cecha)
         WHERE (cecha:Cecha OR cecha:CechaWlasna)

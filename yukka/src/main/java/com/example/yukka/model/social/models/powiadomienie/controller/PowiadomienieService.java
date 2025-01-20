@@ -126,8 +126,12 @@ public class PowiadomienieService {
                     przetworzOkresy(zasadzona.getRoslina().getOkresyKwitnienia(), aktualnyMiesiac, nazwyRoslinKwitnienie, zasadzona.getRoslina().getNazwa());     
                 });
             });
-            utworzOkresPowiadomienie(nazwyRoslinOwocowanie, TypPowiadomienia.OWOCOWANIE_ROSLIN_TERAZ, uzytkownik);
-            utworzOkresPowiadomienie(nazwyRoslinKwitnienie, TypPowiadomienia.KWITNIENIE_ROSLIN_TERAZ, uzytkownik);
+            if (uzytkownik.getUstawienia().isPowiadomieniaOgrodKwitnienie()) {
+                utworzOkresPowiadomienie(nazwyRoslinKwitnienie, TypPowiadomienia.KWITNIENIE_ROSLIN_TERAZ, uzytkownik);
+            }
+            if (uzytkownik.getUstawienia().isPowiadomieniaOgrodOwocowanie()) {
+                utworzOkresPowiadomienie(nazwyRoslinOwocowanie, TypPowiadomienia.OWOCOWANIE_ROSLIN_TERAZ, uzytkownik);
+            }
         }
     }
 
@@ -364,10 +368,9 @@ public class PowiadomienieService {
      * Wysyła powiadomienie o nowym komentarzu.
      *
      * @param nadawca   Użytkownik, który wysyła powiadomienie.
-     * @param odbiorca  Użytkownik, który otrzymuje powiadomienie.
      * @param komentarz Komentarz, który dotyczy powiadomienia.
      */
-    public void sendPowiadomienieOfKomentarz(Uzytkownik nadawca, Uzytkownik odbiorca, Komentarz komentarz) {
+    public void sendPowiadomienieOfKomentarz(Uzytkownik nadawca, Komentarz komentarz) {
         if(komentarz.getUzytkownik().getUuid().equals(nadawca.getUuid())) {
             return;
         }
@@ -379,6 +382,16 @@ public class PowiadomienieService {
                 System.out.println("\n\n\nPost jest nullem\n\n\n");
                 return;
             }
+        }
+
+        if (komentarz.getUzytkownik() == null) {
+            throw new EntityNotFoundException("Nie znaleziono odbiorcy komentarza");
+        }
+        Uzytkownik odbiorca = uzytkownikRepository.findByUUID(komentarz.getUzytkownik().getUuid())
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono odbiorcy komentarza"));
+        
+        if (!odbiorca.getUstawienia().isPowiadomieniaKomentarzeOdpowiedz() || odbiorca.getUuid().equals(nadawca.getUuid())) {
+            return;
         }
 
         PowiadomienieDTO powiadomienie = PowiadomienieDTO.builder()

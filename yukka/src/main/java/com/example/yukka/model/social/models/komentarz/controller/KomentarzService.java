@@ -36,6 +36,7 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <strong>KomentarzService</strong> - Serwis odpowiedzialny za operacje na komentarzach.
@@ -65,6 +66,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class KomentarzService {
     @Value("${komentarz.add.cooldown}")
     private Integer komAddCD;
@@ -88,6 +90,7 @@ public class KomentarzService {
      */
     @Transactional(readOnly = true)
     public KomentarzResponse findByUUIDWithOdpowiedzi(String uuid) {
+        log.info("Szukanie komentarza o ID: " + uuid);
         return  komentarzRepository.findKomentarzWithOdpowiedziByUUID(uuid)
                 .map(komentarzMapper::toKomentarzResponse)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + uuid));
@@ -107,6 +110,8 @@ public class KomentarzService {
     public PageResponse<KomentarzResponse> findKomentarzeOfUzytkownik(int page, int size, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
+        log.info("Szukanie komentarzy użytkownika: " + nazwa + " przez użytkownika: " + uzyt.getEmail());
+
         if (targetUzyt.isEmpty() || !uzyt.hasAuthenticationRights(targetUzyt.get())) {
            throw new ForbiddenException("Nie masz uprawnień do przeglądania komentarzy tego użytkownika");
         }
@@ -126,10 +131,7 @@ public class KomentarzService {
      */
     public OcenaResponse addOcenaToKomentarz(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
-
-        if(uzyt.isBan()) {
-            throw new BannedUzytkownikException("Użytkownik jest zbanowany");
-        }
+        log.info("Dodawanie oceny do komentarza: " + request.getOcenialnyId() + " przez użytkownika: " + uzyt.getEmail());
 
         return addOcenaToKomentarz(request, uzyt);
     }
@@ -146,6 +148,7 @@ public class KomentarzService {
      */
     public OcenaResponse addOcenaToKomentarz(OcenaRequest request, Uzytkownik connectedUser) {
         Uzytkownik uzyt = connectedUser;
+        log.info("Dodawanie oceny do komentarza: " + request.getOcenialnyId() + " przez użytkownika: " + uzyt.getEmail());
 
         Komentarz komentarz = komentarzRepository
             .findKomentarzByUUID(request.getOcenialnyId()).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getOcenialnyId()));
@@ -175,6 +178,8 @@ public class KomentarzService {
      */
     public KomentarzResponse addKomentarzToWiadomoscPrywatna(KomentarzRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik nadawca = (Uzytkownik) connectedUser.getPrincipal();
+        log.info("Dodawanie komentarza do wiadomości prywatnej: " + request.getTargetId() + " przez użytkownika: " + nadawca.getEmail());
+
         return addKomentarzToWiadomoscPrywatna(request, file, nadawca);
     }
 
@@ -221,6 +226,7 @@ public class KomentarzService {
      */
     public KomentarzResponse addKomentarzToPost(KomentarzRequest request,  MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info("Dodawanie komentarza do posta: " + request.getTargetId() + " przez użytkownika: " + uzyt.getEmail());
 
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastKomentarz(newestKomentarz);
@@ -263,6 +269,7 @@ public class KomentarzService {
      */
     public KomentarzResponse addOdpowiedzToKomentarz(@Valid KomentarzRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info("Dodawanie odpowiedzi do komentarza: " + request.getTargetId());
 
         Optional<Komentarz> newestKomentarz = komentarzRepository.findNewestKomentarzOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastKomentarz(newestKomentarz);
@@ -300,7 +307,7 @@ public class KomentarzService {
         Komentarz response = komentarzRepository.addOdpowiedzToKomentarzInPost(nadawca.getEmail(), kom, 
         request.getTargetId(), LocalDateTime.now());
 
-        powiadomienieService.sendPowiadomienieOfKomentarz(connectedUser, komentarzDoOdpowiedzi.getUzytkownik(), komentarzDoOdpowiedzi);
+        powiadomienieService.sendPowiadomienieOfKomentarz(connectedUser, komentarzDoOdpowiedzi);
 
         return response;
     }
@@ -316,6 +323,8 @@ public class KomentarzService {
      */
     public KomentarzResponse updateKomentarz(KomentarzRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info("Aktualizacja komentarza o ID: " + request.getTargetId() + " przez użytkownika: " + uzyt.getEmail());
+
         komentarzRepository.findKomentarzByUUID(request.getTargetId())
                 .filter(k -> uzyt.hasAuthenticationRights(k.getUzytkownik()))
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + request.getTargetId()));
@@ -336,17 +345,16 @@ public class KomentarzService {
      */
     public void deleteKomentarz(String uuid, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());        
+        log.info("Usuwanie komentarza o ID: " + uuid + " przez użytkownika: " + uzyt.getEmail());
+
         Komentarz komentarz = komentarzRepository.findKomentarzByUUID(uuid)
-            .orElseThrow(
-                () -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + uuid)
-            );
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + uuid));
         
         if (!uzyt.hasAuthenticationRights(komentarz.getUzytkownik())) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia komentarza");
         }
 
         if(komentarz.getWPoscie() != null) {
-            System.out.println("Usuwanie komentarza z posta BO TAKI WYKRYTO");
             deleteKomentarzFromPost(komentarz.getWPoscie().getUuid(), uuid, uzyt);
         } else if(komentarz.getRozmowaPrywatna() != null) {
             komentarzRepository.removeKomentarz(uuid);
@@ -366,6 +374,8 @@ public class KomentarzService {
      */
     public void deleteKomentarzFromPost(String postUUID, String uuid, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info("Usuwanie komentarza o ID: " + uuid + " z posta o ID: " + postUUID + " przez użytkownika: " + uzyt.getEmail());
+
         postRepository.findPostByUUIDCheck(postUUID).orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + postUUID));
         Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByUUID(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + uuid));
@@ -380,7 +390,6 @@ public class KomentarzService {
         }
         komentarzRepository.removeKomentarz(kom.getUuid());
     }
-
 
     /**
      * Usuwa komentarz z posta oraz wszystkie odpowiedzi na ten komentarz.

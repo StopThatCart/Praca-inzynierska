@@ -99,7 +99,6 @@ public class SocialSeeder {
 				post = postService.save(postReq, null, uzytkownicy.get(rand));
 			}
 			
-			// Dodawanie ocen do postów
 			Collections.shuffle(uzytkownicy);
 			int liczbaOcen = (int) (Math.random() * uzytkownicy.size()) + 1;
 			for (int j = 0; j < liczbaOcen; j++) {
@@ -137,10 +136,7 @@ public class SocialSeeder {
 					kom = komentarzService.addKomentarzToPost(komReq, null, uzytkownicy.get(rand));
 				}
 
-				// Dodawanie losowej ilości odpowiedzi do komentarza
 				addOdpowiedziRekursywne(kom, uzytkownicy, random, 1);
-
-				// Dodawanie ocen do komentarzy
 				addOcenyToKomentarz(kom, uzytkownicy);
 			}
 		}
@@ -192,7 +188,7 @@ public class SocialSeeder {
 				.lubi(Math.random() < 0.5)
 				.build();
 	
-			// Na wypadek, gdyby użytkownik próbował ocenić własny komentarz
+			// Powinno zwrócić wyjątek, jeśli włączono zakaz oceniania własnych komentarzy
 			try {
 				komentarzService.addOcenaToKomentarz(ocenaReq, uzytkownicy.get(j));
 			} catch (IllegalArgumentException e) {}

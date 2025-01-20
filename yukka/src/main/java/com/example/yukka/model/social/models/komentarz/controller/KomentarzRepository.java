@@ -136,9 +136,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
 
         RETURN kom
         """)
-    Komentarz addOdpowiedzToKomentarzInPost(String email, @Param("kom") Komentarz kom, 
-    String uuid,
-    @Param("time") LocalDateTime time);
+    Komentarz addOdpowiedzToKomentarzInPost(String email, Komentarz kom, String uuid, @Param("time") LocalDateTime time);
 
     @Query("""
         MATCH (uzyt:Uzytkownik{email: $email})
@@ -152,8 +150,7 @@ public interface KomentarzRepository extends Neo4jRepository<Komentarz, Long> {
     
         RETURN kom
         """)
-    Komentarz addKomentarzToPost(String email, String postUUID, @Param("kom") Komentarz kom,
-        @Param("time") LocalDateTime time);
+    Komentarz addKomentarzToPost(String email, String postUUID, Komentarz kom, @Param("time") LocalDateTime time);
 
     @Query("""
         MATCH (uzyt1:Uzytkownik{nazwa: $nadawca})-[:JEST_W_ROZMOWIE]->(priv:RozmowaPrywatna)<-[:JEST_W_ROZMOWIE]-(uzyt2:Uzytkownik{nazwa: $odbiorca})

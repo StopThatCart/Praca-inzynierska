@@ -32,6 +32,7 @@ import com.example.yukka.model.uzytkownik.controller.UzytkownikRepository;
 import com.example.yukka.model.uzytkownik.controller.UzytkownikService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Serwis odpowiedzialny za operacje związane z postami.
@@ -54,6 +55,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PostService {
     @Value("${post.add.cooldown}")
     private Integer postAddCD;
@@ -77,6 +79,7 @@ public class PostService {
      */
     @Transactional(readOnly = true)
     public PostResponse findByUUID(String uuid) {
+        log.info("Szukanie posta o ID: " + uuid);
         Post post = postRepository.findPostByUUID(uuid)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + uuid));
 
@@ -93,6 +96,7 @@ public class PostService {
      */
     @Transactional(readOnly = true)
     public PostResponse findByUUIDCheck(String uuid) {
+        log.info("Szukanie posta o ID: " + uuid);
         Post post = postRepository.findPostByUUIDCheck(uuid)
         .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + uuid));
 
@@ -109,6 +113,7 @@ public class PostService {
      */
     @Transactional(readOnly = true)
     public PageResponse<PostResponse> findAllPosts(int page, int size, String szukaj) {
+        log.info("Szukanie wszystkich postów...");
         Pageable pageable = PageRequest.of(page, size, Sort.by("post.dataUtworzenia").descending());
         Page<Post> posts = postRepository.findAllPosts(szukaj, pageable);
 
@@ -129,6 +134,8 @@ public class PostService {
     @Transactional(readOnly = true)
     public PageResponse<PostResponse> findAllPostyByUzytkownik(int page, int size, String nazwa, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info("Szukanie postów użytkownika: " + nazwa + " przez użytkownika: " + uzyt.getNazwa());
+
         Optional<Uzytkownik> targetUzyt = uzytkownikRepository.findByNazwa(nazwa);
         if(targetUzyt.isEmpty()) {
             throw new EntityNotFoundException("Nie znaleziono użytkownika o podanej nazwie: " + nazwa);
@@ -151,6 +158,7 @@ public class PostService {
      */
     public PostResponse save(PostRequest request, MultipartFile file, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info("Zapisywanie nowego postu przez użytkownika: " + uzyt.getNazwa());
         
         Optional<Post> newestPost = postRepository.findNewestPostOfUzytkownik(uzyt.getEmail());
         checkTimeSinceLastPost(newestPost);
@@ -185,6 +193,8 @@ public class PostService {
      */
     public OcenaResponse addOcenaToPost(OcenaRequest request, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info("Dodawanie oceny do posta przez użytkownika: " + uzyt.getNazwa());
+
         Post post = postRepository.findPostByUUIDCheck(request.getOcenialnyId())
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + request.getOcenialnyId()));
         
@@ -204,6 +214,8 @@ public class PostService {
      */
     public void deletePost(String uuid, Authentication connectedUser) {
         Uzytkownik uzyt = ((Uzytkownik) connectedUser.getPrincipal());
+        log.info("Usuwanie posta o ID: " + uuid + " przez użytkownika: " + uzyt.getNazwa());
+        
         Post post = postRepository.findPostByUUIDCheck(uuid).orElseThrow( () -> new EntityNotFoundException("Nie znaleziono posta o podanym ID: " + uuid));
         if(!uzyt.hasAuthenticationRights(post.getAutor())) {
             throw new ForbiddenException("Nie masz uprawnień do usunięcia tego posta");
