@@ -1,6 +1,9 @@
 package com.example.yukka.model.uzytkownik.controller;
 
 import static java.io.File.separator;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -465,7 +468,6 @@ public class UzytkownikService implements  UserDetailsService {
         removeUzytkownikQueries(uzyt.getEmail());
 
         Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUuid());
-        log.info("Usuwanie folderu: " + path);
         fileUtils.deleteDirectory(path);
     }
 
@@ -550,14 +552,12 @@ public class UzytkownikService implements  UserDetailsService {
      * <p>Metoda wykorzystuje klasę fileUtils do usunięcia folderu.
      */
     public void seedRemoveUzytkownicyObrazy() {
-        
-        List<Uzytkownik> uzytkownicy = uzytkownikRepository.findAll();
-        for(Uzytkownik uzyt : uzytkownicy) {
-
-           // uzytkownikRepository.delete(uzyt);
-            Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUuid());
-            log.info("Usuwanie folderu: " + path);
-            fileUtils.deleteDirectory(path);
+        Path usersDirectory = Paths.get(fileUploadPath + separator + "uzytkownicy");
+        try {
+            Files.list(usersDirectory).forEach(fileUtils::deleteDirectory);
+            log.info("Usunięto wszystkie foldery w katalogu uzytkownicy");
+        } catch (IOException e) {
+            log.error("Wystąpił błąd podczas usuwania folderów w katalogu uzytkownicy", e);
         }
     }
 

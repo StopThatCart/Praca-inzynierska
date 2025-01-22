@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import static java.io.File.separator;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -68,27 +68,8 @@ public class FileUtils {
     @Value("${powiadomienia.obraz.default.name}")
     private String powiadomieniaAvatarObrazName;
 
-
-    
-    /**
-     * Odczytuje plik obrazu rośliny z podanego URL.
-     *
-     * @param fileUrl URL pliku obrazu rośliny. Jeśli jest pusty lub null, zwraca null.
-     *                Jeśli URL jest równy domyślnej nazwie obrazu rośliny, odczytuje plik z domyślnej ścieżki.
-     * @return Tablica bajtów reprezentująca zawartość pliku obrazu rośliny.
-     */
-    // public  byte[] readRoslinaObrazFile(String fileUrl) {
-    //     if (StringUtils.isBlank(fileUrl)) {
-    //         return null;
-    //     }
-
-    //     if (fileUrl.equals(defaultRoslinaObrazName)) {
-    //         Path imagePath = new File(defaultRoslinaObrazPath).toPath();
-    //         return readFileFromLocation(imagePath);
-    //     }
-    //     Path imagePath = Paths.get(fileUrl);
-    //     return readFileFromLocation(imagePath);
-    // }
+    @Value("${application.file.uploads.photos-output-path}")
+    private String fileUploadPath;
 
     /**
      * Odczytuje plik z podanego URL, uwzględniając domyślne ścieżki.
@@ -204,6 +185,7 @@ public class FileUtils {
      * @return true, jeśli katalog został usunięty; w przeciwnym razie false.
      */
     public boolean deleteDirectory(Path path) {
+        log.info("Usuwanie folderu: " + path);
         if (path == null) {
             log.warn("Ścieżka usuwania jest null");
             return false;
@@ -282,6 +264,27 @@ public class FileUtils {
         } catch (Exception e) {
             log.error("Wystąpił błąd podczas usuwania pliku: " + e.getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Usuwa wszystkie pliki z katalogu "seed" w ścieżce uploadu plików, a następnie tworzy 
+     * nowy pusty katalog "seed" z plikiem ".gitkeep" w środku.
+     * 
+     * Ścieżka do katalogu "seed" jest tworzona na podstawie zmiennej `fileUploadPath` 
+     * oraz separatorów katalogów.
+     */
+    public void removeSeededObrazy() {
+        String fileUploadSubPath = fileUploadPath + separator +  "defaults" + separator + "rosliny" + separator + "seed";
+        Path seedDirectory = Paths.get(fileUploadSubPath);
+        try {
+            deleteDirectory(seedDirectory);
+            Files.createDirectories(seedDirectory);
+
+            Path gitkeepPath = seedDirectory.resolve(".gitkeep");
+            Files.createFile(gitkeepPath);
+        } catch (IOException e) {
+            log.error("Wystąpił błąd podczas usuwania plików w folderze seed", e);
         }
     }
 }

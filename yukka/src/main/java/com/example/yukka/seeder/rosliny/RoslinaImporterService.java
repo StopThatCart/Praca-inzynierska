@@ -1,5 +1,4 @@
 package com.example.yukka.seeder.rosliny;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -17,8 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.yukka.file.FileUtils;
 import com.example.yukka.model.roslina.RoslinaRequest;
 import com.example.yukka.model.roslina.cecha.CechaWithRelations;
 import com.example.yukka.model.roslina.controller.RoslinaService;
@@ -42,7 +43,6 @@ public class RoslinaImporterService {
     @Value("${application.seeder.csv-file-path}")
     private String CSV_FILE;
 
-    
     @Value("${roslina.seed.obrazy-path}")
     private String seedObrazyPath;
 
@@ -52,17 +52,15 @@ public class RoslinaImporterService {
     @Value("${roslina.obraz.default.jpg-file-path}")
     private String defaultObrazPath;
 
-    //private final RoslinaMapper roslinaMapper;
     private final RoslinaService roslinaService;
-    
     private final Neo4jSeeder neo4jSeeder;
+    private final FileUtils fileUtils;
 
     private final String emptyCsvValue = "Brak";
 
     @Value("${roslina.seed.amount}")
     private int limit;
 
-  
     /**
      * Metoda seedRosliny służy do inicjalizacji bazy danych roślin.
      * Metoda wykonuje następujące kroki:
@@ -80,6 +78,9 @@ public class RoslinaImporterService {
             if(seedDatabase){
                 log.info("Tworzenie bazy danych...");
                 neo4jSeeder.dropAndCreateDatabase(dbName);
+                fileUtils.removeSeededObrazy();
+
+
                 List<RoslinaRequest> bep = parseCsvToRoslinaRequests(CSV_FILE, limit);
                 if (neo4jSeeder.isItActuallyAvailable()) {
                     neo4jSeeder.installConstraints();
@@ -144,7 +145,6 @@ public class RoslinaImporterService {
      *         </ul>
      */
     private MultipartFile loadImageFile(String obraz) {
-        // Zbudowanie ścieżki do pliku obrazu na podstawie nazwy łacińskiej rośliny
         String imagePath;
         if(obraz.equals(defaultObrazName)) {
             imagePath = Paths.get(defaultObrazPath).toString();
@@ -157,15 +157,12 @@ public class RoslinaImporterService {
         if (imageFile.exists()) {
             try {
                 String fileName = imageFile.getName();
-                String baseName = fileName;
-
-                if (fileName.endsWith(".jpg") || fileName.endsWith(".png")) {
-                    baseName = fileName.substring(0, fileName.length() - 4);
-                }
-              //  log.info("Nazwa pliku: " + baseName + (fileName.endsWith(".jpg") ? ".jpg" : (fileName.endsWith(".png") ? ".png" : "")));
+                String baseName = StringUtils.stripFilenameExtension(fileName);
+                String extension = StringUtils.getFilenameExtension(fileName);
+                String contentType = extension != null && extension.equalsIgnoreCase("png") ? "image/png" : "image/jpeg";
 
                 FileInputStream input = new FileInputStream(imageFile);
-                return new MockMultipartFile(baseName, baseName, "image/jpeg", input);
+                return new MockMultipartFile(baseName, fileName, contentType, input);
             } catch (IOException e) {
                 log.error("Nie udało się załadować pliku obrazu: " + imagePath, e);
             }

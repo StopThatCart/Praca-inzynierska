@@ -69,18 +69,19 @@ public class FileStoreService {
      * Zapisuje plik rośliny z nasionami.
      *
      * @param sourceFile Plik źródłowy do przesłania.
-     * @param obraz Nazwa obrazu rośliny.
+     * @param fileName Nazwa obrazu rośliny.
      * @return Nazwa przesłanego pliku lub oryginalna nazwa obrazu, jeśli jest domyślna.
      */
-    public String saveSeededRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String obraz) {
+    public String saveSeededRoslina(@Nonnull MultipartFile sourceFile, @Nonnull String fileName) {
         //validateImage(sourceFile, false);
         String fileUploadSubPath = "defaults";
-        if(!obraz.equals(defaultRoslinaObrazName)) {
+        if(!fileName.equals(defaultRoslinaObrazName)) {
             fileUploadSubPath = fileUploadSubPath + separator + "rosliny" + separator + "seed";
-            return uploadFile(sourceFile, fileUploadSubPath, obraz);
+            return uploadFile(sourceFile, fileUploadSubPath, sourceFile.getName());
         }
-        return obraz;
+        return fileName;
     }
+    
 
     
     /**
@@ -215,8 +216,15 @@ public class FileStoreService {
             return null;
         }
 
+        String fileExtension = getFileExtension(sourceFile.getOriginalFilename());
+        if (fileExtension.isEmpty()) {
+            log.warn("Nie można określić rozszerzenia pliku: " + sourceFile.getOriginalFilename());
+            //fileExtension = "jpg";
+            //return null;
+        }
+
         String targetFileName = fileName;
-        String targetFilePath = finalUploadPath + separator + targetFileName;
+        String targetFilePath = finalUploadPath + separator + targetFileName + "." + fileExtension;
         Path targetPath = Paths.get(targetFilePath);
 
         try {
