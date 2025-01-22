@@ -130,7 +130,7 @@ public class FileUtils {
      */
     public byte[] readFileFromLocation(Path path, DefaultImage defaultImage) {
         if(path == null || path.toString().isEmpty()) {
-            System.out.println("No jest null");
+            log.warn("Ścieżka pliku jest pusta");
             return readDefaultImage(defaultImage);
         }
         
@@ -139,7 +139,7 @@ public class FileUtils {
             if(imageFile.exists()) {
                 return Files.readAllBytes(path);
             } else {
-                System.out.println("No jest null2");
+                log.warn("Nie znaleziono pliku w ścieżce {}", path.toString());
                 return readDefaultImage(defaultImage);
             }
         } catch (IOException e) {

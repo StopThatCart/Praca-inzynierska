@@ -74,7 +74,6 @@ public class DzialkaRoslinaRequest extends BaseDzialkaRequest {
     @AssertTrue(message = "Pozycja rośliny musi być w przydzielonych kafelkach")
     private boolean isValid() {
         if (this.getX() == null || this.getY() == null) {
-            System.out.println("Pozycja x i y nie może być null");
             return false;
         }
         Pozycja pos = Pozycja.builder().x(this.getX()).y(this.getY()).build();

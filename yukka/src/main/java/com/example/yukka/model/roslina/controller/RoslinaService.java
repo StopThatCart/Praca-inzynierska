@@ -44,7 +44,6 @@ import lombok.extern.slf4j.Slf4j;
  * <li><strong>saveSeededRoslina</strong>: Zapisuje nową roślinę z plikiem obrazu.</li>
  * <li><strong>update</strong>: Aktualizuje istniejącą roślinę.</li>
  * <li><strong>uploadRoslinaObraz</strong>: Aktualizuje obraz rośliny.</li>
- * <li><strong>deleteByNazwaLacinska</strong>: Usuwa roślinę po jej nazwie łacińskiej.</li>
  * <li><strong>deleteByUUID</strong>: Usuwa roślinę po jej identyfikatorze.</li>
  * </ul>
  */
@@ -102,7 +101,6 @@ public class RoslinaService {
     public PageResponse<RoslinaResponse> findAllRoslinyWithParameters(int page, int size, RoslinaRequest request) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("roslina.nazwa").ascending());
         if(request == null) {
-            System.out.println("Request is null");
             return findAllRosliny(page, size);
         }
         Roslina ros = roslinaMapper.toRoslina(request);
@@ -377,36 +375,17 @@ public class RoslinaService {
 
         Roslina roslina = roslinaRepository.findByUUID(uuid)
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + uuid));
-        
 
         if(roslina.isRoslinaWlasna() ) {
             Uzytkownik targetUzyt = roslina.getUzytkownik();
             if (!uzyt.hasAuthenticationRights(targetUzyt)) {
                 throw new ForbiddenException("Nie masz uprawnień do usunięcia rośliny użytkownika: " + targetUzyt.getNazwa());
             }
-
             fileUtils.deleteObraz(roslina.getObraz());
             roslinaRepository.deleteByUUID(uuid);
             return;
-            
-        } else if (uzyt.isNormalUzytkownik()) {
-            throw new ForbiddenException("Nie masz uprawnień do usunięcia tej rośliny.");
-        }
+        } else if (uzyt.isNormalUzytkownik()) throw new ForbiddenException("Nie masz uprawnień do usunięcia tej rośliny.");
         
-        fileUtils.deleteObraz(roslina.getObraz());
-        roslinaRepository.deleteByUUID(uuid);
-    }
-
-    /**
-     * Usuwa roślinę po jej identyfikatorze.
-     *
-     * @param uuid identyfikator rośliny.
-     * @param connectedUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika.
-     */
-    public void deleteByUUID(String uuid, Uzytkownik uzyt) {
-        Roslina roslina = roslinaRepository.findByUUID(uuid)
-            .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + uuid));
-
         fileUtils.deleteObraz(roslina.getObraz());
         roslinaRepository.deleteByUUID(uuid);
     }

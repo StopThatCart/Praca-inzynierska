@@ -11,7 +11,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.example.yukka.auth.authorities.ROLE;
@@ -52,7 +50,6 @@ public class RoslinaControllerTest {
     @Autowired
     private RoslinaMapper roslinaMapper;
 
-  //  @Mock
     Authentication mockAuth;
     Uzytkownik uzyt;
 
@@ -140,17 +137,11 @@ public class RoslinaControllerTest {
         roslina = lipaHenryego;
         roslinaResponse = RoslinaResponse.builder().build();
         
-        System.out.println("\nUsuwanie rośliny testowej\n");
+        log.info("Usuwanie rośliny testowej");
         roslinaService.deleteByNazwaLacinska(nazwaLacinska);
     }
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
     @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Order(1)
     void testRoslinaRequestInvalidDataAccessResourceUsageException(){
         Roslina emptyRoslina2 = Roslina.builder().build();
@@ -170,21 +161,18 @@ public class RoslinaControllerTest {
             .opis(roslinaOpis)
             .wysokoscMin(wysokoscMin)
             .wysokoscMax(wysokoscMax)
-           // .obraz(roslinaObraz)
             .build();
 
         RoslinaRequest emptyRoslinaRequest = roslinaMapper.toRoslinaRequest(roslinaWithoutRelations);
         ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(emptyRoslinaRequest, null, mockAuth);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         RoslinaResponse body = response.getBody();
         assertNotNull(body);
         assertNotNull(body.getUuid());
 
         Roslina roslina2 = roslinaRepository.findByUUID(body.getUuid()).get();
-        
-        // Assert
-            
+
         Assertions.assertThat(roslina2).isNotNull();
         Assertions.assertThat(roslina2.getId()).isNotNull();
         Assertions.assertThat(roslina2.getUuid()).isNotNull();
@@ -193,9 +181,7 @@ public class RoslinaControllerTest {
         Assertions.assertThat(roslina2.getOpis()).isEqualTo(roslinaWithoutRelations.getOpis());
         Assertions.assertThat(roslina2.getWysokoscMin()).isEqualTo(roslinaWithoutRelations.getWysokoscMin());
         Assertions.assertThat(roslina2.getWysokoscMax()).isEqualTo(roslinaWithoutRelations.getWysokoscMax());
-
         Assertions.assertThat(roslina2.getFormy()).isEmpty();
-        // Reszty nie trzeba bo to w sumie to samo
 
         roslinaService.deleteByNazwaLacinska(lacinskaNazwa2);
     }
@@ -207,10 +193,13 @@ public class RoslinaControllerTest {
         ResponseEntity<RoslinaResponse> response = roslinaController.saveRoslina(roslinaRequest, null, mockAuth);
        
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        RoslinaResponse body = response.getBody();
+        assertNotNull(body);
+        assertNotNull(body.getUuid());
         
-      //  Roslina roslina2 = roslinaController.saveRoslina(roslinaRequest).getBody();
-        Roslina roslina2 = roslinaRepository.findByNazwaLacinskaWithCechy(nazwaLacinska).get();
-        // Assert
+
+        Roslina roslina2 = roslinaRepository.findByUUID(body.getUuid()).get();
         
         Assertions.assertThat(roslina2).isNotNull();
         Assertions.assertThat(roslina2.getId()).isNotNull();
@@ -224,14 +213,13 @@ public class RoslinaControllerTest {
         Assertions.assertThat(roslina2.areCechyEqual(roslina2.getGleby(), roslina.getGleby())).isTrue();
         Assertions.assertThat(roslina2.areCechyEqual(roslina2.getKoloryLisci(), roslina.getKoloryLisci())).isTrue();
         Assertions.assertThat(roslina2.areCechyEqual(roslina2.getKoloryKwiatow(), roslina.getKoloryKwiatow())).isTrue();
-        // Reszty nie trzeba bo nie ma zbytniej różnicy
+
         roslinaResponse.setUuid(roslina2.getUuid());
         roslinaResponse.setNazwa(roslina2.getNazwa());
         roslinaResponse.setNazwaLacinska(roslina2.getNazwaLacinska());
         roslinaResponse.setOpis(roslina2.getOpis());
         roslinaResponse.setWysokoscMin(roslina2.getWysokoscMin());
         roslinaResponse.setWysokoscMax(roslina2.getWysokoscMax());
-
 
         log.info("Zakończono test dodawania roślin.");
     }
@@ -243,50 +231,37 @@ public class RoslinaControllerTest {
         Set<Cecha> grupa2 = new HashSet<>(Arrays.asList(new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.GRUPA.getBackendValue()), "owocowe")));
         Cecha owoc22 = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.OWOC.getBackendValue()),"rzułte");
 
-        // Zmiana nazwy
         roslina.setNazwa(nazwa2);
-
-        // Usunięcie właściwości
         roslina.setFormy(Collections.emptySet());
-
-        // Zamiana właściwości
         roslina.setGrupy(grupa2);
 
-        // Dodanie właściwości
         Set<Cecha> owoceOld = roslina.getOwoce();
-        Set<Cecha> owoceNew = new HashSet<>(owoceOld);  // Zamiana na modyfikowalną listę
+        Set<Cecha> owoceNew = new HashSet<>(owoceOld);
         owoceNew.addAll(Arrays.asList(owoc22));
-        roslina.setOwoce(owoceNew);  // Ustawienie zaktualizowanej listy
+        roslina.setOwoce(owoceNew);
 
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina);
         assertNotNull(roslinaResponse);
         assertNotNull(roslinaResponse.getUuid());
-        log.info("UUID: " + roslinaResponse.getUuid());
         ResponseEntity<RoslinaResponse> response = roslinaController.updateRoslina(roslinaResponse.getUuid(), roslinaRequest);
-        // Assert
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+
         Roslina roslina2 = roslinaRepository.findByUUID(roslinaResponse.getUuid()).get();
-        
         Assertions.assertThat(roslina2).isNotNull();
         Assertions.assertThat(roslina2.getId()).isNotNull();
 
-        // Ta część jest ważna
         Assertions.assertThat(roslina2.getNazwa()).isEqualTo(nazwa2);
-        
         Assertions.assertThat(roslina2.areCechyEqual(roslina2.getFormy(), Collections.emptySet())).isTrue();
         Assertions.assertThat(roslina2.areCechyEqual(roslina2.getGrupy(), grupa2)).isTrue();
-
-        //System.out.println("\n\n\n + OwoceOld: " + owoceOld + " Roslina: " + roslina2.getOwoce() + " ||| " + owoceNew + " :OwoceNew\n\n\n");
-
         Assertions.assertThat(roslina2.areCechyEqual(roslina2.getOwoce(), owoceNew)).isTrue();
 
-        System.out.println("\n\n\nZakończono test auktualizacji rośliny.\n\n\n");
+        log.info("Zakończono test auktualizacji rośliny.");
     }
 
     @Test
     @Order(4) 
     void testDeleteRoslina() {
-        System.out.println("\n\n\nRozpoczęto test usuwania roślin.\n\n\n");
+        log.info("Rozpoczęto test usuwania roślin.");
         assertNotNull(roslinaResponse);
         assertNotNull(roslinaResponse.getUuid());
 
@@ -294,6 +269,6 @@ public class RoslinaControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertTrue(roslinaRepository.findByUUID(roslinaResponse.getUuid()).isEmpty());
 
-        System.out.println("\n\n\nZakończono test usuwania roślin.\n\n\n");
+        log.info("Zakończono test usuwania roślin.");
     }
 }

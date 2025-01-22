@@ -176,7 +176,7 @@ public class DzialkaService {
         .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny na pozycji (" + x + ", " + y + ") na działce " + numer));
 
         for (ZasadzonaNaReverse zasadzonaNa : dzialka.getZasadzoneRosliny()) {
-            System.out.println("Zasadzona na: " + zasadzonaNa.getX() + ", " + zasadzonaNa.getY());
+            log.info("Zasadzona na: " + zasadzonaNa.getX() + ", " + zasadzonaNa.getY());
         }
 
         if (dzialka.getZasadzoneRosliny().isEmpty()) {
@@ -414,8 +414,6 @@ public class DzialkaService {
         if (!zajetePozycje.isEmpty()) {
             throw new IllegalArgumentException("Pozycje są zajęte przez inne rośliny: " + zajetePozycje);
         }
-
-        //System.out.println("Pozycje: " + request.getPozycje().toString());
     
         Dzialka res = dzialkaRepository.changeRoslinaPozycjaInDzialka(uzyt.getEmail(),
                 request.getNumerDzialki(),
@@ -531,7 +529,7 @@ public class DzialkaService {
         Dzialka dzialka = getDzialkaByNumer(request.getNumerDzialki(), uzyt);
 
         ZasadzonaNaReverse pozycja = dzialka.getZasadzonaNaByCoordinates(request.getX(), request.getY());
-        System.out.println("Le aktualizacja notatki rośliny na działce");
+        log.info("Aktualizacja notatki rośliny na działce");
         if (pozycja != null) {
             Dzialka dzialkaZRoslina = dzialkaRepository.updateRoslinaNotatkaInDzialka(uzyt.getEmail(), request.getNumerDzialki(), 
             request.getX(), request.getY(), request.getNotatka());

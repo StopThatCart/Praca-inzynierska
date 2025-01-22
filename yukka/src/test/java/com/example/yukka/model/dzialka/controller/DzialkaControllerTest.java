@@ -93,8 +93,6 @@ public class DzialkaControllerTest {
 
         uzytkownikService.addUzytkownik(uzyt);
         uzyt = uzytkownikRepository.findByEmail(uzyt.getEmail()).get();
-
-        System.out.println(uzyt.getUuid());
     }
 
     @AfterAll

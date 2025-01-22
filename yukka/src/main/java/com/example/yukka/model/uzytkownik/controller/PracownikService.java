@@ -191,7 +191,7 @@ public class PracownikService {
         removeUzytkownikQueries(targetUzyt.getEmail());
 
         Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + targetUzyt.getUuid());
-        System.out.println("Usuwanie folderu: " + path);
+        log.info("Usuwanie folderu: " + path);
         fileUtils.deleteDirectory(path);
     }
 

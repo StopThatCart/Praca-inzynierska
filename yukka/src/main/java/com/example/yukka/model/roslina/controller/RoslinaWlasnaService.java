@@ -105,7 +105,6 @@ public class RoslinaWlasnaService {
      */
     public PageResponse<RoslinaResponse> findRoslinyOfUzytkownik(int page, int size, RoslinaRequest request, String nazwa, Uzytkownik uzyt) {
         if (request == null) {
-            System.out.println("Request is null");
             request = RoslinaRequest.builder().build();
         }
         log.info(nazwa + " próbuje pobrać rośliny użytkownika: " + nazwa);
@@ -262,7 +261,6 @@ public class RoslinaWlasnaService {
             .orElseThrow( () -> new EntityNotFoundException("Nie znaleziono rośliny o id " + uuid + " dla użytkownika " + uzyt.getNazwa()));
 
         Uzytkownik targetUzyt = roslina.getUzytkownik();
-        System.out.println("Uzytkownik: " + targetUzyt.getNazwa());
 
         if (!uzyt.hasAuthenticationRights(targetUzyt)) {
             throw new ForbiddenException("Brak uprawnień do zmiany obrazu rośliny " + uuid);

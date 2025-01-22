@@ -374,12 +374,13 @@ public class PowiadomienieService {
         if(komentarz.getUzytkownik().getUuid().equals(nadawca.getUuid())) {
             return;
         }
+        log.info("Wysyłanie powiadomienia o nowym komentarzu");
 
         Post post =  komentarz.getPost();
         if(post == null && komentarz.getWPoscie() != null) {
             post = komentarz.getWPoscie();
             if(post == null) {
-                System.out.println("\n\n\nPost jest nullem\n\n\n");
+                log.error("Post jest pusty");
                 return;
             }
         }
@@ -492,7 +493,6 @@ public class PowiadomienieService {
         if(pow.isEmpty()) {
             return false;
         }
-        System.out.println("Data utworzenia zgłoszenia: " + pow.get().getDataUtworzenia());
         return !pow.get().getDataUtworzenia().plusMinutes(15).isBefore(LocalDateTime.now());
     }
 

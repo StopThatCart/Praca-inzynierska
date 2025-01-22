@@ -93,8 +93,6 @@ public class KomentarzController {
         return ResponseEntity.status(CREATED).body(komentarzService.addOdpowiedzToKomentarz(request, file, connectedUser));
     }
 
-    // TODO: Jak masz problem z plikami to w endpointach z plikami zamień @RequestBody na @RequestPart("request")
-
     /**
      * Metoda obsługująca żądanie POST do dodania komentarza do posta.
      *

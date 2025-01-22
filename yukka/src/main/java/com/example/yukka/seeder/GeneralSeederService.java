@@ -24,7 +24,6 @@ import com.example.yukka.model.dzialka.requests.MoveRoslinaRequest;
 import com.example.yukka.model.roslina.RoslinaMapper;
 import com.example.yukka.model.roslina.RoslinaResponse;
 import com.example.yukka.model.roslina.controller.RoslinaRepository;
-import com.example.yukka.model.roslina.controller.RoslinaService;
 import com.example.yukka.model.social.models.komentarz.controller.KomentarzRepository;
 import com.example.yukka.model.social.models.post.controller.PostRepository;
 import com.example.yukka.model.social.models.powiadomienie.TypPowiadomienia;
@@ -59,7 +58,6 @@ public class GeneralSeederService {
 	private final DzialkaService dzialkaService;
 	private final DzialkaRepository dzialkaRepository;
 
-	private final RoslinaService roslinaService;
 	private final RoslinaRepository roslinaRepository;
     private final RoslinaMapper roslinaMapper;
 
@@ -358,13 +356,13 @@ public class GeneralSeederService {
 	// 		.cechy(Arrays.asList(kolorLisci, okresOwocowania, gleba1, gleba2))
 	// 		.build();
 
-	// 	System.out.println("Testowanie wyszukiwania rośliny z parametrami");
+	// 	log.info("Testowanie wyszukiwania rośliny z parametrami");
 	// 	PageResponse<RoslinaResponse> res = roslinaService.findAllRoslinyWithParameters(0, 12, exampleRoslina);
 	// 	if(res.getContent().isEmpty()) {
-	// 		System.out.println("Nie znaleziono rośliny");
+	// 		log.info("Nie znaleziono rośliny");
 	// 	} else {
-	// 		System.out.println("Znaleziono pierwszą roślinę: " + res.getContent().get(0).getNazwa());
-	// 		System.out.println("Liczba znalezionych roślin: " + res.getContent().size());
+	// 		log.info("Znaleziono pierwszą roślinę: " + res.getContent().get(0).getNazwa());
+	// 		log.info("Liczba znalezionych roślin: " + res.getContent().size());
 	// 	}
 
 	// }

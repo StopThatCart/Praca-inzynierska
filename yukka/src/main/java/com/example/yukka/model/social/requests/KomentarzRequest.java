@@ -35,7 +35,6 @@ public class KomentarzRequest {
     private String targetId;
 
     @AssertTrue(message = "Komentarz musi zawierać opis lub obraz")
-    @SuppressWarnings("unused")
     private boolean isOpisOrObrazPresent() {
         return (opis != null && !opis.isEmpty()) || (obraz != null && !obraz.isEmpty());
     }

@@ -346,7 +346,7 @@ public class UzytkownikService implements  UserDetailsService {
         fileUtils.deleteObraz(uzytkownik.getAvatar());
 
         String leObraz = fileStoreService.saveAvatar(file, uzyt.getUuid());
-        System.out.println("Zapisano avatar: " + leObraz);
+        log.info("Zapisano avatar: " + leObraz);
 
         uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
         return uzytkownik;
@@ -368,9 +368,9 @@ public class UzytkownikService implements  UserDetailsService {
      */
     public Boolean setBlokUzytkownik(String nazwa, Authentication currentUser, boolean blok){
         Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
-
         Uzytkownik blokowany = uzytkownikRepository.findByNazwa(nazwa)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
+        log.info("Użytkownik {} próbuje zablokować użytkownika {}", uzyt.getNazwa(), blokowany.getNazwa());
 
         if(blokowany.getEmail().equals(uzyt.getEmail())) {
             throw new IllegalArgumentException("Nie można blokować samego siebie");
@@ -380,13 +380,11 @@ public class UzytkownikService implements  UserDetailsService {
             throw new IllegalArgumentException("Admini i pracownicy nie mogą być blokowani.");
         }
 
-        System.out.println("Pobieranie blokowanych użytkowników");
+        log.info("Pobieranie blokowanych użytkowników");
         Optional<Uzytkownik> uzyt2 = uzytkownikRepository.getBlokowaniUzytkownicyOfUzytkownik(uzyt.getEmail());
         
-        System.out.println("Sprawdzanie czy użytkownik jest już zablokowany");
         if(blok) {
             if(uzyt2.isPresent()) {
-                System.out.println("SET BLOKUJE");
                 Set<Uzytkownik> blokowani = uzyt2.get().getBlokowaniUzytkownicy();
 
                 if(blokowani.stream().anyMatch(b -> b.getEmail().equals(blokowany.getEmail()))) {
@@ -398,7 +396,7 @@ public class UzytkownikService implements  UserDetailsService {
             throw new IllegalArgumentException("Nie znaleziono blokowanych użytkowników");
         }
 
-        System.out.println("Odblokowywanie użytkownika");
+        log.info("Odblokowywanie użytkownika");
         return uzytkownikRepository.odblokujUzyt(blokowany.getEmail(), uzyt.getEmail());
     }
 
@@ -467,7 +465,7 @@ public class UzytkownikService implements  UserDetailsService {
         removeUzytkownikQueries(uzyt.getEmail());
 
         Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUuid());
-        System.out.println("Usuwanie folderu: " + path);
+        log.info("Usuwanie folderu: " + path);
         fileUtils.deleteDirectory(path);
     }
 
@@ -558,7 +556,7 @@ public class UzytkownikService implements  UserDetailsService {
 
            // uzytkownikRepository.delete(uzyt);
             Path path = Paths.get(fileUploadPath + separator + "uzytkownicy" + separator + uzyt.getUuid());
-            System.out.println("Usuwanie folderu: " + path);
+            log.info("Usuwanie folderu: " + path);
             fileUtils.deleteDirectory(path);
         }
     }

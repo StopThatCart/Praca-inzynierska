@@ -187,7 +187,6 @@ public class CommonMapperService {
             post = null;
         }
         
-      //  System.out.println("Komentarz: " + komentarz);
         return KomentarzResponse.builder()
             .id(komentarz.getId())
             .uuid(komentarz.getUuid())

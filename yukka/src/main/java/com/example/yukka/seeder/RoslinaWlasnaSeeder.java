@@ -108,8 +108,6 @@ public class RoslinaWlasnaSeeder {
         RoslinaRequest roslinaRequest = roslinaMapper.toRoslinaRequest(roslina1);
 
         roslinaWlasnaService.save(roslinaRequest, null, uzyt);
-
-      //  System.out.println("ROSLINA1: " + roslina1);
         return roslinaWlasnaService.findRoslinyOfUzytkownik(0, 12, null, uzyt.getNazwa(), uzyt);
 	}
 

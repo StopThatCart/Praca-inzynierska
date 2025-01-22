@@ -42,11 +42,9 @@ public class Neo4JAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String nameOrEmail = authentication.getName();
         String haslo = authentication.getCredentials().toString();
-        System.out.println("nazwa: " + nameOrEmail);
         Optional<Uzytkownik> uzytOpt = uzytkownikRepository.findByNameOrEmail(nameOrEmail);
 
         if (uzytOpt.isEmpty()) {
-            System.out.println("Nie ma takiego uzytkownika");
             throw new BadCredentialsException("Niepoprawny login lub hasło.");
         }
 

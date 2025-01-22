@@ -1,7 +1,0 @@
-pip install aiohttp
-pip install asyncio
-pip install neo4j
-pip install requests
-pip install bs4
-pip install pandas
-pip install selenium

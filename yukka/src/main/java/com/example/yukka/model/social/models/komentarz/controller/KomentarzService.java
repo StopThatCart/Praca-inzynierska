@@ -405,7 +405,7 @@ public class KomentarzService {
         Komentarz kom = komentarzRepository.findKomentarzWithOdpowiedziByUUID(komUUID)
             .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono komentarza o podanym ID: " + komUUID));
 
-        System.out.println("Pobieranie użytowników z posta");
+        log.info("Pobieranie użytowników z posta");
 
         fileUtils.deleteObraz(kom.getObraz());
         for (Komentarz odp : kom.getOdpowiedzi()) {
@@ -424,9 +424,9 @@ public class KomentarzService {
      */
     public void seedRemoveKomentarzeObrazy() {
         List<Komentarz> komentarze = komentarzRepository.findAll();
-        System.out.println("Usuwanie obrazów komentarzy");
+        log.info("Usuwanie obrazów komentarzy");
         for (Komentarz kom : komentarze) {
-            System.out.println("Usuwanie obrazu komentarza: " + kom.getUuid());
+            log.info("Usuwanie obrazu komentarza: " + kom.getUuid());
             fileUtils.deleteObraz(kom.getObraz());
         }
     }
