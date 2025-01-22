@@ -159,9 +159,7 @@ public class RoslinaImporterService {
                 String fileName = imageFile.getName();
                 String baseName = fileName;
 
-                if (fileName.endsWith(".jpg")) {
-                    baseName = fileName.substring(0, fileName.length() - 4);
-                } else if (fileName.endsWith(".png")) {
+                if (fileName.endsWith(".jpg") || fileName.endsWith(".png")) {
                     baseName = fileName.substring(0, fileName.length() - 4);
                 }
               //  log.info("Nazwa pliku: " + baseName + (fileName.endsWith(".jpg") ? ".jpg" : (fileName.endsWith(".png") ? ".png" : "")));

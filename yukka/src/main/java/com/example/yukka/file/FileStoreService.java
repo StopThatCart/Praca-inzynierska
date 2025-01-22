@@ -215,12 +215,7 @@ public class FileStoreService {
             return null;
         }
 
-        String fileExtension = getFileExtension(sourceFile.getOriginalFilename());
         String targetFileName = fileName;
-        if (!fileName.toLowerCase().endsWith("." + fileExtension)) {
-            targetFileName += "." + fileExtension;
-        }
-        
         String targetFilePath = finalUploadPath + separator + targetFileName;
         Path targetPath = Paths.get(targetFilePath);
 

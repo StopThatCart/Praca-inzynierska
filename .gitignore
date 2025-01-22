@@ -38,7 +38,7 @@ build/
 
 ### brehh ###
 node_modules/
-Scrapper/images/*
+scrapper/images/*
 #*.png
 
 ### obrazy ###

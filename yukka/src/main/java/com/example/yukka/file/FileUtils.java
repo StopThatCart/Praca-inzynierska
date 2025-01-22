@@ -32,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
  * <ul>
  *   <li><strong>defaultRoslinaObrazPath</strong>: Ścieżka do domyślnego obrazu rośliny.</li>
  *   <li><strong>defaultRoslinaObrazName</strong>: Nazwa domyślnego obrazu rośliny.</li>
- *   <li><strong>seedRoslinaObrazyPath</strong>: Ścieżka do obrazów nasion roślin.</li>
  *   <li><strong>defaultAvatarObrazPath</strong>: Ścieżka do domyślnego awatara użytkownika.</li>
  *   <li><strong>defaultAvatarObrazName</strong>: Nazwa domyślnego awatara użytkownika.</li>
  *   <li><strong>powiadomieniaAvatarObrazPath</strong>: Ścieżka do domyślnego obrazu powiadomień.</li>
@@ -58,9 +57,6 @@ public class FileUtils {
     private  String defaultRoslinaObrazPath;
     @Value("${roslina.obraz.default.name}")
     private  String defaultRoslinaObrazName;
-
-    @Value("${roslina.seed.obrazy-path}")
-    private  String seedRoslinaObrazyPath;
 
     @Value("${uzytkownik.obraz.default.png-file-path}")
     private  String defaultAvatarObrazPath;
