@@ -1,4 +1,5 @@
-<section class="mx-1">
+<app-loading class="p-2" [isLoading]="isLoading"></app-loading>
+<section class="mx-1" *ngIf="!isLoading">
   <div class="container p-2 mt-2 bg-secondary" style="border-radius: 5px;max-width: 800px;">
     <div class="row gx-5 gy-3 d-flex justify-content-center align-items-center py-3">
       <div class="gap-1 col-auto d-flex flex-column avatar-info">
@@ -25,10 +26,16 @@
           [zglaszany]="uzyt.nazwa"
           [odnosnik]="uzyt.nazwa">
           </app-zgloszenie-button>
+          <app-blok-button *ngIf="!isCurrentUser()"
+          [odbiorcaNazwa]="uzyt.nazwa"
+          [zablokowany]="isBlokowany()"
+          
+          >
+          </app-blok-button>
         </div>
 
         <ng-template #wyslijWiadomosc>
-          <ng-container *ngIf="uzyt.aktywowany">
+          <ng-container *ngIf="uzyt.aktywowany && !isBlok()">
             <ng-container *ngIf="isZaproszony() else wyslijZaproszenie">
               <a [routerLink]="['rozmowy', this.uzyt.nazwa]" class="btn btn-primary btn-custom" role="button">Wyślij wiadomość</a>
             </ng-container>
@@ -56,6 +63,9 @@
             </ng-container>
             <ng-container *ngIf="uzyt.ban">
               <h5 class="text-danger fw-bold">Konto zbanowane do : {{ uzyt.banDo }}</h5>
+            </ng-container>
+            <ng-container *ngIf="!isBlokowany() && !isCurrentUser()">
+              <h5 class="text-danger fw-bold">Blokuje ciebie</h5>
             </ng-container>
             
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StatystykiDto, UzytkownikResponse } from '../../../../services/models';
+import { BlokResponse, StatystykiDto, UzytkownikResponse } from '../../../../services/models';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UzytkownikService } from '../../../../services/services';
 import { TokenService } from '../../../../services/token/token.service';
@@ -9,15 +9,19 @@ import { ZgloszenieButtonComponent } from "../../components/zgloszenie-button/zg
 import { TypPowiadomienia } from '../../models/TypPowiadomienia';
 import { BanButtonComponent } from "../../components/ban-button/ban-button.component";
 import { UsunKontoButtonComponent } from "../../components/usun-konto-button/usun-konto-button.component";
+import { BlokButtonComponent } from "../../components/blok-button/blok-button.component";
+import { isBlok } from '../../../../services/fn/uzytkownik/is-blok';
+import { LoadingComponent } from '../../../../components/loading/loading.component';
 
 @Component({
   selector: 'app-profil-page',
   standalone: true,
-  imports: [CommonModule, RouterModule, ZgloszenieButtonComponent, BanButtonComponent, UsunKontoButtonComponent],
+  imports: [CommonModule, RouterModule, ZgloszenieButtonComponent, BanButtonComponent, UsunKontoButtonComponent, BlokButtonComponent, LoadingComponent],
   templateUrl: './profil-page.component.html',
   styleUrl: './profil-page.component.css'
 })
 export class ProfilPageComponent implements OnInit {
+
   uzyt: UzytkownikResponse = {};
   nazwa: string | undefined;
   private _avatar: string | undefined;
@@ -25,10 +29,10 @@ export class ProfilPageComponent implements OnInit {
 
   errorMsg: string | null = null;
 
-  isCurrentUserBoi: boolean = false;
 
+  isLoading: boolean = true;
 
-
+  blokResponse: BlokResponse = {};
   zaproszony: boolean | undefined;
   isZaproszonyChecked: boolean = false;
   zaproszenieWyslane: boolean = false;
@@ -51,7 +55,7 @@ export class ProfilPageComponent implements OnInit {
         this.route.snapshot.data['nazwa'] = this.nazwa;
       }
     });
-    this.isCurrentUserBoi = this.isCurrentUser();
+
   }
 
   getUzytkownikByNazwa(nazwa: string): void {
@@ -59,10 +63,19 @@ export class ProfilPageComponent implements OnInit {
       next: (uzyt) => {
         this.uzyt = uzyt;
         this.errorMsg = null;
-        this.getStatystykiOfUzytkownik(nazwa);
+        
+        
       },
       error: (err) => {
         this.errorMsg = 'Nie znaleziono użytkownika o podanej nazwie.';
+      }, 
+      complete: () => {
+        if (this.errorMsg && this.errorMsg.length > 0) {
+          console.log('ErroDESADASDASDASDASSDr: ', this.errorMsg);
+        } else {
+          this.getStatystykiOfUzytkownik(nazwa);
+          this.getBlok();
+        }
       }
     });
   }
@@ -163,13 +176,10 @@ export class ProfilPageComponent implements OnInit {
       return this.zaproszony;
     }
 
-    if (this.tokenService.token && this.uzyt.nazwa
-      && this.tokenService.nazwa !== this.uzyt.nazwa) {
-
+    if (this.tokenService.token && this.uzyt.nazwa && this.tokenService.nazwa !== this.uzyt.nazwa) {
       this.rozService.findRozmowaPrywatnaByNazwa({ 'uzytkownik-nazwa': this.uzyt.nazwa })
         .subscribe({
           next: (roz) => {
-            console.log('Rozmowa: ', roz);
             if (roz) {
               this.zaproszony = true;
             }
@@ -185,6 +195,45 @@ export class ProfilPageComponent implements OnInit {
             return false;
           }
       });
+    }
+    return false;
+  }
+
+  getBlok() {
+    if (this.tokenService.token && this.uzyt.nazwa && this.tokenService.nazwa !== this.uzyt.nazwa) {
+      this.uzytService.isBlok({ nazwa: this.uzyt.nazwa }).subscribe({
+        next: (res) => {
+          console.log('Blok: ', res);
+          this.blokResponse = res;
+        },
+        error: (err) => {
+          console.log('Error: ', err.error);
+          return false;
+        }, 
+        complete: () => {
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.isLoading = false;
+    }
+    return false;
+  }
+
+  isBlok(): boolean {
+    if (this.blokResponse.obojeBlokujacy) {
+      return true;
+    } else if (this.blokResponse.blok) {
+      return true;
+    }
+    return false;
+  }
+
+  isBlokowany(): boolean {
+    if (!this.blokResponse) return false;
+
+    if (this.blokResponse.blok && this.blokResponse.blokujacy === this.tokenService.nazwa) {
+      return true;
     }
     return false;
   }

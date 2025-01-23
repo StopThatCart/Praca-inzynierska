@@ -1,6 +1,8 @@
 package com.example.yukka.model.social.models.rozmowaPrywatna.controller;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -155,6 +157,23 @@ public class RozmowaPrywatnaService {
 
         if (!odbiorca.isAktywowany()) {
             throw new IllegalArgumentException("Konto użytkownika nie jest aktywne");
+        }
+
+        Optional<Uzytkownik> uzytWithBlokowani = uzytkownikRepository.getBlokowaniUzytkownicyOfUzytkownik(nadawca.getEmail());
+        Optional<Uzytkownik> targetUzytWithBlokowani = uzytkownikRepository.getBlokowaniUzytkownicyOfUzytkownik(odbiorca.getEmail());
+
+        if (uzytWithBlokowani.isPresent()) {
+            Set<Uzytkownik> blokowani = uzytWithBlokowani.get().getBlokowaniUzytkownicy();
+            if(blokowani.stream().anyMatch(b -> b.getEmail().equals(odbiorca.getEmail()))) {
+                throw new IllegalArgumentException("Nie można zapraszać zablokowanego użytkownika");
+            }
+        }
+
+        if (targetUzytWithBlokowani.isPresent()) {
+            Set<Uzytkownik> blokowani = targetUzytWithBlokowani.get().getBlokowaniUzytkownicy();
+            if(blokowani.stream().anyMatch(b -> b.getEmail().equals(nadawca.getEmail()))) {
+                throw new IllegalArgumentException("Nie można zapraszać użytkownika, który cię blokuje");
+            }
         }
 
         if (rozmowaPrywatnaRepository.findRozmowaPrywatnaByUUID(nadawca.getUuid(), odbiorca.getUuid()).isPresent()) {

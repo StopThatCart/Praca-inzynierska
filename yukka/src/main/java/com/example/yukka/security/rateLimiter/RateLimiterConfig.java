@@ -19,8 +19,8 @@ public class RateLimiterConfig {
     @Bean
     // Odnawia  refill / 60 tokenów na sekundę
     public Bucket createBucket() {
-        int refill = 60;
-        Bandwidth limit = Bandwidth.classic(300, Refill.greedy(refill, Duration.ofMinutes(1)));
+        int refill = 70;
+        Bandwidth limit = Bandwidth.classic(400, Refill.greedy(refill, Duration.ofMinutes(1)));
         return Bucket4j.builder().addLimit(limit).build();
     }
 }

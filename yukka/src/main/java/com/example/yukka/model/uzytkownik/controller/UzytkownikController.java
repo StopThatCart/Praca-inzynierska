@@ -20,6 +20,7 @@ import com.example.yukka.auth.requests.UsunKontoRequest;
 import com.example.yukka.common.FileResponse;
 import com.example.yukka.common.PageResponse;
 import com.example.yukka.model.social.models.powiadomienie.controller.PowiadomienieService;
+import com.example.yukka.model.uzytkownik.BlokResponse;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
 import com.example.yukka.model.uzytkownik.requests.ProfilRequest;
 import com.example.yukka.model.uzytkownik.requests.StatystykiDTO;
@@ -210,6 +211,18 @@ public class UzytkownikController {
     @PatchMapping(value = "/avatar", consumes = "multipart/form-data", produces="application/json")
     public ResponseEntity<UzytkownikResponse> updateAvatar(@Parameter() @RequestPart("file") MultipartFile file, Authentication connectedUser) {
         return ResponseEntity.ok(uzytkownikService.updateUzytkownikAvatar(file, connectedUser));
+    }
+
+    /**
+     * Sprawdza, stan zablokowania jednego użytkownika z drugim.
+     *
+     * @param nazwa Nazwa użytkownika.
+     * @param currentUser Aktualnie uwierzytelniony użytkownik.
+     * @return ResponseEntity zawierający obiekt BlokResponse z informacją o blokowaniu.
+     */
+    @GetMapping(value = "/blok/{nazwa}", produces="application/json")
+    public ResponseEntity<BlokResponse> isBlok(@PathVariable("nazwa") String nazwa, Authentication currentUser) {
+        return ResponseEntity.ok(uzytkownikService.isBlok(nazwa, currentUser));
     }
 
     /**

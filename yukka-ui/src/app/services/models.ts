@@ -4,6 +4,7 @@ export type { AuthenticationResponse } from './models/authentication-response';
 export type { AuthRequest } from './models/auth-request';
 export type { BanRequest } from './models/ban-request';
 export type { BaseDzialkaRequest } from './models/base-dzialka-request';
+export type { BlokResponse } from './models/blok-response';
 export type { CechaKatalogResponse } from './models/cecha-katalog-response';
 export type { CechaResponse } from './models/cecha-response';
 export type { CechaWithRelations } from './models/cecha-with-relations';

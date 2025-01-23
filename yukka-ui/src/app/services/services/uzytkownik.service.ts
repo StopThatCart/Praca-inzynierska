@@ -9,6 +9,7 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { BlokResponse } from '../models/blok-response';
 import { FileResponse } from '../models/file-response';
 import { findAllUzytkownicy } from '../fn/uzytkownik/find-all-uzytkownicy';
 import { FindAllUzytkownicy$Params } from '../fn/uzytkownik/find-all-uzytkownicy';
@@ -24,6 +25,8 @@ import { getStatystykiOfUzytkownik } from '../fn/uzytkownik/get-statystyki-of-uz
 import { GetStatystykiOfUzytkownik$Params } from '../fn/uzytkownik/get-statystyki-of-uzytkownik';
 import { getUstawienia } from '../fn/uzytkownik/get-ustawienia';
 import { GetUstawienia$Params } from '../fn/uzytkownik/get-ustawienia';
+import { isBlok } from '../fn/uzytkownik/is-blok';
+import { IsBlok$Params } from '../fn/uzytkownik/is-blok';
 import { PageResponseUzytkownikResponse } from '../models/page-response-uzytkownik-response';
 import { removeSelf } from '../fn/uzytkownik/remove-self';
 import { RemoveSelf$Params } from '../fn/uzytkownik/remove-self';
@@ -347,6 +350,31 @@ export class UzytkownikService extends BaseService {
   getBlokowaniAndBlokujacy(params?: GetBlokowaniAndBlokujacy$Params, context?: HttpContext): Observable<UzytkownikResponse> {
     return this.getBlokowaniAndBlokujacy$Response(params, context).pipe(
       map((r: StrictHttpResponse<UzytkownikResponse>): UzytkownikResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `isBlok()` */
+  static readonly IsBlokPath = '/uzytkownicy/blok/{nazwa}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `isBlok()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  isBlok$Response(params: IsBlok$Params, context?: HttpContext): Observable<StrictHttpResponse<BlokResponse>> {
+    return isBlok(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `isBlok$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  isBlok(params: IsBlok$Params, context?: HttpContext): Observable<BlokResponse> {
+    return this.isBlok$Response(params, context).pipe(
+      map((r: StrictHttpResponse<BlokResponse>): BlokResponse => r.body)
     );
   }
 

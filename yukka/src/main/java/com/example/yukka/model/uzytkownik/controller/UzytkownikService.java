@@ -40,6 +40,7 @@ import com.example.yukka.handler.exceptions.BlockedUzytkownikException;
 import com.example.yukka.handler.exceptions.EntityAlreadyExistsException;
 import com.example.yukka.handler.exceptions.EntityNotFoundException;
 import com.example.yukka.model.social.mappers.CommonMapperService;
+import com.example.yukka.model.uzytkownik.BlokResponse;
 import com.example.yukka.model.uzytkownik.Ustawienia;
 import com.example.yukka.model.uzytkownik.Uzytkownik;
 import com.example.yukka.model.uzytkownik.UzytkownikResponse;
@@ -353,6 +354,53 @@ public class UzytkownikService implements  UserDetailsService {
 
         uzytkownik = uzytkownikRepository.updateAvatar(uzyt.getEmail(), leObraz);
         return uzytkownik;
+    }
+
+    /**
+     * Sprawdza, czy użytkownik blokuje innego użytkownika.
+     *
+     * @param nazwa Nazwa użytkownika, który ma być sprawdzony.
+     * @param currentUser Aktualnie zalogowany użytkownik.
+     * @return Obiekt BlokResponse zawierający informacje o blokowaniu.
+     * @throws EntityNotFoundException Jeśli użytkownik o podanej nazwie nie zostanie znaleziony.
+     */
+    public BlokResponse isBlok(String nazwa, Authentication currentUser){
+        Uzytkownik uzyt = (Uzytkownik) currentUser.getPrincipal();
+        Uzytkownik targetUzyt = uzytkownikRepository.findByNazwa(nazwa)
+            .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o nazwie: " + nazwa));
+        log.info("Sprawdzanie, czy użytkownik {} próbuje blokuje użytkownika {}", uzyt.getNazwa(), targetUzyt.getNazwa());
+
+        BlokResponse blokResponse = BlokResponse.builder().blok(false).blokujacy(null).obojeBlokujacy(false).build();
+
+        if(targetUzyt.getEmail().equals(uzyt.getEmail())) {
+            return blokResponse;
+        }
+
+        log.info("Pobieranie blokowanych użytkowników");
+        Optional<Uzytkownik> uzytWithBlokowani = uzytkownikRepository.getBlokowaniUzytkownicyOfUzytkownik(uzyt.getEmail());
+        Optional<Uzytkownik> targetUzytWithBlokowani = uzytkownikRepository.getBlokowaniUzytkownicyOfUzytkownik(targetUzyt.getEmail());
+
+        if (uzytWithBlokowani.isPresent()) {
+            Set<Uzytkownik> blokowani = uzytWithBlokowani.get().getBlokowaniUzytkownicy();
+            if(blokowani.stream().anyMatch(b -> b.getEmail().equals(targetUzyt.getEmail()))) {
+                blokResponse.setBlok(true);
+                blokResponse.setBlokujacy(uzyt.getNazwa());
+            }
+        }
+
+        if (targetUzytWithBlokowani.isPresent()) {
+            Set<Uzytkownik> blokowani = targetUzytWithBlokowani.get().getBlokowaniUzytkownicy();
+            if(blokowani.stream().anyMatch(b -> b.getEmail().equals(uzyt.getEmail()))) {
+                blokResponse.setBlok(true);
+                if (blokResponse.getBlokujacy() != null) {
+                    blokResponse.setObojeBlokujacy(true);
+                } else {
+                    blokResponse.setBlokujacy(targetUzyt.getNazwa());
+                }
+            }
+        }
+
+        return blokResponse;
     }
 
 

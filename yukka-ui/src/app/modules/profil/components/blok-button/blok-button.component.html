@@ -1,0 +1,10 @@
+<ng-container *ngIf="!zablokowany; else odblokuj" >
+    <button (click)="zablokujUzyt()" class="btn btn-danger" type="button">
+      Zablokuj &nbsp;<i class="fa-solid fa-user-slash" ></i>
+    </button>
+</ng-container>
+<ng-template #odblokuj>
+<button (click)="odblokujUzyt()" class="btn btn-danger" type="button">
+    Odblokuj &nbsp;<i class="fa-solid fa-user-slash" ></i>
+</button>
+</ng-template>

@@ -28,9 +28,16 @@
                       <h4 class="text-center mb-4 pb-2">Komentarze</h4>
                       <div class="row">
                           <div class="col">
-                            <ng-container *ngFor="let komentarz of post?.komentarze">
-                              <app-komentarz-card [komentarz]="komentarz" [depth]="0"></app-komentarz-card>
+                            <ng-container *ngIf="post?.komentarze?.length; else brakKomentarzy">
+                              <ng-container *ngFor="let komentarz of post?.komentarze">
+                                <app-komentarz-card [komentarz]="komentarz" [depth]="0"></app-komentarz-card>
+                              </ng-container>
                             </ng-container>
+
+
+                            <ng-template #brakKomentarzy>
+                              <p class="text-center fs-5">Brak komentarzy.</p>
+                            </ng-template>
                           </div>
                       </div>
                   </div>

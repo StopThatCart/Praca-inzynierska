@@ -86,7 +86,7 @@
 
         </div>
         <ng-container *ngIf="komentarz.odpowiedzi && komentarz.odpowiedzi.length > 0">
-          <a class="komentarz-option" (click)="toggleOdpowiedzi()">
+          <a class="komentarz-option ms-1" (click)="toggleOdpowiedzi()">
             <i class="fas fa-chevron-down fa-xs" *ngIf="!showOdpowiedzi"></i>
             <i class="fas fa-chevron-up fa-xs" *ngIf="showOdpowiedzi"></i>
             <span class="small">&nbsp;{{ showOdpowiedzi ? 'Zwiń' : 'Rozwiń' }} odpowiedzi</span>
