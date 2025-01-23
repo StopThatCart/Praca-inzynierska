@@ -80,15 +80,15 @@ public class PostController {
      *
      * @param page numer strony wyników, domyślnie 0
      * @param size rozmiar strony wyników, domyślnie 10
-     * @param szukaj nazwa lub opis postu
+     * @param search nazwa lub opis postu
      * @return ResponseEntity zawierające stronę wyników z postami
      */
     @GetMapping(produces="application/json")
-    public ResponseEntity<PageResponse<PostResponse>> findAllPosty(
+    public ResponseEntity<PageResponse<PostResponse>> findAllPosts(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            @RequestParam(name = "szukaj", required = false) String szukaj) {
-        return ResponseEntity.ok(postService.findAllPosts(page, size, szukaj));
+            @RequestParam(name = "search", required = false) String search) {
+        return ResponseEntity.ok(postService.findAllPosts(page, size, search));
     }
 
     /**

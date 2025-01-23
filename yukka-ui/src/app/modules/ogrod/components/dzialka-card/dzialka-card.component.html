@@ -1,0 +1,10 @@
+<div class="card bg-secondary"
+[ngClass]="{'border-primary border-4': hasRosliny()}"
+>
+  <div class="card-body">
+    <h5 class="card-title limit-to-3-lines">{{ dzialka.nazwa }}</h5>
+    <h5 class="card-title">Nr: {{ dzialka.numer }}</h5>
+    <p class="card-text">Liczba roślin: {{ dzialka.liczbaRoslin }}</p>
+    <a  [routerLink]="['dzialka', dzialka.numer]"  class="btn btn-primary">Zobacz</a>
+  </div>
+</div>

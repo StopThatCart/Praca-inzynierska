@@ -674,7 +674,7 @@
         }
       }
     },
-    "/rosliny/szukaj": {
+    "/rosliny/search": {
       "post": {
         "tags": [
           "Roslina"
@@ -890,7 +890,7 @@
         "tags": [
           "Post"
         ],
-        "operationId": "findAllPosty",
+        "operationId": "findAllPosts",
         "parameters": [
           {
             "name": "page",
@@ -913,7 +913,7 @@
             }
           },
           {
-            "name": "szukaj",
+            "name": "search",
             "in": "query",
             "required": false,
             "schema": {
@@ -2907,6 +2907,8 @@
             "type": "string"
           },
           "nazwa": {
+            "maxLength": 255,
+            "minLength": 1,
             "type": "string"
           },
           "nazwaLacinska": {
@@ -3910,11 +3912,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "ynowy": {
+          "xnowy": {
             "type": "integer",
             "format": "int32"
           },
-          "xnowy": {
+          "ynowy": {
             "type": "integer",
             "format": "int32"
           }

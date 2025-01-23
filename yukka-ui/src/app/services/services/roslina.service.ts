@@ -162,7 +162,7 @@ export class RoslinaService extends BaseService {
   }
 
   /** Path part for operation `findAllRoslinyWithParameters()` */
-  static readonly FindAllRoslinyWithParametersPath = '/rosliny/szukaj';
+  static readonly FindAllRoslinyWithParametersPath = '/rosliny/search';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

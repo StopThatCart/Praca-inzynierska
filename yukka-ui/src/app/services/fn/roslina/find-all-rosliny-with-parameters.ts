@@ -33,4 +33,4 @@ export function findAllRoslinyWithParameters(http: HttpClient, rootUrl: string, 
   );
 }
 
-findAllRoslinyWithParameters.PATH = '/rosliny/szukaj';
+findAllRoslinyWithParameters.PATH = '/rosliny/search';

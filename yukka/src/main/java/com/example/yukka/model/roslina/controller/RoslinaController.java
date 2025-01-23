@@ -63,7 +63,7 @@ public class RoslinaController {
      * @param request obiekt zawierający kryteria wyszukiwania roślin, opcjonalny
      * @return ResponseEntity zawierający stronę wyników z roślinami zgodnymi z podanymi parametrami
      */
-    @PostMapping(value="/szukaj", produces="application/json")
+    @PostMapping(value="/search", produces="application/json")
     public ResponseEntity<PageResponse<RoslinaResponse>> findAllRoslinyWithParameters(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "12", required = false) int size,

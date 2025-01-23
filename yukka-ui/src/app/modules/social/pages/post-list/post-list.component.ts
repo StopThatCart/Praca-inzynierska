@@ -52,10 +52,10 @@ export class PostListComponent {
     this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 0;
 
     this.toggleLoading();
-    this.postService.findAllPosty({
+    this.postService.findAllPosts({
       page: this.page,
       size: this.size,
-      szukaj: this.searchText.trim()
+      search: this.searchText.trim()
     }).subscribe({
         next: (posty) => {
           this.postResponse = posty;
@@ -70,7 +70,7 @@ export class PostListComponent {
 
   appendPost= ()=>{
     this.toggleLoading();
-    this.postService.findAllPosty({page: this.page, size: this.size, szukaj: this.searchText.trim()})
+    this.postService.findAllPosts({page: this.page, size: this.size, search: this.searchText.trim()})
     .subscribe({
       next:response=>{
         if (response && response.content) {

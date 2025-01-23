@@ -13,8 +13,8 @@ import { addOcenaToPost } from '../fn/post/add-ocena-to-post';
 import { AddOcenaToPost$Params } from '../fn/post/add-ocena-to-post';
 import { addPost } from '../fn/post/add-post';
 import { AddPost$Params } from '../fn/post/add-post';
-import { findAllPosty } from '../fn/post/find-all-posty';
-import { FindAllPosty$Params } from '../fn/post/find-all-posty';
+import { findAllPosts } from '../fn/post/find-all-posts';
+import { FindAllPosts$Params } from '../fn/post/find-all-posts';
 import { findAllPostyByUzytkownik } from '../fn/post/find-all-posty-by-uzytkownik';
 import { FindAllPostyByUzytkownik$Params } from '../fn/post/find-all-posty-by-uzytkownik';
 import { findPostByUuid } from '../fn/post/find-post-by-uuid';
@@ -58,27 +58,27 @@ export class PostService extends BaseService {
     );
   }
 
-  /** Path part for operation `findAllPosty()` */
-  static readonly FindAllPostyPath = '/posty';
+  /** Path part for operation `findAllPosts()` */
+  static readonly FindAllPostsPath = '/posty';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findAllPosty()` instead.
+   * To access only the response body, use `findAllPosts()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findAllPosty$Response(params?: FindAllPosty$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponsePostResponse>> {
-    return findAllPosty(this.http, this.rootUrl, params, context);
+  findAllPosts$Response(params?: FindAllPosts$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponsePostResponse>> {
+    return findAllPosts(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findAllPosty$Response()` instead.
+   * To access the full response (for headers, for example), `findAllPosts$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findAllPosty(params?: FindAllPosty$Params, context?: HttpContext): Observable<PageResponsePostResponse> {
-    return this.findAllPosty$Response(params, context).pipe(
+  findAllPosts(params?: FindAllPosts$Params, context?: HttpContext): Observable<PageResponsePostResponse> {
+    return this.findAllPosts$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageResponsePostResponse>): PageResponsePostResponse => r.body)
     );
   }

@@ -8,11 +8,12 @@ import { ErrorHandlingService } from '../../../../services/error-handler/error-h
 import { ErrorMsgComponent } from "../../../../components/error-msg/error-msg.component";
 import { RenameIconComponent } from "../../components/rename-icon/rename-icon.component";
 import { RenameIconModes } from '../../components/rename-icon/rename-icon-mode';
+import { DzialkaCardComponent } from "../../components/dzialka-card/dzialka-card.component";
 
 @Component({
   selector: 'app-dzialki-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ErrorMsgComponent, RenameIconComponent],
+  imports: [CommonModule, RouterModule, ErrorMsgComponent, RenameIconComponent, DzialkaCardComponent],
   templateUrl: './dzialki-list.component.html',
   styleUrl: './dzialki-list.component.css'
 })

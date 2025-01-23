@@ -97,7 +97,7 @@ public class PostControllerTest {
     @Test
     @Order(1)
     void testFindAllPosty() {
-        ResponseEntity<?> response = postController.findAllPosty(0, 12, null);
+        ResponseEntity<?> response = postController.findAllPosts(0, 12, null);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 

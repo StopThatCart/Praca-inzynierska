@@ -116,7 +116,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> 
                     auth.requestMatchers("/rosliny",
-                    "/rosliny/szukaj",
+                    "/rosliny/search",
                     "/rosliny/cechyQuery"
                                         
                     ).permitAll()

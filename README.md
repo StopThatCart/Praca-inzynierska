@@ -16,6 +16,7 @@ Rośliny oficjalne lub własne mogą być posadzone na swojej działce reprezent
 - Zarządzanie roślinami: Pracownicy wykonują operacje CRUDowe na roślinach w katalogu, a także każdy użytkownik może tworzyć własne rośliny.
 - Zarządzanie ogrodem: Możliwość zarządzania ogrodem podzielonym na działki, gdzie można sadzić rośliny, przydzielając im określony obszar, pozycję, a także pozwalając na różne modyfikacje.
 - Zarządzanie społecznością: Użytkownicy mogą przeglądać posty i komentarze, oceniać je, odpowiadać, a także tworzyć swoje.
+- Zarządanie powiadomieniami: Użytkownicy otrzymują powiadomienia o zdarzeniach takich jak odpowiedź na komentarz, czy nadejście okresu kwitnienia ich roślin w ogrodzie.
 - Rozmowy prywatne: Użytkownicy mogą prowadzić między sobą rozmowy prywatne
 - Zgłaszanie i banowanie: Użytkownicy mogą zgłaszać innych użytkowników, a pracownicy ich banować
 

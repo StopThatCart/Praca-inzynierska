@@ -48,11 +48,6 @@ public class Ogrod {
     @Relationship(type = "MA_DZIALKE", direction = Relationship.Direction.OUTGOING)
     private List<Dzialka> dzialki;
 
-
-    
-    /** 
-     * @return String
-     */
     @Override
     public String toString() {
         return "Ogrod{" +
@@ -62,5 +57,4 @@ public class Ogrod {
                 ", dzialki=" + dzialki.size() +
                 '}';
     }
-
 }
