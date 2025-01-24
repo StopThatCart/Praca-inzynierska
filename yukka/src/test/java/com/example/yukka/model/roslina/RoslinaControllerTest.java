@@ -107,7 +107,7 @@ public class RoslinaControllerTest {
         
         Cecha walorPachnaceKwiaty = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.WALOR.getBackendValue()), "pachnące kwiaty");
         Cecha walorRoslinaMiododajna = new Cecha(Collections.singletonList(RoslinaEtykietyFrontend.WALOR.getBackendValue()), "roślina miododajna");
-        // Resztę właściwości zostawia się pustą.
+        // Resztę cech zostawia się pustą.
 
         
         Roslina lipaHenryego = Roslina.builder()
