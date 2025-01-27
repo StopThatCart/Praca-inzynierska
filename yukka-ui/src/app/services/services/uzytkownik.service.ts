@@ -387,7 +387,8 @@ export class UzytkownikService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  removeSelf$Response(params: RemoveSelf$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  removeSelf$Response(params: RemoveSelf$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
     return removeSelf(this.http, this.rootUrl, params, context);
   }
 
@@ -397,9 +398,12 @@ export class UzytkownikService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  removeSelf(params: RemoveSelf$Params, context?: HttpContext): Observable<void> {
+  removeSelf(params: RemoveSelf$Params, context?: HttpContext): Observable<{
+}> {
     return this.removeSelf$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
     );
   }
 

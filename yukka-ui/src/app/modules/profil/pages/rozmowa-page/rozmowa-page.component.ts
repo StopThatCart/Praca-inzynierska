@@ -74,7 +74,6 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
     }, 5000);
 
    // this.findAllPowiadomienia();
-   // console.log(this.powResponse);
   }
 
   ngOnDestroy(): void {
@@ -181,7 +180,6 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
 
   private scrollToBottom(): void {
     if (this.isUserNearBottom()) {
-      //console.log('Scrolling to bottom');
       try {
         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
       } catch(err) {
@@ -201,12 +199,8 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
       this.uzytService.setBlokUzytkownik({ nazwa: this.odbiorcaNazwa, blok: true }).subscribe({
         next: (res) => {
           if(res) {
-            console.log('Użytkownik zablokowany');
-            console.log(res);
             this.zablokowany = true;
             this.getBlokowaniAndBlokujacy();
-          } else {
-            console.log('Nie udało się zablokować użytkownika');
           }
         },
         error: (err) => {
@@ -227,12 +221,8 @@ export class RozmowaPageComponent implements OnInit, OnDestroy, AfterViewChecked
       this.uzytService.setBlokUzytkownik({ nazwa: this.odbiorcaNazwa, blok: false }).subscribe({
         next: (res) => {
           if(res) {
-            console.log('Użytkownik odblokowany');
-            console.log(res);
             this.zablokowany = false;
             this.getBlokowaniAndBlokujacy();
-          } else {
-            console.log('Nie udało się odblokować użytkownika');
           }
         },
         error: (err) => {

@@ -47,7 +47,6 @@ export class ModalWyswietlanieRoslinyPickComponent {
         this.closePickerModal();
         return;
       }
-      console.log(this.selectedWyswietlanie);
       this.selectedRoslina.wyswietlanie = this.selectedWyswietlanie;
       this.obrazChange.emit(this.selectedWyswietlanie);
       this.closePickerModal();
@@ -56,7 +55,6 @@ export class ModalWyswietlanieRoslinyPickComponent {
 
   onWyswietlanieChange($event: String) {
     this.selectedWyswietlanie = $event.toString();
-    console.log('Wyswietlanie:', this.selectedWyswietlanie);
   }
 
 

@@ -47,8 +47,6 @@ export class DzialkiListComponent implements OnInit {
   }
 
   getOgrod() {
-    console.log('getOgrod');
-
     if(!this.uzytNazwa) {
       return;
     }
@@ -57,7 +55,6 @@ export class DzialkiListComponent implements OnInit {
     .subscribe({
         next: (ogrod) => {
           this.ogrodResponse = ogrod;
-          console.log(this.ogrodResponse);
         },
         error: (error) => {
           console.error('Error fetching ogrod:', error);

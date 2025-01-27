@@ -43,7 +43,7 @@ public class SocialSeeder {
 	private final KomentarzService komentarzService;
 	private final FileUtils fileUtils;
 
-    private final int MAX_POSTY = 5;
+    private final int MAX_POSTY = 20;
 	private final int MAX_KOMENTARZE = 4;
 	private final int MAX_ODPOWIEDZI_DEPTH = 2;
 	private final int MAX_ODPOWIEDZI = 2;

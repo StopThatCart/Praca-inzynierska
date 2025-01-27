@@ -37,8 +37,6 @@ export class CechaDropdownComponent {
     const index = this.selectedCechy.findIndex(
       selected => selected.etykieta === cecha.etykieta && selected.nazwa === nazwa
     );
-    console.log(cecha);
-    console.log(nazwa);
 
     if (index === -1) {
       const newCechaWithRelacja = { ...cecha };
@@ -60,7 +58,7 @@ export class CechaDropdownComponent {
       
       //this.selectedCechy.push({ ...cechaWithRelacja, nazwa });
       this.selectedCechy.push({ ...cechaWithRelacja });
-      console.log(this.selectedCechy);
+      //console.log(this.selectedCechy);
     } else {
       this.selectedCechy.splice(index, 1);
     }

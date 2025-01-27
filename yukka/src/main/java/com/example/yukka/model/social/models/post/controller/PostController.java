@@ -166,10 +166,7 @@ public class PostController {
      * </ul>
      */
     @DeleteMapping(value = "/{uuid}", produces="application/json")
-    public ResponseEntity<String> removePost(
-                    @PathVariable("uuid") String uuid,
-                    Authentication currentUser) {
-                        
+    public ResponseEntity<String> removePost(@PathVariable("") String uuid, Authentication currentUser) {
         postService.deletePost(uuid, currentUser);
         return ResponseEntity.noContent().build();
     }

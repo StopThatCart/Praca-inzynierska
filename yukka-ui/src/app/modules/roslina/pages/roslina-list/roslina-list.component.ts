@@ -161,16 +161,15 @@ export class RoslinaListComponent implements OnInit{
   }
 
   onCechaToggled(cechy: CechaWithRelations[]): void {
-    console.log('Cechy toggled:', cechy);
+    //console.log('Cechy toggled:', cechy);
     this.request.cechy = cechy;
     this.cechaTagComponent.updateSortedCechy(cechy);
   }
 
   onCechaRemoved(index: number): void {
-    console.log('Removing cecha at index:', index);
-
+   // console.log('Removing cecha at index:', index);
     this.request.cechy.splice(index, 1);
-    console.log('Request after removing:', this.request);
+   // console.log('Request after removing:', this.request);
   }
 
   // Paginacja

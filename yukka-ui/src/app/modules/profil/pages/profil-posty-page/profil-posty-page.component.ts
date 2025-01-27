@@ -47,14 +47,12 @@ export class ProfilPostyPageComponent {
       this.nazwa = params['nazwa'];
       if (this.nazwa) {
         this.findAllPosty();
-        console.log(this.postResponse);
       }
     });
 
   }
 
   findAllPosty() {
-    console.log('findAllPostyOfUzytkownik');
     if(!this.nazwa) return;
     this.errorMsg = [];
 
@@ -71,7 +69,6 @@ export class ProfilPostyPageComponent {
         error: (err) => {
           if (err.status === 403) {
 
-            //console.log('Eaaaaa');
           }
           this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
           this.toggleLoading();

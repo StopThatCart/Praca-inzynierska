@@ -55,7 +55,6 @@ export class EdycjaNavComponent implements OnInit {
   goToPowiadomienia() {
     const nazwa = this.tokenService.nazwa;
     if (nazwa) {
-      console.log('goToPowiadomieniaPage - start');
       this.router.navigate([`/profil/${nazwa}/powiadomienia`]);
     }
   }

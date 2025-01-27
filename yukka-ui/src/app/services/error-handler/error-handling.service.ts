@@ -18,6 +18,8 @@ export class ErrorHandlingService {
       return errorMsg;
     }
 
+
+
     if (err.error) {
       if(err.error.validationErrors) {
         errorMsg = err.error.validationErrors
@@ -40,12 +42,11 @@ export class ErrorHandlingService {
       } else {
         errorMsg.push(err.status);
       }
-    }else if (err.message) {
+    } else if (err.message) {
       errorMsg.push(err.message);
     } else {
       errorMsg.push(err);
     }
-    //console.log("Error message: " + errorMsg);
     return errorMsg;
   }
 

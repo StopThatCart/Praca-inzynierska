@@ -46,8 +46,6 @@ export class TileUtils {
   }
 
   static base64ToBlob(base64: string, contentType: string): Blob {
-    console.log('base64ToBlob');
-    console.log(base64);
     const byteCharacters = atob(base64);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {

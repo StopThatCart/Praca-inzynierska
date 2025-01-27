@@ -247,8 +247,9 @@ public class UzytkownikController {
      * @param currentUser obiekt Authentication reprezentujący aktualnie zalogowanego użytkownika
      */
     @DeleteMapping(consumes = "application/json", produces = "application/json")
-    public void removeSelf(@RequestBody UsunKontoRequest request, Authentication currentUser) {
+    public ResponseEntity<?> removeSelf(@RequestBody UsunKontoRequest request, Authentication currentUser) {
         uzytkownikService.removeSelf(request, currentUser);
+        return ResponseEntity.noContent().build();
     }
 
 

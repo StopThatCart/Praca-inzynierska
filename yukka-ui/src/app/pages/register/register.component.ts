@@ -40,12 +40,10 @@ export class RegisterComponent {
       body: this.registerRequest
     }).subscribe( {
         next: (res) => {
-          console.log(res);
           this.router.navigate(['aktywacja-konta']);
           //this.login();
         },
         error: (err) => {
-          console.log(err);
           this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
         }
     });

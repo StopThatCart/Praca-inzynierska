@@ -80,11 +80,8 @@ export class PostCardComponent implements OnInit {
       let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: uuid };
       this.postService.addOcenaToPost({ body: ocenaRequest }).subscribe({
         next: (res) => {
-          console.log('Ocena dodana: ', res);
-          console.log('Oceny: ', res.ocenyLubi, res.ocenyNieLubi);
           this.post.ocenyLubi = res.ocenyLubi;
           this.post.ocenyNieLubi = res.ocenyNieLubi;
-          console.log('Post po ocenie: ', this.post);
         },
         error: (error: HttpErrorResponse) => {
           if (error.status === 403) {
@@ -103,8 +100,13 @@ export class PostCardComponent implements OnInit {
       if (this.post.uuid) {
         this.postService.removePost({ uuid: this.post.uuid }).subscribe({
           next: (res) => {
-            //console.log('Post usunięty');
-            this.router.navigate(['/social/posty']);
+            if (this.router.url === '/social/posty') {
+              this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this.router.navigate(['/social/posty']);
+              });
+            } else {
+              this.router.navigate(['/social/posty']);
+            }
           },
           error: (error) => {
             this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);

@@ -46,7 +46,6 @@ export class RoslinaTileCircleComponent {
   onRoslinaClick() {
     if(this.mode !== DzialkaModes.Pan && this.editMode === DzialkaModes.BrakEdycji) {
       this.roslinaClick.emit(this.zasadzonaRoslina);
-      console.log('Roslina clicked');
       console.log(this.zasadzonaRoslina);
     }
 

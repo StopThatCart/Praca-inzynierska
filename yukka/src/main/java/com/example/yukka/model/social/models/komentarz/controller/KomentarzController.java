@@ -56,7 +56,6 @@ public class KomentarzController {
      */
     @GetMapping(value = "/{uuid}", produces="application/json")
     public ResponseEntity<KomentarzResponse> findKomentarzByUUID(@PathVariable() String uuid) {
-        
         return ResponseEntity.ok(komentarzService.findByUUIDWithOdpowiedzi(uuid));
     }
 
@@ -142,10 +141,7 @@ public class KomentarzController {
      * @return ResponseEntity zawierające informację o usunięciu komentarza
      */
     @DeleteMapping(value = "/{uuid}", produces="application/json")
-    public ResponseEntity<String> removeKomentarz(
-                    @PathVariable() String uuid,
-                    Authentication currentUser) {
-
+    public ResponseEntity<String> removeKomentarz(@PathVariable() String uuid, Authentication currentUser) {
         komentarzService.deleteKomentarz(uuid, currentUser);
         return ResponseEntity.noContent().build();
     }

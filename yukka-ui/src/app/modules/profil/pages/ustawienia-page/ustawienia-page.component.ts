@@ -53,7 +53,6 @@ export class UstawieniaPageComponent  implements OnInit {
     this.uzytService.findByNazwa( {nazwa: this.tokenService.nazwa } )
     .subscribe({
       next: (uzyt) => {
-        console.log(uzyt);
         this.uzyt = uzyt;
         this.ustawienia = this.convertToUstawieniaRequest(uzyt.ustawienia || {});
       },
@@ -80,15 +79,12 @@ export class UstawieniaPageComponent  implements OnInit {
     this.message = "";
 
     if(this.ustawienia) {
-      console.log("Masz tu ustawienia mordo: ");
-      console.log(this.ustawienia);
       this.uzytService.updateUstawienia({body:  { ustawienia: this.ustawienia }})
       .subscribe({
         next: (uzyt) => {
           this.message = "Ustawienia zostały zaktualizowane.";
           this.uzyt = uzyt;
           this.ustawienia = this.convertToUstawieniaRequest(uzyt.ustawienia || {});
-          console.log(uzyt.ustawienia);
         },
         error: (err) => {
           console.log(err);

@@ -75,7 +75,6 @@ export class AddRoslinaPageComponent implements OnInit {
       if (params['doKatalogu'] !== undefined) {
         this.doKatalogu = params['doKatalogu'] === 'true';
       }
-      console.log('doKatalogu:', this.doKatalogu);
     });
     this.fetchCechy();
   }
@@ -89,15 +88,15 @@ export class AddRoslinaPageComponent implements OnInit {
   }
 
   onCechaToggled(cechy: CechaWithRelations[]): void {
-    console.log('Cechy toggled:', cechy);
+   // console.log('Cechy toggled:', cechy);
     this.request.cechy = cechy;
     this.cechaTagComponent.updateSortedCechy(cechy);
   }
 
   onCechaRemoved(index: number): void {
-    console.log('Removing cecha at index:', index);
+    //console.log('Removing cecha at index:', index);
     this.request.cechy.splice(index, 1);
-    console.log('Request after removing:', this.request);
+   // console.log('Request after removing:', this.request);
   }
 
   onCustomCechaAdded(customCecha: CechaWithRelations): void {
@@ -110,7 +109,6 @@ export class AddRoslinaPageComponent implements OnInit {
     this.roslinaService.getCechyWithRelations().subscribe({
       next: (response) => {
         this.cechyResponse = response;
-        console.log("Konwertowanie cech");
         this.cechyResponse = this.cechaProcessService.processCechyResponse(this.cechyResponse);
       },
       error: (error) => {
@@ -156,7 +154,6 @@ export class AddRoslinaPageComponent implements OnInit {
       this.addRoslinaWlasna(this.request, leFile);
       return;
     }
-    console.log('Dodawanie rośliny: ', this.request);
     this.roslinaService.saveRoslina({ body: { request: this.request, file: leFile } }).subscribe({
       next: (roslina) => {
         this.router.navigate(['rosliny', roslina.uuid]);
@@ -171,12 +168,9 @@ export class AddRoslinaPageComponent implements OnInit {
 
 
   addRoslinaWlasna(request: RoslinaRequest, leFile: any) {
-    console.log('Dodawanie rośliny użytkownika: ', request);
-
     this.roslinaWlasnaService.save({ body: { request: request, file: leFile } }).subscribe({
       next: (roslina) => {
         //this.afterAddRoslina();
-       // console.log("roslinka", roslina);
         this.router.navigate(['rosliny', roslina.uuid]);
       },
       error: (error) => {

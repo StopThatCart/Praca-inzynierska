@@ -94,7 +94,6 @@ export class DzialkaPageComponent implements OnInit  {
       if (this.numer && this.uzytNazwa) {
         this.getUzytkownikByNazwa(this.uzytNazwa);
         this.getDzialkaOfUzytkownikByNumer( this.numer, this.uzytNazwa).then(() => {
-          console.log('Działka załadowana');
           this.isLoading = false;
         }).catch((err) => {
           console.log(err);
@@ -129,17 +128,12 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   createBackup(): void {
-    console.log('Tworzę backup');
-
     let copy = structuredClone(this.dzialka);
     this.dzialkaBackup = copy;
   }
 
   cancelChanges(): void {
-    console.log('Anuluję zmiany');
     if (this.dzialkaBackup) {
-      console.log("dzialkaBackup:", this.dzialkaBackup);
-      console.log("dzialka:", this.dzialka);
       this.dzialka = this.dzialkaBackup;
       this.dzialkaBackup = {};
 
@@ -179,7 +173,6 @@ export class DzialkaPageComponent implements OnInit  {
     const ctx = canvas.getContext('2d');
     const bgCtx = backgroundCanvas.getContext('2d');
     if (ctx && bgCtx) {
-      console.log(canvas.width, canvas.height);
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const tile = TileUtils.findTile(this.tiles, col, row);
@@ -197,7 +190,6 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   private drawTileTexture(tile: Tile, ctx : CanvasRenderingContext2D): void {
-    console.log('drawTileTexture');
     const img = new Image();
 
     if(ctx) {
@@ -216,13 +208,11 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   private drawTileBackground(tile: Tile, ctx: CanvasRenderingContext2D): void {
-    //console.log('drawTileBackground');
     ctx.fillStyle = this.getRgbaColor(tile.backgroundColor);
     ctx.fillRect(tile.x * this.tileSize, tile.y * this.tileSize, this.tileSize, this.tileSize);
   }
 
   changeRoslinaPozycjaInDzialka(): void {
-    console.log('changeRoslinaPozycjaInDzialka');
     if(!this.selectedRoslina?.pozycje || this.numer === undefined) return;
 
     this.moveRoslinaRequest.pozycje = this.selectedRoslina?.pozycje;
@@ -236,7 +226,6 @@ export class DzialkaPageComponent implements OnInit  {
         this.editMode = DzialkaModes.BrakEdycji;
         this.selectedRoslina = undefined;
         this.dzialka = dzialka;
-        console.log(dzialka);
 
         this.initializeTiles();
         this.processRosliny(dzialka);
@@ -249,11 +238,9 @@ export class DzialkaPageComponent implements OnInit  {
 
   getDzialkaOfUzytkownikByNumer(numer: number, uzytkownikNazwa: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log('getDzialkaOfUzytkownikByNumer');
       this.dzialkaService.getDzialkaOfUzytkownikByNumer({ numer: numer, 'uzytkownik-nazwa': uzytkownikNazwa }).subscribe({
         next: (dzialka) => {
           this.dzialka = dzialka;
-          console.log(dzialka);
           this.processRosliny(dzialka);
 
           resolve();
@@ -272,14 +259,12 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   onRoslinaDelete() {
-    console.log('onRoslinaDelete');
     this.initializeTiles();
     this.drawChessboard();
     this.getDzialkaOfUzytkownikByNumer(this.numer!, this.uzytNazwa!);
   }
 
   async onRoslinaUpdate(selectedRoslina : ZasadzonaRoslinaResponse) {
-    console.log('onRoslinaUpdate');
     this.initializeTiles();
     this.drawChessboard();
     await this.getDzialkaOfUzytkownikByNumer(this.numer!, this.uzytNazwa!);
@@ -287,16 +272,12 @@ export class DzialkaPageComponent implements OnInit  {
     if (this.selectedRoslina) {
         let ros = this.dzialka.zasadzoneRosliny?.find(roslina => roslina.x === this.selectedRoslina!.x && roslina.y === this.selectedRoslina!.y);
         if (ros) {
-          console.log('Znaleziono roślinę');
-          console.log(ros);
-          console.log(this.selectedRoslina);
           this.selectedRoslina = ros;
         }
       }
   }
 
   onRoslinaBaseChange(roslina: ZasadzonaRoslinaResponse) {
-    console.log('onRoslinaKolorChange');
     if(this.selectedRoslina) {
       this.selectedRoslina = roslina;
       this.updateTilesWithRoslina(this.selectedRoslina, false);
@@ -304,7 +285,6 @@ export class DzialkaPageComponent implements OnInit  {
   }
 
   processRosliny(dzialka: DzialkaResponse): void {
-    console.log('processRosliny');
     if (dzialka.zasadzoneRosliny) {
       dzialka.zasadzoneRosliny.forEach(zasadzonaRoslina => {
         if (zasadzonaRoslina.pozycje) {
@@ -353,12 +333,10 @@ export class DzialkaPageComponent implements OnInit  {
     }
     if (this.editMode === DzialkaModes.EditRoslinaKafelki || this.editMode === DzialkaModes.EditRoslinaPozycja) {
       if(tile.zasadzonaRoslina) {
-        console.log('Na tym kafelku znajduje się roślina.');
         return;
       }
 
       if(tile.uuid  && tile.uuid !== this.selectedRoslina?.roslina?.uuid) {
-        console.log('Ten kafelek nie jest przypisany do tej rośliny.');
         return;
       }
 
@@ -405,7 +383,6 @@ export class DzialkaPageComponent implements OnInit  {
     if(!this.selectedRoslina) return;
     const oldTile = TileUtils.findTile(this.tiles, this.selectedRoslina.x!, this.selectedRoslina.y!);
     if(oldTile) {
-      console.log('Czyści stary kafelek');
       console.log("x:", oldTile.x, "y:", oldTile.y);
       console.log(this.selectedRoslina)
       TileUtils.removeRoslina(oldTile);
@@ -462,7 +439,6 @@ export class DzialkaPageComponent implements OnInit  {
   onRoslinaClick(roslina: ZasadzonaRoslinaResponse): void {
     if (this.mode === DzialkaModes.Select) {
       this.selectedRoslina = roslina;
-      console.log('Wybrano roślinę');
 
       if (roslina.x !== undefined && roslina.y !== undefined) {
         this.moveRoslinaRequest.x = roslina.x;

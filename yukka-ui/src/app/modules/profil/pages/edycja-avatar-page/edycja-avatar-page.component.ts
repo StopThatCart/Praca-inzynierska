@@ -83,13 +83,11 @@ export class EdycjaAvatarPageComponent {
       this.errorMsg.push('Nie wybrano pliku.');
       return;
     }
-    console.log("nazwa łacińska: " + this.nazwa);
 
     this.uzytService.updateAvatar ({ body: { file: this.wybranyPlik } })
       .subscribe({
         next: () => {
           this.router.navigate(['profil', this.nazwa]);
-          this.message = 'Yippie';
         },
         error: (error) => {
           this.errorMsg = this.errorHandlingService.handleErrors(error, this.errorMsg);

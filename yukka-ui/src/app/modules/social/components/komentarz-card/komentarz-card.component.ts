@@ -34,6 +34,7 @@ export class KomentarzCardComponent implements OnInit {
   showOdpowiedzi: boolean = false;
 
   canEdit: boolean = false;
+  canDelete: boolean = false;
   isEditing: boolean = false;
   editedOpis: string = '';
 
@@ -58,8 +59,11 @@ export class KomentarzCardComponent implements OnInit {
 
   ngOnInit() {
     if(this.tokenService.isTokenValid()) {
-      if (this.komentarz.uzytkownikNazwa && this.tokenService.hasAuthenticationRights(this.komentarz.uzytkownikNazwa)) {
+      if (this.komentarz.uzytkownikNazwa && this.tokenService.nazwa === this.komentarz.uzytkownikNazwa) {
         this.canEdit = true;
+      }
+      if (this.komentarz.uzytkownikNazwa && this.tokenService.hasAuthenticationRights(this.komentarz.uzytkownikNazwa)) {
+        this.canDelete = true;
       }
     }
 
@@ -129,7 +133,6 @@ export class KomentarzCardComponent implements OnInit {
       let ocenaRequest: OcenaRequest = { lubi: ocena, ocenialnyId: uuid };
       this.komentarzService.addOcenaToKomentarz({ body: ocenaRequest }).subscribe({
         next: (komentarz) => {
-          console.log('Ocena dodana');
           this.komentarz.ocenyLubi = komentarz.ocenyLubi;
           this.komentarz.ocenyNieLubi = komentarz.ocenyNieLubi;
         },
@@ -167,8 +170,6 @@ export class KomentarzCardComponent implements OnInit {
       this.request.opis = this.editedOpis;
       this.komentarzService.updateKomentarz({ body: this.request }).subscribe({
         next: (res) => {
-          console.log('Komentarz zaktualizowany');
-          console.log(res);
           this.komentarz.opis = res.opis;
           this.komentarz.edytowany = res.edytowany;
           this.isEditing = false;
@@ -187,8 +188,6 @@ export class KomentarzCardComponent implements OnInit {
       if (this.komentarz.uuid) {
         this.komentarzService.removeKomentarz({ uuid: this.komentarz.uuid }).subscribe({
           next: (res) => {
-            console.log('Komentarz usunięty');
-            console.log(res);
             window.location.reload();
           },
           error: (error) => {

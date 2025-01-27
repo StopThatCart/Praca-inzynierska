@@ -109,18 +109,12 @@ export class OffcanvasRoslinaComponent {
 
     if(!this.zasadzonaRoslina || this.zasadzonaRoslina.x == undefined || this.zasadzonaRoslina.y == undefined) {
       console.error('Nie można usunąć rośliny z działki, brak pozycji');
-      console.log("sprawdzanie")
-      console.log(this.zasadzonaRoslina)
-      console.log(this.zasadzonaRoslina?.x)
-      console.log(this.zasadzonaRoslina?.y)
       return;
     }
     let deletRequest = this.makeBaseDzialkaRequest();
 
     this.dzialkaService.deleteRoslinaFromDzialka( { body: deletRequest }).subscribe({
       next: () => {
-        console.log('roslinaRemove');
-
         this.roslinaRemove.emit(this.zasadzonaRoslina);
       },
       error: (err) => {
@@ -153,7 +147,6 @@ export class OffcanvasRoslinaComponent {
 
 
   confirmColorChange(newColor: string) {
-    console.log('confirmColorChange', newColor);
     if(!this.zasadzonaRoslina) return;
     this.zasadzonaRoslina!.kolor = newColor;
 
@@ -162,7 +155,6 @@ export class OffcanvasRoslinaComponent {
 
     this.dzialkaService .updateRoslinaKolorInDzialka( { body: request }).subscribe({
       next: () => {
-        console.log('kolorowanie yeeeeeey');
         this.zasadzonaRoslina!.kolor = newColor;
         this.roslinaBaseChange.emit(this.zasadzonaRoslina);
       },
@@ -177,7 +169,6 @@ export class OffcanvasRoslinaComponent {
   }
 
   confirmNotatkaPickerChange(newNotatka: string) {
-    console.log('confirmNotatkaChange', newNotatka);
     if(!this.zasadzonaRoslina) return;
     this.zasadzonaRoslina!.notatka = newNotatka;
 
@@ -186,7 +177,6 @@ export class OffcanvasRoslinaComponent {
 
     this.dzialkaService .updateRoslinaNotatkaInDzialka( { body: request }).subscribe({
       next: () => {
-        console.log('notatkowanie yeeeeeey');
         this.zasadzonaRoslina!.notatka = newNotatka;
         this.roslinaBaseChange.emit(this.zasadzonaRoslina);
       },
@@ -203,7 +193,6 @@ export class OffcanvasRoslinaComponent {
   }
 
   confirmWyswietlanieChange(newWyswietlanie: string) {
-    console.log('confirmWyswietlanieChange', newWyswietlanie);
     if(!this.zasadzonaRoslina) return;
 
     let request: DzialkaRoslinaRequest = this.makeDzialkaRoslinaRequest();
@@ -221,14 +210,12 @@ export class OffcanvasRoslinaComponent {
   }
 
   confirmObrazChange(obraz: any) {
-    console.log('confirmObrazChange', obraz);
     if(!this.zasadzonaRoslina) return;
     if(obraz === null) {
       let deletRequest = this.makeBaseDzialkaRequest();
       if(this.isTextureMode) {
         this.dzialkaService.deleteRoslinaTeksturaFromDzialka( { body: deletRequest }).subscribe({
           next: () => {
-            console.log('usunięto teksturę');
             this.roslinaSmolChange.emit(this.zasadzonaRoslina);
           },
           error: (err) => {
@@ -238,9 +225,7 @@ export class OffcanvasRoslinaComponent {
       } else {
         this.dzialkaService.deleteRoslinaObrazFromDzialka( { body: deletRequest }).subscribe({
           next: () => {
-            console.log('usunięto obraz');
             this.zasadzonaRoslina!.obraz = this.zasadzonaRoslina?.roslina?.obraz;
-            console.log(this.zasadzonaRoslina);
 
             this.roslinaSmolChange.emit(this.zasadzonaRoslina);
           },
@@ -256,15 +241,8 @@ export class OffcanvasRoslinaComponent {
       let obrazek : any = null;
       this.isTextureMode ? (teksturka = obraz) : (obrazek = obraz);
 
-      console.log('W trybie tekstury: ' + this.isTextureMode);
-      console.log(teksturka == null ? 'null' : 'nie null');
-      console.log(obrazek == null ? 'null' : 'nie null');
-
       this.dzialkaService.updateRoslinaObrazInDzialka( { body: {request : request, obraz: obrazek, tekstura: teksturka } }).subscribe({
         next: (obrazek) => {
-          console.log('zaktualizowano obraz');
-          console.log('W trybie tekstury: ' + this.isTextureMode);
-          console.log(obrazek);
           //if(!this.isTextureMode) this.zasadzonaRoslina!.obraz = obrazek.content;
           this.roslinaSmolChange.emit(this.zasadzonaRoslina);
         },

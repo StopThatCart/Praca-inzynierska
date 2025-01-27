@@ -50,7 +50,6 @@ export class AddPowiadomienieModalComponent {
   }
 
   onSubmit() {
-    console.log('Wysyłanie powiadomienia');
     if (this.doKogo === undefined || this.request.opis === '') return;
     this.errorMsg = [];
     this.message = '';
@@ -58,7 +57,6 @@ export class AddPowiadomienieModalComponent {
     if (this.doKogo?.toLowerCase() === 'uzytkownik') {
       this.powiadomienieService.sendSpecjalnePowiadomienie( { body: this.request } ).subscribe({
         next: (res) => {
-          console.log('Powiadomienie zostało wysłane');
           this.message = 'Powiadomienie zostało wysłane';
           this.powiadomienieDodane.emit();
           this.modalService.dismissAll();
@@ -71,9 +69,9 @@ export class AddPowiadomienieModalComponent {
     } else if (this.doKogo?.toLowerCase() === 'pracownik') {
       this.powiadomienieService.sendSpecjalnePowiadomienieToPracownicy( { body: this.request } ).subscribe({
         next: (res) => {
-          console.log('Powiadomienie do pracowników zostało wysłane');
           this.message = 'Powiadomienie do pracowników zostało wysłane';
           this.powiadomienieDodane.emit();
+          this,this.request.opis = '';
           this.modalService.dismissAll();
         },
         error: (err) => {

@@ -121,8 +121,6 @@ export class WiadomoscCardComponent implements OnInit {
       this.request.opis = this.editedOpis;
       this.komentarzService.updateKomentarz({ body: this.request }).subscribe({
         next: (res) => {
-          console.log('Komentarz zaktualizowany');
-          console.log(res);
           this.wiadomosc.opis = res.opis;
           this.wiadomosc.edytowany = res.edytowany;
           this.isEditing = false;
@@ -141,8 +139,6 @@ export class WiadomoscCardComponent implements OnInit {
       if (this.wiadomosc.uuid) {
         this.komentarzService.removeKomentarz({ uuid: this.wiadomosc.uuid }).subscribe({
           next: (res) => {
-            console.log('Komentarz usunięty');
-            console.log(res);
             this.onRemove.emit(this.wiadomosc.uuid);
           },
           error: (err) => {

@@ -85,7 +85,7 @@
       </div>
     </div>
     <div class="row gx-2 gy-2 justify-content-center align-items-center">
-      <div *ngIf="uzyt.ustawienia?.ogrodPokaz" class="col d-flex justify-content-center align-items-center">
+      <div *ngIf="uzyt.ustawienia?.ogrodPokaz || isCurrentUser()" class="col d-flex justify-content-center align-items-center">
         <a [routerLink]="['/ogrod', uzyt.nazwa]" class="btn btn-outline-primary btn-outline-custom fw-medium" role="button">Ogród</a>
       </div>
       <div *ngIf="isCurrentUser() || isPracownikOrAdmin()" class="col d-flex justify-content-center align-items-center">

@@ -4,83 +4,50 @@
     "title": "Spring Security OpenApi",
     "description": "Dokumentacja OpenApi dla Spring Security",
     "termsOfService": "Terms of service",
-    "contact": {
-      "name": "Łukasz Domin",
-      "email": "lukaszdomin@interia.pl"
-    },
-    "license": {
-      "name": "Licence name",
-      "url": "https://some-url.com"
-    },
+    "contact": { "name": "Łukasz Domin", "email": "lukaszdomin@interia.pl" },
+    "license": { "name": "Licence name", "url": "https://some-url.com" },
     "version": "0.3"
   },
-  "servers": [
-    {
-      "url": "http://localhost:8081",
-      "description": "Local ENV"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
+  "servers": [{ "url": "http://localhost:8081", "description": "Local ENV" }],
+  "security": [{ "bearerAuth": [] }],
   "paths": {
     "/rozmowy/{uzytkownik-nazwa}/reject": {
       "put": {
-        "tags": [
-          "RozmowaPrywatna"
-        ],
+        "tags": ["RozmowaPrywatna"],
         "operationId": "rejectRozmowaPrywatna",
         "parameters": [
           {
             "name": "uzytkownik-nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "content": { "*/*": { "schema": { "type": "object" } } }
           }
         }
       }
     },
     "/rozmowy/{uzytkownik-nazwa}/accept": {
       "put": {
-        "tags": [
-          "RozmowaPrywatna"
-        ],
+        "tags": ["RozmowaPrywatna"],
         "operationId": "acceptRozmowaPrywatna",
         "parameters": [
           {
             "name": "uzytkownik-nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -88,18 +55,14 @@
     },
     "/roslinyWlasne/{uuid}": {
       "put": {
-        "tags": [
-          "RoslinaWlasna"
-        ],
+        "tags": ["RoslinaWlasna"],
         "operationId": "updateObraz",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
@@ -108,10 +71,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "file": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -121,11 +81,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -133,18 +89,14 @@
     },
     "/rosliny/{uuid}": {
       "get": {
-        "tags": [
-          "Roslina"
-        ],
+        "tags": ["Roslina"],
         "operationId": "findByUUID",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -152,35 +104,27 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/RoslinaResponse" }
               }
             }
           }
         }
       },
       "put": {
-        "tags": [
-          "Roslina"
-        ],
+        "tags": ["Roslina"],
         "operationId": "updateRoslina",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/RoslinaRequest" }
             }
           },
           "required": true
@@ -190,57 +134,41 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/RoslinaResponse" }
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "Roslina"
-        ],
+        "tags": ["Roslina"],
         "operationId": "deleteRoslina",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "content": { "*/*": { "schema": { "type": "string" } } }
           }
         }
       }
     },
     "/rosliny/{uuid}/obraz": {
       "put": {
-        "tags": [
-          "Roslina"
-        ],
+        "tags": ["Roslina"],
         "operationId": "updateRoslinaObraz",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
@@ -249,10 +177,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "file": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -262,11 +187,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": { "schema": { "type": "string" } }
             }
           }
         }
@@ -274,16 +195,12 @@
     },
     "/posty/oceny": {
       "put": {
-        "tags": [
-          "Post"
-        ],
+        "tags": ["Post"],
         "operationId": "addOcenaToPost",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OcenaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/OcenaRequest" }
             }
           },
           "required": true
@@ -293,9 +210,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OcenaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/OcenaResponse" }
               }
             }
           }
@@ -304,16 +219,12 @@
     },
     "/komentarze/oceny": {
       "put": {
-        "tags": [
-          "Komentarz"
-        ],
+        "tags": ["Komentarz"],
         "operationId": "addOcenaToKomentarz",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OcenaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/OcenaRequest" }
             }
           },
           "required": true
@@ -323,9 +234,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OcenaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/OcenaResponse" }
               }
             }
           }
@@ -334,16 +243,12 @@
     },
     "/uzytkownicy/send-zmiana-email": {
       "post": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "sendChangeEmail",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EmailRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/EmailRequest" }
             }
           },
           "required": true
@@ -352,11 +257,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -364,18 +265,14 @@
     },
     "/rozmowy/{uzytkownik-nazwa}": {
       "get": {
-        "tags": [
-          "RozmowaPrywatna"
-        ],
+        "tags": ["RozmowaPrywatna"],
         "operationId": "findRozmowaPrywatnaByNazwa",
         "parameters": [
           {
             "name": "uzytkownik-nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -392,29 +289,21 @@
         }
       },
       "post": {
-        "tags": [
-          "RozmowaPrywatna"
-        ],
+        "tags": ["RozmowaPrywatna"],
         "operationId": "inviteToRozmowaPrywatna",
         "parameters": [
           {
             "name": "uzytkownik-nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -422,26 +311,19 @@
     },
     "/rozmowy/wiadomosc": {
       "post": {
-        "tags": [
-          "RozmowaPrywatna"
-        ],
+        "tags": ["RozmowaPrywatna"],
         "operationId": "addKomentarzToWiadomoscPrywatna",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "request"
-                ],
+                "required": ["request"],
                 "type": "object",
                 "properties": {
                   "request": {
                     "$ref": "#/components/schemas/KomentarzRequest"
                   },
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "file": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -452,9 +334,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/KomentarzResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/KomentarzResponse" }
               }
             }
           }
@@ -463,26 +343,17 @@
     },
     "/rosliny": {
       "post": {
-        "tags": [
-          "Roslina"
-        ],
+        "tags": ["Roslina"],
         "operationId": "saveRoslina",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "request"
-                ],
+                "required": ["request"],
                 "type": "object",
                 "properties": {
-                  "request": {
-                    "$ref": "#/components/schemas/RoslinaRequest"
-                  },
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "request": { "$ref": "#/components/schemas/RoslinaRequest" },
+                  "file": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -493,9 +364,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/RoslinaResponse" }
               }
             }
           }
@@ -504,26 +373,17 @@
     },
     "/roslinyWlasne": {
       "post": {
-        "tags": [
-          "RoslinaWlasna"
-        ],
+        "tags": ["RoslinaWlasna"],
         "operationId": "save",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "request"
-                ],
+                "required": ["request"],
                 "type": "object",
                 "properties": {
-                  "request": {
-                    "$ref": "#/components/schemas/RoslinaRequest"
-                  },
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "request": { "$ref": "#/components/schemas/RoslinaRequest" },
+                  "file": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -534,25 +394,19 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/RoslinaResponse" }
               }
             }
           }
         }
       },
       "patch": {
-        "tags": [
-          "RoslinaWlasna"
-        ],
+        "tags": ["RoslinaWlasna"],
         "operationId": "update",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/RoslinaRequest" }
             }
           },
           "required": true
@@ -562,9 +416,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RoslinaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/RoslinaResponse" }
               }
             }
           }
@@ -573,46 +425,32 @@
     },
     "/roslinyWlasne/szukaj": {
       "post": {
-        "tags": [
-          "RoslinaWlasna"
-        ],
+        "tags": ["RoslinaWlasna"],
         "operationId": "findAllRoslinyOfUzytkownik",
         "parameters": [
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 0 }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 12
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 12 }
           },
           {
             "name": "uzytkownik-nazwa",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/RoslinaRequest" }
             }
           },
           "required": true
@@ -633,26 +471,20 @@
     },
     "/roslinyWlasne/cechyQuery": {
       "post": {
-        "tags": [
-          "RoslinaWlasna"
-        ],
+        "tags": ["RoslinaWlasna"],
         "operationId": "getUzytkownikCechyCountFromQuery",
         "parameters": [
           {
             "name": "uzytkownik-nazwa",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/RoslinaRequest" }
             }
           }
         },
@@ -676,38 +508,26 @@
     },
     "/rosliny/search": {
       "post": {
-        "tags": [
-          "Roslina"
-        ],
+        "tags": ["Roslina"],
         "operationId": "findAllRoslinyWithParameters",
         "parameters": [
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 0 }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 12
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 12 }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/RoslinaRequest" }
             }
           }
         },
@@ -727,16 +547,12 @@
     },
     "/rosliny/cechyQuery": {
       "post": {
-        "tags": [
-          "Roslina"
-        ],
+        "tags": ["Roslina"],
         "operationId": "getCechyCountFromQuery",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RoslinaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/RoslinaRequest" }
             }
           }
         },
@@ -760,17 +576,13 @@
     },
     "/pracownicy": {
       "post": {
-        "tags": [
-          "Pracownik"
-        ],
+        "tags": ["Pracownik"],
         "operationId": "addPracownik",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "request"
-                ],
+                "required": ["request"],
                 "type": "object",
                 "properties": {
                   "request": {
@@ -785,11 +597,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -797,16 +605,12 @@
     },
     "/powiadomienia/zgloszenie": {
       "post": {
-        "tags": [
-          "Powiadomienie"
-        ],
+        "tags": ["Powiadomienie"],
         "operationId": "sendZgloszenie",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ZgloszenieRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/ZgloszenieRequest" }
             }
           },
           "required": true
@@ -815,11 +619,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -827,9 +627,7 @@
     },
     "/powiadomienia/pracownik": {
       "post": {
-        "tags": [
-          "Powiadomienie"
-        ],
+        "tags": ["Powiadomienie"],
         "operationId": "sendSpecjalnePowiadomienie",
         "requestBody": {
           "content": {
@@ -845,11 +643,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -857,9 +651,7 @@
     },
     "/powiadomienia/admin": {
       "post": {
-        "tags": [
-          "Powiadomienie"
-        ],
+        "tags": ["Powiadomienie"],
         "operationId": "sendSpecjalnePowiadomienieToPracownicy",
         "requestBody": {
           "content": {
@@ -875,11 +667,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -887,38 +675,26 @@
     },
     "/posty": {
       "get": {
-        "tags": [
-          "Post"
-        ],
+        "tags": ["Post"],
         "operationId": "findAllPosts",
         "parameters": [
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 0 }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 10 }
           },
           {
             "name": "search",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -935,26 +711,17 @@
         }
       },
       "post": {
-        "tags": [
-          "Post"
-        ],
+        "tags": ["Post"],
         "operationId": "addPost",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "request"
-                ],
+                "required": ["request"],
                 "type": "object",
                 "properties": {
-                  "request": {
-                    "$ref": "#/components/schemas/PostRequest"
-                  },
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "request": { "$ref": "#/components/schemas/PostRequest" },
+                  "file": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -965,9 +732,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PostResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/PostResponse" }
               }
             }
           }
@@ -976,26 +741,19 @@
     },
     "/komentarze/posty": {
       "post": {
-        "tags": [
-          "Komentarz"
-        ],
+        "tags": ["Komentarz"],
         "operationId": "addKomentarzToPost",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "request"
-                ],
+                "required": ["request"],
                 "type": "object",
                 "properties": {
                   "request": {
                     "$ref": "#/components/schemas/KomentarzRequest"
                   },
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "file": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -1006,9 +764,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/KomentarzResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/KomentarzResponse" }
               }
             }
           }
@@ -1017,26 +773,19 @@
     },
     "/komentarze/odpowiedzi": {
       "post": {
-        "tags": [
-          "Komentarz"
-        ],
+        "tags": ["Komentarz"],
         "operationId": "addOdpowiedzToKomentarz",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "request"
-                ],
+                "required": ["request"],
                 "type": "object",
                 "properties": {
                   "request": {
                     "$ref": "#/components/schemas/KomentarzRequest"
                   },
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "file": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -1047,9 +796,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/KomentarzResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/KomentarzResponse" }
               }
             }
           }
@@ -1058,30 +805,20 @@
     },
     "/dzialki/rosliny": {
       "post": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "saveRoslinaToDzialka",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "request"
-                ],
+                "required": ["request"],
                 "type": "object",
                 "properties": {
                   "request": {
                     "$ref": "#/components/schemas/DzialkaRoslinaRequest"
                   },
-                  "obraz": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "tekstura": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "obraz": { "type": "string", "format": "binary" },
+                  "tekstura": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -1092,25 +829,19 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DzialkaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/DzialkaResponse" }
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "deleteRoslinaFromDzialka",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BaseDzialkaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/BaseDzialkaRequest" }
             }
           },
           "required": true
@@ -1119,11 +850,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": { "schema": { "type": "string" } }
             }
           }
         }
@@ -1131,16 +858,12 @@
     },
     "/api/auth/zmiana-hasla": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "changePassword",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HasloRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/HasloRequest" }
             }
           },
           "required": true
@@ -1149,11 +872,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -1161,29 +880,21 @@
     },
     "/api/auth/zmiana-hasla-email/{email}": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "sendResetPasswordEmail",
         "parameters": [
           {
             "name": "email",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -1191,29 +902,21 @@
     },
     "/api/auth/zmiana-email": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "changeEmail",
         "parameters": [
           {
             "name": "token",
             "in": "query",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -1221,16 +924,12 @@
     },
     "/api/auth/register": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "register",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegistrationRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/RegistrationRequest" }
             }
           },
           "required": true
@@ -1239,11 +938,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -1251,18 +946,14 @@
     },
     "/api/auth/refresh-token": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "refreshToken",
         "parameters": [
           {
             "name": "X-Refresh-Token",
             "in": "header",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -1281,16 +972,12 @@
     },
     "/api/auth/login": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "login",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AuthRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/AuthRequest" }
             }
           },
           "required": true
@@ -1311,35 +998,27 @@
     },
     "/uzytkownicy/ustawienia": {
       "get": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "getUstawienia",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UzytkownikResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/UzytkownikResponse" }
               }
             }
           }
         }
       },
       "patch": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "updateUstawienia",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "ustawienia"
-                ],
+                "required": ["ustawienia"],
                 "type": "object",
                 "properties": {
                   "ustawienia": {
@@ -1355,9 +1034,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UzytkownikResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/UzytkownikResponse" }
               }
             }
           }
@@ -1366,22 +1043,16 @@
     },
     "/uzytkownicy/profil": {
       "patch": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "updateProfil",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "profil"
-                ],
+                "required": ["profil"],
                 "type": "object",
                 "properties": {
-                  "profil": {
-                    "$ref": "#/components/schemas/ProfilRequest"
-                  }
+                  "profil": { "$ref": "#/components/schemas/ProfilRequest" }
                 }
               }
             }
@@ -1392,9 +1063,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UzytkownikResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/UzytkownikResponse" }
               }
             }
           }
@@ -1403,37 +1072,27 @@
     },
     "/uzytkownicy/blok/{nazwa}/{blok}": {
       "patch": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "setBlokUzytkownik",
         "parameters": [
           {
             "name": "nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "blok",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "boolean"
-            }
+            "schema": { "type": "boolean" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
-              }
+              "application/json": { "schema": { "type": "boolean" } }
             }
           }
         }
@@ -1441,41 +1100,30 @@
     },
     "/uzytkownicy/avatar": {
       "get": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "getAvatar",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/FileResponse" }
               }
             }
           }
         }
       },
       "patch": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "updateAvatar",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "file"
-                ],
+                "required": ["file"],
                 "type": "object",
                 "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "file": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -1486,9 +1134,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UzytkownikResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/UzytkownikResponse" }
               }
             }
           }
@@ -1497,29 +1143,21 @@
     },
     "/pracownicy/unban/{uzytkownik-nazwa}": {
       "patch": {
-        "tags": [
-          "Pracownik"
-        ],
+        "tags": ["Pracownik"],
         "operationId": "unbanUzytkownik",
         "parameters": [
           {
             "name": "uzytkownik-nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
-              }
+              "application/json": { "schema": { "type": "boolean" } }
             }
           }
         }
@@ -1527,22 +1165,16 @@
     },
     "/pracownicy/ban": {
       "patch": {
-        "tags": [
-          "Pracownik"
-        ],
+        "tags": ["Pracownik"],
         "operationId": "setBanUzytkownik",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "request"
-                ],
+                "required": ["request"],
                 "type": "object",
                 "properties": {
-                  "request": {
-                    "$ref": "#/components/schemas/BanRequest"
-                  }
+                  "request": { "$ref": "#/components/schemas/BanRequest" }
                 }
               }
             }
@@ -1552,11 +1184,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
-              }
+              "application/json": { "schema": { "type": "boolean" } }
             }
           }
         }
@@ -1564,30 +1192,21 @@
     },
     "/powiadomienia/{id}/ukryte": {
       "patch": {
-        "tags": [
-          "Powiadomienie"
-        ],
+        "tags": ["Powiadomienie"],
         "operationId": "ukryjPowiadomienie",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "schema": { "type": "integer", "format": "int64" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -1595,19 +1214,14 @@
     },
     "/powiadomienia/{id}/przeczytane": {
       "patch": {
-        "tags": [
-          "Powiadomienie"
-        ],
+        "tags": ["Powiadomienie"],
         "operationId": "setPowiadomieniePrzeczytane",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "schema": { "type": "integer", "format": "int64" }
           }
         ],
         "responses": {
@@ -1626,19 +1240,13 @@
     },
     "/powiadomienia/przeczytane": {
       "patch": {
-        "tags": [
-          "Powiadomienie"
-        ],
+        "tags": ["Powiadomienie"],
         "operationId": "setAllPowiadomieniaPrzeczytane",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -1646,29 +1254,21 @@
     },
     "/ogrody/{nazwa}": {
       "patch": {
-        "tags": [
-          "Ogród"
-        ],
+        "tags": ["Ogród"],
         "operationId": "setOgrodNazwa",
         "parameters": [
           {
             "name": "nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": { "schema": { "type": "string" } }
             }
           }
         }
@@ -1676,16 +1276,12 @@
     },
     "/komentarze": {
       "patch": {
-        "tags": [
-          "Komentarz"
-        ],
+        "tags": ["Komentarz"],
         "operationId": "updateKomentarz",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/KomentarzRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/KomentarzRequest" }
             }
           },
           "required": true
@@ -1695,9 +1291,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/KomentarzResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/KomentarzResponse" }
               }
             }
           }
@@ -1706,38 +1300,27 @@
     },
     "/dzialki/{numer}/{nazwa}": {
       "patch": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "renameDzialka",
         "parameters": [
           {
             "name": "numer",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           },
           {
             "name": "nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": { "schema": { "type": "string" } }
             }
           }
         }
@@ -1745,16 +1328,12 @@
     },
     "/dzialki/rosliny/wyswietlanie": {
       "patch": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "updateRoslinaWyswietlanieInDzialka",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DzialkaRoslinaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/DzialkaRoslinaRequest" }
             }
           },
           "required": true
@@ -1764,9 +1343,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DzialkaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/DzialkaResponse" }
               }
             }
           }
@@ -1775,16 +1352,12 @@
     },
     "/dzialki/rosliny/pozycja": {
       "patch": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "updateRoslinaPozycjaInDzialka",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MoveRoslinaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/MoveRoslinaRequest" }
             }
           },
           "required": true
@@ -1794,9 +1367,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DzialkaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/DzialkaResponse" }
               }
             }
           }
@@ -1805,16 +1376,12 @@
     },
     "/dzialki/rosliny/obraz": {
       "delete": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "deleteRoslinaObrazFromDzialka",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BaseDzialkaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/BaseDzialkaRequest" }
             }
           },
           "required": true
@@ -1823,40 +1390,26 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": { "schema": { "type": "string" } }
             }
           }
         }
       },
       "patch": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "updateRoslinaObrazInDzialka",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "request"
-                ],
+                "required": ["request"],
                 "type": "object",
                 "properties": {
                   "request": {
                     "$ref": "#/components/schemas/DzialkaRoslinaRequest"
                   },
-                  "obraz": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "tekstura": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "obraz": { "type": "string", "format": "binary" },
+                  "tekstura": { "type": "string", "format": "binary" }
                 }
               }
             }
@@ -1867,9 +1420,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/FileResponse" }
               }
             }
           }
@@ -1878,16 +1429,12 @@
     },
     "/dzialki/rosliny/notatka": {
       "patch": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "updateRoslinaNotatkaInDzialka",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DzialkaRoslinaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/DzialkaRoslinaRequest" }
             }
           },
           "required": true
@@ -1897,9 +1444,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DzialkaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/DzialkaResponse" }
               }
             }
           }
@@ -1908,16 +1453,12 @@
     },
     "/dzialki/rosliny/kolor": {
       "patch": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "updateRoslinaKolorInDzialka",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DzialkaRoslinaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/DzialkaRoslinaRequest" }
             }
           },
           "required": true
@@ -1927,9 +1468,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DzialkaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/DzialkaResponse" }
               }
             }
           }
@@ -1938,38 +1477,26 @@
     },
     "/uzytkownicy/szukaj": {
       "get": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "findAllUzytkownicy",
         "parameters": [
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 0 }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 10 }
           },
           {
             "name": "szukaj",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -1988,18 +1515,14 @@
     },
     "/uzytkownicy/profil/{nazwa}": {
       "get": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "getStatystykiOfUzytkownik",
         "parameters": [
           {
             "name": "nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2007,9 +1530,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatystykiDTO"
-                }
+                "schema": { "$ref": "#/components/schemas/StatystykiDTO" }
               }
             }
           }
@@ -2018,18 +1539,14 @@
     },
     "/uzytkownicy/nazwa/{nazwa}": {
       "get": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "findByNazwa",
         "parameters": [
           {
             "name": "nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2037,9 +1554,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UzytkownikResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/UzytkownikResponse" }
               }
             }
           }
@@ -2048,18 +1563,14 @@
     },
     "/uzytkownicy/email/{email}": {
       "get": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "findByEmail",
         "parameters": [
           {
             "name": "email",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2067,9 +1578,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UzytkownikResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/UzytkownikResponse" }
               }
             }
           }
@@ -2078,18 +1587,14 @@
     },
     "/uzytkownicy/blokowani": {
       "get": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "getBlokowaniAndBlokujacy",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UzytkownikResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/UzytkownikResponse" }
               }
             }
           }
@@ -2098,18 +1603,14 @@
     },
     "/uzytkownicy/blok/{nazwa}": {
       "get": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "isBlok",
         "parameters": [
           {
             "name": "nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2117,9 +1618,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BlokResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/BlokResponse" }
               }
             }
           }
@@ -2128,30 +1627,20 @@
     },
     "/rozmowy": {
       "get": {
-        "tags": [
-          "RozmowaPrywatna"
-        ],
+        "tags": ["RozmowaPrywatna"],
         "operationId": "findRozmowyPrywatneOfUzytkownik",
         "parameters": [
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 0 }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 10 }
           }
         ],
         "responses": {
@@ -2170,9 +1659,7 @@
     },
     "/rosliny/cechy": {
       "get": {
-        "tags": [
-          "Roslina"
-        ],
+        "tags": ["Roslina"],
         "operationId": "getCechyWithRelations",
         "responses": {
           "200": {
@@ -2182,9 +1669,7 @@
                 "schema": {
                   "uniqueItems": true,
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CechaResponse"
-                  }
+                  "items": { "$ref": "#/components/schemas/CechaResponse" }
                 }
               }
             }
@@ -2194,30 +1679,20 @@
     },
     "/powiadomienia": {
       "get": {
-        "tags": [
-          "Powiadomienie"
-        ],
+        "tags": ["Powiadomienie"],
         "operationId": "getPowiadomienia",
         "parameters": [
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 0 }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 10 }
           }
         ],
         "responses": {
@@ -2236,19 +1711,14 @@
     },
     "/powiadomienia/nieprzeczytane/count": {
       "get": {
-        "tags": [
-          "Powiadomienie"
-        ],
+        "tags": ["Powiadomienie"],
         "operationId": "getNieprzeczytaneCountOfUzytkownik",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
+                "schema": { "type": "integer", "format": "int32" }
               }
             }
           }
@@ -2257,18 +1727,14 @@
     },
     "/posty/{uuid}": {
       "get": {
-        "tags": [
-          "Post"
-        ],
+        "tags": ["Post"],
         "operationId": "findPostByUUID",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2276,38 +1742,28 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PostResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/PostResponse" }
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "Post"
-        ],
+        "tags": ["Post"],
         "operationId": "removePost",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": { "schema": { "type": "string" } }
             }
           }
         }
@@ -2315,18 +1771,14 @@
     },
     "/posty/{uuid}/check": {
       "get": {
-        "tags": [
-          "Post"
-        ],
+        "tags": ["Post"],
         "operationId": "findPostByUUIDCheck",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2334,9 +1786,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PostResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/PostResponse" }
               }
             }
           }
@@ -2345,38 +1795,26 @@
     },
     "/posty/uzytkownik/{nazwa}": {
       "get": {
-        "tags": [
-          "Post"
-        ],
+        "tags": ["Post"],
         "operationId": "findAllPostyByUzytkownik",
         "parameters": [
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 0 }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 10 }
           },
           {
             "name": "nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2395,38 +1833,26 @@
     },
     "/ogrody": {
       "get": {
-        "tags": [
-          "Ogród"
-        ],
+        "tags": ["Ogród"],
         "operationId": "findAllOgrody",
         "parameters": [
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 0 }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 10 }
           },
           {
             "name": "szukaj",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2445,18 +1871,14 @@
     },
     "/ogrody/{uzytkownik-nazwa}": {
       "get": {
-        "tags": [
-          "Ogród"
-        ],
+        "tags": ["Ogród"],
         "operationId": "getDzialki",
         "parameters": [
           {
             "name": "uzytkownik-nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2464,9 +1886,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OgrodResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/OgrodResponse" }
               }
             }
           }
@@ -2475,18 +1895,14 @@
     },
     "/komentarze/{uuid}": {
       "get": {
-        "tags": [
-          "Komentarz"
-        ],
+        "tags": ["Komentarz"],
         "operationId": "findKomentarzByUUID",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2494,38 +1910,28 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/KomentarzResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/KomentarzResponse" }
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "Komentarz"
-        ],
+        "tags": ["Komentarz"],
         "operationId": "removeKomentarz",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": { "schema": { "type": "string" } }
             }
           }
         }
@@ -2533,38 +1939,26 @@
     },
     "/komentarze/uzytkownicy/{nazwa}": {
       "get": {
-        "tags": [
-          "Komentarz"
-        ],
+        "tags": ["Komentarz"],
         "operationId": "findKomentarzeOfUzytkownik",
         "parameters": [
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 0 }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
+            "schema": { "type": "integer", "format": "int32", "default": 10 }
           },
           {
             "name": "nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2583,37 +1977,26 @@
     },
     "/dzialki/{numer}/{x}/{y}": {
       "get": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "getRoslinaInDzialka",
         "parameters": [
           {
             "name": "numer",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           },
           {
             "name": "x",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           },
           {
             "name": "y",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           }
         ],
         "responses": {
@@ -2632,27 +2015,20 @@
     },
     "/dzialki/{numer}/{uuid}": {
       "get": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "getRoslinaInDzialkaByUUID",
         "parameters": [
           {
             "name": "numer",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           },
           {
             "name": "uuid",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2671,27 +2047,20 @@
     },
     "/dzialki/{numer}/uzytkownicy/{uzytkownik-nazwa}": {
       "get": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "getDzialkaOfUzytkownikByNumer",
         "parameters": [
           {
             "name": "numer",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "schema": { "type": "integer", "format": "int32" }
           },
           {
             "name": "uzytkownik-nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -2699,9 +2068,7 @@
             "description": "OK",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DzialkaResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/DzialkaResponse" }
               }
             }
           }
@@ -2710,9 +2077,7 @@
     },
     "/dzialki/pozycje": {
       "get": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "getPozycjeInDzialki",
         "responses": {
           "200": {
@@ -2721,9 +2086,7 @@
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DzialkaResponse"
-                  }
+                  "items": { "$ref": "#/components/schemas/DzialkaResponse" }
                 }
               }
             }
@@ -2733,29 +2096,21 @@
     },
     "/api/auth/aktywacja-konta": {
       "get": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "confirm",
         "parameters": [
           {
             "name": "token",
             "in": "query",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -2763,29 +2118,21 @@
     },
     "/api/auth/aktywacja-konta/resend": {
       "get": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "confirmResend",
         "parameters": [
           {
             "name": "email",
             "in": "query",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -2793,83 +2140,63 @@
     },
     "/uzytkownicy": {
       "delete": {
-        "tags": [
-          "Uzytkownik"
-        ],
+        "tags": ["Uzytkownik"],
         "operationId": "removeSelf",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UsunKontoRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/UsunKontoRequest" }
             }
           },
           "required": true
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
           }
         }
       }
     },
     "/pracownicy/{uzytkownik-nazwa}": {
       "delete": {
-        "tags": [
-          "Pracownik"
-        ],
+        "tags": ["Pracownik"],
         "operationId": "remove",
         "parameters": [
           {
             "name": "uzytkownik-nazwa",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "content": { "*/*": { "schema": { "type": "string" } } }
           }
         }
       }
     },
     "/powiadomienia/{id}": {
       "delete": {
-        "tags": [
-          "Powiadomienie"
-        ],
+        "tags": ["Powiadomienie"],
         "operationId": "removePowiadomienie",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "schema": { "type": "integer", "format": "int64" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           }
         }
@@ -2877,16 +2204,12 @@
     },
     "/dzialki/rosliny/tekstura": {
       "delete": {
-        "tags": [
-          "Dzialka"
-        ],
+        "tags": ["Dzialka"],
         "operationId": "deleteRoslinaTeksturaFromDzialka",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BaseDzialkaRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/BaseDzialkaRequest" }
             }
           },
           "required": true
@@ -2895,11 +2218,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "application/json": { "schema": { "type": "string" } }
             }
           }
         }
@@ -2911,15 +2230,9 @@
       "CechaWithRelations": {
         "type": "object",
         "properties": {
-          "etykieta": {
-            "type": "string"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "relacja": {
-            "type": "string"
-          }
+          "etykieta": { "type": "string" },
+          "nazwa": { "type": "string" },
+          "relacja": { "type": "string" }
         }
       },
       "RoslinaRequest": {
@@ -2933,25 +2246,15 @@
         ],
         "type": "object",
         "properties": {
-          "uuid": {
-            "type": "string"
-          },
-          "nazwa": {
-            "maxLength": 255,
-            "minLength": 1,
-            "type": "string"
-          },
+          "uuid": { "type": "string" },
+          "nazwa": { "maxLength": 255, "minLength": 1, "type": "string" },
           "nazwaLacinska": {
             "maxLength": 255,
             "minLength": 1,
             "type": "string"
           },
-          "opis": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string"
-          },
+          "opis": { "type": "string" },
+          "obraz": { "type": "string" },
           "wysokoscMin": {
             "maximum": 200,
             "minimum": 0,
@@ -2968,347 +2271,189 @@
             "maxItems": 100,
             "minItems": 0,
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CechaWithRelations"
-            }
+            "items": { "$ref": "#/components/schemas/CechaWithRelations" }
           }
         }
       },
       "RoslinaResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "uuid": {
-            "type": "string"
-          },
-          "labels": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "nazwaLacinska": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "wysokoscMin": {
-            "type": "number",
-            "format": "double"
-          },
-          "wysokoscMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "autor": {
-            "type": "string"
-          },
-          "roslinaUzytkownika": {
-            "type": "boolean"
-          },
+          "id": { "type": "integer", "format": "int64" },
+          "uuid": { "type": "string" },
+          "labels": { "type": "array", "items": { "type": "string" } },
+          "nazwa": { "type": "string" },
+          "nazwaLacinska": { "type": "string" },
+          "opis": { "type": "string" },
+          "wysokoscMin": { "type": "number", "format": "double" },
+          "wysokoscMax": { "type": "number", "format": "double" },
+          "obraz": { "type": "string", "format": "byte" },
+          "autor": { "type": "string" },
+          "roslinaUzytkownika": { "type": "boolean" },
           "grupy": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "formy": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "gleby": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "koloryLisci": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "koloryKwiatow": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "kwiaty": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "odczyny": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "okresyKwitnienia": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "okresyOwocowania": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "owoce": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "podgrupa": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "pokroje": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "silyWzrostu": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "stanowiska": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "walory": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "wilgotnosci": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "zastosowania": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
           "zimozielonosci": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           }
         }
       },
       "OcenaRequest": {
-        "required": [
-          "lubi",
-          "ocenialnyId"
-        ],
+        "required": ["lubi", "ocenialnyId"],
         "type": "object",
         "properties": {
-          "ocenialnyId": {
-            "type": "string"
-          },
-          "lubi": {
-            "type": "boolean"
-          }
+          "ocenialnyId": { "type": "string" },
+          "lubi": { "type": "boolean" }
         }
       },
       "OcenaResponse": {
         "type": "object",
         "properties": {
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          }
+          "ocenyLubi": { "type": "integer", "format": "int32" },
+          "ocenyNieLubi": { "type": "integer", "format": "int32" }
         }
       },
       "EmailRequest": {
-        "required": [
-          "haslo",
-          "nowyEmail"
-        ],
+        "required": ["haslo", "nowyEmail"],
         "type": "object",
         "properties": {
-          "haslo": {
-            "maxLength": 100,
-            "minLength": 8,
-            "type": "string"
-          },
-          "nowyEmail": {
-            "type": "string"
-          }
+          "haslo": { "maxLength": 100, "minLength": 8, "type": "string" },
+          "nowyEmail": { "type": "string" }
         }
       },
       "KomentarzRequest": {
-        "required": [
-          "targetId"
-        ],
+        "required": ["targetId"],
         "type": "object",
         "properties": {
-          "opis": {
-            "maxLength": 3000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string"
-          },
-          "targetId": {
-            "type": "string"
-          }
+          "opis": { "maxLength": 3000, "minLength": 0, "type": "string" },
+          "obraz": { "type": "string" },
+          "targetId": { "type": "string" }
         }
       },
       "KomentarzResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "uuid": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "edytowany": {
-            "type": "boolean"
-          },
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "dataUtworzenia": {
-            "type": "string"
-          },
-          "post": {
-            "$ref": "#/components/schemas/PostResponse"
-          },
+          "id": { "type": "integer", "format": "int64" },
+          "uuid": { "type": "string" },
+          "opis": { "type": "string" },
+          "edytowany": { "type": "boolean" },
+          "ocenyLubi": { "type": "integer", "format": "int32" },
+          "ocenyNieLubi": { "type": "integer", "format": "int32" },
+          "dataUtworzenia": { "type": "string" },
+          "post": { "$ref": "#/components/schemas/PostResponse" },
           "odpowiadaKomentarzowi": {
             "$ref": "#/components/schemas/KomentarzResponse"
           },
           "odpowiedzi": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KomentarzResponse"
-            }
+            "items": { "$ref": "#/components/schemas/KomentarzResponse" }
           },
-          "uzytkownikNazwa": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          }
+          "uzytkownikNazwa": { "type": "string" },
+          "obraz": { "type": "string", "format": "byte" },
+          "avatar": { "type": "string", "format": "byte" }
         }
       },
       "PostResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "uuid": {
-            "type": "string"
-          },
-          "tytul": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "ocenyLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ocenyNieLubi": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "liczbaKomentarzy": {
-            "type": "integer",
-            "format": "int32"
-          },
+          "id": { "type": "integer", "format": "int64" },
+          "uuid": { "type": "string" },
+          "tytul": { "type": "string" },
+          "opis": { "type": "string" },
+          "ocenyLubi": { "type": "integer", "format": "int32" },
+          "ocenyNieLubi": { "type": "integer", "format": "int32" },
+          "liczbaKomentarzy": { "type": "integer", "format": "int32" },
           "komentarze": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KomentarzResponse"
-            }
+            "items": { "$ref": "#/components/schemas/KomentarzResponse" }
           },
-          "uzytkownik": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          },
-          "dataUtworzenia": {
-            "type": "string"
-          }
+          "uzytkownik": { "type": "string" },
+          "obraz": { "type": "string", "format": "byte" },
+          "avatar": { "type": "string", "format": "byte" },
+          "dataUtworzenia": { "type": "string" }
         }
       },
       "PageResponseRoslinaResponse": {
@@ -3316,67 +2461,35 @@
         "properties": {
           "content": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RoslinaResponse"
-            }
+            "items": { "$ref": "#/components/schemas/RoslinaResponse" }
           },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
+          "number": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int32" },
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" }
         }
       },
       "CechaKatalogResponse": {
         "type": "object",
         "properties": {
-          "etykieta": {
-            "type": "string"
-          },
+          "etykieta": { "type": "string" },
           "nazwyLiczbaRoslin": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NazwaLiczbaRoslin"
-            }
+            "items": { "$ref": "#/components/schemas/NazwaLiczbaRoslin" }
           }
         }
       },
       "NazwaLiczbaRoslin": {
         "type": "object",
         "properties": {
-          "nazwa": {
-            "type": "string"
-          },
-          "liczbaRoslin": {
-            "type": "integer",
-            "format": "int32"
-          }
+          "nazwa": { "type": "string" },
+          "liczbaRoslin": { "type": "integer", "format": "int32" }
         }
       },
       "RegistrationRequest": {
-        "required": [
-          "email",
-          "haslo",
-          "nazwa",
-          "powtorzHaslo"
-        ],
+        "required": ["email", "haslo", "nazwa", "powtorzHaslo"],
         "type": "object",
         "properties": {
           "nazwa": {
@@ -3385,82 +2498,35 @@
             "pattern": "^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+( [a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)*$",
             "type": "string"
           },
-          "email": {
-            "type": "string"
-          },
-          "haslo": {
-            "maxLength": 100,
-            "minLength": 8,
-            "type": "string"
-          },
-          "powtorzHaslo": {
-            "maxLength": 100,
-            "minLength": 8,
-            "type": "string"
-          }
+          "email": { "type": "string" },
+          "haslo": { "maxLength": 100, "minLength": 8, "type": "string" },
+          "powtorzHaslo": { "maxLength": 100, "minLength": 8, "type": "string" }
         }
       },
       "ZgloszenieRequest": {
-        "required": [
-          "odnosnik",
-          "opis",
-          "typPowiadomienia",
-          "zglaszany"
-        ],
+        "required": ["odnosnik", "opis", "typPowiadomienia", "zglaszany"],
         "type": "object",
         "properties": {
-          "zglaszany": {
-            "maxLength": 200,
-            "minLength": 0,
-            "type": "string"
-          },
-          "opis": {
-            "maxLength": 200,
-            "minLength": 0,
-            "type": "string"
-          },
-          "typPowiadomienia": {
-            "type": "string"
-          },
-          "odnosnik": {
-            "type": "string"
-          }
+          "zglaszany": { "maxLength": 200, "minLength": 0, "type": "string" },
+          "opis": { "maxLength": 200, "minLength": 0, "type": "string" },
+          "typPowiadomienia": { "type": "string" },
+          "odnosnik": { "type": "string" }
         }
       },
       "SpecjalnePowiadomienieRequest": {
-        "required": [
-          "opis"
-        ],
+        "required": ["opis"],
         "type": "object",
         "properties": {
-          "opis": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string"
-          }
+          "opis": { "maxLength": 1000, "minLength": 0, "type": "string" }
         }
       },
       "PostRequest": {
-        "required": [
-          "tytul"
-        ],
+        "required": ["tytul"],
         "type": "object",
         "properties": {
-          "tytul": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
-          },
-          "opis": {
-            "maxLength": 3000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "obraz": {
-            "maxLength": 200,
-            "minLength": 0,
-            "type": "string"
-          }
+          "tytul": { "maxLength": 100, "minLength": 0, "type": "string" },
+          "opis": { "maxLength": 3000, "minLength": 0, "type": "string" },
+          "obraz": { "maxLength": 200, "minLength": 0, "type": "string" }
         }
       },
       "DzialkaRoslinaRequest": {
@@ -3498,138 +2564,71 @@
             "minItems": 1,
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Pozycja"
-            }
+            "items": { "$ref": "#/components/schemas/Pozycja" }
           },
-          "roslinaUUID": {
-            "type": "string"
-          },
+          "roslinaUUID": { "type": "string" },
           "kolor": {
             "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
             "type": "string"
           },
-          "wyswietlanie": {
-            "type": "string"
-          },
-          "notatka": {
-            "type": "string"
-          },
-          "tekstura": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string"
-          }
+          "wyswietlanie": { "type": "string" },
+          "notatka": { "type": "string" },
+          "tekstura": { "type": "string" },
+          "obraz": { "type": "string" }
         }
       },
       "Pozycja": {
         "type": "object",
         "properties": {
-          "x": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "y": {
-            "type": "integer",
-            "format": "int32"
-          }
+          "x": { "type": "integer", "format": "int32" },
+          "y": { "type": "integer", "format": "int32" }
         }
       },
       "DzialkaResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "numer": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "wlascicielNazwa": {
-            "type": "string"
-          },
+          "id": { "type": "integer", "format": "int64" },
+          "nazwa": { "type": "string" },
+          "numer": { "type": "integer", "format": "int32" },
+          "wlascicielNazwa": { "type": "string" },
           "zasadzoneRosliny": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ZasadzonaRoslinaResponse"
-            }
+            "items": { "$ref": "#/components/schemas/ZasadzonaRoslinaResponse" }
           },
-          "liczbaRoslin": {
-            "type": "integer",
-            "format": "int32"
-          }
+          "liczbaRoslin": { "type": "integer", "format": "int32" }
         }
       },
       "ZasadzonaRoslinaResponse": {
         "type": "object",
         "properties": {
-          "roslina": {
-            "$ref": "#/components/schemas/RoslinaResponse"
-          },
-          "x": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "y": {
-            "type": "integer",
-            "format": "int32"
-          },
+          "roslina": { "$ref": "#/components/schemas/RoslinaResponse" },
+          "x": { "type": "integer", "format": "int32" },
+          "y": { "type": "integer", "format": "int32" },
           "tabX": {
             "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "items": { "type": "integer", "format": "int32" }
           },
           "tabY": {
             "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "items": { "type": "integer", "format": "int32" }
           },
           "pozycje": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Pozycja"
-            }
+            "items": { "$ref": "#/components/schemas/Pozycja" }
           },
-          "kolor": {
-            "type": "string"
-          },
-          "tekstura": {
-            "type": "string",
-            "format": "byte"
-          },
-          "wyswietlanie": {
-            "type": "string"
-          },
-          "notatka": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          }
+          "kolor": { "type": "string" },
+          "tekstura": { "type": "string", "format": "byte" },
+          "wyswietlanie": { "type": "string" },
+          "notatka": { "type": "string" },
+          "obraz": { "type": "string", "format": "byte" }
         }
       },
       "HasloRequest": {
-        "required": [
-          "noweHaslo",
-          "nowePowtorzHaslo",
-          "token"
-        ],
+        "required": ["noweHaslo", "nowePowtorzHaslo", "token"],
         "type": "object",
         "properties": {
-          "token": {
-            "type": "string"
-          },
+          "token": { "type": "string" },
           "noweHaslo": {
             "maxLength": 2147483647,
             "minLength": 8,
@@ -3645,29 +2644,16 @@
       "AuthenticationResponse": {
         "type": "object",
         "properties": {
-          "token": {
-            "type": "string"
-          },
-          "refreshToken": {
-            "type": "string"
-          }
+          "token": { "type": "string" },
+          "refreshToken": { "type": "string" }
         }
       },
       "AuthRequest": {
-        "required": [
-          "email",
-          "haslo"
-        ],
+        "required": ["email", "haslo"],
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string"
-          },
-          "haslo": {
-            "maxLength": 100,
-            "minLength": 8,
-            "type": "string"
-          }
+          "email": { "type": "string" },
+          "haslo": { "maxLength": 100, "minLength": 8, "type": "string" }
         }
       },
       "UstawieniaRequest": {
@@ -3680,235 +2666,104 @@
         ],
         "type": "object",
         "properties": {
-          "statystykiProfilu": {
-            "type": "boolean"
-          },
-          "ogrodPokaz": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeOdpowiedz": {
-            "type": "boolean"
-          },
-          "powiadomieniaOgrodKwitnienie": {
-            "type": "boolean"
-          },
-          "powiadomieniaOgrodOwocowanie": {
-            "type": "boolean"
-          }
+          "statystykiProfilu": { "type": "boolean" },
+          "ogrodPokaz": { "type": "boolean" },
+          "powiadomieniaKomentarzeOdpowiedz": { "type": "boolean" },
+          "powiadomieniaOgrodKwitnienie": { "type": "boolean" },
+          "powiadomieniaOgrodOwocowanie": { "type": "boolean" }
         }
       },
       "Ustawienia": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "statystykiProfilu": {
-            "type": "boolean"
-          },
-          "ogrodPokaz": {
-            "type": "boolean"
-          },
-          "powiadomieniaKomentarzeOdpowiedz": {
-            "type": "boolean"
-          },
-          "powiadomieniaOgrodKwitnienie": {
-            "type": "boolean"
-          },
-          "powiadomieniaOgrodOwocowanie": {
-            "type": "boolean"
-          }
+          "id": { "type": "integer", "format": "int64" },
+          "statystykiProfilu": { "type": "boolean" },
+          "ogrodPokaz": { "type": "boolean" },
+          "powiadomieniaKomentarzeOdpowiedz": { "type": "boolean" },
+          "powiadomieniaOgrodKwitnienie": { "type": "boolean" },
+          "powiadomieniaOgrodOwocowanie": { "type": "boolean" }
         }
       },
       "UzytkownikResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "uuid": {
-            "type": "string"
-          },
-          "labels": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          },
-          "dataUtworzenia": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "aktywowany": {
-            "type": "boolean"
-          },
-          "ban": {
-            "type": "boolean"
-          },
-          "banDo": {
-            "type": "string",
-            "format": "date"
-          },
-          "banPowod": {
-            "type": "string"
-          },
-          "imie": {
-            "type": "string"
-          },
-          "miasto": {
-            "type": "string"
-          },
-          "miejsceZamieszkania": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "ustawienia": {
-            "$ref": "#/components/schemas/Ustawienia"
-          },
+          "id": { "type": "integer", "format": "int64" },
+          "uuid": { "type": "string" },
+          "labels": { "type": "array", "items": { "type": "string" } },
+          "nazwa": { "type": "string" },
+          "email": { "type": "string" },
+          "avatar": { "type": "string", "format": "byte" },
+          "dataUtworzenia": { "type": "string", "format": "date-time" },
+          "aktywowany": { "type": "boolean" },
+          "ban": { "type": "boolean" },
+          "banDo": { "type": "string", "format": "date" },
+          "banPowod": { "type": "string" },
+          "imie": { "type": "string" },
+          "miasto": { "type": "string" },
+          "miejsceZamieszkania": { "type": "string" },
+          "opis": { "type": "string" },
+          "ustawienia": { "$ref": "#/components/schemas/Ustawienia" },
           "blokowaniUzytkownicy": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UzytkownikResponse"
-            }
+            "items": { "$ref": "#/components/schemas/UzytkownikResponse" }
           },
           "blokujacyUzytkownicy": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UzytkownikResponse"
-            }
+            "items": { "$ref": "#/components/schemas/UzytkownikResponse" }
           }
         }
       },
       "ProfilRequest": {
         "type": "object",
         "properties": {
-          "imie": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
-          },
-          "miasto": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
-          },
+          "imie": { "maxLength": 100, "minLength": 0, "type": "string" },
+          "miasto": { "maxLength": 100, "minLength": 0, "type": "string" },
           "miejsceZamieszkania": {
             "maxLength": 100,
             "minLength": 0,
             "type": "string"
           },
-          "opis": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string"
-          }
+          "opis": { "maxLength": 500, "minLength": 0, "type": "string" }
         }
       },
       "BanRequest": {
-        "required": [
-          "ban",
-          "banDo",
-          "nazwa",
-          "powod"
-        ],
+        "required": ["ban", "banDo", "nazwa", "powod"],
         "type": "object",
         "properties": {
-          "nazwa": {
-            "type": "string"
-          },
-          "powod": {
-            "type": "string"
-          },
-          "ban": {
-            "type": "boolean"
-          },
-          "banDo": {
-            "type": "string",
-            "format": "date"
-          }
+          "nazwa": { "type": "string" },
+          "powod": { "type": "string" },
+          "ban": { "type": "boolean" },
+          "banDo": { "type": "string", "format": "date" }
         }
       },
       "PowiadomienieResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "typ": {
-            "type": "string"
-          },
-          "przeczytane": {
-            "type": "boolean"
-          },
-          "ukryte": {
-            "type": "boolean"
-          },
-          "tytul": {
-            "type": "string"
-          },
-          "odnosnik": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
+          "id": { "type": "integer", "format": "int64" },
+          "typ": { "type": "string" },
+          "przeczytane": { "type": "boolean" },
+          "ukryte": { "type": "boolean" },
+          "tytul": { "type": "string" },
+          "odnosnik": { "type": "string" },
+          "opis": { "type": "string" },
           "nazwyRoslin": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          },
-          "uzytkownikNazwa": {
-            "type": "string"
-          },
-          "iloscPolubien": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "data": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "dataUtworzenia": {
-            "type": "string"
-          },
-          "zglaszajacy": {
-            "$ref": "#/components/schemas/UzytkownikResponse"
-          },
-          "zgloszenie": {
-            "type": "boolean"
-          }
+          "avatar": { "type": "string", "format": "byte" },
+          "uzytkownikNazwa": { "type": "string" },
+          "iloscPolubien": { "type": "integer", "format": "int32" },
+          "data": { "type": "string", "format": "date-time" },
+          "dataUtworzenia": { "type": "string" },
+          "zglaszajacy": { "$ref": "#/components/schemas/UzytkownikResponse" },
+          "zgloszenie": { "type": "boolean" }
         }
       },
       "MoveRoslinaRequest": {
-        "required": [
-          "numerDzialki",
-          "pozycje",
-          "x",
-          "y"
-        ],
+        "required": ["numerDzialki", "pozycje", "x", "y"],
         "type": "object",
         "properties": {
           "numerDzialki": {
@@ -3934,146 +2789,64 @@
             "minItems": 1,
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Pozycja"
-            }
+            "items": { "$ref": "#/components/schemas/Pozycja" }
           },
-          "numerDzialkiNowy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "xnowy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ynowy": {
-            "type": "integer",
-            "format": "int32"
-          }
+          "numerDzialkiNowy": { "type": "integer", "format": "int32" },
+          "xnowy": { "type": "integer", "format": "int32" },
+          "ynowy": { "type": "integer", "format": "int32" }
         }
       },
       "FileResponse": {
         "type": "object",
-        "properties": {
-          "content": {
-            "type": "string",
-            "format": "byte"
-          }
-        }
+        "properties": { "content": { "type": "string", "format": "byte" } }
       },
       "PageResponseUzytkownikResponse": {
         "type": "object",
         "properties": {
           "content": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UzytkownikResponse"
-            }
+            "items": { "$ref": "#/components/schemas/UzytkownikResponse" }
           },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
+          "number": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int32" },
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" }
         }
       },
       "StatystykiDTO": {
         "type": "object",
         "properties": {
-          "posty": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "komentarze": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "rosliny": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "komentarzeOcenyPozytywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "komentarzeOcenyNegatywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "postyOcenyPozytywne": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "postyOcenyNegatywne": {
-            "type": "integer",
-            "format": "int32"
-          }
+          "posty": { "type": "integer", "format": "int32" },
+          "komentarze": { "type": "integer", "format": "int32" },
+          "rosliny": { "type": "integer", "format": "int32" },
+          "komentarzeOcenyPozytywne": { "type": "integer", "format": "int32" },
+          "komentarzeOcenyNegatywne": { "type": "integer", "format": "int32" },
+          "postyOcenyPozytywne": { "type": "integer", "format": "int32" },
+          "postyOcenyNegatywne": { "type": "integer", "format": "int32" }
         }
       },
       "BlokResponse": {
         "type": "object",
         "properties": {
-          "blok": {
-            "type": "boolean"
-          },
-          "blokujacy": {
-            "type": "string"
-          },
-          "obojeBlokujacy": {
-            "type": "boolean"
-          }
+          "blok": { "type": "boolean" },
+          "blokujacy": { "type": "string" },
+          "obojeBlokujacy": { "type": "boolean" }
         }
       },
       "KomentarzSimpleResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "uuid": {
-            "type": "string"
-          },
-          "opis": {
-            "type": "string"
-          },
-          "edytowany": {
-            "type": "boolean"
-          },
-          "dataUtworzenia": {
-            "type": "string"
-          },
-          "uzytkownikNazwa": {
-            "type": "string"
-          },
-          "postUUID": {
-            "type": "string"
-          },
-          "obraz": {
-            "type": "string",
-            "format": "byte"
-          },
-          "avatar": {
-            "type": "string",
-            "format": "byte"
-          }
+          "id": { "type": "integer", "format": "int64" },
+          "uuid": { "type": "string" },
+          "opis": { "type": "string" },
+          "edytowany": { "type": "boolean" },
+          "dataUtworzenia": { "type": "string" },
+          "uzytkownikNazwa": { "type": "string" },
+          "postUUID": { "type": "string" },
+          "obraz": { "type": "string", "format": "byte" },
+          "avatar": { "type": "string", "format": "byte" }
         }
       },
       "PageResponseRozmowaPrywatnaResponse": {
@@ -4081,80 +2854,42 @@
         "properties": {
           "content": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RozmowaPrywatnaResponse"
-            }
+            "items": { "$ref": "#/components/schemas/RozmowaPrywatnaResponse" }
           },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
+          "number": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int32" },
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" }
         }
       },
       "RozmowaPrywatnaResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "aktywna": {
-            "type": "boolean"
-          },
-          "nadawca": {
-            "type": "string"
-          },
+          "id": { "type": "integer", "format": "int64" },
+          "aktywna": { "type": "boolean" },
+          "nadawca": { "type": "string" },
           "uzytkownicy": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UzytkownikResponse"
-            }
+            "items": { "$ref": "#/components/schemas/UzytkownikResponse" }
           },
           "komentarze": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KomentarzSimpleResponse"
-            }
+            "items": { "$ref": "#/components/schemas/KomentarzSimpleResponse" }
           },
-          "liczbaWiadomosci": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ostatnioAktualizowana": {
-            "type": "string"
-          }
+          "liczbaWiadomosci": { "type": "integer", "format": "int32" },
+          "ostatnioAktualizowana": { "type": "string" }
         }
       },
       "CechaResponse": {
         "type": "object",
         "properties": {
-          "etykieta": {
-            "type": "string"
-          },
+          "etykieta": { "type": "string" },
           "nazwy": {
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           }
         }
       },
@@ -4163,32 +2898,14 @@
         "properties": {
           "content": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PowiadomienieResponse"
-            }
+            "items": { "$ref": "#/components/schemas/PowiadomienieResponse" }
           },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
+          "number": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int32" },
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" }
         }
       },
       "PageResponsePostResponse": {
@@ -4196,52 +2913,25 @@
         "properties": {
           "content": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PostResponse"
-            }
+            "items": { "$ref": "#/components/schemas/PostResponse" }
           },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
+          "number": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int32" },
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" }
         }
       },
       "OgrodResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "nazwa": {
-            "type": "string"
-          },
-          "wlascicielNazwa": {
-            "type": "string"
-          },
+          "id": { "type": "integer", "format": "int64" },
+          "nazwa": { "type": "string" },
+          "wlascicielNazwa": { "type": "string" },
           "dzialki": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DzialkaResponse"
-            }
+            "items": { "$ref": "#/components/schemas/DzialkaResponse" }
           }
         }
       },
@@ -4250,32 +2940,14 @@
         "properties": {
           "content": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OgrodResponse"
-            }
+            "items": { "$ref": "#/components/schemas/OgrodResponse" }
           },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
+          "number": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int32" },
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" }
         }
       },
       "PageResponseKomentarzResponse": {
@@ -4283,54 +2955,25 @@
         "properties": {
           "content": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/KomentarzResponse"
-            }
+            "items": { "$ref": "#/components/schemas/KomentarzResponse" }
           },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
+          "number": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int32" },
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" }
         }
       },
       "UsunKontoRequest": {
-        "required": [
-          "haslo"
-        ],
+        "required": ["haslo"],
         "type": "object",
         "properties": {
-          "haslo": {
-            "maxLength": 100,
-            "minLength": 8,
-            "type": "string"
-          }
+          "haslo": { "maxLength": 100, "minLength": 8, "type": "string" }
         }
       },
       "BaseDzialkaRequest": {
-        "required": [
-          "numerDzialki",
-          "pozycje",
-          "x",
-          "y"
-        ],
+        "required": ["numerDzialki", "pozycje", "x", "y"],
         "type": "object",
         "properties": {
           "numerDzialki": {
@@ -4356,9 +2999,7 @@
             "minItems": 1,
             "uniqueItems": true,
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Pozycja"
-            }
+            "items": { "$ref": "#/components/schemas/Pozycja" }
           }
         }
       }

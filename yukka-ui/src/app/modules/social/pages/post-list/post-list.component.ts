@@ -43,12 +43,9 @@ export class PostListComponent {
 
   ngOnInit(): void {
     this.findAllPosty();
-    console.log(this.postResponse);
   }
 
   findAllPosty() {
-    console.log('findAllPosty');
-
     this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 0;
 
     this.toggleLoading();
@@ -97,7 +94,6 @@ export class PostListComponent {
    }
 
    onSearch = (event: any) => {
-    console.log('onSearch');
     this.page = 0;
     this.searchText = event;
     this.findAllPosty();

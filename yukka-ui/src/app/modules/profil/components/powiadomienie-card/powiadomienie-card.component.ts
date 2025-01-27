@@ -52,10 +52,7 @@ export class PowiadomienieCardComponent {
   }
 
   goToTarget() {
-    console.log('goToTarget');
-    console.log('pow: ', this.pow);
     if (this.pow.odnosnik && this.pow.typ) {
-      // TODO: Nawigacja na bazie typu powiadomienia
       switch (this.pow.typ) {
         case TypPowiadomienia.SPECJALNE:
         case TypPowiadomienia.BAN:
@@ -89,7 +86,6 @@ export class PowiadomienieCardComponent {
   }
 
   onHover() {
-    console.log('onHover');
     if (!this.pow.przeczytane) {
 
       this.setPrzeczytane();
@@ -106,7 +102,6 @@ export class PowiadomienieCardComponent {
               console.error('Powiadomienie nie istnieje');
               return;
             }
-            console.log('Powiadomienie set: ', pow);
             this.pow.przeczytane = pow.przeczytane;
             this.powiadomieniePrzeczytane.emit(this.pow);
             this.powiadomieniaSyncService.notifyPowiadomieniePrzeczytane(this.pow);
@@ -126,7 +121,6 @@ export class PowiadomienieCardComponent {
     event.stopPropagation();
     if (this.pow.id) {
       if(this.pow.typ === TypPowiadomienia.SPECJALNE || this.pow.typ === TypPowiadomienia.ZGLOSZENIE) {
-        console.log('Nie można usunąć powiadomienia specjalnego');
         this.powiadomienieService.ukryjPowiadomienie({ id: this.pow.id }).subscribe({
           next: () => {
             this.powiadomienieUsuniete.emit(this.pow);

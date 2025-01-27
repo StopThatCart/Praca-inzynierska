@@ -32,7 +32,6 @@ export class ModalNotatkaPickComponent {
   }
 
   confirm() {
-    console.log('confirmChange', this.notatka);
     this.confirmChange.emit(this.notatka);
     this.closePickerModal();
   }

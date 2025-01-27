@@ -55,9 +55,6 @@ export class PowiadomieniaDropdownComponent implements OnInit {
         this.powResponse.content = this.powResponse.content.filter((p: any) => p.id !== pow.id);
       }
     });
-
-   // this.findAllPowiadomienia();
-   // console.log(this.powResponse);
   }
 
   loadPowiadomienia() {
@@ -67,8 +64,6 @@ export class PowiadomieniaDropdownComponent implements OnInit {
   }
 
   findAllPowiadomienia() {
-    console.log('findAllPowiadomienia');
-
     this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 1;
 
     this.toggleLoading();
@@ -77,7 +72,6 @@ export class PowiadomieniaDropdownComponent implements OnInit {
         next: (powiadomienia) => {
           this.powResponse = powiadomienia;
           this.updateUnreadCount();
-          console.log(this.powResponse);
         },
         error: (error) => {
           console.error('Error fetching powiadomienia:', error);
@@ -88,7 +82,6 @@ export class PowiadomieniaDropdownComponent implements OnInit {
   }
 
   appendPow= ()=>{
-    console.log('appendPow: ' + this.page);
     this.toggleLoading();
     this.powService.getPowiadomienia({page: this.page, size: this.size})
     .subscribe({
@@ -125,7 +118,6 @@ export class PowiadomieniaDropdownComponent implements OnInit {
   }
 
   updateUnreadCount() {
-    console.log('updateUnreadCount: DROPDOWN  - start');
     this.powService.getNieprzeczytaneCountOfUzytkownik().subscribe({
       next: (count) => {
         this.unreadCount = count;
@@ -153,7 +145,6 @@ export class PowiadomieniaDropdownComponent implements OnInit {
 
 
   goToPowiadomieniaPage() {
-    console.log('goToPowiadomieniaPage - start');
     const nazwa = this.tokenService.nazwa;
     this.router.navigate([`/profil/${nazwa}/powiadomienia`]);
   }

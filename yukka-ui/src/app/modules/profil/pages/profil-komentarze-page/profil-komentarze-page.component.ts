@@ -71,7 +71,6 @@ export class ProfilKomentarzePageComponent {
   // Paginacja
 
   goToPage(page: number) {
-    console.log('goToPage', page);
     this.router.navigate([`/profil/${this.nazwa}/komentarze`], {
       queryParams: {
         page: page,

@@ -38,8 +38,6 @@ export class BlokButtonComponent {
         next: (res) => {
           if(res) {
             window.location.reload();
-          } else {
-            console.log('Nie udało się zablokować użytkownika');
           }
         },
         error: (err) => {
@@ -61,8 +59,6 @@ export class BlokButtonComponent {
         next: (res) => {
           if(res) {
             window.location.reload();
-          } else {
-            console.log('Nie udało się odblokować użytkownika');
           }
         },
         error: (err) => {

@@ -94,15 +94,14 @@ export class UpdateRoslinaPageComponent {
   }
 
   onCechaToggled(cechy: CechaWithRelations[]): void {
-    console.log('Cechy toggled:', cechy);
     this.request.cechy = cechy;
     this.cechaTagComponent.updateSortedCechy(cechy);
   }
 
   onCechaRemoved(index: number): void {
-    console.log('Removing cecha at index:', index);
+   // console.log('Removing cecha at index:', index);
     this.request.cechy.splice(index, 1);
-    console.log('Request after removing:', this.request);
+   // console.log('Request after removing:', this.request);
   }
 
   onCustomCechaAdded(customCecha: CechaWithRelations): void {
@@ -114,7 +113,6 @@ export class UpdateRoslinaPageComponent {
     this.roslinaService.getCechyWithRelations().subscribe({
       next: (response) => {
         this.cechyResponse = response;
-        console.log("Konwertowanie cech");
         this.cechyResponse = this.cechaProcessService.processCechyResponse(this.cechyResponse);
       },
       error: (error) => {
@@ -151,8 +149,6 @@ export class UpdateRoslinaPageComponent {
   }
 
   updateRoslinaWlasna(request: RoslinaRequest): void {
-    console.log("AKTUALIZACJA ROŚLINY UZYTKOWNIKA");
-
     this.roslinaWlasnaService.update({ body: request }).subscribe({
       next: () => {
         this.message = 'Roślina została zaaktualizowana';

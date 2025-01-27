@@ -73,10 +73,15 @@
               <i class="fas fa-edit"></i>
             </button>
 
+
+          </ng-container>
+
+          <ng-container *ngIf="canDelete">
             <button (click)="deleteKomentarz()" class="btn btn-danger" type="button"  placement="bottom" ngbTooltip="Usuń">
               <i class="fas fa-trash"></i>
             </button>
           </ng-container>
+          
 
           <app-zgloszenie-button
           [typPowiadomienia]="typPowiadomienia.ZGLOSZENIE_KOMENTARZ"

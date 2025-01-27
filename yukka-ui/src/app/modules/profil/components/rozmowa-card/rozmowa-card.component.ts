@@ -83,7 +83,6 @@ export class RozmowaCardComponent implements OnInit {
     if(this.selectedUzyt && this.selectedUzyt.nazwa) {
       this.rozService.acceptRozmowaPrywatna({ 'uzytkownik-nazwa': this.selectedUzyt.nazwa }).subscribe({
         next: (res) => {
-          console.log('Rozmowa prywatna accepted');
           this.rozmowa.aktywna = true;
         },
         error: (err) => {
@@ -96,12 +95,9 @@ export class RozmowaCardComponent implements OnInit {
   rejectRozmowaPrywatna(event : Event) {
     event.stopPropagation();
     if(this.selectedUzyt && this.selectedUzyt.nazwa) {
-      console.log('Rejecting rozmowa prywatna');
-      console.log('Selected user: ', this.selectedUzyt.nazwa);
 
       this.rozService.rejectRozmowaPrywatna({ "uzytkownik-nazwa": this.selectedUzyt.nazwa }).subscribe({
         next: () => {
-          console.log('Rozmowa prywatna odrzucona');
           this.onReject.emit(this.selectedUzyt?.nazwa);
         },
         error: (err) => {

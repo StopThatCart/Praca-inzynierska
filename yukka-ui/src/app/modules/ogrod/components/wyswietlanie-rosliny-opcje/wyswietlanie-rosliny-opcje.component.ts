@@ -21,7 +21,6 @@ export class WyswietlanieRoslinyOpcjeComponent {
   @Output() wyswietlanieChange = new EventEmitter<String>();
 
   onWyswietlanieChange(event: Event): void {
-    console.log('Wybrano opcję:', this.wyswietlanie);
     this.wyswietlanieChange.emit(this.wyswietlanie);
   }
 

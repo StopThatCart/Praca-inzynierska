@@ -41,8 +41,6 @@ export class EdycjaUsunKontoPageComponent {
 
     if(!confirm("Czy na pewno chcesz usunąć konto? Tej operacji nie można cofnąć!")) return;
 
-    console.log(this.request);
-    console.log("Usuwam konto");
     this.uzytkownikService.removeSelf({ body: this.request }).subscribe({
       next: () => {
         this.tokenService.clearToken();

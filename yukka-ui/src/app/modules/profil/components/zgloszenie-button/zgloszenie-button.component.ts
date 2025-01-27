@@ -71,9 +71,6 @@ export class ZgloszenieButtonComponent {
 
 
   zglosUzytkownika() {
-   // console.log('Zgłoszenie użytkownika');
-   // console.log(this.request);
-    //console.log(this.zglaszany);
     if (this.typPowiadomienia === undefined ||
       this.zglaszany === undefined ||
       this.odnosnik === undefined ||
@@ -86,11 +83,9 @@ export class ZgloszenieButtonComponent {
 
     this.errorMsg = [];
     this.message = '';
-    console.log('Zgłoszenie użytkownika');
 
     this.powiadomienieService.sendZgloszenie( { body: this.request } ).subscribe({
       next: (res) => {
-        console.log('Zgłoszenie zostało wysłane');
         this.message = 'Zgłoszenie zostało wysłane';
         //modal.close('Save click')
       },

@@ -34,7 +34,6 @@ export class ModalObrazPickComponent {
   }
 
   confirm() {
-    console.log('confirmObrazZmiana');
     this.obrazChange.emit(this.wybranyPlik);
     this.imageUpload.clearImage();
     this.closePickerModal();
@@ -42,7 +41,6 @@ export class ModalObrazPickComponent {
 
   delet() {
     if(confirm('Czy na pewno chcesz usunąć ten plik?')) {
-      console.log('deletObraz');
       this.obrazChange.emit(null);
 
       this.imageUpload.clearImage();

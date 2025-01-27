@@ -259,6 +259,11 @@ public class AuthenticationService {
         log.info("Wysyłanie e-maila resetowania hasła do: " + email);
         var uzyt = uzytkownikRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika z podanym adresem email"));
+        
+        if (!uzyt.isAktywowany()) {
+            throw new IllegalArgumentException("Konto nie zostało jeszcze aktywowane.");
+        }
+        
         emailService.sendValidationEmail(uzyt, EmailTemplateName.RESET_HASLO);
     }
 

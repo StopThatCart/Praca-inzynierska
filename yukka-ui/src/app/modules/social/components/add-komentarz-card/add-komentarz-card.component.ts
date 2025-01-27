@@ -41,12 +41,8 @@ export class AddKomentarzCardComponent implements OnInit {
 
   ngOnInit() {
     if(this.targetId) {
-      console.log("TargetId przy załadowaniu: " + this.targetId);
       this.request.targetId = this.targetId;
     }
-
-    console.log("Request przy załadowaniu");
-    console.log(this.request);
   }
 
   onFileSelected(file: any) {
@@ -60,23 +56,16 @@ export class AddKomentarzCardComponent implements OnInit {
   }
 
   addKomentarz() {
-    console.log("Request przy dodawaniu");
-    console.log(this.request);
     this.errorMsg = [];
 
     if(this.typ) {
       if(this.typ === TypKomentarza.ODPOWIEDZ) {
-        console.log("Odpowiedz na komentarz");
         this.addOdpowiedzToKomentarz();
       } else if(this.typ === TypKomentarza.POST) {
-        console.log("Komentarz na post");
         this.addKomentarzToPost();
       } else if(this.typ === TypKomentarza.WIADOMOSC) {
-        console.log("Wiadomość do użytkownika");
         this.addWiadomoscToRozmowaPrywatna();
       }
-    } else {
-      console.log("Nie wybrano typu komentarza");
     }
   }
 

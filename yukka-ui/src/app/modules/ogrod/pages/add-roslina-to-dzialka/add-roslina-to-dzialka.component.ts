@@ -82,8 +82,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
         this.dzialki = dzialki;
 
         this.loadDzialka();
-
-        console.log(dzialki);
       },
       error: (err) => {
         this.dzialki = [];
@@ -96,7 +94,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
 
   onWyswietlanieChange($event: String) {
     this.request.wyswietlanie = $event.toString();
-    console.log('Wyswietlanie:', this.request.wyswietlanie);
   }
 
   onDzialkaChange(numerDzialki: number) {
@@ -138,7 +135,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
         if (roslina.uuid) {
           this.request.roslinaUUID = roslina.uuid;
         }
-        console.log(roslina);
       },
       error: (err) => {
         this.roslina = undefined;
@@ -192,7 +188,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
 
   addRoslinaToDzialka() {
     if(this.mode === DzialkaModes.BrakEdycji) return;
-    console.log(this.request);
 
     if(this.request.x === -1 || this.request.y === -1) {
       this.errorMsg = [];
@@ -230,7 +225,6 @@ export class AddRoslinaToDzialkaComponent implements OnInit {
 
   changeEditMode(mode: DzialkaModes): void {
     this.mode = mode;
-    console.log('pozycje:', this.request.pozycje);
   }
 
   onFileSelected(file: File) {

@@ -47,14 +47,12 @@ export class LoginComponent {
       body: this.authRequest
     }).subscribe( {
         next: (res) => {
-          console.log(res);
           this.tokenService.token = res.token as string;
           this.tokenService.refreshToken = res.refreshToken as string;
           this.router.navigate(['']);
 
         },
         error: (err) => {
-          console.log(err);
           this.errorMsg = this.errorHandlingService.handleErrors(err, this.errorMsg);
         }
     });

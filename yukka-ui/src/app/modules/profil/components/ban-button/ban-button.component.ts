@@ -68,8 +68,6 @@ export class BanButtonComponent {
 
 
   zbanujUzytkownika() {
-   // console.log('Zgłoszenie użytkownika');
-   // console.log(this.request);
     if (this.zglaszany === undefined ||
       this.zbanowany === undefined ||
       this.request.banDo === '' ||
@@ -81,7 +79,6 @@ export class BanButtonComponent {
 
     this.errorMsg = [];
     this.message = '';
-    console.log('Zgłoszenie użytkownika');
 
     this.pracownikService.setBanUzytkownik( { body: { request: this.request } } ).subscribe({
       next: (res) => {
@@ -104,7 +101,6 @@ export class BanButtonComponent {
     if(this.zglaszany === undefined) return;
     this.pracownikService.unbanUzytkownik({ 'uzytkownik-nazwa': this.zglaszany }).subscribe({
       next: (res) => {
-        console.log('Użytkownik odbanowany');
         window.location.reload();
       },
       error: (err) => {

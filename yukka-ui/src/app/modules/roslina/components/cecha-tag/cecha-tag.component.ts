@@ -45,14 +45,12 @@ export class CechaTagComponent implements OnChanges {
   }
 
   removeCecha(cecha: CechaWithRelations): void {
-    console.log('Usuwam ceche', cecha);
-
     let index = this.sortedCechy.findIndex(w =>
       w.etykieta === cecha.etykieta
       && w.nazwa === cecha.nazwa
       && w.relacja === cecha.relacja);
     if(index === -1) {
-      console.log('Nie znaleziono cechy do usuniecia');
+     // console.log('Nie znaleziono cechy do usuniecia');
       return;
     }
     this.sortedCechy.splice(index, 1);

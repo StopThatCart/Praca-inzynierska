@@ -44,7 +44,7 @@
           <p *ngIf="mode === DzialkaModes.EditRoslinaKafelki" >Kliknij na wolny kafelek, aby go dodać lub usunąć z rośliny. </p>
           <p *ngIf="mode === DzialkaModes.EditRoslinaPozycja" >Kliknij na wolny kafelek, aby postawić na nim roślinę.</p>
           <div class="btn-group">
-            <button (click)="changeEditMode(DzialkaModes.EditRoslinaPozycja)" class="btn btn-info">Zmień pozycję rośliny</button>
+            <button (click)="changeEditMode(DzialkaModes.EditRoslinaPozycja)" class="btn btn-light">Zmień pozycję rośliny</button>
             <button (click)="changeEditMode(DzialkaModes.EditRoslinaKafelki)" class="btn btn-primary">Zmień kafelki należące do rośliny</button>
           </div>
         </div>

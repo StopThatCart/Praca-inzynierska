@@ -53,10 +53,6 @@ export class RenameIconComponent implements OnInit {
   onSave() {
     if (!this.isEditing) return;
 
-    console.log('onSave');
-    console.log(this.zmieniany);
-    console.log(this.nazwa + " === " + RenameIconModes.DZIALKA + " ? " + (this.zmieniany === RenameIconModes.DZIALKA));
-    console.log(RenameIconModes.DZIALKA);
     if (this.zmieniany === RenameIconModes.DZIALKA) {
       this.renameDzialka();
     } else if (this.zmieniany === RenameIconModes.OGROD) {
@@ -67,8 +63,6 @@ export class RenameIconComponent implements OnInit {
   }
 
   onCancel() {
-    console.log('onCancel');
-    console.log(this.zmieniany);
     this.isEditing = false;
     this.nazwa = this.oldNazwa;
   }
@@ -80,7 +74,6 @@ export class RenameIconComponent implements OnInit {
     this.dzialkaService.renameDzialka({numer: this.numer, nazwa: this.nazwa})
     .subscribe({
       next: () => {
-        console.log('nazwa dzialki zmieniona');
         this.afterSave();
       },
       error: (err) => {
@@ -98,7 +91,6 @@ export class RenameIconComponent implements OnInit {
     this.ogrodService.setOgrodNazwa({nazwa: this.nazwa})
     .subscribe({
       next: () => {
-        console.log('nazwa ogrodu zmieniona');
         this.afterSave();
       },
       error: (err) => {

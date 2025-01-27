@@ -153,10 +153,10 @@ export class RoslinyUzytkownikaPageComponent {
   }
 
   onCechaRemoved(index: number): void {
-    console.log('Removing cecha at index:', index);
+    // console.log('Removing cecha at index:', index);
 
     this.request.cechy.splice(index, 1);
-    console.log('Request after removing:', this.request);
+    // console.log('Request after removing:', this.request);
   }
 
   // Paginacja

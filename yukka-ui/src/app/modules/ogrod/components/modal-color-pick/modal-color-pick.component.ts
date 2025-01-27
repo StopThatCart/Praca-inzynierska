@@ -36,7 +36,6 @@ export class ModalColorPickComponent {
   }
 
   confirm() {
-    console.log('confirmColorChange', this.selectedColor);
     this.confirmColorChange.emit(this.selectedColor);
     this.closePickerModal();
   }

@@ -108,7 +108,6 @@ export class NavbarComponent implements OnInit {
 
   goToPowiadomieniaPage() {
     if (this.uzytNazwa) {
-      console.log('goToPowiadomieniaPage - start');
       this.router.navigate([`/profil/${this.uzytNazwa}/powiadomienia`]);
     }
 

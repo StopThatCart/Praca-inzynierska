@@ -71,7 +71,6 @@ export class ProfilPageComponent implements OnInit {
       }, 
       complete: () => {
         if (this.errorMsg && this.errorMsg.length > 0) {
-          console.log('ErroDESADASDASDASDASSDr: ', this.errorMsg);
         } else {
           this.getStatystykiOfUzytkownik(nazwa);
           this.getBlok();
@@ -203,7 +202,6 @@ export class ProfilPageComponent implements OnInit {
     if (this.tokenService.token && this.uzyt.nazwa && this.tokenService.nazwa !== this.uzyt.nazwa) {
       this.uzytService.isBlok({ nazwa: this.uzyt.nazwa }).subscribe({
         next: (res) => {
-          console.log('Blok: ', res);
           this.blokResponse = res;
         },
         error: (err) => {

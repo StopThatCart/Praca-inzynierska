@@ -41,7 +41,6 @@ export class RozmowyListComponent {
   ngOnInit(): void {
     this.getBlokowaniAndBlokujacy();
     this.findRozmowyOfUzytkownik();
-    console.log(this.rozResponse);
   }
 
   handleReject(nazwa: string) {
@@ -55,7 +54,6 @@ export class RozmowyListComponent {
   getBlokowaniAndBlokujacy() {
     this.uzytService.getBlokowaniAndBlokujacy().subscribe({
       next: (response) => {
-        console.log('getBlokowaniAndBlokujacy response:', response);
         this.currentUzyt = response;
         this.blokowaniUzytkownicy = response.blokowaniUzytkownicy ?? [];
         this.blokujacyUzytkownicy = response.blokujacyUzytkownicy ?? [];
@@ -67,8 +65,6 @@ export class RozmowyListComponent {
   }
 
   findRozmowyOfUzytkownik() {
-    console.log('findRozmowyOfUzytkownik');
-
     this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 1;
 
     this.toggleLoading();

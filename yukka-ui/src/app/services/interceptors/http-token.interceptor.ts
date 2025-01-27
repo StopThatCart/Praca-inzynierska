@@ -39,7 +39,6 @@ export const httpTokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, n
               }
             });
           } else {
-            console.log('Yyyy, usuwanko tokena ale zakomentowane');
             tokenService.clearRefreshToken();
           }
           return next(req);

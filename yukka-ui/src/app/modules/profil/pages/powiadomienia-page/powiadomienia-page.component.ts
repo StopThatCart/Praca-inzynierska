@@ -61,8 +61,6 @@ export class PowiadomieniaPageComponent implements OnInit {
     this.powiadomieniaSyncService.powiadomieniePrzeczytane$.subscribe((pow) => {
       this.updatePowiadomienie(pow);
     });
-
-   // console.log(this.powResponse);
   }
 
   findAllPowiadomienia() {
@@ -131,7 +129,6 @@ export class PowiadomieniaPageComponent implements OnInit {
   // Paginacja
 
   goToPage(page: number) {
-    console.log('goToPage', page);
     this.router.navigate([`/profil/${this.nazwa}/powiadomienia`], {
       queryParams: {
         page: page,

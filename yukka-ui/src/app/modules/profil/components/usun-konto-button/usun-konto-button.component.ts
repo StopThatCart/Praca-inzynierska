@@ -29,15 +29,12 @@ export class UsunKontoButtonComponent {
   ) {}
 
   usunUzytkownika() {
-   // console.log('Zgłoszenie użytkownika');
-   // console.log(this.request);
     if (this.usuwany === undefined) return;
 
     if(!confirm("Czy na pewno chcesz usunąć tego użytkownika?")) return;
 
     this.errorMsg = [];
     this.message = '';
-    console.log('Usunięcie użytkownika');
 
     this.pracownikService.remove( { 'uzytkownik-nazwa': this.usuwany }).subscribe({
       next: (res) => {

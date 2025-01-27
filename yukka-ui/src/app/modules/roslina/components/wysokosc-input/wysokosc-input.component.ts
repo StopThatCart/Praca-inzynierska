@@ -28,7 +28,6 @@ export class WysokoscInputComponent {
       this.wysokoscMax = this.wysokoscMin;
     }
     this.wysokoscMinChange.emit(this.wysokoscMin);
-    console.log('wysokoscMin: ', this.wysokoscMin);
   }
 
   onWysokoscMaxChange() {

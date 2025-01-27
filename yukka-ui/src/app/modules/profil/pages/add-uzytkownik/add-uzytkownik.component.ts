@@ -38,7 +38,6 @@ export class AddUzytkownikComponent {
 
     this.pracownikService.addPracownik({ body: { request: this.request } }).subscribe( {
         next: (res) => {
-          console.log(res);
           this.message = 'Użytkownik został dodany, a na podany adres email został wysłany kod aktywacyjny.';
           this.request = {
             nazwa: '',

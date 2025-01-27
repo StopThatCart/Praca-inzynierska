@@ -44,7 +44,6 @@ export class UzytkownikListComponent {
 
   ngOnInit(): void {
     this.findAllUzytkownicy();
-    console.log(this.uzytResponse);
   }
 
   isAdmin(): boolean {
@@ -52,8 +51,6 @@ export class UzytkownikListComponent {
   }
 
   findAllUzytkownicy() {
-    console.log('findAllUzytkownicy');
-
     this.page = (Number.isInteger(this.page) && this.page >= 0) ? this.page : 0;
 
     this.toggleLoading();
