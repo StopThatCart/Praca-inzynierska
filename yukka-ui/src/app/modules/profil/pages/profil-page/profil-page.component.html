@@ -64,7 +64,7 @@
             <ng-container *ngIf="uzyt.ban">
               <h5 class="text-danger fw-bold">Konto zbanowane do : {{ uzyt.banDo }}</h5>
             </ng-container>
-            <ng-container *ngIf="!isBlokowany() && !isCurrentUser()">
+            <ng-container *ngIf="!isBlokowany() && !isCurrentUser() && isTokenAvailable()">
               <h5 class="text-danger fw-bold">Blokuje ciebie</h5>
             </ng-container>
             
